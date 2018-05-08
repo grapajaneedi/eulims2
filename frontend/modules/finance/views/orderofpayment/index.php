@@ -25,7 +25,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
 
     <p>
 
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/orderofpayment/create', 'class' => 'btn btn-success create_orderofpayment','title' => Yii::t('app', "Create New Order of Payment"),'name'=>'Create Order of Payment']); ?>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/orderofpayment/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Order of Payment"),'name'=>'Create Order of Payment']); ?>
     </p>
     
     <fieldset>

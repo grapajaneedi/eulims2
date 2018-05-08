@@ -7,14 +7,16 @@ use Yii;
 /**
  * This is the model class for table "tbl_collectiontype".
  *
- * @property integer $collectiontype_id
+ * @property int $collectiontype_id
  * @property string $natureofcollection
- * @property integer $status
+ * @property int $status
+ *
+ * @property Orderofpayment[] $orderofpayments
  */
 class Collectiontype extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -30,18 +32,19 @@ class Collectiontype extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['collectiontype_id', 'status'], 'integer'],
+            [['status'], 'integer'],
             [['natureofcollection'], 'string', 'max' => 50],
+            [['natureofcollection'], 'unique'],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -50,5 +53,13 @@ class Collectiontype extends \yii\db\ActiveRecord
             'natureofcollection' => 'Natureofcollection',
             'status' => 'Status',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrderofpayments()
+    {
+        return $this->hasMany(Orderofpayment::className(), ['collectiontype_id' => 'collectiontype_id']);
     }
 }

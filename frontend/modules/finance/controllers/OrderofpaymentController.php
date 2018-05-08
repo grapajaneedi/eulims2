@@ -67,16 +67,19 @@ class OrderofpaymentController extends Controller
     {
         $model = new Orderofpayment();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            
+        if ($model->load(Yii::$app->request->post()) && $model->save()) { 
             return $this->redirect(['view', 'id' => $model->orderofpayment_id]);
         } else {
             if(Yii::$app->request->isAjax){
-            return $this->renderAjax('create', [
+                return $this->renderAjax('create', [
                     'model' => $model,
                 ]);
-             }
-        }
+            }else{
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+       }   
     }
 
     /**

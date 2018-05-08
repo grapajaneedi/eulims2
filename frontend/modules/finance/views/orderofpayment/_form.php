@@ -20,10 +20,8 @@ use kartik\widgets\DatePicker;
     <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
      
     </div>
-    
-  
    <?php 
-        
+       
 	echo $form->field($model, 'collectiontype_id')->widget(Select2::classname(), [
     	'data' => ArrayHelper::map(Collectiontype::find()->all(), 'collectiontype_id', 'natureofcollection'),
     	'language' => 'en',
