@@ -6,6 +6,11 @@
  * Module: main * 
  */
 jQuery(document).ready(function ($) {
+    $('.btn-modal').click(function () {
+        // alert(this.value);
+        LoadModal(this.name, this.value);
+    });
+
     // --- Delete action (bootbox) ---
     yii.confirm = function (message, ok, cancel) {
         var title = $(this).data("title");
