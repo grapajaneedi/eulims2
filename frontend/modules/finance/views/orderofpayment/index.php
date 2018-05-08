@@ -14,13 +14,13 @@ use kartik\widgets\DatePicker;
 use common\components\Functions;
 
 $func= new Functions();
+$this->title = 'Order of Payments';
 $this->params['breadcrumbs'][] = 'Order of Payments';
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
 ?>
 <div class="orderofpayment-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -28,10 +28,10 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/orderofpayment/create', 'class' => 'btn btn-success create_orderofpayment','title' => Yii::t('app', "Create New Order of Payment"),'name'=>'Create Order of Payment']); ?>
     </p>
     
-    <fieldset class="legend-border">
-    <legend class="legend-border">Legend/Status</legend>
+    <fieldset>
+    <legend>Legend/Status</legend>
     <div style="padding: 0 10px">
-    	<span class="icon-check"></span> <font color="#006600">Paid</font>
+    	<span class="glyphicon glyphicon-check"></span> <font color="#006600">Paid</font>
     </div>
     </fieldset>
     
