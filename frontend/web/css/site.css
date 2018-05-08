@@ -140,3 +140,17 @@ label.required{
       color:red;
 }
 
+fieldset
+{
+    border: 1px solid #DDD;
+    padding: 10px;
+    margin: 0 0 10px 0;
+    -moz-border-radius:7px;
+}
+
+fieldset>legend {
+    width: inherit;
+    padding: 0 10px;
+    border-bottom: none;
+    margin-bottom: 0;
+}
