@@ -4,3 +4,6 @@ protected/runtime/*
 !protected/runtime/.gitignore
 protected/data/*.db
 themes/classic/views/
+#vendor/kartik-v/yii2-datecontrol/
+vendor/kartik-v/yii2-datecontrol/
+vendor/kartik-v/yii2-widget-datepicker/
