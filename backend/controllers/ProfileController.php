@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\helpers\Html;
+use common\components\MyPDF;
 
 /**
  * ProfileController implements the CRUD actions for Profile model.
@@ -47,11 +49,25 @@ class ProfileController extends Controller
     {
         $searchModel = new ProfileSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        $model= Profile::find()->where(['user_id'=> \Yii::$app->user->id])->one();
+        if($model){
+            $pdfContent= $this->renderPartial('view',['model'=>$model]);
+        }else{
+            $pdfContent=null;
+        }
+        if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'pdfContent'=>$pdfContent,
+            ]);
+        }else{
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'pdfContent'=>$pdfContent,
+            ]);
+        }
     }
 
     /**
@@ -61,11 +77,20 @@ class ProfileController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        //$model=$this->findModel($id);
+        //$content= $this->renderPartial('view',['model'=>$model]);
+        //$PDF=new MyPDF($content);
+        //$PDF->renderPDF();
+        if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }else{
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
     }
-
     /**
      * Creates a new Profile model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -101,9 +126,15 @@ class ProfileController extends Controller
                 ]);
             }
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('create', [
+                    'model' => $model,
+                ]);
+            }else{
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
         }
     }
 
@@ -115,19 +146,13 @@ class ProfileController extends Controller
      */
     public function actionUpdate($id)
     {
-        //var_dump(Yii::$app->request->post());
-        //exit;
         Yii::$app->params['uploadPath'] = realpath(dirname(__FILE__)).'\..\..' . '\backend\web\uploads\user\photo\\';
+        $model = $this->findModel($id);
         if(Yii::$app->user->can('access-his-profile')){
-            if($id==\Yii::$app->user->identity->user_id){
-                $mId=$id;
-            }else{
-                $mId=-1;
+            if($model->user_id!=Yii::$app->user->identity->user_id){
+                throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');
             }
-        }else{
-           $mId=$id; 
         }
-        $model = $this->findModel($mId);
         $OldAvatar=$model->avatar;
         $OldImageUrl=$model->image_url;
         $changeImage=false;
@@ -156,14 +181,20 @@ class ProfileController extends Controller
                     $this->actionDeleteimage($OldAvatar);
                 }
                 //return "Saved...";
-                return $this->redirect(['view', 'id'=>$model->user_id]);
+                return $this->redirect(['/profile']);
             } else {
-                // error in saving model
+                throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');
             }
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('update', [
+                    'model' => $model,
+                ]);
+            }else{
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
         }
     }
     public function actionDeleteimage($avatar){

@@ -9,6 +9,7 @@ use common\models\system\Rstl;
 use common\models\system\User;
 use common\models\lab\Lab;
 use yii\grid\ActionColumn;
+use yii\helpers\Url;
 //use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ProfileSearch */
@@ -81,13 +82,24 @@ $gridColumn = [
         //'class' => 'yii\grid\ActionColumn'
         'class' => kartik\grid\ActionColumn::className(),
         'template' => $Buttontemplate,
+        'buttons'=>[
+              'view'=>function ($url, $model) {
+                  return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/profile/'.$model->profile_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Test Category <font color='Blue'></font>")]);
+              },
+              'update'=>function ($url, $model) {
+                  return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/profile/update/'.$model->profile_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Test Category<font color='Blue'></font>")]);
+              }
+             // 'delete'=>function ($url, $model) {
+             //   return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>'/profile/delete/'.$model->profile_id, 'onclick'=>'ConfirmBox(this.title,this.value)', 'class' => 'btn btn-danger']);
+            //},
+          ],
     ],
 ];
 ?>
 <div class="profile-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <p>
-        <?= Html::a('Create Profile', ['create'], ['class' => 'btn btn-success']) ?>
+        <button type="button" onclick="LoadModal('Create Profile','/profile/create')" class="btn btn-success"><i class="fa fa-save"> Create Profile</i></button>
     </p>
     <div class="table-responsive">
         <?=

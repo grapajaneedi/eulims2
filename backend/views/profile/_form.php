@@ -15,10 +15,10 @@ use yii\bootstrap\Modal;
 /* @var $this yii\web\View */
 /* @var $model common\models\Profile */
 /* @var $form yii\widgets\ActiveForm */
-if(Yii::$app->user->can('access-his-profile')){
-    $UserList= ArrayHelper::map(User::findAll(['user_id'=>Yii::$app->user->identity->user_id]),'user_id','email');
-}else{
+if(Yii::$app->user->can('profile-full-access')){
     $UserList= ArrayHelper::map(User::find()->all(),'user_id','email');
+}else{ 
+    $UserList= ArrayHelper::map(User::findAll(['user_id'=>Yii::$app->user->identity->user_id]),'user_id','email');
 }
 $RstlList= ArrayHelper::map(Rstl::find()->all(),'rstl_id','name');
 $LabList= ArrayHelper::map(lab::find()->all(),'lab_id','labname');
@@ -31,19 +31,10 @@ SCRIPT;
 $this->registerJs($js, View::POS_READY);
 $this->registerCssFile("/css/profile.css");
 
-Modal::begin([
-    'headerOptions' => ['id' => 'modalHeader'],
-    'id' => 'modal',
-    'size' => 'modal-lg',
-    //keeps from closing modal with esc key or by clicking out of the modal.
-    // user must click cancel or X to close
-    'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
-]);
-echo "<div id='modalContent'>This is a sample</div>";
-Modal::end();
 ?>
 
 <div class="profile-form">
+    <div class="row" style="margin-left: 30px">
             <?php $form = ActiveForm::begin([
                 'options'=>['enctype'=>'multipart/form-data'] // important
             ]); ?>
@@ -62,8 +53,11 @@ Modal::end();
                             'allowedFileExtensions'=>['jpg','gif','png'],
                             'overwriteInitial'=>true,
                             'resizeImages'=>true,
+                            'initialPreviewConfig'=>[
+                                'width'=>'120px',
+                            ],
                             'initialPreview' => [
-                                '<img src="'.Yii::$app->urlManager->baseUrl.'\uploads\user\photo\\'.$model->getImageUrl().'" width="200" class="file-preview-image">',
+                                '<img src="'.Yii::$app->urlManagerBackend->baseUrl.'\uploads\user\photo\\'.$model->getImageUrl().'" width="200" class="file-preview-image">',
                             ],
                             'showUpload'=>false,
                             'showRemove'=>false,
@@ -138,11 +132,12 @@ Modal::end();
             ]); ?>
             </span>
             </div>
-            <div class="row">
+            <div class="row" style="float: right;padding-right: 76px">
                 <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-                <?= Html::resetButton('Reset', ['class' => 'btn btn-success']) ?>
-                <?= Html::Button('Cancel', ['class' => 'btn btn-default','id'=>'modalCancel','onclick'=>'js:$("#modal").modal("hide")']) ?>
+                <?= Html::resetButton('Reset', ['class' => 'btn btn-danger']) ?>
+                <?= Html::Button('Cancel', ['class' => 'btn btn-default','id'=>'modalCancel','data-dismiss'=>'modal']) ?>
             </div>
 
             <?php ActiveForm::end(); ?>
+    </div>
 </div>
