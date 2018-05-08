@@ -34,7 +34,6 @@
         "yii2mod/yii2-sweet-alert": "*",
         "phpnt/yii2-export": "^0.0.7",
         "machour/yii2-notifications": "*",
-        "kartik-v/yii2-datecontrol": "dev-master",
         "yiimaker/yii2-email-templates": "3.0.1",
         "motion/yii2-language-provider": "1.0.0",
         "creocoder/yii2-translateable": "1.0.0",
@@ -108,7 +107,9 @@
         "behat/gherkin": "4.4.5",
         "kartik-v/yii2-detail-view": "*",
         "kartik-v/yii2-widget-datepicker": "@dev",
-        "miloschuman/yii2-highcharts-widget": "^6.0"
+        "miloschuman/yii2-highcharts-widget": "^6.0",
+        "kartik-v/yii2-datecontrol": "dev-master",
+        "kartik-v/yii2-popover-x": "*"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "^2.0"
