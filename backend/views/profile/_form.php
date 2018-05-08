@@ -57,7 +57,7 @@ $this->registerCssFile("/css/profile.css");
                                 'width'=>'120px',
                             ],
                             'initialPreview' => [
-                                '<img src="'.Yii::$app->urlManagerBackend->baseUrl.'\uploads\user\photo\\'.$model->getImageUrl().'" width="200" class="file-preview-image">',
+                                '<img src="'.Yii::$app->urlManager->baseUrl.'\uploads\user\photo\\'.$model->getImageUrl().'" width="200" class="file-preview-image">',
                             ],
                             'showUpload'=>false,
                             'showRemove'=>false,
