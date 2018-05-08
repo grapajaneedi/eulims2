@@ -92,7 +92,7 @@ function LoadModal(header,url,closebutton){
     if(closebutton==undefined){
         closebutton=true;
     }
-    var content='<div id="boot-box-content" style="padding-bottom: 20px"><i class="fa fa-spin fa-spinner"></i> Loading...</div>';
+    var content='<div id="boot-box-content" style="padding-bottom: 30px"><i class="fa fa-spin fa-spinner"></i> Loading...</div>';
     var dialog = bootbox.dialog({
         title: header,
         message: content,
