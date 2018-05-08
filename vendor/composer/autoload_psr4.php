@@ -36,6 +36,8 @@ return array(
     'maxmirazh33\\image\\' => array($vendorDir . '/maxmirazh33/yii2-uploadable-cropable-image/src'),
     'machour\\yii2\\notifications\\' => array($vendorDir . '/machour/yii2-notifications'),
     'kartik\\select2\\' => array($vendorDir . '/kartik-v/yii2-widget-select2'),
+    'kartik\\popover\\' => array($vendorDir . '/kartik-v/yii2-popover-x'),
+    'kartik\\plugins\\popover\\' => array($vendorDir . '/kartik-v/bootstrap-popover-x'),
     'kartik\\plugins\\fileinput\\' => array($vendorDir . '/kartik-v/bootstrap-fileinput'),
     'kartik\\plugins\\dateformatter\\' => array($vendorDir . '/kartik-v/php-date-formatter'),
     'kartik\\mpdf\\' => array($vendorDir . '/kartik-v/yii2-mpdf'),

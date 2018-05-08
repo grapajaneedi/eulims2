@@ -72,6 +72,8 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'k' => 
         array (
             'kartik\\select2\\' => 15,
+            'kartik\\popover\\' => 15,
+            'kartik\\plugins\\popover\\' => 23,
             'kartik\\plugins\\fileinput\\' => 25,
             'kartik\\plugins\\dateformatter\\' => 29,
             'kartik\\mpdf\\' => 12,
@@ -299,6 +301,14 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'kartik\\select2\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-select2',
+        ),
+        'kartik\\popover\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-popover-x',
+        ),
+        'kartik\\plugins\\popover\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/bootstrap-popover-x',
         ),
         'kartik\\plugins\\fileinput\\' => 
         array (
