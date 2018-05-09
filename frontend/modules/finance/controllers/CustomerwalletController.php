@@ -95,18 +95,11 @@ class CustomerwalletController extends Controller
     public function actionCreate()
     {
         $model = new Customerwallet();
-        
-        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('create', [
-                    'model' => $model,
-                ]);
-        }
-
         if ($model->load(Yii::$app->request->post())) {
             $model->last_update=date('Y-m-d h:i:s');
             $model->date=date('Y-m-d h:i:s');
             if($model->save()){
-				$session = Yii::$app->session;
+		 $session = Yii::$app->session;
                  $wallet = new Customertransaction();
                  $wallet->updated_by =Yii::$app->user->id;
                  $wallet->date =date('Y-m-d h:i:s');
@@ -115,10 +108,16 @@ class CustomerwalletController extends Controller
                  $wallet->balance=$model->balance;
                  $wallet->customerwallet_id=$model->customerwallet_id;
                  $wallet->save();
-				 $session->set('savepopup',"executed");
+		 $session->set('savepopup',"executed");
             }
             return $this->redirect(['index']);
-        } 
+        }else{
+            if(Yii::$app->request->isAjax){
+                return $this->renderAjax('create', [
+                    'model' => $model,
+                ]);
+            }
+        }
     }
 
     /**

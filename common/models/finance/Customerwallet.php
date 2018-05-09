@@ -32,6 +32,22 @@ class Customerwallet extends \yii\db\ActiveRecord
     {
         return Yii::$app->get('financedb');
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['date', 'last_update'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['last_update'],
+                ],
+            ],
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -72,10 +88,5 @@ class Customerwallet extends \yii\db\ActiveRecord
     public function getCustomer()
     {
         return $this->hasOne(Customer::className(), ['customer_id' => 'customer_id']);
-    }
-    
-     public function getCollectiontype()
-    {
-        return $this->hasOne(Collectiontype::className(), ['collectiontype_id' => 'natureofcollection']);
     }
 }
