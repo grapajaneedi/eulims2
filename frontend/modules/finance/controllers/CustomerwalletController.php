@@ -95,7 +95,7 @@ class CustomerwalletController extends Controller
     public function actionCreate()
     {
         $model = new Customerwallet();
-
+        
         if ($model->load(Yii::$app->request->post())) {
             $model->last_update=date('Y-m-d h:i:s');
             $model->date=date('Y-m-d h:i:s');
