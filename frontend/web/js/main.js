@@ -11,7 +11,9 @@ jQuery(document).ready(function ($) {
         //LoadModal(this.name, this.value);
         ShowModal(this.name, this.value);
     });
-
+    $('.modal-dialog').draggable({
+        handle: ".modal-header"
+    });
     // --- Delete action (bootbox) ---
     yii.confirm = function (message, ok, cancel) {
         var title = $(this).data("title");
@@ -88,17 +90,29 @@ function ConfirmBox(Title, Message){
         }
     );
 }
-function ShowModal(header,url){
-   $("#modalHeader").html(header);
-   $("#modal").modal('show')
-        .find('#modalContent')
-        .load(url); 
-}
-
-function LoadModal(header,url,closebutton){
+function ShowModal(header,url,closebutton){
     if(closebutton==undefined){
         closebutton=true;
     }
+    $(".close").prop('disabled',!closebutton);
+    var dialog=$("#modal").modal({
+        backdrop: false,
+        show: true
+    });
+    dialog.init(function(){
+        setTimeout(function(){
+            dialog.find('#modalHeader').html(header);
+            dialog.find('#modalContent').load(url);
+        }, 5);
+    });
+}
+
+function LoadModal(header,url,closebutton){
+    ShowModal(header,url,closebutton);
+    //if(closebutton==undefined){
+   //     closebutton=true;
+   // }
+    /*
     var content='<div id="boot-box-content" style="padding-bottom: 30px"><i class="fa fa-spin fa-spinner"></i> Loading...</div>';
     var dialog = bootbox.dialog({
         title: header,
@@ -111,7 +125,7 @@ function LoadModal(header,url,closebutton){
             dialog.find('#boot-box-content').load(url);
         }, 10);
     });
-  
+    */
   }
 function printPartOfPage(elementId) {
     var printContent = document.getElementById(elementId);
