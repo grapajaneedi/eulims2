@@ -114,8 +114,6 @@ class CustomerwalletController extends Controller
 
         }
 
-        
-
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                     'model' => $model,
