@@ -73,9 +73,4 @@ class Customerwallet extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Customer::className(), ['customer_id' => 'customer_id']);
     }
-    
-     public function getCollectiontype()
-    {
-        return $this->hasOne(Collectiontype::className(), ['collectiontype_id' => 'natureofcollection']);
-    }
 }

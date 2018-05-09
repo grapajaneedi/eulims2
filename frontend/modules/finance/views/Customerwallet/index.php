@@ -24,15 +24,13 @@ use common\components\Functions;
 $func= new Functions();
 $this->title = 'Customer Wallet';
 $this->params['breadcrumbs'][] = $this->title;
-$this->registerJsFile("/js/finance/finance.js");
-
 ?>
 
 <div class="customerwallet-index">
 
     <p>
 
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Wallet', ['value'=>'/finance/customerwallet/create', 'class' => 'btn btn-success custom_button','title' => Yii::t('app', "Create New Wallet"),'name'=>'Create New Wallet']); ?>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Wallet', ['value'=>'/finance/customerwallet/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Wallet"),'name'=>'Create New Wallet']); ?>
     </p>
 <div class="table-responsive">
     <?= GridView::widget([
@@ -110,11 +108,11 @@ $this->registerJsFile("/js/finance/finance.js");
                 'buttons'=>[
                     'add'=>function ($url, $model) {
                         $t = '/finance/customertransaction/create?customerwallet_id='.$model->customerwallet_id;
-                        return Html::button('<span class="glyphicon glyphicon-plus"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-success custom_button','title' => Yii::t('app', "Add Funds for ".$model->customer->customer_name),'name' => Yii::t('app', "Add Funds for <font color='Blue'>[<b>".$model->customer->customer_name."</b>]</font>")]);
+                        return Html::button('<span class="glyphicon glyphicon-plus"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Add Funds for ".$model->customer->customer_name),'name' => Yii::t('app', "Add Funds for <font color='#272727'>[<b>".$model->customer->customer_name."</b>]</font>")]);
                     },
                     'view'=>function ($url, $model) {
                         $t = '/finance/customerwallet/view?id='.$model->customerwallet_id;
-                        return Html::button('<span class="fa fa-eye"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-primary custom_button','title' => Yii::t('app', "View History for ".$model->customer->customer_name),'name' => Yii::t('app', "View History for  <font color='Blue'>[<b>".$model->customer->customer_name."</b>]</font>")]);
+                        return Html::button('<span class="fa fa-eye"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-primary btn-modal','title' => Yii::t('app', "View History for ".$model->customer->customer_name),'name' => Yii::t('app', "View History for  <font color='#272727'>[<b>".$model->customer->customer_name."</b>]</font>")]);
                     },
                     
                 ],

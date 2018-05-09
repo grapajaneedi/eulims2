@@ -67,15 +67,18 @@ class InfoController extends Controller
     {
         $model = new Customer();
 
-        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('create', [
-                'model' => $model,
-            ]);
-        }
+        
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->customer_id]);
         } else {
+
+            if(Yii::$app->request->isAjax){
+                return $this->renderAjax('create', [
+                    'model' => $model,
+                ]);
+            }
+            
             return $this->render('create', [
                 'model' => $model,
             ]);
