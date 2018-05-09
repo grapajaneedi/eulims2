@@ -42,7 +42,7 @@ if (Yii::$app->user->can('access-testcategory-delete')){
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Test Category', ['value'=>'/services/testcategory/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Test Category")]); ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Test Category', ['value'=>'/services/testcategory/create', 'class' => 'btn btn-success btn-modal','name'=>'Create New Test Category','title' => Yii::t('app', "Create New Test Category")]); ?>
       
     </p>
     <div class="table-responsive">
