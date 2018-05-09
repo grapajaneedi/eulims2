@@ -4,6 +4,7 @@ namespace common\models\finance;
 
 use Yii;
 use common\models\lab\Customer;
+use yii\db\ActiveRecord;
  
 /* @property integer $customerwallet_id
  * @property string $date

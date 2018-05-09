@@ -116,6 +116,10 @@ class CustomerwalletController extends Controller
                 return $this->renderAjax('create', [
                     'model' => $model,
                 ]);
+            }else{
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
             }
         }
     }
