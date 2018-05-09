@@ -68,6 +68,8 @@ class TestController extends Controller
      * @return mixed
      */
     public function actionCreate() {
+        
+        if(!Yii::$app->request->isAjax){ echo "not ajax"; exit();}
         $model = new Test();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

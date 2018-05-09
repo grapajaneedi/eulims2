@@ -1,34 +1,47 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\CollectiontypeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Collectiontypes';
+$this->title = 'Collection Types';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="collectiontype-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Collectiontype', ['create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Collection Type', ['value'=>'/finance/collectiontype/create', 'class' => 'btn btn-success btn-modal','name' => Yii::t('app', "Create New Collection Type")]); ?>
+      
     </p>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+    <div class="table-responsive">
+        <?php 
+        $Buttontemplate='{view}{update}{delete}'; 
+        ?>
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'panel' => [
+                'type' => GridView::TYPE_PRIMARY,
+                'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+            ],
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
 
-            'collectiontype_id',
-            'natureofcollection',
-            'status',
+               // 'collectiontype_id',
+                'natureofcollection',
+                'status',
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+                [
+                    'class' => kartik\grid\ActionColumn::className(),
+                    'template' => $Buttontemplate,
+                ],
+            ],
+        ]); ?>
+    </div>
 </div>

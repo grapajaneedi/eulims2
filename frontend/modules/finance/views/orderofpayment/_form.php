@@ -7,6 +7,7 @@ use common\models\lab\Customer;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use kartik\widgets\DatePicker;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Orderofpayment */
 /* @var $form yii\widgets\ActiveForm */
@@ -20,30 +21,36 @@ use kartik\widgets\DatePicker;
     <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
      
     </div>
-   <?php 
-       
-	echo $form->field($model, 'collectiontype_id')->widget(Select2::classname(), [
-    	'data' => ArrayHelper::map(Collectiontype::find()->all(), 'collectiontype_id', 'natureofcollection'),
-    	'language' => 'en',
-    	'options' => ['placeholder' => 'Select Collection Type ...'],
-    	'pluginOptions' => [
-      	  'allowClear' => true
-    	],
-	])->label('<label class="required">*</label>'.'Collection Type');
-    ?>
-  
-    <?php
-    echo $form->field($model, 'order_date')->widget(DatePicker::classname(), [
-    'options' => ['placeholder' => 'Select Date ...'],
-    'type' => DatePicker::TYPE_COMPONENT_APPEND,
-        'pluginOptions' => [
-            'format' => 'yyyy-mm-dd',
-            'todayHighlight' => true,
-            'autoclose'=>true
-        ]
-    ])->label('<label class="required">*</label>'.'Date');
-    ?>
-    
+    <div class="row">
+        <div class="col-sm-6">
+       <?php 
+
+            echo $form->field($model, 'collectiontype_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(Collectiontype::find()->all(), 'collectiontype_id', 'natureofcollection'),
+            'language' => 'en',
+            'options' => ['placeholder' => 'Select Collection Type ...'],
+            'pluginOptions' => [
+              'allowClear' => true
+            ],
+            ])->label('<label class="required">*</label>'.'Collection Type');
+        ?>
+        </div>   
+        <div class="col-sm-6">
+         <?php
+         echo $form->field($model, 'order_date')->widget(DatePicker::classname(), [
+         'options' => ['placeholder' => 'Select Date ...'],
+         'type' => DatePicker::TYPE_COMPONENT_APPEND,
+             'pluginOptions' => [
+                 'format' => 'yyyy-mm-dd',
+                 'todayHighlight' => true,
+                 'autoclose'=>true
+             ]
+         ])->label('<label class="required">*</label>'.'Date');
+         ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
     <?php
         echo $form->field($model, 'customer_id')->widget(Select2::classname(), [
     	'data' => ArrayHelper::map(Customer::find()->all(), 'customer_id', 'customer_name'),
@@ -54,9 +61,19 @@ use kartik\widgets\DatePicker;
     	],
 	])->label('<label class="required">*</label>'.'Customer Name');
      ?>
-
-    <?= $form->field($model, 'amount')->textInput(['type'=>'number'])->label('<label class="required">*</label>'.'Amount'); ?>
-
+        </div>
+        <div class="col-sm-6">
+            <?= $form->field($model, 'amount')->textInput(['type'=>'number'])->label('<label class="required">*</label>'.'Amount'); ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">  
+            <div id="requests" style="padding:15px!important;">    	
+                    <?php echo $this->renderAjax('_request', ['dataProvider'=>$dataProvider]); ?>
+            </div>
+        </div>
+    </div> 
+   
     <?= $form->field($model, 'purpose')->textarea(['maxlength' => true])->label('<label class="required">*</label>'.'Purpose/For payment of'); ?>
 
    

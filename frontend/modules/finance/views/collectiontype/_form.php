@@ -18,8 +18,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'status')->textInput() ?>
 
-    <div class="form-group">
+   
+    <div class="form-group pull-right">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?php if(Yii::$app->request->isAjax){ ?>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <?php } ?>
     </div>
 
     <?php ActiveForm::end(); ?>

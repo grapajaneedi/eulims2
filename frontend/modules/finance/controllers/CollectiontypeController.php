@@ -51,9 +51,11 @@ class CollectiontypeController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]);
+        }
     }
 
     /**
@@ -65,13 +67,27 @@ class CollectiontypeController extends Controller
     {
         $model = new Collectiontype();
 
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->collectiontype_id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+           // if (Yii::$app->request->isAjax){
+                return $this->runAction('index');
+         //  }else{
+          //      return $this->redirect(['view', 'id' => $model->test_category_id]);
+         //   }
+          
+        } 
+          
+             if(Yii::$app->request->isAjax){
+                return $this->renderAjax('create', [
+                    'model' => $model,
+                   
+                ]);
+            }else{
+                return $this->render('create', [
+                    'model' => $model,
+                  
+                ]);
+            }
     }
 
     /**
