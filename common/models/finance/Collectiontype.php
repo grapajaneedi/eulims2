@@ -40,6 +40,7 @@ class Collectiontype extends \yii\db\ActiveRecord
             [['status'], 'integer'],
             [['natureofcollection'], 'string', 'max' => 50],
             [['natureofcollection'], 'unique'],
+            [['natureofcollection'], 'required'],
         ];
     }
 
@@ -50,7 +51,7 @@ class Collectiontype extends \yii\db\ActiveRecord
     {
         return [
             'collectiontype_id' => 'Collectiontype ID',
-            'natureofcollection' => 'Natureofcollection',
+            'natureofcollection' => 'Nature of collection',
             'status' => 'Status',
         ];
     }

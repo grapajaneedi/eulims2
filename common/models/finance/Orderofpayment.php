@@ -48,7 +48,7 @@ class Orderofpayment extends \yii\db\ActiveRecord
         return [
             [['rstl_id', 'collectiontype_id', 'customer_id', 'created_receipt', 'allow_erratum'], 'integer'],
             [['order_date'], 'safe'],
-            [['allow_erratum','collectiontype_id','order_date','customer_id','amount','purpose'],'required'],
+            [['collectiontype_id','order_date','customer_id','amount','purpose'],'required'],
             [['amount'], 'number'],
             [['transactionnum'], 'string', 'max' => 100],
             [['purpose'], 'string', 'max' => 200],
@@ -64,10 +64,10 @@ class Orderofpayment extends \yii\db\ActiveRecord
         return [
             'orderofpayment_id' => 'Orderofpayment ID',
             'rstl_id' => 'Rstl ID',
-            'transactionnum' => 'Transactionnum',
-            'collectiontype_id' => 'Collectiontype ID',
-            'order_date' => 'Order Date',
-            'customer_id' => 'Customer ID',
+            'transactionnum' => 'Transaction Number',
+            'collectiontype_id' => 'Collection Type',
+            'order_date' => 'Date',
+            'customer_id' => 'Customer Name',
             'amount' => 'Amount',
             'purpose' => 'Purpose',
             'created_receipt' => 'Created Receipt',
