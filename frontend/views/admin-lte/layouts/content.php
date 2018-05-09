@@ -17,7 +17,7 @@ $Host= "//".Yii::$app->getRequest()->serverName;
 ?>
 <div class="content-wrapper">
     <?php
-    /*Modal::begin([
+    Modal::begin([
     'options' => [
         'id' => 'modal',
         'tabindex' => false // important for Select2 to work properly
@@ -29,7 +29,7 @@ $Host= "//".Yii::$app->getRequest()->serverName;
     echo "<div>&nbsp;</div>";
     echo "</div>";
     Modal::end();
-    */
+    
     echo Breadcrumbs::widget([
       'itemTemplate' => "<li><i>{link}</i></li>\n", // template for all links
       'tag'=>'ol', //<li class="active"><span>Data</span></li>

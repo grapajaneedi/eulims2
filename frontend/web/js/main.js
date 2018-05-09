@@ -8,7 +8,8 @@
 jQuery(document).ready(function ($) {
     $('.btn-modal').click(function () {
         // alert(this.value);
-        LoadModal(this.name, this.value);
+        //LoadModal(this.name, this.value);
+        ShowModal(this.name, this.value);
     });
 
     // --- Delete action (bootbox) ---
@@ -87,6 +88,13 @@ function ConfirmBox(Title, Message){
         }
     );
 }
+function ShowModal(header,url){
+   $("#modalHeader").html(header);
+   $("#modal").modal('show')
+        .find('#modalContent')
+        .load(url); 
+}
+
 function LoadModal(header,url,closebutton){
     if(closebutton==undefined){
         closebutton=true;

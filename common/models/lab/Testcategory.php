@@ -40,7 +40,7 @@ class Testcategory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['category_name', 'lab_id'], 'required'],
+            [['category_name'], 'required'],
             [['lab_id'], 'integer'],
             [['category_name'], 'string', 'max' => 200],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],

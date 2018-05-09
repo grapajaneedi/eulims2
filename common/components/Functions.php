@@ -91,4 +91,7 @@ class Functions extends Component{
                         }"),
         ]);
     }
+    public function GetLaboratoryList(){
+        
+    }
 }
