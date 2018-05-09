@@ -72,7 +72,7 @@ class CustomerwalletController extends Controller
         $transactions = $searchModel->searchbycustomerid($id);
 
 
-        if(\Yii::$app->request->isAjax){
+        if(Yii::$app->request->isAjax){
 
              return $this->renderAjax('view', [
             'model' => $this->findModel($id),
@@ -97,8 +97,8 @@ class CustomerwalletController extends Controller
         $model = new Customerwallet();
         
         if ($model->load(Yii::$app->request->post())) {
-            $model->last_update=date('Y-m-d h:i:s');
-            $model->date=date('Y-m-d h:i:s');
+            // $model->last_update=date('Y-m-d h:i:s');
+            // $model->date=date('Y-m-d h:i:s');
             if($model->save() ){
                 $session = Yii::$app->session;
                  $wallet = new Customertransaction();
@@ -110,6 +110,7 @@ class CustomerwalletController extends Controller
                  $wallet->customerwallet_id=$model->customerwallet_id;
                  $wallet->save();
                  $session->set('savepopup',"executed");
+                 return $this->runAction('index');
             }
 
         }
