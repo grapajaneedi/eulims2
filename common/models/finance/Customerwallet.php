@@ -4,6 +4,7 @@ namespace common\models\finance;
 
 use Yii;
 use common\models\lab\Customer;
+use yii\db\ActiveRecord;
  
 /* @property integer $customerwallet_id
  * @property string $date
@@ -31,6 +32,22 @@ class Customerwallet extends \yii\db\ActiveRecord
     public static function getDb()
     {
         return Yii::$app->get('financedb');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['date', 'last_update'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['last_update'],
+                ],
+            ],
+        ];
     }
 
     /**

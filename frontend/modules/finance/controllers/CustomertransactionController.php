@@ -92,8 +92,6 @@ class CustomertransactionController extends Controller
             }
         }
         
-        
-
         if(Yii::$app->request->isAjax){
              
             return $this->renderAjax('create', [
@@ -107,14 +105,7 @@ class CustomertransactionController extends Controller
                 'model' => $model,
                 'customerwallet_id'=>$customerwallet_id
             ]);
-            
-
-
         }
-
-
-
-
     }
 
     /**
