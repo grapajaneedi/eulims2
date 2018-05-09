@@ -74,7 +74,9 @@ if(Yii::$app->user->isGuest){
             //$ItemSubMenu[]=[];
             foreach ($MenuItems as $MenuItem => $mItem){
                 $icon=substr($mItem->icon,6,strlen($mItem->icon)-6);
-                $SubmodulePermission="access-".strtolower($mItem->Package_Detail);
+                $pkgdetails1=strtolower($mItem->Package_Detail);
+                $pkgdetails2=str_replace(" ","-",$pkgdetails1);
+                $SubmodulePermission="access-".$pkgdetails2; //access-Order of Payment
                 $ItemS=[
                    'label'=>$mItem->Package_Detail,
                    'icon'=>$icon,

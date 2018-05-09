@@ -59,12 +59,12 @@ $this->registerJsFile("/js/customer/customer.js");
                     //     return Html::button('<span class="glyphicon glyphicon-plus"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-success custom_button','title' => Yii::t('app', "Add Funds for ".$model->customer->customer_name),'name' => Yii::t('app', "Add Funds for <font color='Blue'>[<b>".$model->customer->customer_name."</b>]</font>")]);
                     // },
                     'view'=>function ($url, $model) {
-                        $t = '/customer/customer/view?id='.$model->customer_id;
-                        return Html::button('<span class="fa fa-eye"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-primary customer_button','title' => Yii::t('app', "View Details for ".$model->customer_name),'name' => Yii::t('app', "View Details for  <font color='Blue'>[<b>".$model->customer_name."</b>]</font>")]);
+                        $t = '/customer/ionfo/view?id='.$model->customer_id;
+                        return Html::button('<span class="fa fa-eye"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-primary btn-modal','title' => Yii::t('app', "View Details for ".$model->customer_name),'name' => Yii::t('app', "View Details for  <font color='Blue'>[<b>".$model->customer_name."</b>]</font>")]);
                     },
                     'update'=>function ($url, $model) {
-                        $t = '/customer/customer/update?id='.$model->customer_id;
-                        return Html::button('<span class="fa fa-pencil"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-success customer_button','title' => Yii::t('app', "Update Details for ".$model->customer_name),'name' => Yii::t('app', "Update Details for  <font color='Blue'>[<b>".$model->customer_name."</b>]</font>")]);
+                        $t = '/customer/info/update?id='.$model->customer_id;
+                        return Html::button('<span class="fa fa-pencil"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Update Details for ".$model->customer_name),'name' => Yii::t('app', "Update Details for  <font color='Blue'>[<b>".$model->customer_name."</b>]</font>")]);
                     },
                     
                 ],
