@@ -11,7 +11,6 @@ use yii\helpers\Url;
 
 $this->title = 'Customers';
 $this->params['breadcrumbs'][] = $this->title;
-$this->registerJsFile("/js/customer/customer.js");
 
 ?>
 <div class="customer-index">
@@ -59,7 +58,7 @@ $this->registerJsFile("/js/customer/customer.js");
                     //     return Html::button('<span class="glyphicon glyphicon-plus"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-success custom_button','title' => Yii::t('app', "Add Funds for ".$model->customer->customer_name),'name' => Yii::t('app', "Add Funds for <font color='Blue'>[<b>".$model->customer->customer_name."</b>]</font>")]);
                     // },
                     'view'=>function ($url, $model) {
-                        $t = '/customer/ionfo/view?id='.$model->customer_id;
+                        $t = '/customer/info/view?id='.$model->customer_id;
                         return Html::button('<span class="fa fa-eye"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-primary btn-modal','title' => Yii::t('app', "View Details for ".$model->customer_name),'name' => Yii::t('app', "View Details for  <font color='Blue'>[<b>".$model->customer_name."</b>]</font>")]);
                     },
                     'update'=>function ($url, $model) {

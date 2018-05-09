@@ -81,23 +81,20 @@ class CustomertransactionController extends Controller
             //0 = credit ,1 = debit
             $model->transactiontype=0;
             $model->updated_by=Yii::$app->user->id;
-            // if($model->save()){
-            $wallet = Customerwallet::find()->where(['customerwallet_id' => $model->customerwallet_id])->one();
-            $wallet->balance = $wallet->balance + $model->amount;
-            $wallet->last_update=date('Y-m-d  h:i:s');
-            if($wallet->save()){
-                $model->balance= $wallet->balance;
-                $model->save();
-            }
-
+            // if($model->save(false)){
+                $wallet = Customerwallet::find()->where(['customerwallet_id' => $model->customerwallet_id])->one();
+                $wallet->balance = $wallet->balance + $model->amount;
+                // $wallet->last_update=date('Y-m-d  h:i:s');
+                if($wallet->save()){
+                    $model->balance= $wallet->balance;
+                    $model->save();
+                    return $this->redirect(['/finance/customerwallet']);
+                }
             // }
 
-            return $this->redirect(['/finance/customerwallet']);
         }
         
-        
-
-        if(\Yii::$app->request->isAjax){
+        if(Yii::$app->request->isAjax){
              
             return $this->renderAjax('create', [
                 'model' => $model,
@@ -110,14 +107,7 @@ class CustomertransactionController extends Controller
                 'model' => $model,
                 'customerwallet_id'=>$customerwallet_id
             ]);
-            
-
-
         }
-
-
-
-
     }
 
     /**

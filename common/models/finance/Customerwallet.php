@@ -5,6 +5,8 @@ namespace common\models\finance;
 use Yii;
 use common\models\lab\Customer;
 use yii\db\ActiveRecord;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
  
 /* @property integer $customerwallet_id
  * @property string $date
@@ -33,22 +35,22 @@ class Customerwallet extends \yii\db\ActiveRecord
     {
         return Yii::$app->get('financedb');
     }
-    
+
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
         return [
-            'timestamp' => [
-                'class' => 'yii\behaviors\TimestampBehavior',
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['date', 'last_update'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['last_update'],
-                ],
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'date',
+                'updatedAtAttribute' => 'last_update',
+                'value' => new Expression('NOW()'),
             ],
         ];
     }
+
 
     /**
      * @inheritdoc
@@ -56,7 +58,7 @@ class Customerwallet extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date', 'last_update', 'balance', 'customer_id'], 'required'],
+            [['balance', 'customer_id'], 'required'],
             [['date', 'last_update'], 'safe'],
             [['balance'], 'number'],
             [['customer_id'], 'integer'],

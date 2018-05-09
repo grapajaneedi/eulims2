@@ -14,6 +14,7 @@ use common\models\lab\sampletype;
 /* @var $form yii\widgets\ActiveForm */
 $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 ?>
+
 <div class="test-category-form" style="padding-bottom: 10px">
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
