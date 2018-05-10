@@ -18,19 +18,37 @@ use yii\helpers\Html;
 //$Session=Yii::$app->session;
 //$mMessage=$Session->get('mMessage');
 ?>
+<style type="text/css">
+    @font-face {
+        font-family: 'Audiowide';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Audiowide Regular'), local('Audiowide-Regular'), url('/font/audiowide_latin_ext.woff2') format('woff2');
+
+    }
+    /* latin */
+    @font-face {
+        font-family: 'Audiowide';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Audiowide Regular'), local('Audiowide-Regular'), url('/font./audiowide_latin.woff2') format('woff2');
+
+    }
+</style>
 
 <div class="row" style=" background: linear-gradient(to bottom right, #3c8dbc, #b1d1e4);" >
     <div class="jumbotron d-flex align-items-center" style="border:10px dashed #3c8dbc; margin:5%;background-color:lightgray" >
         
         <i class="fa fa-warning " style="font-size: 150px;color: #3c8dbc; "></i>
-        <h2>Website under maintenance</h2>
+        <h2 style="font-family: 'Audiowide';color: #3c8dbc;">Website under maintenance</h2>
         <div>
-            <p>This site is undergoing system upgrade to enhanced the system.</p>
-            <div class="row">
+            <p style="font-family: 'Audiowide';color: #3c8dbc;">This site is undergoing system upgrade to enhanced the system.</p>
+           <!-- <div class="row">
                 <div class="col-sm-4">.col-sm-4x</div>
                 <div class="col-sm-4">.col-sm-4</div>
                 <div class="col-sm-4">.col-sm-4</div>
             </div> 
+           -->
         
         </div>
     </div>

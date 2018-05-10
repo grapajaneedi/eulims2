@@ -50,9 +50,13 @@ if (Yii::$app->maintenanceMode->IsEnabled){
                             'pluginEvents' => [
                                 "switchChange.bootstrapSwitch" => "
                     function() { 
+                    
                         $.ajax('/settings/" . $setEnable . "',{
                             success: function (data, status, xhr) {// success callback function
                             document.location=location.href;
+                             e.preventDefault();
+                             
+                         
                         }
                         });
                     }  

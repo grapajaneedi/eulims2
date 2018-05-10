@@ -10,11 +10,10 @@ body {
 .box-shadow{
     box-shadow: 5px 5px;
 }
-.modal-header{
-    background-color: #3c8dbc
-}
 .modal-header>h4{
-    color: white
+    color: white;
+    position: absolute;
+    top: 8px
 }
 .wrap {
     min-height: 100%;
@@ -24,8 +23,9 @@ body {
 }
 .modal-header {
     border-bottom-color: #f4f4f4;
-    padding-bottom: 0px!important;
+    padding-bottom: 8px!important;
     padding-top: 15px!important;
+    background-color: #3c8dbc;
 }
 .wrap > .container {
     padding: 70px 15px 20px;

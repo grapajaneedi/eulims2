@@ -7,12 +7,7 @@
  */
 jQuery(document).ready(function ($) {
     $('.btn-modal').click(function () {
-        // alert(this.value);
-        //LoadModal(this.name, this.value);
-        ShowModal(this.name, this.value);
-    });
-    $('.modal-dialog').draggable({
-        handle: ".modal-header"
+        ShowModal(this.name, this.value,true,'600px');
     });
     // --- Delete action (bootbox) ---
     yii.confirm = function (message, ok, cancel) {
@@ -90,43 +85,34 @@ function ConfirmBox(Title, Message){
         }
     );
 }
-function ShowModal(header,url,closebutton){
+function ShowModal(header,url,closebutton,width){
     if(closebutton==undefined){
         closebutton=true;
     }
+    if(width==undefined){
+       width='600px'; 
+    }
     $(".close").prop('disabled',!closebutton);
+    $('#modalContent').html('');
     var dialog=$("#modal").modal({
         backdrop: false,
-        show: true
+        show: true,
+        draggable: true
     });
     dialog.init(function(){
         setTimeout(function(){
-            dialog.find('#modalHeader').html(header);
+            dialog.find('.modal-title').html(header);
+            dialog.find('.modal-dialog ').css({
+               width: width
+            });
             dialog.find('#modalContent').load(url);
         }, 5);
     });
 }
 
-function LoadModal(header,url,closebutton){
-    ShowModal(header,url,closebutton);
-    //if(closebutton==undefined){
-   //     closebutton=true;
-   // }
-    /*
-    var content='<div id="boot-box-content" style="padding-bottom: 30px"><i class="fa fa-spin fa-spinner"></i> Loading...</div>';
-    var dialog = bootbox.dialog({
-        title: header,
-        message: content,
-        closeButton: closebutton
-    });
-    
-    dialog.init(function(){
-        setTimeout(function(){
-            dialog.find('#boot-box-content').load(url);
-        }, 10);
-    });
-    */
-  }
+function LoadModal(header,url,closebutton,width){
+    ShowModal(header,url,closebutton, width);
+}
 function printPartOfPage(elementId) {
     var printContent = document.getElementById(elementId);
     var windowUrl = 'about:blank';

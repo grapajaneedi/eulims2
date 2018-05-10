@@ -183,6 +183,22 @@ class SiteController extends Controller
             ]);
         }
     }
+    
+     public function actionUserdashboard()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->goBack();
+        } else {
+            return $this->render('userdashboard', [
+                'model' => $model,
+            ]);
+        }
+    }
 
     /**
      * Logs out the current user.
@@ -255,9 +271,20 @@ class SiteController extends Controller
                 return $this->runAction('success', ['model' => $user]);
             }
         }
-        return $this->render('signup', [
+        if (Yii::$app->request->isAjax)
+        {
+            return $this->renderAjax('signup', [
             'model' => $model,
         ]);
+        }
+        else
+        {
+            return $this->render('signup', [
+            'model' => $model,
+        ]);
+        }
+        
+        
     }
     public function actionSuccess($model){
         return $this->render('success', [
@@ -305,10 +332,20 @@ class SiteController extends Controller
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
             }
         }
-
+        
+        if (Yii::$app->request->isAjax)
+        {
+            return $this->renderAjax('requestPasswordResetToken', [
+            'model' => $model,
+        ]);
+     
+        }
+        else
+        {
         return $this->render('requestPasswordResetToken', [
             'model' => $model,
         ]);
+        }
     }
 
     /**

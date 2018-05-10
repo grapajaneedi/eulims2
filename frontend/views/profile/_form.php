@@ -34,11 +34,12 @@ $this->registerCssFile("/css/profile.css");
 ?>
 
 <div class="profile-form">
-    <div class="row" style="margin-left: 30px">
+    <div class="row justify-content-around" style="margin-left: 30px">
             <?php $form = ActiveForm::begin([
                 'options'=>['enctype'=>'multipart/form-data'] // important
             ]); ?>
-            <div class="row">
+            <div class="row ">
+                
                 <span style="float:left; width: 250px;margin-right: 5px">
                 <?php echo $form->field($model, 'image_url')->hiddenInput(['value' => $model->image_url])->label(false) ?>
                 <?php echo $form->field($model, 'avatar')->hiddenInput(['value' => $model->avatar])->label(false) ?>
@@ -77,6 +78,8 @@ $this->registerCssFile("/css/profile.css");
                 ?>
                    
                 </span>
+                
+                
             </div><!-- end of Row -->
             <div class="row">
             <span style="float:left; width: 250px;margin-right: 5px">

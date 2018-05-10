@@ -7,20 +7,20 @@ use Yii;
 /**
  * This is the model class for table "tbl_customertransaction".
  *
- * @property integer $customertransaction_id
+ * @property int $customertransaction_id
+ * @property int $updated_by
  * @property string $date
- * @property integer $transactiontype
+ * @property int $transactiontype
  * @property string $amount
  * @property string $balance
- * @property integer $customerwallet_id
- * @property integer $updated_by
+ * @property int $customerwallet_id
  *
  * @property Customerwallet $customerwallet
  */
 class Customertransaction extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -36,32 +36,32 @@ class Customertransaction extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['date', 'transactiontype', 'amount', 'balance', 'customerwallet_id', 'updated_by'], 'required'],
+            [['updated_by', 'date', 'transactiontype', 'amount', 'balance', 'customerwallet_id'], 'required'],
+            [['updated_by', 'transactiontype', 'customerwallet_id'], 'integer'],
             [['date'], 'safe'],
-            [['transactiontype', 'customerwallet_id', 'updated_by'], 'integer'],
             [['amount', 'balance'], 'number'],
             [['customerwallet_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customerwallet::className(), 'targetAttribute' => ['customerwallet_id' => 'customerwallet_id']],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
             'customertransaction_id' => 'Customertransaction ID',
+            'updated_by' => 'Updated By',
             'date' => 'Date',
-            'transactiontype' => 'Transaction Type',
+            'transactiontype' => 'Transactiontype',
             'amount' => 'Amount',
             'balance' => 'Balance',
             'customerwallet_id' => 'Customerwallet ID',
-            'updated_by' => 'Updated By',
         ];
     }
 
