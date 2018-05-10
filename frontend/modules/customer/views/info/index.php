@@ -7,7 +7,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\CustomerSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
+// $this->registerJsFile('https://maps.googleapis.com/maps/api/js?key=AIzaSyBkbMSbpiE90ee_Jvcrgbb12VRXZ9tlzIc&libraries=places');
 $this->title = 'Customers';
 $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile("/js/customer/customer.js");

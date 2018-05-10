@@ -2,7 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\components\GooglePlacesAutoComplete;
+use dosamigos\google\places\Search;
 
+$this->registerJsFile("/js/customer/googleplace.js");
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Customer */
 /* @var $form yii\widgets\ActiveForm */
@@ -60,6 +63,13 @@ use yii\widgets\ActiveForm;
         </div>
         <div class="col-md-6">
         <p>Select Location Here</p>
+        <?php
+            echo GooglePlacesAutoComplete::widget([
+                'name' => 'place',
+                'value' => 'Zamboanga',
+                'options'=>['class'=>'form-control']
+            ]);
+        ?>
         </div>
     </div>
 
