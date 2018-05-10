@@ -67,8 +67,6 @@ class InfoController extends Controller
     {
         $model = new Customer();
 
-        
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->customer_id]);
         } else {
@@ -78,10 +76,12 @@ class InfoController extends Controller
                     'model' => $model,
                 ]);
             }
-            
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            else{
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+        
         }
     }
 
@@ -94,16 +94,18 @@ class InfoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if(Yii::$app->request->isAjax){
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-               return $this->redirect(['view', 'id' => $model->customer_id]);
-            }   else {
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+           return $this->redirect(['view', 'id' => $model->customer_id]);
+        }
+        else {
+            if(Yii::$app->request->isAjax){
                 return $this->renderAjax('update', [
                     'model' => $model,
                 ]);
             }
         }
+        
     }
 
     /**
