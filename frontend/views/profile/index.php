@@ -85,14 +85,11 @@ $gridColumn = [
         'template' => $Buttontemplate,
         'buttons'=>[
               'view'=>function ($url, $model) {
-                  return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/profile/'.$model->profile_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Test Category <font color='Blue'></font>")]);
+                  return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/profile/'.$model->profile_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View <font color='Blue'>Profile</font>")]);
               },
               'update'=>function ($url, $model) {
-                  return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/profile/update/'.$model->profile_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Test Category<font color='Blue'></font>")]);
+                  return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/profile/update/'.$model->profile_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update <font color='Blue'>Profile</font>")]);
               }
-             // 'delete'=>function ($url, $model) {
-             //   return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>'/profile/delete/'.$model->profile_id, 'onclick'=>'ConfirmBox(this.title,this.value)', 'class' => 'btn btn-danger']);
-            //},
           ],
     ],
 ];

@@ -4,7 +4,6 @@ use yii\helpers\Html;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-
 if (Yii::$app->controller->action->id === 'login') { 
 /**
  * Do not use this code in your template. Remove it. 
@@ -30,6 +29,11 @@ if (Yii::$app->controller->action->id === 'login') {
         <title><?= Html::encode($this->title) ?></title>
         <link rel="shortcut icon" href="<?php echo Yii::$app->request->baseUrl; ?>/favicon.ico" type="image/x-icon" />
         <?php $this->head() ?>
+        <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBkbMSbpiE90ee_Jvcrgbb12VRXZ9tlzIc&amp;libraries=places&amp;language=en-US"></script>
+        <script> 
+         var autocomplete;
+        
+        </script>
     </head>
     <body class="hold-transition skin-blue sidebar-collapse">
     <?php $this->beginBody() ?>

@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\components\GooglePlacesAutoComplete;
 use dosamigos\google\places\Search;
-
-$this->registerJsFile("/js/customer/googleplace.js");
-/* @var $this yii\web\View */
 /* @var $model common\models\lab\Customer */
 /* @var $form yii\widgets\ActiveForm */
+//$js="//maps.googleapis.com/maps/api/js?key=AIzaSyBkbMSbpiE90ee_Jvcrgbb12VRXZ9tlzIc&amp;libraries=places&amp;language=en-US";
+//$this->registerJsFile($js); 
+$this->registerJsFile("/js/customer/googleplace.js"); 
 ?>
 
 <div class="customer-form">
@@ -91,5 +91,4 @@ $this->registerJsFile("/js/customer/googleplace.js");
     </div>
 
     <?php ActiveForm::end(); ?>
-
 </div>
