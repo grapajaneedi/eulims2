@@ -38,6 +38,7 @@ $gridColumn = [
     [
         'attribute' => 'user_id',
         'label' => 'User',
+         
         'value' => function($model) {
             return $model->user->username;
         },
@@ -99,7 +100,7 @@ $gridColumn = [
 <div class="profile-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <p>
-        <button type="button" onclick="LoadModal('Create Profile','/profile/create')" class="btn btn-success"><i class="fa fa-save"> Create Profile</i></button>
+        <button type="button" onclick="LoadModal('Create Profile','/profile/create')" class="btn btn-success"><i class="fa fa-save"></i> Create Profile</button>
     </p>
     <div class="table-responsive">
         <?=
