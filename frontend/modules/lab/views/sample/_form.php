@@ -6,6 +6,9 @@ use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
 use kartik\widgets\DatePicker;
 use yii\helpers\Url;
+use yii\web\JsExpression;
+use kartik\widgets\TypeaheadBasic;
+use kartik\widgets\Typeahead;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Sample */
@@ -79,13 +82,37 @@ if(count($sampletype) > 0){
             echo "";
         }
     ?>
+    <?php
+        echo '<label class="control-label">Sample Template</label>';
+        /*echo TypeaheadBasic::widget([
+            'name' => 'saved_templates',
+            'id' => 'saved_templates',
+            'data' =>  $sampletemplate,
+            'dataset' => ['limit' => 10],
+            'scrollable' => true,
+            'options' => ['placeholder' => 'Search sample template...'],
+            'pluginOptions' => ['highlight'=>true],
+        ]);*/
+    ?>
+    <?php
+        echo Select2::widget([
+        'name' => 'saved_templates',
+        //'value' => '',
+        'data' => $sampletemplate,
+        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select sample template ...'],
+        'options' => ['id' => 'saved_templates']
+    ]);
+    ?>
 
+    <br />
     <?= $form->field($model, 'samplename')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
+    <?= Html::checkbox('sample_template', false, ['label' => '&nbsp;Save Sample Template','value'=>"1"]); ?>
+    <br /><br />
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -151,3 +178,37 @@ $('.input-number').change(function() {
     
 });
 </script>
+<style type="text/css">
+div.required label:after {
+    content: " *";
+    color: red;
+}
+div.required label{
+     color: #333333;
+}
+</style>
+<?php
+$this->registerJs("$('#saved_templates').on('change',function(){
+    var id = $('#saved_templates').val();
+        $.ajax({
+            //url: '".Url::toRoute("sample/getlisttemplate?template_id='+id+'")."',
+            url: '".Url::toRoute("sample/getlisttemplate")."',
+            dataType: 'json',
+            method: 'GET',
+            //data: {id: $(this).val()},
+            data: {template_id: id},
+            success: function (data, textStatus, jqXHR) {
+                $('#sample-samplename').val(data.name);
+                $('#sample-description').val(data.description);
+            },
+            beforeSend: function (xhr) {
+                alert('Loading...');
+                //alert('<div style=\'text-align:center;\'><img src=\'/images/img-loader64.gif\'></div>');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('An error occured!');
+                alert('Error in ajax request');
+            }
+        });
+});");
+?>
