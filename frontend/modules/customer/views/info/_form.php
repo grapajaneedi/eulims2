@@ -2,7 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\components\GooglePlacesAutoComplete;
+use dosamigos\google\places\Search;
 
+$this->registerJsFile("/js/customer/googleplace.js");
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Customer */
 /* @var $form yii\widgets\ActiveForm */
@@ -33,24 +36,6 @@ use yii\widgets\ActiveForm;
 
     <div class="row">
         <div class="col-md-6">
-        <?= $form->field($model, 'municipalitycity_id')->textInput() ?>
-        </div>
-        <div class="col-md-6">
-        <?= $form->field($model, 'barangay_id')->textInput() ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-        <?= $form->field($model, 'district')->textInput() ?>
-        </div>
-        <div class="col-md-6">
-        <?= $form->field($model, 'address')->textInput(['maxlength' => true]) ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
         <?= $form->field($model, 'tel')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-md-6">
@@ -67,6 +52,29 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
 
+
+    <div class="row">
+        <div class="col-md-6">
+         <?= $form->field($model, 'address')->textInput(['maxlength' => true,'readonly'=>'true']) ?>
+
+        <?= $form->field($model, 'latitude')->textInput(['readonly'=>'true']) ?>
+
+        <?= $form->field($model, 'longitude')->textInput(['readonly'=>'true']) ?>
+        </div>
+        <div class="col-md-6">
+        <p>Select Location Here</p>
+        <?php
+            echo GooglePlacesAutoComplete::widget([
+                'name' => 'place',
+                'value' => 'Zamboanga',
+                'options'=>['class'=>'form-control']
+            ]);
+        ?>
+        </div>
+    </div>
+
+   
+
     <div class="row">
         <div class="col-md-6">
         <?= $form->field($model, 'business_nature_id')->textInput() ?>
@@ -76,20 +84,10 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
+    <?= $form->field($model, 'created_at')->textInput() ?>
 
-        </div>
-        <div class="col-md-6">
-
-        </div>
-    </div>    
-
-    <div class="form-group pull-right">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <?php if(Yii::$app->request->isAjax){ ?>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <?php } ?>
+    <div class="form-group">
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
