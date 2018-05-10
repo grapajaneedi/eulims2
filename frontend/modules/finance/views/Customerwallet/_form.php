@@ -14,7 +14,7 @@ use kartik\select2\Select2;
 
 <div class="customerwallet-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php  $form = ActiveForm::begin(); ?>
 
     <?php 
 	// Normal select with ActiveForm & model
