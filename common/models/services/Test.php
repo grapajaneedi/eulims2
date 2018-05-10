@@ -69,7 +69,7 @@ class Test extends \yii\db\ActiveRecord
         return [
             'test_id' => 'Test ID',
             'agency_id' => 'Agency ID',
-            'testname' => 'Testname',
+            'testname' => 'Test Name',
             'method' => 'Method',
             'references' => 'References',
             'fee' => 'Fee',
