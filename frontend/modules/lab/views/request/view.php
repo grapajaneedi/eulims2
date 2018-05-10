@@ -16,17 +16,20 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php
-Modal::begin([
-    'headerOptions' => ['id' => 'modalSampleheader'],
-    'id' => 'sampleModal',
+//Modal::begin([
+    //'headerOptions' => ['id' => 'modalSampleheader'],
     //'size' => 'modal-sm',
-    //'tabindex' => false
+    //'tabindex' => false,
     //keeps from closing modal with esc key or by clicking out of the modal.
     // user must click cancel or X to close
-    'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
-]);
-echo "<div id='modalContent'><div style='text-align:center;'><img src='/images/img-loader64.gif'></div></div>";
-Modal::end();
+    //'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
+   // 'options' => [
+ //       'id' => 'sampleModal',
+  //      'tabindex' => false // important for Select2 to work properly
+  // ],
+//]);
+//echo "<div id='modalContent'><div style='text-align:center;'><img src='/images/img-loader64.gif'></div></div>";
+//Modal::end();
 ?>
 
 <div class="request-view">
@@ -265,7 +268,7 @@ Modal::end();
                     'heading'=>'<h3 class="panel-title">Samples</h3>',
                     'type'=>'primary',
                     //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['/lab/sample/create','request_id'=>$model->request_id], ['class' => 'btn btn-success']),
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Sample', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Sample', 'class' => 'btn btn-success btn-modal','id' => 'modalBtn']),
                     'after'=>'',
                     'footer'=>false,
                 ],
@@ -331,11 +334,10 @@ Modal::end();
     </div>
 </div>
 <script type="text/javascript">
-//$.fn.modal.Constructor.prototype.enforceFocus = $.noop;
-    $("#modalBtn").click(function(){
-        $("#modalSampleheader").html($(this).attr('title'));
-        //$("#modal").modal('show')
-        $("#sampleModal").modal('show')
+   $("#modalBtn").click(function(){
+        $(".modal-title").html($(this).attr('title'));
+        $("#modal").modal('show')
+        //$("#sampleModal").modal('show')
             .find('#modalContent')
             .load($(this).attr('value'));
     });

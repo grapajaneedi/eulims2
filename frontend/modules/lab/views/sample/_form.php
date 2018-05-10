@@ -47,6 +47,7 @@ if(count($sampletype) > 0){
     <?= $form->field($model,'test_category_id')->widget(Select2::classname(),[
                 'data' => $testcategory,
                 //'theme' => Select2::THEME_KRAJEE,
+                'theme' => Select2::THEME_BOOTSTRAP,
                 'options' => ['id'=>'sample-test_category_id'],
                 'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Testcategory'],
         ])
@@ -99,6 +100,7 @@ if(count($sampletype) > 0){
         'name' => 'saved_templates',
         //'value' => '',
         'data' => $sampletemplate,
+        'theme' => Select2::THEME_BOOTSTRAP,
         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select sample template ...'],
         'options' => ['id' => 'saved_templates']
     ]);
@@ -109,7 +111,7 @@ if(count($sampletype) > 0){
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
-    <?= Html::checkbox('sample_template', false, ['label' => '&nbsp;Save Sample Template','value'=>"1"]); ?>
+    <?= Html::checkbox('sample_template', false, ['label' => '&nbsp;Save as template','value'=>"1"]); ?>
     <br /><br />
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -179,10 +181,6 @@ $('.input-number').change(function() {
 });
 </script>
 <style type="text/css">
-div.required label:after {
-    content: " *";
-    color: red;
-}
 div.required label{
      color: #333333;
 }

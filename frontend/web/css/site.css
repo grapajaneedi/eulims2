@@ -136,8 +136,9 @@ a.desc:after {
     outline: none;
 }
 
-label.required{
-      color:red;
+div.required label:after {
+    content: "*";
+    color: red;
 }
 
 fieldset
