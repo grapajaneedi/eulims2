@@ -89,7 +89,7 @@ function ConfirmBox(Title, Message){
         }
     );
 }
-function ShowModal(header,url,closebutton){
+function ShowModal(header,url,closebutton,width){
     if(closebutton==undefined){
         closebutton=true;
     }
@@ -113,26 +113,9 @@ function ShowModal(header,url,closebutton){
     });
 }
 
-function LoadModal(header,url,closebutton){
-    ShowModal(header,url,closebutton);
-    //if(closebutton==undefined){
-   //     closebutton=true;
-   // }
-    /*
-    var content='<div id="boot-box-content" style="padding-bottom: 30px"><i class="fa fa-spin fa-spinner"></i> Loading...</div>';
-    var dialog = bootbox.dialog({
-        title: header,
-        message: content,
-        closeButton: closebutton
-    });
-    
-    dialog.init(function(){
-        setTimeout(function(){
-            dialog.find('#boot-box-content').load(url);
-        }, 10);
-    });
-    */
-  }
+function LoadModal(header,url,closebutton,width){
+    ShowModal(header,url,closebutton, width);
+}
 function printPartOfPage(elementId) {
     var printContent = document.getElementById(elementId);
     var windowUrl = 'about:blank';

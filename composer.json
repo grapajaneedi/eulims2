@@ -110,7 +110,7 @@
         "miloschuman/yii2-highcharts-widget": "^6.0",
         "kartik-v/yii2-popover-x": "*",
         "kartik-v/yii2-datepicker": "@dev",
-        "2amigos/yii2-google-maps-library" : "*"
+        "2amigos/yii2-google-maps-library": "*"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "^2.0"
