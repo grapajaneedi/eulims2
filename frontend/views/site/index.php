@@ -6,6 +6,7 @@ use edofre\fullcalendar\Fullcalendar;
 
 use miloschuman\highcharts\Highcharts;
 use miloschuman\highcharts\HighchartsAsset;
+use common\models\system\LoginForm;
 
 
 /* @var $this yii\web\View */
@@ -659,12 +660,12 @@ function updateRecord(obj) {
         </div>
 
 <?php } else { ?>
-        <div class="body-content">
-            <div class="row-fluid">
-                <div class="jumbotron-carousel">
-                    <h3>Enhaced ULIMS version 2.0</h3>
-                </div>
-            </div>
-        </div>
+         <?php
+            $model = new LoginForm();
+            echo $this->render('..\admin-lte\site\userdashboard', [
+                'model' => $model,
+            ]);
+            
+          ?>
 <?php } ?>
 </div>
