@@ -7,8 +7,7 @@
  */
 jQuery(document).ready(function ($) {
     $('.btn-modal').click(function () {
-        // alert(this.value);
-        LoadModal(this.name, this.value);
+        ShowModal(this.name, this.value,true,'600px');
     });
     $("#modal").draggable({
         handle: ".modal-header"
@@ -94,14 +93,21 @@ function ShowModal(header,url,closebutton){
     if(closebutton==undefined){
         closebutton=true;
     }
+    if(width==undefined){
+       width='600px'; 
+    }
     $(".close").prop('disabled',!closebutton);
     var dialog=$("#modal").modal({
         backdrop: false,
-        show: true
+        show: true,
+        'max-width': '800px'
     });
     dialog.init(function(){
         setTimeout(function(){
             dialog.find('#modalHeader').html(header);
+            dialog.find('.modal-dialog ').css({
+               width: width
+            });
             dialog.find('#modalContent').load(url);
         }, 5);
     });
