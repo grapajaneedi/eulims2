@@ -268,7 +268,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'heading'=>'<h3 class="panel-title">Samples</h3>',
                     'type'=>'primary',
                     //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['/lab/sample/create','request_id'=>$model->request_id], ['class' => 'btn btn-success']),
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Sample', 'class' => 'btn btn-success btn-modal','id' => 'modalBtn']),
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Sample', 'class' => 'btn btn-success','id' => 'modalBtn']),
                     'after'=>'',
                     'footer'=>false,
                 ],
