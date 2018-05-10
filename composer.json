@@ -12,7 +12,7 @@
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/yiisoft/yii2"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0.6",
@@ -110,7 +110,7 @@
         "miloschuman/yii2-highcharts-widget": "^6.0",
         "kartik-v/yii2-popover-x": "*",
         "kartik-v/yii2-datepicker": "@dev",
-        "2amigos/yii2-google-maps-library": "*"
+        "kalyabin/yii2-select-google-map-location": "*"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "^2.0"

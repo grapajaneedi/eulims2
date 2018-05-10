@@ -5,23 +5,22 @@ namespace common\models\finance;
 use Yii;
 
 /**
- * This is the model class for table "tbl_collectiontype".
+ * This is the model class for table "tbl_paymentmode".
  *
- * @property int $collectiontype_id
- * @property string $natureofcollection
- * @property int $status
+ * @property int $payment_mode_id
+ * @property string $payment_mode
  *
  * @property Orderofpayment[] $orderofpayments
  * @property Receipt[] $receipts
  */
-class Collectiontype extends \yii\db\ActiveRecord
+class Paymentmode extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'tbl_collectiontype';
+        return 'tbl_paymentmode';
     }
 
     /**
@@ -38,9 +37,8 @@ class Collectiontype extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status'], 'integer'],
-            [['natureofcollection'], 'string', 'max' => 50],
-            [['natureofcollection'], 'unique'],
+            [['payment_mode'], 'required'],
+            [['payment_mode'], 'string', 'max' => 50],
         ];
     }
 
@@ -50,9 +48,8 @@ class Collectiontype extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'collectiontype_id' => 'Collectiontype ID',
-            'natureofcollection' => 'Natureofcollection',
-            'status' => 'Status',
+            'payment_mode_id' => 'Payment Mode ID',
+            'payment_mode' => 'Payment Mode',
         ];
     }
 
@@ -61,7 +58,7 @@ class Collectiontype extends \yii\db\ActiveRecord
      */
     public function getOrderofpayments()
     {
-        return $this->hasMany(Orderofpayment::className(), ['collectiontype_id' => 'collectiontype_id']);
+        return $this->hasMany(Orderofpayment::className(), ['payment_mode_id' => 'payment_mode_id']);
     }
 
     /**
@@ -69,6 +66,6 @@ class Collectiontype extends \yii\db\ActiveRecord
      */
     public function getReceipts()
     {
-        return $this->hasMany(Receipt::className(), ['collectiontype_id' => 'collectiontype_id']);
+        return $this->hasMany(Receipt::className(), ['payment_mode_id' => 'payment_mode_id']);
     }
 }
