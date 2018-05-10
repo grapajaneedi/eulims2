@@ -34,7 +34,7 @@ $fieldOptions2 = [
         font-family: 'Audiowide';
         font-style: normal;
         font-weight: 400;
-        src: local('Audiowide Regular'), local('Audiowide-Regular'), url('/font./audiowide_latin.woff2') format('woff2');
+        src: local('Audiowide Regular'), local('Audiowide-Regular'), url('/font/audiowide_latin.woff2') format('woff2');
 
     }
 
