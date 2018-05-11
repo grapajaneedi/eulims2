@@ -27,7 +27,7 @@ $Host= "//".Yii::$app->getRequest()->serverName;
     ]);
     echo "<div>";
     //echo "<div id='modalContent' style='margin-left: 5px; padding-bottom:10px;'><img src='/images/ajax-loader.gif' alt=''/></div>";
-	echo "<div id='modalContent' style='margin-left: 5px;'><div style='text-align:center;'><img src='/images/img-loader64.gif' alt=''></div></div>";
+    echo "<div id='modalContent' style='margin-left: 5px;'><div style='text-align:center;'><img src='/images/img-loader64.gif' alt=''></div></div>";
     echo "<div>&nbsp;</div>";
     echo "</div>";
     Modal::end();
