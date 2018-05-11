@@ -10,7 +10,7 @@ use common\models\lab\Testcategory;
 use common\models\lab\Request;
 use common\models\lab\Lab;
 use common\models\lab\Samplecode;
-use common\models\lab\Sampletemplate;
+use common\models\lab\SampleName;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -136,6 +136,11 @@ class SampleController extends Controller
                 $quantity = (int) $_POST['qnty'];
             } else {
                 $quantity = 1;
+            }
+
+            if(isset($_POST['sample_template']))
+            {
+                $this->saveSampleTemplate($_POST['Sample']['samplename'],$_POST['Sample']['description']);
             }
 
             if($quantity>1)
@@ -458,9 +463,9 @@ class SampleController extends Controller
 
     protected function listSampletemplate()
     {
-        $sampleTemplate = ArrayHelper::map(Sampletemplate::find()->all(), 'sampletemplate_id', 
+        $sampleTemplate = ArrayHelper::map(SampleName::find()->all(), 'sample_name_id', 
             function($sampleTemplate, $defaultValue) {
-                return $sampleTemplate->name;
+                return $sampleTemplate->sample_name;
         });
 
         return $sampleTemplate;
@@ -469,9 +474,9 @@ class SampleController extends Controller
     public function actionGetlisttemplate() {
         if(isset($_GET['template_id'])){
             $id = (int) $_GET['template_id'];
-            $modelSampletemplate =  Sampletemplate::findOne(['sampletemplate_id'=>$id]);
+            $modelSampletemplate =  SampleName::findOne(['sample_name_id'=>$id]);
             if(count($modelSampletemplate)>0){
-                $sampleName = $modelSampletemplate->name;
+                $sampleName = $modelSampletemplate->sample_name;
                 $sampleDescription = $modelSampletemplate->description;
             } else {
                 $sampleName = "";
@@ -487,24 +492,30 @@ class SampleController extends Controller
         ]);
     }
 
-    protected function saveSampleTemplate()
+    protected function saveSampleTemplate($sampleName,$description)
     {
-        
+        $modelSampletemplate = new SampleName();
+
+        $modelSampletemplate->sample_name = $sampleName;
+        $modelSampletemplate->description = $description;
+        $modelSampletemplate->save();
+
+        return $modelSampletemplate;
     }
 
     public function actionListtemplate($q = null)
     {
         $query = new Query;
         
-        $query->select('name')
-            ->from('eulims_lab.tbl_sampletemplate')
-            ->where('name LIKE "%' . $q .'%"')
-            ->orderBy('name');
+        $query->select('sample_name')
+            ->from('eulims_lab.tbl_sample_name')
+            ->where('sample_name LIKE "%' . $q .'%"')
+            ->orderBy('sample_name');
         $command = $query->createCommand();
         $data = $command->queryAll();
         $out = [];
         foreach ($data as $d) {
-            $out[] = ['value' => $d['name']];
+            $out[] = ['value' => $d['sample_name']];
         }
         echo Json::encode($out);
     }

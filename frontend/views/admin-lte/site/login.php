@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
@@ -22,7 +23,22 @@ $this->registerJsFile('/js/bootbox.min.js');
 $this->registerJsFile('/js/main.js');
 
 ?>
-
+<?php
+    Modal::begin([
+    'options' => [
+        'id' => 'modal',
+        'tabindex' => false, // important for Select2 to work properly
+        //'class' => 'modal draggable fade',
+    ],
+    'header' => '<h4 class="modal-title">New Profile</h4>'
+    ]);
+    echo "<div>";
+    //echo "<div id='modalContent' style='margin-left: 5px; padding-bottom:10px;'><img src='/images/ajax-loader.gif' alt=''/></div>";
+    echo "<div id='modalContent' style='margin-left: 5px;'><div style='text-align:center;'><img src='/images/img-loader64.gif' alt=''></div></div>";
+    echo "<div>&nbsp;</div>";
+    echo "</div>";
+    Modal::end();
+?>
 <link href="/css/site.css" rel="stylesheet">
 <style>
     /* latin-ext */
@@ -66,7 +82,6 @@ $this->registerJsFile('/js/main.js');
 <div class="body-content" style="margin:10%;background: linear-gradient(110deg,  #b1d1e4 50%,#3c8dbc 50%);"  >
     <div >
         <div class="d-flex align-items-center" >
-
             <div>
                 <div class="row">
 
@@ -91,9 +106,6 @@ $this->registerJsFile('/js/main.js');
                                     <br><br>
                                 </div>
                             </div>
-
-
-
                         </div>
                     </div>
 
@@ -136,8 +148,8 @@ $this->registerJsFile('/js/main.js');
                                 <!--<a href="/site/requestpasswordreset">I forgot my password</a><br>
                                 <a href="/site/signup">SignUp</a> -->
                                 
-                                 <a href="#" onclick="LoadModal('Reset Password','/site/requestpasswordreset')">I forgot my password</a><br>
-                                <a href="#" onclick="LoadModal('Sign Up','/site/signup')">Sign Up</a>
+                                 <a href="#" onclick="ShowModal('Reset Password','/site/requestpasswordreset')">I forgot my password</a><br>
+                                <a href="#" onclick="ShowModal('Sign Up','/site/signup')">Sign Up</a>
                             </div>
                             <!-- /.login-box-body -->
                         </div><!-- /.login-box -->

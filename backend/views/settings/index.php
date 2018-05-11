@@ -2,6 +2,7 @@
 /* @var $this yii\web\View */
 use yii\web\View;
 use kartik\switchinput\SwitchInput;
+use yii\widgets\Pjax;
 
 $this->title = 'System Settings';
 $this->params['breadcrumbs'][] = $this->title;
@@ -27,6 +28,7 @@ if (Yii::$app->maintenanceMode->IsEnabled){
 }
 
 ?>
+<?php Pjax::begin() ?>
 <div class="content">
     <?php if(Yii::$app->user->can('access-settings')){ ?>
     <div class="panel<?= $PanelClass ?>">
@@ -53,7 +55,8 @@ if (Yii::$app->maintenanceMode->IsEnabled){
                     
                         $.ajax('/settings/" . $setEnable . "',{
                             success: function (data, status, xhr) {// success callback function
-                            document.location=location.href;
+                            //document.location=location.href;
+                            location.reload();
                              e.preventDefault();
                              
                          
@@ -71,3 +74,4 @@ if (Yii::$app->maintenanceMode->IsEnabled){
     </div>
     <?php } ?>
 </div>
+<?php Pjax::end() ?>

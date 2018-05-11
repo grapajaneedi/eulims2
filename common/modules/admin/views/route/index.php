@@ -4,6 +4,7 @@ use common\modules\admin\AnimateAsset;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\web\YiiAsset;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $routes [] */
@@ -19,6 +20,7 @@ $opts = Json::htmlEncode([
 $this->registerJs("var _opts = {$opts};");
 $this->registerJs($this->render('_script.js'));
 $animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></i>';
+Pjax::begin();
 ?>
 <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => 'route']); ?>
 <div class="panel panel-default col-xs-12">
@@ -82,3 +84,4 @@ $animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate
         </div>
     </div>
 </div>
+<?php                Pjax::end() ?>

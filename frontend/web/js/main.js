@@ -86,10 +86,10 @@ function ConfirmBox(Title, Message){
     );
 }
 function ShowModal(header,url,closebutton,width){
-    if(closebutton==undefined){
+    if(closebutton===undefined){
         closebutton=true;
     }
-    if(width==undefined){
+    if(width===undefined){
        width='600px'; 
     }
     $(".close").prop('disabled',!closebutton);

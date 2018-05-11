@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Url;
+use yii\widgets\Pjax;
 /* 
  * Project Name: eulims * 
  * Copyright(C)2017 Department of Science & Technology -IX * 
@@ -74,6 +75,7 @@ switch($button){
         break;
 }
 ?>
+<!-- 
 <div class="row div-hr" style="padding-left: 1px">
     <div class="col-lg-12">
         <?php if(Yii::$app->user->can('access-user')){ ?>
@@ -100,3 +102,4 @@ switch($button){
     </div>
     <hr style="padding-bottom: 0px">
 </div>
+!-->

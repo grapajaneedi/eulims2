@@ -36,7 +36,11 @@ class RouteController extends Controller
     public function actionIndex()
     {
         $model = new Route();
-        return $this->render('index', ['routes' => $model->getRoutes()]);
+        IF(Yii::$app->request->isAjax){
+            return $this->renderAjax('index', ['routes' => $model->getRoutes()]);
+        }else{
+            return $this->render('index', ['routes' => $model->getRoutes()]);
+        }
     }
 
     /**

@@ -82,7 +82,7 @@ $this->title = 'Admin EULIMS';
             <div class="col-sm-4 col-md-2">
               <h4 class="text-center">Users</h4>
               <div  style="padding-top: 1px;padding-bottom: 5px;display:block;text-align: center">
-                 <a href="/admin/user" title="Debug"><img src="/images/users.png" style="height:30%;width: 30%"></a>
+                 <a onclick="ShowModal('Users','/admin/user',true,'80%')" href="#" title="Users"><img src="/images/users.png" style="height:30%;width: 30%"></a>
               </div>
             </div>
             <!-- /.col -->
@@ -98,7 +98,7 @@ $this->title = 'Admin EULIMS';
               <h4 class="text-center">Route</h4>
 
               <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                <a href="/admin/route" title="Debug"> <img src="/images/route.png" style="height:30%;width: 30%"></a>
+                <a onclick="ShowModal('Route','/admin/route')" href="#" title="Route"> <img src="/images/route.png" style="height:30%;width: 30%"></a>
               </div>
             </div>
             <!-- /.col -->
@@ -106,7 +106,7 @@ $this->title = 'Admin EULIMS';
               <h4 class="text-center">Roles</h4>
 
               <div  style="padding-top: 1px;padding-bottom: 5px;display:block;text-align: center">
-                <a href="/admin/role" title="Debug"> <img src="/images/roles.png" style="height:40%;width: 40%"></a>
+                <a onclick="ShowModal('Roles','/admin/role')" href="#" title="Roles"> <img src="/images/roles.png" style="height:40%;width: 40%"></a>
               </div>
             </div>
             <!-- /.col -->
@@ -144,7 +144,7 @@ $this->title = 'Admin EULIMS';
               <h4 class="text-center">System Maintenance</h4>
 
               <div  style="padding-top: 1px;padding-bottom: 20px;display:block;text-align: center">
-                 <a href="#" onclick="LoadModal('Debug','/debug')" title="Debug"> <img src="/images/rules.png" style="height:30%;width: 30%"></a>
+                 <a href="#" onclick="LoadModal('System Maintenance','/settings')" title="Debug"> <img src="/images/rules.png" style="height:30%;width: 30%"></a>
                  
               </div>
             </div>

@@ -104,7 +104,7 @@ function ShowModal(header,url,closebutton,width){
     });
     dialog.init(function(){
         setTimeout(function(){
-            dialog.find('#modalHeader').html(header);
+            dialog.find('.modal-title').html(header);
             dialog.find('.modal-dialog ').css({
                width: width
             });
