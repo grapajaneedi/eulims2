@@ -2,9 +2,6 @@
 use kartik\mpdf\Pdf;
 
 return [
-    // 'mygoogle'=>[
-    //             'key'=> 'AIzaSyBkbMSbpiE90ee_Jvcrgbb12VRXZ9tlzIc'
-    // ],
     'mailer' => [
            'class' => 'yii\swiftmailer\Mailer',
            'viewPath' => '@common/mail',
@@ -26,7 +23,6 @@ return [
                 ]
             ],
     ],
-
     'cache' => [
             'class' => 'yii\caching\FileCache',
     ],

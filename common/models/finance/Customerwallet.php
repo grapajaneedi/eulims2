@@ -84,9 +84,4 @@ class Customerwallet extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Customertransaction::className(), ['customerwallet_id' => 'customerwallet_id']);
     }
-
-    public function getCustomer()
-    {
-        return $this->hasOne(Customer::className(), ['customer_id' => 'customer_id']);
-    }
 }
