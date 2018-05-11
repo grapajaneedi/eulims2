@@ -3,7 +3,7 @@
 namespace common\models\finance;
 
 use Yii;
-
+use common\models\lab\Customer;
 /**
  * This is the model class for table "tbl_orderofpayment".
  *
@@ -47,7 +47,7 @@ class Orderofpayment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'transactionnum', 'collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose'], 'required'],
+            [['collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose'], 'required'],
             [['rstl_id', 'collectiontype_id', 'payment_mode_id', 'customer_id', 'created_receipt', 'allow_erratum'], 'integer'],
             [['order_date'], 'safe'],
             [['transactionnum'], 'string', 'max' => 100],
@@ -65,12 +65,12 @@ class Orderofpayment extends \yii\db\ActiveRecord
         return [
             'orderofpayment_id' => 'Orderofpayment ID',
             'rstl_id' => 'Rstl ID',
-            'transactionnum' => 'Transactionnum',
-            'collectiontype_id' => 'Collectiontype ID',
-            'payment_mode_id' => 'Payment Mode ID',
+            'transactionnum' => 'Transaction Number',
+            'collectiontype_id' => 'Collection Type',
+            'payment_mode_id' => 'Mode of Payment',
             'order_date' => 'Order Date',
-            'customer_id' => 'Customer ID',
-            'purpose' => 'Purpose',
+            'customer_id' => 'Customer Name',
+            'purpose' => 'Purpose/Payment for',
             'created_receipt' => 'Created Receipt',
             'allow_erratum' => 'Allow Erratum',
         ];
@@ -106,5 +106,10 @@ class Orderofpayment extends \yii\db\ActiveRecord
     public function getReceipts()
     {
         return $this->hasMany(Receipt::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+    }
+    
+    public function getCustomer()
+    {
+        return $this->hasOne(Customer::className(), ['customer_id' => 'customer_id']);
     }
 }

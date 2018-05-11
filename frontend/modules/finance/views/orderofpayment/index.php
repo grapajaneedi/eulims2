@@ -14,8 +14,8 @@ use kartik\widgets\DatePicker;
 use common\components\Functions;
 
 $func= new Functions();
-$this->title = 'Order of Payments';
-$this->params['breadcrumbs'][] = 'Order of Payments';
+$this->title = 'Order of Payment';
+$this->params['breadcrumbs'][] = 'Order of Payment';
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
 ?>
@@ -54,20 +54,19 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
            // 'rstl_id',
             'transactionnum',
             [
-                'attribute'=>'collectiontype_id',
-                'value'=>'collectiontype.natureofcollection',
-                'filter'=>Select2::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'collectiontype_id',
-                    'data' => ArrayHelper::map(Collectiontype::find()->all(), 'collectiontype_id', 'natureofcollection'),
-                    'theme' => Select2::THEME_BOOTSTRAP,
-                    'hideSearch' => false,
-                    'options' => [
-                        'placeholder' => 'Select Collection Type',
-                    ]
-                ]),
+                'attribute' => 'collectiontype_id',
+                'label' => 'Collection Type',
+                'value' => function($model) {
+                    return $model->collectiontype->natureofcollection;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(CollectionTYpe::find()->asArray()->all(), 'collectiontype_id', 'natureofcollection'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Collection Type', 'id' => 'grid-op-search-collectiontype_id']
             ],
-             [
+            [
                 'attribute'=>'order_date',
                 
                 'filter'=>DatePicker::widget([
@@ -79,20 +78,21 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                         'todayHighlight' => true
                     ]
                 ]),
+                
             ],
-           [
-                'attribute'=>'customer_id',
-                'value'=>'customer.customer_name',
-                'filter'=>Select2::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'customer_id',
-                    'data' => ArrayHelper::map(Customer::find()->all(), 'customer_id', 'customer_name'),
-                    'theme' => Select2::THEME_BOOTSTRAP,
-                    'hideSearch' => false,
-                    'options' => [
-                        'placeholder' => 'Select a Customer',
-                    ]
-                ]),
+          
+            [
+                'attribute' => 'customer_id',
+                'label' => 'Customer Name',
+                'value' => function($model) {
+                    return $model->customer->customer_name;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(Customer::find()->asArray()->all(), 'customer_id', 'customer_name'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Customer Name', 'id' => 'grid-op-search-customer_id']
             ],
            
             // 'amount',
