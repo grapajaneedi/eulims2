@@ -51,8 +51,11 @@ class CustomerwalletSearch extends Customerwallet
         // exit();
         // add conditions that should always apply here
 
-        $dataProvider = new ActiveDataProvider([
+         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+              'pageSize' => 1,
+            ],
         ]);
 
         $this->load($params);

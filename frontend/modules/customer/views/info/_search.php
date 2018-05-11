@@ -25,17 +25,19 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'head') ?>
 
+    <?php // echo $form->field($model, 'municipalitycity_id') ?>
+
+    <?php // echo $form->field($model, 'barangay_id') ?>
+
+    <?php // echo $form->field($model, 'district') ?>
+
+    <?php // echo $form->field($model, 'address') ?>
+
     <?php // echo $form->field($model, 'tel') ?>
 
     <?php // echo $form->field($model, 'fax') ?>
 
     <?php // echo $form->field($model, 'email') ?>
-
-    <?php // echo $form->field($model, 'address') ?>
-
-    <?php // echo $form->field($model, 'latitude') ?>
-
-    <?php // echo $form->field($model, 'longitude') ?>
 
     <?php // echo $form->field($model, 'customer_type_id') ?>
 
