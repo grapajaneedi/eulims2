@@ -53,7 +53,7 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'latitude', 'longitude', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'created_at'], 'required'],
+            [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'created_at'], 'required'],
             [['rstl_id', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'created_at'], 'integer'],
             [['latitude', 'longitude'], 'number'],
             [['customer_code'], 'string', 'max' => 11],

@@ -73,8 +73,6 @@ $this->registerJsFile("/js/customer/googleplace.js");
         </div>
     </div>
 
-   
-
     <div class="row">
         <div class="col-md-6">
         <?= $form->field($model, 'business_nature_id')->textInput() ?>
