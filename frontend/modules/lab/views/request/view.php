@@ -243,22 +243,26 @@ $this->params['breadcrumbs'][] = $this->title;
             $gridColumns = [
                 //['class' => 'yii\grid\SerialColumn'],
                 [
-                    'attribute'=>'request_id',
+                    'attribute'=>'sample_code',
                     'enableSorting' => false,
                 ],
                 [
-                    'attribute'=>'request_ref_num',
+                    'attribute'=>'samplename',
                     'enableSorting' => false,
                 ],
                 [
-                    'attribute'=>'report_due',
+                    'attribute'=>'description',
+                    'format' => 'raw',
                     'enableSorting' => false,
+                    'value' => function($data){
+                        return ($data->request->lab_id == 2) ? "<span style='font-size:11.5px;'>Sampling Date: <b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
+                    },
                 ],
             ];
 
             echo GridView::widget([
-                'id' => 'request-grid',
-                'dataProvider'=> $dataProvider,
+                'id' => 'sample-grid',
+                'dataProvider'=> $sampleDataProvider,
                 'summary' => '',
                 'responsive'=>true,
                 'striped'=>true,
