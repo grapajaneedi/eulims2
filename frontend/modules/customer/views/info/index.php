@@ -16,7 +16,7 @@ $this->registerJsFile("/js/customer/customer.js");
 
 
     <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Customer', ['value'=>'/customer/info/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Customer"),'name'=>'Create New Customer']); ?>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Customer', ['value'=>'/customer/info/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Customer"),'name'=>'Create New Customer','onclick'=>"ShowModal('New Customer','/customer/info/create',true,'900px')"]); ?>
     </p>
     <div class="table-responsive">
         <?= GridView::widget([
