@@ -20,7 +20,7 @@ class OrderofpaymentSearch extends Orderofpayment
         return [
             [['orderofpayment_id', 'rstl_id', 'collectiontype_id', 'customer_id', 'created_receipt'], 'integer'],
             [['transactionnum', 'order_date', 'purpose'], 'safe'],
-            [['amount'], 'number'],
+           
         ];
     }
 
@@ -65,7 +65,6 @@ class OrderofpaymentSearch extends Orderofpayment
             'collectiontype_id' => $this->collectiontype_id,
             'order_date' => $this->order_date,
             'customer_id' => $this->customer_id,
-            'amount' => $this->amount,
             'created_receipt' => $this->created_receipt,
         ]);
 
