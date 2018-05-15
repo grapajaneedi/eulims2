@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 //use yii\grid\GridView;
 use kartik\grid\GridView;
-use yii\grid\ActionColumn;
+use kartik\grid\ActionColumn;
 use yii\helpers\ArrayHelper;
 use common\models\system\Package;
 
@@ -24,7 +24,8 @@ $Buttontemplate='{view}{update}';
     <p>
         <button onclick="LoadModal('Create Details','/package/details?action=create')" class="btn btn-success">Create Package Details</button>
     </p>
-    <?= GridView::widget([
+    <?=
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -54,61 +55,64 @@ $Buttontemplate='{view}{update}';
             ],
             'created_at:datetime',
             'updated_at:datetime',
-             [
-                        //'class' => 'yii\grid\ActionColumn'
-                        'class' => ActionColumn::className(),
-                        'template'=>$Buttontemplate,'class' => 'yii\grid\ActionColumn',
-                        'header' => 'Actions',
-                        'headerOptions' => ['style' => 'color:#337ab7'],
-                        'template' => '{view}{update}{delete}',
-                        'buttons' => [
-                            'view' => function ($url, $model) {
-                                //return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-                                //    'title' => Yii::t('app', 'lead-view'),
-                                //]);
-                                return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', [
-                                    'class'=>'btn btn-primary packageviewdetails',
+            [
+                //'class' => 'yii\grid\ActionColumn'
+                'class' => ActionColumn::className(),
+                'template' => $Buttontemplate, 'class' => 'yii\grid\ActionColumn',
+                'header' => 'Actions',
+                'headerOptions' => ['style' => 'color:#337ab7'],
+                'template' => '{view}{update}{delete}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        //return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
+                        //    'title' => Yii::t('app', 'lead-view'),
+                        //]);
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', [
+                                    'class' => 'btn btn-primary packageviewdetails',
                                     'title' => Yii::t('app', 'Package Details'),
-                                    'value'=>$url,
-                                    'onclick'=>'LoadModal(this.title,this.value);'
-                                ]);
-                            },
-                            'update' => function ($url, $model) {
-                                //return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
-                                //    'title' => Yii::t('app', 'lead-update'),
-                                //]);
-                                return Html::button('<span class="glyphicon glyphicon-pencil"></span>', [
-                                    'class'=>'btn btn-primary packageviewdetails',
+                                    'value' => $url,
+                                    'onclick' => 'LoadModal(this.title,this.value);'
+                        ]);
+                    },
+                    'update' => function ($url, $model) {
+                        //return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+                        //    'title' => Yii::t('app', 'lead-update'),
+                        //]);
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', [
+                                    'class' => 'btn btn-primary packageviewdetails',
                                     'title' => Yii::t('app', 'Package Details'),
-                                    'value'=>$url,
-                                    'onclick'=>'LoadModal(this.title,this.value);'
-                                ]);
-                            },
-                            'delete' => function ($url, $model) {
-                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-                                    'title' => Yii::t('app', 'lead-delete'),
-                                    'class'=>'btn btn-primary'
-                                ]);
-                            }
-                        ],
-                        'urlCreator' => function ($action, $model, $key, $index) {
-                            if ($action === 'view') {
-                                $url ='/package/details?action=view&id='.$model->Package_DetailID;
-                                return $url;
-                            }
-                            if ($action === 'update') {
-                                //$url ='index.php?r=client-login/lead-update&id='.$model->Package_DetailID;
-                                $url ='/package/details?action=update&id='.$model->Package_DetailID;
-                                return $url;
-                            }
-                            if ($action === 'delete') {
-                                $url ='/package/deletedetails/'.$model->Package_DetailID;
-                                return $url;
-                            }
-                        }
-                    ],
+                                    'value' => $url,
+                                    'onclick' => 'LoadModal(this.title,this.value);'
+                        ]);
+                    },
+                /* 'delete' => function ($url, $model) {
+                  return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+                  'title' => Yii::t('app', 'lead-delete'),
+                  'class'=>'btn btn-primary'
+                  ]);
+                  }
+                 * 
+                 */
+                ],
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'view') {
+                        $url = '/package/details?action=view&id=' . $model->Package_DetailID;
+                        return $url;
+                    }
+                    if ($action === 'update') {
+                        //$url ='index.php?r=client-login/lead-update&id='.$model->Package_DetailID;
+                        $url = '/package/details?action=update&id=' . $model->Package_DetailID;
+                        return $url;
+                    }
+                    if ($action === 'delete') {
+                        $url = '/package/deletedetails/' . $model->Package_DetailID;
+                        return $url;
+                    }
+                }
+            ],
         ],
-    ]); ?>
+    ]);
+    ?>
         </div>
      </div>
 </div>

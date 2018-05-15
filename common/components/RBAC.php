@@ -12,6 +12,7 @@ namespace common\components;
 use common\models\auth\AuthItem;
 use common\models\auth\AuthItemChild;
 use common\models\auth\AuthAssignment;
+use common\components\Functions;
 /**
  * Description of RBAC
  *
@@ -40,6 +41,7 @@ class RBAC {
         }
     }
     public function CreateSubModulePermissions($ModuleName,$SubModuleName, $Url){
+        $Funct=new Functions();
         $AuthItem= AuthItem::find()->where("name='$Url'")->one();
         if(!$AuthItem){// Create Only if permission does not exits
             $SubName1= strtolower($SubModuleName)."/*";
@@ -56,7 +58,8 @@ class RBAC {
             $AuthItem2->type=2;
             $AuthItem2->save();
             $AuthItemChild=new AuthItemChild();
-            $AuthItemChild->parent="access-$SubName2";
+            $childPermission=$Funct->left($SubName2, strlen($SubName2)-2);
+            $AuthItemChild->parent="access-".strtolower($childPermission);
             $AuthItemChild->child=$Url;
             $AuthItemChild->save();
         }

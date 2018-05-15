@@ -75,7 +75,7 @@ switch($button){
         break;
 }
 ?>
-<!-- 
+<?php if(!Yii::$app->request->isAjax){ ?>
 <div class="row div-hr" style="padding-left: 1px">
     <div class="col-lg-12">
         <?php if(Yii::$app->user->can('access-user')){ ?>
@@ -102,4 +102,4 @@ switch($button){
     </div>
     <hr style="padding-bottom: 0px">
 </div>
-!-->
+<?php } ?>

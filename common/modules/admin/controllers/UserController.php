@@ -79,11 +79,17 @@ class UserController extends Controller
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->renderAjax('index', [
+        if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
-        ]);
+            ]);
+        }else{
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]); 
+        }
     }
     public function actionUpdate($id)
     {

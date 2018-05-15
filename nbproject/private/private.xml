@@ -2,6 +2,15 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/views/site/about.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/backend/views/package/packagedetails/view.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/finance/views/Customerwallet/index.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/components/Functions.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/finance/Customerwallet.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/components/RBAC.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/backend/views/package/packagedetails/index.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/backend/controllers/PackageController.php</file>
+        </group>
     </open-files>
 </project-private>
