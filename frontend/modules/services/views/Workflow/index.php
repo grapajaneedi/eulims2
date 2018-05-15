@@ -25,7 +25,7 @@ $testlist= ArrayHelper::map(Test::find()->all(),'test_id','testname');
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Workflow', ['value'=>'/services/sampletype/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Workflow")]); ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Workflow', ['value'=>'/services/workflow/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Workflow")]); ?>
     </p>
 
     <?= GridView::widget([
@@ -41,19 +41,19 @@ $testlist= ArrayHelper::map(Test::find()->all(),'test_id','testname');
             ['class' => 'yii\grid\SerialColumn'],
 
             'workflow_id',
-            [
-                'attribute' => 'test_category_id',
-                'label' => 'Test Category',
-                'value' => function($model) {
-                    return $model->tests->testname;
-                },
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => $testlist,
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['placeholder' => 'Test Category', 'test_category_id' => 'grid-products-search-category_type_id']
-            ],
+            // [
+            //     'attribute' => 'test_category_id',
+            //     'label' => 'Test Category',
+            //     'value' => function($model) {
+            //         return $model->tests->testname;
+            //     },
+            //     'filterType' => GridView::FILTER_SELECT2,
+            //     'filter' => $testlist,
+            //     'filterWidgetOptions' => [
+            //         'pluginOptions' => ['allowClear' => true],
+            //     ],
+            //     'filterInputOptions' => ['placeholder' => 'Test Category', 'test_category_id' => 'grid-products-search-category_type_id']
+            // ],
 
             'method',
             'workflow',
@@ -64,10 +64,10 @@ $testlist= ArrayHelper::map(Test::find()->all(),'test_id','testname');
             // 'template' => '{view}{update}{delete}',
             'buttons'=>[
                 'view'=>function ($url, $model) {
-                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/services/sampletype/view?id='.$model->workflow_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Sample Type<font color='Blue'></font>")]);
+                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/services/workflow/view?id='.$model->workflow_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Workflow<font color='Blue'></font>")]);
                 },
                 'update'=>function ($url, $model) {
-                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/services/sampletype/update?id='.$model->workflow_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Sample Type<font color='Blue'></font>")]);
+                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/services/workflow/update?id='.$model->workflow_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Workflow<font color='Blue'></font>")]);
                 },
             //     'delete'=>function ($url, $model) {
             //       $t = '/services/testcategory/delete';

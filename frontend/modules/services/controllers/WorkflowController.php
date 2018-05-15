@@ -52,9 +52,11 @@ class WorkflowController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]);
+        }
     }
 
     /**
@@ -65,14 +67,21 @@ class WorkflowController extends Controller
     public function actionCreate()
     {
         $model = new Workflow();
-
+       
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->workflow_id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+           // if (Yii::$app->request->isAjax){
+                return $this->runAction('index');
+         //  }else{
+          //      return $this->redirect(['view', 'id' => $model->test_category_id]);
+         //   }
+          
+        } 
+          
+       if(Yii::$app->request->isAjax){
+                return $this->renderAjax('create', [
+                        'model' => $model,
+                    ]);
+            }
     }
 
     /**
@@ -88,11 +97,11 @@ class WorkflowController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->workflow_id]);
+        } else if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
