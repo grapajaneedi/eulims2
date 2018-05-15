@@ -5,27 +5,26 @@ namespace common\models\services;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\services\Test;
+use common\models\services\Workflow;
 
 /**
- * TestSearch represents the model behind the search form about `common\models\services\Test`.
+ * WorkflowSearch represents the model behind the search form of `common\models\services\Workflow`.
  */
-class TestSearch extends Test
+class WorkflowSearch extends Workflow
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['test_id', 'rstl_id', 'duration', 'test_category_id', 'sample_type_id', 'lab_id'], 'integer'],
-            [['testname', 'method', 'references'], 'safe'],
-            [['fee'], 'number'],
+            [['workflow_id', 'test_id'], 'integer'],
+            [['method', 'workflow'], 'safe'],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function scenarios()
     {
@@ -42,15 +41,12 @@ class TestSearch extends Test
      */
     public function search($params)
     {
-        $query = Test::find();
+        $query = Workflow::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 5,
-              ],
         ]);
 
         $this->load($params);
@@ -63,18 +59,12 @@ class TestSearch extends Test
 
         // grid filtering conditions
         $query->andFilterWhere([
+            'workflow_id' => $this->workflow_id,
             'test_id' => $this->test_id,
-            'rstl_id' => $this->rstl_id,
-            'fee' => $this->fee,
-            'duration' => $this->duration,
-            'test_category_id' => $this->test_category_id,
-            'sample_type_id' => $this->sample_type_id,
-            'lab_id' => $this->lab_id,
         ]);
 
-        $query->andFilterWhere(['like', 'testname', $this->testname])
-            ->andFilterWhere(['like', 'method', $this->method])
-            ->andFilterWhere(['like', 'references', $this->references]);
+        $query->andFilterWhere(['like', 'method', $this->method])
+            ->andFilterWhere(['like', 'workflow', $this->workflow]);
 
         return $dataProvider;
     }
