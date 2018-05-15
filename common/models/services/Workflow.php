@@ -58,9 +58,9 @@ class Workflow extends \yii\db\ActiveRecord
         ];
     }
 
-      /**
+    /**
      * @return \yii\db\ActiveQuery
-     */
+    */
     public function getTests()
     {
         return $this->hasMany(Test::className(), ['test_id' => 'test_id']);

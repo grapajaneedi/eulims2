@@ -18,7 +18,7 @@ class TestSearch extends Test
     public function rules()
     {
         return [
-            [['test_id', 'agency_id', 'duration', 'test_category_id', 'sample_type_id', 'lab_id'], 'integer'],
+            [['test_id', 'rstl_id', 'duration', 'test_category_id', 'sample_type_id', 'lab_id'], 'integer'],
             [['testname', 'method', 'references'], 'safe'],
             [['fee'], 'number'],
         ];
@@ -64,7 +64,7 @@ class TestSearch extends Test
         // grid filtering conditions
         $query->andFilterWhere([
             'test_id' => $this->test_id,
-            'agency_id' => $this->agency_id,
+            'rstl_id' => $this->rstl_id,
             'fee' => $this->fee,
             'duration' => $this->duration,
             'test_category_id' => $this->test_category_id,
