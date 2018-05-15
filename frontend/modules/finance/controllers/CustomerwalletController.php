@@ -112,7 +112,6 @@ class CustomerwalletController extends Controller
                  $session->set('savepopup',"executed");
                  return $this->runAction('index');
             }
-
         }
 
         if(Yii::$app->request->isAjax){
