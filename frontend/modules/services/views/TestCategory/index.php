@@ -38,7 +38,7 @@ if (Yii::$app->user->can('access-testcategory-delete')){
 
 <div class="test-category-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+   
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
