@@ -213,11 +213,11 @@ class SampleController extends Controller
     {
         $model = $this->findModel($id);
 
-        if(isset($_GET['request_id']))
+        /*if(isset($_GET['request_id']))
         {
             $requestId = (int) $_GET['request_id'];
-        }
-        $request = $this->findRequest($requestId);
+        }*/
+        $request = $this->findRequest($model->request_id);
         $labId = $request->lab_id;
 
         $testcategory = $this->listTestcategory($labId);
@@ -258,6 +258,7 @@ class SampleController extends Controller
                     'testcategory' => $testcategory,
                     'sampletype' => $sampletype,
                     'labId' => $labId,
+                    'sampletemplate' => $this->listSampletemplate(),
                 ]);
         } else {
             return $this->render('update', [
@@ -265,6 +266,7 @@ class SampleController extends Controller
                 'testcategory' => $testcategory,
                 'sampletype' => $sampletype,
                 'labId' => $labId,
+                'sampletemplate' => $this->listSampletemplate(),
             ]);
         }
     }
