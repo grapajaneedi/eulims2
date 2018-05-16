@@ -1,7 +1,9 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+//use yii\widgets\DetailView;
+use kartik\detail\DetailView;
+use kartik\checkbox\CheckboxX;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Lab */
@@ -11,20 +13,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Labs', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lab-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->lab_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->lab_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -34,7 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'labcount',
             'nextrequestcode',
             'active',
+            [
+                'class'=>'kartik\checkbox\CheckboxX',
+                'attribute' => 'active',
+            ]
         ],
     ]) ?>
-
+    <div style="position:absolute;right:18px;bottom:10px;">
+        <button type="button" class="btn btn-default" data-dismiss="modal" >Cancel</button>
+    </div>
 </div>

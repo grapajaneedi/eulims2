@@ -51,9 +51,15 @@ class ConfigurationsController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }else{
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]); 
+        }
     }
 
     /**
@@ -83,10 +89,15 @@ class ConfigurationsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->lab_id]);
-        } else {
+        if(Yii::$app->request->isAjax){
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->lab_id]);
+            } else {
+                return $this->renderAjax('update', [
+                    'model' => $model,
+                ]);
+            }   
+        }else{
             return $this->render('update', [
                 'model' => $model,
             ]);

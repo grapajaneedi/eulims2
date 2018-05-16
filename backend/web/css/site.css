@@ -15,7 +15,17 @@ body {
 .wrap > .container {
     padding: 70px 15px 20px;
 }
-
+/**** Kartik Grivew ****/
+.kv-grid-table>thead{
+    background-color: #337ab7;
+    color: white;
+    text-decoration: none
+}
+.kv-grid-table>thead>tr>th a{
+    color: white;
+    text-decoration: none
+}
+/**** Kartik Grivew ****/
 .modal-header {
     border-bottom-color: #f4f4f4;
     padding-bottom: 10px!important;
