@@ -29,11 +29,6 @@ if (Yii::$app->controller->action->id === 'login') {
         <title><?= Html::encode($this->title) ?></title>
         <link rel="shortcut icon" href="<?php echo Yii::$app->request->baseUrl; ?>/favicon.ico" type="image/x-icon" />
         <?php $this->head() ?>
-        <script src="//maps.googleapis.com/maps/api/js?key=<?= \Yii::$app->params['googlekey']?>&amp;libraries=places&amp;language=en-US"></script>
-        <script> 
-         var autocomplete;
-        
-        </script>
     </head>
     <body class="hold-transition skin-blue sidebar-collapse">
     <?php $this->beginBody() ?>

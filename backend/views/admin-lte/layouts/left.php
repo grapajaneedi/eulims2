@@ -45,7 +45,7 @@ if(Yii::$app->user->isGuest){
         </div>
 
         <!-- search form -->
-        <form action="#" method="get" class="sidebar-form">
+        <form action="#" method="get" class="sidebar-form fa-">
             <div class="input-group">
                 <input type="text" name="q" class="form-control" placeholder="Search..."/>
               <span class="input-group-btn">
@@ -66,6 +66,15 @@ if(Yii::$app->user->isGuest){
                         'icon' => 'cogs',
                         'url' => '/#',
                         'items' => [
+                           [
+                                'label' => 'Configurations',
+                                'icon' => 'foursquare',
+                                'url' => '#',
+                                'items' => [
+                                    ['label' => 'Laboratories', 'icon' => 'columns', 'url' => ['/system/configurations'],'visible'=> Yii::$app->user->can('access-user')],
+                                ],
+                                'visible'=> Yii::$app->user->can('access-rbac')
+                            ],
                             ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii'],'visible'=> Yii::$app->user->can('access-gii')],
                             ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],'visible'=> Yii::$app->user->can('access-debug')],
                             ['label' => 'Package List', 'icon' => 'cog', 'url' => ['/package'],'visible'=> Yii::$app->user->can('access-package-list')],

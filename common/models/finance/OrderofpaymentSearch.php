@@ -6,21 +6,26 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\finance\Orderofpayment;
+use kartik\daterange\DateRangeBehavior;
 
 /**
  * OrderofpaymentSearch represents the model behind the search form about `common\models\finance\Orderofpayment`.
  */
 class OrderofpaymentSearch extends Orderofpayment
 {
+    public $createTimeRange;
+    public $createTimeStart;
+    public $createTimeEnd;
     /**
      * @inheritdoc
      */
+   
     public function rules()
     {
         return [
             [['orderofpayment_id', 'rstl_id', 'collectiontype_id', 'customer_id', 'created_receipt'], 'integer'],
             [['transactionnum', 'order_date', 'purpose'], 'safe'],
-           
+            [['createTimeRange'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
         ];
     }
 
@@ -69,7 +74,9 @@ class OrderofpaymentSearch extends Orderofpayment
         ]);
 
         $query->andFilterWhere(['like', 'transactionnum', $this->transactionnum])
-            ->andFilterWhere(['like', 'purpose', $this->purpose]);
+            ->andFilterWhere(['like', 'purpose', $this->purpose])
+            ->andFilterWhere(['>=', 'order_date', $this->createTimeStart])
+            ->andFilterWhere(['<', 'order_date', $this->createTimeEnd]);
 
         return $dataProvider;
     }

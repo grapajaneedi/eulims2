@@ -2,11 +2,11 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-use kartik\select2\Select2;
 use common\models\lab\Customer;
 use common\models\finance\Collectiontype;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
+use kartik\daterange\DateRangePicker;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\OrderofpaymentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -67,18 +67,23 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 'filterInputOptions' => ['placeholder' => 'Collection Type', 'id' => 'grid-op-search-collectiontype_id']
             ],
             [
-                'attribute'=>'order_date',
-                
-                'filter'=>DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'order_date',
-                    'options' => ['placeholder' => 'Select date ...'],
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true
+               'attribute'=>'order_date',
+               'filterType'=> GridView::FILTER_DATE_RANGE,
+               /*'filter'=>DateRangePicker::widget([
+                    'model'=>$model,
+                    'attribute'=>'order_date',
+                    'convertFormat'=>true,
+                    'startAttribute'=>'datetime_min',
+                    'endAttribute'=>'datetime_max',
+                    'pluginOptions'=>[
+                        'timePicker'=>true,
+                        'timePickerIncrement'=>30,
+                        'locale'=>[
+                            'format'=>'Y-m-d'
+                        ]
                     ]
                 ]),
-                
+                */
             ],
           
             [

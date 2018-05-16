@@ -56,6 +56,10 @@ class InfoController extends Controller
             return $this->renderAjax('view', [
                 'model' => $this->findModel($id),
             ]);
+        }else{
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
         }
     }
 
@@ -67,9 +71,12 @@ class InfoController extends Controller
     public function actionCreate()
     {
         $model = new Customer();
-
+        $model->rstl_id=11;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->customer_id]);
+            $session = Yii::$app->session;
+            $session->set('savepopup',"executed");
+            // return $this->redirect(['view', 'id' => $model->customer_id]);
+            return $this->redirect(['index']);
         }
 
         if(Yii::$app->request->isAjax){
@@ -95,15 +102,17 @@ class InfoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if(Yii::$app->request->isAjax){
+        //if(Yii::$app->request->isAjax){
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-               return $this->redirect(['view', 'id' => $model->customer_id]);
+                 $session = Yii::$app->session;
+                $session->set('savepopup',"executed");
+               return $this->redirect(['index']);
             }   else {
-                return $this->renderAjax('update', [
+                return $this->render('update', [
                     'model' => $model,
                 ]);
             }
-        }
+        //}
     }
 
     /**

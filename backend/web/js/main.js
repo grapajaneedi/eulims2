@@ -9,9 +9,6 @@ jQuery(document).ready(function ($) {
     $('.btn-modal').click(function () {
         ShowModal(this.name, this.value,true,'600px');
     });
-    $("#modal").draggable({
-        handle: ".modal-header"
-    }); 
     // --- Delete action (bootbox) ---
     yii.confirm = function (message, ok, cancel) {
         var title = $(this).data("title");

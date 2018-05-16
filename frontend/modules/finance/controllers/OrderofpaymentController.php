@@ -5,10 +5,11 @@ namespace frontend\modules\finance\controllers;
 use Yii;
 use common\models\finance\Orderofpayment;
 use common\models\finance\OrderofpaymentSearch;
+use common\models\lab\Request;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\data\ActiveDataProvider;
 /**
  * OrderofpaymentController implements the CRUD actions for Orderofpayment model.
  */
@@ -123,9 +124,18 @@ class OrderofpaymentController extends Controller
         }
     }
 
-     public function actionGetlistrequest($id)
+     public function actionGetlistrequest()
     {
-        return 'fgdg';
+        $post=Yii::$app->request->post();
+        $customer_id=$post['customer_id'];
+        $query = Request::find()->where(['customer_id' => $customer_id]);
+        
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+         return $this->renderPartial('_request', ['dataProvider'=>$dataProvider]);
+
     }
     /**
      * Deletes an existing Orderofpayment model.
