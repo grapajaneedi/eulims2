@@ -61,8 +61,32 @@ use kartik\widgets\DatePicker;
             ],
             'pluginEvents' => [
                 "change" => "function() {
+                    var customer_id=$(this).val();
+                    $('#prog').show();
+                    $('#requests').hide();
+                    jQuery.ajax( {
+                        type: \"POST\",
+                        data: {
+                            customer_id:customer_id,
+                        },
+                        url: \"/finance/orderofpayment/getlistrequest\",
+                        dataType: \"text\",
+                        success: function ( response ) {
+                           
+                           setTimeout(function(){
+                           $('#prog').hide();
+                             $('#requests').show();
+                           $('#requests').html(response);
+                               }, 1500);
+
+                           
+                        },
+                        error: function ( xhr, ajaxOptions, thrownError ) {
+                            alert( thrownError );
+                        }
+                    });   
                  }",
-             ],       
+             ], 
             ]);
          ?>
         </div>
@@ -81,9 +105,12 @@ use kartik\widgets\DatePicker;
     </div>
     <div class="row">
         <div class="col-lg-12">  
+             <div id="prog" style="position:relative;display:none;">
+                <img style="display:block; margin:0 auto;" src="<?php echo  $GLOBALS['frontend_base_uri']; ?>/images/ajax-loader.gif">
+                 </div>
             <div id="requests" style="padding:15px!important;">    	
-                    <?php echo $this->renderAjax('_request', ['dataProvider'=>$dataProvider]); ?>
-            </div>
+               <?php //echo $this->renderAjax('_request', ['dataProvider'=>$dataProvider]); ?>
+            </div> 
         </div>
     </div> 
    
