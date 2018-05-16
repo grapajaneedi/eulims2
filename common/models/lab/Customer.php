@@ -3,6 +3,9 @@
 namespace common\models\lab;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "tbl_customer".
@@ -40,6 +43,24 @@ class Customer extends \yii\db\ActiveRecord
     }
 
     /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes'=>[
+                ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
+                ],
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => '',
+                //'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
+    /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
     public static function getDb()
@@ -53,7 +74,7 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'created_at'], 'required'],
+            [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'customer_type_id', 'business_nature_id', 'industrytype_id'], 'required'],
             [['rstl_id', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'created_at'], 'integer'],
             [['latitude', 'longitude'], 'number'],
             [['customer_code'], 'string', 'max' => 11],
