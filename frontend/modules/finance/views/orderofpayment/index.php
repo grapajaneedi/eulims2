@@ -69,6 +69,23 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
             [
                'attribute'=>'order_date',
                'filterType'=> GridView::FILTER_DATE_RANGE,
+               'value' => function($model) {
+                    return date_format(date_create($model->order_date),"m/d/Y");
+                },
+                'filterWidgetOptions' => ([
+                     'model'=>$model,
+                     'attribute'=>'order_date',
+                     'startAttribute'=>'createDateStart',
+                     'endAttribute'=>'createDateEnd',
+                     'presetDropdown'=>TRUE,
+                     'convertFormat'=>TRUE,
+                     'pluginOptions'=>[
+                        'locale'=>[
+                            'format'=>'Y-m-d'
+                        ],
+                         'opens'=>'left',
+                      ]
+                ]),        
                /*'filter'=>DateRangePicker::widget([
                     'model'=>$model,
                     'attribute'=>'order_date',
@@ -82,8 +99,8 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                             'format'=>'Y-m-d'
                         ]
                     ]
-                ]),
-                */
+                ]), */
+                
             ],
           
             [

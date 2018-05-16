@@ -14,8 +14,8 @@ use kartik\daterange\DateRangeBehavior;
 class OrderofpaymentSearch extends Orderofpayment
 {
     public $createTimeRange;
-    public $createTimeStart;
-    public $createTimeEnd;
+    public $createDateStart;
+    public $createDateEnd;
     /**
      * @inheritdoc
      */
@@ -24,7 +24,7 @@ class OrderofpaymentSearch extends Orderofpayment
     {
         return [
             [['orderofpayment_id', 'rstl_id', 'collectiontype_id', 'customer_id', 'created_receipt'], 'integer'],
-            [['transactionnum', 'order_date', 'purpose'], 'safe'],
+            [['transactionnum', 'order_date', 'purpose','createDateStart','createDateEnd'], 'safe'],
             [['createTimeRange'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
         ];
     }
@@ -68,16 +68,13 @@ class OrderofpaymentSearch extends Orderofpayment
             'orderofpayment_id' => $this->orderofpayment_id,
             'rstl_id' => $this->rstl_id,
             'collectiontype_id' => $this->collectiontype_id,
-            'order_date' => $this->order_date,
             'customer_id' => $this->customer_id,
             'created_receipt' => $this->created_receipt,
         ]);
 
         $query->andFilterWhere(['like', 'transactionnum', $this->transactionnum])
             ->andFilterWhere(['like', 'purpose', $this->purpose])
-            ->andFilterWhere(['>=', 'order_date', $this->createTimeStart])
-            ->andFilterWhere(['<', 'order_date', $this->createTimeEnd]);
-
+            ->andFilterWhere(['between', 'order_date', $this->createDateStart, $this->createDateEnd]);
         return $dataProvider;
     }
     
