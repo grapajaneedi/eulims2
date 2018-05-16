@@ -67,9 +67,9 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 'filterInputOptions' => ['placeholder' => 'Collection Type', 'id' => 'grid-op-search-collectiontype_id']
             ],
             [
-                //'attribute'=>'order_date',
-                
-                'filter'=>DateRangePicker::widget([
+               'attribute'=>'order_date',
+               'filterType'=> GridView::FILTER_DATE_RANGE,
+               /*'filter'=>DateRangePicker::widget([
                     'model'=>$model,
                     'attribute'=>'order_date',
                     'convertFormat'=>true,
@@ -83,7 +83,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                         ]
                     ]
                 ]),
-                
+                */
             ],
           
             [

@@ -82,6 +82,7 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
             'kartik\\file\\' => 12,
             'kartik\\dialog\\' => 14,
             'kartik\\detail\\' => 14,
+            'kartik\\daterange\\' => 17,
             'kartik\\datecontrol\\' => 19,
             'kartik\\date\\' => 12,
             'kartik\\base\\' => 12,
@@ -341,6 +342,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'kartik\\detail\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-detail-view',
+        ),
+        'kartik\\daterange\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-date-range',
         ),
         'kartik\\datecontrol\\' => 
         array (

@@ -71,7 +71,7 @@ if(Yii::$app->user->isGuest){
                                 'icon' => 'foursquare',
                                 'url' => '#',
                                 'items' => [
-                                    ['label' => 'Laboratories', 'icon' => 'columns', 'url' => ['/lab/config'],'visible'=> Yii::$app->user->can('access-user')],
+                                    ['label' => 'Laboratories', 'icon' => 'columns', 'url' => ['/system/configurations'],'visible'=> Yii::$app->user->can('access-user')],
                                 ],
                                 'visible'=> Yii::$app->user->can('access-rbac')
                             ],

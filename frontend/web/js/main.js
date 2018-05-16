@@ -42,16 +42,6 @@ jQuery(document).ready(function ($) {
         // to cancel click handler
         return false;
     };
-    /*$("#modalButton").click(function(){
-        $("#modal").modal('show')
-            .find('#modalContent')
-            .load($(this).attr('value'));
-    });
-    //modalCancel
-    $("#modalCancel").click(function(){
-        $("#modal").modal('hide');
-    });
-    */
 });
 function MessageBox(){
     krajeeDialog.dialog(

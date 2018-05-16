@@ -40,11 +40,18 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
             ['class' => 'kartik\grid\ActionColumn'],
         ],
     ])."</div></div>";
-?>
-<div class="lab-index">
+$create=<<<HTML
     <p>
         <?= Html::a('Create Lab', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+HTML;
+?>
+<div class="lab-index">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+        <div class="panel-title"></div>
+        </div>
+        <div class="panel-body">
     <?php
             echo TabsX::widget([
                 'position' => TabsX::POS_ABOVE,
@@ -76,4 +83,6 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
                 ],
             ]);
     ?>
+        </div>
+    </div>
 </div>
