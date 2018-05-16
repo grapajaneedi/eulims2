@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\lab\controllers;
+namespace backend\modules\system\controllers;
 
 use Yii;
 use common\models\lab\Lab;
@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * LabController implements the CRUD actions for Lab model.
  */
-class LabController extends Controller
+class ConfigurationsController extends Controller
 {
     /**
      * @inheritdoc
