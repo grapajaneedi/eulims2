@@ -74,33 +74,37 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 },
                 'filterWidgetOptions' => ([
                      'model'=>$model,
+                     'useWithAddon'=>true,
                      'attribute'=>'order_date',
                      'startAttribute'=>'createDateStart',
                      'endAttribute'=>'createDateEnd',
                      'presetDropdown'=>TRUE,
                      'convertFormat'=>TRUE,
                      'pluginOptions'=>[
+                         'allowClear' => true,
                         'locale'=>[
-                            'format'=>'Y-m-d'
+                            'format'=>'Y-m-d',
+                            'separator'=>' to ',
                         ],
                          'opens'=>'left',
-                      ]
+                      ],
+                     'pluginEvents'=>[
+                        "cancel.daterangepicker" => "function(ev, picker) {
+                        picker.element[0].children[1].textContent = '';
+                        $(picker.element[0].nextElementSibling).val('').trigger('change');
+                        }",
+                        
+                        'apply.daterangepicker' => 'function(ev, picker) { 
+                        var val = picker.startDate.format(picker.locale.format) + picker.locale.separator +
+                        picker.endDate.format(picker.locale.format);
+
+                        picker.element[0].children[1].textContent = val;
+                        $(picker.element[0].nextElementSibling).val(val);
+                        }',
+                      ] 
+                     
                 ]),        
-               /*'filter'=>DateRangePicker::widget([
-                    'model'=>$model,
-                    'attribute'=>'order_date',
-                    'convertFormat'=>true,
-                    'startAttribute'=>'datetime_min',
-                    'endAttribute'=>'datetime_max',
-                    'pluginOptions'=>[
-                        'timePicker'=>true,
-                        'timePickerIncrement'=>30,
-                        'locale'=>[
-                            'format'=>'Y-m-d'
-                        ]
-                    ]
-                ]), */
-                
+               
             ],
           
             [
