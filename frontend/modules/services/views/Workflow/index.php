@@ -1,32 +1,33 @@
 <?php
+
+
 use kartik\widgets\DatePicker;
 use kartik\widgets\DateTimePicker;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
-use common\models\services\Testcategory;
-//use yii\grid\GridView;
+use common\models\services\Test;
 
 /* @var $this yii\web\View */
-/* @var $searchModel common\models\services\SampletypeSearch */
+/* @var $searchModel common\models\WorkflowSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Sample Types';
-$this->params['breadcrumbs'][] = ['label' => 'Services', 'url' => ['/services']];
-$this->params['breadcrumbs'][] = 'Manage Sample Type';
-$testcategorylist= ArrayHelper::map(testCategory::find()->all(),'test_category_id','category_name');
-
-//$this->params['breadcrumbs'][] = 'Test Categories';
+$this->title = 'Workflow Management';
+$this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile("/js/services/services.js");
-?>
-<div class="sampletype-index">
 
+$testlist= ArrayHelper::map(Test::find()->all(),'test_id','testname');
+?>
+<div class="workflow-index">
+
+    
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Sample Type', ['value'=>'/services/sampletype/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Sample Type")]); ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Workflow', ['value'=>'/services/sampletype/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Workflow")]); ?>
     </p>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -38,31 +39,35 @@ $this->registerJsFile("/js/services/services.js");
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'sample_type',
+
+            'workflow_id',
             [
                 'attribute' => 'test_category_id',
                 'label' => 'Test Category',
                 'value' => function($model) {
-                    return $model->testCategory->category_name;
+                    return $model->tests->testname;
                 },
                 'filterType' => GridView::FILTER_SELECT2,
-                'filter' => $testcategorylist,
+                'filter' => $testlist,
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Test Category', 'test_category_id' => 'grid-products-search-category_type_id']
             ],
 
+            'method',
+            'workflow',
+            // ['class' => 'yii\grid\ActionColumn'],
             ['class' => 'kartik\grid\ActionColumn',
             'contentOptions' => ['style' => 'width: 8.7%'],
            // 'visible'=> Yii::$app->user->isGuest ? false : true,
-            'template' => '{view}{update}{delete}',
+            // 'template' => '{view}{update}{delete}',
             'buttons'=>[
                 'view'=>function ($url, $model) {
-                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/services/sampletype/view?id='.$model->sample_type_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Sample Type<font color='Blue'></font>")]);
+                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/services/sampletype/view?id='.$model->workflow_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Sample Type<font color='Blue'></font>")]);
                 },
                 'update'=>function ($url, $model) {
-                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/services/sampletype/update?id='.$model->sample_type_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Sample Type<font color='Blue'></font>")]);
+                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/services/sampletype/update?id='.$model->workflow_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Sample Type<font color='Blue'></font>")]);
                 },
             //     'delete'=>function ($url, $model) {
             //       $t = '/services/testcategory/delete';

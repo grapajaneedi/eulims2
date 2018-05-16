@@ -86,8 +86,10 @@ class CustomertransactionController extends Controller
                 $wallet->balance = $wallet->balance + $model->amount;
                 // $wallet->last_update=date('Y-m-d  h:i:s');
                 if($wallet->save()){
+                    $session = Yii::$app->session;
                     $model->balance= $wallet->balance;
                     $model->save();
+                    $session->set('savepopup',"executed");
                     return $this->redirect(['/finance/customerwallet']);
                 }
             // }

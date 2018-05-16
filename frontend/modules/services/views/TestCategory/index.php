@@ -32,7 +32,7 @@ $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname' );//Yii::$app->
 if (Yii::$app->user->can('access-testcategory-delete')){
     $button='{view}{update}{delete}';
 }else{
-    $button='{view}{update}';
+    $button='{view}{update}{delete}';
 }
 ?>
 
@@ -92,7 +92,7 @@ if (Yii::$app->user->can('access-testcategory-delete')){
                 'filterInputOptions' => ['placeholder' => 'Laboratory', 'lab_id' => 'grid-products-search-category_type_id']
             ],
          //   ['class' => 'yii\grid\ActionColumn'],
-          ['class' => 'yii\grid\ActionColumn',
+          ['class' => 'kartik\grid\ActionColumn',
           'contentOptions' => ['style' => 'width: 8.7%'],
          // 'visible'=> Yii::$app->user->isGuest ? false : true,
           'template' => $button,
@@ -103,9 +103,9 @@ if (Yii::$app->user->can('access-testcategory-delete')){
               'update'=>function ($url, $model) {
                   return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/services/testcategory/update','id'=>$model->test_category_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Test Category<font color='Blue'></font>")]);
               },
-              'delete'=>function ($url, $model) {
-                return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/services/testcategory/delete','id'=>$model->test_category_id]), 'class' => 'btn btn-danger']);
-            },
+            //   'delete'=>function ($url, $model) {
+            //     return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/services/testcategory/delete','id'=>$model->test_category_id]), 'class' => 'btn btn-danger']);
+            // },
           ],
       ],
     ]; 

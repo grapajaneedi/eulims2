@@ -8,7 +8,7 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="customertransaction-form">
+<div class="customertransaction-form" style="padding-bottom: 10px">
 
     <?php $form = ActiveForm::begin([
     ]); ?>
@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
             'confirm' => 'Are you sure you want to add credits to this account ?',
         ],]) ?>
         <?php if(Yii::$app->request->isAjax){ ?>
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <?php } ?>
     </div>
 
