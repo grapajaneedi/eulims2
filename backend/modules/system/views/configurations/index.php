@@ -24,6 +24,7 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
         'pjax'=>true,
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
+            ['class' => 'kartik\grid\CheckBoxColumn'],
             [
                 'attribute' => 'labname',
                 'label' => 'Laboratory Name',
@@ -46,7 +47,7 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Lab::find()->asArray()->all(), 'labcode', 'labcode'),
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
+                    'pluginOptions' => ['allowClear' => true]
                 ],
                 'filterInputOptions' => ['placeholder' => 'Lab Code', 'lab_id' => 'grid-products-search-category_type_id']
             ],
@@ -88,7 +89,7 @@ HTML;
 <div class="lab-index">
     <div class="panel panel-primary">
         <div class="panel-heading">
-        <div class="panel-title"></div>
+            <div class="panel-title"></div>
         </div>
         <div class="panel-body">
     <?php

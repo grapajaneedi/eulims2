@@ -9,14 +9,14 @@
 
 // Password required to gain access to Administration Panel
 // Set to Blank to allow reset from browser
-define('SW_ADMIN_PASSWORD','');
+define('SW_ADMIN_PASSWORD','admin');
 
 define('SW_HTTP_BASEDIR', './');
 define('SW_HTTP_URLHOST', 'http://127.0.0.1');
 
 
 // Default System Language
-define('SW_LANGUAGE', '');
+define('SW_LANGUAGE', 'en_gb');
 
 define('SW_DEFAULT_PROJECT', 'reports');
 

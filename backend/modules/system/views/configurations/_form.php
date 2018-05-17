@@ -19,24 +19,24 @@ use common\models\lab\Lab;
         <?php
         echo $form->field($model, 'lab_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map(Lab::find()->asArray()->all(), 'lab_id', 'labname'),
-            'language' => 'de',
+            'language' => 'en-gb',
             'options' => ['placeholder' => 'Select a Laboratory'],
             'pluginOptions' => [
                 'allowClear' => true
             ],
-        ]);
+        ])->label('Laboratory');
         ?>
         </div>
         <div class="col-md-6">
-    <?= $form->field($model, 'labcode')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'labcode')->textInput(['maxlength' => true])->label('Laboratory Code') ?>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-    <?= $form->field($model, 'labcount')->textInput() ?>
+    <?= $form->field($model, 'labcount')->textInput()->label('Laboratory Count') ?>
         </div>
          <div class="col-md-6">
-    <?= $form->field($model, 'nextrequestcode')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'nextrequestcode')->textInput(['maxlength' => true])->label('Next Request Code') ?>
         </div>
      </div>
     <div class="row">
