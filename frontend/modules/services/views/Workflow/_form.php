@@ -4,6 +4,10 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
+use common\models\services\Test;
+
+$TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','testname');
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\services\Workflow */
@@ -14,9 +18,29 @@ use yii\helpers\ArrayHelper;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'test_id')->textInput() ?>
+    <div class="row">
+             <div class="col-md-6">
+             <?= $form->field($model, 'test_id')->widget(Select2::classname(), [
+                'data' => $TestList,
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select Test'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+             ])->label("Test"); ?>
+             </div>
 
-    <?= $form->field($model, 'method')->textInput(['maxlength' => true]) ?>
+             <div class="col-md-6">
+             <?= $form->field($model, 'method')->textInput(['maxlength' => true]) ?>
+             </div>
+         </div>
+
+
+ 
+
+   
+
+    
 
     <?= $form->field($model, 'workflow')->textInput(['maxlength' => true]) ?>
 

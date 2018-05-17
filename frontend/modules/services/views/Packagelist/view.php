@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\services\Workflow */
+/* @var $model common\models\lab\Packagelist */
 
-$this->title = $model->workflow_id;
-$this->params['breadcrumbs'][] = ['label' => 'Workflows', 'url' => ['index']];
+$this->title = $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'Packagelists', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="workflow-view">
+<div class="packagelist-view">
 
  
 
@@ -21,10 +21,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'workflow_id',
-            'test.testName',
-            'method',
-            'workflow',
+            'package_id',
+            'rstl_id',
+            'testcategory_id',
+            'sampletype_id',
+            'name',
+            'rate',
+            'tests',
         ],
     ]) ?>
 

@@ -32,8 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
-<div style="position:absolute;right:18px;bottom:10px;">
-    <!-- <div class="pull-right" style="text-align:right;position:relative;"> -->
+    <div style="position:absolute;right:18px;bottom:10px;">
         <button type="button" class="btn btn-default" data-dismiss="modal" >Cancel</button>
     </div>
 </div>
