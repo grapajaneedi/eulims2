@@ -102,17 +102,25 @@ class InfoController extends Controller
     {
         $model = $this->findModel($id);
 
-        //if(Yii::$app->request->isAjax){
+        // if(Yii::$app->request->isAjax){
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                  $session = Yii::$app->session;
                 $session->set('savepopup',"executed");
                return $this->redirect(['index']);
-            }   else {
+            }   
+
+
+            if(Yii::$app->request->isAjax){
+                return $this->renderAjax('update', [
+                    'model' => $model,
+                ]);
+            }
+            else {
                 return $this->render('update', [
                     'model' => $model,
                 ]);
             }
-        //}
+        // }
     }
 
     /**

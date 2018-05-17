@@ -14,8 +14,6 @@ use yii\helpers\ArrayHelper;
 /* @var $form yii\widgets\ActiveForm */ 
 //$this->registerJsFile("/js/customer/googleplace.js"); 
 ?>
-<script src="https://maps.googleapis.com/maps/api/js?key=<?= \Yii::$app->params['googlekey']?>&libraries=places"></script>
-
 <div class="customer-form">
 
     <?php $form = ActiveForm::begin(); ?>
@@ -30,18 +28,8 @@ use yii\helpers\ArrayHelper;
         <?= $form->field($model, 'customer_code')->textInput(['maxlength' => true]) ?>
         </div>
     </div> -->
-    <div class="col-md-6">
-        <div class="row">
-            <div class="col-md-12">
-            <STRONG>Select Location Here</STRONG><br>
-            <input id="searchTextField" type="text" size="50"/>
-            <div id="output"></div><br /><br />     
-            <div id="map" style="width: auto;height: 400px;"></div> 
-
-            </div>
-        </div>  
-    </div>
-    <div class="col-md-6">
+    
+    
         <div class="row">
             <div class="col-md-6">
             <?= $form->field($model, 'customer_name')->textInput(['maxlength' => true]) ?>
@@ -103,6 +91,8 @@ use yii\helpers\ArrayHelper;
         </div>
         <div class="row">
              <div class="col-md-6">
+               <?= Html::button('<span class="glyphicon glyphicon-search"></span> Locate', ['value'=>'/customer/info/create', 'class' => 'btn btn-small btn-success','title' => Yii::t('app', "Locate Customer"),'onclick'=>"ShowGModal('Locate Customer',true,'900px')"]); ?>
+
                  <?= $form->field($model, 'address')->textarea(['maxlength' => true,'readonly'=>'true']) ?>
 
                 <?= $form->field($model, 'latitude')->textInput(['readonly'=>'true']) ?>
@@ -113,7 +103,7 @@ use yii\helpers\ArrayHelper;
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
-    </div>
+    
     
 
 
@@ -121,17 +111,3 @@ use yii\helpers\ArrayHelper;
 
     <?php ActiveForm::end(); ?>
 </div>
-
-
-   
-
-
- 
-
-<?php 
-
-$this->registerJsFile("/js/customer/autocomplete.js");
-$this->registerJsFile("/js/customer/google-map-marker.js");
-
-?>
-        
