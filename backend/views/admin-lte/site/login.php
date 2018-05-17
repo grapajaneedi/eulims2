@@ -18,10 +18,84 @@ $fieldOptions2 = [
     'inputTemplate' => "{input}<span class='glyphicon glyphicon-lock form-control-feedback'></span>"
 ];
 ?>
+<style>
+    /* latin-ext */
+    @font-face {
+        font-family: 'Audiowide';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Audiowide Regular'), local('Audiowide-Regular'), url('/font/audiowide_latin_ext.woff2') format('woff2');
 
-<div class="login-box">
+    }
+    /* latin */
+    @font-face {
+        font-family: 'Audiowide';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Audiowide Regular'), local('Audiowide-Regular'), url('/font/audiowide_latin.woff2') format('woff2');
+
+    }
+
+    .newtext {
+        font-size: 72px;
+        background: -webkit-linear-gradient( #1b4f72  , #3c8dbc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font: normal 52px/1 "Audiowide", Helvetica, sans-serif;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        font-family: 'Audiowide';
+        font-size: 60px;
+        text-align: center;
+    }
+      .img-responsive {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin:auto;
+ 
+}
+
+</style>
+
+<div class="body-content" style="margin:10%;background: linear-gradient(110deg,  #b1d1e4 50%,#3c8dbc 50%);"  >
+    <div >
+        <div class="d-flex align-items-center" >
+
+            <div>
+                <div class="row">
+
+                    <div class="col-sm-6 ">
+                        <div class="d-flex align-items-center" >
+                            <div class="row" style="margin-top: 10%">
+                                <div class="col-sm-12 col-md-offset-0 ">
+                                    <img src="/images/onelablogonew.png" style="width: 80%;border-radius: 15px 15px;display: block; height: auto; max-width: 100%;margin:0 auto;">
+                                    </div>
+                                <div class="col-sm-12 col-md-offset-0 ">
+                                    
+                                    <h1 class="newtext">
+                                        E.U.L.I.M.S
+                                    </h1>
+                                    <p style="font-family: 'Audiowide';font-size:18px;color:#1b4f72;text-align:center;vertical-align: central">
+                                        Enhanced Unified Laboratory Information Management System
+                                    </p>
+
+                                    <p style="font-family: 'Audiowide';font-size:18px;color:#1b4f72;text-align:center;vertical-align: central">
+                                        Department of Science and Technology
+                                    </p> 
+                                    <br><br>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                       <div class="login-box">
     <div class="login-logo">
-        <a href="#"><b>Enhanced</b>ULIMS</a>
+        <h2 style="font-family: 'Audiowide'">Admin Login</h2>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
@@ -56,3 +130,14 @@ $fieldOptions2 = [
     </div>
     <!-- /.login-box-body -->
 </div><!-- /.login-box -->
+                    </div>
+                </div> 
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+

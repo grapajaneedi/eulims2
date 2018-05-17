@@ -668,4 +668,3 @@ function updateRecord(obj) {
             
           ?>
 <?php } ?>
-</div>

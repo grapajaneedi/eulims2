@@ -145,9 +145,6 @@ $this->registerJsFile('/js/main.js');
                                     <!-- /.col -->
                                 </div>
                                 <?php ActiveForm::end(); ?>
-                                <!--<a href="/site/requestpasswordreset">I forgot my password</a><br>
-                                <a href="/site/signup">SignUp</a> -->
-                                
                                  <a href="#" onclick="ShowModal('Reset Password','/site/requestpasswordreset')">I forgot my password</a><br>
                                 <a href="#" onclick="ShowModal('Sign Up','/site/signup')">Sign Up</a>
                             </div>
