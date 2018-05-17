@@ -136,8 +136,8 @@ $this->registerJsFile('/js/main.js');
                                 <!--<a href="/site/requestpasswordreset">I forgot my password</a><br>
                                 <a href="/site/signup">SignUp</a> -->
                                 
-                                 <a href="#" onclick="LoadModal('Reset Password','/site/requestpasswordreset')">I forgot my password</a><br>
-                                <a href="#" onclick="LoadModal('Sign Up','/site/signup')">Sign Up</a>
+                                 <a href="#" onclick="LoadModal('Reset Password','/site/requestpasswordreset',true,'200px')">I forgot my password</a><br>
+                                 <a href="#" onclick="LoadModal('Sign Up','/site/signup',true,'200px')">Sign Up</a>
                             </div>
                             <!-- /.login-box-body -->
                         </div><!-- /.login-box -->

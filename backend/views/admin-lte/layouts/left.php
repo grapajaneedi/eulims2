@@ -28,6 +28,13 @@ if(Yii::$app->user->isGuest){
 }
 
 ?>
+<style type="text/css">
+    .square
+    {
+        display: block; color: rgb(255, 255, 255); float: left; width: 50px; height: 50px; text-align: center; border-radius: 10px; background: rgb(52, 73, 94); cursor: default;
+    }
+</style>
+
 <aside class="main-sidebar">
 
     <section class="sidebar">

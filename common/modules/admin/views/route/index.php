@@ -21,6 +21,7 @@ $this->registerJs($this->render('_script.js'));
 $animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></i>';
 ?>
 <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => 'route']); ?>
+
 <div class="panel panel-default col-xs-12">
     <div class="panel-heading"><i class="fa fa-fa-road fa-adn"></i> Route</div>
     <div class="panel-body">
@@ -81,4 +82,7 @@ $animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate
             </div>
         </div>
     </div>
+     <p>
+                <?= Html::a(Yii::t('rbac-admin', 'Back to Dashboard'), ['../site/login'], ['class' => 'btn btn-success',]) ?>
+            </p>
 </div>

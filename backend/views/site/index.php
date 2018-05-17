@@ -1,19 +1,50 @@
 <?php
 
+use yii\widgets\Pjax;
+use yii\helpers\Html;
+use yii\bootstrap\Tabs;
+
 /* @var $this yii\web\View */
 
 $this->title = 'Admin EULIMS';
 ?>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <link href="/css/site.css" rel="stylesheet">
+
 <div class="site-index">
+<?php if(Yii::$app->user->isGuest)
+{
+   // echo '<h1>Guest</h1>';
+  //  echo Yii::$app->user->isGuest;
+    
+    /* Redirect browser */
+    header("Location: /site/login");
+ 
 
-  
-    <div class="body-content">
+exit;
+}
 
+else{
+?>
+    <?php
+    
+    $JS=<<<SCRIPT
+     $("#tab_1").load('/admin/user');        
+SCRIPT;
+$this->registerJs($JS);
+    ?>
+     <div class="body-content">
+     
+        
         <div class="box box-default color-palette-box" style="padding:0px">
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-tag"></i> System Settings</h3>
+          <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
         </div>
+            
         <div class="box-body">
           <div class="row">
             <div class="col-sm-4 col-md-2">
@@ -63,19 +94,21 @@ $this->title = 'Admin EULIMS';
               </div>
             </div>
             <!-- /.col -->
-            
            
           </div>
-          <!-- /.row -->
-          
-          <!-- /.row -->
         </div>
         <!-- /.box-body -->
       </div>
+         
+        
         
         <div class="box box-default color-palette-box">
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-tag"></i> Role Based Access Control (RBAC) Settings</h3>
+          <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
         </div>
         <div class="box-body">
           <div class="row">
@@ -83,6 +116,7 @@ $this->title = 'Admin EULIMS';
               <h4 class="text-center">Users</h4>
               <div  style="padding-top: 1px;padding-bottom: 5px;display:block;text-align: center">
                  <a href="/admin/user" title="Debug"><img src="/images/users.png" style="height:30%;width: 30%"></a>
+               
               </div>
             </div>
             <!-- /.col -->
@@ -136,18 +170,12 @@ $this->title = 'Admin EULIMS';
 
               <div  style="padding-top: 1px;padding-bottom: 20px;display:block;text-align: center">
                  <a href="/admin/rule" title="Debug"> <img src="/images/rules.png" style="height:30%;width: 30%"></a>
+                  
                  
               </div>
             </div>
             
-            <div class="col-sm-4 col-md-2">
-              <h4 class="text-center">System Maintenance</h4>
-
-              <div  style="padding-top: 1px;padding-bottom: 20px;display:block;text-align: center">
-                 <a href="#" onclick="LoadModal('Debug','/debug')" title="Debug"> <img src="/images/rules.png" style="height:30%;width: 30%"></a>
-                 
-              </div>
-            </div>
+            
             <!-- /.col -->
            
             <!-- /.col -->
@@ -156,6 +184,46 @@ $this->title = 'Admin EULIMS';
         </div>
         <!-- /.box-body -->
       </div>
+         
+         
+    
+    
+    
 
     </div>
+ <?php 
+}
+    ?>
+
+  
+   
+    
+ 
 </div>
+
+<div id="theModal" class="modal fade text-center">
+    <div class="modal-dialog">
+      <div class="modal-content">
+         
+      </div>
+    </div>
+  </div>
+
+<div class="modal fade in" id="ModalNew" style="padding-right: 16px;">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Default Modal</h4>
+              </div>
+              
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
