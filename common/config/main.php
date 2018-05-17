@@ -13,7 +13,15 @@ return [
         'gridview' => ['class' => 'kartik\grid\Module'],
         'datecontrol' =>  [
             'class' => '\kartik\datecontrol\Module'
-        ]
+        ],
+        'reportico' => [
+            'class' => 'reportico\reportico\Module',
+            'controllerMap' => [
+                'reportico' => 'reportico\reportico\controllers\ReporticoController',
+                'mode' => 'reportico\reportico\controllers\ModeController',
+                'ajax' => 'reportico\reportico\controllers\AjaxController',
+            ]
+        ],
     ],
     
     'components' => $components

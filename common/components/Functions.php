@@ -91,6 +91,15 @@ class Functions extends Component{
                         }"),
         ]);
     }
+    /**
+     * 
+     * @param type $mString
+     * @param type $length
+     * @return typeLeft Function
+     */
+    public function left($mString, $length){
+        return substr($mString,0,$length);
+    }
     public function GetLaboratoryList(){
         
     }

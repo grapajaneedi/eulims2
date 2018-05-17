@@ -35,11 +35,11 @@ class GooglePlacesAutoComplete extends InputWidget {
         $elementId = $this->options['id'];
         $scriptOptions = json_encode($this->autocompleteOptions);
         $view = $this->getView();
-        $view->registerJsFile(self::API_URL . http_build_query([
-            'key'=>\Yii::$app->places->key,
-            'libraries' => $this->libraries,
-            'language' => $this->language
-        ]));
+        //$view->registerJsFile(self::API_URL . http_build_query([
+        //    'key'=>\Yii::$app->places->key,
+        //    'libraries' => $this->libraries,
+        //    'language' => $this->language
+        //]));
         $view->registerJs(<<<JS
 (function(){
     var input = document.getElementById('{$elementId}');

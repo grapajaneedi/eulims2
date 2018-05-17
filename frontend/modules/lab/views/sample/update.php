@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = 'Update';
         'testcategory' => $testcategory,
         'sampletype' => $sampletype,
         'labId' => $labId,
+        'sampletemplate' => $sampletemplate,
     ]) ?>
 
 </div>

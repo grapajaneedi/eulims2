@@ -4,6 +4,9 @@ namespace common\models\finance;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use common\models\finance\Customertransaction;
+use common\models\lab\Customer;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "tbl_customerwallet".
@@ -55,7 +58,7 @@ class Customerwallet extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date', 'last_update', 'balance', 'customer_id'], 'required'],
+            [['balance', 'customer_id'], 'required'],
             [['date', 'last_update'], 'safe'],
             [['balance'], 'number'],
             [['customer_id'], 'integer'],
@@ -83,5 +86,13 @@ class Customerwallet extends \yii\db\ActiveRecord
     public function getCustomertransactions()
     {
         return $this->hasMany(Customertransaction::className(), ['customerwallet_id' => 'customerwallet_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCustomer()
+    {
+        return $this->hasOne(Customer::className(), ['customer_id' => 'customer_id']);
     }
 }

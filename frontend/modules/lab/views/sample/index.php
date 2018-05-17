@@ -100,7 +100,7 @@ Modal::end();*/
 <script type="text/javascript">
 //$.fn.modal.Constructor.prototype.enforceFocus = $.noop;
     $("#modalBtn").click(function(){
-        $("#modalHeader").html($(this).attr('title'));
+        $(".modal-title").html($(this).attr('title'));
         $("#modal").modal('show')
         //$("#sampleModal").modal('show')
             .find('#modalContent')

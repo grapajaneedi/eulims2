@@ -2,11 +2,11 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-use kartik\select2\Select2;
 use common\models\lab\Customer;
 use common\models\finance\Collectiontype;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
+use kartik\daterange\DateRangePicker;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\OrderofpaymentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -14,8 +14,8 @@ use kartik\widgets\DatePicker;
 use common\components\Functions;
 
 $func= new Functions();
-$this->title = 'Order of Payments';
-$this->params['breadcrumbs'][] = 'Order of Payments';
+$this->title = 'Order of Payment';
+$this->params['breadcrumbs'][] = 'Order of Payment';
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
 ?>
@@ -54,45 +54,71 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
            // 'rstl_id',
             'transactionnum',
             [
-                'attribute'=>'collectiontype_id',
-                'value'=>'collectiontype.natureofcollection',
-                'filter'=>Select2::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'collectiontype_id',
-                    'data' => ArrayHelper::map(Collectiontype::find()->all(), 'collectiontype_id', 'natureofcollection'),
-                    'theme' => Select2::THEME_BOOTSTRAP,
-                    'hideSearch' => false,
-                    'options' => [
-                        'placeholder' => 'Select Collection Type',
-                    ]
-                ]),
+                'attribute' => 'collectiontype_id',
+                'label' => 'Collection Type',
+                'value' => function($model) {
+                    return $model->collectiontype->natureofcollection;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(CollectionTYpe::find()->asArray()->all(), 'collectiontype_id', 'natureofcollection'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Collection Type', 'id' => 'grid-op-search-collectiontype_id']
             ],
-             [
-                'attribute'=>'order_date',
-                
-                'filter'=>DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'order_date',
-                    'options' => ['placeholder' => 'Select date ...'],
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true
-                    ]
-                ]),
+            [
+               'attribute'=>'order_date',
+               'filterType'=> GridView::FILTER_DATE_RANGE,
+               'value' => function($model) {
+                    return date_format(date_create($model->order_date),"m/d/Y");
+                },
+                'filterWidgetOptions' => ([
+                     'model'=>$model,
+                     'useWithAddon'=>true,
+                     'attribute'=>'order_date',
+                     'startAttribute'=>'createDateStart',
+                     'endAttribute'=>'createDateEnd',
+                     'presetDropdown'=>TRUE,
+                     'convertFormat'=>TRUE,
+                     'pluginOptions'=>[
+                         'allowClear' => true,
+                        'locale'=>[
+                            'format'=>'Y-m-d',
+                            'separator'=>' to ',
+                        ],
+                         'opens'=>'left',
+                      ],
+                     'pluginEvents'=>[
+                        "cancel.daterangepicker" => "function(ev, picker) {
+                        picker.element[0].children[1].textContent = '';
+                        $(picker.element[0].nextElementSibling).val('').trigger('change');
+                        }",
+                        
+                        'apply.daterangepicker' => 'function(ev, picker) { 
+                        var val = picker.startDate.format(picker.locale.format) + picker.locale.separator +
+                        picker.endDate.format(picker.locale.format);
+
+                        picker.element[0].children[1].textContent = val;
+                        $(picker.element[0].nextElementSibling).val(val);
+                        }',
+                      ] 
+                     
+                ]),        
+               
             ],
-           [
-                'attribute'=>'customer_id',
-                'value'=>'customer.customer_name',
-                'filter'=>Select2::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'customer_id',
-                    'data' => ArrayHelper::map(Customer::find()->all(), 'customer_id', 'customer_name'),
-                    'theme' => Select2::THEME_BOOTSTRAP,
-                    'hideSearch' => false,
-                    'options' => [
-                        'placeholder' => 'Select a Customer',
-                    ]
-                ]),
+          
+            [
+                'attribute' => 'customer_id',
+                'label' => 'Customer Name',
+                'value' => function($model) {
+                    return $model->customer->customer_name;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(Customer::find()->asArray()->all(), 'customer_id', 'customer_name'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Customer Name', 'id' => 'grid-op-search-customer_id']
             ],
            
             // 'amount',

@@ -9,9 +9,6 @@ jQuery(document).ready(function ($) {
     $('.btn-modal').click(function () {
         ShowModal(this.name, this.value,true,'600px');
     });
-    $('.modal-dialog').draggable({
-        handle: ".modal-header"
-    });
     // --- Delete action (bootbox) ---
     yii.confirm = function (message, ok, cancel) {
         var title = $(this).data("title");
@@ -45,15 +42,6 @@ jQuery(document).ready(function ($) {
         // to cancel click handler
         return false;
     };
-    $("#modalButton").click(function(){
-        $("#modal").modal('show')
-            .find('#modalContent')
-            .load($(this).attr('value'));
-    });
-    //modalCancel
-    $("#modalCancel").click(function(){
-        $("#modal").modal('hide');
-    });
 });
 function MessageBox(){
     krajeeDialog.dialog(
@@ -89,21 +77,22 @@ function ConfirmBox(Title, Message){
     );
 }
 function ShowModal(header,url,closebutton,width){
-    if(closebutton==undefined){
+    if(closebutton===undefined){
         closebutton=true;
     }
-    if(width==undefined){
+    if(width===undefined){
        width='600px'; 
     }
     $(".close").prop('disabled',!closebutton);
+    $('#modalContent').html('');
     var dialog=$("#modal").modal({
         backdrop: false,
         show: true,
-        'max-width': '800px'
+        draggable: true
     });
     dialog.init(function(){
         setTimeout(function(){
-            dialog.find('#modalHeader').html(header);
+            dialog.find('.modal-title').html(header);
             dialog.find('.modal-dialog ').css({
                width: width
             });
@@ -127,4 +116,55 @@ function printPartOfPage(elementId) {
     printWindow.focus();
     printWindow.print();
     printWindow.close();
+}
+function MessageBox(Message,Title="System Message",labelYes="",labelCancel="", WithCallback=false) {
+    var labelButton=(labelYes==="") && (labelCancel==="");
+    if(labelButton && FuncName===""){
+        bootbox.alert({
+            title: Title,
+            message: Message,
+            size: 'medium'
+        });
+        return true;
+    }else if(!labelButton && !WithCallback){
+        bootbox.confirm({
+            title: Title,
+            message: Message,
+            buttons: {
+                cancel: {
+                    label: labelCancel,
+                    className: 'btn-default'
+                },
+                confirm: {
+                    label: labelYes,
+                    className: 'btn-success'
+                }
+            },
+            callback: function (result) {
+                return true;
+            }
+        });
+    }else if(!labelButton && WithCallback){
+        bootbox.confirm({
+            title: Title,
+            message: Message,
+            buttons: {
+                cancel: {
+                    label: labelCancel,
+                    className: 'btn-default'
+                },
+                confirm: {
+                    label: labelYes,
+                    className: 'btn-success'
+                }
+        },
+        callback: function (result) {
+           if(result){//yes
+               ConfirmCallback();
+           }else{//No
+               CancelCallBack();
+           }
+        }
+        });
+    }
 }

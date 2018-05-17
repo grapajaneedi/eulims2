@@ -8,6 +8,9 @@ use common\models\lab\SampleSearch;
 use common\models\lab\Sampletype;
 use common\models\lab\Testcategory;
 use common\models\lab\Request;
+use common\models\lab\Lab;
+use common\models\lab\Samplecode;
+use common\models\lab\SampleName;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -66,8 +69,15 @@ class SampleController extends Controller
      */
     public function actionView($id)
     {
+        $searchModel = new SampleSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        //$dataProvider->sort->sortParam = false;
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            //'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+
         ]);
     }
 
@@ -128,6 +138,11 @@ class SampleController extends Controller
                 $quantity = 1;
             }
 
+            if(isset($_POST['sample_template']))
+            {
+                $this->saveSampleTemplate($_POST['Sample']['samplename'],$_POST['Sample']['description']);
+            }
+
             if($quantity>1)
             {
                 for ($i=1;$i<=$quantity;$i++)
@@ -175,6 +190,7 @@ class SampleController extends Controller
                     'testcategory' => $testcategory,
                     'sampletype' => $sampletype,
                     'labId' => $labId,
+                    'sampletemplate' => $this->listSampletemplate(),
                 ]);
         } else {
             return $this->render('create', [
@@ -182,6 +198,7 @@ class SampleController extends Controller
                 'testcategory' => $testcategory,
                 'sampletype' => $sampletype,
                 'labId' => $labId,
+                'sampletemplate' => $this->listSampletemplate(),
             ]);
         }
     }
@@ -196,11 +213,11 @@ class SampleController extends Controller
     {
         $model = $this->findModel($id);
 
-        if(isset($_GET['request_id']))
+        /*if(isset($_GET['request_id']))
         {
             $requestId = (int) $_GET['request_id'];
-        }
-        $request = $this->findRequest($requestId);
+        }*/
+        $request = $this->findRequest($model->request_id);
         $labId = $request->lab_id;
 
         $testcategory = $this->listTestcategory($labId);
@@ -241,6 +258,7 @@ class SampleController extends Controller
                     'testcategory' => $testcategory,
                     'sampletype' => $sampletype,
                     'labId' => $labId,
+                    'sampletemplate' => $this->listSampletemplate(),
                 ]);
         } else {
             return $this->render('update', [
@@ -248,6 +266,7 @@ class SampleController extends Controller
                 'testcategory' => $testcategory,
                 'sampletype' => $sampletype,
                 'labId' => $labId,
+                'sampletemplate' => $this->listSampletemplate(),
             ]);
         }
     }
@@ -344,5 +363,162 @@ class SampleController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    /*public function actionGeneratesamplecode($requestId)
+    {
+        $samples = Sample::find()
+                ->where(['request_id = :requestId'])
+                ->params([':requestId'] => $requestId)
+                ->all();
+        $html = "";
+        $request = $this->findRequest($requestId);
+
+        if(count($samples->analysis) > 0){
+            foreach ($samples as $sample) {
+                if(count($sample->analysis) > 0){
+                    $labCode = Lab::model()->findOne($request->lab_id);
+                    $year = date('Y', strtotime($request->request_datetime));
+
+                    $samplecode = new Samplecode();
+                    $code = $samplecode->
+                } else {
+                    echo CJSON::encode(array(
+                        'status'=>'failure', 
+                        'div'=>'No analysis for this sample.'
+                        ));
+                    exit; 
+                }
+            }
+        } else {
+            echo CJSON::encode(array(
+                'status'=>'failure', 
+                'div'=>'No analysis.'
+                ));
+            exit; 
+        }
+
+
+        if($modelRequest->sampleCount && $modelRequest->anals){
+            foreach($modelRequest->samps as $sample)
+            {
+                $labCode = Lab::model()->findByPk($modelRequest->labId);
+                
+                $year = date('Y', strtotime($modelRequest->requestDate));
+                
+                $code=new Samplecode;
+                $sampleCode = $this->generateSampleCode($labCode, $year);
+                $number = explode('-', $sampleCode);
+                $this->appendSampleCode($modelRequest, $number[1]);
+                
+                Sample::model()->updateByPk($sample->id, array('sampleCode'=>$sampleCode));
+                
+                
+                foreach($sample->analysesForGeneration as $analysis)
+                {
+                    Analysis::model()->updateByPk($analysis->id, array('sampleCode'=>$sampleCode));
+                }
+                
+                $sampleNew = Sample::model()->findByPk($sample->id);
+                $html .= '<p>'.$sampleNew->sampleName.' : '.$sampleNew->sampleCode.'</p><br/>';
+            }
+            $this->updateGeneratedRequest($modelRequest);
+            echo CJSON::encode(array(
+                    'status'=>'success', 
+                    'div'=>$html.'<br \> Successfully Generated.'
+                    ));
+            exit; 
+        }else{
+            echo CJSON::encode(array(
+                    'status'=>'failure', 
+                    'div'=>'<div style="text-align:center;" class="alert alert-error"><i class="icon icon-warning-sign"></i><font style="font-size:14px;"> System Warning. </font><br \><br \><div>Cannot generate sample code. <br \>Please add at least one(1) sample and analysis.</div></div>'
+                    ));
+            exit;           
+        }
+    }*/
+
+    protected function generateSampleCode($lab, $year){
+        $samplecode = Samplecode::mdodel()->find([
+            'select' => '*',
+            'order' => 'number DESC',
+            'condition' => ''
+        ]);
+        $sampleCode = Samplecode::model()->find(array(
+                'select'=>'*',
+                'order'=>'number DESC, id DESC',
+                'condition'=>'rstl_id = :rstl_id AND labId = :labId AND year = :year AND cancelled = 0',
+                'params'=>array(':rstl_id' => Yii::app()->Controller->getRstlId(), ':labId' => $modelLab->id, ':year' => $year )
+            ));
+            
+        if(isset($sampleCode)){
+            return $modelLab->labCode.'-'.Yii::app()->Controller->addZeros($sampleCode->number + 1);
+        }else{
+            $initializeCode = Initializecode::model()->find(array(
+                'select'=>'*',
+                'condition'=>'rstl_id = :rstl_id AND lab_id = :lab_id AND codeType = :codeType',
+                'params'=>array(':rstl_id' => Yii::app()->Controller->getRstlId(), ':lab_id' => $modelLab->id, ':codeType' => 2)
+            ));
+            $startCode = Yii::app()->Controller->addZeros($initializeCode->startCode + 1);
+            return $modelLab->labCode.'-'.$startCode;
+        }
+    }
+
+    protected function listSampletemplate()
+    {
+        $sampleTemplate = ArrayHelper::map(SampleName::find()->all(), 'sample_name_id', 
+            function($sampleTemplate, $defaultValue) {
+                return $sampleTemplate->sample_name;
+        });
+
+        return $sampleTemplate;
+    }
+
+    public function actionGetlisttemplate() {
+        if(isset($_GET['template_id'])){
+            $id = (int) $_GET['template_id'];
+            $modelSampletemplate =  SampleName::findOne(['sample_name_id'=>$id]);
+            if(count($modelSampletemplate)>0){
+                $sampleName = $modelSampletemplate->sample_name;
+                $sampleDescription = $modelSampletemplate->description;
+            } else {
+                $sampleName = "";
+                $sampleDescription = "";
+            }
+        } else {
+            $sampleName = "Error getting sample name";
+            $sampleDescription = "Error getting description";
+        }
+        return Json::encode([
+            'name'=>$sampleName,
+            'description'=>$sampleDescription,
+        ]);
+    }
+
+    protected function saveSampleTemplate($sampleName,$description)
+    {
+        $modelSampletemplate = new SampleName();
+
+        $modelSampletemplate->sample_name = $sampleName;
+        $modelSampletemplate->description = $description;
+        $modelSampletemplate->save();
+
+        return $modelSampletemplate;
+    }
+
+    public function actionListtemplate($q = null)
+    {
+        $query = new Query;
+        
+        $query->select('sample_name')
+            ->from('eulims_lab.tbl_sample_name')
+            ->where('sample_name LIKE "%' . $q .'%"')
+            ->orderBy('sample_name');
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $out = [];
+        foreach ($data as $d) {
+            $out[] = ['value' => $d['sample_name']];
+        }
+        echo Json::encode($out);
     }
 }

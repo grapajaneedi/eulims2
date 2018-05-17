@@ -53,24 +53,22 @@ $this->registerJsFile("/js/services/services.js");
                 'filterInputOptions' => ['placeholder' => 'Test Category', 'test_category_id' => 'grid-products-search-category_type_id']
             ],
 
-            ['class' => 'yii\grid\ActionColumn',
+            ['class' => 'kartik\grid\ActionColumn',
             'contentOptions' => ['style' => 'width: 8.7%'],
            // 'visible'=> Yii::$app->user->isGuest ? false : true,
             'template' => '{view}{update}{delete}',
             'buttons'=>[
                 'view'=>function ($url, $model) {
-                    $t = '/services/testcategory/create';
-                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/services/sampletype/view?id='.$model->sample_type_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary modal_services','title' => Yii::t('app', "View Sample Type<font color='Blue'></font>")]);
+                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/services/sampletype/view?id='.$model->sample_type_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Sample Type<font color='Blue'></font>")]);
                 },
                 'update'=>function ($url, $model) {
-                    $t = '/services/testcategory/create';
-                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/services/sampletype/update?id='.$model->sample_type_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Update Sample Type<font color='Blue'></font>")]);
+                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/services/sampletype/update?id='.$model->sample_type_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Sample Type<font color='Blue'></font>")]);
                 },
-                'delete'=>function ($url, $model) {
-                  $t = '/services/testcategory/delete';
-                  return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>'/services/sampletype/delete?id='.$model->sample_type_id, 'class' => 'btn btn-danger modal_services','title' => Yii::t('app', "View History for  <font color='Blue'></font>")]);
+            //     'delete'=>function ($url, $model) {
+            //       $t = '/services/testcategory/delete';
+            //     //  return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>'/services/sampletype/delete?id='.$model->sample_type_id, 'class' => 'btn btn-danger','title' => Yii::t('app', "View History for  <font color='Blue'></font>")]);
     
-              },
+            //   },
             ],
         ],
         ],

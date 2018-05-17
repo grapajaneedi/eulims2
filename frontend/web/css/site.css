@@ -10,11 +10,13 @@ body {
 .box-shadow{
     box-shadow: 5px 5px;
 }
-.modal-header{
-    background-color: #3c8dbc
-}
 .modal-header>h4{
-    color: white
+    color: white;
+    position: absolute;
+    top: 8px
+}
+.pac-container{
+    z-index: 60000;
 }
 .wrap {
     min-height: 100%;
@@ -22,10 +24,22 @@ body {
     margin: 0 auto -60px;
     padding: 0 0 60px;
 }
+/**** Kartik Grivew ****/
+.kv-grid-table>thead{
+    background-color: #337ab7;
+    color: white;
+    text-decoration: none
+}
+.kv-grid-table>thead>tr>th a{
+    color: white;
+    text-decoration: none
+}
+/**** Kartik Grivew ****/
 .modal-header {
     border-bottom-color: #f4f4f4;
-    padding-bottom: 0px!important;
+    padding-bottom: 10px!important;
     padding-top: 15px!important;
+    background-color: #3c8dbc;
 }
 .wrap > .container {
     padding: 70px 15px 20px;
@@ -136,8 +150,9 @@ a.desc:after {
     outline: none;
 }
 
-label.required{
-      color:red;
+div.required label:after {
+    content: "*";
+    color: red;
 }
 
 fieldset

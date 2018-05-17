@@ -15,16 +15,26 @@ body {
 .wrap > .container {
     padding: 70px 15px 20px;
 }
-.modal-header{
-    background-color: #3c8dbc
+/**** Kartik Grivew ****/
+.kv-grid-table>thead{
+    background-color: #337ab7;
+    color: white;
+    text-decoration: none
+}
+.kv-grid-table>thead>tr>th a{
+    color: white;
+    text-decoration: none
+}
+/**** Kartik Grivew ****/
+.modal-header {
+    border-bottom-color: #f4f4f4;
+    padding-bottom: 10px!important;
+    padding-top: 15px!important;
+    background-color: #3c8dbc;
+    border-bottom: 1px;
 }
 .modal-header>h4{
     color: white
-}
-.modal-header {
-    border-bottom-color: #f4f4f4;
-    padding-bottom: 0px!important;
-    padding-top: 15px!important;
 }
 .footer {
     height: 60px;

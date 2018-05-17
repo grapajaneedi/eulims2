@@ -8,6 +8,8 @@ use common\models\lab\RequestSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
+use common\models\lab\Sample;
 
 /**
  * RequestController implements the CRUD actions for Request model.
@@ -51,8 +53,23 @@ class RequestController extends Controller
      */
     public function actionView($id)
     {
+        $searchModel = new RequestSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $samplesQuery = Sample::find()->where(['request_id' => $id]);
+        $sampleDataProvider = new ActiveDataProvider([
+                'query' => $samplesQuery,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+                'sort' => false,
+        ]);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'sampleDataProvider' => $sampleDataProvider,
         ]);
     }
 

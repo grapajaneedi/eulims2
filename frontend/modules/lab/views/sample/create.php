@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'testcategory' => $testcategory,
         'sampletype' => $sampletype,
         'labId' => $labId,
+        'sampletemplate' => $sampletemplate,
     ]) ?>
 
 </div>

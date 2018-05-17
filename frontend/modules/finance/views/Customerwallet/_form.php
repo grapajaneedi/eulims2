@@ -12,9 +12,9 @@ use kartik\select2\Select2;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="customerwallet-form">
+<div class="customerwallet-form" style="padding-bottom: 10px">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php  $form = ActiveForm::begin(); ?>
 
     <?php 
 	// Normal select with ActiveForm & model

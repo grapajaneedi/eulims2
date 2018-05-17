@@ -8,23 +8,24 @@ use yii\data\ActiveDataProvider;
 use common\models\lab\Customer;
 
 /**
- * CustomerSearch represents the model behind the search form about `common\models\lab\Customer`.
+ * CustomerSearch represents the model behind the search form of `common\models\lab\Customer`.
  */
 class CustomerSearch extends Customer
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['customer_id', 'rstl_id', 'municipalitycity_id', 'barangay_id', 'district', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'created_at'], 'integer'],
-            [['customer_code', 'customer_name', 'head', 'address', 'tel', 'fax', 'email'], 'safe'],
+            [['customer_id', 'rstl_id', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'created_at'], 'integer'],
+            [['customer_code', 'customer_name', 'head', 'tel', 'fax', 'email', 'address'], 'safe'],
+            [['latitude', 'longitude'], 'number'],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function scenarios()
     {
@@ -61,9 +62,8 @@ class CustomerSearch extends Customer
         $query->andFilterWhere([
             'customer_id' => $this->customer_id,
             'rstl_id' => $this->rstl_id,
-            'municipalitycity_id' => $this->municipalitycity_id,
-            'barangay_id' => $this->barangay_id,
-            'district' => $this->district,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
             'customer_type_id' => $this->customer_type_id,
             'business_nature_id' => $this->business_nature_id,
             'industrytype_id' => $this->industrytype_id,
@@ -73,10 +73,10 @@ class CustomerSearch extends Customer
         $query->andFilterWhere(['like', 'customer_code', $this->customer_code])
             ->andFilterWhere(['like', 'customer_name', $this->customer_name])
             ->andFilterWhere(['like', 'head', $this->head])
-            ->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'tel', $this->tel])
             ->andFilterWhere(['like', 'fax', $this->fax])
-            ->andFilterWhere(['like', 'email', $this->email]);
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'address', $this->address]);
 
         return $dataProvider;
     }

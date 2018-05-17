@@ -20,7 +20,8 @@ class AppAsset extends AssetBundle
         'js/bootbox.min.js',
         'js/main.js',
         'js/jquery.validate.min.js',
-        'js/nprogress.js'
+        'js/nprogress.js',
+        'https://code.jquery.com/ui/1.11.3/jquery-ui.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -18,14 +18,15 @@ $Host= "//".Yii::$app->getRequest()->serverName;
 <div class="content-wrapper">
     <?php
     Modal::begin([
-    'options' => [
-        'id' => 'modal',
-        'tabindex' => false // important for Select2 to work properly
-    ],
-    'header' => '<h4 style="padding-top: 0px;margin-top: 0px" id="modalHeader">New Profile</h4>'
+        'clientOptions' => ['backdrop' => 'static', 'keyboard' => false],
+        'options' => [
+            'id' => 'modal',
+            'tabindex' => false, // important for Select2 to work properly
+        ],
+        'header' => '<h4 class="fa fa-clone" style="padding-top: 0px;margin-top: 0px;padding-bottom:0px;margin-bottom: 0px"> <span class="modal-title" style="font-size: 16px"></span></h4>'
     ]);
     echo "<div>";
-    echo "<div id='modalContent' style='margin-left: 5px; padding-bottom:10px;'><img src='/images/ajax-loader.gif' alt=''/></div>";
+    echo "<div id='modalContent' style='margin-left: 5px;'><div style='text-align:center;'><img src='/images/img-loader64.gif' alt=''></div></div>";
     echo "<div>&nbsp;</div>";
     echo "</div>";
     Modal::end();
