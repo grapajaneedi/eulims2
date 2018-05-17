@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "33f30578f107e780c864c7c48d0632d0",
+    "content-hash": "5324de1c205e3c0eaab93a34d29dd331",
     "packages": [
         {
             "name": "2amigos/google-places-library",
@@ -5175,6 +5175,43 @@
             "time": "2016-10-10T12:19:37+00:00"
         },
         {
+            "name": "reportico/yii2-reportico",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reportico-web/yii2-reportico.git",
+                "reference": "e258bf31c3adf4ba163cf89c0d6669148e2eceff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/reportico-web/yii2-reportico/zipball/e258bf31c3adf4ba163cf89c0d6669148e2eceff",
+                "reference": "e258bf31c3adf4ba163cf89c0d6669148e2eceff",
+                "shasum": ""
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "reportico\\reportico\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Peter Deed",
+                    "email": "info@reportico.org"
+                }
+            ],
+            "description": "Reportico",
+            "keywords": [
+                "extension",
+                "yii2"
+            ],
+            "time": "2018-03-21T00:37:43+00:00"
+        },
+        {
             "name": "rmrevin/yii2-fontawesome",
             "version": "2.17.1",
             "source": {
@@ -7653,7 +7690,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "kartik-v/yii2-widget-datepicker": 20,
-        "kartik-v/yii2-date-range": 20
+        "kartik-v/yii2-date-range": 20,
+        "reportico/yii2-reportico": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

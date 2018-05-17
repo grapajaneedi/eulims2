@@ -48,6 +48,7 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'r' => 
         array (
             'rmrevin\\yii\\fontawesome\\' => 24,
+            'reportico\\reportico\\' => 20,
         ),
         'p' => 
         array (
@@ -252,6 +253,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'rmrevin\\yii\\fontawesome\\' => 
         array (
             0 => __DIR__ . '/..' . '/rmrevin/yii2-fontawesome',
+        ),
+        'reportico\\reportico\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/reportico/yii2-reportico',
         ),
         'phpnt\\exportFile\\' => 
         array (
