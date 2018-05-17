@@ -66,6 +66,11 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
                 }
             ],
             [
+                'class'=>'kartik\grid\BooleanColumn',
+                'attribute' => 'active',
+                'label' => 'Active',
+            ],
+            [
             //'class' => 'yii\grid\ActionColumn'
             'class' => kartik\grid\ActionColumn::className(),
             'template' => $Buttontemplate,

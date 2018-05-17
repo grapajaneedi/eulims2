@@ -9,7 +9,7 @@ use Yii;
  *
  * @property integer $sample_type_id
  * @property string $sample_type
- * @property integer $test_category_id
+ * @property integer $testcategory_id
  *
  * @property Sample[] $samples
  * @property Testcategory $testCategory
@@ -39,10 +39,10 @@ class Sampletype extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['sample_type', 'test_category_id'], 'required'],
-            [['test_category_id'], 'integer'],
+            [['sample_type', 'testcategory_id'], 'required'],
+            [['testcategory_id'], 'integer'],
             [['sample_type'], 'string', 'max' => 75],
-            [['test_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['test_category_id' => 'testcategory_id']],
+            [['test_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
         ];
     }
 
@@ -54,7 +54,7 @@ class Sampletype extends \yii\db\ActiveRecord
         return [
             'sample_type_id' => 'Sample Type ID',
             'sample_type' => 'Sample Type',
-            'test_category_id' => 'Test Category ID',
+            'testcategory_id' => 'Test Category ID',
         ];
     }
 

@@ -18,7 +18,7 @@ class TestCategorySearch extends TestCategory
     public function rules()
     {
         return [
-            [['test_category_id', 'lab_id'], 'integer'],
+            [['testcategory_id', 'lab_id'], 'integer'],
             [['category_name'], 'safe'],
         ];
     }
@@ -62,7 +62,7 @@ class TestCategorySearch extends TestCategory
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'test_category_id' => $this->test_category_id,
+            'testcategory_id' => $this->testcategory_id,
             'lab_id' => $this->lab_id,
         ]);
 

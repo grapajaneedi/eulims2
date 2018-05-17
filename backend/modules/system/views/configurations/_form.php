@@ -22,7 +22,8 @@ use common\models\lab\Lab;
             'language' => 'en-gb',
             'options' => ['placeholder' => 'Select a Laboratory'],
             'pluginOptions' => [
-                'allowClear' => true
+                'allowClear' => true,
+                'disabled' => true,
             ],
         ])->label('Laboratory');
         ?>
