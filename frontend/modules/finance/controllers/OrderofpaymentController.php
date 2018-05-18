@@ -79,16 +79,20 @@ class OrderofpaymentController extends Controller
         $dataProvider->pagination->pageSize=5;
         
          if ($model->load(Yii::$app->request->post())) {
-           //return $this->redirect(['view', 'id' => $model->orderofpayment_id]);
-            //return $this->runAction('index');
-          if($model->validate() && $model->save()){
+            foreach($_POST['request_id'] as $id){
+		$request = Request::model()->findByPk($id);
+            }
+            if(isset($_POST['Request']['sampling_date'])){
+                $model->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
+            }  
+            if($model->validate() && $model->save()){
                 $session = Yii::$app->session;
                 $model->rstl_id=1;
                 $model->transactionnum='123456';
                 $model->save();
                 $session->set('savepopup',"executed");
                 return $this->redirect(['/finance/orderofpayment']);
-          }
+            }
            
         } 
         if(Yii::$app->request->isAjax){
@@ -135,8 +139,10 @@ class OrderofpaymentController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
-         return $this->renderPartial('_request', ['dataProvider'=>$dataProvider]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_request', ['dataProvider'=>$dataProvider]);
+            //return;
+        }
 
     }
     /**
