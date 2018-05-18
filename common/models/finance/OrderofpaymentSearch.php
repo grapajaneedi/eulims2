@@ -6,21 +6,26 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\finance\Orderofpayment;
+use kartik\daterange\DateRangeBehavior;
 
 /**
  * OrderofpaymentSearch represents the model behind the search form about `common\models\finance\Orderofpayment`.
  */
 class OrderofpaymentSearch extends Orderofpayment
 {
+    public $createTimeRange;
+    public $createDateStart;
+    public $createDateEnd;
     /**
      * @inheritdoc
      */
+   
     public function rules()
     {
         return [
             [['orderofpayment_id', 'rstl_id', 'collectiontype_id', 'customer_id', 'created_receipt'], 'integer'],
-            [['transactionnum', 'order_date', 'purpose'], 'safe'],
-            [['amount'], 'number'],
+            [['transactionnum', 'order_date', 'purpose','createDateStart','createDateEnd'], 'safe'],
+            [['createTimeRange'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
         ];
     }
 
@@ -63,15 +68,13 @@ class OrderofpaymentSearch extends Orderofpayment
             'orderofpayment_id' => $this->orderofpayment_id,
             'rstl_id' => $this->rstl_id,
             'collectiontype_id' => $this->collectiontype_id,
-            'order_date' => $this->order_date,
             'customer_id' => $this->customer_id,
-            'amount' => $this->amount,
             'created_receipt' => $this->created_receipt,
         ]);
 
         $query->andFilterWhere(['like', 'transactionnum', $this->transactionnum])
-            ->andFilterWhere(['like', 'purpose', $this->purpose]);
-
+            ->andFilterWhere(['like', 'purpose', $this->purpose])
+            ->andFilterWhere(['between', 'order_date', $this->createDateStart, $this->createDateEnd]);
         return $dataProvider;
     }
     

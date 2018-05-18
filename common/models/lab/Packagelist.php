@@ -7,22 +7,22 @@ use Yii;
 /**
  * This is the model class for table "tbl_packagelist".
  *
- * @property integer $package_id
- * @property integer $rstl_id
- * @property integer $testcategory_id
- * @property integer $sampletype_id
+ * @property int $package_id
+ * @property int $rstl_id
+ * @property int $testcategory_id
+ * @property int $sample_type_id
  * @property string $name
  * @property string $rate
  * @property string $tests
  *
  * @property Testcategory $testcategory
- * @property Sample $sampletype
+ * @property Sample $sampleType
  * @property Sample[] $samples
  */
 class Packagelist extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -38,23 +38,23 @@ class Packagelist extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['rstl_id', 'testcategory_id', 'sampletype_id', 'name', 'tests'], 'required'],
-            [['rstl_id', 'testcategory_id', 'sampletype_id'], 'integer'],
+            [['rstl_id', 'testcategory_id', 'sample_type_id', 'name', 'tests'], 'required'],
+            [['rstl_id', 'testcategory_id', 'sample_type_id'], 'integer'],
             [['rate'], 'number'],
             [['name'], 'string', 'max' => 50],
             [['tests'], 'string', 'max' => 100],
             [['testcategory_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
-            [['sampletype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sample::className(), 'targetAttribute' => ['sampletype_id' => 'sample_id']],
+            [['sample_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sample::className(), 'targetAttribute' => ['sample_type_id' => 'sample_id']],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -62,7 +62,7 @@ class Packagelist extends \yii\db\ActiveRecord
             'package_id' => 'Package ID',
             'rstl_id' => 'Rstl ID',
             'testcategory_id' => 'Testcategory ID',
-            'sampletype_id' => 'Sampletype ID',
+            'sample_type_id' => 'Sample Type ID',
             'name' => 'Name',
             'rate' => 'Rate',
             'tests' => 'Tests',
@@ -80,9 +80,9 @@ class Packagelist extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSampletype()
+    public function getSampleType()
     {
-        return $this->hasOne(Sample::className(), ['sample_id' => 'sampletype_id']);
+        return $this->hasOne(Sample::className(), ['sample_id' => 'sample_type_id']);
     }
 
     /**

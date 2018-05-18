@@ -5,10 +5,11 @@ namespace frontend\modules\finance\controllers;
 use Yii;
 use common\models\finance\Orderofpayment;
 use common\models\finance\OrderofpaymentSearch;
+use common\models\lab\Request;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\data\ActiveDataProvider;
 /**
  * OrderofpaymentController implements the CRUD actions for Orderofpayment model.
  */
@@ -35,12 +36,14 @@ class OrderofpaymentController extends Controller
      */
     public function actionIndex()
     {
+        $model = new Orderofpayment();
         $searchModel = new OrderofpaymentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model' => $model,
         ]);
     }
 
@@ -75,24 +78,37 @@ class OrderofpaymentController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) { 
-            //return $this->redirect(['view', 'id' => $model->orderofpayment_id]);
-            return $this->runAction('index');
-        } else {
-            if(Yii::$app->request->isAjax){
-                return $this->renderAjax('create', [
-                    'model' => $model,
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
-                ]);
-            }else{
-                return $this->render('create', [
-                    'model' => $model,
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
-                ]);
+         if ($model->load(Yii::$app->request->post())) {
+            foreach($_POST['request_id'] as $id){
+		$request = Request::model()->findByPk($id);
             }
-       }   
+            if(isset($_POST['Request']['sampling_date'])){
+                $model->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
+            }  
+            if($model->validate() && $model->save()){
+                $session = Yii::$app->session;
+                $model->rstl_id=1;
+                $model->transactionnum='123456';
+                $model->save();
+                $session->set('savepopup',"executed");
+                return $this->redirect(['/finance/orderofpayment']);
+            }
+           
+        } 
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('create', [
+                'model' => $model,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }else{
+            return $this->render('create', [
+                'model' => $model,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+        
     }
 
     /**
@@ -114,6 +130,21 @@ class OrderofpaymentController extends Controller
         }
     }
 
+     public function actionGetlistrequest()
+    {
+        $post=Yii::$app->request->post();
+        $customer_id=$post['customer_id'];
+        $query = Request::find()->where(['customer_id' => $customer_id]);
+        
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_request', ['dataProvider'=>$dataProvider]);
+            //return;
+        }
+
+    }
     /**
      * Deletes an existing Orderofpayment model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

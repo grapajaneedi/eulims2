@@ -10,7 +10,7 @@ use common\models\lab\Testcategory;
 use common\models\lab\Request;
 use common\models\lab\Lab;
 use common\models\lab\Samplecode;
-use common\models\lab\Sampletemplate;
+use common\models\lab\SampleName;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -18,6 +18,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
+use yii\web\Response;
 
 /**
  * SampleController implements the CRUD actions for Sample model.
@@ -138,6 +139,11 @@ class SampleController extends Controller
                 $quantity = 1;
             }
 
+            if(isset($_POST['sample_template']))
+            {
+                $this->saveSampleTemplate($_POST['Sample']['samplename'],$_POST['Sample']['description']);
+            }
+
             if($quantity>1)
             {
                 for ($i=1;$i<=$quantity;$i++)
@@ -152,7 +158,7 @@ class SampleController extends Controller
                         }
                         $sample->rstl_id = 11;
                         $sample->sample_code = 0;
-                        $sample->test_category_id = (int) $_POST['Sample']['test_category_id'];
+                        $sample->testcategory_id = (int) $_POST['Sample']['testcategory_id'];
                         $sample->sample_type_id = (int) $_POST['Sample']['sample_type_id'];
                         $sample->samplename = $_POST['Sample']['samplename'];
                         $sample->description = $_POST['Sample']['description'];
@@ -165,10 +171,13 @@ class SampleController extends Controller
                         print_r($_POST);
                     echo "</pre>";*/
                 }
-                return $this->redirect('index');
+                //return $this->redirect('index');
+                return $this->redirect(['/lab/request/view', 'id' => $requestId]);
             } else {
                 if($model->save(false)){
-                    return $this->redirect(['view', 'id' => $model->sample_id]);
+                    //return $this->redirect(['view', 'id' => $model->sample_id]);
+                    //echo Json::encode('Successfully saved.');
+                    return $this->redirect(['/lab/request/view', 'id' => $requestId]);
                 }
             }
 
@@ -206,20 +215,21 @@ class SampleController extends Controller
      */
     public function actionUpdate($id)
     {
+        //\Yii::$app->response->format = Response:: FORMAT_JSON;
         $model = $this->findModel($id);
 
-        if(isset($_GET['request_id']))
+        /*if(isset($_GET['request_id']))
         {
             $requestId = (int) $_GET['request_id'];
-        }
-        $request = $this->findRequest($requestId);
+        }*/
+        $request = $this->findRequest($model->request_id);
         $labId = $request->lab_id;
 
         $testcategory = $this->listTestcategory($labId);
         //$sampletype = $this->listSampletype();
 
         $sampletype = ArrayHelper::map(Sampletype::find()
-                ->where(['test_category_id' => $model->test_category_id])
+                ->where(['testcategory_id' => $model->testcategory_id])
                 ->all(), 'sample_type_id', 'sample_type');
 
         /*if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -245,7 +255,25 @@ class SampleController extends Controller
             //$model->sampling_date = date('Y-m-d');
 
             if($model->save(false)){
-                return $this->redirect(['view', 'id' => $model->sample_id]);
+                //if(Yii::$app->request->isAjax){
+                  //  echo Json::encode('Successfully saved.');
+                    //return;
+                //} //else {
+                    //return $this->redirect(['view', 'id' => $model->sample_id]);
+                //}
+                //Yii::$app->session->setFlash('formSave');
+                //\Yii::$app->response->format = Response::FORMAT_JSON;
+                //return['id'=>$id, 'someOtherData'=>true];
+                //return;
+
+                //Yii::$app->response->format = Response::FORMAT_JSON;
+                //return json_encode(["test"=> 1]);
+               // return array('status' => true, 'data'=> 'Student record is successfully updated');
+                //Yii::info('Model was not saved');
+                //Yii::$app->session->setFlash('formError');
+                //echo Json::encode('Successfully saved.');
+                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+
             }
         } elseif (Yii::$app->request->isAjax) {
                 return $this->renderAjax('_form', [
@@ -253,6 +281,7 @@ class SampleController extends Controller
                     'testcategory' => $testcategory,
                     'sampletype' => $sampletype,
                     'labId' => $labId,
+                    'sampletemplate' => $this->listSampletemplate(),
                 ]);
         } else {
             return $this->render('update', [
@@ -260,6 +289,7 @@ class SampleController extends Controller
                 'testcategory' => $testcategory,
                 'sampletype' => $sampletype,
                 'labId' => $labId,
+                'sampletemplate' => $this->listSampletemplate(),
             ]);
         }
     }
@@ -274,7 +304,12 @@ class SampleController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        //return $this->redirect(['index']);
+        //return Json::encode(['result' => 'Successfully deleted.']);;
+        //throw ('Successfully deleted.');
+        //echo "Sample successfully deleted.";
+        //throw "Error";
+        return;
     }
 
     /**
@@ -321,7 +356,7 @@ class SampleController extends Controller
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
-            $list = Sampletype::find()->andWhere(['test_category_id'=>$id])->asArray()->all();
+            $list = Sampletype::find()->andWhere(['testcategory_id'=>$id])->asArray()->all();
             $selected  = null;
             if ($id != null && count($list) > 0) {
                 $selected = '';
@@ -458,9 +493,9 @@ class SampleController extends Controller
 
     protected function listSampletemplate()
     {
-        $sampleTemplate = ArrayHelper::map(Sampletemplate::find()->all(), 'sampletemplate_id', 
+        $sampleTemplate = ArrayHelper::map(SampleName::find()->all(), 'sample_name_id', 
             function($sampleTemplate, $defaultValue) {
-                return $sampleTemplate->name;
+                return $sampleTemplate->sample_name;
         });
 
         return $sampleTemplate;
@@ -469,9 +504,9 @@ class SampleController extends Controller
     public function actionGetlisttemplate() {
         if(isset($_GET['template_id'])){
             $id = (int) $_GET['template_id'];
-            $modelSampletemplate =  Sampletemplate::findOne(['sampletemplate_id'=>$id]);
+            $modelSampletemplate =  SampleName::findOne(['sample_name_id'=>$id]);
             if(count($modelSampletemplate)>0){
-                $sampleName = $modelSampletemplate->name;
+                $sampleName = $modelSampletemplate->sample_name;
                 $sampleDescription = $modelSampletemplate->description;
             } else {
                 $sampleName = "";
@@ -487,25 +522,14 @@ class SampleController extends Controller
         ]);
     }
 
-    protected function saveSampleTemplate()
+    protected function saveSampleTemplate($sampleName,$description)
     {
-        
-    }
+        $modelSampletemplate = new SampleName();
 
-    public function actionListtemplate($q = null)
-    {
-        $query = new Query;
-        
-        $query->select('name')
-            ->from('eulims_lab.tbl_sampletemplate')
-            ->where('name LIKE "%' . $q .'%"')
-            ->orderBy('name');
-        $command = $query->createCommand();
-        $data = $command->queryAll();
-        $out = [];
-        foreach ($data as $d) {
-            $out[] = ['value' => $d['name']];
-        }
-        echo Json::encode($out);
+        $modelSampletemplate->sample_name = $sampleName;
+        $modelSampletemplate->description = $description;
+        $modelSampletemplate->save();
+
+        return $modelSampletemplate;
     }
 }

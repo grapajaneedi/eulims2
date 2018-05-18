@@ -79,11 +79,10 @@ class UserController extends Controller
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
+            return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
-        ]);
+            ]); 
     }
     public function actionUpdate($id)
     {
@@ -199,14 +198,24 @@ class UserController extends Controller
                 if(Yii::$app->user->isGuest){
                     
                 }else{
+                    
                    return $this->run('/admin/user'); 
                 } 
             }
         }
-
+        
+        if (Yii::$app->request->isAjax)
+        {
+            return $this->renderAjax('signup', [
+                'model' => $model,
+        ]);
+        }
+        else
+        {
         return $this->render('signup', [
                 'model' => $model,
         ]);
+        }
     }
 
     /**

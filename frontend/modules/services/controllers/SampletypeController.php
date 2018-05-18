@@ -57,10 +57,6 @@ class SampletypeController extends Controller
                     'model' => $this->findModel($id),
                 ]);
         }
-
-        //    return $this->render('view', [
-        //     'model' => $this->findModel($id),
-        // ]);
     }
 
     /**
@@ -73,12 +69,7 @@ class SampletypeController extends Controller
         $model = new Sampletype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            // if (Yii::$app->request->isAjax){
                  return $this->runAction('index');
-          //  }else{
-           //      return $this->redirect(['view', 'id' => $model->test_category_id]);
-          //   }
-           
          } 
            
         if(Yii::$app->request->isAjax){
@@ -86,18 +77,7 @@ class SampletypeController extends Controller
                          'model' => $model,
                      ]);
              }
-        }
-
-        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        //     return $this->redirect(['view', 'id' => $model->sample_type_id]);
-        // } else {
-        //     return $this->render('create', [
-        //         'model' => $model,
-        //     ]);
-        // }
-
-      
-    
+        }  
 
     /**
      * Updates an existing Sampletype model.
@@ -110,7 +90,7 @@ class SampletypeController extends Controller
         $model = $this->findModel($id);
         
                 if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->testcategory_id]);
+                    return $this->redirect(['view', 'id' => $model->test_category_id]);
                 } else if (Yii::$app->request->isAjax) {
                     return $this->renderAjax('update', [
                         'model' => $model,

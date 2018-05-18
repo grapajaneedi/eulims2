@@ -4,6 +4,7 @@ use common\modules\admin\AnimateAsset;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\web\YiiAsset;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $routes [] */
@@ -19,8 +20,10 @@ $opts = Json::htmlEncode([
 $this->registerJs("var _opts = {$opts};");
 $this->registerJs($this->render('_script.js'));
 $animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></i>';
+Pjax::begin();
 ?>
 <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => 'route']); ?>
+
 <div class="panel panel-default col-xs-12">
     <div class="panel-heading"><i class="fa fa-fa-road fa-adn"></i> Route</div>
     <div class="panel-body">
@@ -81,4 +84,8 @@ $animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate
             </div>
         </div>
     </div>
+     <p>
+                <?= Html::a(Yii::t('rbac-admin', 'Back to Dashboard'), ['../site/login'], ['class' => 'btn btn-success',]) ?>
+            </p>
 </div>
+<?php                Pjax::end() ?>

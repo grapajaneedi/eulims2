@@ -56,10 +56,6 @@ class TestController extends Controller
                     'model' => $this->findModel($id),
                 ]);
         }
-
-        //  return $this->render('view', [
-        //     'model' => $this->findModel($id),
-        // ]);
     }
 
     /**
@@ -73,12 +69,7 @@ class TestController extends Controller
         $model = new Test();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            // if (Yii::$app->request->isAjax){
-                 return $this->runAction('index');
-          //  }else{
-           //      return $this->redirect(['view', 'id' => $model->test_category_id]);
-          //   }
-           
+                 return $this->runAction('index');   
          } 
            
         if(Yii::$app->request->isAjax){

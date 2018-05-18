@@ -30,6 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
 //]);
 //echo "<div id='modalContent'><div style='text-align:center;'><img src='/images/img-loader64.gif'></div></div>";
 //Modal::end();
+
+
 ?>
 
 <div class="request-view">
@@ -124,6 +126,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'displayOnly'=>true
                         ],
                     ],
+                    
                 ],
                 [
                     'columns' => [
@@ -207,6 +210,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                     ],
                 ],
+                
                 [
                     'group'=>true,
                     'label'=>'Transaction Details',
@@ -243,37 +247,113 @@ $this->params['breadcrumbs'][] = $this->title;
             $gridColumns = [
                 //['class' => 'yii\grid\SerialColumn'],
                 [
-                    'attribute'=>'request_id',
+                    'attribute'=>'sample_code',
                     'enableSorting' => false,
                 ],
                 [
-                    'attribute'=>'request_ref_num',
+                    'attribute'=>'samplename',
                     'enableSorting' => false,
                 ],
                 [
-                    'attribute'=>'report_due',
+                    'attribute'=>'description',
+                    'format' => 'raw',
                     'enableSorting' => false,
+                    'value' => function($data){
+                        return ($data->request->lab_id == 2) ? "<span style='font-size:11.5px;'>Sampling Date: <b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
+                    },
+                ],
+                [
+                    'class' => 'kartik\grid\ActionColumn',
+                    'template' => '{delete}',
+                    'dropdown' => false,
+                    'dropdownOptions' => ['class' => 'pull-right'],
+                    //'urlCreator' => function($action, $model, $key, $index) { return '#'; },
+                    'urlCreator' => function ($action, $model, $key, $index) {
+                        /*if ($action === 'update') {
+                            $url ='index.php?r=client-login/lead-update&id='.$model->id;
+                            return $url;
+                        }*/
+                        if ($action === 'delete') {
+                            $url ='/lab/sample/delete?id='.$model->sample_id;
+                            return $url;
+                        }
+
+                    },
+                    /*'viewOptions' => ['title' => 'This will launch the book details page. Disabled for this demo!', 'data-toggle' => 'tooltip'],
+                    'updateOptions' => ['title' => 'This will launch the book update page. Disabled for this demo!', 'data-toggle' => 'tooltip'],*/
+                    'deleteOptions' => ['title' => 'Delete Sample', 'data-toggle' => 'tooltip'],
+                    //'buttons' => [
+                        /*'view' => function ($url, $model) {
+                            return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
+                                        'title' => Yii::t('app', 'lead-view'),
+                            ]);
+                        },
+
+                        'update' => function ($url, $model) {
+                            return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+                                        'title' => Yii::t('app', 'lead-update'),
+                            ]);
+                        },*/
+                        /*'delete' => function ($url, $model) {
+                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url);
+                        }*/
+
+                    //],
+                    'headerOptions' => ['class' => 'kartik-sheet-style'],
                 ],
             ];
 
             echo GridView::widget([
-                'id' => 'request-grid',
-                'dataProvider'=> $dataProvider,
-                'summary' => '',
+                'id' => 'sample-grid',
+                'dataProvider'=> $sampleDataProvider,
+                //'summary' => '',
+                //'showPageSummary' => true,
+                //'showHeader' => true,
+                //'showPageSummary' => true,
+                //'showFooter' => true,
+                //'template' => '{update} {delete}',
+                'pjax'=>true,
+                'pjaxSettings' => [
+                    'options' => [
+                        'enablePushState' => false,
+                    ]
+                ],
                 'responsive'=>true,
                 'striped'=>true,
                 'hover'=>true,
                 //'filterModel' => $searchModel,
+               // 'toggleDataOptions' => ['minCount' => 10],
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Samples</h3>',
                     'type'=>'primary',
                     //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['/lab/sample/create','request_id'=>$model->request_id], ['class' => 'btn btn-success']),
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Sample', 'class' => 'btn btn-success','id' => 'modalBtn']),
-                    'after'=>'',
-                    'footer'=>false,
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    //'after'=>'',
+                    //'footer'=>false,
                 ],
+                'rowOptions' => function ($model, $key, $index, $grid) {
+                    return [
+                        //'id' => $model->sample_id,
+                        'id' => $model->sample_id,
+                        //'id' => $data['request_id'],
+                        //'onclick' => 'alert(this.id);',
+                        'onclick' => 'updateSample('.$model->sample_id.');',
+                        'style' => 'cursor:pointer;',
+                        //'onclick' => 'updateSample(this.id,this.request_id);',
+                        // [
+                        //     'data-id' => $model->sample_id,
+                        //     'data-request_id' => $model->request_id
+                        // ],
+                    ];
+                },
                 'columns' => $gridColumns,
-                'toolbar' => [],
+                'toolbar' => [
+                    'content'=> Html::a('<i class="glyphicon glyphicon-repeat"></i>', [Url::to(['request/view','id'=>$model->request_id])], [
+                                'class' => 'btn btn-default', 
+                                'title' => 'Reset Grid'
+                            ]),
+                    '{toggleData}',
+                ],
                 /*'toolbar' => [
                     [
                         'content'=>
@@ -313,7 +393,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ];
 
             echo GridView::widget([
-                'id' => 'request-grid',
+                'id' => 'analysis-grid',
                 'dataProvider'=> $dataProvider,
                 'summary' => '',
                 'responsive'=>true,
@@ -323,22 +403,100 @@ $this->params['breadcrumbs'][] = $this->title;
                     'heading'=>'<h3 class="panel-title">Analyses</h3>',
                     'type'=>'primary',
                     //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['/lab/analysis/create'], ['class' => 'btn btn-success'],['id' => 'modalBtn']),
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['analysis/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn']),
-                    'after'=>'',
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Package', 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add other Services', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Other Services', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                   
+                  //  'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn']),
                     'footer'=>false,
                 ],
                 'columns' => $gridColumns,
-                'toolbar' => [],
+                'toolbar' => [
+                ],
             ]);
         ?>
     </div>
 </div>
 <script type="text/javascript">
-   $("#modalBtn").click(function(){
+   /*$("#modalBtn").click(function(){
         $(".modal-title").html($(this).attr('title'));
         $("#modal").modal('show')
         //$("#sampleModal").modal('show')
             .find('#modalContent')
             .load($(this).attr('value'));
-    });
+    });*/
+
+    function updateSample(id){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       var url = '/lab/sample/update?id='+id;
+        $('.modal-title').html('Update Sample');
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
+
+    function addSample(url,title){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       //var url = '/lab/sample/update?id='+id;
+        $(".modal-title").html(title);
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
 </script>
+<?php
+$this->registerJs("
+    /*$('td').click(function (e) {
+        var id = $(this).closest('tr').data('id');
+        if(e.target == this)
+            location.href = '" . Url::to(['accountinfo/update']) . "?id=' + id;
+    });*/
+
+
+    $('#sample-grid tbody td').css('cursor', 'pointer');
+    /*$('tbody td').click(function (e) {
+        var id = $(this).closest('tr').data('id');
+        if (e.target == this)
+            location.href = '" . Url::to(['sample/update']) . "?id=' + id;
+    });*/
+    // $('#sample-grid tbody td').click(function(e) {
+    // //$('#sample-grid-pjax tbody tr').click(function() {
+    //     e.preventDefault();
+    //     var id = $(this).closest('tr').data('id');
+    //     var url = '" . Url::to(['sample/update']) . "?id=' + id;
+    //     $('.modal-title').html('Update Sample');
+    //     $('#modal').modal('show')
+    //         .find('#modalContent')
+    //         .load(url);
+    // });
+/*$('#sample-grid tbody td').click(function() {
+    var id = $(this).closest('tr').data('id');
+    $('.modal-title').html('Update Sample');
+        $('#modal').modal('show')
+            .find('#modalContent').load(updateSample(id));
+    
+});*/
+
+/*function updateSample(id)
+{
+    //var id = $(this).closest('tr').data('id');
+    $.ajax({
+        type: 'GET',
+        // dataType: 'json',
+        // data: {
+        // 'user': 'A'
+        // },
+        //data: {id: $model->request_id},
+        url: '" . Url::to(['sample/update']) . "?id=' + id,
+        contentType: 'application/json',
+        success: function(data) {
+            console.log(typeof(data));
+            console.log(data)
+        },
+        error: function (data) {
+            console.log(data);
+        },
+    });
+}*/
+");
+?>

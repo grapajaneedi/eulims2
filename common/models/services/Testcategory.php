@@ -3,14 +3,13 @@
 namespace common\models\services;
 
 use Yii;
-use common\models\lab\Lab;
 
 /**
  * This is the model class for table "tbl_testcategory".
  *
- * @property integer $test_category_id
+ * @property int $testcategory_id
  * @property string $category_name
- * @property integer $lab_id
+ * @property int $lab_id
  *
  * @property Packagelist[] $packagelists
  * @property Sampletype[] $sampletypes
@@ -20,7 +19,7 @@ use common\models\lab\Lab;
 class Testcategory extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -36,7 +35,7 @@ class Testcategory extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -44,17 +43,17 @@ class Testcategory extends \yii\db\ActiveRecord
             [['category_name', 'lab_id'], 'required'],
             [['lab_id'], 'integer'],
             [['category_name'], 'string', 'max' => 200],
-            [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => TestCategory::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
+            [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
-            'test_category_id' => 'Testcategory ID',
+            'testcategory_id' => 'Testcategory ID',
             'category_name' => 'Category Name',
             'lab_id' => 'Lab ID',
         ];
@@ -65,7 +64,7 @@ class Testcategory extends \yii\db\ActiveRecord
      */
     public function getPackagelists()
     {
-        return $this->hasMany(Packagelist::className(), ['test_category_id' => 'test_category_id']);
+        return $this->hasMany(Packagelist::className(), ['testcategory_id' => 'testcategory_id']);
     }
 
     /**
@@ -73,7 +72,7 @@ class Testcategory extends \yii\db\ActiveRecord
      */
     public function getSampletypes()
     {
-        return $this->hasMany(Sampletype::className(), ['test_category_id' => 'test_category_id']);
+        return $this->hasMany(Sampletype::className(), ['testcategory_id' => 'testcategory_id']);
     }
 
     /**
@@ -81,7 +80,7 @@ class Testcategory extends \yii\db\ActiveRecord
      */
     public function getTests()
     {
-        return $this->hasMany(Test::className(), ['test_category_id' => 'test_category_id']);
+        return $this->hasMany(Test::className(), ['testcategory_id' => 'testcategory_id']);
     }
 
     /**

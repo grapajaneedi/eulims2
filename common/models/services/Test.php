@@ -3,32 +3,31 @@
 namespace common\models\services;
 
 use Yii;
-use common\models\services\lab;
 
 /**
  * This is the model class for table "tbl_test".
  *
- * @property integer $test_id
- * @property integer $agency_id
+ * @property int $test_id
+ * @property int $rstl_id
  * @property string $testname
  * @property string $method
  * @property string $references
  * @property string $fee
- * @property integer $duration
- * @property integer $test_category_id
- * @property integer $sample_type_id
- * @property integer $lab_id
+ * @property int $duration
+ * @property int $testcategory_id
+ * @property int $sample_type_id
+ * @property int $lab_id
  *
  * @property Analysis[] $analyses
  * @property Analysis[] $analyses0
  * @property Lab $lab
- * @property Testcategory $testCategory
+ * @property Testcategory $testcategory
  * @property Sampletype $sampleType
  */
 class Test extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -44,37 +43,37 @@ class Test extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['agency_id', 'testname', 'method', 'references', 'duration', 'test_category_id', 'sample_type_id', 'lab_id'], 'required'],
-            [['agency_id', 'duration', 'test_category_id', 'sample_type_id', 'lab_id'], 'integer'],
+            [['rstl_id', 'testname', 'method', 'references', 'duration', 'testcategory_id', 'sample_type_id', 'lab_id'], 'required'],
+            [['rstl_id', 'duration', 'testcategory_id', 'sample_type_id', 'lab_id'], 'integer'],
             [['fee'], 'number'],
             [['testname'], 'string', 'max' => 200],
             [['method'], 'string', 'max' => 150],
             [['references'], 'string', 'max' => 100],
-          //  [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
-            [['test_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['test_category_id' => 'test_category_id']],
+            [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
+            [['testcategory_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
             [['sample_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sample_type_id' => 'sample_type_id']],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
             'test_id' => 'Test ID',
-            'agency_id' => 'Agency ID',
+            'rstl_id' => 'Rstl ID',
             'testname' => 'Testname',
             'method' => 'Method',
             'references' => 'References',
             'fee' => 'Fee',
             'duration' => 'Duration',
-            'test_category_id' => 'Test Category ID',
+            'testcategory_id' => 'Testcategory ID',
             'sample_type_id' => 'Sample Type ID',
             'lab_id' => 'Lab ID',
         ];
@@ -107,9 +106,9 @@ class Test extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTestCategory()
+    public function getTestcategory()
     {
-        return $this->hasOne(Testcategory::className(), ['test_category_id' => 'test_category_id']);
+        return $this->hasOne(Testcategory::className(), ['testcategory_id' => 'testcategory_id']);
     }
 
     /**

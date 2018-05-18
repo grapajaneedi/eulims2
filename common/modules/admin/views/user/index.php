@@ -12,12 +12,13 @@ $this->title = Yii::t('rbac-admin', 'Users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
-    <?= $this->renderFile(__DIR__.'/../menu.php',['button'=>'user']); ?>
+
+    
     <div class="panel panel-default col-xs-12">
         <div class="panel-heading"><i class="fa fa-user-circle fa-adn"></i> Users</div>
         <div class="panel-body">
             <p>
-                <?= Html::a(Yii::t('rbac-admin', 'Signup New User'), ['signup'], ['class' => 'btn btn-success']) ?>
+                <?= Html::a(Yii::t('rbac-admin', 'Signup New User'), ['signup'], ['class' => 'btn btn-success',]) ?>
             </p>
     <?=
     GridView::widget([
@@ -61,5 +62,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ]);
         ?>
         </div>
+        <p>
+                <?= Html::a(Yii::t('rbac-admin', 'Back to Dashboard'), ['../site/login'], ['class' => 'btn btn-success',]) ?>
+            </p>
     </div>
 </div>

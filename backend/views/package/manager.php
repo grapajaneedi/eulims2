@@ -7,6 +7,7 @@ use yii\bootstrap\Modal;
 use kartik\widgets\FileInput;
 use yii\helpers\Url;
 use kartik\form\ActiveForm;
+use yii\helpers\Html;
 
 $this->title = 'Package Manager';
 $this->params['breadcrumbs'][] = $this->title;
@@ -244,4 +245,7 @@ $Packages= Package::find()->all();
                 <button id="btnCreateModule" class="btn btn-primary btn-float-left"><span class="fa fa-building"></span> Create Module</button>
             </div>
         </div>
+      <p>
+               
+            </p>
  </div>

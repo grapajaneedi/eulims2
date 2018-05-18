@@ -43,5 +43,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ?>
             <?php Pjax::end(); ?>
         </div>
+        <p>
+                <?= Html::a(Yii::t('rbac-admin', 'Back to Dashboard'), ['../site/login'], ['class' => 'btn btn-success',]) ?>
+            </p>
     </div>
+    
 </div>

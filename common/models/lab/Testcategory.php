@@ -5,7 +5,7 @@ namespace common\models\lab;
 use Yii;
 
 /**
- * This is the model class for table "tbl_testcategory".
+ * This is the model class for table "tbltestcategory".
  *
  * @property integer $testcategory_id
  * @property string $category_name
@@ -72,7 +72,7 @@ class Testcategory extends \yii\db\ActiveRecord
      */
     public function getSampletypes()
     {
-        return $this->hasMany(Sampletype::className(), ['test_category_id' => 'testcategory_id']);
+        return $this->hasMany(Sampletype::className(), ['testcategory_id' => 'testcategory_id']);
     }
 
     /**
@@ -80,7 +80,7 @@ class Testcategory extends \yii\db\ActiveRecord
      */
     public function getTests()
     {
-        return $this->hasMany(Test::className(), ['test_category_id' => 'testcategory_id']);
+        return $this->hasMany(Test::className(), ['testcategory_id' => 'testcategory_id']);
     }
 
     /**

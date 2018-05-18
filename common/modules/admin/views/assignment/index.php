@@ -26,7 +26,7 @@ $columns[] = [
 ];
 ?>
 <div class="assignment-index">
-    <?= $this->renderFile(__DIR__.'/../menu.php',['button'=>'Assignment']); ?>
+  
     <div class="panel panel-default col-xs-12">
         <div class="panel-heading"><i class="fa fa-user-circle fa-adn"></i> Assignment</div>
         <div class="panel-body">
@@ -40,5 +40,9 @@ $columns[] = [
     ?>
     <?php Pjax::end(); ?>
         </div>
+        <p>
+                <?= Html::a(Yii::t('rbac-admin', 'Back to Dashboard'), ['../site/login'], ['class' => 'btn btn-success',]) ?>
+            </p>
     </div>
+    
 </div>

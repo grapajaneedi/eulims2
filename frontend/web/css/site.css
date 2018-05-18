@@ -24,9 +24,20 @@ body {
     margin: 0 auto -60px;
     padding: 0 0 60px;
 }
+/**** Kartik Grivew ****/
+.kv-grid-table>thead{
+    background-color: #337ab7;
+    color: white;
+    text-decoration: none
+}
+.kv-grid-table>thead>tr>th a{
+    color: white;
+    text-decoration: none
+}
+/**** Kartik Grivew ****/
 .modal-header {
     border-bottom-color: #f4f4f4;
-    padding-bottom: 8px!important;
+    padding-bottom: 10px!important;
     padding-top: 15px!important;
     background-color: #3c8dbc;
 }
@@ -158,3 +169,12 @@ fieldset>legend {
     border-bottom: none;
     margin-bottom: 0;
 }
+
+
+/*.requests {
+    overflow-y:auto;
+}
+
+.modal-open {
+    overflow: hidden!important;
+}*/
