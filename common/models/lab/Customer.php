@@ -18,6 +18,9 @@ use yii\db\ActiveRecord;
  * @property string $tel
  * @property string $fax
  * @property string $email
+ * @property int $municipalitycity_id 
+ * @property int $barangay_id 
+ * @property int $district 
  * @property string $address
  * @property double $latitude
  * @property double $longitude
@@ -74,7 +77,7 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'customer_type_id', 'business_nature_id', 'industrytype_id'], 'required'],
+            [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'municipalitycity_id', 'barangay_id', 'district', 'customer_type_id', 'business_nature_id', 'industrytype_id'], 'required'],
             [['rstl_id', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'created_at'], 'integer'],
             [['latitude', 'longitude'], 'number'],
             [['customer_code'], 'string', 'max' => 11],
@@ -100,6 +103,9 @@ class Customer extends \yii\db\ActiveRecord
             'customer_code' => 'Customer Code',
             'customer_name' => 'Customer Name',
             'head' => 'Head',
+            'municipalitycity_id' => 'Municipalitycity ID', 
+            'barangay_id' => 'Barangay ID', 
+            'district' => 'District', 
             'tel' => 'Tel',
             'fax' => 'Fax',
             'email' => 'Email',
@@ -145,11 +151,4 @@ class Customer extends \yii\db\ActiveRecord
         return $this->hasMany(Request::className(), ['customer_id' => 'customer_id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRequests0()
-    {
-        return $this->hasMany(Request::className(), ['customer_id' => 'customer_id']);
-    }
 }

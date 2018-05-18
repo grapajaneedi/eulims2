@@ -7,6 +7,9 @@ use common\models\lab\Industrytype;
 use common\models\lab\Customertype;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
+use common\models\address\MunicipalityCity;
+use common\models\address\Province;
+use common\models\address\Barangay;
 
 // use common\components\GooglePlacesAutoComplete;
 // use dosamigos\google\places\Search;
@@ -90,7 +93,7 @@ use yii\helpers\ArrayHelper;
             </div>
         </div>
         <div class="row">
-             <div class="col-md-6">
+             <div class="col-md-6" style="border-right: 4px dotted blue;">
                <?= Html::button('<span class="glyphicon glyphicon-search"></span> Locate', ['value'=>'/customer/info/create', 'class' => 'btn btn-small btn-success','title' => Yii::t('app', "Locate Customer"),'onclick'=>"ShowGModal('Locate Customer',true,'900px')"]); ?>
 
                  <?= $form->field($model, 'address')->textarea(['maxlength' => true,'readonly'=>'true']) ?>
@@ -98,6 +101,40 @@ use yii\helpers\ArrayHelper;
                 <?= $form->field($model, 'latitude')->textInput(['readonly'=>'true']) ?>
 
                 <?= $form->field($model, 'longitude')->textInput(['readonly'=>'true']) ?>
+            </div>
+            <div class="col-md-6">
+                <?php 
+                // echo $form->field($model, 'business_nature_id')->widget(Select2::classname(), [
+                //     'data' => ArrayHelper::map(Businessnature::find()->all(), 'business_nature_id', 'nature'),
+                //     'language' => 'en',
+                //     'options' => ['placeholder' => 'Select  ...'],
+                //     'pluginOptions' => [
+                //       'allowClear' => true
+                //     ],
+                // ]);
+                ?>
+
+                <?php 
+                echo $form->field($model, 'municipalitycity_id')->widget(Select2::classname(), [
+                    'data' => ArrayHelper::map(MunicipalityCity::find()->all(), 'id', 'municipality'),
+                    'language' => 'en',
+                    'options' => ['placeholder' => 'Select  ...'],
+                    'pluginOptions' => [
+                      'allowClear' => true
+                    ],
+                ]);
+                ?>
+
+                <?php 
+                echo $form->field($model, 'barangay_id')->widget(Select2::classname(), [
+                    'data' => ArrayHelper::map(Barangay::find()->all(), 'barangay_id', 'barangay'),
+                    'language' => 'en',
+                    'options' => ['placeholder' => 'Select  ...'],
+                    'pluginOptions' => [
+                      'allowClear' => true
+                    ],
+                ]);
+                ?>
             </div>
         </div>
     <div class="form-group">
