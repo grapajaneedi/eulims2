@@ -17,7 +17,7 @@ use kartik\widgets\DatePicker;
 <div class="orderofpayment-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: -20px !important;">
+    <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 0px !important;">
      <a href="#" class="close" data-dismiss="alert" >×</a>
     <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
     </div>
@@ -70,7 +70,7 @@ use kartik\widgets\DatePicker;
                             customer_id:customer_id,
                         },
                         url: \"/finance/orderofpayment/getlistrequest\",
-                        dataType: \"text\",
+                        dataType: \"html\",
                         success: function ( response ) {
                            
                            setTimeout(function(){
