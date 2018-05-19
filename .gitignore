@@ -15,4 +15,4 @@ backend/web/images/Thumbs.db
 nbproject/project.xml
 nbproject/private/private.xml
 
-common/database
+#common/database
