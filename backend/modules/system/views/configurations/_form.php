@@ -20,6 +20,27 @@ $js=<<<SCRIPT
       $("#btnSubmit").toggle();
       $("#btnSaveRequestTemplate").toggle();
    });
+   $("#btnSaveRequestTemplate").click(function(){
+        $.post('/ajax/saverequesttemplate', {
+            rstl_id: $("#RSTLSelect2").val(),
+            rtemp: $("#RequestLaboratory").val()
+        }, function(result){
+            //Return values
+            if(result.Status=='Failed'){
+                bootbox.alert({
+                    title: "EULIMS",
+                    message: "Request Template Failed to Saved!",
+                    size: 'medium'
+                });
+            }else{
+                bootbox.alert({
+                    title: "EULIMS",
+                    message: "Request Template Successully Saved!",
+                    size: 'medium'
+                });
+            }
+        }); 
+   });
 SCRIPT;
 $this->registerJs($js);
 ?>
@@ -53,12 +74,14 @@ $this->registerJs($js);
         </div>
      </div>
     <div class="row">
+        <?php if(\Yii::$app->user->can('access-configure-template')){ ?> 
         <div class="col-md-6">
             <label class="control-label" for="RequestLaboratory">&nbsp;</label>
             <a id="CollapseRequestcode" class="btn btn-primary" data-toggle="collapse" style="width: 100%" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                 Configure Request Template
             </a>
         </div>
+         <?php } ?>
         <div class="col-md-6">
             <?php
                 echo $form->field($model, 'active')->widget(SwitchInput::classname(), [
@@ -85,7 +108,22 @@ $this->registerJs($js);
                         'id'=>'RSTLSelect2',
                         'value' => $RequestcodedTemplate->rstl_id,
                         'data' => ArrayHelper::map(Rstl::find()->asArray()->all(), 'rstl_id', 'name'),
-                        'options' => ['multiple' => false, 'placeholder' => 'Select RSTL']
+                        'options' => ['multiple' => false, 'placeholder' => 'Select RSTL'],
+                        'pluginEvents' => [
+                            "select2:select" => "function() { 
+                                //Ajax Call
+                                $.post('/ajax/gettemplate', {
+                                    rstl_id: this.value
+                                }, function(result){
+                                    //Return values
+                                    if(result.requestcode_template_id==0){
+                                       //No Template
+                                       
+                                    }
+                                    $('#RequestLaboratory').val(result.requestcode_template);
+                                }); 
+                            }
+                        "]
                     ]);
                     ?>
                 </div>
@@ -97,8 +135,10 @@ $this->registerJs($js);
         </div>
     </div>
      <div style="position:absolute;right:18px;bottom:10px;">
+        <?php if(\Yii::$app->user->can('access-configure-template')){ ?> 
         <button type="button" id="btnSaveRequestTemplate" style="display: none" class="btn btn-success">Save Request Template</button>
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['id'=>'btnSubmit','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?php } ?>
+         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['id'=>'btnSubmit','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         <button type="button" class="btn btn-default" data-dismiss="modal" >Cancel</button>
     </div>
     <?php ActiveForm::end(); ?>

@@ -29,6 +29,71 @@ if (Yii::$app->controller->action->id === 'login') {
         <title><?= Html::encode($this->title) ?></title>
         <link rel="shortcut icon" href="<?php echo $GLOBALS['frontend_base_uri'] ?>/favicon.ico" type="image/x-icon" />
         <?php $this->head() ?>
+        <?php echo PHP_EOL; ?>
+        <script type="text/javascript">
+            function MessageBox(Message,Title="System Message",labelYes="",labelCancel="", WithCallback=false) {
+        var labelButton=(labelYes==="") && (labelCancel==="");
+        if(labelButton && !WithCallback){
+            bootbox.alert({
+                title: Title,
+                message: Message,
+                size: 'medium'
+            });
+            return true;
+        }else if(!labelButton && !WithCallback){
+            bootbox.confirm({
+                title: Title,
+                message: Message,
+                buttons: {
+                    cancel: {
+                        label: labelCancel,
+                        className: 'btn-default'
+                    },
+                    confirm: {
+                        label: labelYes,
+                        className: 'btn-success'
+                    }
+                },
+                callback: function (result) {
+                    return true;
+                }
+            });
+        }else if(!labelButton && WithCallback){
+            bootbox.confirm({
+                title: Title,
+                message: Message,
+                buttons: {
+                    cancel: {
+                        label: labelCancel,
+                        className: 'btn-default'
+                                    },
+                                    confirm: {
+                                        label: labelYes,
+                                        className: 'btn-success'
+                                    }
+                                },
+                                callback: function (result) {
+                                    try {
+                                        if (result) {//yes
+                                            ConfirmCallback();
+                                        } else {//No
+                                            CancelCallBack();
+                                        }
+                                    } catch (err) {
+                                        krajeeDialog.alert(err.message + "!");
+                                        /*bootbox.alert({
+                                         title: Title,
+                                         message: err.message+'!',
+                                         size: 'medium'
+                                         });
+                                         */
+                                    }
+
+                                }
+                            });
+                    }
+        }
+        </script>
     </head>
     <body class="hold-transition skin-blue sidebar-collapse">
     <?php $this->beginBody() ?>
