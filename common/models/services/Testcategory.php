@@ -2,6 +2,8 @@
 
 namespace common\models\services;
 
+use common\models\lab\Lab;
+
 use Yii;
 
 /**

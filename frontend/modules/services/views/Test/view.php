@@ -21,13 +21,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'test_id',
-            'agency_id',
+            'rstl_id',
             'testname',
             'method',
             'references',
             'fee',
             'duration',
-            'testCategory.category_name',
+            'Testcategory.category_name',
             'sampleType.sample_type'
         ],
     ]) ?>
