@@ -4,7 +4,7 @@ namespace frontend\modules\services\controllers;
 
 use Yii;
 use common\models\lab\Packagelist;
-use common\models\PackagelistSearch;
+use common\models\lab\PackagelistSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -93,7 +93,7 @@ class PackagelistController extends Controller
         $model = $this->findModel($id);
 
           if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->test_category_id]);
+                    return $this->redirect(['view', 'id' => $model->testcategory_id]);
                 } else if (Yii::$app->request->isAjax) {
                     return $this->renderAjax('update', [
                         'model' => $model,

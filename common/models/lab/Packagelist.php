@@ -10,7 +10,7 @@ use Yii;
  * @property integer $package_id
  * @property integer $rstl_id
  * @property integer $testcategory_id
- * @property integer $sampletype_id
+ * @property integer $sample_type_id
  * @property string $name
  * @property string $rate
  * @property string $tests
@@ -43,13 +43,13 @@ class Packagelist extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'testcategory_id', 'sampletype_id', 'name', 'tests'], 'required'],
-            [['rstl_id', 'testcategory_id', 'sampletype_id'], 'integer'],
+            [['rstl_id', 'testcategory_id', 'sample_type_id', 'name', 'tests'], 'required'],
+            [['rstl_id', 'testcategory_id', 'sample_type_id'], 'integer'],
             [['rate'], 'number'],
             [['name'], 'string', 'max' => 50],
             [['tests'], 'string', 'max' => 100],
             [['testcategory_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
-            [['sampletype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sample::className(), 'targetAttribute' => ['sampletype_id' => 'sample_id']],
+            [['sample_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sample::className(), 'targetAttribute' => ['sample_type_id' => 'sample_id']],
         ];
     }
 
@@ -62,7 +62,7 @@ class Packagelist extends \yii\db\ActiveRecord
             'package_id' => 'Package ID',
             'rstl_id' => 'Rstl ID',
             'testcategory_id' => 'Testcategory ID',
-            'sampletype_id' => 'Sampletype ID',
+            'sample_type_id' => 'Sampletype ID',
             'name' => 'Name',
             'rate' => 'Rate',
             'tests' => 'Tests',
@@ -82,7 +82,7 @@ class Packagelist extends \yii\db\ActiveRecord
      */
     public function getSampletype()
     {
-        return $this->hasOne(Sample::className(), ['sample_id' => 'sampletype_id']);
+        return $this->hasOne(Sample::className(), ['sample_id' => 'sample_type_id']);
     }
 
     /**

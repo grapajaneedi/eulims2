@@ -104,7 +104,7 @@ class Sample extends \yii\db\ActiveRecord
      */
     public function getPackagelists()
     {
-        return $this->hasMany(Packagelist::className(), ['sampletype_id' => 'sample_id']);
+        return $this->hasMany(Packagelist::className(), ['sample_type_id' => 'sample_id']);
     }
 
     /**

@@ -2,7 +2,8 @@
 SQLyog Ultimate v12.09 (64 bit)
 MySQL - 5.7.16-log : Database - eulims_lab
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -278,16 +279,16 @@ DROP TABLE IF EXISTS `tbl_packagelist`;
 CREATE TABLE `tbl_packagelist` (
   `package_id` int(11) NOT NULL AUTO_INCREMENT,
   `rstl_id` int(11) NOT NULL,
-  `testcategory_id` int(11) NOT NULL,
-  `sampletype_id` int(11) NOT NULL,
+  `sample_type_idid` int(11) NOT NULL,
+  `sample_type_id` int(11) NOT NULL,
   `name` varchar(50) CHARACTER SET latin1 NOT NULL,
   `rate` decimal(10,2) NOT NULL DEFAULT '0.00',
   `tests` varchar(100) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`package_id`),
-  KEY `testcategory_id` (`testcategory_id`),
-  KEY `sampletype_id` (`sampletype_id`),
-  CONSTRAINT `tbl_packagelist_ibfk_1` FOREIGN KEY (`testcategory_id`) REFERENCES `tbl_testcategory` (`test_category_id`),
-  CONSTRAINT `tbl_packagelist_ibfk_2` FOREIGN KEY (`sampletype_id`) REFERENCES `tbl_sample` (`sample_id`)
+  KEY `sample_type_idid` sample_type_idy_id`),
+  KEY `sample_type_id` (`sample_type_id`),
+  CONSTRAINT `tbl_packagelist_ibfk_1` FOREIGN KEY (`sample_type_idid`) REFERENCES `tbl_testcategory` (`test_category_id`),
+  CONSTRAINT `tbl_packagelist_ibfk_2` FOREIGN KEY (`sample_type_id`) REFERENCES `tbl_sample` (`sample_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 /*Data for the table `tbl_packagelist` */
