@@ -17,7 +17,7 @@ use kartik\widgets\DatePicker;
 <div class="orderofpayment-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
 
     <?php $form = ActiveForm::begin(); ?>
-    <?php echo $form->field($model, 'RequestIds')->textInput() ?>
+    <?php echo $form->field($model, 'RequestIds')->hiddenInput()->label(false) ?>
     <div style="padding:0px!important;">
         <div class="row">
             <div class="col-sm-6">
