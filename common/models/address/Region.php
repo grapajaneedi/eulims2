@@ -7,14 +7,16 @@ use Yii;
 /**
  * This is the model class for table "tbl_region".
  *
- * @property integer $region_id
+ * @property int $region_id
  * @property string $code
  * @property string $region
+ *
+ * @property Province[] $provinces
  */
 class Region extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -30,7 +32,7 @@ class Region extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -42,7 +44,7 @@ class Region extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -51,5 +53,13 @@ class Region extends \yii\db\ActiveRecord
             'code' => 'Code',
             'region' => 'Region',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProvinces()
+    {
+        return $this->hasMany(Province::className(), ['region_id' => 'region_id']);
     }
 }

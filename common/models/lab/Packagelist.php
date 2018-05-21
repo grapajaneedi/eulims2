@@ -7,22 +7,29 @@ use Yii;
 /**
  * This is the model class for table "tbl_packagelist".
  *
+<<<<<<< HEAD
  * @property integer $package_id
  * @property integer $rstl_id
  * @property integer $testcategory_id
  * @property integer $sample_type_id
+=======
+ * @property int $package_id
+ * @property int $rstl_id
+ * @property int $testcategory_id
+ * @property int $sample_type_id
+>>>>>>> upstream/master
  * @property string $name
  * @property string $rate
  * @property string $tests
  *
  * @property Testcategory $testcategory
- * @property Sample $sampletype
+ * @property Sample $sampleType
  * @property Sample[] $samples
  */
 class Packagelist extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -38,7 +45,7 @@ class Packagelist extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -54,7 +61,7 @@ class Packagelist extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -62,7 +69,11 @@ class Packagelist extends \yii\db\ActiveRecord
             'package_id' => 'Package ID',
             'rstl_id' => 'Rstl ID',
             'testcategory_id' => 'Testcategory ID',
+<<<<<<< HEAD
             'sample_type_id' => 'Sampletype ID',
+=======
+            'sample_type_id' => 'Sample Type ID',
+>>>>>>> upstream/master
             'name' => 'Name',
             'rate' => 'Rate',
             'tests' => 'Tests',
@@ -80,7 +91,7 @@ class Packagelist extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSampletype()
+    public function getSampleType()
     {
         return $this->hasOne(Sample::className(), ['sample_id' => 'sample_type_id']);
     }

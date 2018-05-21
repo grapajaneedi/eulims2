@@ -26,7 +26,7 @@ if(count($sampletype) > 0){
 
 <div class="sample-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
     <?php if(empty($model->sample_id)): ?>
     <p><label>Sample Quantity</label></p>
     <div class="input-group" style="margin-bottom: 15px;">
@@ -44,11 +44,11 @@ if(count($sampletype) > 0){
     </div>
     <?php endif; ?>
 
-    <?= $form->field($model,'test_category_id')->widget(Select2::classname(),[
+    <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
                 'data' => $testcategory,
-                //'theme' => Select2::THEME_KRAJEE,
-                'theme' => Select2::THEME_BOOTSTRAP,
-                'options' => ['id'=>'sample-test_category_id'],
+                'theme' => Select2::THEME_KRAJEE,
+                //'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['id'=>'sample-testcategory_id'],
                 'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Testcategory'],
         ])
     ?>
@@ -59,7 +59,7 @@ if(count($sampletype) > 0){
         'options'=>['id'=>'sample-sample_type_id'],
         'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
         'pluginOptions'=>[
-            'depends'=>['sample-test_category_id'],
+            'depends'=>['sample-testcategory_id'],
             'placeholder'=>'Select Sampletype',
             'url'=>Url::to(['/lab/sample/listsampletype']),
             'loadingText' => 'Loading Sampletype...',
@@ -84,7 +84,7 @@ if(count($sampletype) > 0){
         }
     ?>
     <?php
-        echo '<label class="control-label">Sample Template</label>';
+        //echo '<label class="control-label">Sample Template</label>';
         /*echo TypeaheadBasic::widget([
             'name' => 'saved_templates',
             'id' => 'saved_templates',
@@ -96,23 +96,31 @@ if(count($sampletype) > 0){
         ]);*/
     ?>
     <?php
-        echo Select2::widget([
-        'name' => 'saved_templates',
-        //'value' => '',
-        'data' => $sampletemplate,
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select sample template ...'],
-        'options' => ['id' => 'saved_templates']
-    ]);
+        if(empty($model->sample_id)){
+            echo '<label class="control-label">Sample Template</label>';
+            echo Select2::widget([
+                'name' => 'saved_templates',
+                //'value' => '',
+                'data' => $sampletemplate,
+                //'theme' => Select2::THEME_BOOTSTRAP,
+                'theme' => Select2::THEME_KRAJEE,
+                'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select sample template ...'],
+                'options' => ['id' => 'saved_templates']
+            ]);
+            echo "<br>";
+        }
     ?>
 
-    <br />
     <?= $form->field($model, 'samplename')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
-    <?= Html::checkbox('sample_template', false, ['label' => '&nbsp;Save as template','value'=>"1"]); ?>
-    <br /><br />
+    <?php
+        if(empty($model->sample_id)){
+            echo Html::checkbox('sample_template', false, ['label' => '&nbsp;Save as template','value'=>"1"]);
+            echo "<br><br>";
+        }
+    ?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
@@ -209,4 +217,29 @@ $this->registerJs("$('#saved_templates').on('change',function(){
             }
         });
 });");
+?>
+<?php
+$script = <<< JS
+    $('form#{Sample}').on('beforeSubmit', function(e){
+        var \$form = $(this);
+        $.post(
+            \$form.attr("action"), 
+            \$form.serialize()
+        )
+        .done(function(result){
+            if(result == 1)
+            {
+                //$(document).find('#modal').modal('hide');
+                $(\$form).trigger("reset");
+                $.pjax.reload({container:'#sample-grid-pjax'});
+            } else {
+                $("#message").html(result.message);
+            }
+        }).fail(function(){
+            console.log("server error");
+        });
+    return false;
+    });
+JS;
+$this->registerJs($script);
 ?>

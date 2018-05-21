@@ -24,6 +24,7 @@ body {
     margin: 0 auto -60px;
     padding: 0 0 60px;
 }
+
 /**** Kartik Grivew ****/
 .kv-grid-table>thead{
     background-color: #337ab7;
@@ -169,3 +170,12 @@ fieldset>legend {
     border-bottom: none;
     margin-bottom: 0;
 }
+
+
+/*.requests {
+    overflow-y:auto;
+}
+
+.modal-open {
+    overflow: hidden!important;
+}*/
