@@ -76,10 +76,10 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
             'template' => $Buttontemplate,
             'buttons'=>[
               'view'=>function ($url, $model) {
-                  return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['configurations/view','id'=>$model->lab_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View <font color='Blue'>Laboratory</font>")]);
+                  return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['configurations/view','id'=>$model->lab_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Laboratory")]);
               },
               'update'=>function ($url, $model) {
-                  return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['configurations/update','id'=>$model->lab_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update <font color='Blue'>Laboratory</font>")]);
+                  return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['configurations/update','id'=>$model->lab_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Laboratory")]);
               }
                 ],
             ],
