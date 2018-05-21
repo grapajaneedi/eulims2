@@ -8,6 +8,7 @@ use common\models\lab\CustomerSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Html;
 
 /**
  * InfoController implements the CRUD actions for Customer model.
@@ -24,6 +25,9 @@ class InfoController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    //'getprovince' => ['POST'],
+                    'getmunicipality' => ['POST'],
+                    'getbarangay' => ['POST']
                 ],
             ],
         ];
@@ -135,6 +139,31 @@ class InfoController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionGetprovince(){
+
+        $data = array('NA'=>'Not Applicable');
+
+        //append blank
+         // echo Html::tag('option', array('value'=>''),Html::encode(null),true);
+        echo Html::tag('option', Html::encode('fdgdfbd'), ['value' => 'sdfgdg']);
+        // foreach($data as $value=>$name)
+        // {
+            // echo Html::tag('option',
+                       // array('value'=>$value),Html::encode($name),true);
+            // echo Html::tag('option',
+                       // Html::encode($name),Html::encode($name),true);
+        // }
+
+    }
+
+    public function actionGetmunicipality(){
+        echo "something";
+    }
+
+    public function actionGetbarangay(){
+        echo "something";
     }
 
     /**

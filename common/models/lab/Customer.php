@@ -14,9 +14,7 @@ use Yii;
  * @property double $latitude
  * @property double $longitude
  * @property string $head
- * @property int $municipalitycity_id
  * @property int $barangay_id
- * @property int $district
  * @property string $address
  * @property string $tel
  * @property string $fax
@@ -56,8 +54,8 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'municipalitycity_id', 'barangay_id', 'district', 'customer_type_id', 'business_nature_id', 'industrytype_id'], 'required'],
-            [['rstl_id', 'municipalitycity_id', 'barangay_id', 'district', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'created_at'], 'integer'],
+            [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'barangay_id', 'customer_type_id', 'business_nature_id', 'industrytype_id'], 'required'],
+            [['rstl_id', 'barangay_id', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'created_at'], 'integer'],
             [['latitude', 'longitude'], 'number'],
             [['customer_code'], 'string', 'max' => 11],
             [['customer_name', 'address'], 'string', 'max' => 200],
@@ -83,9 +81,7 @@ class Customer extends \yii\db\ActiveRecord
             'latitude' => 'Latitude',
             'longitude' => 'Longitude',
             'head' => 'Head',
-            'municipalitycity_id' => 'Municipalitycity ID', 
             'barangay_id' => 'Barangay ID', 
-            'district' => 'District', 
             'tel' => 'Tel',
             'fax' => 'Fax',
             'email' => 'Email',
