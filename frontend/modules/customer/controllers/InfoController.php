@@ -5,10 +5,14 @@ namespace frontend\modules\customer\controllers;
 use Yii;
 use common\models\lab\Customer;
 use common\models\lab\CustomerSearch;
+use common\models\address\Province;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
+
 
 /**
  * InfoController implements the CRUD actions for Customer model.
@@ -142,19 +146,27 @@ class InfoController extends Controller
     }
 
     public function actionGetprovince(){
+        // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $data = array('NA'=>'Not Applicable');
-
-        //append blank
-         // echo Html::tag('option', array('value'=>''),Html::encode(null),true);
-        echo Html::tag('option', Html::encode('fdgdfbd'), ['value' => 'sdfgdg']);
-        // foreach($data as $value=>$name)
-        // {
-            // echo Html::tag('option',
-                       // array('value'=>$value),Html::encode($name),true);
-            // echo Html::tag('option',
-                       // Html::encode($name),Html::encode($name),true);
-        // }
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $list = Province::find()->andWhere(['region_id'=>$id])->asArray()->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $province) {
+                    $out[] = ['id' => $province['province_id'], 'name' => $province['province']];
+                    if ($i == 0) {
+                        $selected = $province['province_id'];
+                    }
+                }
+                // Shows how you can preselect a value
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
 
     }
 

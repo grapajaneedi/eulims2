@@ -11,6 +11,9 @@ use common\models\address\CityMunicipality;
 use common\models\address\Province;
 use common\models\address\Barangay;
 use common\models\address\Region;
+use yii\helpers\Url;
+use kartik\widgets\DepDrop;
+
 
 /* @var $model common\models\lab\Customer */
 /* @var $form yii\widgets\ActiveForm */ 
@@ -104,35 +107,35 @@ use common\models\address\Region;
                 <label class="control-label">Region</label><br>
                 <?php 
                 echo Select2::widget([
-                    'id'=>'cregion',
                     'name' => 'cregion',
                     'data' => ArrayHelper::map(Region::find()->all(), 'region_id', 'region'),
                     'theme' => Select2::THEME_BOOTSTRAP,
                     'hideSearch' => false,
                     'options' => [
-                        'placeholder' => 'Select a Region',
+                        'id'=>'cregion'
                     ],
-                    'pluginOptions'=>array(
-                        'ajax'=>array( 
-                            'type'=>'POST',
-                            'url'=>Yii::$app->urlManager->createUrl('/customer/info/getprovince'),
-                            'update'=>'#cprovince',
-                        ),
-                    ),
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Region'],
                 ]);
                 ?>
                 <br>
                 <label class="control-label">Province</label><br>
                 <?php 
-                echo Select2::widget([
-                    'id'=>'cprovince',
+                echo DepDrop::widget([
+                    'type'=>DepDrop::TYPE_SELECT2,
                     'name' => 'province',
-                    'data' => ArrayHelper::map(Province::find()->all(), 'region_id', 'region'),
-                    'theme' => Select2::THEME_BOOTSTRAP,
-                    'hideSearch' => false,
+                    'data' => null,
+                    // 'theme' => Select2::THEME_BOOTSTRAP,
+                    // 'hideSearch' => false,
                     'options' => [
-                        'placeholder' => 'Select a Province',
+                        'id'=>'cprovince'
                     ],
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'pluginOptions'=>[
+                        'depends'=>['cregion'],
+                        'placeholder'=>'Select Province',
+                        'url'=>Url::to(['/customer/info/getprovince']),
+                        'loadingText' => 'Loading provinces...',
+                    ]
                 ]);
                 ?>
                 <br>
