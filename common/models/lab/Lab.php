@@ -123,4 +123,12 @@ class Lab extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Testreportconfig::className(), ['lab_id' => 'lab_id']);
     }
+    /** 
+    * @return \yii\db\ActiveQuery 
+    */ 
+   public function getLabManagers() 
+   { 
+       return $this->hasMany(LabManager::className(), ['lab_id' => 'lab_id']); 
+   }
+
 }
