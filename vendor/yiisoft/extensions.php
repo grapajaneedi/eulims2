@@ -709,4 +709,13 @@ return array (
       '@reportico/reportico' => $vendorDir . '/reportico/yii2-reportico',
     ),
   ),
+  'yii2assets/yii2-pdfjs' => 
+  array (
+    'name' => 'yii2assets/yii2-pdfjs',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@yii2assets/pdfjs' => $vendorDir . '/yii2assets/yii2-pdfjs',
+    ),
+  ),
 );

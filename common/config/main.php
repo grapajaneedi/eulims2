@@ -14,6 +14,14 @@ return [
         'datecontrol' =>  [
             'class' => '\kartik\datecontrol\Module'
         ],
+        'pdfjs' => [
+            'class' => '\yii2assets\pdfjs\Module',
+            'waterMark'=>[
+                'text'=>' EULIMS',
+                'color'=> 'red',
+                'alpha'=>'0.3'
+            ]
+        ],
         'reportico' => [
             'class' => 'reportico\reportico\Module',
             'controllerMap' => [

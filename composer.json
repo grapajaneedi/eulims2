@@ -110,7 +110,8 @@
         "miloschuman/yii2-highcharts-widget": "^6.0",
         "kartik-v/yii2-popover-x": "*",
         "kartik-v/yii2-date-range": "@dev",
-        "reportico/yii2-reportico": "dev-master"
+        "reportico/yii2-reportico": "dev-master",
+        "yii2assets/yii2-pdfjs": ">=1.0"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "^2.0"

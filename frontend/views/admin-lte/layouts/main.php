@@ -29,6 +29,18 @@ if (Yii::$app->controller->action->id === 'login') {
         <title><?= Html::encode($this->title) ?></title>
         <link rel="shortcut icon" href="<?php echo Yii::$app->request->baseUrl; ?>/favicon.ico" type="image/x-icon" />
         <?php $this->head() ?>
+        <?php echo PHP_EOL; ?>
+        <script type="text/javascript">
+            function PreviewReport(PDFUrl){
+                /*
+                * This Function will preview Generated PDF
+                * With the given URL of PDF Action
+                */
+                //alert(PDFUrl);
+                var url="/reports/preview?url="+PDFUrl;
+                window.open(url, '_blank');
+            }
+        </script>
     </head>
     <body class="hold-transition skin-blue sidebar-collapse">
     <?php $this->beginBody() ?>

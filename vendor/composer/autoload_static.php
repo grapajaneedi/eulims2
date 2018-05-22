@@ -12,8 +12,8 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         '180092cfc969a12e06f2132a203a3184' => __DIR__ . '/..' . '/codeception/verify/src/Codeception/function.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
-        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
     );
@@ -35,6 +35,7 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
             'yii\\' => 4,
             'yii2mod\\alert\\' => 14,
             'yii2assets\\printthis\\' => 21,
+            'yii2assets\\pdfjs\\' => 17,
         ),
         'v' => 
         array (
@@ -238,6 +239,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         array (
             0 => __DIR__ . '/..' . '/yii2assets/yii2-printthis',
         ),
+        'yii2assets\\pdfjs\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yii2assets/yii2-pdfjs',
+        ),
         'vova07\\imperavi\\tests\\' => 
         array (
             0 => __DIR__ . '/..' . '/vova07/yii2-imperavi-widget/tests',
@@ -265,8 +270,8 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'noam148\\imageresize\\' => 
         array (
