@@ -7,15 +7,16 @@ use common\models\lab\Industrytype;
 use common\models\lab\Customertype;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
-use common\models\address\MunicipalityCity;
+use common\models\address\CityMunicipality;
 use common\models\address\Province;
 use common\models\address\Barangay;
+use common\models\address\Region;
+use yii\helpers\Url;
+use kartik\widgets\DepDrop;
 
-// use common\components\GooglePlacesAutoComplete;
-// use dosamigos\google\places\Search;
+
 /* @var $model common\models\lab\Customer */
 /* @var $form yii\widgets\ActiveForm */ 
-//$this->registerJsFile("/js/customer/googleplace.js"); 
 ?>
 <div class="customer-form">
 
@@ -94,7 +95,7 @@ use common\models\address\Barangay;
         </div>
         <div class="row">
              <div class="col-md-6" style="border-right: 4px dotted blue;">
-               <?= Html::button('<span class="glyphicon glyphicon-search"></span> Locate', ['value'=>'/customer/info/create', 'class' => 'btn btn-small btn-success','title' => Yii::t('app', "Locate Customer"),'onclick'=>"ShowGModal('Locate Customer',true,'900px')"]); ?>
+               <?= Html::button('<span class="glyphicon glyphicon-search"></span> Locate', ['value'=>'/customer/info/create', 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Locate Customer"),'onclick'=>"ShowGModal('Locate Customer',true,'900px')"]); ?>
 
                  <?= $form->field($model, 'address')->textarea(['maxlength' => true,'readonly'=>'true']) ?>
 
@@ -103,36 +104,77 @@ use common\models\address\Barangay;
                 <?= $form->field($model, 'longitude')->textInput(['readonly'=>'true']) ?>
             </div>
             <div class="col-md-6">
+                <label class="control-label">Region</label><br>
                 <?php 
-                // echo $form->field($model, 'business_nature_id')->widget(Select2::classname(), [
-                //     'data' => ArrayHelper::map(Businessnature::find()->all(), 'business_nature_id', 'nature'),
-                //     'language' => 'en',
-                //     'options' => ['placeholder' => 'Select  ...'],
-                //     'pluginOptions' => [
-                //       'allowClear' => true
-                //     ],
-                // ]);
-                ?>
-
-                <?php 
-                echo $form->field($model, 'municipalitycity_id')->widget(Select2::classname(), [
-                    'data' => ArrayHelper::map(MunicipalityCity::find()->all(), 'id', 'municipality'),
-                    'language' => 'en',
-                    'options' => ['placeholder' => 'Select  ...'],
-                    'pluginOptions' => [
-                      'allowClear' => true
+                echo Select2::widget([
+                    'name' => 'cregion',
+                    'data' => ArrayHelper::map(Region::find()->all(), 'region_id', 'region'),
+                    'theme' => Select2::THEME_BOOTSTRAP,
+                    'hideSearch' => false,
+                    'options' => [
+                        'id'=>'cregion'
                     ],
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Region'],
                 ]);
                 ?>
-
+                <br>
+                <label class="control-label">Province</label><br>
                 <?php 
-                echo $form->field($model, 'barangay_id')->widget(Select2::classname(), [
-                    'data' => ArrayHelper::map(Barangay::find()->all(), 'barangay_id', 'barangay'),
-                    'language' => 'en',
-                    'options' => ['placeholder' => 'Select  ...'],
-                    'pluginOptions' => [
-                      'allowClear' => true
+                echo DepDrop::widget([
+                    'type'=>DepDrop::TYPE_SELECT2,
+                    'name' => 'province',
+                    'data' => null,
+                    // 'theme' => Select2::THEME_BOOTSTRAP,
+                    // 'hideSearch' => false,
+                    'options' => [
+                        'id'=>'cprovince'
                     ],
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'pluginOptions'=>[
+                        'depends'=>['cregion'],
+                        'placeholder'=>'Select Province',
+                        'url'=>Url::to(['/customer/info/getprovince']),
+                        'loadingText' => 'Loading provinces...',
+                    ]
+                ]);
+                ?>
+                <br>
+                <label class="control-label">Municipality</label><br>
+                 <?php 
+                echo DepDrop::widget([
+                    'type'=>DepDrop::TYPE_SELECT2,
+                    'name' => 'municipality',
+                    'data' => null,
+                    'options' => [
+                        'id'=>'cmunicipality'
+                    ],
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'pluginOptions'=>[
+                        'depends'=>['cprovince'],
+                        'placeholder'=>'Select Municipality',
+                        'url'=>Url::to(['/customer/info/getmunicipality']),
+                        'loadingText' => 'Loading cities or municipalities...',
+                    ]
+                ]);
+                ?>
+                <label class="control-label">Barangay</label><br>
+                 <?php 
+                echo DepDrop::widget([
+                    'type'=>DepDrop::TYPE_SELECT2,
+                    // 'name' => 'customer-barangay_id',
+                    'data' => null,
+                    'options' => [
+                        'id'=>'customer-barangay_id'
+                    ],
+                    'model'=>$model,
+                    'attribute'=>'barangay_id',
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'pluginOptions'=>[
+                        'depends'=>['cmunicipality'],
+                        'placeholder'=>'Select Barangay',
+                        'url'=>Url::to(['/customer/info/getbarangay']),
+                        'loadingText' => 'Loading barangay...',
+                    ]
                 ]);
                 ?>
             </div>
