@@ -6,6 +6,8 @@ use Yii;
 use common\models\lab\Customer;
 use common\models\lab\CustomerSearch;
 use common\models\address\Province;
+use common\models\address\CityMunicipality;
+use common\models\address\Barangay;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -171,11 +173,51 @@ class InfoController extends Controller
     }
 
     public function actionGetmunicipality(){
-        echo "something";
+         // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $list = CityMunicipality::find()->andWhere(['province_id'=>$id])->asArray()->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $city_municipality) {
+                    $out[] = ['id' => $city_municipality['city_municipality_id'], 'name' => $city_municipality['city_municipality']];
+                    if ($i == 0) {
+                        $selected = $city_municipality['city_municipality_id'];
+                    }
+                }
+                // Shows how you can preselect a value
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
     }
 
     public function actionGetbarangay(){
-        echo "something";
+         // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $list = Barangay::find()->andWhere(['barangay_id'=>$id])->asArray()->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $barangay) {
+                    $out[] = ['id' => $barangay['barangay_id'], 'name' => $barangay['barangay']];
+                    if ($i == 0) {
+                        $selected = $barangay['barangay_id'];
+                    }
+                }
+                // Shows how you can preselect a value
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
     }
 
     /**

@@ -140,27 +140,41 @@ use kartik\widgets\DepDrop;
                 ?>
                 <br>
                 <label class="control-label">Municipality</label><br>
-                <?php 
-                echo Select2::widget([
-                    'id'=>'cmunicipality',
-                    'name' => 'cmunicipality',
-                    'data' => ArrayHelper::map(CityMunicipality::find()->all(), 'city_municipality_id', 'city_municipality'),
-                    'theme' => Select2::THEME_BOOTSTRAP,
-                    'hideSearch' => false,
+                 <?php 
+                echo DepDrop::widget([
+                    'type'=>DepDrop::TYPE_SELECT2,
+                    'name' => 'municipality',
+                    'data' => null,
                     'options' => [
-                        'placeholder' => 'Select a City/Municipality',
+                        'id'=>'cmunicipality'
+                    ],
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'pluginOptions'=>[
+                        'depends'=>['cprovince'],
+                        'placeholder'=>'Select Municipality',
+                        'url'=>Url::to(['/customer/info/getmunicipality']),
+                        'loadingText' => 'Loading cities or municipalities...',
                     ]
                 ]);
                 ?>
-                <br>
-                <?php 
-                echo $form->field($model, 'barangay_id')->widget(Select2::classname(), [
-                    'data' => ArrayHelper::map(Barangay::find()->all(), 'barangay_id', 'barangay'),
-                    'language' => 'en',
-                    'options' => ['placeholder' => 'Select a Barangay'],
-                    'pluginOptions' => [
-                      'allowClear' => true
+                <label class="control-label">Barangay</label><br>
+                 <?php 
+                echo DepDrop::widget([
+                    'type'=>DepDrop::TYPE_SELECT2,
+                    // 'name' => 'customer-barangay_id',
+                    'data' => null,
+                    'options' => [
+                        'id'=>'customer-barangay_id'
                     ],
+                    'model'=>$model,
+                    'attribute'=>'barangay_id',
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'pluginOptions'=>[
+                        'depends'=>['cmunicipality'],
+                        'placeholder'=>'Select Barangay',
+                        'url'=>Url::to(['/customer/info/getbarangay']),
+                        'loadingText' => 'Loading barangay...',
+                    ]
                 ]);
                 ?>
             </div>

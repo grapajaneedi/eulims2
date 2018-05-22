@@ -1,6 +1,7 @@
 <?php
 
 namespace common\models\lab;
+use yii\db\ActiveRecord;
 
 use Yii;
 
@@ -38,6 +39,28 @@ class Customer extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'tbl_customer';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            // [
+            //     'class' => TimestampBehavior::className(),
+            //     'createdAtAttribute' => 'created_at',
+            //     'updatedAtAttribute' => 'last_update',
+            //     'value' => new Expression('NOW()'),
+            // ],
+
+                [
+                     'class' => 'yii\behaviors\TimestampBehavior',
+                     'attributes' => [
+                         ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
+                     ],
+                 ],
+        ];
     }
 
     /**
