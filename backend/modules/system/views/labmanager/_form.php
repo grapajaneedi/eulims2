@@ -16,8 +16,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'user_id')->textInput() ?>
 
-    <?= $form->field($model, 'active')->textInput() ?>
-
     <?= $form->field($model, 'updated_at')->textInput() ?>
 
     <div class="form-group">

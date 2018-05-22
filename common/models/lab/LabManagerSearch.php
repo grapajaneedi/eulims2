@@ -4,8 +4,9 @@ namespace common\models\lab;
 
 use Yii;
 use yii\base\Model;
-use yii\data\ActiveDataProvider;
+//use yii\data\ActiveDataProvider;
 use common\models\lab\LabManager;
+use yii\data\SqlDataProvider;
 
 /**
  * LabManagerSearch represents the model behind the search form of `common\models\lab\LabManager`.
@@ -18,7 +19,7 @@ class LabManagerSearch extends LabManager
     public function rules()
     {
         return [
-            [['lab_manager_id', 'lab_id', 'user_id', 'active', 'updated_at'], 'integer'],
+            [['lab_manager_id', 'lab_id', 'user_id', 'updated_at'], 'integer'],
         ];
     }
 
@@ -40,29 +41,33 @@ class LabManagerSearch extends LabManager
      */
     public function search($params)
     {
-        $query = LabManager::find();
-
-        // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
+        $SQLCount="SELECT COUNT(*) FROM `eulims`.`vw_labrbac` ";
+        $SQLCount.="LEFT JOIN `eulims_lab`.`tbl_lab_manager` ON(`eulims_lab`.`tbl_lab_manager`.`user_id`=`vw_labrbac`.`user_id`) ";
+        $SQLCount.="WHERE `vw_labrbac`.`user_id` LIKE CONCAT(:user_id,'%') AND `tbl_lab_manager`.`lab_id` LIKE CONCAT(:lab_id,'%')";
+        $SQL="SELECT `vw_labrbac`.`user_id`, `vw_labrbac`.`labmanager`,`tbl_lab`.`labname`, ";
+        $SQL.="IFNULL(`tbl_lab_manager`.`lab_id`,'') AS lab_id, `updated_at` ";
+        $SQL.="FROM `eulims`.`vw_labrbac` ";
+        $SQL.="LEFT JOIN `eulims_lab`.`tbl_lab_manager` ON(`eulims_lab`.`tbl_lab_manager`.`user_id`=`vw_labrbac`.`user_id`) ";
+        $SQL.="LEFT JOIN `eulims_lab`.`tbl_lab` ON(`eulims_lab`.`tbl_lab`.`lab_id`=`eulims_lab`.`tbl_lab_manager`.`lab_id`) ";
+        $SQL.="WHERE IFNULL(`vw_labrbac`.`user_id`,'') LIKE CONCAT(:user_id,'%') AND IFNULL(`tbl_lab_manager`.`lab_id`,'') LIKE CONCAT(:lab_id,'%')";
+        $count = Yii::$app->db->createCommand($SQLCount, [':user_id' => $this->user_id,':lab_id'=>$this->lab_id])->queryScalar();
         $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'lab_manager_id' => $this->lab_manager_id,
-            'lab_id' => $this->lab_id,
-            'user_id' => $this->user_id,
-            'active' => $this->active,
-            'updated_at' => $this->updated_at,
+        $dataProvider = new SqlDataProvider([
+            'sql' => $SQL,
+            'params' => [':user_id' => $this->user_id,':lab_id'=>$this->lab_id],
+            'totalCount' => $count,
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+            /*'sort' => [
+                'attributes' => [
+                    'labmanager',
+                    'lab_id',
+                    'updated_at:datetime'
+                ],
+            ]
+             * 
+             */
         ]);
 
         return $dataProvider;

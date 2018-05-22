@@ -23,6 +23,11 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
         'filterModel' => $searchModel,
         'tableOptions'=>['class'=>'table table-hover table-stripe table-hand'],
         'pjax'=>true,
+        'pjaxSettings' => [
+                'options' => [
+                    'enablePushState' => false,
+                ],
+        ],
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             ['class' => 'kartik\grid\CheckBoxColumn'],
@@ -103,39 +108,52 @@ $TechnicalManagerContent=GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'pjax'=>true,
+        'pjaxSettings' => [
+                'options' => [
+                    'enablePushState' => false,
+                ],
+        ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
                 'label'=>'Lab Manager',
                 'attribute'=>'user_id',
                 'value' => function($model) {
-                    return $model->user->profile->labname;
+                    return $model['labmanager'];
                 },
                 'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map($LabmanagerList, 'lab_id', 'LabManager'),
+                'filter' => ArrayHelper::map($LabmanagerList, 'user_id', 'LabManager'),
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'LabManager', 'lab_id' => 'grid-products-search-category_type_id']
+                'filterInputOptions' => ['placeholder' => 'LabManager', 'user_id' => 'grid-products-search-category_type_id']
             ],
             [
                 'attribute' => 'lab_id',
-                'label' => 'Laboratory Name',
-                'value' => function($model) {
-                    return $model->lab->labname;
+                'label' => 'Laboratory',
+                'value' => function($data) {
+                    return $data['labname'];
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Lab::find()->asArray()->all(), 'lab_id', 'labname'),
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'Lab Code', 'lab_id' => 'grid-products-search-category_type_id']
+                'filterInputOptions' => ['placeholder' => 'Laboratory', 'lab_id' => 'grid-products-search-category_type_id']
             ],
-            'user_id',
-            'active',
-            'updated_at',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            'updated_at:datetime',
+            [
+                'class' => kartik\grid\ActionColumn::className(),
+                'template' => $Buttontemplate,
+                'buttons'=>[
+                    'view'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['labmanager/view','id'=>$model['lab_id']]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Lab Manager")]);
+                    },
+                    'update'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['labmanager/update','id'=>$model['lab_id']]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Lab Manager")]);
+                    }
+                ],
+            ],
         ],
     ]);
 ?>
