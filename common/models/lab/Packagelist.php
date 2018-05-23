@@ -7,10 +7,10 @@ use Yii;
 /**
  * This is the model class for table "tbl_packagelist".
  *
- * @property int $package_id
- * @property int $rstl_id
- * @property int $testcategory_id
- * @property int $sample_type_id
+ * @property integer $package_id
+ * @property integer $rstl_id
+ * @property integer $testcategory_id
+ * @property integer $sample_type_id
  * @property string $name
  * @property string $rate
  * @property string $tests
@@ -62,7 +62,6 @@ class Packagelist extends \yii\db\ActiveRecord
             'package_id' => 'Package ID',
             'rstl_id' => 'Rstl ID',
             'testcategory_id' => 'Testcategory ID',
-            'sample_type_id' => 'Sample Type ID',
             'name' => 'Name',
             'rate' => 'Rate',
             'tests' => 'Tests',

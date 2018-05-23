@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 /* @var $model common\models\services\Sampletype */
 /* @var $form yii\widgets\ActiveForm */
 
-$LabList= ArrayHelper::map(Testcategory::find()->orderBy('category_name')->all(),'test_category_id','category_name');
+$LabList= ArrayHelper::map(Testcategory::find()->orderBy('category_name')->all(),'testcategory_id','category_name');
 
 
 ?>
@@ -19,7 +19,7 @@ $LabList= ArrayHelper::map(Testcategory::find()->orderBy('category_name')->all()
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'test_category_id')->widget(Select2::classname(), [
+    <?= $form->field($model, 'testcategory_id')->widget(Select2::classname(), [
                 'data' => $LabList,
                 'language' => 'en',
                 'options' => ['placeholder' => 'Select Test Category'],

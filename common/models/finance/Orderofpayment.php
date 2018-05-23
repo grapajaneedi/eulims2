@@ -25,6 +25,7 @@ use common\models\lab\Customer;
  */
 class Orderofpayment extends \yii\db\ActiveRecord
 {
+    public $RequestIds;
     /**
      * {@inheritdoc}
      */
@@ -47,10 +48,10 @@ class Orderofpayment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose'], 'required'],
+            [['collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose','RequestIds'], 'required'],
             [['rstl_id', 'collectiontype_id', 'payment_mode_id', 'customer_id', 'created_receipt', 'allow_erratum'], 'integer'],
             [['order_date'], 'safe'],
-            [['transactionnum'], 'string', 'max' => 100],
+            [['transactionnum','RequestIds'], 'string', 'max' => 100],
             [['purpose'], 'string', 'max' => 200],
             [['collectiontype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collectiontype::className(), 'targetAttribute' => ['collectiontype_id' => 'collectiontype_id']],
             [['payment_mode_id'], 'exist', 'skipOnError' => true, 'targetClass' => Paymentmode::className(), 'targetAttribute' => ['payment_mode_id' => 'payment_mode_id']],

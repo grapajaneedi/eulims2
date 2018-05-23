@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'package_id',
             'rstl_id',
             'testcategory_id',
-            'sampletype_id',
+            'sample_type_id',
             'name',
             'rate',
             'tests',

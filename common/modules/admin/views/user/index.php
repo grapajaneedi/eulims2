@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
-    
+    <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => 'user']); ?>
     <div class="panel panel-default col-xs-12">
         <div class="panel-heading"><i class="fa fa-user-circle fa-adn"></i> Users</div>
         <div class="panel-body">

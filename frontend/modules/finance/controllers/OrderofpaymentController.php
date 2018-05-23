@@ -130,15 +130,16 @@ class OrderofpaymentController extends Controller
         }
     }
 
-     public function actionGetlistrequest()
+     public function actionGetlistrequest($id)
     {
-        $post=Yii::$app->request->post();
-        $customer_id=$post['customer_id'];
-        $query = Request::find()->where(['customer_id' => $customer_id]);
+       //$post=Yii::$app->request->post();
+       // $customer_id=$post['customer_id'];
+        $query = Request::find()->where(['customer_id' => $id]);
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+        $dataProvider->pagination->pageSize=3;
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_request', ['dataProvider'=>$dataProvider]);
             //return;

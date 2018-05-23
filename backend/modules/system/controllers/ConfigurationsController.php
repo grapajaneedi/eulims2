@@ -89,8 +89,16 @@ class ConfigurationsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/system/configurations']);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->labcode= strtoupper($model->labcode);
+            if ($model->save()){
+                return $this->redirect(['/system/configurations']);
+            }else{
+                return $this->renderAjax('update', [
+                    'model' => $model,
+                ]);
+            }
+            
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,
