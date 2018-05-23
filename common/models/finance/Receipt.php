@@ -10,7 +10,7 @@ use Yii;
  * @property int $receipt_id
  * @property int $rstl_id
  * @property int $terminal_id
- * @property int $orderofpayment_id
+ * @property int $collection_id
  * @property int $project_id
  * @property string $or_number
  * @property string $receiptDate
@@ -21,11 +21,12 @@ use Yii;
  * @property string $total
  * @property int $cancelled
  *
+ * @property Billing[] $billings
  * @property Check $check
- * @property Orderofpayment $orderofpayment
  * @property Project $project
  * @property Paymentmode $paymentMode
  * @property Collectiontype $collectiontype
+ * @property Collection $collection
  */
 class Receipt extends \yii\db\ActiveRecord
 {
@@ -51,16 +52,16 @@ class Receipt extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'terminal_id', 'orderofpayment_id', 'project_id', 'or_number', 'receiptDate', 'payment_mode_id', 'customer_id', 'collectiontype_id', 'total', 'cancelled'], 'required'],
-            [['rstl_id', 'terminal_id', 'orderofpayment_id', 'project_id', 'payment_mode_id', 'check_id', 'customer_id', 'collectiontype_id', 'cancelled'], 'integer'],
+            [['rstl_id', 'terminal_id', 'collection_id', 'project_id', 'or_number', 'receiptDate', 'payment_mode_id', 'customer_id', 'collectiontype_id', 'total', 'cancelled'], 'required'],
+            [['rstl_id', 'terminal_id', 'collection_id', 'project_id', 'payment_mode_id', 'check_id', 'customer_id', 'collectiontype_id', 'cancelled'], 'integer'],
             [['receiptDate'], 'safe'],
             [['total'], 'number'],
             [['or_number'], 'string', 'max' => 50],
             [['check_id'], 'exist', 'skipOnError' => true, 'targetClass' => Check::className(), 'targetAttribute' => ['check_id' => 'check_id']],
-            [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orderofpayment::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'project_id']],
             [['payment_mode_id'], 'exist', 'skipOnError' => true, 'targetClass' => Paymentmode::className(), 'targetAttribute' => ['payment_mode_id' => 'payment_mode_id']],
             [['collectiontype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collectiontype::className(), 'targetAttribute' => ['collectiontype_id' => 'collectiontype_id']],
+            [['collection_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collection::className(), 'targetAttribute' => ['collection_id' => 'collection_id']],
         ];
     }
 
@@ -73,7 +74,7 @@ class Receipt extends \yii\db\ActiveRecord
             'receipt_id' => 'Receipt ID',
             'rstl_id' => 'Rstl ID',
             'terminal_id' => 'Terminal ID',
-            'orderofpayment_id' => 'Orderofpayment ID',
+            'collection_id' => 'Collection ID',
             'project_id' => 'Project ID',
             'or_number' => 'Or Number',
             'receiptDate' => 'Receipt Date',
@@ -89,17 +90,17 @@ class Receipt extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCheck()
+    public function getBillings()
     {
-        return $this->hasOne(Check::className(), ['check_id' => 'check_id']);
+        return $this->hasMany(Billing::className(), ['receipt_id' => 'receipt_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOrderofpayment()
+    public function getCheck()
     {
-        return $this->hasOne(Orderofpayment::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+        return $this->hasOne(Check::className(), ['check_id' => 'check_id']);
     }
 
     /**
@@ -124,5 +125,13 @@ class Receipt extends \yii\db\ActiveRecord
     public function getCollectiontype()
     {
         return $this->hasOne(Collectiontype::className(), ['collectiontype_id' => 'collectiontype_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCollection()
+    {
+        return $this->hasOne(Collection::className(), ['collection_id' => 'collection_id']);
     }
 }

@@ -11,6 +11,8 @@ use Yii;
  * @property string $natureofcollection
  * @property int $status
  *
+ * @property Accountingcodemapping[] $accountingcodemappings
+ * @property Accountingcode[] $accountingcodes
  * @property Orderofpayment[] $orderofpayments
  * @property Receipt[] $receipts
  */
@@ -54,6 +56,22 @@ class Collectiontype extends \yii\db\ActiveRecord
             'natureofcollection' => 'Natureofcollection',
             'status' => 'Status',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccountingcodemappings()
+    {
+        return $this->hasMany(Accountingcodemapping::className(), ['collectiontype_id' => 'collectiontype_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccountingcodes()
+    {
+        return $this->hasMany(Accountingcode::className(), ['accountingcode_id' => 'accountingcode_id'])->viaTable('tbl_accountingcodemapping', ['collectiontype_id' => 'collectiontype_id']);
     }
 
     /**

@@ -11,11 +11,8 @@ $this->params['breadcrumbs'][] = ['label' => $model->lab_manager_id, 'url' => ['
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="lab-manager-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
-
+    <div style="height: 10px"></div>
 </div>
