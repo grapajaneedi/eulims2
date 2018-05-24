@@ -336,9 +336,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Samples</h3>',
                     'type'=>'primary',
+
+                    //<janeedi>
+                    
                     //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['/lab/sample/create','request_id'=>$model->request_id], ['class' => 'btn btn-success']),
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-plus"></i> Generate Samplecode', ['value' => Url::to(['sample/generatesamplecode','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
-                    //'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    //</janeedi>
+                    //'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']
                     //'after'=>'',
                     'after'=>false,
                     //'footer'=>false,
@@ -386,24 +390,110 @@ $this->params['breadcrumbs'][] = $this->title;
         ?>
         </div>
     </div>
-    <div class="container">
-        <?php
-            $gridColumns = [
-                //['class' => 'yii\grid\SerialColumn'],
-                [
-                    'attribute'=>'request_id',
-                    'enableSorting' => false,
-                ],
-                [
-                    'attribute'=>'request_ref_num',
-                    'enableSorting' => false,
-                ],
-                [
-                    'attribute'=>'report_due',
-                    'enableSorting' => false,
-                ],
-            ];
 
+    <!-- <janeedi> -->
+    <div class="container">
+    <div class="table-responsive">
+    <?php
+        $gridColumns = [
+            [
+                'attribute'=>'sample',
+                'enableSorting' => false,
+            ],
+            [
+                'attribute'=>'sample_code',
+                'enableSorting' => false,
+            ],
+            [
+                'attribute'=>'tests',
+                'format' => 'raw',
+                'enableSorting' => false,
+                'value' => function($data){
+                    return ($data->request->lab_id == 2) ? "<span style='font-size:11.5px;'>Sampling Date: <b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
+                },
+            ],
+            [
+                'attribute'=>'method',
+                'format' => 'raw',
+                'enableSorting' => false,
+                'value' => function($data){
+                    return ($data->request->lab_id == 2) ? "<span style='font-size:11.5px;'>Sampling Date: <b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
+                },
+            ],
+            [
+                'attribute'=>'quantity',
+                'format' => 'raw',
+                'enableSorting' => false,
+                'value' => function($data){
+                    return ($data->request->lab_id == 2) ? "<span style='font-size:11.5px;'>Sampling Date: <b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
+                },
+            ],
+            [
+                'attribute'=>'unit price',
+                'format' => 'raw',
+                'enableSorting' => false,
+                'value' => function($data){
+                    return ($data->request->lab_id == 2) ? "<span style='font-size:11.5px;'>Sampling Date: <b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
+                },
+            ],
+            [
+                'attribute'=>'status',
+                'format' => 'raw',
+                'enableSorting' => false,
+                'value' => function($data){
+                    return ($data->request->lab_id == 2) ? "<span style='font-size:11.5px;'>Sampling Date: <b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
+                },
+            ],
+            [
+                'class' => 'kartik\grid\ActionColumn',
+                'template' => '{delete}',
+                'dropdown' => false,
+                'dropdownOptions' => ['class' => 'pull-right'],
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'delete') {
+                        $url ='/lab/sample/delete?id='.$model->sample_id;
+                        return $url;
+                    }
+                },
+                'deleteOptions' => ['title' => 'Delete Sample', 'data-toggle' => 'tooltip'],
+                'headerOptions' => ['class' => 'kartik-sheet-style'],
+            ],
+        ];
+
+        echo GridView::widget([
+            'id' => 'sample-grid',
+            'dataProvider'=> $analysisDataProvider,
+            'pjax'=>true,
+            'pjaxSettings' => [
+                'options' => [
+                    'enablePushState' => false,
+                ]
+            ],
+            'responsive'=>true,
+            'striped'=>true,
+            'hover'=>true,
+            'panel' => [
+                'heading'=>'<h3 class="panel-title">Analysis</h3>',
+                'type'=>'primary',
+                'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Analysis', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-plus"></i> Add Other Services', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Other Services', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+            ],
+            'rowOptions' => function ($model, $key, $index, $grid) {
+                return [
+                    'id' => $model->sample_id,
+                    'onclick' => 'updateSample('.$model->sample_id.');',
+                    'style' => 'cursor:pointer;',
+                ];
+            },
+            'columns' => $gridColumns,
+            'toolbar' => [
+                'content'=> Html::a('<i class="glyphicon glyphicon-repeat"></i>', [Url::to(['request/view','id'=>$model->request_id])], [
+                            'class' => 'btn btn-default', 
+                            'title' => 'Reset Grid'
+                        ]),
+                '{toggleData}',
+            ],
+        ]);
+    ?>
             echo GridView::widget([
                 'id' => 'analysis-grid',
                 'dataProvider'=> $dataProvider,
@@ -429,6 +519,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ?>
     </div>
 </div>
+
+<!-- </janeedi> -->
 <script type="text/javascript">
    /*$("#modalBtn").click(function(){
         $(".modal-title").html($(this).attr('title'));
