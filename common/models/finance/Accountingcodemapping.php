@@ -8,9 +8,8 @@ use Yii;
  * This is the model class for table "tbl_accountingcodemapping".
  *
  * @property int $mapping_id
- * @property int $accountingcode_id
  * @property int $collectiontype_id
- *
+ * @property int $accountingcode_id
  * @property Accountingcode $accountingcode
  * @property Collectiontype $collectiontype
  */
