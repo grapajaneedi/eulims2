@@ -12,9 +12,9 @@ use common\models\lab\LabManagerSearch;
 /* @var $searchModel common\models\lab\LabSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Configurations';
+$this->title = 'EULIMS | Configurations';
 $this->params['breadcrumbs'][] = ['label' => 'System', 'url' => ['/system']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = "Configurations";
 
 $Buttontemplate='{view}{update}'; 
 
@@ -74,6 +74,13 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
                 }
             ],
             [
+                'attribute' => 'nextsamplecode',
+                'label' => 'Next Sample Code',
+                'value' => function($model) {
+                    return $model->nextsamplecode ? $model->nextsamplecode : '<No Sample Code>';
+                }
+            ],
+            [
                 'class'=>'kartik\grid\BooleanColumn',
                 'attribute' => 'active',
                 'label' => 'Active',
@@ -105,11 +112,11 @@ $Connection= Yii::$app->db;
 $Command=$Connection->createCommand($SQL);
 $LabmanagerList=$Command->queryAll();
 $searchModel = new LabManagerSearch();
-$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+$dataProvider = $searchModel->search(Yii::$app->request->queryParams);//
 $TechnicalManagerContent=GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'hover'=>true,
         'pjax'=>true,
         'pjaxSettings' => [
                 'options' => [
@@ -144,7 +151,13 @@ $TechnicalManagerContent=GridView::widget([
                 ],
                 'filterInputOptions' => ['placeholder' => 'Laboratory', 'lab_id' => 'grid-products-search-category_type_id']
             ],
-            'updated_at:datetime',
+            [
+                'label'=>'Updated At',
+                'attribute'=>'updated_at',
+                'value'=>function($data){
+                    return gmdate("m/d/Y H:i A", $data['updated_at']);
+                }
+            ],
             [
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Buttontemplate,
@@ -153,7 +166,11 @@ $TechnicalManagerContent=GridView::widget([
                         return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['labmanager/view','id'=>$model['user_id']]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Lab Manager")]);
                     },
                     'update'=>function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['labmanager/update','id'=>$model['lab_id']]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Lab Manager")]);
+                        if($model['lab_manager_id']){//Existed so Updated
+                            return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['labmanager/update','id'=>$model['lab_manager_id']]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Lab Manager")]);
+                        }else{//Create new
+                            return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['labmanager/create','id'=>$model['user_id']]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Lab Manager")]);
+                        }
                     }
                 ],
                

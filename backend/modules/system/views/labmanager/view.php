@@ -11,7 +11,7 @@ use yii\widgets\DetailView;
     <?php echo DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'labmanager',
+            'lab_manager_id',
             'labname',
             'updated_at:datetime',
         ],
