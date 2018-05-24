@@ -17,7 +17,7 @@ use kartik\widgets\DatePicker;
 <div class="orderofpayment-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
 
     <?php $form = ActiveForm::begin(); ?>
-    <?php echo $form->field($model, 'RequestIds')->hiddenInput()->label(false) ?>
+    <?php echo $form->field($model, 'RequestIds')->textInput()->label(false) ?>
     <div style="padding:0px!important;">
         <div class="row">
             <div class="col-sm-6">
@@ -62,13 +62,14 @@ use kartik\widgets\DatePicker;
                     "change" => "function(e) {
                          e.preventDefault();
                         var customer_id=$(this).val();
+                        var request= $model->RequestIds
                         $('#prog').show();
                         $('#requests').hide();
                         jQuery.ajax( {
                             type: \"POST\",
-                            //data: {
-                            //    customer_id:customer_id,
-                           // },
+                            data: {
+                                request_id:customer_id,
+                           },
                             url: \"/finance/orderofpayment/getlistrequest?id=\"+$(this).val(),
                             dataType: \"html\",
                             success: function ( response ) {
@@ -142,11 +143,12 @@ use kartik\widgets\DatePicker;
 <script type="text/javascript">
     $(document).ready(function(){
         $('#orderofpayment-customer_id').click();
+       
+  
     });
     $('#orderofpayment-customer_id').on('change',function() {
        $(this).select2('close');
         //alert('csdfsd');
     });
-  
   
 </script>
