@@ -13,7 +13,7 @@ use common\models\system\Labrbac;
  * @property int $updated_at
  *
  * @property Lab $lab
- * @property Labrbac $labmanager
+ * @property Labrbac $labrbac
  */
 class LabManager extends \yii\db\ActiveRecord
 {
@@ -42,6 +42,7 @@ class LabManager extends \yii\db\ActiveRecord
             [['lab_id', 'user_id'], 'required'],
             [['lab_id', 'user_id', 'updated_at'], 'integer'],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Labrbac::className(), 'targetAttribute' => ['user_id' => 'user_id']],
         ];
     }
 
@@ -68,7 +69,7 @@ class LabManager extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLabmanager()
+    public function getLabrbac()
     {
         return $this->hasOne(Labrbac::className(), ['user_id' => 'user_id']);
     }

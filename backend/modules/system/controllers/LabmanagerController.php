@@ -5,6 +5,7 @@ namespace backend\modules\system\controllers;
 use Yii;
 use common\models\lab\LabManager;
 use common\models\lab\LabManagerSearch;
+use common\models\system\Labrbac;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -52,9 +53,17 @@ class LabmanagerController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $model= Labrbac::find()->where(['user_id'=>$id])->one();
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->render('view', [
+                
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
@@ -69,10 +78,15 @@ class LabmanagerController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->lab_manager_id]);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('create', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
@@ -89,10 +103,11 @@ class LabmanagerController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->lab_manager_id]);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        //if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
+       // }
     }
 
     /**

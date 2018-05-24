@@ -44,12 +44,12 @@ class LabManagerSearch extends LabManager
         $SQLCount="SELECT COUNT(*) FROM `eulims`.`vw_labrbac` ";
         $SQLCount.="LEFT JOIN `eulims_lab`.`tbl_lab_manager` ON(`eulims_lab`.`tbl_lab_manager`.`user_id`=`vw_labrbac`.`user_id`) ";
         $SQLCount.="WHERE `vw_labrbac`.`user_id` LIKE CONCAT(:user_id,'%') AND `tbl_lab_manager`.`lab_id` LIKE CONCAT(:lab_id,'%')";
-        $SQL="SELECT `vw_labrbac`.`user_id`, `vw_labrbac`.`labmanager`,`tbl_lab`.`labname`, ";
-        $SQL.="IFNULL(`tbl_lab_manager`.`lab_id`,'') AS lab_id, `updated_at` ";
+        $SQL="SELECT `vw_labrbac`.`user_id`, `vw_labrbac`.`labmanager`,`vw_labrbac`.`labname`, ";
+        $SQL.="`vw_labrbac`.`lab_id`, `updated_at` ";
         $SQL.="FROM `eulims`.`vw_labrbac` ";
-        $SQL.="LEFT JOIN `eulims_lab`.`tbl_lab_manager` ON(`eulims_lab`.`tbl_lab_manager`.`user_id`=`vw_labrbac`.`user_id`) ";
-        $SQL.="LEFT JOIN `eulims_lab`.`tbl_lab` ON(`eulims_lab`.`tbl_lab`.`lab_id`=`eulims_lab`.`tbl_lab_manager`.`lab_id`) ";
-        $SQL.="WHERE IFNULL(`vw_labrbac`.`user_id`,'') LIKE CONCAT(:user_id,'%') AND IFNULL(`tbl_lab_manager`.`lab_id`,'') LIKE CONCAT(:lab_id,'%')";
+       // $SQL.="LEFT JOIN `eulims_lab`.`tbl_lab_manager` ON(`eulims_lab`.`tbl_lab_manager`.`user_id`=`vw_labrbac`.`user_id`) ";
+       // $SQL.="LEFT JOIN `eulims_lab`.`tbl_lab` ON(`eulims_lab`.`tbl_lab`.`lab_id`=`eulims_lab`.`tbl_lab_manager`.`lab_id`) ";
+        $SQL.="WHERE IFNULL(`vw_labrbac`.`user_id`,'') LIKE CONCAT(:user_id,'%') AND IFNULL(`lab_id`,'') LIKE CONCAT(:lab_id,'%')";
         $count = Yii::$app->db->createCommand($SQLCount, [':user_id' => $this->user_id,':lab_id'=>$this->lab_id])->queryScalar();
         $this->load($params);
         $dataProvider = new SqlDataProvider([

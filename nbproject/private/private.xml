@@ -11,6 +11,11 @@
             <file>file:/C:/UwAmp/www/eulims2/common/models/finance/Receipt.php</file>
             <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/orderofpayment/_form.php</file>
             <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/orderofpayment/index.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/finance/Collectiontype.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/finance/Receipt.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/finance/Orderofpayment.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/finance/Billing.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/finance/Collection.php</file>
         </group>
     </open-files>
 </project-private>

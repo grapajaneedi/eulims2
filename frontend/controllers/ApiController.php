@@ -5,14 +5,12 @@ namespace frontend\controllers;
 use Yii;
 use yii\rest\ActiveController;
 use common\models\system\Profile;
+use kartik\mpdf\Pdf;
 
 class ApiController extends ActiveController
 {
     public $modelClass = 'common\models\system\Profile';
-    //public function actionIndex()
-    //{
-    //    return $this->render('index');
-    //}
+    
     public function verbs() {
         parent::verbs();
         return [

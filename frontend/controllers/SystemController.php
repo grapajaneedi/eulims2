@@ -8,6 +8,7 @@ use common\models\system\RstlSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use kartik\mpdf\Pdf;
 
 /**
  * SystemController implements the CRUD actions for Rstl model.
@@ -120,5 +121,14 @@ class SystemController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    public function actionPdf(){
+        $pdf = Yii::$app->pdf;
+        $pdf->orientation=Pdf::ORIENT_PORTRAIT;
+        $pdf->destination=Pdf::DEST_BROWSER;
+        $content= $this->renderPartial('_pdf');
+        $pdf->content = $content;
+        return $pdf->render();
+        exit;
     }
 }
