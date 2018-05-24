@@ -93,6 +93,8 @@ function ShowModal(header,url,closebutton,width){
     if(width==undefined){
        width='600px'; 
     }
+    $('.modal-title').html('');
+    $('#modalContent').html("<div id='modalContent' style='margin-left: 5px;'><div style='text-align:center;'><img src='/images/img-loader64.gif' alt=''></div></div>");
     $(".close").prop('disabled',!closebutton);
     var dialog=$("#modal").modal({
         backdrop: false,
@@ -106,7 +108,7 @@ function ShowModal(header,url,closebutton,width){
                width: width
             });
             dialog.find('#modalContent').load(url);
-        }, 5);
+        }, 1);
     });
 }
 
