@@ -9,7 +9,7 @@ use yii\helpers\Url;
 use common\components\Functions;
 
 
-$func = new Functions();
+$sweetalert = new Functions();
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
@@ -494,41 +494,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]);
     ?>
-            echo GridView::widget([
-                'id' => 'analysis-grid',
-                'dataProvider'=> $dataProvider,
-                'summary' => '',
-                'responsive'=>true,
-                'hover'=>true,
-                //'filterModel' => $searchModel,
-                'panel' => [
-                    'heading'=>'<h3 class="panel-title">Analyses</h3>',
-                    'type'=>'primary',
-                    //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['/lab/analysis/create'], ['class' => 'btn btn-success'],['id' => 'modalBtn']),
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
-                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Package', 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
-                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add other Services', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Other Services', 'class' => 'btn btn-success','id' => 'modalBtn']),
-                   'after'=>false,
-                  //  'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn']),
-                    //'footer'=>false,
-                ],
-                'columns' => $gridColumns,
-                'toolbar' => [
-                ],
-            ]);
-        ?>
+
     </div>
 </div>
 
 <!-- </janeedi> -->
 <script type="text/javascript">
-   /*$("#modalBtn").click(function(){
-        $(".modal-title").html($(this).attr('title'));
-        $("#modal").modal('show')
-        //$("#sampleModal").modal('show')
-            .find('#modalContent')
-            .load($(this).attr('value'));
-    });*/
+    $('#sample-grid tbody td').css('cursor', 'pointer');
 
     function updateSample(id){
        //var url = 'Url::to(['sample/update']) . "?id=' + id;
@@ -549,82 +521,23 @@ $this->params['breadcrumbs'][] = $this->title;
     }
 </script>
 <?php
-$this->registerJs("
-    /*$('td').click(function (e) {
-        var id = $(this).closest('tr').data('id');
-        if(e.target == this)
-            location.href = '" . Url::to(['accountinfo/update']) . "?id=' + id;
-    });*/
-
-
-    $('#sample-grid tbody td').css('cursor', 'pointer');
-    /*$('tbody td').click(function (e) {
-        var id = $(this).closest('tr').data('id');
-        if (e.target == this)
-            location.href = '" . Url::to(['sample/update']) . "?id=' + id;
-    });*/
-    // $('#sample-grid tbody td').click(function(e) {
-    // //$('#sample-grid-pjax tbody tr').click(function() {
-    //     e.preventDefault();
-    //     var id = $(this).closest('tr').data('id');
-    //     var url = '" . Url::to(['sample/update']) . "?id=' + id;
-    //     $('.modal-title').html('Update Sample');
-    //     $('#modal').modal('show')
-    //         .find('#modalContent')
-    //         .load(url);
-    // });
-/*$('#sample-grid tbody td').click(function() {
-    var id = $(this).closest('tr').data('id');
-    $('.modal-title').html('Update Sample');
-        $('#modal').modal('show')
-            .find('#modalContent').load(updateSample(id));
-    
-});*/
-
-/*function updateSample(id)
-{
-    //var id = $(this).closest('tr').data('id');
-    $.ajax({
-        type: 'GET',
-        // dataType: 'json',
-        // data: {
-        // 'user': 'A'
-        // },
-        //data: {id: $model->request_id},
-        url: '" . Url::to(['sample/update']) . "?id=' + id,
-        contentType: 'application/json',
-        success: function(data) {
-            console.log(typeof(data));
-            console.log(data)
-        },
-        error: function (data) {
-            console.log(data);
-        },
-    });
-}*/
-");
-?>
-<?php
     // This section will allow to popup a notification
     $session = Yii::$app->session;
     if ($session->isActive) {
         $session->open();
-        if (isset($session['deletepopup'])) {
-            $func->CrudAlert("Successfully Deleted","WARNING",true);
-            //$func->CrudAlert("Deleted Successfully",Alert::TYPE_WARNING,true);
-            //$func->CrudAlert("Deleted Successfully",Alert::TYPE_SUCCESS,true);
-            unset($session['deletepopup']);
+        if (isset($session['deletemessage'])) {
+            $sweetalert->CrudAlert("Successfully Deleted","WARNING",true);
+            unset($session['deletemessage']);
             $session->close();
         }
-        if (isset($session['updatepopup'])) {
-            $func->CrudAlert("Successfully Updated","SUCCESS",true);
-            unset($session['updatepopup']);
+        if (isset($session['updatemessage'])) {
+            $sweetalert->CrudAlert("Successfully Updated","SUCCESS",true);
+            unset($session['updatemessage']);
             $session->close();
         }
-        if (isset($session['savepopup'])) {
-            $func->CrudAlert("Successfully Saved","SUCCESS",true);
-            //$func->CrudAlert("Successfully saved.",Alert::TYPE_WARNING,true);
-            unset($session['savepopup']);
+        if (isset($session['savemessage'])) {
+            $sweetalert->CrudAlert("Successfully Saved","SUCCESS",true);
+            unset($session['savemessage']);
             $session->close();
         }
     }
