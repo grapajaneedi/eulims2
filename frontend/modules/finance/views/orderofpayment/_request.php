@@ -2,33 +2,49 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 
-
-
+$js=<<<SCRIPT
+   $(".kv-row-checkbox").click(function(){
+       // alert(this.value);
+        var keys = $('#grid').yiiGridView('getSelectedRows');
+        $("#orderofpayment-requestids").val(keys.join());
+      
+   });          
+SCRIPT;
+$this->registerJs($js);
 ?>
-<font style="font-weight:bold;font-size:0.9em">Select Request : </font>
-<div class="row">
+
+ <?php 
+    $gridColumn = [
+        [
+            'class' => '\kartik\grid\SerialColumn',
+            
+         ],
+         [
+            'class' => '\kartik\grid\CheckboxColumn',
+            
+         ],
+        'request_ref_num',
+        'request_datetime',
+    ];
+?>    
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
-       
+        'id'=>'grid',
         'pjax'=>true,
-        'export'=>false,
-        'panel' => [
-                'type' => GridView::TYPE_PRIMARY,
-                'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-            ],
-   
-
-         
-        'columns' => [
-            
-            
-            
-            ['class' => 'yii\grid\SerialColumn'],
-            'request_ref_num',
-            'request_datetime',
-           // 'orderofpayment_id',
-           // 'rstl_id',
-            'customer.customer_name',
+        'pjaxSettings' => [
+            'options' => [
+                'enablePushState' => false,
+            ]
         ],
+        
+        'responsive'=>true,
+        'striped'=>true,
+        'hover'=>true,
+        'panel' => [
+            'heading'=>'<h3 class="panel-title">Request</h3>',
+            'type'=>'primary',
+            //'footer'=> false,
+         ],
+         'columns' =>$gridColumn,
     ]); ?>
-</div>
+

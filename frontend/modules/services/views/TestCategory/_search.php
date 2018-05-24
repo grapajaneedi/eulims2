@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'test_category_id') ?>
+    <?= $form->field($model, 'testcategory_id') ?>
 
     <?= $form->field($model, 'category_name') ?>
 

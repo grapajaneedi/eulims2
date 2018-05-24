@@ -6,6 +6,7 @@ use kartik\tabs\TabsX;
 use yii\helpers\Url;
 use common\models\lab\Lab;
 use yii\helpers\ArrayHelper;
+use common\models\lab\LabManagerSearch;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\LabSearch */
@@ -22,9 +23,16 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
         'filterModel' => $searchModel,
         'tableOptions'=>['class'=>'table table-hover table-stripe table-hand'],
         'pjax'=>true,
+        'pjaxSettings' => [
+                'options' => [
+                    'enablePushState' => false,
+                ],
+        ],
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
-            ['class' => 'kartik\grid\CheckBoxColumn'],
+            [
+                'class'=>'kartik\grid\CheckBoxColumn',
+            ],
             [
                 'attribute' => 'labname',
                 'label' => 'Laboratory Name',
@@ -66,15 +74,20 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
                 }
             ],
             [
+                'class'=>'kartik\grid\BooleanColumn',
+                'attribute' => 'active',
+                'label' => 'Active',
+            ],
+            [
             //'class' => 'yii\grid\ActionColumn'
             'class' => kartik\grid\ActionColumn::className(),
             'template' => $Buttontemplate,
             'buttons'=>[
               'view'=>function ($url, $model) {
-                  return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['configurations/view','id'=>$model->lab_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View <font color='Blue'>Laboratory</font>")]);
+                  return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['configurations/view','id'=>$model->lab_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Laboratory")]);
               },
               'update'=>function ($url, $model) {
-                  return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['configurations/update','id'=>$model->lab_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update <font color='Blue'>Laboratory</font>")]);
+                  return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['configurations/update','id'=>$model->lab_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Laboratory")]);
               }
                 ],
             ],
@@ -85,6 +98,68 @@ $createHTML=<<<HTML
         <?= Html::a('Create Lab', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 HTML;
+$SQL="SELECT `tbl_profile`.`user_id`,CONCAT(fnProperCase(`firstname`),' ',LEFT(UCASE(`middleinitial`),1) ,'. ',fnProperCase(`lastname`)) AS LabManager
+FROM `tbl_profile` INNER JOIN `tbl_auth_assignment` ON(`tbl_auth_assignment`.`user_id`=`tbl_profile`.`user_id`)
+WHERE `item_name`='lab-manager'";
+$Connection= Yii::$app->db;
+$Command=$Connection->createCommand($SQL);
+$LabmanagerList=$Command->queryAll();
+$searchModel = new LabManagerSearch();
+$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+$TechnicalManagerContent=GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'pjax'=>true,
+        'pjaxSettings' => [
+                'options' => [
+                    'enablePushState' => false,
+                ],
+        ],
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            [
+                'label'=>'Lab Manager',
+                'attribute'=>'user_id',
+                'value' => function($model) {
+                    return $model['labmanager'];
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map($LabmanagerList, 'user_id', 'LabManager'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'LabManager', 'user_id' => 'grid-products-search-category_type_id']
+            ],
+            [
+                'attribute' => 'lab_id',
+                'label' => 'Laboratory',
+                'value' => function($data) {
+                    return $data['labname'];
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(Lab::find()->asArray()->all(), 'lab_id', 'labname'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Laboratory', 'lab_id' => 'grid-products-search-category_type_id']
+            ],
+            'updated_at:datetime',
+            [
+                'class' => kartik\grid\ActionColumn::className(),
+                'template' => $Buttontemplate,
+                'buttons'=>[
+                    'view'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['labmanager/view','id'=>$model['user_id']]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Lab Manager")]);
+                    },
+                    'update'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['labmanager/update','id'=>$model['lab_id']]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Lab Manager")]);
+                    }
+                ],
+               
+            ],
+        ],
+    ]);
 ?>
 <div class="lab-index">
     <div class="panel panel-primary">
@@ -108,16 +183,16 @@ HTML;
                     ],
                     [
                         'label' => '<i class="fa fa-users"></i> Technical Managers',
-                        'content' => "",
+                        'content' => $TechnicalManagerContent,
                         'active' => false,
                         'options' => ['id' => 'manager_config'],
                        // 'visible' => Yii::$app->user->can('access-terminal-configurations')
                     ],
                     [
                         'label' => '<i class="fa-level-down"></i> Discounts',
-                        'content' => "",
+                        'content' => "rtrttrtrtrtrtt",
                         'active' => false,
-                        'options' => ['id' => 'manager_config'],
+                        'options' => ['id' => 'discount_config'],
                        // 'visible' => Yii::$app->user->can('access-terminal-configurations')
                     ],
                 ],

@@ -7,20 +7,21 @@ use Yii;
 /**
  * This is the model class for table "tbl_sample".
  *
- * @property integer $sample_id
- * @property integer $rstl_id
- * @property integer $pstcsample_id
- * @property integer $package_id
- * @property integer $sample_type_id
+ * @property int $sample_id
+ * @property int $rstl_id
+ * @property int $pstcsample_id
+ * @property int $package_id
+ * @property int $testcategory_id
+ * @property int $sample_type_id
  * @property string $sample_code
  * @property string $samplename
  * @property string $description
  * @property string $sampling_date
  * @property string $remarks
- * @property integer $request_id
- * @property integer $sample_month
- * @property integer $sample_year
- * @property integer $active
+ * @property int $request_id
+ * @property int $sample_month
+ * @property int $sample_year
+ * @property int $active
  *
  * @property Analysis[] $analyses
  * @property Packagelist[] $packagelists
@@ -32,7 +33,7 @@ use Yii;
 class Sample extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -48,13 +49,13 @@ class Sample extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['rstl_id', 'test_category_id', 'sample_type_id', 'sample_code', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
-            [['rstl_id', 'pstcsample_id', 'package_id', 'sample_type_id', 'request_id', 'sample_month', 'sample_year', 'active'], 'integer'],
+            [['rstl_id', 'testcategory_id', 'sample_type_id', 'sample_code', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
+            [['rstl_id', 'pstcsample_id', 'package_id', 'testcategory_id', 'sample_type_id', 'request_id', 'sample_month', 'sample_year', 'active'], 'integer'],
             [['description'], 'string'],
             [['sampling_date'], 'safe'],
             [['sample_code'], 'string', 'max' => 20],
@@ -67,23 +68,23 @@ class Sample extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
             'sample_id' => 'Sample ID',
             'rstl_id' => 'Rstl ID',
-            'pstcsample_id' => 'Pstcsample ID',
+            'pstcsample_id' => 'Pstc Sample ID',
             'package_id' => 'Package ID',
-            'test_category_id' => 'Test Category',
+            'testcategory_id' => 'Test Category',
             'sample_type_id' => 'Sample Type',
             'sample_code' => 'Sample Code',
             'samplename' => 'Sample Name',
             'description' => 'Description',
             'sampling_date' => 'Sampling Date',
             'remarks' => 'Remarks',
-            'request_id' => 'Request',
+            'request_id' => 'Request ID',
             'sample_month' => 'Sample Month',
             'sample_year' => 'Sample Year',
             'active' => 'Active',
@@ -103,7 +104,7 @@ class Sample extends \yii\db\ActiveRecord
      */
     public function getPackagelists()
     {
-        return $this->hasMany(Packagelist::className(), ['sampletype_id' => 'sample_id']);
+        return $this->hasMany(Packagelist::className(), ['sample_type_id' => 'sample_id']);
     }
 
     /**
@@ -112,14 +113,6 @@ class Sample extends \yii\db\ActiveRecord
     public function getSampleType()
     {
         return $this->hasOne(Sampletype::className(), ['sample_type_id' => 'sample_type_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTestcategory()
-    {
-        return $this->hasOne(Testcategory::className(), ['testcategory_id' => 'test_category_id']);
     }
 
     /**

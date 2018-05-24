@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\TestCategory */
 
-$this->title = $model->test_category_id;
+$this->title = $model->testcategory_id;
 // $this->params['breadcrumbs'][] = ['label' => 'Test Categories', 'url' => ['index']];
 // $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -15,7 +15,7 @@ $this->title = $model->test_category_id;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'test_category_id',
+            'testcategory_id',
             'category_name',
             'lab.labname',
         ],

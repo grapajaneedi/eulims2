@@ -10,7 +10,6 @@ use Yii;
  * @property int $mapping_id
  * @property int $collectiontype_id
  * @property int $accountingcode_id
- *
  * @property Accountingcode $accountingcode
  * @property Collectiontype $collectiontype
  */
@@ -38,7 +37,7 @@ class Accountingcodemapping extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['collectiontype_id', 'accountingcode_id'], 'integer'],
+            [['accountingcode_id', 'collectiontype_id'], 'integer'],
             [['accountingcode_id', 'collectiontype_id'], 'unique', 'targetAttribute' => ['accountingcode_id', 'collectiontype_id']],
             [['accountingcode_id'], 'exist', 'skipOnError' => true, 'targetClass' => Accountingcode::className(), 'targetAttribute' => ['accountingcode_id' => 'accountingcode_id']],
             [['collectiontype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collectiontype::className(), 'targetAttribute' => ['collectiontype_id' => 'collectiontype_id']],
@@ -52,8 +51,8 @@ class Accountingcodemapping extends \yii\db\ActiveRecord
     {
         return [
             'mapping_id' => 'Mapping ID',
-            'collectiontype_id' => 'Collectiontype ID',
             'accountingcode_id' => 'Accountingcode ID',
+            'collectiontype_id' => 'Collectiontype ID',
         ];
     }
 

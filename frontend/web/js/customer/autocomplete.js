@@ -33,11 +33,11 @@
            zoomControl:true,
            mapTypeControl:true,
            scaleControl:false,
-           streetViewControl:false,
+           streetViewControl:true,
            overviewMapControl:true,
            rotateControl:false,  
            scrollwheel: false,
-           draggable: false,	
+           draggable: true,	
        }
        map = new google.maps.Map(document.getElementById('map'), mapOptions);
    }

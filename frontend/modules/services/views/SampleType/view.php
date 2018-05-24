@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'sample_type_id',
             'sample_type',
-            'testCategory.category_name',
+            'testcategory.category_name',
         ],
     ]) ?>
 

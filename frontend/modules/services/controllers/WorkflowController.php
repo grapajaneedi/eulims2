@@ -52,8 +52,8 @@ class WorkflowController extends Controller
      */
     public function actionView($id)
     {
-        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('view', [
+       if(Yii::$app->request->isAjax){
+            return $this->render('view', [
                     'model' => $this->findModel($id),
                 ]);
         }
@@ -69,12 +69,7 @@ class WorkflowController extends Controller
         $model = new Workflow();
        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-           // if (Yii::$app->request->isAjax){
-                return $this->runAction('index');
-         //  }else{
-          //      return $this->redirect(['view', 'id' => $model->test_category_id]);
-         //   }
-          
+                return $this->runAction('index');  
         } 
           
        if(Yii::$app->request->isAjax){

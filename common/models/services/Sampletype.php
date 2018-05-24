@@ -2,25 +2,23 @@
 
 namespace common\models\services;
 
-use common\models\services\Testcategory;
-
 use Yii;
 
 /**
  * This is the model class for table "tbl_sampletype".
  *
- * @property integer $sample_type_id
+ * @property int $sample_type_id
  * @property string $sample_type
- * @property integer $test_category_id
+ * @property int $testcategory_id
  *
  * @property Sample[] $samples
- * @property Testcategory $testCategory
+ * @property Testcategory $testcategory
  * @property Test[] $tests
  */
 class Sampletype extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -36,27 +34,27 @@ class Sampletype extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['sample_type', 'test_category_id'], 'required'],
-            [['test_category_id'], 'integer'],
+            [['sample_type', 'testcategory_id'], 'required'],
+            [['testcategory_id'], 'integer'],
             [['sample_type'], 'string', 'max' => 75],
-            [['test_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['test_category_id' => 'test_category_id']],
+            [['testcategory_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
             'sample_type_id' => 'Sample Type ID',
             'sample_type' => 'Sample Type',
-            'test_category_id' => 'Test Category ID',
+            'testcategory_id' => 'Testcategory ID',
         ];
     }
 
@@ -71,9 +69,9 @@ class Sampletype extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTestCategory()
+    public function getTestcategory()
     {
-        return $this->hasOne(Testcategory::className(), ['test_category_id' => 'test_category_id']);
+        return $this->hasOne(Testcategory::className(), ['testcategory_id' => 'testcategory_id']);
     }
 
     /**

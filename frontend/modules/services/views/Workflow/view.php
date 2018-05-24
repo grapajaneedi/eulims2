@@ -12,27 +12,23 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="workflow-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+ 
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->workflow_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->workflow_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+      
     </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'workflow_id',
-            'test_id',
+            'test.testName',
             'method',
             'workflow',
         ],
     ]) ?>
 
+    <div style="position:absolute;right:18px;bottom:10px;">
+        <button type="button" class="btn btn-default" data-dismiss="modal" >Cancel</button>
+    </div>
 </div>

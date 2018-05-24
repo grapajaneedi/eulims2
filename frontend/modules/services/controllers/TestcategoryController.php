@@ -52,16 +52,11 @@ class TestcategoryController extends Controller
      */
     public function actionView($id)
     {
-
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('view', [
                     'model' => $this->findModel($id),
                 ]);
         }
-
-        // return $this->render('view', [
-        //     'model' => $this->findModel($id),
-        // ]);
     }
 
     /**
@@ -74,22 +69,14 @@ class TestcategoryController extends Controller
         $model = new TestCategory();
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-           // if (Yii::$app->request->isAjax){
                 return $this->runAction('index');
-         //  }else{
-          //      return $this->redirect(['view', 'id' => $model->test_category_id]);
-         //   }
-          
         } 
           
        if(Yii::$app->request->isAjax){
                 return $this->renderAjax('create', [
                         'model' => $model,
                     ]);
-            }
-        
-        
-       
+            }           
     }
 
     /**
@@ -103,19 +90,12 @@ class TestcategoryController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->test_category_id]);
+            return $this->redirect(['view', 'id' => $model->testcategory_id]);
         } else if (Yii::$app->request->isAjax) {
             return $this->renderAjax('update', [
                 'model' => $model,
             ]);
          }
-
-        ///
-        // if(Yii::$app->request->isAjax){
-        //     return $this->renderAjax('view', [
-        //             'model' => $this->findModel($id),
-        //         ]);
-        // }
     }
 
     /**

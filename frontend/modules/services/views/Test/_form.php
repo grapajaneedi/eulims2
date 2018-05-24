@@ -13,7 +13,7 @@ use common\models\services\Sampletype;
 /* @var $model common\models\services\Test */
 /* @var $form yii\widgets\ActiveForm */
 
-$Testcategorylist= ArrayHelper::map(Testcategory::find()->all(),'test_category_id','category_name');
+$Testcategorylist= ArrayHelper::map(Testcategory::find()->all(),'testcategory_id','category_name');
 $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sample_type');
 $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 
@@ -47,7 +47,7 @@ $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
             </div>
 
             <div class="col-md-6">
-                  <?= $form->field($model, 'test_category_id')->widget(Select2::classname(), [
+                  <?= $form->field($model, 'testcategory_id')->widget(Select2::classname(), [
                         'data' => $Testcategorylist,
                         'language' => 'en',
                         'options' => ['placeholder' => 'Select Test Category'],

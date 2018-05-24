@@ -15,7 +15,7 @@ use common\models\services\Testcategory;
 $this->title = 'Sample Types';
 $this->params['breadcrumbs'][] = ['label' => 'Services', 'url' => ['/services']];
 $this->params['breadcrumbs'][] = 'Manage Sample Type';
-$testcategorylist= ArrayHelper::map(testCategory::find()->all(),'test_category_id','category_name');
+$testcategorylist= ArrayHelper::map(testCategory::find()->all(),'testcategory_id','category_name');
 
 //$this->params['breadcrumbs'][] = 'Test Categories';
 $this->registerJsFile("/js/services/services.js");
@@ -40,17 +40,17 @@ $this->registerJsFile("/js/services/services.js");
             ['class' => 'yii\grid\SerialColumn'],
             'sample_type',
             [
-                'attribute' => 'test_category_id',
+                'attribute' => 'testcategory_id',
                 'label' => 'Test Category',
                 'value' => function($model) {
-                    return $model->testCategory->category_name;
+                    return $model->testcategory->category_name;
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => $testcategorylist,
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'Test Category', 'test_category_id' => 'grid-products-search-category_type_id']
+                'filterInputOptions' => ['placeholder' => 'Test Category', 'testcategory_id' => 'grid-products-search-category_type_id']
             ],
 
             ['class' => 'kartik\grid\ActionColumn',

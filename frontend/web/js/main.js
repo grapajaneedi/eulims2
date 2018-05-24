@@ -8,7 +8,7 @@
 jQuery(document).ready(function ($) {
     $('.btn-modal').click(function () {
         ShowModal(this.name, this.value,true,'600px');
-    });
+    }); 
     // --- Delete action (bootbox) ---
     yii.confirm = function (message, ok, cancel) {
         var title = $(this).data("title");
@@ -83,8 +83,9 @@ function ShowModal(header,url,closebutton,width){
     if(width===undefined){
        width='600px'; 
     }
+    $('.modal-title').html('');
+    $('#modalContent').html("<div id='modalContent' style='margin-left: 5px;'><div style='text-align:center;'><img src='/images/img-loader64.gif' alt=''></div></div>");
     $(".close").prop('disabled',!closebutton);
-    $('#modalContent').html('');
     var dialog=$("#modal").modal({
         backdrop: false,
         show: true,

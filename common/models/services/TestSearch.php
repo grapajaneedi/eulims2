@@ -18,7 +18,7 @@ class TestSearch extends Test
     public function rules()
     {
         return [
-            [['test_id', 'rstl_id', 'duration', 'test_category_id', 'sample_type_id', 'lab_id'], 'integer'],
+            [['test_id', 'rstl_id', 'duration', 'testcategory_id', 'sample_type_id', 'lab_id'], 'integer'],
             [['testname', 'method', 'references'], 'safe'],
             [['fee'], 'number'],
         ];
@@ -67,7 +67,7 @@ class TestSearch extends Test
             'rstl_id' => $this->rstl_id,
             'fee' => $this->fee,
             'duration' => $this->duration,
-            'test_category_id' => $this->test_category_id,
+            'testcategory_id' => $this->testcategory_id,
             'sample_type_id' => $this->sample_type_id,
             'lab_id' => $this->lab_id,
         ]);

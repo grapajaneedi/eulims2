@@ -3,9 +3,6 @@
 namespace common\models\services;
 
 use Yii;
-use yii\base\Model;
-use yii\data\ActiveDataProvider;
-use common\models\services\WorkflowSearch;
 
 /**
  * This is the model class for table "tbl_workflow".
@@ -41,7 +38,8 @@ class Workflow extends \yii\db\ActiveRecord
         return [
             [['test_id', 'method', 'workflow'], 'required'],
             [['test_id'], 'integer'],
-            [['method', 'workflow'], 'string', 'max' => 50],
+            [['method'], 'string', 'max' => 40],
+            [['workflow'], 'string', 'max' => 100],
         ];
     }
 
@@ -56,13 +54,5 @@ class Workflow extends \yii\db\ActiveRecord
             'method' => 'Method',
             'workflow' => 'Workflow',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-    */
-    public function getTests()
-    {
-        return $this->hasMany(Test::className(), ['test_id' => 'test_id']);
     }
 }

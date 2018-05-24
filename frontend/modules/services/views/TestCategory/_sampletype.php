@@ -12,7 +12,7 @@ use yii\data\ArrayDataProvider;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $dataProvider = new ArrayDataProvider([
-    'allModels' => $model->test_category_id,
+    'allModels' => $model->testcategory_id,
     'key' => 'sample_type_id'
 ]);
     GridView::widget([
@@ -26,7 +26,7 @@ $dataProvider = new ArrayDataProvider([
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'test_category_id',
+            'testcategory_id',
             // 'fee',
             // 'duration',
             // 'test_category_id',

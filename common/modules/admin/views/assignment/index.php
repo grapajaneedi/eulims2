@@ -26,7 +26,7 @@ $columns[] = [
 ];
 ?>
 <div class="assignment-index">
-  
+   <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => 'route']); ?>
     <div class="panel panel-default col-xs-12">
         <div class="panel-heading"><i class="fa fa-user-circle fa-adn"></i> Assignment</div>
         <div class="panel-body">

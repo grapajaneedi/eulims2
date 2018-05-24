@@ -222,15 +222,15 @@
   `package_id` int(11) NOT NULL AUTO_INCREMENT,
   `rstl_id` int(11) NOT NULL,
   `testcategory_id` int(11) NOT NULL,
-  `sampletype_id` int(11) NOT NULL,
+  `sample_type_id` int(11) NOT NULL,
   `name` varchar(50) CHARACTER SET latin1 NOT NULL,
   `rate` decimal(10,2) NOT NULL DEFAULT '0.00',
   `tests` varchar(100) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`package_id`),
   KEY `testcategory_id` (`testcategory_id`),
-  KEY `sampletype_id` (`sampletype_id`),
+  KEY `sample_type_id` (`sample_type_id`),
   CONSTRAINT `tbl_packagelist_ibfk_1` FOREIGN KEY (`testcategory_id`) REFERENCES `tbl_testcategory` (`testcategory_id`),
-  CONSTRAINT `tbl_packagelist_ibfk_2` FOREIGN KEY (`sampletype_id`) REFERENCES `tbl_sample` (`sample_id`)
+  CONSTRAINT `tbl_packagelist_ibfk_2` FOREIGN KEY (`sample_type_id`) REFERENCES `tbl_sample` (`sample_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci</sql_create_table>
 </table>
 <table name="tbl_paymenttype" view="colnames">

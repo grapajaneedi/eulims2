@@ -18,6 +18,9 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
+use yii\web\Response;
+use kartik\mpdf\Pdf;
+use yii\db\ActiveQuery;
 
 /**
  * SampleController implements the CRUD actions for Sample model.
@@ -37,6 +40,20 @@ class SampleController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionPrintlabel(){
+
+        $pdf = Yii::$app->pdf;
+        $pdf->orientation=Pdf::ORIENT_LANDSCAPE;
+        $content = $this->renderPartial('printlabel/_form');
+        $pdf->content = $content;
+        $pdf->destination = Pdf::DEST_BROWSER;
+        $pdf->format = [
+            35,
+            66
+        ];
+        return $pdf->render();
     }
 
     /**
@@ -96,7 +113,7 @@ class SampleController extends Controller
         } else {
             $labId = 2;
         }*/
-
+        $session = Yii::$app->session;
         //$req = Yii::$app->request;
 
         if(Yii::$app->request->get('request_id'))
@@ -126,7 +143,7 @@ class SampleController extends Controller
             }
 
             $model->rstl_id = 11;
-            $model->sample_code = 0;
+            //$model->sample_code = 0;
             $model->request_id = $request->request_id;
             $model->sample_month = date('m', $request->request_datetime);
             $model->sample_year = date('Y', $request->request_datetime);
@@ -157,7 +174,7 @@ class SampleController extends Controller
                         }
                         $sample->rstl_id = 11;
                         $sample->sample_code = 0;
-                        $sample->test_category_id = (int) $_POST['Sample']['test_category_id'];
+                        $sample->testcategory_id = (int) $_POST['Sample']['testcategory_id'];
                         $sample->sample_type_id = (int) $_POST['Sample']['sample_type_id'];
                         $sample->samplename = $_POST['Sample']['samplename'];
                         $sample->description = $_POST['Sample']['description'];
@@ -170,10 +187,14 @@ class SampleController extends Controller
                         print_r($_POST);
                     echo "</pre>";*/
                 }
-                return $this->redirect('index');
+                //return $this->redirect('index');
+                return $this->redirect(['/lab/request/view', 'id' => $requestId]);
             } else {
                 if($model->save(false)){
-                    return $this->redirect(['view', 'id' => $model->sample_id]);
+                    //return $this->redirect(['view', 'id' => $model->sample_id]);
+                    //echo Json::encode('Successfully saved.');
+                    $session->set('savepopup',"executed");
+                    return $this->redirect(['/lab/request/view', 'id' => $requestId]);
                 }
             }
 
@@ -211,12 +232,16 @@ class SampleController extends Controller
      */
     public function actionUpdate($id)
     {
+        //\Yii::$app->response->format = Response:: FORMAT_JSON;
         $model = $this->findModel($id);
 
         /*if(isset($_GET['request_id']))
         {
             $requestId = (int) $_GET['request_id'];
         }*/
+
+        $session = Yii::$app->session;
+
         $request = $this->findRequest($model->request_id);
         $labId = $request->lab_id;
 
@@ -224,7 +249,7 @@ class SampleController extends Controller
         //$sampletype = $this->listSampletype();
 
         $sampletype = ArrayHelper::map(Sampletype::find()
-                ->where(['test_category_id' => $model->test_category_id])
+                ->where(['testcategory_id' => $model->testcategory_id])
                 ->all(), 'sample_type_id', 'sample_type');
 
         /*if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -250,7 +275,26 @@ class SampleController extends Controller
             //$model->sampling_date = date('Y-m-d');
 
             if($model->save(false)){
-                return $this->redirect(['view', 'id' => $model->sample_id]);
+                //if(Yii::$app->request->isAjax){
+                  //  echo Json::encode('Successfully saved.');
+                    //return;
+                //} //else {
+                    //return $this->redirect(['view', 'id' => $model->sample_id]);
+                //}
+                //Yii::$app->session->setFlash('formSave');
+                //\Yii::$app->response->format = Response::FORMAT_JSON;
+                //return['id'=>$id, 'someOtherData'=>true];
+                //return;
+
+                //Yii::$app->response->format = Response::FORMAT_JSON;
+                //return json_encode(["test"=> 1]);
+               // return array('status' => true, 'data'=> 'Student record is successfully updated');
+                //Yii::info('Model was not saved');
+                //Yii::$app->session->setFlash('formError');
+                //echo Json::encode('Successfully saved.');
+                $session->set('updatepopup',"executed");
+                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+
             }
         } elseif (Yii::$app->request->isAjax) {
                 return $this->renderAjax('_form', [
@@ -281,7 +325,12 @@ class SampleController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        //return $this->redirect(['index']);
+        //return Json::encode(['result' => 'Successfully deleted.']);;
+        //throw ('Successfully deleted.');
+        //echo "Sample successfully deleted.";
+        //throw "Error";
+        return;
     }
 
     /**
@@ -328,7 +377,7 @@ class SampleController extends Controller
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
-            $list = Sampletype::find()->andWhere(['test_category_id'=>$id])->asArray()->all();
+            $list = Sampletype::find()->andWhere(['testcategory_id'=>$id])->asArray()->all();
             $selected  = null;
             if ($id != null && count($list) > 0) {
                 $selected = '';
@@ -437,20 +486,172 @@ class SampleController extends Controller
         }
     }*/
 
-    protected function generateSampleCode($lab, $year){
-        $samplecode = Samplecode::mdodel()->find([
-            'select' => '*',
-            'order' => 'number DESC',
-            'condition' => ''
-        ]);
-        $sampleCode = Samplecode::model()->find(array(
+    public function actionGeneratesamplecode(){
+        //echo "dkaklajlkdja";
+        //exit;
+
+        $requestId = (int) Yii::$app->request->get('request_id');
+
+        $request = $this->findRequest($requestId);
+        $lab = Lab::findOne($request->lab_id);
+
+        //$year = date('Y', strtotime($request->request_datetime));
+        $year = date('Y', $request->request_datetime);
+
+        /*$samplecode = Samplecode::find([
+            'select' => 'MAX(number) as lastnumber',
+            'condition' => 'rstl_id =:rstlId AND lab_id =:labId AND year =:year',
+            'params' => [':rstlId'=>11,':labId'=>$lab->lab_id,':year'=>$year],
+        ])->all();*/
+
+       /* $samplecode = (new Query)
+            ->select(['MAX(number) AS lastnumber'])
+            ->from('eulims_lab.tbl_samplecode')
+            ->where('rstl_id =:rstlId AND lab_id =:labId AND year =:year', [':rstlId'=>11,':labId'=>$lab->lab_id,':year'=>$year])
+            ->all();*/
+
+        /*$samplecode = Samplecode::find()
+        ->select('MAX(number) as lastnumber')
+        ->where('rstl_id =:rstlId AND lab_id =:labId AND year =:year', [':rstlId'=>11,':labId'=>$lab->lab_id,':year'=>$year])
+        ->all();*/
+
+        //$sample = Sample::model()->find(['request_id'=>$request_id])->all();
+        //$sample = $this->findModel($sampleId);
+
+
+       /* $sampleCode = Samplecode::model()->find(array(
                 'select'=>'*',
                 'order'=>'number DESC, id DESC',
                 'condition'=>'rstl_id = :rstl_id AND labId = :labId AND year = :year AND cancelled = 0',
-                'params'=>array(':rstl_id' => Yii::app()->Controller->getRstlId(), ':labId' => $modelLab->id, ':year' => $year )
-            ));
-            
-        if(isset($sampleCode)){
+                'params'=>array(':rstl_id' => Yii::app()->Controller->getRstlId(), ':labId' => $modelLab->id, ':year' => $year)
+            ));*/
+
+        //$nextnumber = $samplecode['lastnumber'] + 1;
+
+        //print_r($samplecode);
+        //$year = date('Y',strtotime($request->request_datetime));
+
+       /* if(count($samplecode) > 0)
+        {
+            $number = $samplecode[0]['lastnumber'];
+            //echo $number;
+            //$nextnumber = 1;
+            //print_r($samplecode);
+            // echo "<pre>";
+            // print_r($samplecode);
+            // echo "</pre>";
+        } else {
+            $number = 0;
+            //print_r($samplecode);
+        }*/
+        
+        //$modelSamplecode->save();
+       // foreach ($request->samples as $samp) {
+            //$sampleId = $samp['sample']['id'];
+            //$sampleId = $samp->sample->id;
+            //print_r($samp);
+
+            //$sampleId = 3;
+            /*$sample = $this->findModel($sampleId);
+
+            $modelSamplecode = new Samplecode();
+            $modelSamplecode->rstl_id = 11;
+            $modelSamplecode->reference_num = $request->request_ref_num;
+            $modelSamplecode->sample_id = $sample->sample_id;
+            $modelSamplecode->lab_id = $lab->lab_id;
+            $modelSamplecode->number = $nextnumber;
+            $modelSamplecode->year = $year;*/
+
+            /*if($modelSamplecode->save())
+            {
+                //update samplecode to tbl_sample
+                $sample->sample_code = $lab->labcode."-".$nextnumber;
+                $sample->save();
+            } else {
+                //error
+                $modelSamplecode->error();
+                exit;
+            }*/
+        //}
+
+        //print_r(count($request->samples));
+
+        foreach ($request->samples as $samp) {
+
+            $samplecode = (new Query)
+            ->select(['MAX(number) AS lastnumber'])
+            ->from('eulims_lab.tbl_samplecode')
+            ->where('rstl_id =:rstlId AND lab_id =:labId AND year =:year', [':rstlId'=>11,':labId'=>$lab->lab_id,':year'=>$year])
+            ->all();
+
+            if(count($samplecode) > 0)
+            {
+                $number = $samplecode[0]['lastnumber'];
+                //echo $number;
+                //$nextnumber = 1;
+                //print_r($samplecode);
+                // echo "<pre>";
+                // print_r($samplecode);
+                // echo "</pre>";
+            } else {
+                $number = 0;
+                //print_r($samplecode);
+            }
+
+            //for ($i=1;$i<=count($request->samples);$i++)
+            //{
+                //$nextnumber = $number + 1;
+            //}
+
+                //$nextnumber = $number + 1;
+
+                //$count = 1;
+                //if(count($request->samples) >= $count)
+               // {
+                    //$count = 1;
+                //for($count=1;count($request->samples) >=$count;$count++)
+                //{
+                    $nextnumber = $number + 1;
+                    $appendNextnumber = str_pad($nextnumber, 4, "0", STR_PAD_LEFT);
+                //}
+                    //echo $samp['sample_id']."<br>";
+                    //echo "-".$nextnumber."<br>";
+                    $sampleId = $samp->sample_id;
+                    $sample = $this->findModel($sampleId);
+                    //$toinsert = $nextnumber + $i;
+
+                    $modelSamplecode = new Samplecode();
+                    $modelSamplecode->rstl_id = 11;
+                    $modelSamplecode->reference_num = $request->request_ref_num;
+                    $modelSamplecode->sample_id = $sampleId;
+                    $modelSamplecode->lab_id = $lab->lab_id;
+                    $modelSamplecode->number = $nextnumber;
+                    $modelSamplecode->year = $year;
+
+                    if($modelSamplecode->save())
+                    {
+                        //update samplecode to tbl_sample
+                        $sample->sample_code = $lab->labcode."-".$appendNextnumber;
+                        $sample->save();
+                    } else {
+                        //error
+                        $modelSamplecode->error();
+                        exit;
+                    }
+                    //$count = $count + 1;
+                //}
+            //}
+           /* echo "<pre>";
+                print_r($_POST);
+            echo "</pre>";*/
+        }
+
+        //echo "<pre>";
+        //print_r($request->samples->sample_id);
+        //echo "</pre>";
+
+
+        /*if(isset($sampleCode)){
             return $modelLab->labCode.'-'.Yii::app()->Controller->addZeros($sampleCode->number + 1);
         }else{
             $initializeCode = Initializecode::model()->find(array(
@@ -460,7 +661,10 @@ class SampleController extends Controller
             ));
             $startCode = Yii::app()->Controller->addZeros($initializeCode->startCode + 1);
             return $modelLab->labCode.'-'.$startCode;
-        }
+        }*/
+
+        //return $modelSamplecode;
+        //return $samplecode;
     }
 
     protected function listSampletemplate()
@@ -503,22 +707,5 @@ class SampleController extends Controller
         $modelSampletemplate->save();
 
         return $modelSampletemplate;
-    }
-
-    public function actionListtemplate($q = null)
-    {
-        $query = new Query;
-        
-        $query->select('sample_name')
-            ->from('eulims_lab.tbl_sample_name')
-            ->where('sample_name LIKE "%' . $q .'%"')
-            ->orderBy('sample_name');
-        $command = $query->createCommand();
-        $data = $command->queryAll();
-        $out = [];
-        foreach ($data as $d) {
-            $out[] = ['value' => $d['sample_name']];
-        }
-        echo Json::encode($out);
     }
 }

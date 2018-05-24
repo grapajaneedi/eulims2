@@ -4,12 +4,14 @@ namespace frontend\modules\finance\controllers;
 
 use Yii;
 use common\models\finance\Orderofpayment;
+use common\models\finance\Paymentitem;
 use common\models\finance\OrderofpaymentSearch;
 use common\models\lab\Request;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 /**
  * OrderofpaymentController implements the CRUD actions for Orderofpayment model.
  */
@@ -74,21 +76,36 @@ class OrderofpaymentController extends Controller
     public function actionCreate()
     {
         $model = new Orderofpayment();
+       
         $searchModel = new OrderofpaymentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
         
          if ($model->load(Yii::$app->request->post())) {
-           //return $this->redirect(['view', 'id' => $model->orderofpayment_id]);
-            //return $this->runAction('index');
-          if($model->validate() && $model->save()){
+           
+            if($model->validate()){
                 $session = Yii::$app->session;
+                $request_ids=$model->RequestIds;
+                $str_request = explode(',', $request_ids);
                 $model->rstl_id=1;
                 $model->transactionnum='123456';
                 $model->save();
+               // $i = 0;
+                $arr_length = count($str_request); 
+                for($i=0;$i<$arr_length;$i++){
+                     $request =$this->findRequest($str_request[$i]);
+                     $paymentitem = new Paymentitem();
+                     $paymentitem->rstl_id = 1;
+                     $paymentitem->request_id = $str_request[$i];
+                     $paymentitem->orderofpayment_id = $model->orderofpayment_id;
+                     $paymentitem->details =$request->request_ref_num;
+                     $paymentitem->amount = $request->total;
+                     $paymentitem->save(); 
+                }
+                  
                 $session->set('savepopup',"executed");
                 return $this->redirect(['/finance/orderofpayment']);
-          }
+            }
            
         } 
         if(Yii::$app->request->isAjax){
@@ -126,17 +143,21 @@ class OrderofpaymentController extends Controller
         }
     }
 
-     public function actionGetlistrequest()
+     public function actionGetlistrequest($id)
     {
-        $post=Yii::$app->request->post();
-        $customer_id=$post['customer_id'];
-        $query = Request::find()->where(['customer_id' => $customer_id]);
+      // $post=Yii::$app->request->post();
+       //$request_id=$post['request_id'];
+       // $model = $this->findModel($id);
+        $query = Request::find()->where(['customer_id' => $id,'status_id'=>1]);
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
-         return $this->renderPartial('_request', ['dataProvider'=>$dataProvider]);
+        $dataProvider->pagination->pageSize=3;
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_request', ['dataProvider'=>$dataProvider]);
+            //return;
+        }
 
     }
     /**
@@ -162,6 +183,15 @@ class OrderofpaymentController extends Controller
     protected function findModel($id)
     {
         if (($model = Orderofpayment::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+    
+    protected function findRequest($requestId)
+    {
+        if (($model = Request::findOne($requestId)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

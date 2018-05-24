@@ -3,7 +3,7 @@
 namespace common\models\finance;
 
 use Yii;
-use common\models\lab\Customer;
+
 /**
  * This is the model class for table "tbl_orderofpayment".
  *
@@ -13,15 +13,17 @@ use common\models\lab\Customer;
  * @property int $collectiontype_id
  * @property int $payment_mode_id
  * @property string $order_date
+ * @property string $total_amount
  * @property int $customer_id
  * @property string $purpose
  * @property int $created_receipt
  * @property int $allow_erratum
  *
+ * @property Billing[] $billings
+ * @property Collection[] $collections
  * @property Collectiontype $collectiontype
  * @property Paymentmode $paymentMode
  * @property Paymentitem[] $paymentitems
- * @property Receipt[] $receipts
  */
 class Orderofpayment extends \yii\db\ActiveRecord
 {
@@ -47,9 +49,10 @@ class Orderofpayment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose'], 'required'],
+            [['rstl_id', 'transactionnum', 'collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose'], 'required'],
             [['rstl_id', 'collectiontype_id', 'payment_mode_id', 'customer_id', 'created_receipt', 'allow_erratum'], 'integer'],
             [['order_date'], 'safe'],
+            [['total_amount'], 'number'],
             [['transactionnum'], 'string', 'max' => 100],
             [['purpose'], 'string', 'max' => 200],
             [['collectiontype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collectiontype::className(), 'targetAttribute' => ['collectiontype_id' => 'collectiontype_id']],
@@ -65,15 +68,32 @@ class Orderofpayment extends \yii\db\ActiveRecord
         return [
             'orderofpayment_id' => 'Orderofpayment ID',
             'rstl_id' => 'Rstl ID',
-            'transactionnum' => 'Transaction Number',
-            'collectiontype_id' => 'Collection Type',
-            'payment_mode_id' => 'Mode of Payment',
+            'transactionnum' => 'Transactionnum',
+            'collectiontype_id' => 'Collectiontype ID',
+            'payment_mode_id' => 'Payment Mode ID',
             'order_date' => 'Order Date',
-            'customer_id' => 'Customer Name',
-            'purpose' => 'Purpose/Payment for',
+            'total_amount' => 'Total Amount',
+            'customer_id' => 'Customer ID',
+            'purpose' => 'Purpose',
             'created_receipt' => 'Created Receipt',
             'allow_erratum' => 'Allow Erratum',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBillings()
+    {
+        return $this->hasMany(Billing::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCollections()
+    {
+        return $this->hasMany(Collection::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
 
     /**
@@ -98,18 +118,5 @@ class Orderofpayment extends \yii\db\ActiveRecord
     public function getPaymentitems()
     {
         return $this->hasMany(Paymentitem::className(), ['orderofpayment_id' => 'orderofpayment_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getReceipts()
-    {
-        return $this->hasMany(Receipt::className(), ['orderofpayment_id' => 'orderofpayment_id']);
-    }
-    
-    public function getCustomer()
-    {
-        return $this->hasOne(Customer::className(), ['customer_id' => 'customer_id']);
     }
 }

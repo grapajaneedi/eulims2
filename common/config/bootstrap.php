@@ -24,5 +24,8 @@ if (isset($_SERVER['SERVER_NAME'])) {
     $GLOBALS['upload_url'] = $Backend_URI;
     $GLOBALS['base_uri'] = $BaseURI;
     $GLOBALS['frontend_base_uri'] = $FrontendBaseURI;
+    /********************** Global Configuration Settings **********************/
+    $GLOBALS['rstl_id']=11; //RSTL ID
+    /***************************************************************************/
 }
 

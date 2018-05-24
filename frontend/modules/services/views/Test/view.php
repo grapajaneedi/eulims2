@@ -21,19 +21,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'test_id',
-            'agency_id',
+            'rstl_id',
             'testname',
             'method',
             'references',
             'fee',
             'duration',
-            'testCategory.category_name',
+            'Testcategory.category_name',
             'sampleType.sample_type'
         ],
     ]) ?>
 
-<div style="position:absolute;right:18px;bottom:10px;">
-    <!-- <div class="pull-right" style="text-align:right;position:relative;"> -->
+    <div style="position:absolute;right:18px;bottom:10px;">
         <button type="button" class="btn btn-default" data-dismiss="modal" >Cancel</button>
     </div>
 </div>

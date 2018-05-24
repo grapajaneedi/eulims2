@@ -19,13 +19,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'lab_id',
             'labname',
             'labcode',
-            'labcount',
-            'nextrequestcode',
-            'active',
             [
-                'class'=>'kartik\checkbox\CheckboxX',
-                'attribute' => 'active',
-            ]
+                'label'=>'Total',
+                'attribute'=>'labcount'
+            ],
+            [
+                'label'=>'Next RequestCode',
+                'attribute'=>'nextrequestcode'
+            ],
+            'active:boolean'
         ],
     ]) ?>
     <div style="position:absolute;right:18px;bottom:10px;">

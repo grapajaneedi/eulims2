@@ -6,12 +6,14 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use common\models\system\Profile;
 
 /**
  * User model
  *
  * @property integer $userid
  * @property string $username
+ * @property string $fullname
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
@@ -20,11 +22,14 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ * 
+ * @property Profile $profile
  */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
+    private $Fullname;
 
     public static function getDb()
     {
@@ -45,6 +50,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             'user_id' => 'ID',
             'username' => 'Username',
+            'fullname'=>'Fullname',
             'auth_key' => 'Auth Key',
             'password_hash' => 'Password Hash',
             'password_reset_token' => 'Password Reset Token',
@@ -71,6 +77,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['fullname'],'safe'],
+            [['fullname'],'string','max'=>100],
             ['status', 'default', 'value' => self::STATUS_DELETED],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['username', 'auth_key', 'password_hash', 'email'], 'required'],
@@ -219,4 +227,5 @@ class User extends ActiveRecord implements IdentityInterface
     public function getProfile(){
         return $this->hasOne(Profile::className(), ['user_id'=>'user_id']);
     }
+ 
 }
