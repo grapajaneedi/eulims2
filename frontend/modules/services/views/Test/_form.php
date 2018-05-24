@@ -14,7 +14,6 @@ use common\models\services\Sampletype;
 /* @var $form yii\widgets\ActiveForm */
 
 $Testcategorylist= ArrayHelper::map(Testcategory::find()->all(),'testcategory_id','category_name');
-$Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sample_type');
 $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 
 ?>

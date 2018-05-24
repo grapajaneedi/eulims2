@@ -44,16 +44,20 @@ class SampleController extends Controller
 
     public function actionPrintlabel(){
 
-        $pdf = Yii::$app->pdf;
-        $pdf->orientation=Pdf::ORIENT_LANDSCAPE;
-        $content = $this->renderPartial('printlabel/_form');
-        $pdf->content = $content;
-        $pdf->destination = Pdf::DEST_BROWSER;
-        $pdf->format = [
-            35,
-            66
-        ];
-        return $pdf->render();
+            $mPDF = new Pdf();
+            $mPDF->content=$this->renderPartial('printlabel/_form');
+            $mPDF->orientation=Pdf::ORIENT_PORTRAIT;
+            $mPDF->marginLeft=1.0;
+            $mPDF->marginRight=1.0;
+            $mPDF->marginTop=0;
+            $mPDF->marginBottom=0.5;
+            $mPDF->format=[66,35]; //Customed Sizes
+            $mPDF->destination= Pdf::DEST_BROWSER;
+            //$Footer="<barcode code='$ORNumber' type='C39' size='1.5' height='0.5'/>";
+          
+            $mPDF->render();
+            exit;
+       
     }
 
     /**

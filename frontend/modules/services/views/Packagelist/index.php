@@ -5,7 +5,8 @@ use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-
+use common\models\services\Testcategory;
+use common\models\services\Sampletype;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\PackagelistSearch */
@@ -14,6 +15,9 @@ use yii\helpers\Html;
 $this->title = 'Package';
 $this->params['breadcrumbs'][] = ['label' => 'Services', 'url' => ['/services']];
 $this->params['breadcrumbs'][] = 'Manage Package';
+$testcategorylist= ArrayHelper::map(testCategory::find()->all(),'testcategory_id','category_name');
+$sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sample_type');
+
 //$this->params['breadcrumbs'][] = $this->title;
 
 $this->registerJsFile("/js/services/services.js");
@@ -39,9 +43,32 @@ $this->registerJsFile("/js/services/services.js");
             ['class' => 'yii\grid\SerialColumn'],
 
             'package_id',
-            'rstl_id',
-            'testcategory_id',
-            'sample_type_id',
+            [
+                'attribute' => 'testcategory_id',
+                'label' => 'Test Category',
+                'value' => function($model) {
+                    return $model->testcategory->category_name;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => $testcategorylist,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Test Category', 'testcategory_id' => 'grid-products-search-category_type_id']
+            ],
+              [
+                'attribute' => 'sample_type_id',
+                'label' => 'Sample Type',
+                'value' => function($model) {
+                    return $model->sampletype->sample_type;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => $sampletypelist,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Sample Type', 'sample_type_id' => 'grid-products-search-category_type_id']
+            ],
             'name',
             //'rate',
             //'tests',
