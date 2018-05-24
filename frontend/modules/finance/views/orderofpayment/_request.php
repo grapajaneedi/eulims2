@@ -1,6 +1,16 @@
 <?php
 use yii\helpers\Html;
 use kartik\grid\GridView;
+
+$js=<<<SCRIPT
+   $(".kv-row-checkbox").click(function(){
+       // alert(this.value);
+        var keys = $('#grid').yiiGridView('getSelectedRows');
+        $("#orderofpayment-requestids").val(keys.join());
+      
+   });          
+SCRIPT;
+$this->registerJs($js);
 ?>
 
  <?php 
@@ -11,7 +21,7 @@ use kartik\grid\GridView;
          ],
          [
             'class' => '\kartik\grid\CheckboxColumn',
-           
+            
          ],
         'request_ref_num',
         'request_datetime',
@@ -19,6 +29,7 @@ use kartik\grid\GridView;
 ?>    
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'id'=>'grid',
         'pjax'=>true,
         'pjaxSettings' => [
             'options' => [
