@@ -6,6 +6,10 @@ use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+use common\components\Functions;
+
+
+$func = new Functions();
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
@@ -249,6 +253,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'attribute'=>'sample_code',
                     'enableSorting' => false,
+                    'contentOptions' => [
+                        'style'=>'max-width:70px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                    ],
                 ],
                 [
                     'attribute'=>'samplename',
@@ -259,8 +266,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     'format' => 'raw',
                     'enableSorting' => false,
                     'value' => function($data){
-                        return ($data->request->lab_id == 2) ? "<span style='font-size:11.5px;'>Sampling Date: <b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
+                        return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
                     },
+                   'contentOptions' => [
+                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                    ],
                 ],
                 [
                     'class' => 'kartik\grid\ActionColumn',
@@ -332,8 +342,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['/lab/sample/create','request_id'=>$model->request_id], ['class' => 'btn btn-success']),
                     'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                     //</janeedi>
-                   
+                    //'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']
                     //'after'=>'',
+                    'after'=>false,
                     //'footer'=>false,
                 ],
                 'rowOptions' => function ($model, $key, $index, $grid) {
@@ -443,7 +454,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         $url ='/lab/sample/delete?id='.$model->sample_id;
                         return $url;
                     }
-
                 },
                 'deleteOptions' => ['title' => 'Delete Sample', 'data-toggle' => 'tooltip'],
                 'headerOptions' => ['class' => 'kartik-sheet-style'],
@@ -484,6 +494,29 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]);
     ?>
+            echo GridView::widget([
+                'id' => 'analysis-grid',
+                'dataProvider'=> $dataProvider,
+                'summary' => '',
+                'responsive'=>true,
+                'hover'=>true,
+                //'filterModel' => $searchModel,
+                'panel' => [
+                    'heading'=>'<h3 class="panel-title">Analyses</h3>',
+                    'type'=>'primary',
+                    //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['/lab/analysis/create'], ['class' => 'btn btn-success'],['id' => 'modalBtn']),
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Package', 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add other Services', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Other Services', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                   'after'=>false,
+                  //  'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    //'footer'=>false,
+                ],
+                'columns' => $gridColumns,
+                'toolbar' => [
+                ],
+            ]);
+        ?>
     </div>
 </div>
 
@@ -570,4 +603,29 @@ $this->registerJs("
     });
 }*/
 ");
+?>
+<?php
+    // This section will allow to popup a notification
+    $session = Yii::$app->session;
+    if ($session->isActive) {
+        $session->open();
+        if (isset($session['deletepopup'])) {
+            $func->CrudAlert("Successfully Deleted","WARNING",true);
+            //$func->CrudAlert("Deleted Successfully",Alert::TYPE_WARNING,true);
+            //$func->CrudAlert("Deleted Successfully",Alert::TYPE_SUCCESS,true);
+            unset($session['deletepopup']);
+            $session->close();
+        }
+        if (isset($session['updatepopup'])) {
+            $func->CrudAlert("Successfully Updated","SUCCESS",true);
+            unset($session['updatepopup']);
+            $session->close();
+        }
+        if (isset($session['savepopup'])) {
+            $func->CrudAlert("Successfully Saved","SUCCESS",true);
+            //$func->CrudAlert("Successfully saved.",Alert::TYPE_WARNING,true);
+            unset($session['savepopup']);
+            $session->close();
+        }
+    }
 ?>
