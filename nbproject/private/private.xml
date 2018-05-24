@@ -3,12 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/inetpub/wwwroot/eulims2/backend/modules/system/controllers/ConfigurationsController.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/backend/modules/system/controllers/LabmanagerController.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/backend/modules/system/views/configurations/index.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/backend/modules/system/views/labmanager/view.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/common/config/components.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/lab/LabManagerSearch.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/finance/Collectiontype.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/finance/Receipt.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/finance/Orderofpayment.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/finance/Billing.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/finance/Collection.php</file>
         </group>
     </open-files>
 </project-private>
