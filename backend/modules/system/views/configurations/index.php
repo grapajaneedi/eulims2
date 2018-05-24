@@ -30,7 +30,9 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
         ],
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
-            ['class' => 'kartik\grid\CheckBoxColumn'],
+            [
+                'class'=>'kartik\grid\CheckBoxColumn',
+            ],
             [
                 'attribute' => 'labname',
                 'label' => 'Laboratory Name',
@@ -104,6 +106,7 @@ $Command=$Connection->createCommand($SQL);
 $LabmanagerList=$Command->queryAll();
 $searchModel = new LabManagerSearch();
 $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
 $TechnicalManagerContent=GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -147,12 +150,13 @@ $TechnicalManagerContent=GridView::widget([
                 'template' => $Buttontemplate,
                 'buttons'=>[
                     'view'=>function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['labmanager/view','id'=>$model['lab_id']]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Lab Manager")]);
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['labmanager/view','id'=>$model['user_id']]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Lab Manager")]);
                     },
                     'update'=>function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['labmanager/update','id'=>$model['lab_id']]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Lab Manager")]);
                     }
                 ],
+               
             ],
         ],
     ]);
@@ -186,9 +190,9 @@ $TechnicalManagerContent=GridView::widget([
                     ],
                     [
                         'label' => '<i class="fa-level-down"></i> Discounts',
-                        'content' => "",
+                        'content' => "rtrttrtrtrtrtt",
                         'active' => false,
-                        'options' => ['id' => 'manager_config'],
+                        'options' => ['id' => 'discount_config'],
                        // 'visible' => Yii::$app->user->can('access-terminal-configurations')
                     ],
                 ],

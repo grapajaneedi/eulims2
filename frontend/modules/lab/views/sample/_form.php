@@ -28,49 +28,70 @@ if(count($sampletype) > 0){
 
     <?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
     <?php if(empty($model->sample_id)): ?>
-    <p><label>Sample Quantity</label></p>
-    <div class="input-group" style="margin-bottom: 15px;">
-        <span class="input-group-btn">
-            <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="qnty">
-                <span class="glyphicon glyphicon-minus"></span>
-            </button>
-        </span>
-        <input type="text" name="qnty" class="form-control input-number" value="1" min="1" max="100" style="width: 50px;text-align: center;">
-        <span class="input-group-btn" style="float:left;">
-            <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="qnty">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
-        </span>
+    <div class="row">
+        <div class="col-sm-3" style="margin-top: 10px;">
+            <label>Sample Quantity</label>
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group" style="margin-bottom: 15px;">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="qnty">
+                        <span class="glyphicon glyphicon-minus"></span>
+                    </button>
+                </span>
+                <input type="text" name="qnty" class="form-control input-number" value="1" min="1" max="100" style="width: 50px;text-align: center;">
+                <span class="input-group-btn" style="float:left;">
+                    <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="qnty">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </span>
+            </div>
+        </div>
     </div>
     <?php endif; ?>
-
-    <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
-                'data' => $testcategory,
-                'theme' => Select2::THEME_KRAJEE,
-                //'theme' => Select2::THEME_BOOTSTRAP,
-                'options' => ['id'=>'sample-testcategory_id'],
-                'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Testcategory'],
-        ])
-    ?>
-
-    <?= $form->field($model, 'sample_type_id')->widget(DepDrop::classname(), [
-        'type'=>DepDrop::TYPE_SELECT2,
-        'data'=>$sampletype,
-        'options'=>['id'=>'sample-sample_type_id'],
-        'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-        'pluginOptions'=>[
-            'depends'=>['sample-testcategory_id'],
-            'placeholder'=>'Select Sampletype',
-            'url'=>Url::to(['/lab/sample/listsampletype']),
-            'loadingText' => 'Loading Sampletype...',
-        ]
-    ])
-    ?>
-
+    <div class="row">
+        <div class="col-sm-6">
+            <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
+                        'data' => $testcategory,
+                        'theme' => Select2::THEME_KRAJEE,
+                        //'theme' => Select2::THEME_BOOTSTRAP,
+                        'options' => ['id'=>'sample-testcategory_id'],
+                        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Testcategory'],
+                ])
+            ?>
+        </div>
+        <div class="col-sm-6">
+            <?= $form->field($model, 'sample_type_id')->widget(DepDrop::classname(), [
+                'type'=>DepDrop::TYPE_SELECT2,
+                'data'=>$sampletype,
+                'options'=>['id'=>'sample-sample_type_id'],
+                'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                'pluginOptions'=>[
+                    'depends'=>['sample-testcategory_id'],
+                    'placeholder'=>'Select Sampletype',
+                    'url'=>Url::to(['/lab/sample/listsampletype']),
+                    'loadingText' => 'Loading Sampletype...',
+                ]
+            ])
+            ?>
+        </div>
+    </div>
+    <div class="row">
     <?php
         if($labId == 2){
+            $startDiv = '<div class="col-sm-6">';
+            $endDiv = "</div>";
+            echo $startDiv;
             //echo $form->field($model, 'sampling_date')->textInput();
-            echo DatePicker::widget([
+            echo $form->field($model, 'sampling_date')->widget(DatePicker::classname(), [
+                'options' => ['placeholder' => 'Enter sampling date ...'],
+                'value' => $model->sampling_date ? date('m/d/Y', strtotime($model->sampling_date)) : date('m/d/Y'),
+                'pluginOptions' => [
+                    'autoclose'=>true,
+                    'format' => 'mm/dd/yyyy'
+                ]
+            ]);
+            /*echo DatePicker::widget([
                 'name' => 'Sample[sampling_date]',
                 'type' => DatePicker::TYPE_COMPONENT_PREPEND,
                 'value' => $model->sampling_date ? date('m/d/Y', strtotime($model->sampling_date)) : date('m/d/Y'),
@@ -78,8 +99,11 @@ if(count($sampletype) > 0){
                     'autoclose'=>true,
                     'format' => 'mm/dd/yyyy'
                 ]
-            ]);
+            ]);*/
+            echo "</div>";
         } else {
+            $startDiv = '<div class="col-sm-12">';
+            $endDiv = "</div>";
             echo "";
         }
     ?>
@@ -95,36 +119,42 @@ if(count($sampletype) > 0){
             'pluginOptions' => ['highlight'=>true],
         ]);*/
     ?>
-    <?php
-        if(empty($model->sample_id)){
-            echo '<label class="control-label">Sample Template</label>';
-            echo Select2::widget([
-                'name' => 'saved_templates',
-                //'value' => '',
-                'data' => $sampletemplate,
-                //'theme' => Select2::THEME_BOOTSTRAP,
-                'theme' => Select2::THEME_KRAJEE,
-                'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select sample template ...'],
-                'options' => ['id' => 'saved_templates']
-            ]);
-            echo "<br>";
-        }
-    ?>
-
-    <?= $form->field($model, 'samplename')->textInput(['maxlength' => true]) ?>
+        <?php
+            echo $startDiv;
+            //if(empty($model->sample_id)){
+                echo '<label class="control-label">Sample Template</label>';
+                echo Select2::widget([
+                    'name' => 'saved_templates',
+                    //'value' => '',
+                    'data' => $sampletemplate,
+                    //'theme' => Select2::THEME_BOOTSTRAP,
+                    'theme' => Select2::THEME_KRAJEE,
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Search sample template ...'],
+                    'options' => ['id' => 'saved_templates']
+                ]);
+                echo "<br>";
+            //}
+            echo $endDiv;
+        ?>
+    </div>
+        
+    <?= $form->field($model, 'samplename')->textInput(['maxlength' => true,'placeholder' => 'Enter sample name ...']) ?>
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
     <?php
         if(empty($model->sample_id)){
             echo Html::checkbox('sample_template', false, ['label' => '&nbsp;Save as template','value'=>"1"]);
-            echo "<br><br>";
+            echo "<br>";
         }
     ?>
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    <div class="form-group" style="padding-bottom: 3px;">
+        <div style="float:right;">
+            <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::button('Cancel', ['class' => 'btn', 'onclick'=>'closeDialog()']) ?>
+            <br>
+        </div>
     </div>
-
     <?php ActiveForm::end(); ?>
 
 </div>
@@ -172,21 +202,44 @@ $('.input-number').change(function() {
     valueCurrent = parseInt($(this).val());
     
     name = $(this).attr('name');
-    if(valueCurrent >= minValue) {
-        $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
-    } else {
-        alert('Sorry, the minimum value was reached');
+
+
+    if(isNaN(valueCurrent)){
+        alert('Only numbers allowed.');
         $(this).val($(this).data('oldValue'));
-    }
-    if(valueCurrent <= maxValue) {
-        $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
     } else {
-        alert('Sorry, the maximum value was reached');
-        $(this).val($(this).data('oldValue'));
+        //if(valueCurrent >= minValue) {
+        if(valueCurrent > minValue) {
+            $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
+        } else {
+            alert('Sorry, the minimum value was not reached');
+            $(this).val($(this).data('oldValue'));
+        }
+        if(valueCurrent <= maxValue) {
+            $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
+        } else {
+            alert('Sorry, the maximum value was reached');
+            $(this).val($(this).data('oldValue'));
+        }
     }
     
     
 });
+
+$(".input-number").keypress(function (e) {
+    //if the letter is not digit then display error and don't type anything
+    if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        //$("#errmsg").html("Digits Only").show().fadeOut("slow");
+        alert('Only numbers allowed.');
+        return false;
+    }
+});
+
+function closeDialog(){
+    $(".modal").modal('hide'); 
+};
+
 </script>
 <style type="text/css">
 div.required label{
@@ -208,7 +261,7 @@ $this->registerJs("$('#saved_templates').on('change',function(){
                 $('#sample-description').val(data.description);
             },
             beforeSend: function (xhr) {
-                alert('Loading...');
+                alert('Please wait...');
                 //alert('<div style=\'text-align:center;\'><img src=\'/images/img-loader64.gif\'></div>');
             },
             error: function (jqXHR, textStatus, errorThrown) {
