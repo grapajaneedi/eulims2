@@ -7,18 +7,19 @@ use Yii;
 /**
  * This is the model class for table "tbl_requestcode_template".
  *
- * @property int $requestcode_template_id
+ * @property int $code_template_id
  * @property int $rstl_id
- * @property string $requestcode_template
+ * @property string $request_code_template
+ * @property string $sample_code_template
  */
-class RequestcodeTemplate extends \yii\db\ActiveRecord
+class CodeTemplate extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'tbl_requestcode_template';
+        return 'tbl_code_template';
     }
 
     /**
@@ -35,9 +36,9 @@ class RequestcodeTemplate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'requestcode_template'], 'required'],
+            [['rstl_id', 'request_code_template','sample_code_template'], 'required'],
             [['rstl_id'], 'integer'],
-            [['requestcode_template'], 'string', 'max' => 100],
+            [['request_code_template','sample_code_template'], 'string', 'max' => 100],
         ];
     }
 
@@ -47,9 +48,10 @@ class RequestcodeTemplate extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'requestcode_template_id' => 'Requestcode Template ID',
+            'request_code_template_id' => 'Requestcode Template ID',
             'rstl_id' => 'Rstl ID',
-            'requestcode_template' => 'Requestcode Template',
+            'request_code_template' => 'Requestcode Template',
+            'sample_code_template' => 'Samplecode Template',
         ];
     }
 }

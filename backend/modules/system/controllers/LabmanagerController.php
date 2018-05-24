@@ -71,12 +71,15 @@ class LabmanagerController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
         $model = new LabManager();
+        $model->user_id=$id;
+        $date = date_create();
+        $model->updated_at=date_format($date, 'U');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->lab_manager_id]);
+            return $this->redirect('/system/configurations');
         }
         if(\Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
@@ -101,7 +104,7 @@ class LabmanagerController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->lab_manager_id]);
+            return $this->redirect('/system/configurations');
         }
         //if(\Yii::$app->request->isAjax){
             return $this->renderAjax('update', [

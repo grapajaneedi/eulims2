@@ -41,13 +41,16 @@ $LabmanagerList=$Command->queryAll();
             'options' => ['placeholder' => 'Select Lab Manager'],
             'pluginOptions' => [
                 'allowClear' => true,
-                'disabled' => true,
+                'disabled' => false,
             ],
         ])->label('Lab Manager');
         ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-    <div class="form-group pull-right">
+    <?php if($model->isNewRecord){ ?>
+    <input type="text" id="_updated_at" disabled class="form-control" value="<?= date("m/d/Y H:i A") ?>" aria-invalid="false">
+    <?php }else{ ?>
+    <input type="text" id="_updated_at" disabled class="form-control" value="<?= gmdate("m/d/Y H:i A", $model->updated_at) ?>" aria-invalid="false">
+    <?php } ?>
+    <div class="form-group pull-right" style="margin-top: 5px">
         <?php if(Yii::$app->request->isAjax){ ?>
             <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancel</button>
         <?php } ?>

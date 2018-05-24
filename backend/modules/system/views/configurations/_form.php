@@ -8,13 +8,13 @@ use common\models\lab\Lab;
 use common\models\system\Rstl;
 use kartik\base\InputWidget;
 use kartik\widgets\SwitchInput;
-use common\models\lab\RequestcodeTemplate;
+use common\models\lab\CodeTemplate;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Lab */
 /* @var $form yii\widgets\ActiveForm */
 $rstl_id=$GLOBALS['rstl_id'];
-$RequestcodedTemplate= RequestcodeTemplate::find()->where(['rstl_id'=>$rstl_id])->one();
+$CodeTemplate= CodeTemplate::find()->where(['rstl_id'=>$rstl_id])->one();
 $js=<<<SCRIPT
    $("#CollapseRequestcode").click(function(){
       $("#btnSubmit").toggle();
@@ -23,7 +23,8 @@ $js=<<<SCRIPT
    $("#btnSaveRequestTemplate").click(function(){
         $.post('/ajax/saverequesttemplate', {
             rstl_id: $("#RSTLSelect2").val(),
-            rtemp: $("#RequestLaboratory").val()
+            rtemp: $("#RequestCodeTemplate").val(),
+            stemp: $("#SampleCodeTemplate").val()
         }, function(result){
             //Return values
             if(result.Status=='Failed'){
@@ -106,7 +107,7 @@ $this->registerJs($js);
                     echo Select2::widget([
                         'name' => 'RequestLaboratory',
                         'id'=>'RSTLSelect2',
-                        'value' => $RequestcodedTemplate->rstl_id,
+                        'value' => $CodeTemplate->rstl_id,
                         'data' => ArrayHelper::map(Rstl::find()->asArray()->all(), 'rstl_id', 'name'),
                         'options' => ['multiple' => false, 'placeholder' => 'Select RSTL'],
                         'pluginEvents' => [
@@ -129,7 +130,11 @@ $this->registerJs($js);
                 </div>
                 <div class="col-md-6">
                     <label class="control-label" for="RequestLaboratory">Request Template</label>
-                    <input type="text" class="form-control" id="RequestLaboratory" value="<?= $RequestcodedTemplate->requestcode_template ?>"/>
+                    <input type="text" class="form-control" id="RequestCodeTemplate" value="<?= $CodeTemplate->request_code_template ?>"/>
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label" for="SampleCodeTemplate">Code Template</label>
+                    <input type="text" class="form-control" id="SampleCodeTemplate" value="<?= $CodeTemplate->sample_code_template ?>"/>
                 </div>
             </div>
         </div>

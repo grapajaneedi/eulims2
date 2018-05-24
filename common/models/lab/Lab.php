@@ -24,6 +24,8 @@ use Yii;
  */
 class Lab extends \yii\db\ActiveRecord
 {
+    public $nextrequestcode;
+    public $nextsamplecode;
     /**
      * @inheritdoc
      */
@@ -48,7 +50,7 @@ class Lab extends \yii\db\ActiveRecord
         return [
             [['labname','labcode', 'labcount', 'active'], 'required'],
             [['labcount', 'active'], 'integer'],
-            [['labname', 'nextrequestcode'], 'string', 'max' => 50],
+            [['labname', 'nextrequestcode','nextsamplecode'], 'string', 'max' => 50],
             [['labcode'], 'string', 'max' => 10],
         ];
     }
@@ -63,7 +65,8 @@ class Lab extends \yii\db\ActiveRecord
             'labname' => 'Laboratory',
             'labcode' => 'Labcode',
             'labcount' => 'Labcount',
-            'nextrequestcode' => 'Nextrequestcode',
+            'nextrequestcode' => 'Next Request Code',
+            'nextsamplecode'=>'Next Sample Code',
             'active' => 'Active',
         ];
     }
