@@ -12,6 +12,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use yii\db\Query;
 /**
  * OrderofpaymentController implements the CRUD actions for Orderofpayment model.
  */
@@ -55,7 +56,8 @@ class OrderofpaymentController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {
+    { 
+        /*
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('view', [
                     'model' => $this->findModel($id),
@@ -65,7 +67,20 @@ class OrderofpaymentController extends Controller
            return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
-        }
+        } */
+         $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $id]);
+         $paymentitemDataProvider = new ActiveDataProvider([
+                'query' => $paymentitem_Query,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+        ]);
+         
+         return $this->render('view', [
+            'model' => $this->findModel($id),
+            'paymentitemDataProvider' => $paymentitemDataProvider,
+        ]);
+
     }
 
     /**
@@ -85,8 +100,9 @@ class OrderofpaymentController extends Controller
                 $session = Yii::$app->session;
                 $request_ids=$model->RequestIds;
                 $str_request = explode(',', $request_ids);
-                $model->rstl_id=1;
-                $model->transactionnum='123456';
+                $model->rstl_id='1';
+                $model->transactionnum= $this->Gettransactionnum();
+              
                 $model->save();
                
                 $arr_length = count($str_request); 
@@ -194,4 +210,15 @@ class OrderofpaymentController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+     public function Gettransactionnum(){
+          $year_month = date('Y-m');
+          $last_trans_num=(new Query)
+            ->select(['count(transactionnum)+ 1 AS lastnumber'])
+            ->from('eulims_finance.tbl_orderofpayment')
+            ->one();
+         $str_trans_num=str_pad($last_trans_num["lastnumber"], 4, "0", STR_PAD_LEFT);
+         $next_transnumber=$year_month."-".$str_trans_num;
+         return $next_transnumber;
+     }
 }

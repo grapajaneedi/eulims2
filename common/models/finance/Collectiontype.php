@@ -53,7 +53,7 @@ class Collectiontype extends \yii\db\ActiveRecord
     {
         return [
             'collectiontype_id' => 'Collectiontype ID',
-            'natureofcollection' => 'Natureofcollection',
+            'natureofcollection' => 'Collection Type',
             'status' => 'Status',
         ];
     }

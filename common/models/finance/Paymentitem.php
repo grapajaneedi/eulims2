@@ -62,7 +62,7 @@ class Paymentitem extends \yii\db\ActiveRecord
             'orderofpayment_id' => 'Orderofpayment ID',
             'details' => 'Details',
             'amount' => 'Amount',
-            'cancelled' => 'Cancelled',
+            'cancelled' => 'Cancelled',             
         ];
     }
 
@@ -73,4 +73,5 @@ class Paymentitem extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Orderofpayment::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
+   
 }

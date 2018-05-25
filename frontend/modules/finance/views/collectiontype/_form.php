@@ -8,17 +8,12 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="collectiontype-form">
+<div class="collectiontype-form" style="padding-bottom: 10px!important;">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'collectiontype_id')->textInput() ?>
-
     <?= $form->field($model, 'natureofcollection')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
-
-   
     <div class="form-group pull-right">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         <?php if(Yii::$app->request->isAjax){ ?>
@@ -27,5 +22,5 @@ use yii\widgets\ActiveForm;
     </div>
 
     <?php ActiveForm::end(); ?>
-
+ 
 </div>
