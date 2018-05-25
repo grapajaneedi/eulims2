@@ -82,15 +82,13 @@ class OrderofpaymentController extends Controller
         $dataProvider->pagination->pageSize=5;
         
          if ($model->load(Yii::$app->request->post())) {
-           
-            if($model->validate()){
                 $session = Yii::$app->session;
                 $request_ids=$model->RequestIds;
                 $str_request = explode(',', $request_ids);
                 $model->rstl_id=1;
                 $model->transactionnum='123456';
                 $model->save();
-               // $i = 0;
+               
                 $arr_length = count($str_request); 
                 for($i=0;$i<$arr_length;$i++){
                      $request =$this->findRequest($str_request[$i]);
@@ -102,11 +100,10 @@ class OrderofpaymentController extends Controller
                      $paymentitem->amount = $request->total;
                      $paymentitem->save(); 
                 }
-                  
+                 
                 $session->set('savepopup',"executed");
                 return $this->redirect(['/finance/orderofpayment']);
-            }
-           
+          
         } 
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [

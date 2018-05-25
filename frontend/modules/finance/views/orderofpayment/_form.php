@@ -17,7 +17,12 @@ use kartik\widgets\DatePicker;
 <div class="orderofpayment-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
 
     <?php $form = ActiveForm::begin(); ?>
-    <?php echo $form->field($model, 'RequestIds')->textInput()->label(false) ?>
+    <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 1px !important;">
+     <a href="#" class="close" data-dismiss="alert" >×</a>
+    <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
+     
+    </div>
+    <?php echo $form->field($model, 'RequestIds')->hiddenInput()->label(false) ?>
     <div style="padding:0px!important;">
         <div class="row">
             <div class="col-sm-6">
@@ -62,7 +67,6 @@ use kartik\widgets\DatePicker;
                     "change" => "function(e) {
                          e.preventDefault();
                         var customer_id=$(this).val();
-                        var request= $model->RequestIds
                         $('#prog').show();
                         $('#requests').hide();
                         jQuery.ajax( {
@@ -89,6 +93,7 @@ use kartik\widgets\DatePicker;
                         $(this).select2('open');
                       //  $(this).one('select-focus',select2Focus);
                       $(this).attr('tabIndex',1);
+                   
                      }",
                  ], 
                 ]);
@@ -141,11 +146,7 @@ use kartik\widgets\DatePicker;
     }
 </style>
 <script type="text/javascript">
-    $(document).ready(function(){
-        $('#orderofpayment-customer_id').click();
-       
-  
-    });
+ 
     $('#orderofpayment-customer_id').on('change',function() {
        $(this).select2('close');
         //alert('csdfsd');

@@ -42,6 +42,12 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'pjax'=>true,
+        'pjaxSettings' => [
+            'options' => [
+                'enablePushState' => false,
+            ]
+        ],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),

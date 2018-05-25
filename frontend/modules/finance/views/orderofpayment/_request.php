@@ -1,5 +1,4 @@
 <?php
-use yii\helpers\Html;
 use kartik\grid\GridView;
 
 $js=<<<SCRIPT
@@ -8,7 +7,11 @@ $js=<<<SCRIPT
         var keys = $('#grid').yiiGridView('getSelectedRows');
         $("#orderofpayment-requestids").val(keys.join());
       
-   });          
+   });    
+   $(".select-on-check-all").change(function(){
+        var keys = $('#grid').yiiGridView('getSelectedRows');
+        $("#orderofpayment-requestids").val(keys.join());
+   });
 SCRIPT;
 $this->registerJs($js);
 ?>
