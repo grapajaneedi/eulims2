@@ -7,6 +7,7 @@ use yii\helpers\Url;
 use common\models\lab\Lab;
 use yii\helpers\ArrayHelper;
 use common\models\lab\LabManagerSearch;
+use common\models\lab\discountSearch;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\LabSearch */
@@ -16,11 +17,14 @@ $this->title = 'Configurations';
 $this->params['breadcrumbs'][] = ['label' => 'System', 'url' => ['/system']];
 $this->params['breadcrumbs'][] = $this->title;
 
+$Session= Yii::$app->session;
+
 $Buttontemplate='{view}{update}'; 
 
 $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'id'=>'LaboratoryGrid',
         'tableOptions'=>['class'=>'table table-hover table-stripe table-hand'],
         'pjax'=>true,
         'pjaxSettings' => [
@@ -104,12 +108,13 @@ WHERE `item_name`='lab-manager'";
 $Connection= Yii::$app->db;
 $Command=$Connection->createCommand($SQL);
 $LabmanagerList=$Command->queryAll();
-$searchModel = new LabManagerSearch();
-$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+$searchModel = new LabManagerSearch();
+$dataProvider2 = $searchModel->search(Yii::$app->request->queryParams);
 $TechnicalManagerContent=GridView::widget([
-        'dataProvider' => $dataProvider,
+        'dataProvider' => $dataProvider2,
         'filterModel' => $searchModel,
+        'id'=>'TechnicalManagerGrid',
         'pjax'=>true,
         'pjaxSettings' => [
                 'options' => [
@@ -121,8 +126,8 @@ $TechnicalManagerContent=GridView::widget([
             [
                 'label'=>'Lab Manager',
                 'attribute'=>'user_id',
-                'value' => function($model) {
-                    return $model['labmanager'];
+                'value' => function($managermodel) {
+                    return $managermodel['labmanager'];
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map($LabmanagerList, 'user_id', 'LabManager'),
@@ -160,6 +165,53 @@ $TechnicalManagerContent=GridView::widget([
             ],
         ],
     ]);
+
+$searchModel = new discountSearch();
+$dataProvider3 = $searchModel->search(Yii::$app->request->queryParams);
+$DiscountContent=GridView::widget([
+        'dataProvider' => $dataProvider3,
+        'filterModel' => $searchModel,
+        'id'=>'DiscountGrid',
+        'pjax'=>true,
+        'pjaxSettings' => [
+                'options' => [
+                    'enablePushState' => false,
+                ],
+        ],
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            'type',
+            [
+            'class' => 'kartik\grid\EditableColumn',
+            'refreshGrid'=>true,
+            'attribute' => 'rate', 
+            'readonly' => function($model, $key, $index, $widget) {
+                return (!$model->status); // do not allow editing of inactive records
+            },
+            'editableOptions' => [
+                'header' => 'Rate', 
+                'inputType' => \kartik\editable\Editable::INPUT_SPIN,
+                'options' => [
+                    'pluginOptions' => ['min' => 0, 'max' => 5000]
+                ],
+                'formOptions'=>['action' => ['/system/discount/updatediscount']],
+            ],
+            'hAlign' => 'right', 
+            'vAlign' => 'middle',
+            'width' => '7%',
+            'format' => ['decimal', 2],
+                'pageSummary' => true
+            ],
+            [
+                'class' => 'kartik\grid\BooleanColumn',
+                'attribute' => 'status', 
+                'vAlign' => 'middle'
+            ], 
+
+            ['class' => 'kartik\grid\ActionColumn'],
+        ],
+    ]);
 ?>
 <div class="lab-index">
     <div class="panel panel-primary">
@@ -190,7 +242,7 @@ $TechnicalManagerContent=GridView::widget([
                     ],
                     [
                         'label' => '<i class="fa-level-down"></i> Discounts',
-                        'content' => "rtrttrtrtrtrtt",
+                        'content' =>$DiscountContent ,
                         'active' => false,
                         'options' => ['id' => 'discount_config'],
                        // 'visible' => Yii::$app->user->can('access-terminal-configurations')

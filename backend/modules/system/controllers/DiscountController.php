@@ -3,17 +3,16 @@
 namespace backend\modules\system\controllers;
 
 use Yii;
-use common\models\lab\Lab;
-use common\models\lab\LabSearch;
-use common\models\lab\LabManagerSearch;
+use common\models\lab\discount;
+use common\models\lab\discountSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * LabController implements the CRUD actions for Lab model.
+ * DiscountController implements the CRUD actions for discount model.
  */
-class ConfigurationsController extends Controller
+class DiscountController extends Controller
 {
     /**
      * @inheritdoc
@@ -31,58 +30,67 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Lists all Lab models.
+     * Lists all discount models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new LabSearch();
+        $searchModel = new discountSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
+
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Lab model.
+     * Displays a single discount model.
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
-        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('view', [
-                'model' => $this->findModel($id),
-            ]);
-        }else{
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]); 
-        }
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     /**
-     * Creates a new Lab model.
+     * Creates a new discount model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Lab();
+        $model = new discount();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->lab_id]);
+            return $this->redirect(['view', 'id' => $model->discount_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
             ]);
         }
     }
-
+    public function actionUpdatediscount(){
+        $post= \Yii::$app->request->post();
+        $postvalues= \Yii::$app->request->post('Discount');
+        $id=$post['editableKey'];
+        $rate=$postvalues[$id]['rate'];
+        $model = $this->findModel($id);
+        if (isset($post['hasEditable'])) {
+            $model->rate=$rate;
+            $model->save();
+        }
+        $value=$model->rate;
+        
+        // return JSON encoded output in the below format
+         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return ['output'=>$value, 'message'=>''];
+    }
     /**
-     * Updates an existing Lab model.
+     * Updates an existing discount model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -90,22 +98,9 @@ class ConfigurationsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post())) {
-            $model->labcode= strtoupper($model->labcode);
-            if ($model->save()){
-                return $this->redirect(['/system/configurations']);
-            }else{
-                return $this->renderAjax('update', [
-                    'model' => $model,
-                ]);
-            }
-            
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->discount_id]);
         } else {
-            return $this->renderAjax('update', [
-                'model' => $model,
-            ]);
-        }   
-        if(Yii::$app->request->isAjax){
             return $this->render('update', [
                 'model' => $model,
             ]);
@@ -113,7 +108,7 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Deletes an existing Lab model.
+     * Deletes an existing discount model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -126,15 +121,15 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Finds the Lab model based on its primary key value.
+     * Finds the discount model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Lab the loaded model
+     * @return discount the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Lab::findOne($id)) !== null) {
+        if (($model = discount::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -718,4 +718,13 @@ return array (
       '@yii2assets/pdfjs' => $vendorDir . '/yii2assets/yii2-pdfjs',
     ),
   ),
+  'kartik-v/yii2-editable' => 
+  array (
+    'name' => 'kartik-v/yii2-editable',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@kartik/editable' => $vendorDir . '/kartik-v/yii2-editable',
+    ),
+  ),
 );
