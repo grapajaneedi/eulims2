@@ -10,6 +10,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
+use yii\db\Query;
 /**
  * OrderofpaymentController implements the CRUD actions for Orderofpayment model.
  */
@@ -53,7 +55,8 @@ class OrderofpaymentController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {
+    { 
+        /*
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('view', [
                     'model' => $this->findModel($id),
@@ -63,7 +66,20 @@ class OrderofpaymentController extends Controller
            return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
-        }
+        } */
+         $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $id]);
+         $paymentitemDataProvider = new ActiveDataProvider([
+                'query' => $paymentitem_Query,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+        ]);
+         
+         return $this->render('view', [
+            'model' => $this->findModel($id),
+            'paymentitemDataProvider' => $paymentitemDataProvider,
+        ]);
+
     }
 
     /**
@@ -79,21 +95,28 @@ class OrderofpaymentController extends Controller
         $dataProvider->pagination->pageSize=5;
         
          if ($model->load(Yii::$app->request->post())) {
-            foreach($_POST['request_id'] as $id){
-		$request = Request::model()->findByPk($id);
-            }
-            if(isset($_POST['Request']['sampling_date'])){
-                $model->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
-            }  
-            if($model->validate() && $model->save()){
                 $session = Yii::$app->session;
-                $model->rstl_id=1;
-                $model->transactionnum='123456';
+                $request_ids=$model->RequestIds;
+                $str_request = explode(',', $request_ids);
+                $model->rstl_id='1';
+                $model->transactionnum= $this->Gettransactionnum();
+              
                 $model->save();
+               
+                $arr_length = count($str_request); 
+                for($i=0;$i<$arr_length;$i++){
+                     $request =$this->findRequest($str_request[$i]);
+                     $paymentitem = new Paymentitem();
+                     $paymentitem->rstl_id = 1;
+                     $paymentitem->request_id = $str_request[$i];
+                     $paymentitem->orderofpayment_id = $model->orderofpayment_id;
+                     $paymentitem->details =$request->request_ref_num;
+                     $paymentitem->amount = $request->total;
+                     $paymentitem->save(); 
+                }
                 $session->set('savepopup',"executed");
                 return $this->redirect(['/finance/orderofpayment']);
-            }
-           
+          
         } 
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
@@ -174,4 +197,24 @@ class OrderofpaymentController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+    protected function findRequest($requestId)
+    {
+        if (($model = Request::findOne($requestId)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+    
+     public function Gettransactionnum(){
+          $year_month = date('Y-m');
+          $last_trans_num=(new Query)
+            ->select(['count(transactionnum)+ 1 AS lastnumber'])
+            ->from('eulims_finance.tbl_orderofpayment')
+            ->one();
+         $str_trans_num=str_pad($last_trans_num["lastnumber"], 4, "0", STR_PAD_LEFT);
+         $next_transnumber=$year_month."-".$str_trans_num;
+         return $next_transnumber;
+     }
 }

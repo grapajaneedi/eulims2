@@ -1,6 +1,19 @@
 <?php
-use yii\helpers\Html;
 use kartik\grid\GridView;
+
+$js=<<<SCRIPT
+   $(".kv-row-checkbox").click(function(){
+       // alert(this.value);
+        var keys = $('#grid').yiiGridView('getSelectedRows');
+        $("#orderofpayment-requestids").val(keys.join());
+      
+   });    
+   $(".select-on-check-all").change(function(){
+        var keys = $('#grid').yiiGridView('getSelectedRows');
+        $("#orderofpayment-requestids").val(keys.join());
+   });
+SCRIPT;
+$this->registerJs($js);
 ?>
 
  <?php 

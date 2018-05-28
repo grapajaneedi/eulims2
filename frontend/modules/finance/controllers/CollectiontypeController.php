@@ -52,7 +52,7 @@ class CollectiontypeController extends Controller
     public function actionView($id)
     {
         if(Yii::$app->request->isAjax){
-            return $this->renderAjax('view', [
+            return $this->render('view', [
                     'model' => $this->findModel($id),
                 ]);
         }
@@ -103,7 +103,7 @@ class CollectiontypeController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->collectiontype_id]);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }

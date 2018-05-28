@@ -1,43 +1,140 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
-
+use kartik\detail\DetailView;
+use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Orderofpayment */
 
-$this->title = $model->orderofpayment_id;
-$this->params['breadcrumbs'][] = ['label' => 'Orderofpayments', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Order of Payment';
+$this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['index']];
+
 ?>
 <div class="orderofpayment-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->orderofpayment_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->orderofpayment_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
+   <div class="container">
     <?= DetailView::widget([
-        'model' => $model,
+        'model'=>$model,
+        'responsive'=>true,
+        'hover'=>true,
+        'mode'=>DetailView::MODE_VIEW,
+        'panel'=>[
+            'heading'=>'<i class="glyphicon glyphicon-book"></i> Order of Payment: ' . $model->transactionnum,
+            'type'=>DetailView::TYPE_PRIMARY,
+        ],
+        'buttons1' => '',
         'attributes' => [
-           // 'orderofpayment_id',
-           // 'rstl_id',
-            'transactionnum',
-            'collectiontype_id',
-            'order_date',
-            'customer.customer_name',
-          //  'amount',
-           // 'purpose',
-            //'created_receipt',
+            [
+                'columns' => [
+                    [
+                        'label'=>'Transaction Number',
+                        'format'=>'raw',
+                        'value'=>$model->transactionnum,
+                        'valueColOptions'=>['style'=>'width:30%'], 
+                        'displayOnly'=>true
+                    ],
+                    [
+                        'label'=>'Customer Name',
+                        'format'=>'raw',
+                        'value'=>$model->customer->customer_name,
+                        'valueColOptions'=>['style'=>'width:30%'], 
+                        'displayOnly'=>true
+                    ],
+                ],
+                    
+            ],
+            [
+                'columns' => [
+                    [
+                        'label'=>'Collection Type',
+                        'format'=>'raw',
+                        'value'=>$model->collectiontype->natureofcollection,
+                        'valueColOptions'=>['style'=>'width:30%'], 
+                        'displayOnly'=>true
+                    ],
+                    [
+                        'label'=>'Address',
+                        'format'=>'raw',
+                        'value'=>$model->customer->address,
+                        'valueColOptions'=>['style'=>'width:30%'], 
+                        'displayOnly'=>true
+                    ],
+                ],
+                    
+            ],
+            [
+                'columns' => [
+                    [
+                        'label'=>'Date',
+                        'format'=>'raw',
+                        'value'=>$model->order_date,
+                        'valueColOptions'=>['style'=>'width:30%'], 
+                        'displayOnly'=>true
+                    ],
+                    [
+                        'label'=>'Total Amount',
+                        'format'=>'raw',
+                        'value'=>'',
+                        'valueColOptions'=>['style'=>'width:30%'], 
+                        'displayOnly'=>true
+                    ],
+                ],
+                    
+            ],
+          
         ],
     ]) ?>
-
+   </div>
+    <div class="container">
+        <div class="table-responsive">
+             <?php
+            $gridColumns = [
+                [
+                    'attribute'=>'details',
+                    'enableSorting' => false,
+                    'contentOptions' => [
+                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                    ],
+                ],
+                [
+                    'attribute'=>'amount',
+                    'enableSorting' => false,
+                    'contentOptions' => [
+                        'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                    ],
+                ],
+              
+              ];
+              
+             echo GridView::widget([
+                'id' => 'paymentitem-grid',
+                'dataProvider'=> $paymentitemDataProvider,
+                'pjax'=>true,
+                'export'=> false,
+                'pjaxSettings' => [
+                    'options' => [
+                        'enablePushState' => false,
+                    ]
+                ],
+                'responsive'=>true,
+                'striped'=>true,
+                'hover'=>true,
+                'panel' => [
+                    'heading'=>'<h3 class="panel-title">Item(s)</h3>',
+                    'type'=>'primary',
+                ],
+                'columns' => $gridColumns,
+                'afterFooter'=>[
+                    [
+                        'columns'=>[
+                            ['content'=>'Total'], 
+                            //['content'=>'Header Before 2', 'options'=>['colspan'=>4, 'class'=>'text-center warning']], 
+                        ],
+                        //'options'=>['class'=>'skip-export'] // remove this row from export
+                    ]
+                ],
+            ]);
+             ?>
+        </div>
+    </div>
 </div>
