@@ -24,7 +24,7 @@ $this->registerJs($js);
          ],
          [
             'class' => '\kartik\grid\CheckboxColumn',
-            
+           
          ],
         'request_ref_num',
         'request_datetime',
@@ -32,7 +32,6 @@ $this->registerJs($js);
 ?>    
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'id'=>'grid',
         'pjax'=>true,
         'pjaxSettings' => [
             'options' => [

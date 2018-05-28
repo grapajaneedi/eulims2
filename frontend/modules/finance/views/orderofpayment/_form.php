@@ -17,7 +17,6 @@ use kartik\widgets\DatePicker;
 <div class="orderofpayment-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
 
     <?php $form = ActiveForm::begin(); ?>
-    
     <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 1px !important;">
      <a href="#" class="close" data-dismiss="alert" >×</a>
     <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
@@ -72,9 +71,9 @@ use kartik\widgets\DatePicker;
                         $('#requests').hide();
                         jQuery.ajax( {
                             type: \"POST\",
-                            data: {
-                                request_id:customer_id,
-                           },
+                            //data: {
+                            //    customer_id:customer_id,
+                           // },
                             url: \"/finance/orderofpayment/getlistrequest?id=\"+$(this).val(),
                             dataType: \"html\",
                             success: function ( response ) {
@@ -147,10 +146,8 @@ use kartik\widgets\DatePicker;
     }
 </style>
 <script type="text/javascript">
- 
     $('#orderofpayment-customer_id').on('change',function() {
        $(this).select2('close');
         //alert('csdfsd');
     });
-  
 </script>

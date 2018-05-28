@@ -18,7 +18,7 @@ use kartik\widgets\DepDrop;
 /* @var $model common\models\lab\Customer */
 /* @var $form yii\widgets\ActiveForm */ 
 ?>
-<div class="customer-form"  style="padding-bottom: 10px">
+<div class="customer-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -154,59 +154,33 @@ use kartik\widgets\DepDrop;
                         'placeholder'=>'Select Municipality',
                         'url'=>Url::to(['/customer/info/getmunicipality']),
                         'loadingText' => 'Loading cities or municipalities...',
-                    ],
-                    ]);
+                    ]
+                ]);
                 ?>
-                <br>
-
-                <?= $form->field($model, 'barangay_id')->widget(DepDrop::classname(), [
-                    'type'           => DepDrop::TYPE_SELECT2,
-                    'data'           =>  $model->isNewRecord ? null : ArrayHelper::map(Barangay::find()->all(), 'barangay_id', 'barangay'),
-                    'options'        => ['id' => 'customer-barangay_id', 'name' => 'Customer[barangay_id]'],
-                    'select2Options' => ['pluginOptions' => ['allowClear' => false]],
+                <label class="control-label">Barangay</label><br>
+                 <?php 
+                echo DepDrop::widget([
+                    'type'=>DepDrop::TYPE_SELECT2,
+                    // 'name' => 'customer-barangay_id',
+                    'data' => null,
+                    'options' => [
+                        'id'=>'customer-barangay_id'
+                    ],
+                    'model'=>$model,
+                    'attribute'=>'barangay_id',
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'depends'=>['cmunicipality'],
                         'placeholder'=>'Select Barangay',
                         'url'=>Url::to(['/customer/info/getbarangay']),
                         'loadingText' => 'Loading barangay...',
-                    ],
-                    'pluginEvents' => [ "depdrop:afterChange"=>"function(event, id, value) { 
-                        if (value == '') { $('.mybtn').prop('disabled',true);}else{ $('.mybtn').prop('disabled',false); } }", ],
-                ])->label('Barangay'); ?>
-
-
-                 <?php 
-                // echo DepDrop::widget([
-                //     'type'=>DepDrop::TYPE_SELECT2,
-                //     // 'name' => 'customer-barangay_id',
-                //     'data' => $model->isNewRecord ? null : ArrayHelper::map(Barangay::find()->all(), 'barangay_id', 'barangay'),
-                //     'options' => [
-                //         'id'=>'customer-barangay_id',
-                //         'name' => 'customer[barangay_id]',
-                //         'required'=>true
-                //     ],
-                //     'model'=>$model,
-                //     'attribute'=>'barangay_id',
-                //     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                //     'pluginOptions'=>[
-                //         'depends'=>['cmunicipality'],
-                //         'placeholder'=>'Select Barangay',
-                //         'url'=>Url::to(['/customer/info/getbarangay']),
-                //         'loadingText' => 'Loading barangay...',
-                //     ]
-                // ]);
+                    ]
+                ]);
                 ?>
             </div>
         </div>
     <div class="form-group">
-    </div>
-
-    <div class="form-group pull-right">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success mybtn' : 'btn btn-primary mybtn','disabled'=>$model->isNewRecord ? true : false]) ?>
-        <?php if(Yii::$app->request->isAjax){ ?>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <?php } ?>
-        
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
     
     

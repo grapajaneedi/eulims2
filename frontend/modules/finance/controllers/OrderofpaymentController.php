@@ -4,7 +4,6 @@ namespace frontend\modules\finance\controllers;
 
 use Yii;
 use common\models\finance\Orderofpayment;
-use common\models\finance\Paymentitem;
 use common\models\finance\OrderofpaymentSearch;
 use common\models\lab\Request;
 use yii\web\Controller;
@@ -91,7 +90,6 @@ class OrderofpaymentController extends Controller
     public function actionCreate()
     {
         $model = new Orderofpayment();
-       
         $searchModel = new OrderofpaymentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
@@ -116,7 +114,6 @@ class OrderofpaymentController extends Controller
                      $paymentitem->amount = $request->total;
                      $paymentitem->save(); 
                 }
-                 
                 $session->set('savepopup',"executed");
                 return $this->redirect(['/finance/orderofpayment']);
           
@@ -158,10 +155,9 @@ class OrderofpaymentController extends Controller
 
      public function actionGetlistrequest($id)
     {
-      // $post=Yii::$app->request->post();
-       //$request_id=$post['request_id'];
-       // $model = $this->findModel($id);
-        $query = Request::find()->where(['customer_id' => $id,'status_id'=>1]);
+       //$post=Yii::$app->request->post();
+       // $customer_id=$post['customer_id'];
+        $query = Request::find()->where(['customer_id' => $id]);
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

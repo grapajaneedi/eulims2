@@ -19,7 +19,6 @@ use yii\helpers\Json;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\web\Response;
-use kartik\mpdf\Pdf;
 use yii\db\ActiveQuery;
 
 /**
@@ -40,20 +39,6 @@ class SampleController extends Controller
                 ],
             ],
         ];
-    }
-
-    public function actionPrintlabel(){
-
-        $pdf = Yii::$app->pdf;
-        $pdf->orientation=Pdf::ORIENT_LANDSCAPE;
-        $content = $this->renderPartial('printlabel/_form');
-        $pdf->content = $content;
-        $pdf->destination = Pdf::DEST_BROWSER;
-        $pdf->format = [
-            35,
-            66
-        ];
-        return $pdf->render();
     }
 
     /**

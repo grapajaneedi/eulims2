@@ -104,13 +104,13 @@ class Customer extends \yii\db\ActiveRecord
             'latitude' => 'Latitude',
             'longitude' => 'Longitude',
             'head' => 'Head',
-            'barangay_id' => 'Barangay', 
+            'barangay_id' => 'Barangay ID', 
             'tel' => 'Tel',
             'fax' => 'Fax',
             'email' => 'Email',
-            'customer_type_id' => 'Customer Type',
-            'business_nature_id' => 'Business Nature',
-            'industrytype_id' => 'Industrytype',
+            'customer_type_id' => 'Customer Type ID',
+            'business_nature_id' => 'Business Nature ID',
+            'industrytype_id' => 'Industrytype ID',
             'created_at' => 'Created At',
         ];
     }
