@@ -68,15 +68,15 @@ class TestController extends Controller
      
         $model = new Test();
 
-     if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->runAction('index');
-            } 
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->runAction('index');
+        } 
             
-      //  if(Yii::$app->request->isAjax){
-                    return $this->render('create', [
-                            'model' => $model,
-                        ]);
-        //        }    
+       if(Yii::$app->request->isAjax){
+            return $this->renderAjax('create', [
+                'model' => $model,
+            ]);
+       }
      }
     
 
