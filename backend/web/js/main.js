@@ -94,6 +94,8 @@ function ShowModal(header,url,closebutton,width){
        width='600px'; 
     }
     $(".close").prop('disabled',!closebutton);
+    $('#modalContent').html("<div style='text-align:center;'><img src='/images/img-loader64.gif' alt=''></div>");
+    $('.modal-title').html();
     var dialog=$("#modal").modal({
         backdrop: false,
         show: true,

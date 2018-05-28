@@ -43,7 +43,6 @@ class RequestSearch extends Request
     public function search($params)
     {
         $query = Request::find();
-
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

@@ -8,13 +8,13 @@ use common\models\lab\Lab;
 use common\models\system\Rstl;
 use kartik\base\InputWidget;
 use kartik\widgets\SwitchInput;
-use common\models\lab\RequestcodeTemplate;
+use common\models\lab\CodeTemplate;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Lab */
 /* @var $form yii\widgets\ActiveForm */
 $rstl_id=$GLOBALS['rstl_id'];
-$RequestcodedTemplate= RequestcodeTemplate::find()->where(['rstl_id'=>$rstl_id])->one();
+$RequestcodedTemplate= CodeTemplate::find()->where(['rstl_id'=>$rstl_id])->one();
 $js=<<<SCRIPT
    $("#CollapseRequestcode").click(function(){
       $("#btnSubmit").toggle();
@@ -129,7 +129,7 @@ $this->registerJs($js);
                 </div>
                 <div class="col-md-6">
                     <label class="control-label" for="RequestLaboratory">Request Template</label>
-                    <input type="text" class="form-control" id="RequestLaboratory" value="<?= $RequestcodedTemplate->requestcode_template ?>"/>
+                    <input type="text" class="form-control" id="RequestLaboratory" value="<?php echo $RequestcodedTemplate->request_code_template ?>"/>
                 </div>
             </div>
         </div>
