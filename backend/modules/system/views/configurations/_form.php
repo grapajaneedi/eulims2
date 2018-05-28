@@ -23,7 +23,8 @@ $js=<<<SCRIPT
    $("#btnSaveRequestTemplate").click(function(){
         $.post('/ajax/saverequesttemplate', {
             rstl_id: $("#RSTLSelect2").val(),
-            rtemp: $("#RequestLaboratory").val()
+            rtemp: $("#requestcodetemplate").val(),
+            stemp: $("#samplecodetemplate").val()
         }, function(result){
             //Return values
             if(result.Status=='Failed'){
@@ -129,7 +130,11 @@ $this->registerJs($js);
                 </div>
                 <div class="col-md-6">
                     <label class="control-label" for="RequestLaboratory">Request Template</label>
-                    <input type="text" class="form-control" id="RequestLaboratory" value="<?php echo $RequestcodedTemplate->request_code_template ?>"/>
+                    <input type="text" class="form-control" id="requestcodetemplate" value="<?php echo $RequestcodedTemplate->request_code_template ?>"/>
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label" for="RequestLaboratory">Sample Template</label>
+                    <input type="text" class="form-control" id="samplecodetemplate" value="<?php echo $RequestcodedTemplate->sample_code_template ?>"/>
                 </div>
             </div>
         </div>

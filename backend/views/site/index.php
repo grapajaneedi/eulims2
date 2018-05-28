@@ -12,16 +12,6 @@ $this->title = 'Admin EULIMS';
 <link href="/css/site.css" rel="stylesheet">
 
 <div class="site-index">
-<?php if(Yii::$app->user->isGuest)
-{
-   // echo '<h1>Guest</h1>';
-  //  echo Yii::$app->user->isGuest;
-    
-    /* Redirect browser */
-    header("Location: /site/login");
-exit;
-}
-else{
 ?>
     <?php
     
@@ -177,14 +167,6 @@ $this->registerJs($JS);
         <!-- /.box-body -->
       </div>
     </div>
- <?php 
-}
-    ?>
-
-  
-   
-    
- 
 </div>
 
 <div id="theModal" class="modal fade text-center">
@@ -196,20 +178,20 @@ $this->registerJs($JS);
   </div>
 
 <div class="modal fade in" id="ModalNew" style="padding-right: 16px;">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">×</span></button>
+                    <span aria-hidden="true">×</span></button>
                 <h4 class="modal-title">Default Modal</h4>
-              </div>
-              
-              <div class="modal-footer">
+            </div>
+
+            <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary">Save changes</button>
-              </div>
             </div>
-            <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
         </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
