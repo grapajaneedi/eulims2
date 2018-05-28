@@ -18,7 +18,7 @@ use kartik\widgets\DepDrop;
 /* @var $model common\models\lab\Customer */
 /* @var $form yii\widgets\ActiveForm */ 
 ?>
-<div class="customer-form">
+<div class="customer-form" style="padding-bottom: 10px">
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -117,7 +117,7 @@ use kartik\widgets\DepDrop;
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Region'],
                 ]);
                 ?>
-                <br>
+                
                 <label class="control-label">Province</label><br>
                 <?php 
                 echo DepDrop::widget([
@@ -138,7 +138,7 @@ use kartik\widgets\DepDrop;
                     ]
                 ]);
                 ?>
-                <br>
+                
                 <label class="control-label">Municipality</label><br>
                  <?php 
                 echo DepDrop::widget([
@@ -179,14 +179,15 @@ use kartik\widgets\DepDrop;
                 ?>
             </div>
         </div>
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-    
-    
+        <div class="row-fluid">
+            <div class="form-group pull-right">
+               <?php if(Yii::$app->request->isAjax){ ?>
+                   <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+               <?php } ?>
 
-
-    
+                <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+             </div>
+        </div>
 
     <?php ActiveForm::end(); ?>
 </div>
