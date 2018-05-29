@@ -26,6 +26,8 @@ if(count($sampletype) > 0){
 
 <div class="sample-form">
 
+    <div class="image-loader" style="display: hidden;"></div>
+
     <?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
     <?php if(empty($model->sample_id)): ?>
     <div class="row">
@@ -241,11 +243,6 @@ function closeDialog(){
 };
 
 </script>
-<style type="text/css">
-div.required label{
-     color: #333333;
-}
-</style>
 <?php
 $this->registerJs("$('#saved_templates').on('change',function(){
     var id = $('#saved_templates').val();
@@ -259,10 +256,11 @@ $this->registerJs("$('#saved_templates').on('change',function(){
             success: function (data, textStatus, jqXHR) {
                 $('#sample-samplename').val(data.name);
                 $('#sample-description').val(data.description);
+                $('.image-loader').removeClass( \"img-loader\" );
             },
             beforeSend: function (xhr) {
-                alert('Please wait...');
-                //alert('<div style=\'text-align:center;\'><img src=\'/images/img-loader64.gif\'></div>');
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('An error occured!');
@@ -296,3 +294,33 @@ $script = <<< JS
 JS;
 $this->registerJs($script);
 ?>
+<style type="text/css">
+/* Absolute Center Spinner */
+.img-loader {
+    position: fixed;
+    z-index: 999;
+    /*height: 2em;
+    width: 2em;*/
+    height: 64px;
+    width: 64px;
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: url('/images/img-loader64.gif');
+    background-repeat: no-repeat;
+}
+/* Transparent Overlay */
+.img-loader:before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+}
+</style>

@@ -9,7 +9,7 @@ use yii\helpers\Url;
 use common\components\Functions;
 
 
-$func = new Functions();
+$sweetalert = new Functions();
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
@@ -438,6 +438,8 @@ $this->params['breadcrumbs'][] = $this->title;
             .load($(this).attr('value'));
     });*/
 
+     $('#sample-grid tbody td').css('cursor', 'pointer');
+
     function updateSample(id){
        //var url = 'Url::to(['sample/update']) . "?id=' + id;
        var url = '/lab/sample/update?id='+id;
@@ -517,22 +519,19 @@ $this->registerJs("
     $session = Yii::$app->session;
     if ($session->isActive) {
         $session->open();
-        if (isset($session['deletepopup'])) {
-            $func->CrudAlert("Successfully Deleted","WARNING",true);
-            //$func->CrudAlert("Deleted Successfully",Alert::TYPE_WARNING,true);
-            //$func->CrudAlert("Deleted Successfully",Alert::TYPE_SUCCESS,true);
-            unset($session['deletepopup']);
+        if (isset($session['deletemessage'])) {
+            $sweetalert->CrudAlert("Successfully Deleted","WARNING",true);
+            unset($session['deletemessage']);
             $session->close();
         }
-        if (isset($session['updatepopup'])) {
-            $func->CrudAlert("Successfully Updated","SUCCESS",true);
-            unset($session['updatepopup']);
+        if (isset($session['updatemessage'])) {
+            $sweetalert->CrudAlert("Successfully Updated","SUCCESS",true);
+            unset($session['updatemessage']);
             $session->close();
         }
-        if (isset($session['savepopup'])) {
-            $func->CrudAlert("Successfully Saved","SUCCESS",true);
-            //$func->CrudAlert("Successfully saved.",Alert::TYPE_WARNING,true);
-            unset($session['savepopup']);
+        if (isset($session['savemessage'])) {
+            $sweetalert->CrudAlert("Successfully Saved","SUCCESS",true);
+            unset($session['savemessage']);
             $session->close();
         }
     }

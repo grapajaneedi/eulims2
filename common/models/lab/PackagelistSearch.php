@@ -18,7 +18,7 @@ class PackagelistSearch extends Packagelist
     public function rules()
     {
         return [
-            [['package_id', 'rstl_id', 'testcategory_id', 'sample_type_id'], 'integer'],
+            [['package_id', 'rstl_id'], 'integer'],
             [['name', 'tests'], 'safe'],
             [['rate'], 'number'],
         ];
@@ -62,8 +62,6 @@ class PackagelistSearch extends Packagelist
         $query->andFilterWhere([
             'package_id' => $this->package_id,
             'rstl_id' => $this->rstl_id,
-            'testcategory_id' => $this->testcategory_id,
-            'sample_type_id' => $this->sample_type_id,
             'rate' => $this->rate,
         ]);
 

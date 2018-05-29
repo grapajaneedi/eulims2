@@ -15,6 +15,15 @@ use common\models\lab\CodeTemplate;
 /* @var $form yii\widgets\ActiveForm */
 $rstl_id=$GLOBALS['rstl_id'];
 $RequestcodedTemplate= CodeTemplate::find()->where(['rstl_id'=>$rstl_id])->one();
+if(!$RequestcodedTemplate){
+   $rstl_id=0; 
+   $request_code_template='';
+   $sample_code_template='';
+}else{
+    $request_code_template=$RequestcodedTemplate->request_code_template;
+    $sample_code_template=$RequestcodedTemplate->sample_code_template;
+    $rstl_id=$RequestcodedTemplate->rstl_id;
+}
 $js=<<<SCRIPT
    $("#CollapseRequestcode").click(function(){
       $("#btnSubmit").toggle();
@@ -98,6 +107,7 @@ $this->registerJs($js);
             ?>
         </div>
     </div>
+    <hr>
     <div class="row" style="padding-bottom: 15px">
         <div class="collapse" id="collapseExample">
             <div class="card card-body">
@@ -107,7 +117,7 @@ $this->registerJs($js);
                     echo Select2::widget([
                         'name' => 'RequestLaboratory',
                         'id'=>'RSTLSelect2',
-                        'value' => $RequestcodedTemplate->rstl_id,
+                        'value' => $rstl_id,
                         'data' => ArrayHelper::map(Rstl::find()->asArray()->all(), 'rstl_id', 'name'),
                         'options' => ['multiple' => false, 'placeholder' => 'Select RSTL'],
                         'pluginEvents' => [
@@ -130,11 +140,11 @@ $this->registerJs($js);
                 </div>
                 <div class="col-md-6">
                     <label class="control-label" for="RequestLaboratory">Request Template</label>
-                    <input type="text" class="form-control" id="requestcodetemplate" value="<?php echo $RequestcodedTemplate->request_code_template ?>"/>
+                    <input type="text" class="form-control" id="requestcodetemplate" value="<?php echo $request_code_template ?>"/>
                 </div>
                 <div class="col-md-6">
                     <label class="control-label" for="RequestLaboratory">Sample Template</label>
-                    <input type="text" class="form-control" id="samplecodetemplate" value="<?php echo $RequestcodedTemplate->sample_code_template ?>"/>
+                    <input type="text" class="form-control" id="samplecodetemplate" value="<?php echo $sample_code_template ?>"/>
                 </div>
             </div>
         </div>

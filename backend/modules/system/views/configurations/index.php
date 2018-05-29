@@ -209,7 +209,19 @@ $DiscountContent=GridView::widget([
                 'vAlign' => 'middle'
             ], 
 
-            ['class' => 'kartik\grid\ActionColumn'],
+            [
+                'class' => kartik\grid\ActionColumn::className(),
+                //'template' => $Buttontemplate,
+                'buttons'=>[
+                    'view'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['discount/view','id'=>$model->discount_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Discount")]);
+                    },
+                    'update'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['discount/update','id'=>$model->discount_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Discount")]);
+                    }
+                ],
+               
+            ],
         ],
     ]);
 ?>
