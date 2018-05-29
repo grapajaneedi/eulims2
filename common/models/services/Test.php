@@ -11,7 +11,6 @@ use common\models\lab\Lab;
  * @property int $test_id
  * @property int $rstl_id
  * @property string $testname
- * @property string $method
  * @property string $payment_references
  * @property string $fee
  * @property int $duration
@@ -49,11 +48,10 @@ class Test extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'testname', 'method', 'testcategory_id', 'sample_type_id'], 'required'],
+            [['rstl_id', 'testname', 'testcategory_id', 'sample_type_id'], 'required'],
             [['rstl_id', 'duration', 'testcategory_id', 'sample_type_id', 'lab_id'], 'integer'],
             [['fee'], 'number'],
             [['testname'], 'string', 'max' => 200],
-            [['method'], 'string', 'max' => 150],
             [['payment_references'], 'string', 'max' => 100],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
             [['testcategory_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
@@ -70,7 +68,6 @@ class Test extends \yii\db\ActiveRecord
             'test_id' => 'Test ID',
             'rstl_id' => 'Rstl ID',
             'testname' => 'Testname',
-            'method' => 'Method',
             'payment_references' => 'Payment References',
             'fee' => 'Fee',
             'duration' => 'Duration',
