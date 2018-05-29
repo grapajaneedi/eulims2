@@ -4,6 +4,7 @@ namespace frontend\modules\finance\controllers;
 
 use Yii;
 use common\models\finance\Orderofpayment;
+use common\models\finance\Paymentitem;
 use common\models\finance\OrderofpaymentSearch;
 use common\models\lab\Request;
 use yii\web\Controller;
@@ -12,6 +13,7 @@ use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\db\Query;
+use common\components\Functions;
 /**
  * OrderofpaymentController implements the CRUD actions for Orderofpayment model.
  */
@@ -56,17 +58,6 @@ class OrderofpaymentController extends Controller
      */
     public function actionView($id)
     { 
-        /*
-        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('view', [
-                    'model' => $this->findModel($id),
-                ]);
-        }
-        else{  
-           return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]);
-        } */
          $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $id]);
          $paymentitemDataProvider = new ActiveDataProvider([
                 'query' => $paymentitem_Query,
@@ -93,6 +84,10 @@ class OrderofpaymentController extends Controller
         $searchModel = new OrderofpaymentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
+        
+        //echo "<pre>";
+        //print_r($this->Gettransactionnum());
+        //echo "</pre>";
         
          if ($model->load(Yii::$app->request->post())) {
                 $session = Yii::$app->session;
@@ -155,8 +150,6 @@ class OrderofpaymentController extends Controller
 
      public function actionGetlistrequest($id)
     {
-       //$post=Yii::$app->request->post();
-       // $customer_id=$post['customer_id'];
         $query = Request::find()->where(['customer_id' => $id]);
         
         $dataProvider = new ActiveDataProvider([
@@ -165,7 +158,6 @@ class OrderofpaymentController extends Controller
         $dataProvider->pagination->pageSize=3;
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_request', ['dataProvider'=>$dataProvider]);
-            //return;
         }
 
     }
@@ -208,13 +200,17 @@ class OrderofpaymentController extends Controller
     }
     
      public function Gettransactionnum(){
-          $year_month = date('Y-m');
-          $last_trans_num=(new Query)
-            ->select(['count(transactionnum)+ 1 AS lastnumber'])
-            ->from('eulims_finance.tbl_orderofpayment')
-            ->one();
-         $str_trans_num=str_pad($last_trans_num["lastnumber"], 4, "0", STR_PAD_LEFT);
-         $next_transnumber=$year_month."-".$str_trans_num;
-         return $next_transnumber;
+        $year=date('Y');
+        $terminal_id=1;
+        $rstl_id=11;
+        $result = \Yii::$app->financedb->createCommand("CALL spGenerateTransactionNumber(:mYear, :mTerminalID, :mRSTLID)",[
+            ':mYear'=>$year,
+            ':mTerminalID'=>$terminal_id,
+            ':mRSTLID'=>$rstl_id
+            ])
+            ->queryAll();
+        $transnumber=$result[0]['transaction_number'];
+        return $transnumber;
+        
      }
 }

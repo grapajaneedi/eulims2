@@ -9,6 +9,8 @@ use kartik\grid\GridView;
 $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['index']];
 
+
+//}
 ?>
 <div class="orderofpayment-view">
 
@@ -95,6 +97,8 @@ $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['inde
                     'contentOptions' => [
                         'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
                     ],
+                    //'hAlign' => 'right',
+                    'pageSummary' => '<span style="float:right;">Total</span>',
                 ],
                 [
                     'attribute'=>'amount',
@@ -102,7 +106,13 @@ $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['inde
                     'contentOptions' => [
                         'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
                     ],
+                    'hAlign' => 'right', 
+                    'vAlign' => 'middle',
+                    'width' => '7%',
+                    'format' => ['decimal', 2],
+                    'pageSummary' => true
                 ],
+               
               
               ];
               
@@ -119,20 +129,13 @@ $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['inde
                 'responsive'=>true,
                 'striped'=>true,
                 'hover'=>true,
+                'showPageSummary' => true,
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
                     'type'=>'primary',
                 ],
                 'columns' => $gridColumns,
-                'afterFooter'=>[
-                    [
-                        'columns'=>[
-                            ['content'=>'Total'], 
-                            //['content'=>'Header Before 2', 'options'=>['colspan'=>4, 'class'=>'text-center warning']], 
-                        ],
-                        //'options'=>['class'=>'skip-export'] // remove this row from export
-                    ]
-                ],
+               
             ]);
              ?>
         </div>
