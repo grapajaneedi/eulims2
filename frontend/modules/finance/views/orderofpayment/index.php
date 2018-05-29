@@ -30,7 +30,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     <fieldset>
     <legend>Legend/Status</legend>
     <div style="padding: 0 10px">
-    	<span class="glyphicon glyphicon-check"></span> <font color="#006600">Paid</font>
+        <span class="badge" style="background: #41f4f1;"><span class="glyphicon glyphicon-check"></span> <font color="#006600">Paid</font></span>
     </div>
     </fieldset>
     
