@@ -7,25 +7,25 @@ use Yii;
 /**
  * This is the model class for table "tbl_request".
  *
- * @property integer $request_id
+ * @property int $request_id
  * @property string $request_ref_num
- * @property integer $request_datetime
- * @property integer $rstl_id
- * @property integer $lab_id
- * @property integer $customer_id
- * @property integer $payment_type_id
- * @property integer $modeofrelease_id
+ * @property int $request_datetime
+ * @property int $rstl_id
+ * @property int $lab_id
+ * @property int $customer_id
+ * @property int $payment_type_id
+ * @property int $modeofrelease_id
  * @property string $discount
- * @property integer $discount_id
- * @property integer $purpose_id
- * @property integer $or_id
+ * @property int $discount_id
+ * @property int $purpose_id
+ * @property int $or_id
  * @property string $total
  * @property string $report_due
  * @property string $conforme
  * @property string $receivedBy
- * @property integer $created_at
- * @property integer $posted
- * @property integer $status_id
+ * @property int $created_at
+ * @property int $posted
+ * @property int $status_id
  *
  * @property Analysis[] $analyses
  * @property Cancelledrequest[] $cancelledrequests
@@ -44,7 +44,7 @@ use Yii;
 class Request extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -60,12 +60,12 @@ class Request extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['request_ref_num', 'request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
+            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
             [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id'], 'integer'],
             [['discount', 'total'], 'number'],
             [['report_due'], 'safe'],
@@ -83,7 +83,7 @@ class Request extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {

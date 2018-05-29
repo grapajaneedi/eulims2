@@ -2,22 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/lab/controllers/SampleController.php</file>
-            <file>file:/C:/UwAmp/www/eulims2/common/models/lab/Request.php</file>
-            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/lab/views/sample/_form.php</file>
-            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/controllers/OrderofpaymentController.php</file>
-            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/orderofpayment/_request.php</file>
-            <file>file:/C:/UwAmp/www/eulims2/common/models/finance/Orderofpayment.php</file>
-            <file>file:/C:/UwAmp/www/eulims2/common/models/finance/Receipt.php</file>
-            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/orderofpayment/_form.php</file>
-            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/orderofpayment/index.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/backend/modules/system/controllers/ConfigurationsController.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/backend/modules/system/controllers/LabmanagerController.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/backend/modules/system/views/configurations/index.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/backend/modules/system/views/labmanager/view.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/common/config/components.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/lab/LabManagerSearch.php</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
