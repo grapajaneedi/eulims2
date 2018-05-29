@@ -27,11 +27,27 @@ $this->registerJs($js);
            
          ],
         'request_ref_num',
-        'request_datetime',
+        [
+            'attribute'=>'request_datetime',
+            'pageSummary' => '<span style="float:right;">Total</span>',
+        ],
+        [
+            'attribute'=>'total',
+            'enableSorting' => false,
+            'contentOptions' => [
+                'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
+            ],
+            'hAlign' => 'right', 
+            'vAlign' => 'middle',
+            'width' => '7%',
+            'format' => ['decimal', 2],
+            'pageSummary' => true
+        ],
     ];
 ?>    
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'id'=>'grid',
         'pjax'=>true,
         'pjaxSettings' => [
             'options' => [
@@ -48,5 +64,6 @@ $this->registerJs($js);
             //'footer'=> false,
          ],
          'columns' =>$gridColumn,
+         'showPageSummary' => true,
     ]); ?>
 
