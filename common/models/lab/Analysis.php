@@ -7,22 +7,23 @@ use Yii;
 /**
  * This is the model class for table "tbl_analysis".
  *
- * @property integer $analysis_id
+ * @property int $analysis_id
  * @property string $date_analysis
- * @property integer $rstl_id
- * @property integer $pstcanalysis_id
- * @property integer $request_id
- * @property integer $sample_id
+ * @property int $rstl_id
+ * @property int $pstcanalysis_id
+ * @property int $request_id
+ * @property int $sample_id
  * @property string $sample_code
  * @property string $testname
  * @property string $method
  * @property string $references
- * @property integer $quantity
+ * @property int $quantity
  * @property string $fee
- * @property integer $test_id
- * @property integer $cancelled
- * @property integer $status
- * @property integer $user_id
+ * @property int $test_id
+ * @property int $cancelled
+ * @property int $status
+ * @property int $user_id
+ * @property int $is_package
  *
  * @property Test $test
  * @property Sample $sample
@@ -33,7 +34,7 @@ use Yii;
 class Analysis extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -49,14 +50,14 @@ class Analysis extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
             [['date_analysis', 'rstl_id', 'pstcanalysis_id', 'request_id', 'sample_id', 'sample_code', 'testname', 'method', 'references', 'quantity', 'test_id', 'cancelled', 'status'], 'required'],
             [['date_analysis'], 'safe'],
-            [['rstl_id', 'pstcanalysis_id', 'request_id', 'sample_id', 'quantity', 'test_id', 'cancelled', 'status', 'user_id'], 'integer'],
+            [['rstl_id', 'pstcanalysis_id', 'request_id', 'sample_id', 'quantity', 'test_id', 'cancelled', 'status', 'user_id', 'is_package'], 'integer'],
             [['fee'], 'number'],
             [['sample_code'], 'string', 'max' => 20],
             [['testname'], 'string', 'max' => 200],
@@ -70,7 +71,7 @@ class Analysis extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -91,6 +92,7 @@ class Analysis extends \yii\db\ActiveRecord
             'cancelled' => 'Cancelled',
             'status' => 'Status',
             'user_id' => 'User ID',
+            'is_package' => 'Is Package',
         ];
     }
 

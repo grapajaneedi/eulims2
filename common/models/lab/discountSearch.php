@@ -5,27 +5,27 @@ namespace common\models\lab;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\lab\Packagelist;
+use common\models\lab\discount;
 
 /**
- * PackagelistSearch represents the model behind the search form of `common\models\lab\Packagelist`.
+ * discountSearch represents the model behind the search form about `common\models\lab\discount`.
  */
-class PackagelistSearch extends Packagelist
+class discountSearch extends discount
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['package_id', 'rstl_id'], 'integer'],
-            [['name', 'tests'], 'safe'],
+            [['discount_id'], 'integer'],
+            [['type', 'status'], 'safe'],
             [['rate'], 'number'],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function scenarios()
     {
@@ -42,7 +42,7 @@ class PackagelistSearch extends Packagelist
      */
     public function search($params)
     {
-        $query = Packagelist::find();
+        $query = discount::find();
 
         // add conditions that should always apply here
 
@@ -60,13 +60,12 @@ class PackagelistSearch extends Packagelist
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'package_id' => $this->package_id,
-            'rstl_id' => $this->rstl_id,
+            'discount_id' => $this->discount_id,
             'rate' => $this->rate,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'tests', $this->tests]);
+        $query->andFilterWhere(['like', 'type', $this->type])
+            ->andFilterWhere(['like', 'status', $this->status]);
 
         return $dataProvider;
     }

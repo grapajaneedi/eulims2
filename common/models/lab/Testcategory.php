@@ -5,13 +5,13 @@ namespace common\models\lab;
 use Yii;
 
 /**
- * This is the model class for table "tbltestcategory".
+ * This is the model class for table "tbl_testcategory".
  *
- * @property integer $testcategory_id
+ * @property int $testcategory_id
  * @property string $category_name
- * @property integer $lab_id
+ * @property int $lab_id
  *
- * @property Packagelist[] $packagelists
+ * @property Sample[] $samples
  * @property Sampletype[] $sampletypes
  * @property Test[] $tests
  * @property Lab $lab
@@ -19,7 +19,7 @@ use Yii;
 class Testcategory extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -35,12 +35,12 @@ class Testcategory extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['category_name'], 'required'],
+            [['category_name', 'lab_id'], 'required'],
             [['lab_id'], 'integer'],
             [['category_name'], 'string', 'max' => 200],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
@@ -48,7 +48,7 @@ class Testcategory extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -62,9 +62,9 @@ class Testcategory extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPackagelists()
+    public function getSamples()
     {
-        return $this->hasMany(Packagelist::className(), ['testcategory_id' => 'testcategory_id']);
+        return $this->hasMany(Sample::className(), ['testcategory_id' => 'testcategory_id']);
     }
 
     /**

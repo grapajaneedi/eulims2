@@ -88,6 +88,7 @@ class Functions extends Component{
                         $('.sweet-alert').removeClass( \"visible \" );
                         $('.sweet-alert').addClass( \"hideSweetAlert \" );
                         $('.sweet-alert').css('display','none');
+                        $('body').removeClass( \"stop-scrolling\" );
                         }"),
         ]);
     }

@@ -26,6 +26,8 @@ if(count($sampletype) > 0){
 
 <div class="sample-form">
 
+    <div class="image-loader" style="display: hidden;"></div>
+
     <?php $form = ActiveForm::begin(['id'=>$model->formName()]); ?>
     <?php if(empty($model->sample_id)): ?>
     <div class="row">
@@ -159,8 +161,6 @@ if(count($sampletype) > 0){
 
 </div>
 <script type="text/javascript">
-    //plugin bootstrap minus and plus
-//http://jsfiddle.net/laelitenetwork/puJ6G/
 $('.btn-number').click(function(e){
     e.preventDefault();
     
@@ -202,50 +202,43 @@ $('.input-number').change(function() {
     valueCurrent = parseInt($(this).val());
     
     name = $(this).attr('name');
-
-
-    if(isNaN(valueCurrent)){
-        alert('Only numbers allowed.');
-        $(this).val($(this).data('oldValue'));
+    if(valueCurrent >= minValue) {
+        $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
     } else {
-        //if(valueCurrent >= minValue) {
-        if(valueCurrent > minValue) {
-            $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
-        } else {
-            alert('Sorry, the minimum value was not reached');
-            $(this).val($(this).data('oldValue'));
-        }
-        if(valueCurrent <= maxValue) {
-            $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
-        } else {
-            alert('Sorry, the maximum value was reached');
-            $(this).val($(this).data('oldValue'));
-        }
+        alert('Sorry, the minimum value was reached');
+        $(this).val($(this).data('oldValue'));
+    }
+    if(valueCurrent <= maxValue) {
+        $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
+    } else {
+        alert('Sorry, the maximum value was reached');
+        $(this).val($(this).data('oldValue'));
     }
     
     
 });
 
-$(".input-number").keypress(function (e) {
-    //if the letter is not digit then display error and don't type anything
-    if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-        //display error message
-        //$("#errmsg").html("Digits Only").show().fadeOut("slow");
-        alert('Only numbers allowed.');
-        return false;
-    }
-});
+$(".input-number").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+             // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) || 
+             // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
 
 function closeDialog(){
     $(".modal").modal('hide'); 
 };
 
 </script>
-<style type="text/css">
-div.required label{
-     color: #333333;
-}
-</style>
 <?php
 $this->registerJs("$('#saved_templates').on('change',function(){
     var id = $('#saved_templates').val();
@@ -259,10 +252,11 @@ $this->registerJs("$('#saved_templates').on('change',function(){
             success: function (data, textStatus, jqXHR) {
                 $('#sample-samplename').val(data.name);
                 $('#sample-description').val(data.description);
+                $('.image-loader').removeClass( \"img-loader\" );
             },
             beforeSend: function (xhr) {
-                alert('Please wait...');
-                //alert('<div style=\'text-align:center;\'><img src=\'/images/img-loader64.gif\'></div>');
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('An error occured!');
@@ -296,3 +290,33 @@ $script = <<< JS
 JS;
 $this->registerJs($script);
 ?>
+<style type="text/css">
+/* Absolute Center Spinner */
+.img-loader {
+    position: fixed;
+    z-index: 999;
+    /*height: 2em;
+    width: 2em;*/
+    height: 64px;
+    width: 64px;
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: url('/images/img-loader64.gif');
+    background-repeat: no-repeat;
+}
+/* Transparent Overlay */
+.img-loader:before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+}
+</style>

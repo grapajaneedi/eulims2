@@ -3,7 +3,7 @@
 namespace common\models\services;
 
 use Yii;
-use common\models\lab\Lab;
+use common\models\lab\Lab; 
 
 /**
  * This is the model class for table "tbl_test".
