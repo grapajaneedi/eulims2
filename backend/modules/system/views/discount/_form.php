@@ -18,10 +18,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'status')->checkbox() ?>
 
-    <div class="form-group">
+    <div class="form-group pull-right">
+        <?php if(Yii::$app->request->isAjax){ ?>
+            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancel</button>
+        <?php } ?>
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
-
     <?php ActiveForm::end(); ?>
 
 </div>

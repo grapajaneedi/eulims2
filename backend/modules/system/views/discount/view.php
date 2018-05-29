@@ -11,28 +11,16 @@ $this->params['breadcrumbs'][] = ['label' => 'Discounts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="discount-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->discount_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->discount_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'discount_id',
             'type',
             'rate',
-            'status',
+            'status:boolean',
         ],
     ]) ?>
-
+    <div class="form-group pull-right">
+        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancel</button>
+    </div>
 </div>
