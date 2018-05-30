@@ -19,6 +19,7 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
 
     <?php $form = ActiveForm::begin(); ?>
 
+                    'allowClear' => true
     <div class="row">
              <div class="col-md-6">
              <?= $form->field($model, 'test_id')->widget(Select2::classname(), [
@@ -26,7 +27,6 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
                 'language' => 'en',
                 'options' => ['placeholder' => 'Select Test'],
                 'pluginOptions' => [
-                    'allowClear' => true
                 ],
              ])->label("Test"); ?>
              </div>
@@ -36,25 +36,38 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
              </div>
          </div>
     <?php
-echo SortableInput::widget([
-    'model' => $model,
-    'attribute' => 'workflow',
-    'hideInput' => false,
-    'delimiter' => '~',
-    'items' => [
-        1 => ['content' => 'Item # 1'],
-        2 => ['content' => 'Item # 2'],
-        3 => ['content' => 'Item # 3'],
-        4 => ['content' => 'Item # 4', 'disabled'=>true],
-    ]   
-]);
+        // echo Sortable::widget([
+        //     'type' => Sortable::TYPE_LIST,
+        //     'items' => [
+        //         ['content' => 'Item # 1'],
+        //         ['content' => 'Item # 2'],
+        //         ['content' => 'Item # 3'],
+        //     ]   
+        // ]);
 
- ?>
+        // echo $form->field($model,'workflow')->widget(SortableInput::classname(),
+        // [
+        //     // 'type' => SortableInput::TYPE_LIST,
+        //     'items' => [
+        //         ['content' => 'Item # 1'],
+        //         ['content' => 'Item # 2'],
+        //         ['content' => 'Item # 3'],
+        //     ]   
+        // ]);
+        echo SortableInput::widget([
+            'model' => $model,
+            'attribute' => 'workflow',
+            'hideInput' => false,
+            'delimiter' => '~',
+            'items' => [
+                1 => ['content' => 'Item # 1'],
+                2 => ['content' => 'Item # 2'],
+                3 => ['content' => 'Item # 3'],
+                4 => ['content' => 'Item # 4', 'disabled'=>true],
+            ]   
+        ]);
 
-   
-
-    
-
+    ?>
     <?= $form->field($model, 'workflow')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group pull-right">

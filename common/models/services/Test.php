@@ -48,7 +48,7 @@ class Test extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'testname', 'testcategory_id', 'sample_type_id'], 'required'],
+            [['testname', 'testcategory_id', 'sample_type_id'], 'required'],
             [['rstl_id', 'duration', 'testcategory_id', 'sample_type_id', 'lab_id'], 'integer'],
             [['fee'], 'number'],
             [['testname'], 'string', 'max' => 200],
@@ -68,13 +68,25 @@ class Test extends \yii\db\ActiveRecord
             'test_id' => 'Test ID',
             'rstl_id' => 'Rstl ID',
             'testname' => 'Testname',
-            'payment_references' => 'Payment References',
+            'payment_references' => 'References',
             'fee' => 'Fee',
             'duration' => 'Duration',
             'testcategory_id' => 'Testcategory ID',
             'sample_type_id' => 'Sample Type ID',
             'lab_id' => 'Lab ID',
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        // ...custom code here...
+        $this->rstl_id=$GLOBALS['rstl_id'];
+        $this->duration=0;
+        return true;
     }
 
     /**

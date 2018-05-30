@@ -19,7 +19,7 @@ class TestSearch extends Test
     {
         return [
             [['test_id', 'rstl_id', 'duration', 'testcategory_id', 'sample_type_id', 'lab_id'], 'integer'],
-            [['testname', 'method', 'references'], 'safe'],
+            [['testname', 'payment_references'], 'safe'],
             [['fee'], 'number'],
         ];
     }
@@ -73,8 +73,7 @@ class TestSearch extends Test
         ]);
 
         $query->andFilterWhere(['like', 'testname', $this->testname])
-            ->andFilterWhere(['like', 'method', $this->method])
-            ->andFilterWhere(['like', 'references', $this->references]);
+            ->andFilterWhere(['like', 'payment_references', $this->payment_references]);
 
         return $dataProvider;
     }

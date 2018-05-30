@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
-
 use common\models\lab\Lab;
 use common\models\services\Testcategory;
 use common\models\services\Sampletype;
@@ -25,28 +24,14 @@ $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
              <div class="col-md-6">
                  <?= $form->field($model, 'testname')->textInput(['maxlength' => true]) ?>
              </div>
-
              <div class="col-md-6">
-                 <?= $form->field($model, 'method')->textInput(['maxlength' => true]) ?>
+                 <?= $form->field($model, 'payment_references')->textInput(['maxlength' => true]) ?>
              </div>
          </div>
 
-        <div class="row">
-             <div class="col-md-6">
-                 <?= $form->field($model, 'references')->textInput(['maxlength' => true]) ?>
-             </div>
-
-            <div class="col-md-6">
-                 <?= $form->field($model, 'fee')->textInput(['maxlength' => true]) ?>
-            </div>
-        </div>
 
         <div class="row">
-             <div class="col-md-6">
-                  <?= $form->field($model, 'duration')->textInput() ?>
-            </div>
-
-            <div class="col-md-6">
+            <div class="col-md-12">
                   <?= $form->field($model, 'testcategory_id')->widget(Select2::classname(), [
                         'data' => $Testcategorylist,
                         'language' => 'en',
