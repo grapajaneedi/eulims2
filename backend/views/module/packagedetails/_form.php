@@ -16,9 +16,7 @@ $FontAwesomeList=FA::getConstants();
 ?>
 
 <div class="package-details-form">
-     <div class="panel panel-default col-xs-12">
-        <div class="panel-heading"><i class="fa fa-angellist"></i> Details</div>
-        <div class="panel-body">
+    <div class="col-md-12">
     <?php $form = ActiveForm::begin(); ?>
             <div class="row">
                 <span style="float:left; width: 250px;margin-right: 5px">
@@ -58,11 +56,10 @@ $FontAwesomeList=FA::getConstants();
                 <?= $form->field($model, 'updated_at')->textInput(['readonly'=>true]) ?>
                 </span>
              </div>
-    <div class="row" style="float: right">
-        <button style='margin-left: 5px' type='button' class='btn btn-secondary pull-left-sm' data-dismiss='modal'>Cancel</button>
+    <div class="row pull-right" style="padding-right: 65px">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <button style='margin-left: 5px' type='button' class='btn btn-secondary pull-left-sm' data-dismiss='modal'>Cancel</button>
     </div>
     <?php ActiveForm::end(); ?>
-        </div>
     </div>
 </div>

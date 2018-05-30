@@ -56,14 +56,14 @@ SCRIPT;
               <h4 class="text-center">Module Manager</h4>
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/module/manager" title="Package Manager"><img src="/images/package.png" style="height:35%;width: 35%"></a>
+                 <a href="/module/manager" title="Module Manager"><img src="/images/package.png" style="height:35%;width: 35%"></a>
               </div>
             </div>
             <div class="col-sm-4 col-md-2">
               <h4 class="text-center">Module List</h4>
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/module" title="Package List"><img src="/images/list.png" style="height:30%;width: 30%"></a>
+                 <a href="/module" title="Module List"><img src="/images/list.png" style="height:30%;width: 30%"></a>
               </div>
             </div>
             <!-- /.col -->
@@ -71,7 +71,7 @@ SCRIPT;
               <h4 class="text-center">Package Details</h4>
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/modules/details" title="Package Details"><img src="/images/details.png" style="height:30%;width: 30%"></a>
+                 <a href="/module/details" title="Module Details"><img src="/images/details.png" style="height:30%;width: 30%"></a>
               </div>
             </div>
             <!-- /.col -->  

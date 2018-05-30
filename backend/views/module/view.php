@@ -12,45 +12,30 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="package-view">
-    <div class="panel panel-default col-xs-12">
-        <div class="panel-heading"><i class="fa fa-user-circle fa-adn"></i> View <?= $this->title ?></div>
-        <div class="panel-body">
-            <p>
-                <?= Html::a('Update', ['update', 'id' => $model->PackageID], ['class' => 'btn btn-primary']) ?>
-                <?=
-                Html::a('Delete', ['delete', 'id' => $model->PackageID], [
-                    'class' => 'btn btn-danger',
-                    'data' => [
-                        'confirm' => 'Are you sure you want to delete this item?',
-                        'method' => 'post',
-                    ],
-                ])
-                ?>
-            </p>
-
-            <?=
-            DetailView::widget([
-                'model' => $model,
-                'attributes' => [
-                    'PackageID',
-                    'PackageName',
-                    [
-                        'attribute' => 'icon',
-                        'label' => 'Icon Name',
-                    ],
-                    [
-                        'attribute' => 'icon',
-                        'label' => 'Icon',
-                        'format' => 'raw',
-                        'value' => function($model) {
-                            return "<span class='" . $model->icon . "'><span>";
-                        }
-                    ],
-                    'created_at:date',
-                    'updated_at:date',
-                ],
-            ])
-            ?>
-        </div>
+    <?=
+    DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'PackageID',
+            'PackageName',
+            [
+                'attribute' => 'icon',
+                'label' => 'Icon Name',
+            ],
+            [
+                'attribute' => 'icon',
+                'label' => 'Icon',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return "<span class='" . $model->icon . "'><span>";
+                }
+            ],
+            'created_at:date',
+            'updated_at:date',
+        ],
+    ])
+    ?>
+    <div class="row" style="float: right;padding-right: 15px">
+        <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
     </div>
 </div>

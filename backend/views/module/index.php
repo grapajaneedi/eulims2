@@ -9,7 +9,7 @@
  */
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\grid\ActionColumn;
 
 /* @var $this yii\web\View */
@@ -18,16 +18,21 @@ use yii\grid\ActionColumn;
 
 $this->title = 'Module List';
 $this->params['breadcrumbs'][] = $this->title;
-$Buttontemplate='{view}{update}';
+$Buttontemplate='{view}{update}{delete}';
 ?>
 <div class="package-index">
-    <div class="panel panel-default col-xs-12">
+    <div class="panel panel-primary col-xs-12">
         <div class="panel-heading"><i class="fa fa-angellist"></i> <?= $this->title ?> View</div>
         <div class="panel-body">
             <?=
             GridView::widget([
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
+                //'bordered' => true,
+                //'striped' => true,
+                //'condensed' => true,
+                //'responsive' => true,
+                //'hover' => true,
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
                     [
@@ -48,9 +53,21 @@ $Buttontemplate='{view}{update}';
                     'created_at:date',
                     'updated_at:date',
                     [
-                        'class' => 'yii\grid\ActionColumn',
-                        //'class' => kartik\grid\ActionColumn::className(),
-                        'template' => $Buttontemplate,
+                        'class' => 'kartik\grid\ActionColumn',
+                        'template' => '{delete}',
+                        'buttons'=>[
+                            'view'=>function ($url, $model) {
+                                return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/module/'.$model->PackageID, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Module</font>")]);
+                            },
+                        'update'=>function ($url, $model) {
+                            return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/module/update/'.$model->PackageID,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Module</font>")]);
+                        },
+                        /*'delete'=>function ($url, $model) {
+                          return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>'/profile/delete/'.$model->profile_id, 'onclick'=>'ConfirmBox(this.title,this.value)', 'class' => 'btn btn-danger']);
+                        },
+                         * 
+                         */
+                        ],
                     ],
                 ],
             ]);

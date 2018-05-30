@@ -13,17 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="package-details-view">
-    <p>
-        <a href="/package/details?action=update&id=<?= $model->Package_DetailID ?>" class="btn btn-primary">Update</a>
-        <?= Html::a('Delete', ['delete', 'id' => $model->Package_DetailID], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -43,5 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'updated_at:datetime',
         ],
     ]) ?>
-
+    <div class="row" style="float: right;padding-right: 15px">
+        <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
+    </div>
 </div>

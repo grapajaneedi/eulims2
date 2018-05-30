@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $Buttontemplate='{view}{update}';
 ?>
 <div class="package-details-index">
-     <div class="panel panel-default col-xs-12">
+     <div class="panel panel-primary col-xs-12">
         <div class="panel-heading"><i class="fa fa-angellist"></i> View <?= $this->title ?></div>
         <div class="panel-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -63,7 +63,7 @@ $Buttontemplate='{view}{update}';
             [
                 'class' => 'kartik\grid\ActionColumn',
                 //'class' => ActionColumn::className(),
-                'template' => $Buttontemplate, 'class' => 'yii\grid\ActionColumn',
+                //'template' => $Buttontemplate, 'class' => 'kartik\grid\ActionColumn',
                 'header' => 'Actions',
                 'headerOptions' => ['style' => 'color:#337ab7'],
                 'template' => '{view}{update}{delete}',
@@ -95,9 +95,9 @@ $Buttontemplate='{view}{update}';
                             'title' => Yii::t('app', 'lead-delete'),
                             'class'=>'btn btn-danger'
                         ]);
-                    }
-                    */
-                ],
+                    }*/
+                    
+                ], 
                 'urlCreator' => function ($action, $model, $key, $index) {
                     if ($action === 'view') {
                         $url = '/module/details?action=view&id=' . $model->Package_DetailID;
@@ -108,10 +108,12 @@ $Buttontemplate='{view}{update}';
                         $url = '/module/details?action=update&id=' . $model->Package_DetailID;
                         return $url;
                     }
-                    if ($action === 'delete') {
+                    /*if ($action === 'delete') {
                         $url = '/module/deletedetails/' . $model->Package_DetailID;
                         return $url;
                     }
+                     * 
+                     */
                 }
             ],
         ],

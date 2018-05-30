@@ -10,7 +10,6 @@ use common\models\system\PackageSearch;
 use common\models\system\Package;
 use common\models\system\PackageDetailsSearch;
 use common\models\system\PackageDetails;
-use common\components\RBAC;
 
 class ModuleController extends \yii\web\Controller
 {
@@ -35,7 +34,7 @@ class ModuleController extends \yii\web\Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -77,7 +76,7 @@ class ModuleController extends \yii\web\Controller
     {
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->PackageID]);
+            return $this->redirect(['/module']);
         } else {
             if(Yii::$app->request->isAjax){
                 return $this->renderAjax('update', [
