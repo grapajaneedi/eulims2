@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\system\PackageDetails */
 
 $this->title = $model->Package_Detail;
-$this->params['breadcrumbs'][] = ['label' => 'Package', 'url' => ['/package']];
+$this->params['breadcrumbs'][] = ['label' => 'Module', 'url' => ['/module']];
 $this->params['breadcrumbs'][] = ['label' => 'Details', 'url' => ['details?action=view', 'id'=> $model->Package_DetailID]];
 $this->params['breadcrumbs'][] = $this->title;
 

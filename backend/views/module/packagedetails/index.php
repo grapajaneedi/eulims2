@@ -12,7 +12,7 @@ use common\models\system\Package;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Details';
-$this->params['breadcrumbs'][] = ['label' => 'Package', 'url' => ['/package']];
+$this->params['breadcrumbs'][] = ['label' => 'Modules', 'url' => ['/module']];
 $this->params['breadcrumbs'][] = $this->title;
 $Buttontemplate='{view}{update}';
 ?>
@@ -22,12 +22,17 @@ $Buttontemplate='{view}{update}';
         <div class="panel-body">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <p>
-        <button onclick="LoadModal('Create Details','/package/details?action=create')" class="btn btn-success">Create Package Details</button>
+        <button onclick="LoadModal('Create Details','/module/details?action=create')" class="btn btn-success">Create Module Details</button>
     </p>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'bordered' => true,
+        'striped' => true,
+        'condensed' => true,
+        'responsive' => true,
+        'hover' => true,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
@@ -56,8 +61,8 @@ $Buttontemplate='{view}{update}';
             'created_at:datetime',
             'updated_at:datetime',
             [
-                //'class' => 'yii\grid\ActionColumn'
-                'class' => ActionColumn::className(),
+                'class' => 'kartik\grid\ActionColumn',
+                //'class' => ActionColumn::className(),
                 'template' => $Buttontemplate, 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Actions',
                 'headerOptions' => ['style' => 'color:#337ab7'],
@@ -79,33 +84,32 @@ $Buttontemplate='{view}{update}';
                         //    'title' => Yii::t('app', 'lead-update'),
                         //]);
                         return Html::button('<span class="glyphicon glyphicon-pencil"></span>', [
-                                    'class' => 'btn btn-primary packageviewdetails',
+                                    'class' => 'btn btn-success packageviewdetails',
                                     'title' => Yii::t('app', 'Package Details'),
                                     'value' => $url,
                                     'onclick' => 'LoadModal(this.title,this.value);'
                         ]);
                     },
-                /* 'delete' => function ($url, $model) {
-                  return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-                  'title' => Yii::t('app', 'lead-delete'),
-                  'class'=>'btn btn-primary'
-                  ]);
-                  }
-                 * 
-                 */
+                    /*'delete' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+                            'title' => Yii::t('app', 'lead-delete'),
+                            'class'=>'btn btn-danger'
+                        ]);
+                    }
+                    */
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                     if ($action === 'view') {
-                        $url = '/package/details?action=view&id=' . $model->Package_DetailID;
+                        $url = '/module/details?action=view&id=' . $model->Package_DetailID;
                         return $url;
                     }
                     if ($action === 'update') {
                         //$url ='index.php?r=client-login/lead-update&id='.$model->Package_DetailID;
-                        $url = '/package/details?action=update&id=' . $model->Package_DetailID;
+                        $url = '/module/details?action=update&id=' . $model->Package_DetailID;
                         return $url;
                     }
                     if ($action === 'delete') {
-                        $url = '/package/deletedetails/' . $model->Package_DetailID;
+                        $url = '/module/deletedetails/' . $model->Package_DetailID;
                         return $url;
                     }
                 }

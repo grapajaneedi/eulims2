@@ -105,6 +105,7 @@ class IniObject implements ArrayAccess, IteratorAggregate {
         return $ret;
     }
     public function RemoveModule($ModuleName){
+        $ModuleName=strtolower($ModuleName);
         $ModulePath=\Yii::getAlias('@frontend')."/modules/$ModuleName";
         //$this->lang = parse_ini_file($this->IniUrl, true);
         $KeyToDelete=$ModuleName;
@@ -115,9 +116,15 @@ class IniObject implements ArrayAccess, IteratorAggregate {
         if($Package){
             $Package->delete();
         }
+        //remove route
         $AuthItem= AuthItem::find()->where("name='/".$ModuleName."/*'")->one();
         if($AuthItem){
             $AuthItem->delete();
+        }
+        //remove premissions
+        $AuthItem2= AuthItem::find()->where("name='access-".$ModuleName."'")->one();
+        if($AuthItem2){
+            $AuthItem2->delete();
         }
         //Remove Directory
         $this->deleteDirectory($ModulePath);

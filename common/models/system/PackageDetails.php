@@ -53,10 +53,9 @@ class PackageDetails extends \yii\db\ActiveRecord
         parent::afterSave($insert, $changedAttributes);
          if ($insert) { // Insert command
              $RBAC=new RBAC();
-             $ModuleName= $this->package->PackageName;
              $SubModuleName= $this->Package_Detail;
              $Url= $this->url;
-             $RBAC->CreateSubModulePermissions($ModuleName, $SubModuleName, $Url);
+             $RBAC->CreateSubModulePermissions($SubModuleName, $Url);
          }
     }
     /**

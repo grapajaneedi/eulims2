@@ -12,17 +12,13 @@ $this->title = 'Admin EULIMS';
 <link href="/css/site.css" rel="stylesheet">
 
 <div class="site-index">
-?>
     <?php
-    
-    $JS=<<<SCRIPT
+    $JS = <<<SCRIPT
      $("#tab_1").load('/admin/user');        
 SCRIPT;
-$this->registerJs($JS);
+    $this->registerJs($JS);
     ?>
      <div class="body-content">
-     
-        
         <div class="box box-default color-palette-box" style="padding:0px">
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-tag"></i> System Settings</h3>
@@ -30,8 +26,7 @@ $this->registerJs($JS);
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
               </div>
-        </div>
-            
+        </div>      
         <div class="box-body">
           <div class="row">
             <div class="col-sm-4 col-md-2">
@@ -58,18 +53,17 @@ $this->registerJs($JS);
             </div>
             
             <div class="col-sm-4 col-md-2">
-              <h4 class="text-center">Package Manager</h4>
+              <h4 class="text-center">Module Manager</h4>
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/package/manager" title="Package Manager"><img src="/images/package.png" style="height:35%;width: 35%"></a>
+                 <a href="/module/manager" title="Package Manager"><img src="/images/package.png" style="height:35%;width: 35%"></a>
               </div>
             </div>
-            
             <div class="col-sm-4 col-md-2">
-              <h4 class="text-center">Package List</h4>
+              <h4 class="text-center">Module List</h4>
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/package" title="Package List"><img src="/images/list.png" style="height:30%;width: 30%"></a>
+                 <a href="/module" title="Package List"><img src="/images/list.png" style="height:30%;width: 30%"></a>
               </div>
             </div>
             <!-- /.col -->
@@ -77,7 +71,7 @@ $this->registerJs($JS);
               <h4 class="text-center">Package Details</h4>
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/package/details" title="Package Details"><img src="/images/details.png" style="height:30%;width: 30%"></a>
+                 <a href="/modules/details" title="Package Details"><img src="/images/details.png" style="height:30%;width: 30%"></a>
               </div>
             </div>
             <!-- /.col -->  
@@ -112,7 +106,6 @@ $this->registerJs($JS);
             <!-- /.col -->
             <div class="col-sm-4 col-md-2">
               <h4 class="text-center">Route</h4>
-
               <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
                 <a onclick="ShowModal('Route','/admin/route')" href="#" title="Route"> <img src="/images/route.png" style="height:30%;width: 30%"></a>
               </div>
@@ -135,7 +128,6 @@ $this->registerJs($JS);
             </div>
             <div class="col-sm-4 col-md-2">
               <h4 class="text-center">Menus</h4>
-
              <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
                  <a href="/admin/menu" title="Debug"> <img src="/images/menus.png" style="height:30%;width: 30%"></a>
               </div>
@@ -175,8 +167,7 @@ $this->registerJs($JS);
          
       </div>
     </div>
-  </div>
-
+</div>
 <div class="modal fade in" id="ModalNew" style="padding-right: 16px;">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -185,7 +176,6 @@ $this->registerJs($JS);
                     <span aria-hidden="true">×</span></button>
                 <h4 class="modal-title">Default Modal</h4>
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary">Save changes</button>

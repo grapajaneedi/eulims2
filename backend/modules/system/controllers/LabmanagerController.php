@@ -98,7 +98,7 @@ class LabmanagerController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $model = LabManager::find()->where(['user_id'=>$id])->one();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->lab_manager_id]);

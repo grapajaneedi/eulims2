@@ -12,7 +12,6 @@ namespace common\components;
 use common\models\auth\AuthItem;
 use common\models\auth\AuthItemChild;
 use common\models\auth\AuthAssignment;
-use common\components\Functions;
 /**
  * Description of RBAC
  *
@@ -25,43 +24,50 @@ class RBAC {
         if(!$AuthItem){// Create Only if permission does not exits
             //Create Route
             $AuthItem=new AuthItem();
-            $AuthItem->name="/".$ModuleName."/*";
+            $AuthItem->name="/".strtolower($ModuleName)."/*";
             $AuthItem->type=2;
             $AuthItem->save();
             //create permissions
             $AuthItem2=new AuthItem();
-            $AuthItem2->name="access-$ModuleName";
+            $AuthItem2->name="access-".strtolower($ModuleName);
             $AuthItem2->description="This permission allow user to access $ModuleName module";
             $AuthItem2->type=2;
             $AuthItem2->save();
             $AuthItemChild=new AuthItemChild();
-            $AuthItemChild->parent="access-$ModuleName";
-            $AuthItemChild->child="/".$ModuleName."/*";
+            $AuthItemChild->parent="access-".strtolower($ModuleName);
+            $AuthItemChild->child="/".strtolower($ModuleName)."/*";
             $AuthItemChild->save();
         }
     }
-    public function CreateSubModulePermissions($ModuleName,$SubModuleName, $Url){
-        $Funct=new Functions();
-        $AuthItem= AuthItem::find()->where("name='$Url'")->one();
+    public function CreateSubModulePermissions($SubModuleName, $Url){
+        $Url=$Url."/*";//route: /options/configurations/denominations/*
+        //$SubModuleName: Denominations
+        $AuthItem= AuthItem::find()->where(["name"=>$Url])->one();
         if(!$AuthItem){// Create Only if permission does not exits
-            $SubName1= strtolower($SubModuleName)."/*";
-            $SubName2=str_replace(" ","-",$SubName1);
             //Create Route
             $AuthItem=new AuthItem();
             $AuthItem->name=$Url;
             $AuthItem->type=2;
             $AuthItem->save();
             //create permissions
-            $AuthItem2=new AuthItem();
-            $AuthItem2->name="access-$SubName2";
+            $sName= "access-".str_replace(" ", "-", strtolower(trim($SubModuleName)));//access-denominations
+            $AuthItem2=AuthItem::find()->where(['name'=>$sName])->one();
+            if(!$AuthItem2){
+                 $AuthItem2=new AuthItem();
+            }
+            $AuthItem2->name=$sName;
             $AuthItem2->description="This permission allow user to access $SubModuleName Submodule";
             $AuthItem2->type=2;
             $AuthItem2->save();
-            $AuthItemChild=new AuthItemChild();
-            $childPermission=$Funct->left($SubName2, strlen($SubName2)-2);
-            $AuthItemChild->parent="access-".strtolower($childPermission);
+            $AuthItemChild=AuthItemChild::find()->where(['child'=>$sName])->one();
+            if(!$AuthItemChild){
+                $AuthItemChild=new AuthItemChild();
+            } 
+            $AuthItemChild->parent=$sName;
             $AuthItemChild->child=$Url;
             $AuthItemChild->save();
+        }else{
+            throw new \BadFunctionCallException('Failed to generate permissions.');
         }
     }
     
