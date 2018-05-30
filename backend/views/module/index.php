@@ -16,7 +16,7 @@ use yii\grid\ActionColumn;
 /* @var $searchModel common\models\PackageSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Package List';
+$this->title = 'Module List';
 $this->params['breadcrumbs'][] = $this->title;
 $Buttontemplate='{view}{update}';
 ?>

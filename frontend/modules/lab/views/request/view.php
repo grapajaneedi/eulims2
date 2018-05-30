@@ -14,7 +14,7 @@ $sweetalert = new Functions();
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
 
-$this->title = $model->request_id;
+$this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

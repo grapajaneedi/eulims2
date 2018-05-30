@@ -68,6 +68,7 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
         ]);
 
     ?>
+    <?= $form->field($model, 'workflow')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group pull-right">
     <?php if(Yii::$app->request->isAjax){ ?>

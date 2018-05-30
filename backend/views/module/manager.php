@@ -9,7 +9,7 @@ use yii\helpers\Url;
 use kartik\form\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = 'Package Manager';
+$this->title = 'Module Manager';
 $this->params['breadcrumbs'][] = $this->title;
 $PathFiles= Yii::$app->basePath.'\web\uploads\packages';
 $js="var bUrl='".$GLOBALS['base_uri']."';\n";
@@ -70,7 +70,7 @@ $js.=<<<SCRIPT
         callback: function (result) {
             if(result){
                 $.ajax({
-                    url: bUrl+'/package/export',
+                    url: bUrl+'/module/export',
                     type: 'post',
                     data: {pack: PackageName},
                     success: function( data, textStatus, jQxhr ){
@@ -103,7 +103,7 @@ $js.=<<<SCRIPT
         callback: function (result) {
             if(result){
                 $.ajax({
-                    url: bUrl+'package/removemodule',
+                    url: bUrl+'module/removemodule',
                     type: 'post',
                     data: {url: PackageUrl},
                     success: function( data, textStatus, jQxhr ){
@@ -133,7 +133,7 @@ $js.=<<<SCRIPT
         callback: function (result) {
             if(result){
                 $.ajax({
-                    url: bUrl+'/package/extract',
+                    url: bUrl+'/module/extract',
                     type: 'post',
                     data: {url: PackageUrl, pack: PackageName},
                     success: function( data, textStatus, jQxhr ){
@@ -149,7 +149,7 @@ $js.=<<<SCRIPT
     }
     function CreateModule(){
         bootbox.prompt("Enter the module name: ", function(result){ 
-            var url=bUrl+'/package/createmodule';
+            var url=bUrl+'/module/createmodule';
             if(result){
                 $.ajax({
                     url: url,
@@ -172,12 +172,12 @@ $this->registerJs($js, View::POS_READY,'script-handler');
 $Packages= Package::find()->all();
 
 ?>
- <div class="panel panel-default col-xs-12">
-     <div class="panel-heading"><i class="fa fa-braille"></i> Package Manager <small>version 1.0</small></div>
+ <div class="panel panel-primary col-xs-12">
+     <div class="panel-heading"><i class="fa fa-braille"></i> Module Manager <small>version 1.0</small></div>
         <div class="panel-body"> 
             <hr style="margin-top: 0px;margin-bottom: 0px">
             <div class="col-sm-4" style="height: 100%;padding-left: 0px">
-                <div class="row col-xs-12" style="float: left"><strong>Available Packages</strong></div>
+                <div class="row col-xs-12" style="float: left"><strong>Available Modules</strong></div>
                 <div class="row" style="clear: both;min-height: 380px">
                     <select id="PackageList" class="form-control fill" style="height: 100%" size="21">
                     <?php
@@ -203,14 +203,14 @@ $Packages= Package::find()->all();
                 </div>
                 <?php 
                     Modal::begin([
-                        'header'=>'Import Package Module',
                         'toggleButton' => [
-                            'label'=>'<span class="fa fa-upload"></span> Import Package', 'class'=>'btn btn-primary btn-float-left'
+                            'label'=>'<span class="fa fa-upload"></span> Import Module', 'class'=>'btn btn-primary btn-float-left'
                         ],
+                        'header' => '<h4 class="fa fa-clone" style="padding-top: 0px;margin-top: 0px;padding-bottom:0px;margin-bottom: 0px">  <span class="modal-title" style="font-size: 16px;font-family: \'Source Sans Pro\',sans-serif;">Import Package Module</span></h4>'
                     ]);
                     $form1 = ActiveForm::begin([
                         'options'=>['enctype'=>'multipart/form-data'], // important
-                        'action'=>'/package/upload'
+                        'action'=>'/module/upload'
                     ]);
                     //echo $form1->field($model, 'upload')->fileInput();
                     echo FileInput::widget([
@@ -229,7 +229,7 @@ $Packages= Package::find()->all();
                 <button id="btnInstallPackage" disabled class="btn btn-primary btn-float-left"><span class="fa fa-plus-circle"></span> Install</button>
             </div>
             <div class="col-sm-8" style="height: 100%;padding-left: 0px">
-                <div class="row col-xs-12" style="float: left"><strong>Installed Packages</strong></div>
+                <div class="row col-xs-12" style="float: left"><strong>Installed Modules</strong></div>
                 <div class="row" style="clear: both;min-height: 380px">
                     <select id="InstalledPackageList" class="form-control fill" style="height: 100%" size="21">
                     <?php

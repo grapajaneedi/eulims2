@@ -49,6 +49,7 @@ if(count($sampletype) > 0){
                 </span>
             </div>
         </div>
+        <div class="err-message" style="margin-top: 10px;font-size: 12px;color: #FF0000;"></div>
     </div>
     <?php endif; ?>
     <div class="row">
@@ -164,6 +165,7 @@ if(count($sampletype) > 0){
 $('.btn-number').click(function(e){
     e.preventDefault();
     
+    $(".err-message").html("");
     fieldName = $(this).attr('data-field');
     type      = $(this).attr('data-type');
     var input = $("input[name='"+fieldName+"']");
@@ -200,18 +202,21 @@ $('.input-number').change(function() {
     minValue =  parseInt($(this).attr('min'));
     maxValue =  parseInt($(this).attr('max'));
     valueCurrent = parseInt($(this).val());
+    $(".err-message").html("");
     
     name = $(this).attr('name');
     if(valueCurrent >= minValue) {
         $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
     } else {
-        alert('Sorry, the minimum value was reached');
+        //alert('Sorry, the minimum value was reached');
+        $(".err-message").html("Sorry, the minimum value was reached.");
         $(this).val($(this).data('oldValue'));
     }
     if(valueCurrent <= maxValue) {
         $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
     } else {
-        alert('Sorry, the maximum value was reached');
+        //alert('Sorry, the maximum value was reached');
+        $(".err-message").html("Sorry, the maximum value was reached.");
         $(this).val($(this).data('oldValue'));
     }
     

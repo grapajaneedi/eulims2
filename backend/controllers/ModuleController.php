@@ -10,8 +10,9 @@ use common\models\system\PackageSearch;
 use common\models\system\Package;
 use common\models\system\PackageDetailsSearch;
 use common\models\system\PackageDetails;
+use common\components\RBAC;
 
-class PackageController extends \yii\web\Controller
+class ModuleController extends \yii\web\Controller
 {
     /**
      * Lists all Package models.
@@ -47,7 +48,7 @@ class PackageController extends \yii\web\Controller
     public function actionDeletedetails($id)
     {
         PackageDetails::findOne($id)->delete();
-        return $this->redirect(['package/details']);
+        return $this->redirect(['module/details']);
     }
     /**
      * Displays a single PackageDetails model.
