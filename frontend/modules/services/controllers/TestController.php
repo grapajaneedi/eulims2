@@ -69,10 +69,16 @@ class TestController extends Controller
         $model = new Test();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->runAction('index');
+            $session = Yii::$app->session;
+            $session->set('savepopup',"executed");
+            return $this->redirect('index');
         } 
             
        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('create', [
+                'model' => $model,
+            ]);
+       }else{
             return $this->renderAjax('create', [
                 'model' => $model,
             ]);
@@ -90,13 +96,21 @@ class TestController extends Controller
     {
         $model = $this->findModel($id);
         
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->testcategory_id]);
-                } else if (Yii::$app->request->isAjax) {
-                    return $this->renderAjax('update', [
-                        'model' => $model,
-                    ]);
-                }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+           $session = Yii::$app->session;
+            $session->set('savepopup',"executed");
+            return $this->redirect('index');
+        }
+
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**

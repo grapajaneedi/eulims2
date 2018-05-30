@@ -77,6 +77,12 @@ class WorkflowController extends Controller
                         'model' => $model,
                     ]);
             }
+            else{
+                return $this->render('create', [
+                        'model' => $model,
+                    ]);
+
+            }
     }
 
     /**

@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use common\models\services\Test;
+use kartik\sortinput\SortableInput;
 
 $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','testname');
 
@@ -34,15 +35,40 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
              <?= $form->field($model, 'method')->textInput(['maxlength' => true]) ?>
              </div>
          </div>
-
-
- 
-
-   
-
-    
-
     <?= $form->field($model, 'workflow')->textInput(['maxlength' => true]) ?>
+    <?php
+        // echo Sortable::widget([
+        //     'type' => Sortable::TYPE_LIST,
+        //     'items' => [
+        //         ['content' => 'Item # 1'],
+        //         ['content' => 'Item # 2'],
+        //         ['content' => 'Item # 3'],
+        //     ]   
+        // ]);
+
+        echo $form->field($model,'workflow')->widget(SortableInput::classname(),
+        [
+            // 'type' => SortableInput::TYPE_LIST,
+            'items' => [
+                ['content' => 'Item # 1'],
+                ['content' => 'Item # 2'],
+                ['content' => 'Item # 3'],
+            ]   
+        ]);
+        // echo SortableInput::widget([
+        //     'model' => $model,
+        //     'attribute' => 'workflow',
+        //     'hideInput' => false,
+        //     'delimiter' => '~',
+        //     'items' => [
+        //         1 => ['content' => 'Item # 1'],
+        //         2 => ['content' => 'Item # 2'],
+        //         3 => ['content' => 'Item # 3'],
+        //         4 => ['content' => 'Item # 4', 'disabled'=>true],
+        //     ]   
+        // ]);
+
+    ?>
 
     <div class="form-group pull-right">
     <?php if(Yii::$app->request->isAjax){ ?>
