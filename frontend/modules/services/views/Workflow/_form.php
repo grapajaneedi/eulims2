@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use common\models\services\Test;
+use kartik\sortinput\SortableInput;
 
 $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','testname');
 
@@ -34,9 +35,21 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
              <?= $form->field($model, 'method')->textInput(['maxlength' => true]) ?>
              </div>
          </div>
+    <?php
+echo SortableInput::widget([
+    'model' => $model,
+    'attribute' => 'workflow',
+    'hideInput' => false,
+    'delimiter' => '~',
+    'items' => [
+        1 => ['content' => 'Item # 1'],
+        2 => ['content' => 'Item # 2'],
+        3 => ['content' => 'Item # 3'],
+        4 => ['content' => 'Item # 4', 'disabled'=>true],
+    ]   
+]);
 
-
- 
+ ?>
 
    
 
