@@ -18,6 +18,9 @@ body {
 .pac-container{
     z-index: 60000;
 }
+.table-responsive {
+    overflow-x: none!important;
+}
 .wrap {
     min-height: 100%;
     height: auto;

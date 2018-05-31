@@ -3,7 +3,7 @@
 namespace common\models\lab;
 
 use Yii;
-
+use common\models\system\Rstl;
 /**
  * This is the model class for table "tbl_request".
  *
@@ -40,6 +40,7 @@ use Yii;
  * @property Paymenttype $paymentType
  * @property Sample[] $samples
  * @property Testreport[] $testreports
+ * @property Rstl[] $rstl
  */
 class Request extends \yii\db\ActiveRecord
 {
@@ -213,4 +214,13 @@ class Request extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Testreport::className(), ['request_id' => 'request_id']);
     }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRstl()
+    {
+        return $this->hasOne(Rstl::className(), ['rstl_id' => 'request_id']);
+    }
+
+    
 }
