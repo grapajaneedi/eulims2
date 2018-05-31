@@ -36,7 +36,7 @@ class ProfileController extends Controller
         return [
             'uploadPhoto' => [
                 'class' => 'budyaga\cropper\actions\UploadAction',
-                'url' => 'http://admin.eulims.local/upload/user/photo',
+                'url' => '/upload/user/photo',
                 'path' => '@frontend/web/uploads/user/photo',
             ]
         ];
