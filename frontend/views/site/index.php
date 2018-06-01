@@ -13,6 +13,7 @@ use common\models\system\LoginForm;
 
 $this->title = 'Dashboard';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 <style type="text/css">

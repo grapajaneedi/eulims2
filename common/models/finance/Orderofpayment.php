@@ -20,7 +20,7 @@ use common\models\lab\Customer;
  * @property int $allow_erratum
  *
  * @property Billing[] $billings
- * @property Collection[] $collections
+ * @property Collection $collection
  * @property Collectiontype $collectiontype
  * @property Paymentmode $paymentMode
  * @property Paymentitem[] $paymentitems
@@ -94,7 +94,7 @@ class Orderofpayment extends \yii\db\ActiveRecord
      */
     public function getCollections()
     {
-        return $this->hasMany(Collection::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+        return $this->hasOne(Collection::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
 
     /**

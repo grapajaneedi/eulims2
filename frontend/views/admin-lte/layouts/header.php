@@ -9,12 +9,13 @@ use yii\helpers\ArrayHelper;
 /* @var $this \yii\web\View */
 /* @var $content string */
 $Request_URI=$_SERVER['REQUEST_URI'];
+
 //$_SERVER['SERVER_NAME']
 if($Request_URI=='/'){//alias ex: http://admin.eulims.local
-    $Backend_URI=Yii::$app->urlManagerBackend->createUrl('/');
+    $Backend_URI=Url::base();//Yii::$app->urlManager->createUrl('/');
     $Backend_URI=$Backend_URI."/uploads/user/photo/";
 }else{//http://localhost/eulims/backend/web
-    $Backend_URI='//localhost/eulims/backend/web/uploads/user/photo/';
+    $Backend_URI=Url::base().'/uploads/user/photo/';
 }
 Yii::$app->params['uploadUrl']=$Backend_URI;
 //echo Yii::$app->params['uploadUrl'];
