@@ -40,6 +40,7 @@ class Accountingcode extends \yii\db\ActiveRecord
         return [
             [['accountcode'], 'string', 'max' => 50],
             [['accountdesc'], 'string', 'max' => 250],
+            [['accountcode', 'accountdesc'], 'required'],
         ];
     }
 
