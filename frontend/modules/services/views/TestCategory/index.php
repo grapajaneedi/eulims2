@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-
 use kartik\widgets\DatePicker;
 use kartik\widgets\DateTimePicker;
 use kartik\export\ExportMenu;
@@ -53,7 +52,7 @@ if (Yii::$app->user->can('access-testcategory-delete')){
 
     <?php 
     $gridColumn = [
-        ['class' => '\kartik\grid\CheckboxColumn'],
+       // ['class' => '\kartik\grid\CheckboxColumn'],
         
         [
             'class' => 'kartik\grid\ExpandRowColumn',
