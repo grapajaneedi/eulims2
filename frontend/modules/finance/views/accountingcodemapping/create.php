@@ -9,7 +9,7 @@ use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Accountingcodemapping */
 
-$this->title = 'Add Accountingcode Mapping';
+$this->title = 'Add Account Code Mapping';
 $this->params['breadcrumbs'][] = ['label' => 'Accountingcodemappings', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'modelCollectionType' =>$modelCollectionType,
         'dataProviderCollectionType' =>$dataProviderCollectionType,
         'modelAccountCollection' => $modelAccountCollection,
-        'dataProviderAccountCollection' => $dataProviderAccountCollection
+        'dataProvider' => $dataProvider
         
     ]) ?>
     

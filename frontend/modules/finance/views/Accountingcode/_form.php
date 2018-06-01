@@ -12,9 +12,11 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'accountcode')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'accountcode')->textInput(['maxlength' => true])->label('Account Code : ') ?>
 
-    <?= $form->field($model, 'accountdesc')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'accountdesc')->textInput(['maxlength' => true])->label('Account Desc : ') ?>
+    
+     
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

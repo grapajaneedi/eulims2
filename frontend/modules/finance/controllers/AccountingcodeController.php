@@ -8,6 +8,7 @@ use common\models\finance\AccountingcodeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 
 /**
  * AccountingcodeController implements the CRUD actions for Accountingcode model.
@@ -34,13 +35,35 @@ class AccountingcodeController extends Controller {
      */
     public function actionIndex() {
         $searchModel = new AccountingcodeSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider2 = $searchModel->search(Yii::$app->request->queryParams);
+        
+       
+        $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM eulims_finance.tbl_accountingcode ac
+            LEFT JOIN eulims_finance.tbl_accountingcodemapping acm ON ac.`accountingcode_id`=acm.`accountingcode_id`
+            LEFT JOIN eulims_finance.tbl_collectiontype ct ON acm.`collectiontype_id` = ct.`collectiontype_id`
+            ORDER BY ac.accountingcode_id ')->queryScalar();
+        $queryNew = new yii\db\Query;
 
+
+                              $queryNew->select('eulims_finance.tbl_accountingcode.accountcode, eulims_finance.tbl_collectiontype.natureofcollection')
+                              ->from('eulims_finance.tbl_accountingcode')
+                              ->leftJoin('eulims_finance.tbl_accountingcodemapping', 'eulims_finance.tbl_accountingcode.accountingcode_id = eulims_finance.tbl_accountingcodemapping.accountingcode_id')    
+                              ->leftJoin('eulims_finance.tbl_collectiontype', 'eulims_finance.tbl_accountingcodemapping.collectiontype_id = eulims_finance.tbl_collectiontype.collectiontype_id')
+                              ->orderBy('eulims_finance.tbl_accountingcode.accountingcode_id DESC');
+                                
+                               $dataProvider= new ActiveDataProvider([
+                                  'query' => $queryNew,
+                                   'totalCount' => $count,
+                               'pagination' => [
+                                      'pageSize' => 6
+                                  ],
+
+                              ]);
 
 
 
         return $this->render('index', [
-                    'searchModel' => $searchModel,
+                //   'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
         ]);
     }
@@ -76,7 +99,35 @@ class AccountingcodeController extends Controller {
         $model = new Accountingcode();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->accountingcode_id]);
+           // return $this->redirect(['view', 'id' => $model->accountingcode_id]);
+              $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM eulims_finance.tbl_accountingcode ac
+            LEFT JOIN eulims_finance.tbl_accountingcodemapping acm ON ac.`accountingcode_id`=acm.`accountingcode_id`
+            LEFT JOIN eulims_finance.tbl_collectiontype ct ON acm.`collectiontype_id` = ct.`collectiontype_id`
+            ORDER BY ac.accountingcode_id ')->queryScalar();
+        $queryNew = new yii\db\Query;
+
+
+                              $queryNew->select('eulims_finance.tbl_accountingcode.accountcode, eulims_finance.tbl_collectiontype.natureofcollection')
+                              ->from('eulims_finance.tbl_accountingcode')
+                              ->leftJoin('eulims_finance.tbl_accountingcodemapping', 'eulims_finance.tbl_accountingcode.accountingcode_id = eulims_finance.tbl_accountingcodemapping.accountingcode_id')    
+                              ->leftJoin('eulims_finance.tbl_collectiontype', 'eulims_finance.tbl_accountingcodemapping.collectiontype_id = eulims_finance.tbl_collectiontype.collectiontype_id')
+                              ->orderBy('eulims_finance.tbl_accountingcode.accountingcode_id DESC');
+                                
+                               $dataProvider= new ActiveDataProvider([
+                                  'query' => $queryNew,
+                                   'totalCount' => $count,
+                               'pagination' => [
+                                      'pageSize' => 6
+                                  ],
+
+                              ]);
+
+
+
+        return $this->runAction('index', [
+                //   'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+        ]);
         }
 
         if (Yii::$app->request->isAjax) {

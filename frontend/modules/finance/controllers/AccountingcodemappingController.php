@@ -13,6 +13,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\SqlDataProvider;
 use yii\helpers\ArrayHelper;
+use yii\data\ActiveDataProvider;
+use yii\helpers\Json;
 
 
 
@@ -76,11 +78,13 @@ class AccountingcodemappingController extends Controller
             'sql' => 'Call eulims_finance.spGetAccountMapping();',
             
             'totalCount' => $count,
-           
+           'pagination' => [
+                'pageSize' => 5
+            ],
            
         ]);
         
-     
+     //  $dataProviderAccountCollection->setTotalCount($count);
         
         if (Yii::$app->request->isAjax)
         {
@@ -99,20 +103,179 @@ class AccountingcodemappingController extends Controller
             
         {
             return $this->redirect(['accountingcode/index']);
-            /*
-            return $this->render('create', [
+           
+        }
+    }
+    
+    public function actionCreate()
+    {
+        
+        $model = new Accountingcodemapping();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+            {
+                    
+                            $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM eulims_finance.tbl_accountingcode ac
+            LEFT JOIN eulims_finance.tbl_accountingcodemapping acm ON ac.`accountingcode_id`=acm.`accountingcode_id`
+            LEFT JOIN eulims_finance.tbl_collectiontype ct ON acm.`collectiontype_id` = ct.`collectiontype_id`
+            ORDER BY ac.accountingcode_id ')->queryScalar();
+            $queryNew = new yii\db\Query;
+
+
+                              $queryNew->select('eulims_finance.tbl_accountingcode.accountcode, eulims_finance.tbl_collectiontype.natureofcollection')
+                              ->from('eulims_finance.tbl_accountingcode')
+                              ->leftJoin('eulims_finance.tbl_accountingcodemapping', 'eulims_finance.tbl_accountingcode.accountingcode_id = eulims_finance.tbl_accountingcodemapping.accountingcode_id')    
+                              ->leftJoin('eulims_finance.tbl_collectiontype', 'eulims_finance.tbl_accountingcodemapping.collectiontype_id = eulims_finance.tbl_collectiontype.collectiontype_id')
+                              ->orderBy('eulims_finance.tbl_accountingcode.accountingcode_id');
+                                
+                               $dataProvider= new ActiveDataProvider([
+                                  'query' => $queryNew,
+                                   'totalCount' => $count,
+                               'pagination' => [
+                                      'pageSize' => 6
+                                  ],
+
+                              ]);
+
+
+               return $this -> redirect(['/finance/accountingcode/index']);                 
+      
+                                
+                               
+                                 
+        }
+        
+        $sql = "Call spGetAccountCodeWithoutMapping()";
+        
+        $modelAccountCode = new AccountcodeWithoutMapping();
+        $dataProviderAccountCode = ArrayHelper::map(Yii::$app->financedb->createCommand($sql)->queryAll(),'accountingcode_id','accountcode');
+
+        $modelCollectionType = new Collectiontype();
+        $dataProviderCollectionType= ArrayHelper::map(Collectiontype::find()->all(),'collectiontype_id','natureofcollection');
+        
+        $sqlGrid = "Call spGetAccountMapping()";
+        $modelAccountCollection = new AccountcodeCollection();
+       // $dataProviderAccountCollection =  Yii::$app->financedb->createCommand($sqlGrid)->queryAll();
+        
+      //  $dataProviderAccountCollection = new SqlDataProvider([
+    //'sql' => 'Call spGetAccountMapping()']);
+        $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM eulims_finance.tbl_accountingcodemapping')->queryScalar();
+        
+       $queryA = new yii\db\Query;
+        $queryNew =  'Call eulims_finance.spGetAccountMapping();';
+       
+        $dataProvider2 = new SqlDataProvider([
+            'sql' => $queryNew,
+            
+            'totalCount' => $count,
+            'pagination' => [
+                'pageSize' => 5
+            ],
+          
+        ]);
+        
+      
+        
+        $queryNew = new yii\db\Query;
+       // $queryNew ='SELECT ac.accountcode,ct.natureofcollection FROM eulims_finance.tbl_accountingcode ac INNER JOIN eulims_finance.tbl_accountingcodemapping acm ON ac.accountingcode_id=acm.accountingcode_id INNER JOIN eulims_finance.tbl_collectiontype ct ON acm.collectiontype_id = ct.collectiontype_id';
+ 
+        // $bayar = Yii::$app->db->createCommand('SELECT ac.accountcode,ct.natureofcollection FROM eulims_finance.tbl_accountingcode ac INNER JOIN eulims_finance.tbl_accountingcodemapping acm ON ac.accountingcode_id=acm.accountingcode_id INNER JOIN eulims_finance.tbl_collectiontype ct ON acm.collectiontype_id = ct.collectiontype_id');
+
+        $queryNew->select('accountcode, natureofcollection')
+        ->from('eulims_finance.tbl_accountingcode')
+        ->innerJoin('eulims_finance.tbl_accountingcodemapping', 'eulims_finance.tbl_accountingcode.accountingcode_id = eulims_finance.tbl_accountingcodemapping.accountingcode_id')    
+        ->innerJoin('eulims_finance.tbl_collectiontype', 'eulims_finance.tbl_accountingcodemapping.collectiontype_id = eulims_finance.tbl_collectiontype.collectiontype_id');
+                
+         $dataProvider= new ActiveDataProvider([
+            'query' => $queryNew,
+             'totalCount' => $count,
+         'pagination' => [
+                'pageSize' => 5
+            ],
+          
+        ]);
+    
+        if (Yii::$app->request->isAjax)
+        {
+        return $this->renderAjax('create', [
             'model' => $model,
             'modelAccountCode' =>  $modelAccountCode,
             'dataProviderAccountCode' => $dataProviderAccountCode,
             'modelCollectionType' =>$modelCollectionType,
             'dataProviderCollectionType' =>$dataProviderCollectionType,
             'modelAccountCollection' => $modelAccountCollection,
-            'dataProviderAccountCollection' => $dataProviderAccountCollection
-             *
-             
-         ]);*/
+            'dataProvider' => $dataProvider
+        ]);
+        }
+        
+        else
+            
+        {
+           return $this->redirect(['accountingcode/index']);
         }
     }
+    
+    public function actionCollectionfilter() {
+    
+    
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $accountingcode_ID = $parents[0];
+       
+         
+          $result = Yii::$app->db->createCommand("CALL eulims_finance.spGetCollectionTypeWithoutAccount(:accountingcodeID)") 
+                      ->bindValue(':accountingcodeID' , $accountingcode_ID )
+                      ->queryAll();
+         
+         
+            echo \yii\helpers\Json::encode(['output'=>$result, 'selected'=>''],JSON_UNESCAPED_SLASHES);
+            return;
+        }
+    }
+  
+   
+    echo \yii\helpers\Json::encode(['output'=>'', 'selected'=>'']);
+    return;
+}
+
+
+public function actionAccount() {
+    $out = [];
+     $modelCollectionType = new Collectiontype();
+  //  $dataProviderCollectionType= ArrayHelper::map(Collectiontype::find()->all(),'collectiontype_id','natureofcollection');
+    
+     $dataProviderCollectionType= Collectiontype::find()->all();
+    
+    
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            //$cat_id = $parents[0];
+          //  $out = self::getSubCatList($cat_id); 
+        
+         $out= $dataProviderCollectionType;
+            
+         $test =  [
+              ['collectiontype_id'=>'1', 'natureofcollection'=>'mariano'],
+              ['collectiontype_id'=>'2', 'natureofcollection'=>'testing']
+             ];
+         
+         
+            echo \yii\helpers\Json::encode(['output'=>$out, 'selected'=>''],JSON_UNESCAPED_SLASHES);
+            return;
+        }
+    }
+    
+    $out = [
+    ['id'=>2, 'name'=>'Analysis/Calibration'],
+    ['id'=>3, 'name'=>'Pretoria'],
+   // and so on
+];
+   
+    echo \yii\helpers\Json::encode(['output'=>$dataProviderCollectionType, 'selected'=>'test'],JSON_UNESCAPED_SLASHES);
+}
+    
 
     /**
      * Displays a single Accountingcodemapping model.
@@ -132,70 +295,7 @@ class AccountingcodemappingController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
-        
-        $model = new Accountingcodemapping();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->mapping_id]);
-        }
-        
-        $sql = "Call spGetAccountCodeWithoutMapping()";
-        
-        $modelAccountCode = new AccountcodeWithoutMapping();
-        $dataProviderAccountCode = ArrayHelper::map(Yii::$app->financedb->createCommand($sql)->queryAll(),'accountingcode_id','accountcode');
-
-        $modelCollectionType = new Collectiontype();
-        $dataProviderCollectionType= ArrayHelper::map(Collectiontype::find()->all(),'collectiontype_id','natureofcollection');
-        
-        $sqlGrid = "Call spGetAccountMapping()";
-        $modelAccountCollection = new AccountcodeCollection();
-       // $dataProviderAccountCollection =  Yii::$app->financedb->createCommand($sqlGrid)->queryAll();
-        
-      //  $dataProviderAccountCollection = new SqlDataProvider([
-    //'sql' => 'Call spGetAccountMapping()']);
-        $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM eulims_finance.tbl_accountingcodemapping')->queryScalar();
-
-        $dataProviderAccountCollection = new SqlDataProvider([
-            'sql' => 'Call eulims_finance.spGetAccountMapping();',
-            
-            'totalCount' => $count,
-         
-          
-        ]);
-        
-        $dataProviderAccountCollection->setTotalCount($count);
-        
-        if (Yii::$app->request->isAjax)
-        {
-        return $this->renderAjax('create', [
-            'model' => $model,
-            'modelAccountCode' =>  $modelAccountCode,
-            'dataProviderAccountCode' => $dataProviderAccountCode,
-            'modelCollectionType' =>$modelCollectionType,
-            'dataProviderCollectionType' =>$dataProviderCollectionType,
-            'modelAccountCollection' => $modelAccountCollection,
-            'dataProviderAccountCollection' => $dataProviderAccountCollection
-        ]);
-        }
-        
-        else
-            
-        {
-            return $this->render('create', [
-            'model' => $model,
-            'modelAccountCode' =>  $modelAccountCode,
-            'dataProviderAccountCode' => $dataProviderAccountCode,
-            'modelCollectionType' =>$modelCollectionType,
-            'dataProviderCollectionType' =>$dataProviderCollectionType,
-            'modelAccountCollection' => $modelAccountCollection,
-            'dataProviderAccountCollection' => $dataProviderAccountCollection
-        ]);
-        }
-        
-        
-    }
+    
     
      public function actionDropdown()
     {
@@ -209,16 +309,6 @@ class AccountingcodemappingController extends Controller
 
         $modelCollectionType = new Collectiontype();
         $dataProviderCollectionType= ArrayHelper::map(Collectiontype::find()->all(),'collectiontype_id','natureofcollection');
-        
-      //   $model= $searchModel->loadsp();
-                 //new AccountcodeWithoutMapping();
-         
-         
-       
-    // passing the params into to the sql query
-    
-    // execute the sql command
-       
         
         return $this->render('dropdown', [
             'modelAccountCode' =>  $modelAccountCode,
@@ -240,7 +330,9 @@ class AccountingcodemappingController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->mapping_id]);
+          //  return $this->redirect(['view', 'id' => $model->mapping_id]);
+          //  return $this->refresh();
+           return $this->redirect(['/finance/accountingcode/index']);
         }
 
         return $this->render('update', [
@@ -277,4 +369,6 @@ class AccountingcodemappingController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+    
+    
 }
