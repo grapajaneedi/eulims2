@@ -3,16 +3,16 @@
 namespace frontend\modules\services\controllers;
 
 use Yii;
-use common\models\services\Workflow;
-use common\models\services\WorkflowSearch;
+use common\models\lab\Procedure;
+use common\models\lab\ProcedureSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * WorkflowController implements the CRUD actions for Workflow model.
+ * ProcedureController implements the CRUD actions for Procedure model.
  */
-class WorkflowController extends Controller
+class ProcedureController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,12 +30,12 @@ class WorkflowController extends Controller
     }
 
     /**
-     * Lists all Workflow models.
+     * Lists all Procedure models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new WorkflowSearch();
+        $searchModel = new ProcedureSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,50 +45,38 @@ class WorkflowController extends Controller
     }
 
     /**
-     * Displays a single Workflow model.
+     * Displays a single Procedure model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-       if(Yii::$app->request->isAjax){
-            return $this->render('view', [
-                    'model' => $this->findModel($id),
-                ]);
-        }
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     /**
-     * Creates a new Workflow model.
+     * Creates a new Procedure model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($test_id)
+    public function actionCreate()
     {
-        $model = new Workflow();
-       
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->runAction('index');  
-        } 
-          
-       if(Yii::$app->request->isAjax){
-            return $this->renderAjax('create', [
-                    'model' => $model,
-                    'test_id'=>$test_id
-                ]);
-        }
-        else{
-            return $this->render('create', [
-                    'model' => $model,
-                    'test_id'=>$test_id
-                ]);
+        $model = new Procedure();
 
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->procedure_id]);
         }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
-     * Updates an existing Workflow model.
+     * Updates an existing Procedure model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -99,16 +87,16 @@ class WorkflowController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->workflow_id]);
-        } else if (Yii::$app->request->isAjax) {
-            return $this->renderAjax('update', [
-                'model' => $model,
-            ]);
+            return $this->redirect(['view', 'id' => $model->procedure_id]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
-     * Deletes an existing Workflow model.
+     * Deletes an existing Procedure model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -122,15 +110,15 @@ class WorkflowController extends Controller
     }
 
     /**
-     * Finds the Workflow model based on its primary key value.
+     * Finds the Procedure model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Workflow the loaded model
+     * @return Procedure the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Workflow::findOne($id)) !== null) {
+        if (($model = Procedure::findOne($id)) !== null) {
             return $model;
         }
 

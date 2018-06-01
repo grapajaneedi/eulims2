@@ -9,8 +9,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="customer-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -29,3 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
 </div>
+
+<?php if(Yii::$app->request->isAjax){ ?>
+    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancel</button>
+<?php } ?>

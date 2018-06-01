@@ -25,7 +25,7 @@ $this->registerJsFile("/js/services/services.js");
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Test', ['value'=>'/services/test/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Test")]); ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Test', ['value'=>'/services/test/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Test"),'name' => Yii::t('app', "Create New Test")]); ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -39,7 +39,7 @@ $this->registerJsFile("/js/services/services.js");
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            // 'test_id',
+            'test_id',
             // 'rstl_id',
             'testname',
             // 'method',
@@ -64,14 +64,10 @@ $this->registerJsFile("/js/services/services.js");
                     return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/services/test/update?id='.$model->test_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Update Test"),'name' => Yii::t('app', "Update Test<font color='Blue'></font>")]);
                 },
                 'workflow'=>function ($url, $model) {
-                    $t = '/services/workflow/create';
-                    return Html::button('<span class="glyphicon glyphicon-file"></span>', ['value'=>$t, 'class' => 'btn btn-success btn-modal','name' => Yii::t('app', "Workflow"),'title' => Yii::t('app', "Update Workflow")]);
+                    $t = '/services/workflow/create?test_id='.$model->test_id;
+                    return Html::button('<span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-file"></span>', ['value'=>$t, 'class' => 'btn btn-success btn-modal','name' => Yii::t('app', "Workflow"),'title' => Yii::t('app', "Create Workflow")]);
                 },
-            //     'delete'=>function ($url, $model) {
-            //       $t = '/services/testcategory/delete';
-            //       return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>'/services/test/delete?id='.$model->test_id, 'class' => 'btn btn-danger btn-modal','title' => Yii::t('app', "View History for  <font color='Blue'></font>")]);
-    
-            //   },
+
             ],
         ],
         ],
