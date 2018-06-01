@@ -20,10 +20,10 @@ $func=new Functions();
 <div class="request-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <?php
-        echo $func->GenerateStatusLegend("Legend/Status");
+        echo $func->GenerateStatusLegend("Legend/Status",false);
     ?>
     <p>
-        <button type="button" onclick="LoadModal('Create Request','/lab/request/create')" class="btn btn-success"><i class="fa fa-book-o"></i> Create Request</button>
+        <button type="button" onclick="LoadModal('Create Request','/lab/request/create')" class="btn btn-success"><i class="fa fa-book-o    "></i> Create Request</button>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -58,6 +58,7 @@ $func=new Functions();
                     return date('m/d/Y h:i:s A',$model->request_datetime);
                 }
             ],
+            'customer.customer_name',
             [
                 'attribute' => 'rstl_id', 
                 'label'=>'RSTL',

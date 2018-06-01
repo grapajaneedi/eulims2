@@ -11,6 +11,7 @@ namespace common\components;
 use yii\base\Component;
 use yii2mod\alert\Alert;
 use common\models\lab\Status;
+use common\models\finance\PaymentStatus;
 /**
  * Description of Functions
  *
@@ -55,14 +56,21 @@ class Functions extends Component{
         $ret=$Command->execute();
         return $ret;
     }
-    function GenerateStatusLegend($Legend){
+    function GenerateStatusLegend($Legend, $Ispayment=false){
         $StatusLegend="<fieldset>";
         $StatusLegend.="<legend>$Legend</legend>";
         $StatusLegend.="<div style='padding: 0 10px'>";
-        $Stats= Status::find()->orderBy('status')->all();
+        if($Ispayment){
+            $Stats= PaymentStatus::find()->orderBy('payment_status')->all();
+        }else{
+            $Stats= Status::find()->orderBy('status')->all();
+        }
         foreach ($Stats as $Stat){
-            
-            $StatusLegend.="<span class='badge $Stat->class legend-font' ><span class='$Stat->icon'></span> $Stat->status</span>";
+            if($Ispayment){
+                $StatusLegend.="<span class='badge $Stat->class legend-font' ><span class='$Stat->icon'></span> $Stat->payment_status</span>";
+            }else{
+                $StatusLegend.="<span class='badge $Stat->class legend-font' ><span class='$Stat->icon'></span> $Stat->status</span>";
+            }
         }
         $StatusLegend.="</div>";
         $StatusLegend.="</fieldset>";
