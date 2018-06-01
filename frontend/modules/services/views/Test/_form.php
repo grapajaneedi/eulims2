@@ -43,6 +43,8 @@ $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
             </div>
          </div>
 
+         
+
         <div class="row">
              <div class="col-md-6">
                  <?= $form->field($model, 'sample_type_id')->widget(Select2::classname(), [
