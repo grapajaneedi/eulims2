@@ -7,6 +7,7 @@ use common\models\system\Rstl;
 use common\models\lab\Lab;
 use common\models\lab\Request;
 use common\components\Functions;
+use common\models\lab\Customer;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\RequestSearch */
@@ -58,7 +59,22 @@ $func=new Functions();
                     return date('m/d/Y h:i:s A',$model->request_datetime);
                 }
             ],
-            'customer.customer_name',
+            [
+                'attribute' => 'customer_id', 
+                'label'=>'Customer',
+                'vAlign' => 'middle',
+                'width' => '180px',
+                'value' => function ($model, $key, $index, $widget) { 
+                    return $model->customer->customer_name;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(Customer::find()->orderBy('customer_name')->asArray()->all(), 'customer_id', 'customer_name'), 
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Select RSTL'],
+                'format' => 'raw'
+            ],      
             [
                 'attribute' => 'rstl_id', 
                 'label'=>'RSTL',

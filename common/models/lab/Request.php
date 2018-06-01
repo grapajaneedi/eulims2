@@ -44,6 +44,7 @@ use common\models\system\Rstl;
  */
 class Request extends \yii\db\ActiveRecord
 {
+    public $customer_name;
     /**
      * {@inheritdoc}
      */
@@ -69,7 +70,8 @@ class Request extends \yii\db\ActiveRecord
             [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
             [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id'], 'integer'],
             [['discount', 'total'], 'number'],
-            [['report_due'], 'safe'],
+            [['report_due','customer_name'], 'safe'],
+            [['customer_name'],'string','max'=>200],
             [['request_ref_num', 'conforme', 'receivedBy'], 'string', 'max' => 50],
             [['request_ref_num'], 'unique'],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
@@ -108,6 +110,7 @@ class Request extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'posted' => 'Posted',
             'status_id' => 'Status ID',
+            'customer_name'=>'Customer Name'
         ];
     }
 
