@@ -6,6 +6,7 @@ use \yii\helpers\ArrayHelper;
 use common\models\system\Rstl;
 use common\models\lab\Lab;
 use common\models\lab\Request;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\RequestSearch */
@@ -14,12 +15,15 @@ use common\models\lab\Request;
 $this->title = 'Requests';
 $this->params['breadcrumbs'][] = ['label' => 'Lab', 'url' => ['/lab']];
 $this->params['breadcrumbs'][] = $this->title;
-
+$func=new Functions();
 ?>
 <div class="request-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php
+        echo $func->GenerateStatusLegend("Legend/Status");
+    ?>
     <p>
-        <?= Html::a('Create Request', ['create'], ['class' => 'btn btn-success']) ?>
+        <button type="button" onclick="LoadModal('Create Request','/lab/request/create')" class="btn btn-success"><i class="fa fa-book-o"></i> Create Request</button>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -90,22 +94,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions' => ['placeholder' => 'Select Laboratory'],
                 'format' => 'raw'
             ],
-            // 'customer_id',
-            // 'payment_type_id',
-            // 'modeofrelease_id',
-            // 'discount',
-            // 'discount_id',
-            // 'purpose_id',
-            // 'or_id',
-            // 'total',
-            // 'report_due',
-            // 'conforme',
-            // 'receivedBy',
-            // 'created_at',
-            // 'posted',
-            // 'status_id',
-
-            ['class' => 'kartik\grid\ActionColumn'],
+            [
+            //'class' => 'yii\grid\ActionColumn'
+            'class' => kartik\grid\ActionColumn::className(),
+            'template' => "{view}{update}{delete}",
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/lab/request/view?id=' . $model->request_id, 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Request")]);
+                    },
+                    'update' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/lab/request/update?id=' . $model->request_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Request")]);
+                    }
+                ],
+            ],
         ],
-    ]); ?>
+]); ?>
 </div>

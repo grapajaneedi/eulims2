@@ -14,8 +14,10 @@ use Yii;
  * @property string $amount
  * @property string $balance
  * @property int $customerwallet_id
+ * @property int $collection_id 
  *
  * @property Customerwallet $customerwallet
+ * @property Collection $collection 
  */
 class Customertransaction extends \yii\db\ActiveRecord
 {
@@ -42,10 +44,12 @@ class Customertransaction extends \yii\db\ActiveRecord
     {
         return [
             [['updated_by', 'date', 'transactiontype', 'amount', 'balance', 'customerwallet_id'], 'required'],
-            [['updated_by', 'transactiontype', 'customerwallet_id'], 'integer'],
+            [['updated_by', 'transactiontype', 'customerwallet_id', 'collection_id'], 'integer'],
             [['date'], 'safe'],
             [['amount', 'balance'], 'number'],
+            [['collection_id'], 'unique'], 
             [['customerwallet_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customerwallet::className(), 'targetAttribute' => ['customerwallet_id' => 'customerwallet_id']],
+            [['collection_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collection::className(), 'targetAttribute' => ['collection_id' => 'collection_id']],
         ];
     }
 
@@ -62,6 +66,7 @@ class Customertransaction extends \yii\db\ActiveRecord
             'amount' => 'Amount',
             'balance' => 'Balance',
             'customerwallet_id' => 'Customerwallet ID',
+            'collection_id' => 'Collection ID', 
         ];
     }
 
@@ -72,4 +77,11 @@ class Customertransaction extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Customerwallet::className(), ['customerwallet_id' => 'customerwallet_id']);
     }
+    /** 
+    * @return \yii\db\ActiveQuery 
+    */ 
+    public function getCollection() 
+    { 
+        return $this->hasOne(Collection::className(), ['collection_id' => 'collection_id']); 
+    } 
 }

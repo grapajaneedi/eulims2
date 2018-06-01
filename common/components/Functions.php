@@ -10,6 +10,7 @@ namespace common\components;
 
 use yii\base\Component;
 use yii2mod\alert\Alert;
+use common\models\lab\Status;
 /**
  * Description of Functions
  *
@@ -54,8 +55,21 @@ class Functions extends Component{
         $ret=$Command->execute();
         return $ret;
     }
-	
-	function CrudAlert($title="Saved Successfully",$type="SUCCESS",$showclose=false,$showcancel=false) {
+    function GenerateStatusLegend($Legend){
+        $StatusLegend="<fieldset>";
+        $StatusLegend.="<legend>$Legend</legend>";
+        $StatusLegend.="<div style='padding: 0 10px'>";
+        $Stats= Status::find()->orderBy('status')->all();
+        foreach ($Stats as $Stat){
+            
+            $StatusLegend.="<span class='badge $Stat->class legend-font' ><span class='$Stat->icon'></span> $Stat->status</span>";
+        }
+        $StatusLegend.="</div>";
+        $StatusLegend.="</fieldset>";
+        return $StatusLegend;
+    }
+    
+    function CrudAlert($title="Saved Successfully",$type="SUCCESS",$showclose=false,$showcancel=false) {
         switch($type) {
             case "SUCCESS":
                 $dialog = Alert::TYPE_SUCCESS;

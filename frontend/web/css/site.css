@@ -172,8 +172,11 @@ fieldset>legend {
     padding: 0 10px;
     border-bottom: none;
     margin-bottom: 0;
+    font-size: 17px
 }
-
+.legend-font{
+    font-size: 12px
+}
 
 /*.requests {
     overflow-y:auto;

@@ -15,9 +15,11 @@ use Yii;
  * @property string $amount
  * @property string $wallet_amount
  * @property string $sub_total
- * @property int $cancelled
+ * @property int $payment_status_id
  *
+ * @property Customertransaction $customertransaction 
  * @property Orderofpayment $orderofpayment
+ * @property PaymentStatus $paymentStatus
  * @property Receipt[] $receipts
  */
 class Collection extends \yii\db\ActiveRecord
@@ -44,12 +46,14 @@ class Collection extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'orderofpayment_id', 'nature', 'amount'], 'required'],
-            [['rstl_id', 'orderofpayment_id', 'referral_id', 'cancelled'], 'integer'],
+            [['rstl_id', 'nature'], 'required'],
+            [['rstl_id', 'orderofpayment_id', 'referral_id', 'payment_status_id'], 'integer'],
             [['amount', 'wallet_amount', 'sub_total'], 'number'],
             [['nature'], 'string', 'max' => 50],
             [['rstl_id'], 'unique'],
+            [['orderofpayment_id'], 'unique'],
             [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orderofpayment::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
+            [['payment_status_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentStatus::className(), 'targetAttribute' => ['payment_status_id' => 'payment_status_id']],
         ];
     }
 
@@ -67,7 +71,7 @@ class Collection extends \yii\db\ActiveRecord
             'amount' => 'Amount',
             'wallet_amount' => 'Wallet Amount',
             'sub_total' => 'Sub Total',
-            'cancelled' => 'Cancelled',
+            'payment_status_id' => 'Payment Status ID',
         ];
     }
 
@@ -82,8 +86,23 @@ class Collection extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getPaymentStatus()
+    {
+        return $this->hasOne(PaymentStatus::className(), ['payment_status_id' => 'payment_status_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getReceipts()
     {
         return $this->hasMany(Receipt::className(), ['collection_id' => 'collection_id']);
     }
+    /**
+     * @return \yii\db\ActiveQuery
+    */
+    public function getCustomertransaction() {
+        return $this->hasOne(Customertransaction::className(), ['collection_id' => 'collection_id']);
+    }
+
 }
