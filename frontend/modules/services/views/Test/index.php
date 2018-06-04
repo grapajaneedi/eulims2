@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use kartik\widgets\DatePicker;
 use kartik\widgets\DateTimePicker;
@@ -65,7 +65,13 @@ $this->registerJsFile("/js/services/services.js");
                 },
                 'workflow'=>function ($url, $model) {
                     $t = '/services/workflow/create?test_id='.$model->test_id;
-                    return Html::button('<span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-file"></span>', ['value'=>$t, 'class' => 'btn btn-success btn-modal','name' => Yii::t('app', "Workflow"),'title' => Yii::t('app', "Create Workflow")]);
+
+                    if($model->workflow){
+                        $t = '/services/workflow/view?id='.$model->workflow->workflow_id;
+                        return Html::button('<span class="glyphicon glyphicon-search"></span><span class="glyphicon glyphicon-file"></span>', ['value'=>$t, 'class' => 'btn btn-danger btn-modal','name' => Yii::t('app', "Workflow"),'title' => Yii::t('app', "View  Workflow")]);
+                    }
+                    else
+                        return Html::button('<span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-file"></span>', ['value'=>$t, 'class' => 'btn btn-danger btn-modal','name' => Yii::t('app', "Workflow"),'title' => Yii::t('app', "Create Workflow")]);
                 },
 
             ],
