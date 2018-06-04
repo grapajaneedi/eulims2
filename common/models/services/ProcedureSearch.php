@@ -5,7 +5,7 @@ namespace common\models\services;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\lab\Procedure;
+use common\models\services\Procedure;
 
 /**
  * ProcedureSearch represents the model behind the search form of `common\models\lab\Procedure`.

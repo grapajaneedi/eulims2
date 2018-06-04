@@ -27,6 +27,7 @@ use common\components\Functions;
  * @property int $created_at
  * @property int $posted
  * @property int $status_id
+ * @property int $selected 
  *
  * @property Analysis[] $analyses
  * @property Cancelledrequest[] $cancelledrequests
@@ -69,7 +70,7 @@ class Request extends \yii\db\ActiveRecord
     {
         return [
             [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
-            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id'], 'integer'],
+            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id','selected'], 'integer'],
             [['discount', 'total'], 'number'],
             [['report_due','customer_name'], 'safe'],
             [['customer_name'],'string','max'=>200],
@@ -111,7 +112,8 @@ class Request extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'posted' => 'Posted',
             'status_id' => 'Status ID',
-            'customer_name'=>'Customer Name'
+            'customer_name'=>'Customer Name',
+            'selected' => 'Selected',
         ];
     }
 

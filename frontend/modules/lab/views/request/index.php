@@ -91,7 +91,7 @@ $func=new Functions();
                 'hAlign'=>'center',
                 'format'=>'raw',
                 'value'=>function($model){
-                    return "<button style='width: 140px' class='btn ".$model->status->class."'>".$model->status->status."</button>";
+                    return "<button class='btn ".$model->status->class." btn-block'>".$model->status->status."</button>";
                 }
             ],
             [
@@ -100,9 +100,9 @@ $func=new Functions();
                 'format'=>'raw',
                 'value'=>function($model){
                     if($model->testreports){
-                        return "<button style='width: 140px' class='btn btn-success'>View</button>";
+                        return "<button class='btn btn-success btn-block'>View</button>";
                     }else{
-                        return "<button style='width: 140px' class='btn btn-default'>None</button>";
+                        return "<button class='btn btn-default btn-block'>None</button>";
                     }
                     
                 }
@@ -114,9 +114,9 @@ $func=new Functions();
                 'value'=>function($model){
                     $Obj=$model->getPaymentStatusDetails($model->request_id);
                     if($Obj){
-                       return "<button style='width: 140px' class='btn ".$Obj[0]['class']."'>".$Obj[0]['payment_status']."</button>"; 
+                       return "<button class='btn ".$Obj[0]['class']." btn-block'>".$Obj[0]['payment_status']."</button>"; 
                     }else{
-                       return "<button style='width: 140px' class='btn btn-primary'>Unpaid</button>"; 
+                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
                     }
                    //
                 }
