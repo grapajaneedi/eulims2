@@ -36,20 +36,27 @@ Modal::end();*/
         <?php //= Html::a('Create Sample', ['create'], ['class' => 'btn btn-success']) ?>
         <?php //= Html::button('Create Sample', ['onClick'=>"LoadModal('Create Sample',array('/lab/sample/create','id'))", 'class' => 'btn btn-success','id' => 'modalButton']) ?>
         
-        <?= Html::button('Create Sample', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Create Sample', 'class' => 'btn btn-success','id' => 'modalBtn']); ?>
+        <?php //echo Html::button('Create Sample', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Create Sample', 'class' => 'btn btn-success','id' => 'modalBtn']); ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            //['class' => 'yii\grid\SerialColumn'],
 
-            'sample_id',
+            //'sample_id',
             //'rstl_id',
             //'pstcsample_id',
             //'package_id',
             //'sample_type_id',
+            [
+                'attribute' => 'request_id',
+                //'label' => 'Request Code',
+                'format' => 'raw',
+                'value' => function($data){ return $data->request->request_ref_num;},
+                'group'=>true,  // enable grouping
+            ],
             [
                 'attribute' => 'sample_type_id',
                 //'label' => 'Sample type',
@@ -59,21 +66,23 @@ Modal::end();*/
             ],
             'sample_code',
             'samplename',
-            'description:ntext',
+            //'description:ntext',
+            [
+                'attribute'=>'description',
+                'format' => 'raw',
+                //'enableSorting' => false,
+                'contentOptions' => [
+                    'style'=>'max-width:40%; overflow: auto; white-space: normal; word-wrap: break-word;'
+                ],
+            ],
             // 'sampling_date',
             // 'remarks',
             //'request_id',
-            [
-                'attribute' => 'request_id',
-                //'label' => 'Request Code',
-                'format' => 'raw',
-                'value' => function($data){ return $data->request->request_ref_num;},
-            ],
             // 'sample_month',
             // 'sample_year',
             // 'active',
             //['class' => 'yii\grid\ActionColumn'],
-            [
+            /*[
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update} {delete}',
                 'buttons' => [
@@ -90,7 +99,7 @@ Modal::end();*/
                             }
                         },
                 ],
-            ],
+            ],*/
         ],
     ]); ?>
         </div>
