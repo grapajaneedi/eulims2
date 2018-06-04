@@ -72,7 +72,7 @@ class TestController extends Controller
             $session = Yii::$app->session;
             $session->set('savepopup',"executed");
             return $this->redirect('index');
-        } 
+        }
             
        if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [

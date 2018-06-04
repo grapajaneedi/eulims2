@@ -28,7 +28,7 @@ $model->test_id=$test_id;
              <?= $form->field($model, 'test_id')->widget(Select2::classname(), [
                 'data' => $TestList,
                 'language' => 'en',
-                'options' => ['placeholder' => 'Select Test','disabled'=>true],
+                'options' => ['placeholder' => 'Select Test'],
                 'pluginOptions' => [
                 ],
              ])->label("Test"); ?>
@@ -53,11 +53,7 @@ echo '<div class="col-sm-6">';
                 'connected'=>true,
             ],
             'hideInput' => false,
-            'items' => [
-                ['content' => 'Item # 1'],
-                ['content' => 'Item # 2'],
-                ['content' => 'Item # 3'],
-            ],
+            'items' => [],
             'options' => ['class'=>'form-control', 'readonly'=>true]
         ]);
 
@@ -67,13 +63,7 @@ echo '<div class="col-sm-6">';
 echo '<strong>Procedures</strong>';
 echo SortableInput::widget([
     'name'=>'kv-conn-2',
-    'items' => [
-        10 => ['content' => 'Item # 10'],
-        20 => ['content' => 'Item # 20'],
-        30 => ['content' => 'Item # 30'],
-        40 => ['content' => 'Item # 40'],
-        50 => ['content' => 'Item # 50'],
-    ],
+    'items' => $items,
     'hideInput' => false,
     'sortableOptions' => [
         'itemOptions'=>['class'=>'alert alert-warning'],
@@ -98,7 +88,7 @@ echo Html::resetButton('Reset Form', ['class'=>'btn btn-default']);
 </div>
 
 <script type="text/javascript">
-    $('#workflow-test_id').select2({
-        disabled: true
-    });
+    // $('#workflow-test_id').select2({
+    //     disabled: true
+    // });
 </script>

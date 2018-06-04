@@ -3,7 +3,7 @@
 namespace common\models\services;
 
 use Yii;
-
+use common\models\services\Test;
 /**
  * This is the model class for table "tbl_workflow".
  *
@@ -11,6 +11,8 @@ use Yii;
  * @property int $test_id
  * @property string $method
  * @property string $workflow
+
+ * @property Test $test
  */
 class Workflow extends \yii\db\ActiveRecord
 {
@@ -36,7 +38,7 @@ class Workflow extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['test_id', 'method', 'workflow'], 'required'],
+           [['test_id', 'method', 'workflow'], 'required'],
             [['test_id'], 'integer'],
             [['method'], 'string', 'max' => 40],
             [['workflow'], 'string', 'max' => 100],
@@ -54,5 +56,13 @@ class Workflow extends \yii\db\ActiveRecord
             'method' => 'Method',
             'workflow' => 'Workflow',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTest()
+    {
+        return $this->hasOne(Test::className(), ['test_id' => 'test_id']);
     }
 }
