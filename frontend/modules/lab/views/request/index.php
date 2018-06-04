@@ -76,40 +76,50 @@ $func=new Functions();
                 'format' => 'raw'
             ],      
             [
-                'attribute' => 'rstl_id', 
-                'label'=>'RSTL',
-                'vAlign' => 'middle',
-                'width' => '180px',
-                'value' => function ($model, $key, $index, $widget) { 
-                    return Html::a($model->rstl->name,  
-            '#', 
-            ['title' => 'View author detail', 'onclick' => 'alert("This will open the author page.\n\nDisabled for this demo!")']);
-                },
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(Rstl::find()->orderBy('region_id')->asArray()->all(), 'rstl_id', 'name'), 
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['placeholder' => 'Select RSTL'],
-                'format' => 'raw'
+                'label'=>'Total',
+                'attribute'=>'total',
+                'hAlign'=>'right',
+                'format' => ['decimal', 2],
             ],
             [
-                'attribute' => 'lab_id', 
-                'label'=>'Laboratory',
-                'vAlign' => 'middle',
-                'width' => '180px',
-                'value' => function ($model, $key, $index, $widget) { 
-                    return Html::a($model->lab->labname,  
-            '#', 
-            ['title' => 'View author detail', 'onclick' => 'alert("This will open the author page.\n\nDisabled for this demo!")']);
-                },
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(Lab::find()->orderBy('labname')->asArray()->all(), 'lab_id', 'labname'), 
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['placeholder' => 'Select Laboratory'],
-                'format' => 'raw'
+                'label'=>'Report Due',
+                'attribute'=>'report_due'
+            ],
+            [
+                'label'=>'Analyses Status',
+                'attribute'=>'status_id',
+                'hAlign'=>'center',
+                'format'=>'raw',
+                'value'=>function($model){
+                    return "<button style='width: 140px' class='btn ".$model->status->class."'>".$model->status->status."</button>";
+                }
+            ],
+            [
+                'label'=>'Report Status',
+                'hAlign'=>'center',
+                'format'=>'raw',
+                'value'=>function($model){
+                    if($model->testreports){
+                        return "<button style='width: 140px' class='btn btn-success'>View</button>";
+                    }else{
+                        return "<button style='width: 140px' class='btn btn-default'>None</button>";
+                    }
+                    
+                }
+            ],
+            [
+                'label'=>'Payment Status',
+                'hAlign'=>'center',
+                'format'=>'raw',
+                'value'=>function($model){
+                    $Obj=$model->getPaymentStatusDetails($model->request_id);
+                    if($Obj){
+                       return "<button style='width: 140px' class='btn ".$Obj[0]['class']."'>".$Obj[0]['payment_status']."</button>"; 
+                    }else{
+                       return "<button style='width: 140px' class='btn btn-primary'>Unpaid</button>"; 
+                    }
+                   //
+                }
             ],
             [
             //'class' => 'yii\grid\ActionColumn'

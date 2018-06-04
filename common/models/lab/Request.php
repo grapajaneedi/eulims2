@@ -4,6 +4,7 @@ namespace common\models\lab;
 
 use Yii;
 use common\models\system\Rstl;
+use common\components\Functions;
 /**
  * This is the model class for table "tbl_request".
  *
@@ -225,5 +226,11 @@ class Request extends \yii\db\ActiveRecord
         return $this->hasOne(Rstl::className(), ['rstl_id' => 'request_id']);
     }
 
-    
+    public function getPaymentStatusDetails($RequestID){
+        $func=new Functions();
+        $Connection= Yii::$app->financedb;
+        $rows=$func->ExecuteStoredProcedureRows("spGetPaymentStatusDetails(:mRequestID)", [':mRequestID'=> $RequestID], $Connection);
+        //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        return $rows;
+    }
 }
