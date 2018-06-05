@@ -5,12 +5,12 @@ namespace common\models\lab;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\lab\Procedure;
+use common\models\lab\SampleName;
 
 /**
- * ProcedureSearch represents the model behind the search form of `common\models\lab\Procedure`.
+ * SampleNameSearch represents the model behind the search form of `common\models\lab\SampleName`.
  */
-class ProcedureSearch extends Procedure
+class SampleNameSearch extends SampleName
 {
     /**
      * {@inheritdoc}
@@ -18,8 +18,8 @@ class ProcedureSearch extends Procedure
     public function rules()
     {
         return [
-            [['procedure_id'], 'integer'],
-            [['procedure_name', 'procedure_code'], 'safe'],
+            [['sample_name_id'], 'integer'],
+            [['sample_name', 'description'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class ProcedureSearch extends Procedure
      */
     public function search($params)
     {
-        $query = Procedure::find();
+        $query = SampleName::find();
 
         // add conditions that should always apply here
 
@@ -59,11 +59,11 @@ class ProcedureSearch extends Procedure
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'procedure_id' => $this->procedure_id,
+            'sample_name_id' => $this->sample_name_id,
         ]);
 
-        $query->andFilterWhere(['like', 'procedure_name', $this->procedure_name])
-            ->andFilterWhere(['like', 'procedure_code', $this->procedure_code]);
+        $query->andFilterWhere(['like', 'sample_name', $this->sample_name])
+            ->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;
     }

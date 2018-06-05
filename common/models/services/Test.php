@@ -4,6 +4,7 @@ namespace common\models\services;
 
 use Yii;
 use common\models\lab\Lab; 
+use common\models\services\Workflow;
 
 /**
  * This is the model class for table "tbl_test".
@@ -23,6 +24,7 @@ use common\models\lab\Lab;
  * @property Lab $lab
  * @property Testcategory $testcategory
  * @property Sampletype $sampleType
+ * @property Workflow $workflow
  */
 class Test extends \yii\db\ActiveRecord
 {
@@ -127,5 +129,13 @@ class Test extends \yii\db\ActiveRecord
     public function getSampleType()
     {
         return $this->hasOne(Sampletype::className(), ['sample_type_id' => 'sample_type_id']);
+    }
+
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWorkflow()
+    {
+        return $this->hasOne(Workflow::className(), ['test_id' => 'test_id']);
     }
 }

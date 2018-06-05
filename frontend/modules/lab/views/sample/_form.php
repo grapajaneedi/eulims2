@@ -87,7 +87,7 @@ if(count($sampletype) > 0){
             echo $startDiv;
             //echo $form->field($model, 'sampling_date')->textInput();
             echo $form->field($model, 'sampling_date')->widget(DatePicker::classname(), [
-                'options' => ['placeholder' => 'Enter sampling date ...'],
+                'options' => ['placeholder' => 'Enter sampling date ...','autocomplete'=>'off'],
                 'value' => $model->sampling_date ? date('m/d/Y', strtotime($model->sampling_date)) : date('m/d/Y'),
                 'pluginOptions' => [
                     'autoclose'=>true,

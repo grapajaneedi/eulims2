@@ -4,6 +4,9 @@ namespace common\models\lab;
 
 use Yii;
 use common\models\system\Rstl;
+use common\components\Functions;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 /**
  * This is the model class for table "tbl_request".
  *
@@ -26,6 +29,7 @@ use common\models\system\Rstl;
  * @property int $created_at
  * @property int $posted
  * @property int $status_id
+ * @property int $selected 
  *
  * @property Analysis[] $analyses
  * @property Cancelledrequest[] $cancelledrequests
@@ -44,6 +48,7 @@ use common\models\system\Rstl;
  */
 class Request extends \yii\db\ActiveRecord
 {
+    public $customer_name;
     /**
      * {@inheritdoc}
      */
@@ -51,7 +56,21 @@ class Request extends \yii\db\ActiveRecord
     {
         return 'tbl_request';
     }
-
+    public function behaviors(){
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'creation_at',
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'request_datetime',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'creation_at',
+                ],
+                'value' => function() { 
+                    return date('U'); // unix timestamp 
+                },
+            ]
+        ];
+    }
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
@@ -59,7 +78,6 @@ class Request extends \yii\db\ActiveRecord
     {
         return Yii::$app->get('labdb');
     }
-
     /**
      * {@inheritdoc}
      */
@@ -67,9 +85,10 @@ class Request extends \yii\db\ActiveRecord
     {
         return [
             [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
-            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id'], 'integer'],
+            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id','selected'], 'integer'],
             [['discount', 'total'], 'number'],
-            [['report_due'], 'safe'],
+            [['report_due','customer_name'], 'safe'],
+            [['customer_name'],'string','max'=>200],
             [['request_ref_num', 'conforme', 'receivedBy'], 'string', 'max' => 50],
             [['request_ref_num'], 'unique'],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
@@ -108,6 +127,8 @@ class Request extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'posted' => 'Posted',
             'status_id' => 'Status ID',
+            'customer_name'=>'Customer Name',
+            'selected' => 'Selected',
         ];
     }
 
@@ -222,5 +243,11 @@ class Request extends \yii\db\ActiveRecord
         return $this->hasOne(Rstl::className(), ['rstl_id' => 'request_id']);
     }
 
-    
+    public function getPaymentStatusDetails($RequestID){
+        $func=new Functions();
+        $Connection= Yii::$app->financedb;
+        $rows=$func->ExecuteStoredProcedureRows("spGetPaymentStatusDetails(:mRequestID)", [':mRequestID'=> $RequestID], $Connection);
+        //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        return $rows;
+    }
 }

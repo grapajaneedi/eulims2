@@ -3,15 +3,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/config/params.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/backend/views/profile/view.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/views/profile/view.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/lab/Request.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/services/controllers/ProcedureController.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/_form.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/services/views/procedure/view.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/services/ProcedureSearch.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/create.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/services/views/procedure/index.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/services/views/procedure/_form.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/index.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/services/views/procedure/create.php</file>
         </group>
         <group>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/lab/Request.php</file>
             <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/_form.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/update.php</file>
             <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/controllers/RequestController.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/index.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/common/config/db.php</file>
+            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/create.php</file>
         </group>
     </open-files>
 </project-private>

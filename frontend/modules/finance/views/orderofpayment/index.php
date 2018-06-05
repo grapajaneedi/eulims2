@@ -30,7 +30,11 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     <fieldset>
     <legend>Legend/Status</legend>
     <div style="padding: 0 10px">
-        <span class="badge" style="background: #41f4f1;"><span class="glyphicon glyphicon-check"></span> <font color="#006600">Paid</font></span>
+        <span class="badge btn-primary"><span class="glyphicon glyphicon-unchecked"></span>Unpaid</span>
+    
+        <span class="badge btn-success"><span class="glyphicon glyphicon-check"></span>Paid</span>
+        <span class="badge btn-warning">Partial</span>
+        <span class="badge btn-danger">Cancelled</span>
     </div>
     </fieldset>
     
@@ -129,7 +133,11 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
             // 'amount',
             // 'purpose',
             // 'created_receipt',
-
+            [
+               //'attribute' => 'created_receipt',
+               'label'=>'Status', 
+                
+            ],
             [
               //'class' => 'yii\grid\ActionColumn'
                 'class' => kartik\grid\ActionColumn::className(),

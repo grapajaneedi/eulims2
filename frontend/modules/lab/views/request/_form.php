@@ -6,6 +6,9 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Lab;
 use kartik\datetime\DateTimePicker;
+use common\models\lab\Customer;
+use yii\web\JsExpression;
+use kartik\datecontrol\DateControl;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
@@ -34,17 +37,40 @@ use kartik\datetime\DateTimePicker;
 	'model' => $model,
 	'attribute' => 'request_datetime',
 	'options' => ['placeholder' => 'Enter Date'],
-        'value'=>'05/31/2018 3:26 PM',
+        //'value'=>'06/05/2018 9:15 AM',
 	'pluginOptions' => [
             'autoclose' => true,
-            'format' => 'mm/dd/yyyy g:ii P'
+            'format' => 'mm/dd/yyyy h:i P'
 	]
     ]); ?>
     </div>
 </div>
 <div class="row">
     <div class="col-md-6">
-    <?= $form->field($model, 'customer_id')->textInput()->label('Customer') ?>
+    <?php
+    $url = \yii\helpers\Url::to(['customerlist']);
+    // Get the initial city description
+    $cust_name = empty($model->customer) ? '' : Customer::findOne($model->customer)->customer_name;
+    echo $form->field($model, 'customer_id')->widget(Select2::classname(), [
+        'initValueText' => $cust_name, // set the initial display text
+        'options' => ['placeholder' => 'Search for a customer ...'],
+        'pluginOptions' => [
+            'allowClear' => true,
+            'minimumInputLength' => 3,
+            'language' => [
+                'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+            ],
+            'ajax' => [
+                'url' => $url,
+                'dataType' => 'json',
+                'data' => new JsExpression('function(params) { return {q:params.term,id:1}; }')
+            ],
+            'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+            'templateResult' => new JsExpression('function(Customer) { return Customer.text; }'),
+            'templateSelection' => new JsExpression('function (Customer) { return Customer.text; }'),
+        ],
+    ])->label('Customer');
+    ?>
     </div>
     <div class="col-md-6">
         <label class="control-label">Payment Type</label>

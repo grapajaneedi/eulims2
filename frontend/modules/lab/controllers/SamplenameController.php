@@ -1,18 +1,18 @@
 <?php
 
-namespace frontend\modules\services\controllers;
+namespace frontend\modules\lab\controllers;
 
 use Yii;
-use common\models\services\Procedure;
-use common\models\services\ProcedureSearch;
+use common\models\lab\SampleName;
+use common\models\lab\SampleNameSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProcedureController implements the CRUD actions for Procedure model.
+ * SamplenameController implements the CRUD actions for SampleName model.
  */
-class ProcedureController extends Controller
+class SamplenameController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,12 +30,12 @@ class ProcedureController extends Controller
     }
 
     /**
-     * Lists all Procedure models.
+     * Lists all SampleName models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ProcedureSearch();
+        $searchModel = new SampleNameSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class ProcedureController extends Controller
     }
 
     /**
-     * Displays a single Procedure model.
+     * Displays a single SampleName model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -58,16 +58,16 @@ class ProcedureController extends Controller
     }
 
     /**
-     * Creates a new Procedure model.
+     * Creates a new SampleName model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Procedure();
+        $model = new SampleName();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->procedure_id]);
+            return $this->redirect(['view', 'id' => $model->sample_name_id]);
         }
 
         return $this->render('create', [
@@ -76,7 +76,7 @@ class ProcedureController extends Controller
     }
 
     /**
-     * Updates an existing Procedure model.
+     * Updates an existing SampleName model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -87,7 +87,7 @@ class ProcedureController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->procedure_id]);
+            return $this->redirect(['view', 'id' => $model->sample_name_id]);
         }
 
         return $this->render('update', [
@@ -96,7 +96,7 @@ class ProcedureController extends Controller
     }
 
     /**
-     * Deletes an existing Procedure model.
+     * Deletes an existing SampleName model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -110,15 +110,15 @@ class ProcedureController extends Controller
     }
 
     /**
-     * Finds the Procedure model based on its primary key value.
+     * Finds the SampleName model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Procedure the loaded model
+     * @return SampleName the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Procedure::findOne($id)) !== null) {
+        if (($model = SampleName::findOne($id)) !== null) {
             return $model;
         }
 
