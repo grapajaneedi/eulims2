@@ -93,8 +93,7 @@ $i=0;
     'pjax'=>true,
         'pjaxSettings'=>[
         'neverTimeout'=>true,
-        'beforeGrid'=>'My fancy content before.',
-        'afterGrid'=>'My fancy content after.',
+        
     ]
          
        //  'rowOptions'=>
@@ -181,6 +180,7 @@ $script = <<< JS
                      {
                          if(parseInt(tmpTable.rows[i].cells[j].innerText)>0)
                          {
+                            tmpTable.rows[i].cells[j].innerText= tmpTable.rows[i].cells[j].innerText.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                             tmpTable.rows[i].cells[j].style.textAlign="right";
                             tmpTable.rows[i].cells[j].style.color = "#3c8dbc";
                             tmpTable.rows[i].cells[j].style.fontWeight = "bold";
