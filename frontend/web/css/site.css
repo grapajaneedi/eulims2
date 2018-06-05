@@ -185,3 +185,18 @@ fieldset>legend {
 .modal-open {
     overflow: hidden!important;
 }*/
+.table-scroll {
+    background-color: #DCDCDC;
+    height: 350px !important;
+    transition: 0.5s;
+    overflow-y: scroll;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    position: relative;
+
+}
+
+.table-scroll.max-scroll {
+    height: 600px!important;
+    transition: 0.5s;
+}
