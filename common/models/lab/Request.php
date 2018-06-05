@@ -5,6 +5,8 @@ namespace common\models\lab;
 use Yii;
 use common\models\system\Rstl;
 use common\components\Functions;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 /**
  * This is the model class for table "tbl_request".
  *
@@ -54,7 +56,21 @@ class Request extends \yii\db\ActiveRecord
     {
         return 'tbl_request';
     }
-
+    public function behaviors(){
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'creation_at',
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'request_datetime',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'creation_at',
+                ],
+                'value' => function() { 
+                    return date('U'); // unix timestamp 
+                },
+            ]
+        ];
+    }
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
@@ -62,7 +78,6 @@ class Request extends \yii\db\ActiveRecord
     {
         return Yii::$app->get('labdb');
     }
-
     /**
      * {@inheritdoc}
      */

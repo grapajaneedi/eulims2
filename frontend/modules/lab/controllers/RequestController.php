@@ -10,6 +10,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use common\models\lab\Sample;
+use yii\db\Query;
+use common\models\lab\Customer;
+use DateTime;
 
 /**
  * RequestController implements the CRUD actions for Request model.
@@ -72,6 +75,24 @@ class RequestController extends Controller
             'sampleDataProvider' => $sampleDataProvider,
         ]);
     }
+    public function actionCustomerlist($q = null, $id = null) {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = ['results' => ['customer_id' => '', 'text' => '']];
+        if (!is_null($q)) {
+            $query = new Query;
+            $query->select('customer_id, customer_name AS text')
+                    ->from('tbl_customer')
+                    ->where(['like', 'customer_name', $q])
+                    ->limit(20);
+            $command = $query->createCommand();
+            $command->db= \Yii::$app->labdb;
+            $data = $command->queryAll();
+            $out['results'] = array_values($data);
+        } elseif ($id > 0) {
+            $out['results'] = ['customer_id' => $id, 'text' =>Customer::find()->where(['customer_id'=>$customer_id])->customer_name];
+        }
+        return $out;
+    }
 
     /**
      * Creates a new Request model.
@@ -85,6 +106,8 @@ class RequestController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->request_id]); ///lab/request/view?id=1
         } else {
+            $date = new DateTime();
+            $model->request_datetime=$date->getTimestamp();
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('create', [
                     'model' => $model,
