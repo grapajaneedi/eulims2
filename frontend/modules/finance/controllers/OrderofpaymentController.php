@@ -85,6 +85,8 @@ class OrderofpaymentController extends Controller
     public function actionCreate()
     {
         $model = new Orderofpayment();
+        $paymentitem = new Paymentitem();
+        $collection= new Collection();
         $searchModel = new OrderofpaymentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
@@ -94,44 +96,54 @@ class OrderofpaymentController extends Controller
         //echo "</pre>";
         
          if ($model->load(Yii::$app->request->post())) {
-                $session = Yii::$app->session;
-                $request_ids=$model->RequestIds;
-                $str_request = explode(',', $request_ids);
-                $model->rstl_id=$GLOBALS['rstl_id'];
-                $model->transactionnum= $this->Gettransactionnum();
-               
-                $model->save();
-               //Saving for Paymentitem
-                $arr_length = count($str_request); 
-                $total_amount=0;
-                for($i=0;$i<$arr_length;$i++){
-                     $request =$this->findRequest($str_request[$i]);
-                     $paymentitem = new Paymentitem();
-                     $paymentitem->rstl_id =$GLOBALS['rstl_id'];
-                     $paymentitem->request_id = $str_request[$i];
-                     $paymentitem->orderofpayment_id = $model->orderofpayment_id;
-                     $paymentitem->details =$request->request_ref_num;
-                     $paymentitem->amount = $request->total;
-                     $total_amount+=$request->total;
-                     $paymentitem->save(); 
+             $transaction = Yii::$app->financedb->beginTransaction();
+             $session = Yii::$app->session;
+             try  {
+                 
+                        $request_ids=$model->RequestIds;
+                        $str_request = explode(',', $request_ids);
+                        $model->rstl_id=$GLOBALS['rstl_id'];
+                        $model->transactionnum= $this->Gettransactionnum();
+
+                        $model->save();
+                       //Saving for Paymentitem
+                        $arr_length = count($str_request); 
+                       // $total_amount=0;
+                        for($i=0;$i<$arr_length;$i++){
+                             $request =$this->findRequest($str_request[$i]);
+                             $paymentitem = new Paymentitem();
+                             $paymentitem->rstl_id =$GLOBALS['rstl_id'];
+                             $paymentitem->request_id = $str_request[$i];
+                             $paymentitem->orderofpayment_id = $model->orderofpayment_id;
+                             $paymentitem->details =$request->request_ref_num;
+                             $paymentitem->amount = $request->total;
+                            // $total_amount+=$request->total;
+                             $paymentitem->save(); 
+                        }
+                        //----------------------//
+                        //---Saving for Collection-------
+
+                        $collection_name= $this->getCollectionname($model->collectiontype_id);
+                        $collection->nature=$collection_name['natureofcollection'];
+                        $collection->rstl_id=$GLOBALS['rstl_id'];
+                        $collection->orderofpayment_id=$model->orderofpayment_id;
+                        $collection->referral_id=0;
+                        $collection->save(false);
+                        //
+                        $transaction->commit();
+                        $session->set('savepopup',"executed");
+                         return $this->redirect(['/finance/orderofpayment']);
+                    
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                   $session->set('errorpopup',"executed");
+                   return $this->redirect(['/finance/orderofpayment']);
                 }
-                //----------------------//
-                //---Saving for Collection-------
-                $collection= new Collection();
-                $collection_name= getCollectionname($model->collectiontype_id);
-                var_dump($collection_name);
-                exit;
-                $collection->rstl_id=$GLOBALS['rstl_id'];
-                $collection->orderofpayment_id=$model->orderofpayment_id;
-                $collection->referral_id=0;
-                $collection->nature=$collection_name;
-                $collection->amount=$total_amount;
-                $collection->save();
+                
               //  var_dump($total_amount);
               //  exit;
                 //-------------------------------------------------------------//
-                $session->set('savepopup',"executed");
-                return $this->redirect(['/finance/orderofpayment']);
+               
           
         } 
         if(Yii::$app->request->isAjax){
@@ -177,7 +189,7 @@ class OrderofpaymentController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-        $dataProvider->pagination->pageSize=3;
+       // $dataProvider->pagination->pageSize=3;
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_request', ['dataProvider'=>$dataProvider,'model'=>$model]);
         }
@@ -254,33 +266,39 @@ class OrderofpaymentController extends Controller
         
      }
      
-     public function actionCalculateTotal() {
-    // if (isset($_POST['keylist'])) {
+     public function actionCalculateTotal($id) {
         $post = Yii::$app->request->post();
         $total = 0;
-      // var_dump($post);
-     //   exit;
-        
-        $str_total = explode(',', $post['keylist']);
-        $arr_length = count($str_total); 
-        for($i=0;$i<$arr_length;$i++){
-             $request =$this->findRequest($str_total[$i]);
-             $total+=$request->total;
+        if($id == '' ){
+            echo $total;
         }
-        echo $total;
-       /* echo Json::encode([
-            'status' => 'success',
-            'total' => $total
-        ]);*/
-        
-   // }
+        else{
+            $str_total = explode(',', $id);
+            $arr_length = count($str_total); 
+            for($i=0;$i<$arr_length;$i++){
+                 $request =$this->findRequest($str_total[$i]);
+                 $total+=$request->total;
+            }
+            echo $total;
+        }
      }
      
      public function getCollectionname($collectionid) {
          $collection_name=(new Query)
-            ->select(['natureofcollection'])
+            ->select('natureofcollection')
             ->from('eulims_finance.tbl_collectiontype')
-            ->where(['collectiontype_id' => $collectionid]);
+            ->where(['collectiontype_id' => $collectionid])
+            ->one();
          return $collection_name;
+     }
+     
+     public function postRequest($reqID){
+         $str_total = explode(',', $reqID);
+          $arr_length = count($str_total); 
+            for($i=0;$i<$arr_length;$i++){
+               Yii::$app->labdb->createCommand()
+             ->update('tbl_request', ['posted' => 1], 'request_id= $str_total[$i]')
+             ->execute(); 
+            }
      }
 }

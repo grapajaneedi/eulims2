@@ -56,12 +56,12 @@ class Functions extends Component{
         $ret=$Command->execute();
         return $ret;
     }
-    function GenerateStatusLegend($Legend, $Ispayment=false){
+    function GenerateStatusLegend($Legend, $Ispayment){
         $StatusLegend="<fieldset>";
         $StatusLegend.="<legend>$Legend</legend>";
         $StatusLegend.="<div style='padding: 0 10px'>";
-        if($Ispayment){
-            $Stats= PaymentStatus::find()->orderBy('payment_status')->all();
+        if($Ispayment == true){
+            $Stats= PaymentStatus::find()->orderBy('payment_status_id')->all();
         }else{
             $Stats= Status::find()->orderBy('status')->all();
         }

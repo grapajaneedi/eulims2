@@ -4,6 +4,7 @@ namespace common\models\finance;
 
 use Yii;
 use common\models\lab\Customer;
+use common\components\Functions;
 /**
  * This is the model class for table "tbl_orderofpayment".
  *
@@ -124,5 +125,13 @@ class Orderofpayment extends \yii\db\ActiveRecord
      public function getCustomer()
     {
         return $this->hasOne(Customer::className(), ['customer_id' => 'customer_id']);
+    }
+    
+     public function getCollectionStatus($OpID){
+        $func=new Functions();
+        $Connection= Yii::$app->financedb;
+        $rows=$func->ExecuteStoredProcedureRows("spGetCollectionStatus(:mOpID)", [':mOpID'=> $OpID], $Connection);
+        //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        return $rows;
     }
 }
