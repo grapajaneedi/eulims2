@@ -17,7 +17,14 @@ use common\models\lab\Purpose;
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
 /* @var $form yii\widgets\ActiveForm */
-
+$JS=<<<SCRIPT
+    $("input[name=Request[payment_type_id]]").on('change', function() {
+        if ($(this).val() == 1) {
+           alert("OK");
+        }
+    }); 
+SCRIPT;
+//$this->registerJs($JS);
 ?>
 
 <div class="request-form">
@@ -87,7 +94,9 @@ use common\models\lab\Purpose;
     <div class="col-md-6">
         <label class="control-label">Payment Type</label>
         <div class="col-md-12">
-        <?php echo $form->field($model, 'payment_type_id')->radioList(ArrayHelper::map(Paymenttype::find()->all(),'payment_type_id','type'))->label(false); ?>
+        <?php echo $form->field($model, 'payment_type_id')->radioList(
+            ArrayHelper::map(Paymenttype::find()->all(),'payment_type_id','type')
+        )->label(false); ?>
         </div>
     </div>
 </div>
