@@ -45,7 +45,7 @@ class Paymentitem extends \yii\db\ActiveRecord
             [['rstl_id', 'request_id', 'referral_id', 'orderofpayment_id', 'cancelled'], 'integer'],
             [['amount'], 'number'],
             [['details'], 'string', 'max' => 50],
-            [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orderofpayment::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
+            [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Op::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
         ];
     }
 

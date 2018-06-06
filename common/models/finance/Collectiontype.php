@@ -79,7 +79,7 @@ class Collectiontype extends \yii\db\ActiveRecord
      */
     public function getOrderofpayments()
     {
-        return $this->hasMany(Orderofpayment::className(), ['collectiontype_id' => 'collectiontype_id']);
+        return $this->hasMany(Op::className(), ['collectiontype_id' => 'collectiontype_id']);
     }
 
     /**

@@ -9,7 +9,7 @@ use kartik\widgets\DatePicker;
 use kartik\daterange\DateRangePicker;
 use yii\db\Query;
 /* @var $this yii\web\View */
-/* @var $searchModel common\models\finance\OrderofpaymentSearch */
+/* @var $searchModel common\models\finance\Op */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 use common\components\Functions;
@@ -25,7 +25,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
     <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/orderofpayment/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']); ?>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']); ?>
     </p>
     
     

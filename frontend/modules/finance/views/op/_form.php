@@ -10,7 +10,7 @@ use kartik\select2\Select2;
 use kartik\widgets\DatePicker;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\finance\Orderofpayment */
+/* @var $model common\models\finance\Op */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -22,8 +22,7 @@ use kartik\widgets\DatePicker;
     <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
      
     </div>
-    <?php echo $form->field($model, 'RequestIds')->hiddenInput()->label(false) ?>
-
+   
     <div style="padding:0px!important;">
         <div class="row">
             <div class="col-sm-6">
@@ -77,7 +76,7 @@ use kartik\widgets\DatePicker;
                             //data: {
                             //    customer_id:customer_id,
                            // },
-                            url: \"/finance/orderofpayment/getlistrequest?id=\"+$(this).val(),
+                            url: \"/finance/op/getlistrequest?id=\"+$(this).val(),
                             dataType: \"html\",
                             success: function ( response ) {
 
@@ -128,6 +127,7 @@ use kartik\widgets\DatePicker;
 
             </div>
         </div> 
+		 <?php echo $form->field($model, 'RequestIds')->hiddenInput()->label(false) ?>
         <div class="row">
             <div class="col-lg-12"> 
                 <?= $form->field($model, 'purpose')->textarea(['maxlength' => true]); ?>
@@ -137,7 +137,8 @@ use kartik\widgets\DatePicker;
 
 
         <div class="form-group pull-right">
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success mybtn' : 'btn btn-primary mybtn','disabled'=>$model->isNewRecord ? true : false]) ?>
+       
             <?php if(Yii::$app->request->isAjax){ ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             <?php } ?>
@@ -152,7 +153,7 @@ use kartik\widgets\DatePicker;
     }
 </style>
 <script type="text/javascript">
-    $('#orderofpayment-customer_id').on('change',function() {
+    $('#op-customer_id').on('change',function() {
        $(this).select2('close');
         //alert('csdfsd');
     });
