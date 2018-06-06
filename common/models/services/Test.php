@@ -3,6 +3,8 @@
 namespace common\models\services;
 
 use Yii;
+use common\models\lab\Lab; 
+use common\models\services\Workflow;
 
 /**
  * This is the model class for table "tbl_test".
@@ -10,8 +12,7 @@ use Yii;
  * @property int $test_id
  * @property int $rstl_id
  * @property string $testname
- * @property string $method
- * @property string $references
+ * @property string $payment_references
  * @property string $fee
  * @property int $duration
  * @property int $testcategory_id
@@ -23,6 +24,7 @@ use Yii;
  * @property Lab $lab
  * @property Testcategory $testcategory
  * @property Sampletype $sampleType
+ * @property Workflow $workflow
  */
 class Test extends \yii\db\ActiveRecord
 {
@@ -48,12 +50,11 @@ class Test extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'testname', 'method', 'references', 'duration', 'testcategory_id', 'sample_type_id', 'lab_id'], 'required'],
+            [['testname', 'testcategory_id', 'sample_type_id'], 'required'],
             [['rstl_id', 'duration', 'testcategory_id', 'sample_type_id', 'lab_id'], 'integer'],
             [['fee'], 'number'],
             [['testname'], 'string', 'max' => 200],
-            [['method'], 'string', 'max' => 150],
-            [['references'], 'string', 'max' => 100],
+            [['payment_references'], 'string', 'max' => 100],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
             [['testcategory_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
             [['sample_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sample_type_id' => 'sample_type_id']],
@@ -68,15 +69,26 @@ class Test extends \yii\db\ActiveRecord
         return [
             'test_id' => 'Test ID',
             'rstl_id' => 'Rstl ID',
-            'testname' => 'Testname',
-            'method' => 'Method',
-            'references' => 'References',
+            'testname' => 'Test name',
+            'payment_references' => 'References',
             'fee' => 'Fee',
             'duration' => 'Duration',
             'testcategory_id' => 'Testcategory ID',
             'sample_type_id' => 'Sample Type ID',
             'lab_id' => 'Lab ID',
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        // ...custom code here...
+        $this->rstl_id=$GLOBALS['rstl_id'];
+        $this->duration=0;
+        return true;
     }
 
     /**
@@ -117,5 +129,13 @@ class Test extends \yii\db\ActiveRecord
     public function getSampleType()
     {
         return $this->hasOne(Sampletype::className(), ['sample_type_id' => 'sample_type_id']);
+    }
+
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWorkflow()
+    {
+        return $this->hasOne(Workflow::className(), ['test_id' => 'test_id']);
     }
 }

@@ -7,8 +7,10 @@ use Yii;
 /**
  * This is the model class for table "tbl_status".
  *
- * @property integer $status_id
+ * @property int $status_id
  * @property string $status
+ * @property string $class
+ * @property string $icon
  *
  * @property Request[] $requests
  * @property Testreport[] $testreports
@@ -16,7 +18,7 @@ use Yii;
 class Status extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -32,23 +34,26 @@ class Status extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['status'], 'string', 'max' => 50],
+            [['status', 'class'], 'string', 'max' => 50],
+            [['icon'], 'string', 'max' => 100],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
             'status_id' => 'Status ID',
             'status' => 'Status',
+            'class' => 'Class',
+            'icon' => 'Icon',
         ];
     }
 

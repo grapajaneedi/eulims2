@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\models\lab\Businessnature;
@@ -13,8 +12,6 @@ use common\models\address\Barangay;
 use common\models\address\Region;
 use yii\helpers\Url;
 use kartik\widgets\DepDrop;
-
-
 /* @var $model common\models\lab\Customer */
 /* @var $form yii\widgets\ActiveForm */ 
 ?>

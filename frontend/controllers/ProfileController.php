@@ -36,7 +36,7 @@ class ProfileController extends Controller
         return [
             'uploadPhoto' => [
                 'class' => 'budyaga\cropper\actions\UploadAction',
-                'url' => 'http://admin.eulims.local/upload/user/photo',
+                'url' => '/upload/user/photo',
                 'path' => '@frontend/web/uploads/user/photo',
             ]
         ];
@@ -146,11 +146,13 @@ class ProfileController extends Controller
      */
     public function actionUpdate($id)
     {
-        Yii::$app->params['uploadPath'] = realpath(dirname(__FILE__)).'\..\..' . '\backend\web\uploads\user\photo\\';
+        Yii::$app->params['uploadPath'] = realpath(dirname(__FILE__)).'\..\web\uploads\user\photo\\';
+        $BackendEndPath = realpath(dirname(__FILE__)).'\..\..\backend\web\uploads\user\photo\\';
         $model = $this->findModel($id);
-        if(Yii::$app->user->can('access-his-profile')){
-            if($model->user_id!=Yii::$app->user->identity->user_id){
-                throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');
+        
+        if(Yii::$app->user->can('access-his-profile') && !Yii::$app->user->can('profile-full-access')){
+            if($model->user_id!=Yii::$app->user->id){
+                throw new NotFoundHttpException('Error: The requested profile does not exist or you are not permitted to view this profile.');
             }
         }
         $OldAvatar=$model->avatar;
@@ -161,10 +163,12 @@ class ProfileController extends Controller
                 if($image){
                     // store the source file name
                     $model->image_url = $image->name;
-                    $ext = end((explode(".", $image->name)));
+                    $imagename=explode(".", $image->name);
+                    $ext = $imagename[1];
                     // generate a unique file name
                     $model->avatar = hash('haval160,4',$model->user_id).".{$ext}";
                     $path = Yii::$app->params['uploadPath'] . $model->avatar;
+                    $BackendEndPath=$BackendEndPath . $model->avatar;
                     $changeImage=true;
                 }
                 $NewImageUrl=$model->image_url;
@@ -175,10 +179,11 @@ class ProfileController extends Controller
             if($model->save()){
                 if($changeImage){
                     $image->saveAs($path);
+                    copy($path, $BackendEndPath);
                 }elseif($OldImageUrl!='' && $NewImageUrl==''){
                     //Unlink Image
                     //unlink(Yii::$app->params['uploadPath'].$OldAvatar);
-                    $this->actionDeleteimage($OldAvatar);
+                    $this->actionDeleteimage( Yii::$app->params['uploadPath'] . $OldAvatar);
                 }
                 //return "Saved...";
                 return $this->redirect(['/profile']);
@@ -225,7 +230,7 @@ class ProfileController extends Controller
         if (($model = Profile::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');
+            throw new NotFoundHttpException('Error: The requested profile does not exist or you are not permitted to view this profile.');
         }
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use common\models\lab\Lab;
@@ -14,8 +13,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Tests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="test-view">
-
-
   
     <?= DetailView::widget([
         'model' => $model,

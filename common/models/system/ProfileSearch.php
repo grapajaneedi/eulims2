@@ -57,21 +57,21 @@ class ProfileSearch extends Profile
             // $query->where('0=1');
             return $dataProvider;
         }
-
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'user_id' => $this->user_id,
-            'rstl_id' => $this->rstl_id,
-            'lab_id' => $this->lab_id,
-        ]);
-        if(Yii::$app->user->can('access-his-profile')){
-            $query->andFilterWhere([
-                'user_id' => Yii::$app->user->identity->user_id,
+         $query->andFilterWhere([
+                'user_id' => $this->user_id,
+                'rstl_id' => $this->rstl_id,
+                'lab_id' => $this->lab_id,
             ]);
+        if(Yii::$app->user->can('profile-full-access')){
+            //
+        }elseif(Yii::$app->user->can('access-his-profile')){
+            $query->andFilterWhere(['user_id' => Yii::$app->user->id]); 
+        }else{
+            $query->andFilterWhere(['user_id' => -1]); 
         }
+       
         $query->andFilterWhere(['like', 'lastname', $this->lastname])
             ->andFilterWhere(['like', 'firstname', $this->firstname])
-            ->andFilterWhere(['like','user.username', $this->username])
             ->andFilterWhere(['like','designation', $this->designation])
             ->andFilterWhere(['like','contact_numbers', $this->contact_numbers])
             ->andFilterWhere(['like', 'middleinitial', $this->middleinitial]);

@@ -5,6 +5,7 @@ namespace backend\modules\system\controllers;
 use Yii;
 use common\models\lab\Lab;
 use common\models\lab\LabSearch;
+use common\models\lab\LabManagerSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -37,10 +38,10 @@ class ConfigurationsController extends Controller
     {
         $searchModel = new LabSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider
         ]);
     }
 
@@ -61,7 +62,7 @@ class ConfigurationsController extends Controller
             ]); 
         }
     }
-
+    
     /**
      * Creates a new Lab model.
      * If creation is successful, the browser will be redirected to the 'view' page.

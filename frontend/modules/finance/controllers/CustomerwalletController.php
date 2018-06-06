@@ -110,7 +110,7 @@ class CustomerwalletController extends Controller
                  $wallet->customerwallet_id=$model->customerwallet_id;
                  $wallet->save();
                  $session->set('savepopup',"executed");
-                 return $this->runAction('index');
+                 return $this->redirect('index');
             }
         }
 

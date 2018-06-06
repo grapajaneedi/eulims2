@@ -24,6 +24,7 @@ use Yii;
  */
 class Lab extends \yii\db\ActiveRecord
 {
+    public $nextrequestcode;
     /**
      * @inheritdoc
      */

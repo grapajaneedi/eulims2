@@ -23,7 +23,7 @@ $path = Yii::getAlias("@webroot")."\uploads\user\photo\\";
     <div class="row">
    <div class="col-md-4">
         <?=
-        Html::img(Yii::$app->urlManagerBackend->baseUrl . '\uploads\user\photo\\' . $model->getImageUrl(), [
+        Html::img(Yii::$app->urlManager->baseUrl . '\uploads\user\photo\\' . $model->getImageUrl(), [
             'class' => 'img-thumbnail img-responsive',
             'alt' => $model->user->username,
             'width' => 200,

@@ -14,26 +14,12 @@ use yii\bootstrap\Modal;
 /* @var $this yii\web\View */
 /* @var $model common\models\Profile */
 
-//$this->title = $model->firstname;
-//$this->params['breadcrumbs'][] = ['label' => 'Profile', 'url' => ['/profile']];
-//$this->params['breadcrumbs'][] = $this->title;
 $path = Yii::getAlias("@webroot")."\uploads\user\photo\\";
-/*Modal::begin([
-    'header' => '<h3 style="margin-top: 0px;margin-bottom: 0px">'.$model->user->profile->firstname.' '.$model->user->profile->lastname.'</h3><br style="margin-top: 0px;margin-bottom: 0px">'.$model->user->profile->designation,
-    'size'   => 'model-big',
-    //'toggleButton' => ['label' => 'click me'],
-]);
-echo Html::img(Yii::$app->urlManager->baseUrl.'\uploads\user\photo\\'.$model->getImageUrl(), [ 
-                    'class' => 'img-thumbnail img-responsive',
-                    'alt' => $model->user->username,
-                    'width'=>400
-                ]) ;
-Modal::end();
-*/
+
 ?>
 <div class="profile-view">
     <div class="row">
-   <div class="col-md-2">
+   <div class="col-md-3">
         <?=
         Html::img(Yii::$app->urlManager->baseUrl . '\uploads\user\photo\\' . $model->getImageUrl(), [
             'class' => 'img-thumbnail img-responsive',

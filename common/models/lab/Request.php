@@ -3,29 +3,33 @@
 namespace common\models\lab;
 
 use Yii;
-
+use common\models\system\Rstl;
+use common\components\Functions;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 /**
  * This is the model class for table "tbl_request".
  *
- * @property integer $request_id
+ * @property int $request_id
  * @property string $request_ref_num
- * @property integer $request_datetime
- * @property integer $rstl_id
- * @property integer $lab_id
- * @property integer $customer_id
- * @property integer $payment_type_id
- * @property integer $modeofrelease_id
+ * @property int $request_datetime
+ * @property int $rstl_id
+ * @property int $lab_id
+ * @property int $customer_id
+ * @property int $payment_type_id
+ * @property int $modeofrelease_id
  * @property string $discount
- * @property integer $discount_id
- * @property integer $purpose_id
- * @property integer $or_id
+ * @property int $discount_id
+ * @property int $purpose_id
+ * @property int $or_id
  * @property string $total
  * @property string $report_due
  * @property string $conforme
  * @property string $receivedBy
- * @property integer $created_at
- * @property integer $posted
- * @property integer $status_id
+ * @property int $created_at
+ * @property int $posted
+ * @property int $status_id
+ * @property int $selected 
  *
  * @property Analysis[] $analyses
  * @property Cancelledrequest[] $cancelledrequests
@@ -40,17 +44,33 @@ use Yii;
  * @property Paymenttype $paymentType
  * @property Sample[] $samples
  * @property Testreport[] $testreports
+ * @property Rstl[] $rstl
  */
 class Request extends \yii\db\ActiveRecord
 {
+    public $customer_name;
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
         return 'tbl_request';
     }
-
+    public function behaviors(){
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'creation_at',
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'request_datetime',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'creation_at',
+                ],
+                'value' => function() { 
+                    return date('U'); // unix timestamp 
+                },
+            ]
+        ];
+    }
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
@@ -58,17 +78,17 @@ class Request extends \yii\db\ActiveRecord
     {
         return Yii::$app->get('labdb');
     }
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['request_ref_num', 'request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
-            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id'], 'integer'],
+            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
+            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id','selected'], 'integer'],
             [['discount', 'total'], 'number'],
-            [['report_due'], 'safe'],
+            [['report_due','customer_name'], 'safe'],
+            [['customer_name'],'string','max'=>200],
             [['request_ref_num', 'conforme', 'receivedBy'], 'string', 'max' => 50],
             [['request_ref_num'], 'unique'],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
@@ -83,7 +103,7 @@ class Request extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -107,6 +127,8 @@ class Request extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'posted' => 'Posted',
             'status_id' => 'Status ID',
+            'customer_name'=>'Customer Name',
+            'selected' => 'Selected',
         ];
     }
 
@@ -212,5 +234,20 @@ class Request extends \yii\db\ActiveRecord
     public function getTestreports()
     {
         return $this->hasMany(Testreport::className(), ['request_id' => 'request_id']);
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRstl()
+    {
+        return $this->hasOne(Rstl::className(), ['rstl_id' => 'request_id']);
+    }
+
+    public function getPaymentStatusDetails($RequestID){
+        $func=new Functions();
+        $Connection= Yii::$app->financedb;
+        $rows=$func->ExecuteStoredProcedureRows("spGetPaymentStatusDetails(:mRequestID)", [':mRequestID'=> $RequestID], $Connection);
+        //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        return $rows;
     }
 }

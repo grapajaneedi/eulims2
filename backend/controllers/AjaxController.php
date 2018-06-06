@@ -10,7 +10,7 @@
 
 namespace backend\controllers;
 use yii\filters\VerbFilter;
-use common\models\lab\RequestcodeTemplate;
+use common\models\lab\CodeTemplate;
 use Yii;
 /**
  * Description of AjaxController
@@ -36,18 +36,20 @@ class AjaxController extends \yii\web\Controller{
     public function actionSaverequesttemplate(){
         $post=Yii::$app->request->post();
         $rstl_id=$post['rstl_id'];
-        $requestcode_template=$post['rtemp'];
-        $RequestcodeTemplate= RequestcodeTemplate::find()->where(['rstl_id'=>$rstl_id])->one();
+        $request_code_template=$post['rtemp'];
+        $sample_code_template=$post['stemp'];
+        $RequestcodeTemplate= CodeTemplate::find()->where(['rstl_id'=>$rstl_id])->one();
         if(!$RequestcodeTemplate){
-            $RequestcodeTemplate=new RequestcodeTemplate();
+            $RequestcodeTemplate=new CodeTemplate();
         }
         $RequestcodeTemplate->rstl_id=$rstl_id;
-        $RequestcodeTemplate->requestcode_template=$requestcode_template;
+        $RequestcodeTemplate->request_code_template=$request_code_template;
+        $RequestcodeTemplate->sample_code_template=$sample_code_template;
         if($RequestcodeTemplate->save()){//OK
             $Return=[
                 'Status'=>'Success',
                 'rstl_id'=>$rstl_id,
-                'requestcode_template'=>$RequestcodeTemplate->requestcode_template
+                'requestcode_template'=>$RequestcodeTemplate->request_code_template
             ];
         }else{//Failed to save
             $Return=[

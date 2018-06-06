@@ -10,7 +10,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use common\models\lab\Sample;
-use common\models\lab\Analysis;
+use yii\db\Query;
+use common\models\lab\Customer;
+use DateTime;
 
 /**
  * RequestController implements the CRUD actions for Request model.
@@ -40,7 +42,7 @@ class RequestController extends Controller
     {
         $searchModel = new RequestSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $dataProvider->pagination->pageSize=6;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -58,20 +60,12 @@ class RequestController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
-        $analysisQuery = Analysis::find()->where(['sample_id' =>1]);
-
         $sampleDataProvider = new ActiveDataProvider([
                 'query' => $samplesQuery,
                 'pagination' => [
                     'pageSize' => 10,
                 ],
-        ]);
-
-        $analysisDataProvider = new ActiveDataProvider([
-            'query' => $analysisQuery,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
+                //'sort' => false,
         ]);
 
         return $this->render('view', [
@@ -79,8 +73,25 @@ class RequestController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'sampleDataProvider' => $sampleDataProvider,
-            'analysisDataProvider' => $analysisDataProvider,
         ]);
+    }
+    public function actionCustomerlist($q = null, $id = null) {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = ['results' => ['customer_id' => '', 'text' => '']];
+        if (!is_null($q)) {
+            $query = new Query;
+            $query->select('customer_id, customer_name AS text')
+                    ->from('tbl_customer')
+                    ->where(['like', 'customer_name', $q])
+                    ->limit(20);
+            $command = $query->createCommand();
+            $command->db= \Yii::$app->labdb;
+            $data = $command->queryAll();
+            $out['results'] = array_values($data);
+        } elseif ($id > 0) {
+            $out['results'] = ['customer_id' => $id, 'text' =>Customer::find()->where(['customer_id'=>$customer_id])->customer_name];
+        }
+        return $out;
     }
 
     /**
@@ -93,11 +104,19 @@ class RequestController extends Controller
         $model = new Request();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->request_id]);
+            return $this->redirect(['view', 'id' => $model->request_id]); ///lab/request/view?id=1
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            $date = new DateTime();
+            $model->request_datetime=$date->getTimestamp();
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('create', [
+                    'model' => $model,
+                ]);
+            }else{
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
         }
     }
 
@@ -114,9 +133,15 @@ class RequestController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->request_id]);
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('update', [
+                    'model' => $model,
+                ]);
+            }else{
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
         }
     }
 

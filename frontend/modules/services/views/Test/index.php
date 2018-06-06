@@ -1,10 +1,12 @@
-<?php
+    <?php
 
 use kartik\widgets\DatePicker;
 use kartik\widgets\DateTimePicker;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 use yii\helpers\Html;
+use common\components\Functions;
+$func= new Functions();
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\services\TestSearch */
@@ -23,7 +25,7 @@ $this->registerJsFile("/js/services/services.js");
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Test', ['value'=>'/services/test/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Test")]); ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Test', ['value'=>'/services/test/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Test"),'name' => Yii::t('app', "Create New Test")]); ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -38,11 +40,11 @@ $this->registerJsFile("/js/services/services.js");
             ['class' => 'yii\grid\SerialColumn'],
 
             'test_id',
-            'rstl_id',
+            // 'rstl_id',
             'testname',
-            'method',
-            'references',
-            // 'fee',
+            // 'method',
+            'payment_references',
+            'fee',
             // 'duration',
             // 'test_category_id',
             // 'sample_type_id',
@@ -51,23 +53,51 @@ $this->registerJsFile("/js/services/services.js");
             ['class' => 'kartik\grid\ActionColumn',
             'contentOptions' => ['style' => 'width: 8.7%'],
            // 'visible'=> Yii::$app->user->isGuest ? false : true,
-            'template' => '{view}{update}{delete}',
+            'template' => '{view}{update}{workflow}',
             'buttons'=>[
                 'view'=>function ($url, $model) {
                     $t = '/services/testcategory/create';
-                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/services/test/view?id='.$model->test_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary modal_services','title' => Yii::t('app', "View Test<font color='Blue'></font>")]);
+                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/services/test/view?id='.$model->test_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary btn-modal','title' => Yii::t('app', "View Test"),'name' => Yii::t('app', "View Test")]);
                 },
                 'update'=>function ($url, $model) {
                     $t = '/services/testcategory/create';
-                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/services/test/update?id='.$model->test_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Update Test<font color='Blue'></font>")]);
+                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/services/test/update?id='.$model->test_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Update Test"),'name' => Yii::t('app', "Update Test<font color='Blue'></font>")]);
                 },
-            //     'delete'=>function ($url, $model) {
-            //       $t = '/services/testcategory/delete';
-            //       return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>'/services/test/delete?id='.$model->test_id, 'class' => 'btn btn-danger modal_services','title' => Yii::t('app', "View History for  <font color='Blue'></font>")]);
-    
-            //   },
+                'workflow'=>function ($url, $model) {
+                    $t = '/services/workflow/create?test_id='.$model->test_id;
+
+                    if($model->workflow){
+                        $t = '/services/workflow/view?id='.$model->workflow->workflow_id;
+                        return Html::button('<span class="glyphicon glyphicon-search"></span><span class="glyphicon glyphicon-file"></span>', ['value'=>$t, 'class' => 'btn btn-danger btn-modal','name' => Yii::t('app', "Workflow"),'title' => Yii::t('app', "View  Workflow")]);
+                    }
+                    else
+                        return Html::button('<span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-file"></span>', ['value'=>$t, 'class' => 'btn btn-danger btn-modal','name' => Yii::t('app', "Workflow"),'title' => Yii::t('app', "Create Workflow")]);
+                },
+
             ],
         ],
         ],
     ]); ?>
 </div>
+<?php
+    // This section will allow to popup a notification
+    $session = Yii::$app->session;
+    if ($session->isActive) {
+        $session->open();
+        if (isset($session['deletepopup'])) {
+            $func->CrudAlert("Deleted Successfully","WARNING");
+            unset($session['deletepopup']);
+            $session->close();
+        }
+        if (isset($session['updatepopup'])) {
+            $func->CrudAlert("Updated Successfully");
+            unset($session['updatepopup']);
+            $session->close();
+        }
+        if (isset($session['savepopup'])) {
+            $func->CrudAlert("Saved Successfully","SUCCESS",true);
+            unset($session['savepopup']);
+            $session->close();
+        }
+    }
+    ?>

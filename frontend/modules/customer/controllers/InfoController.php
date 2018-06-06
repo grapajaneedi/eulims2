@@ -81,7 +81,7 @@ class InfoController extends Controller
     public function actionCreate()
     {
         $model = new Customer();
-        $model->rstl_id=11;
+        $model->rstl_id=$GLOBALS['rstl_id'];
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $session = Yii::$app->session;
             $session->set('savepopup',"executed");

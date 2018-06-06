@@ -73,6 +73,8 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         ),
         'k' => 
         array (
+            'kartik\\sortinput\\' => 17,
+            'kartik\\sortable\\' => 16,
             'kartik\\select2\\' => 15,
             'kartik\\popover\\' => 15,
             'kartik\\plugins\\popover\\' => 23,
@@ -82,6 +84,7 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
             'kartik\\helpers\\' => 15,
             'kartik\\form\\' => 12,
             'kartik\\file\\' => 12,
+            'kartik\\editable\\' => 16,
             'kartik\\dialog\\' => 14,
             'kartik\\detail\\' => 14,
             'kartik\\daterange\\' => 17,
@@ -309,6 +312,14 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         array (
             0 => __DIR__ . '/..' . '/machour/yii2-notifications',
         ),
+        'kartik\\sortinput\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-sortable-input',
+        ),
+        'kartik\\sortable\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-sortable',
+        ),
         'kartik\\select2\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-select2',
@@ -344,6 +355,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'kartik\\file\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-fileinput',
+        ),
+        'kartik\\editable\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-editable',
         ),
         'kartik\\dialog\\' => 
         array (

@@ -5,13 +5,19 @@ namespace frontend\modules\finance\controllers;
 use Yii;
 use common\models\finance\Orderofpayment;
 use common\models\finance\Paymentitem;
+use common\models\finance\Collection;
 use common\models\finance\OrderofpaymentSearch;
 use common\models\lab\Request;
+use common\models\finance\Collectiontype;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use yii\db\Query;
+use common\components\Functions;
+use kartik\editable\Editable;
+use yii\helpers\Json;
 /**
  * OrderofpaymentController implements the CRUD actions for Orderofpayment model.
  */
@@ -55,17 +61,20 @@ class OrderofpaymentController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {
-        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('view', [
-                    'model' => $this->findModel($id),
-                ]);
-        }
-        else{  
-           return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]);
-        }
+    { 
+         $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $id]);
+         $paymentitemDataProvider = new ActiveDataProvider([
+                'query' => $paymentitem_Query,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+        ]);
+         
+         return $this->render('view', [
+            'model' => $this->findModel($id),
+            'paymentitemDataProvider' => $paymentitemDataProvider,
+        ]);
+
     }
 
     /**
@@ -76,37 +85,54 @@ class OrderofpaymentController extends Controller
     public function actionCreate()
     {
         $model = new Orderofpayment();
-       
         $searchModel = new OrderofpaymentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
         
+        //echo "<pre>";
+        //print_r($this->Gettransactionnum());
+        //echo "</pre>";
+        
          if ($model->load(Yii::$app->request->post())) {
-           
-            if($model->validate()){
                 $session = Yii::$app->session;
                 $request_ids=$model->RequestIds;
                 $str_request = explode(',', $request_ids);
-                $model->rstl_id=1;
-                $model->transactionnum='123456';
+                $model->rstl_id=$GLOBALS['rstl_id'];
+                $model->transactionnum= $this->Gettransactionnum();
+               
                 $model->save();
-               // $i = 0;
+               //Saving for Paymentitem
                 $arr_length = count($str_request); 
+                $total_amount=0;
                 for($i=0;$i<$arr_length;$i++){
                      $request =$this->findRequest($str_request[$i]);
                      $paymentitem = new Paymentitem();
-                     $paymentitem->rstl_id = 1;
+                     $paymentitem->rstl_id =$GLOBALS['rstl_id'];
                      $paymentitem->request_id = $str_request[$i];
                      $paymentitem->orderofpayment_id = $model->orderofpayment_id;
                      $paymentitem->details =$request->request_ref_num;
                      $paymentitem->amount = $request->total;
+                     $total_amount+=$request->total;
                      $paymentitem->save(); 
                 }
-                  
+                //----------------------//
+                //---Saving for Collection-------
+                $collection= new Collection();
+                $collection_name= getCollectionname($model->collectiontype_id);
+                var_dump($collection_name);
+                exit;
+                $collection->rstl_id=$GLOBALS['rstl_id'];
+                $collection->orderofpayment_id=$model->orderofpayment_id;
+                $collection->referral_id=0;
+                $collection->nature=$collection_name;
+                $collection->amount=$total_amount;
+                $collection->save();
+              //  var_dump($total_amount);
+              //  exit;
+                //-------------------------------------------------------------//
                 $session->set('savepopup',"executed");
                 return $this->redirect(['/finance/orderofpayment']);
-            }
-           
+          
         } 
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
@@ -145,18 +171,18 @@ class OrderofpaymentController extends Controller
 
      public function actionGetlistrequest($id)
     {
-      // $post=Yii::$app->request->post();
-       //$request_id=$post['request_id'];
-       // $model = $this->findModel($id);
-        $query = Request::find()->where(['customer_id' => $id,'status_id'=>1]);
+         $model= new Request();
+        $query = Request::find()->where(['customer_id' => $id]);
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
         $dataProvider->pagination->pageSize=3;
         if(Yii::$app->request->isAjax){
-            return $this->renderAjax('_request', ['dataProvider'=>$dataProvider]);
-            //return;
+            return $this->renderAjax('_request', ['dataProvider'=>$dataProvider,'model'=>$model]);
+        }
+        else{
+            return $this->render('_request', ['dataProvider'=>$dataProvider,'model'=>$model]);
         }
 
     }
@@ -197,4 +223,64 @@ class OrderofpaymentController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+     public function Gettransactionnum(){
+        /*$year=date('Y');
+        $terminal_id=1;
+        $rstl_id=11;
+        $result = \Yii::$app->financedb->createCommand("CALL spGenerateTransactionNumber(:mYear, :mTerminalID, :mRSTLID)",[
+            ':mYear'=>$year,
+            ':mTerminalID'=>$terminal_id,
+            ':mRSTLID'=>$rstl_id
+            ])
+            ->queryAll();
+        $transnumber=$result[0]['transaction_number'];
+        return $transnumber;*/
+          $year_month = date('Y-m');
+          $last_trans_num=(new Query)
+            ->select(['count(transactionnum)+ 1 AS lastnumber'])
+            ->from('eulims_finance.tbl_orderofpayment')
+            ->one();
+          $str_trans_num=0;
+          if($last_trans_num != ''){
+              $str_trans_num=str_pad($last_trans_num["lastnumber"], 4, "0", STR_PAD_LEFT);
+          }
+          else{
+               $str_trans_num='0000';
+          }
+         
+         $next_transnumber=$year_month."-".$str_trans_num;
+         return $next_transnumber;
+        
+     }
+     
+     public function actionCalculateTotal() {
+    // if (isset($_POST['keylist'])) {
+        $post = Yii::$app->request->post();
+        $total = 0;
+      // var_dump($post);
+     //   exit;
+        
+        $str_total = explode(',', $post['keylist']);
+        $arr_length = count($str_total); 
+        for($i=0;$i<$arr_length;$i++){
+             $request =$this->findRequest($str_total[$i]);
+             $total+=$request->total;
+        }
+        echo $total;
+       /* echo Json::encode([
+            'status' => 'success',
+            'total' => $total
+        ]);*/
+        
+   // }
+     }
+     
+     public function getCollectionname($collectionid) {
+         $collection_name=(new Query)
+            ->select(['natureofcollection'])
+            ->from('eulims_finance.tbl_collectiontype')
+            ->where(['collectiontype_id' => $collectionid]);
+         return $collection_name;
+     }
 }

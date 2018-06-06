@@ -1,10 +1,7 @@
 <?php
-
 namespace common\models\lab;
 use yii\db\ActiveRecord;
-
 use Yii;
-
 /**
  * This is the model class for table "tbl_customer".
  *
@@ -40,7 +37,6 @@ class Customer extends \yii\db\ActiveRecord
     {
         return 'tbl_customer';
     }
-
     /**
      * @inheritdoc
      */
@@ -53,7 +49,6 @@ class Customer extends \yii\db\ActiveRecord
             //     'updatedAtAttribute' => 'last_update',
             //     'value' => new Expression('NOW()'),
             // ],
-
                 [
                      'class' => 'yii\behaviors\TimestampBehavior',
                      'attributes' => [
@@ -62,7 +57,6 @@ class Customer extends \yii\db\ActiveRecord
                  ],
         ];
     }
-
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
@@ -70,7 +64,6 @@ class Customer extends \yii\db\ActiveRecord
     {
         return Yii::$app->get('labdb');
     }
-
     /**
      * {@inheritdoc}
      */
@@ -90,7 +83,6 @@ class Customer extends \yii\db\ActiveRecord
             [['industrytype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Industrytype::className(), 'targetAttribute' => ['industrytype_id' => 'industrytype_id']],
         ];
     }
-
     /**
      * {@inheritdoc}
      */
@@ -114,7 +106,6 @@ class Customer extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
         ];
     }
-
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -122,7 +113,6 @@ class Customer extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Customertype::className(), ['customertype_id' => 'customer_type_id']);
     }
-
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -130,7 +120,6 @@ class Customer extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Businessnature::className(), ['business_nature_id' => 'business_nature_id']);
     }
-
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -138,7 +127,6 @@ class Customer extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Industrytype::className(), ['industrytype_id' => 'industrytype_id']);
     }
-
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -146,5 +134,4 @@ class Customer extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Request::className(), ['customer_id' => 'customer_id']);
     }
-
 }

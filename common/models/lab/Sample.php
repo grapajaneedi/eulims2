@@ -11,6 +11,7 @@ use Yii;
  * @property int $rstl_id
  * @property int $pstcsample_id
  * @property int $package_id
+ * @property string $package_rate
  * @property int $testcategory_id
  * @property int $sample_type_id
  * @property string $sample_code
@@ -24,10 +25,10 @@ use Yii;
  * @property int $active
  *
  * @property Analysis[] $analyses
- * @property Packagelist[] $packagelists
  * @property Sampletype $sampleType
  * @property Request $request
  * @property Packagelist $package
+ * @property Testcategory $testcategory
  * @property TestreportSample[] $testreportSamples
  */
 class Sample extends \yii\db\ActiveRecord
@@ -54,8 +55,9 @@ class Sample extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'testcategory_id', 'sample_type_id', 'sample_code', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
+            [['rstl_id', 'testcategory_id', 'sample_type_id', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
             [['rstl_id', 'pstcsample_id', 'package_id', 'testcategory_id', 'sample_type_id', 'request_id', 'sample_month', 'sample_year', 'active'], 'integer'],
+            [['package_rate'], 'number'],
             [['description'], 'string'],
             [['sampling_date'], 'safe'],
             [['sample_code'], 'string', 'max' => 20],
@@ -64,6 +66,7 @@ class Sample extends \yii\db\ActiveRecord
             [['sample_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sample_type_id' => 'sample_type_id']],
             [['request_id'], 'exist', 'skipOnError' => true, 'targetClass' => Request::className(), 'targetAttribute' => ['request_id' => 'request_id']],
             [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Packagelist::className(), 'targetAttribute' => ['package_id' => 'package_id']],
+            [['testcategory_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
         ];
     }
 
@@ -75,8 +78,9 @@ class Sample extends \yii\db\ActiveRecord
         return [
             'sample_id' => 'Sample ID',
             'rstl_id' => 'Rstl ID',
-            'pstcsample_id' => 'Pstc Sample ID',
+            'pstcsample_id' => 'Pstcsample ID',
             'package_id' => 'Package ID',
+            'package_rate' => 'Package Rate',
             'testcategory_id' => 'Test Category',
             'sample_type_id' => 'Sample Type',
             'sample_code' => 'Sample Code',
@@ -102,14 +106,6 @@ class Sample extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPackagelists()
-    {
-        return $this->hasMany(Packagelist::className(), ['sample_type_id' => 'sample_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getSampleType()
     {
         return $this->hasOne(Sampletype::className(), ['sample_type_id' => 'sample_type_id']);
@@ -129,6 +125,14 @@ class Sample extends \yii\db\ActiveRecord
     public function getPackage()
     {
         return $this->hasOne(Packagelist::className(), ['package_id' => 'package_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTestcategory()
+    {
+        return $this->hasOne(Testcategory::className(), ['testcategory_id' => 'testcategory_id']);
     }
 
     /**

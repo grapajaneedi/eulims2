@@ -36,7 +36,7 @@ class ProfileController extends Controller
         return [
             'uploadPhoto' => [
                 'class' => 'budyaga\cropper\actions\UploadAction',
-                'url' => 'http://admin.eulims.local/upload/user/photo',
+                'url' => '/upload/user/photo',
                 'path' => '@frontend/web/uploads/user/photo',
             ]
         ];
@@ -99,6 +99,7 @@ class ProfileController extends Controller
     public function actionCreate()
     {
         Yii::$app->params['uploadPath'] = realpath(dirname(__FILE__)).'\..\..' . '\backend\web\uploads\user\photo\\';
+        $FrontEndPath = realpath(dirname(__FILE__)).'\..\..' . '\frontend\web\uploads\user\photo\\';
         $model = new Profile();
         $HasImage=false;
         if ($model->load(Yii::$app->request->post())) {
@@ -106,15 +107,18 @@ class ProfileController extends Controller
             if($image){
                 // store the source file name
                 $model->image_url = $image->name;
-                $ext = end((explode(".", $image->name)));
+                $imageName=(explode(".", $image->name));
+                $ext =$imageName[1];
                 // generate a unique file name
                 $model->avatar = hash('haval160,4',$model->user_id).".{$ext}";
                 $path = Yii::$app->params['uploadPath'] . $model->avatar;
+                $FrontEndPath=$FrontEndPath . $model->avatar;
                 $HasImage=true;
             }
             if($model->validate() && $model->save()){
                 if($HasImage){
                     $image->saveAs($path);
+                    copy($path, $FrontEndPath);
                 }
                 //return "Saved...";
                 return $this->redirect(['view', 'id'=>$model->user_id]);
@@ -147,8 +151,9 @@ class ProfileController extends Controller
     public function actionUpdate($id)
     {
         Yii::$app->params['uploadPath'] = realpath(dirname(__FILE__)).'\..\..' . '\backend\web\uploads\user\photo\\';
+        $FrontEndPath = realpath(dirname(__FILE__)).'\..\..' . '\frontend\web\uploads\user\photo\\';
         $model = $this->findModel($id);
-        if(Yii::$app->user->can('access-his-profile')){
+        if(Yii::$app->user->can('access-his-profile') && !Yii::$app->user->can('profile-full-access')){
             if($model->user_id!=Yii::$app->user->identity->user_id){
                 throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');
             }
@@ -161,10 +166,12 @@ class ProfileController extends Controller
                 if($image){
                     // store the source file name
                     $model->image_url = $image->name;
-                    $ext = end((explode(".", $image->name)));
+                    $imageName=(explode(".", $image->name));
+                    $ext =$imageName[1];
                     // generate a unique file name
                     $model->avatar = hash('haval160,4',$model->user_id).".{$ext}";
                     $path = Yii::$app->params['uploadPath'] . $model->avatar;
+                    $FrontEndPath=$FrontEndPath . $model->avatar;
                     $changeImage=true;
                 }
                 $NewImageUrl=$model->image_url;
@@ -175,6 +182,7 @@ class ProfileController extends Controller
             if($model->save()){
                 if($changeImage){
                     $image->saveAs($path);
+                    copy($path, $FrontEndPath);
                 }elseif($OldImageUrl!='' && $NewImageUrl==''){
                     //Unlink Image
                     //unlink(Yii::$app->params['uploadPath'].$OldAvatar);

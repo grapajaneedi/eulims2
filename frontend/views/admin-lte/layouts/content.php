@@ -19,6 +19,10 @@ $Host= "//".Yii::$app->getRequest()->serverName;
     <?php
     Modal::begin([
         'clientOptions' => ['backdrop' => 'static', 'keyboard' => false],
+        'bodyOptions'=>[
+            'class' => 'modal-body',
+            'style'=>'padding-bottom: 20px',
+        ],
         'options' => [
             'id' => 'modal',
             'tabindex' => false, // important for Select2 to work properly

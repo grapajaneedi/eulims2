@@ -5,6 +5,7 @@ namespace frontend\modules\services\controllers;
 use Yii;
 use common\models\services\Workflow;
 use common\models\services\WorkflowSearch;
+use common\models\services\Procedure;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -53,7 +54,7 @@ class WorkflowController extends Controller
     public function actionView($id)
     {
        if(Yii::$app->request->isAjax){
-            return $this->render('view', [
+            return $this->renderAjax('view', [
                     'model' => $this->findModel($id),
                 ]);
         }
@@ -64,19 +65,42 @@ class WorkflowController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($test_id)
     {
         $model = new Workflow();
        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->runAction('index');  
-        } 
-          
+                // return $this->runAction('index'); 
+                $session = Yii::$app->session;
+                $session->set('savepopup',"executed");
+                return $this->redirect('/services/test/index'); 
+        }
+
+        //get the steps of procedures here
+        $items = [];
+        $products = Procedure::find()->all();
+        foreach ($products as $p) {
+            $items[$p->procedure_id] = [
+                'content' => $p->procedure_name,
+                'options' => ['data' => ['id'=>$p->procedure_id]],
+            ];
+        }
+
        if(Yii::$app->request->isAjax){
-                return $this->renderAjax('create', [
-                        'model' => $model,
-                    ]);
-            }
+            return $this->renderAjax('create', [
+                    'model' => $model,
+                    'test_id'=>$test_id,
+                    'items'=>$items
+                ]);
+        }
+        else{
+            return $this->render('create', [
+                    'model' => $model,
+                    'test_id'=>$test_id,
+                    'items'=>$items
+                ]);
+
+        }
     }
 
     /**

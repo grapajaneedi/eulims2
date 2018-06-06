@@ -7,14 +7,14 @@ use Yii;
 /**
  * This is the model class for table "tbl_sample_name".
  *
- * @property integer $sample_name_id
+ * @property int $sample_name_id
  * @property string $sample_name
  * @property string $description
  */
 class SampleName extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -30,19 +30,20 @@ class SampleName extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
+            [['sample_name', 'description'], 'required'],
             [['sample_name'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 200],
-            [['sample_name'], 'unique'],
+            [['sample_name', 'description'], 'unique', 'targetAttribute' => ['sample_name', 'description']],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {

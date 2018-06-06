@@ -19,7 +19,6 @@ use yii\helpers\Json;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\web\Response;
-use kartik\mpdf\Pdf;
 use yii\db\ActiveQuery;
 
 /**
@@ -40,20 +39,6 @@ class SampleController extends Controller
                 ],
             ],
         ];
-    }
-
-    public function actionPrintlabel(){
-
-        $pdf = Yii::$app->pdf;
-        $pdf->orientation=Pdf::ORIENT_LANDSCAPE;
-        $content = $this->renderPartial('printlabel/_form');
-        $pdf->content = $content;
-        $pdf->destination = Pdf::DEST_BROWSER;
-        $pdf->format = [
-            35,
-            66
-        ];
-        return $pdf->render();
     }
 
     /**
@@ -173,7 +158,7 @@ class SampleController extends Controller
                             $sample->sampling_date = date('Y-m-d');
                         }
                         $sample->rstl_id = 11;
-                        $sample->sample_code = 0;
+                        //$sample->sample_code = 0;
                         $sample->testcategory_id = (int) $_POST['Sample']['testcategory_id'];
                         $sample->sample_type_id = (int) $_POST['Sample']['sample_type_id'];
                         $sample->samplename = $_POST['Sample']['samplename'];
@@ -188,12 +173,13 @@ class SampleController extends Controller
                     echo "</pre>";*/
                 }
                 //return $this->redirect('index');
+                $session->set('savemessage',"executed");
                 return $this->redirect(['/lab/request/view', 'id' => $requestId]);
             } else {
                 if($model->save(false)){
                     //return $this->redirect(['view', 'id' => $model->sample_id]);
                     //echo Json::encode('Successfully saved.');
-                    $session->set('savepopup',"executed");
+                    $session->set('savemessage',"executed");
                     return $this->redirect(['/lab/request/view', 'id' => $requestId]);
                 }
             }
@@ -292,7 +278,7 @@ class SampleController extends Controller
                 //Yii::info('Model was not saved');
                 //Yii::$app->session->setFlash('formError');
                 //echo Json::encode('Successfully saved.');
-                $session->set('updatepopup',"executed");
+                $session->set('updatemessage',"executed");
                 return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
 
             }
@@ -323,14 +309,17 @@ class SampleController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        //$this->findModel($id)->delete();
+        //return;
 
-        //return $this->redirect(['index']);
-        //return Json::encode(['result' => 'Successfully deleted.']);;
-        //throw ('Successfully deleted.');
-        //echo "Sample successfully deleted.";
-        //throw "Error";
-        return;
+        $delete = $this->findModel($id)->delete();
+
+        if($delete) {
+            //$session->set('deletemessage',"executed");
+            return;
+        } else {
+            return $delete->error();
+        }
     }
 
     /**

@@ -43,7 +43,6 @@ class RequestSearch extends Request
     public function search($params)
     {
         $query = Request::find();
-
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -78,7 +77,7 @@ class RequestSearch extends Request
             'status_id' => $this->status_id,
         ]);
 
-        $query->andFilterWhere(['like', 'request_ref_num', $this->request_ref_num])
+        $query->andFilterWhere(['like','request_ref_num', $this->request_ref_num])
             ->andFilterWhere(['like', 'conforme', $this->conforme])
             ->andFilterWhere(['like', 'receivedBy', $this->receivedBy]);
 
