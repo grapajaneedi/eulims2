@@ -7,6 +7,7 @@ use common\models\finance\Collectiontype;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
 use kartik\daterange\DateRangePicker;
+use yii\db\Query;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\OrderofpaymentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -20,23 +21,14 @@ $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
 ?>
 <div class="orderofpayment-index">
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <?php
+        echo $func->GenerateStatusLegend("Legend/Status",true);
+    ?>
     <p>
         <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/orderofpayment/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']); ?>
     </p>
     
-    <fieldset>
-    <legend>Legend/Status</legend>
-    <div style="padding: 0 10px">
-        <span class="badge btn-primary"><span class="glyphicon glyphicon-unchecked"></span>Unpaid</span>
     
-        <span class="badge btn-success"><span class="glyphicon glyphicon-check"></span>Paid</span>
-        <span class="badge btn-warning">Partial</span>
-        <span class="badge btn-danger">Cancelled</span>
-    </div>
-    </fieldset>
     
   <div class="table-responsive">
     <?php 
@@ -136,7 +128,18 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
             [
                //'attribute' => 'created_receipt',
                'label'=>'Status', 
-                
+               'format'=>'raw',
+               'value'=>function($model){
+                    $Obj=$model->getCollectionStatus($model->orderofpayment_id);
+                    if($Obj){
+                       return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
+                      // return "<button class='badge ".$Obj[0]['class']." legend-font'><span class=".$Obj[0]['icon']."></span> $Obj[0]['status']</span>";
+                    }else{
+                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
+                    }
+                   //
+                }
+               
             ],
             [
               //'class' => 'yii\grid\ActionColumn'
@@ -165,6 +168,11 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         if (isset($session['savepopup'])) {
             $func->CrudAlert("Saved Successfully","SUCCESS",true);
             unset($session['savepopup']);
+            $session->close();
+        }
+        if (isset($session['errorpopup'])) {
+            $func->CrudAlert("Transaction Error","ERROR",true);
+            unset($session['errorpopup']);
             $session->close();
         }
     }

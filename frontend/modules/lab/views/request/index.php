@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use kartik\grid\ActionColumn;
 use \yii\helpers\ArrayHelper;
 use common\models\system\Rstl;
 use common\models\lab\Lab;
@@ -123,12 +124,11 @@ $func=new Functions();
                 }
             ],
             [
-            //'class' => 'yii\grid\ActionColumn'
-            'class' => kartik\grid\ActionColumn::className(),
-            'template' => "{view}{update}{delete}",
+                'class' => kartik\grid\ActionColumn::className(),
+                'template' => "{view}{update}{delete}",
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/lab/request/view?id=' . $model->request_id, 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Request")]);
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/lab/request/view?id=' . $model->request_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Request")]);
                     },
                     'update' => function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/lab/request/update?id=' . $model->request_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Request")]);

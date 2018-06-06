@@ -169,3 +169,19 @@ function MessageBox(Message,Title="System Message",labelYes="",labelCancel="", W
         });
     }
 }
+  $('body').on('click','#max-scroll',function(){
+      //alert('yy');
+        scrolldesc = $('#scroll-description').text();
+        if(scrolldesc=="Minimize") {
+            $('#scroll-description').text('Maximize');
+            $('.table-scroll').removeClass('max-scroll');
+            $('#max-scroll i').removeClass('fa fa-caret-up');
+            $('#max-scroll i').addClass('fa fa-caret-down');
+        }else{
+            $('#scroll-description').text('Minimize');
+            $('.table-scroll').addClass('max-scroll');
+            $('#max-scroll i').removeClass('fa fa-caret-down');
+            $('#max-scroll i').addClass('fa fa-caret-up');
+        }
+
+    });

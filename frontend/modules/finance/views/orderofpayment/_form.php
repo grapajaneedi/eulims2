@@ -42,12 +42,14 @@ use kartik\widgets\DatePicker;
             <div class="col-sm-6">
              <?php
              echo $form->field($model, 'order_date')->widget(DatePicker::classname(), [
-             'options' => ['placeholder' => 'Select Date ...'],
+             'options' => ['placeholder' => 'Select Date ...',
+                 'autocomplete'=>'off'],
              'type' => DatePicker::TYPE_COMPONENT_APPEND,
                  'pluginOptions' => [
                      'format' => 'yyyy-mm-dd',
                      'todayHighlight' => true,
-                     'autoclose'=>true
+                     'autoclose'=>true,
+                     
                  ]
              ]);
              ?>
@@ -118,9 +120,12 @@ use kartik\widgets\DatePicker;
                  <div id="prog" style="position:relative;display:none;">
                     <img style="display:block; margin:0 auto;" src="<?php echo  $GLOBALS['frontend_base_uri']; ?>/images/ajax-loader.gif">
                      </div>
+                
+
                 <div id="requests" style="padding:0px!important;">    	
                    <?php //echo $this->renderAjax('_request', ['dataProvider'=>$dataProvider]); ?>
                 </div> 
+
             </div>
         </div> 
         <div class="row">

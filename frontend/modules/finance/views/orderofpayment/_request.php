@@ -8,12 +8,12 @@ $js=<<<SCRIPT
         var keylist= keys.join();
         $("#orderofpayment-requestids").val(keys.join());
         $.post({
-            url: '/finance/orderofpayment/calculate-total', // your controller action
-            data: {keylist: keylist},
+            url: '/finance/orderofpayment/calculate-total?id='+keylist, // your controller action
+          // data: {keylist: keylist},
             success: function(data) {
-                 var tot=parseFloat(data);
-                 var total=CurrencyFormat(tot,2);
-                 $('#total').html(total);
+                var tot=parseFloat(data);
+                var total=CurrencyFormat(tot,2);
+                $('#total').html(total);
               
             },
         });
@@ -22,13 +22,12 @@ $js=<<<SCRIPT
         var keys = $('#grid').yiiGridView('getSelectedRows');
         $("#orderofpayment-requestids").val(keys.join());
    });
+  
 SCRIPT;
 $this->registerJs($js);
 ?>
 
  <?php 
- $val=123456;
- 
     $gridColumn = [
         [
             'class' => '\kartik\grid\SerialColumn',
@@ -36,12 +35,16 @@ $this->registerJs($js);
          ],
          [
             'class' => '\kartik\grid\CheckboxColumn',
-            
          ],
-        'request_ref_num',
+        [
+          'attribute'=>'request_ref_num',
+          'enableSorting' => false,
+        ],
+       
         [
             'attribute'=>'request_datetime',
             'pageSummary' => '<span style="float:right;">Total</span>',
+            'enableSorting' => false,
         ],
         [
             'attribute'=>'total',
@@ -54,6 +57,7 @@ $this->registerJs($js);
             'width' => '7%',
             'format' => ['decimal', 2],
             'pageSummary' => '<span id="total">0.00</span>',
+             
         ],
          /*[
             'attribute'=>'selected_request',
@@ -63,24 +67,35 @@ $this->registerJs($js);
         
     ];
 ?>    
-<?= GridView::widget([
+
+ <div class="table-scroll" style="">
+
+        <span style="float: right;display: inline-block!important;"><a href="#" id="max-scroll"><i class="fa fa-caret-down"></i> <span id="scroll-description"> Maximize </span> </a></span>
+        <div style="clear: both;"></div>	   
+	<?= GridView::widget([
         'dataProvider' => $dataProvider,
         'id'=>'grid',
         'pjax'=>true,
+       // 'containerOptions'=> ["style"  => 'overflow:auto;height:300px'],
         'pjaxSettings' => [
             'options' => [
                 'enablePushState' => false,
             ]
         ],
         
-        'responsive'=>true,
+        'responsive'=>false,
         'striped'=>true,
         'hover'=>true,
+      
+        'floatHeaderOptions' => ['scrollingTop' => true],
         'panel' => [
             'heading'=>'<h3 class="panel-title">Request</h3>',
             'type'=>'primary',
+          
+            //
             //'footer'=> false,
          ],
+       
          'columns' =>$gridColumn,
          'showPageSummary' => true,
          /*'afterFooter'=>[
@@ -90,4 +105,4 @@ $this->registerJs($js);
              
          ],*/
     ]); ?>
-
+ </div>
