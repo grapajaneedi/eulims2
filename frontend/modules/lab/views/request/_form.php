@@ -75,9 +75,9 @@ use kartik\datecontrol\DateControl;
     <div class="col-md-6">
         <label class="control-label">Payment Type</label>
         <div class="col-md-12">
-        <label>Unpaid <input type="radio" name="PaymentType" value="0"/></label>
-        <label>Paid <input type="radio" name="PaymentType" value="1" checked="checked" /></label>
-        <label>Subsidized <input type="radio" name="PaymentType" value="2"/></label>
+        <?= $form->field($model, 'payment_type_id')->radio(['label' => 'Unpaid', 'value' => 0, 'uncheck' => null]) ?>
+        <?= $form->field($model, 'payment_type_id')->radio(['label' => 'Paid', 'value' => 1, 'uncheck' => null]) ?>
+        <?= $form->field($model, 'payment_type_id')->radio(['label' => 'Fully Subsidized', 'value' => 2, 'uncheck' => null]) ?>
         </div>
     </div>
 </div>
