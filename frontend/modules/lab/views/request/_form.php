@@ -9,6 +9,10 @@ use kartik\datetime\DateTimePicker;
 use common\models\lab\Customer;
 use yii\web\JsExpression;
 use kartik\datecontrol\DateControl;
+use common\models\lab\Paymenttype;
+use common\models\lab\Discount;
+use common\models\lab\Modeofrelease;
+use common\models\lab\Purpose;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
@@ -20,6 +24,12 @@ use kartik\datecontrol\DateControl;
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'rstl_id')->hiddenInput(['value'=>$GLOBALS['rstl_id']])->label(false) ?>
     <?= $form->field($model, 'request_ref_num')->hiddenInput(['maxlength' => true])->label(false) ?>
+    <?= $form->field($model, 'or_id')->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'posted')->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'status_id')->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'created_at')->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'report_due')->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'total')->hiddenInput(['maxlength' => true])->label(false) ?>
 <div class="row">
     <div class="col-md-6">
     <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
@@ -37,7 +47,9 @@ use kartik\datecontrol\DateControl;
 	'model' => $model,
 	'attribute' => 'request_datetime',
 	'options' => ['placeholder' => 'Enter Date'],
-        //'value'=>'06/05/2018 9:15 AM',
+        'value'=>function($model){
+             return date("m/d/Y h:i:s P",$model->request_datetime);
+        },
 	'pluginOptions' => [
             'autoclose' => true,
             'format' => 'mm/dd/yyyy h:i P'
@@ -75,15 +87,42 @@ use kartik\datecontrol\DateControl;
     <div class="col-md-6">
         <label class="control-label">Payment Type</label>
         <div class="col-md-12">
-        <?= $form->field($model, 'payment_type_id')->radio(['label' => 'Unpaid', 'value' => 0, 'uncheck' => null]) ?>
-        <?= $form->field($model, 'payment_type_id')->radio(['label' => 'Paid', 'value' => 1, 'uncheck' => null]) ?>
-        <?= $form->field($model, 'payment_type_id')->radio(['label' => 'Fully Subsidized', 'value' => 2, 'uncheck' => null]) ?>
+        <?php echo $form->field($model, 'payment_type_id')->radioList(ArrayHelper::map(Paymenttype::find()->all(),'payment_type_id','type'))->label(false); ?>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-6">
-    <?= $form->field($model, 'modeofrelease_id')->textInput() ?>
+    <?= $form->field($model, 'modeofrelease_id')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(Modeofrelease::find()->all(),'modeofrelease_id','mode'),
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select Mode'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+    ])->label('Mode of Release'); ?>
+    </div>
+    <div class="col-md-6">
+    <?= $form->field($model, 'discount_id')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(Discount::find()->all(),'discount_id','type'),
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select Discount'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+    ])->label('Discount'); ?>   
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+    <?= $form->field($model, 'purpose_id')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(Purpose::find()->all(),'purpose_id','name'),
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select Purpose'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+    ])->label('Purpose'); ?>
     </div>
     <div class="col-md-6">
     <?= $form->field($model, 'discount')->textInput(['maxlength' => true]) ?>
@@ -91,42 +130,10 @@ use kartik\datecontrol\DateControl;
 </div>
 <div class="row">
     <div class="col-md-6">
-    <?= $form->field($model, 'discount_id')->textInput() ?>
-    </div>
-    <div class="col-md-6">
-    <?= $form->field($model, 'purpose_id')->textInput() ?>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-    <?= $form->field($model, 'or_id')->textInput() ?>
-    </div>
-    <div class="col-md-6">
-    <?= $form->field($model, 'total')->textInput(['maxlength' => true]) ?>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-    <?= $form->field($model, 'report_due')->textInput() ?>
-    </div>
-    <div class="col-md-6">
     <?= $form->field($model, 'conforme')->textInput(['maxlength' => true]) ?>
     </div>
-</div>
-<div class="row">
     <div class="col-md-6">
     <?= $form->field($model, 'receivedBy')->textInput(['maxlength' => true]) ?>
-    </div>
-    <div class="col-md-6">
-    <?= $form->field($model, 'created_at')->textInput() ?>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-    <?= $form->field($model, 'posted')->textInput() ?>
-    </div>
-    <div class="col-md-6">
-    <?= $form->field($model, 'status_id')->textInput() ?>
     </div>
 </div>
 <div class="row">
