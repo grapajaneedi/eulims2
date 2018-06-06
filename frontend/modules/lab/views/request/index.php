@@ -72,7 +72,7 @@ $func=new Functions();
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'Select RSTL'],
+                'filterInputOptions' => ['placeholder' => 'Select Customer'],
                 'format' => 'raw'
             ],      
             [
@@ -83,7 +83,8 @@ $func=new Functions();
             ],
             [
                 'label'=>'Report Due',
-                'attribute'=>'report_due'
+                'attribute'=>'report_due',
+                'hAlign'=>'center'
             ],
             [
                 'label'=>'Analyses Status',
