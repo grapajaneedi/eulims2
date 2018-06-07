@@ -40,12 +40,12 @@ SCRIPT;
 <div class="row">
     <div class="col-md-6">
     <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
-                'language' => 'en',
-                'options' => ['placeholder' => 'Select Lab'],
-                'pluginOptions' => [
-                    'allowClear' => true
-                ],
+        'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
+        'language' => 'en',
+        'options' => ['placeholder' => 'Select Lab'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ]
     ])->label('Laboratory'); ?>
     </div>
     <div class="col-md-6">
@@ -53,14 +53,19 @@ SCRIPT;
     <?php echo DateTimePicker::widget([
 	'model' => $model,
 	'attribute' => 'request_datetime',
+        'readonly'=>true,
 	'options' => ['placeholder' => 'Enter Date'],
         'value'=>function($model){
              return date("m/d/Y h:i:s P",$model->request_datetime);
         },
 	'pluginOptions' => [
             'autoclose' => true,
-            'format' => 'mm/dd/yyyy h:i P'
-	]
+            'removeButton' => false,
+            'format' => 'yyyy-mm-dd h:i:s'
+	],
+        'pluginEvents'=>[
+            "change" => "function() { alert('change'); }",
+        ]
     ]); ?>
     </div>
 </div>
@@ -103,38 +108,50 @@ SCRIPT;
 <div class="row">
     <div class="col-md-6">
     <?= $form->field($model, 'modeofrelease_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map(Modeofrelease::find()->all(),'modeofrelease_id','mode'),
-                'language' => 'en',
-                'options' => ['placeholder' => 'Select Mode'],
-                'pluginOptions' => [
-                    'allowClear' => true
-                ],
+        'data' => ArrayHelper::map(Modeofrelease::find()->all(),'modeofrelease_id','mode'),
+        'language' => 'en',
+        'options' => ['placeholder' => 'Select Mode'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
     ])->label('Mode of Release'); ?>
     </div>
     <div class="col-md-6">
     <?= $form->field($model, 'discount_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map(Discount::find()->all(),'discount_id','type'),
-                'language' => 'en',
-                'options' => ['placeholder' => 'Select Discount'],
-                'pluginOptions' => [
-                    'allowClear' => true
-                ],
+        'data' => ArrayHelper::map(Discount::find()->all(),'discount_id','type'),
+        'language' => 'en',
+        'options' => ['placeholder' => 'Select Discount'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+        'pluginEvents'=>[
+            "change" => 'function() { 
+                var discountid=this.value;
+                $.post("/ajax/getdiscount/", {
+                        discountid: discountid
+                    }, function(result){
+                    if(result){
+                       $("#request-discount").val(result.rate);
+                    }
+                });
+            }
+        ',]
     ])->label('Discount'); ?>   
     </div>
 </div>
 <div class="row">
     <div class="col-md-6">
     <?= $form->field($model, 'purpose_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map(Purpose::find()->all(),'purpose_id','name'),
-                'language' => 'en',
-                'options' => ['placeholder' => 'Select Purpose'],
-                'pluginOptions' => [
-                    'allowClear' => true
-                ],
+        'data' => ArrayHelper::map(Purpose::find()->all(),'purpose_id','name'),
+        'language' => 'en',
+        'options' => ['placeholder' => 'Select Purpose'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
     ])->label('Purpose'); ?>
     </div>
     <div class="col-md-6">
-    <?= $form->field($model, 'discount')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'discount')->textInput(['maxlength' => true,'readonly'=>true,'style'=>'background-color: white']) ?>
     </div>
 </div>
 <div class="row">

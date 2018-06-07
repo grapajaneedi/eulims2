@@ -139,7 +139,8 @@ return [
         'class' => 'common\modules\admin\components\AccessControl',
         'allowActions' => [
             'site/*',
-            '/admin/user/signup'
+            '/admin/user/signup',
+            '/ajax/*'
         ]
     ],
     'params' => $params,
