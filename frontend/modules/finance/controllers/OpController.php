@@ -3,10 +3,10 @@
 namespace frontend\modules\finance\controllers;
 
 use Yii;
-use common\models\finance\Orderofpayment;
+use common\models\finance\Op;
 use common\models\finance\Paymentitem;
 use common\models\finance\Collection;
-use common\models\finance\OrderofpaymentSearch;
+use common\models\finance\OpSearch;
 use common\models\lab\Request;
 use common\models\finance\Collectiontype;
 use yii\web\Controller;
@@ -19,9 +19,9 @@ use common\components\Functions;
 use kartik\editable\Editable;
 use yii\helpers\Json;
 /**
- * OrderofpaymentController implements the CRUD actions for Orderofpayment model.
+ * OrderofpaymentController implements the CRUD actions for Op model.
  */
-class OrderofpaymentController extends Controller
+class OpController extends Controller
 {
     /**
      * @inheritdoc
@@ -39,13 +39,13 @@ class OrderofpaymentController extends Controller
     }
 
     /**
-     * Lists all Orderofpayment models.
+     * Lists all Op models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $model = new Orderofpayment();
-        $searchModel = new OrderofpaymentSearch();
+        $model = new Op();
+        $searchModel = new OpSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -56,7 +56,7 @@ class OrderofpaymentController extends Controller
     }
 
     /**
-     * Displays a single Orderofpayment model.
+     * Displays a single Op model.
      * @param integer $id
      * @return mixed
      */
@@ -78,16 +78,16 @@ class OrderofpaymentController extends Controller
     }
 
     /**
-     * Creates a new Orderofpayment model.
+     * Creates a new Op model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Orderofpayment();
+        $model = new Op();
         $paymentitem = new Paymentitem();
         $collection= new Collection();
-        $searchModel = new OrderofpaymentSearch();
+        $searchModel = new OpSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
         
@@ -131,13 +131,14 @@ class OrderofpaymentController extends Controller
                         $collection->save(false);
                         //
                         $transaction->commit();
+                        $this->postRequest($request_ids);
                         $session->set('savepopup',"executed");
-                         return $this->redirect(['/finance/orderofpayment']);
+                         return $this->redirect(['/finance/op']);
                     
                 } catch (Exception $e) {
                     $transaction->rollBack();
                    $session->set('errorpopup',"executed");
-                   return $this->redirect(['/finance/orderofpayment']);
+                   return $this->redirect(['/finance/op']);
                 }
                 
               //  var_dump($total_amount);
@@ -184,7 +185,7 @@ class OrderofpaymentController extends Controller
      public function actionGetlistrequest($id)
     {
          $model= new Request();
-        $query = Request::find()->where(['customer_id' => $id]);
+        $query = Request::find()->where(['customer_id' => $id,'posted' => 0]);
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -199,7 +200,7 @@ class OrderofpaymentController extends Controller
 
     }
     /**
-     * Deletes an existing Orderofpayment model.
+     * Deletes an existing Op model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -212,15 +213,15 @@ class OrderofpaymentController extends Controller
     }
 
     /**
-     * Finds the Orderofpayment model based on its primary key value.
+     * Finds the Op model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Orderofpayment the loaded model
+     * @return Op the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Orderofpayment::findOne($id)) !== null) {
+        if (($model = Op::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -292,12 +293,13 @@ class OrderofpaymentController extends Controller
          return $collection_name;
      }
      
+       // updating request as posted upon saving order of payment
      public function postRequest($reqID){
          $str_total = explode(',', $reqID);
           $arr_length = count($str_total); 
             for($i=0;$i<$arr_length;$i++){
                Yii::$app->labdb->createCommand()
-             ->update('tbl_request', ['posted' => 1], 'request_id= $str_total[$i]')
+             ->update('tbl_request', ['posted' => 1], 'request_id= '.$str_total[$i])
              ->execute(); 
             }
      }
