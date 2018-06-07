@@ -5,13 +5,13 @@ namespace common\models\finance;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\finance\Orderofpayment;
+use common\models\finance\Op;
 use kartik\daterange\DateRangeBehavior;
 
 /**
  * OrderofpaymentSearch represents the model behind the search form about `common\models\finance\Orderofpayment`.
  */
-class OrderofpaymentSearch extends Orderofpayment
+class OpSearch extends Op
 {
     public $createTimeRange;
     public $createDateStart;
@@ -47,7 +47,7 @@ class OrderofpaymentSearch extends Orderofpayment
      */
     public function search($params)
     {
-        $query = Orderofpayment::find();
+        $query = Op::find();
 
         // add conditions that should always apply here
 

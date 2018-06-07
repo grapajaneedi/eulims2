@@ -26,7 +26,7 @@ use common\components\Functions;
  * @property Paymentmode $paymentMode
  * @property Paymentitem[] $paymentitems
  */
-class Orderofpayment extends \yii\db\ActiveRecord
+class Op extends \yii\db\ActiveRecord
 {
     public $RequestIds;
     /**
@@ -51,7 +51,8 @@ class Orderofpayment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['transactionnum', 'collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose','RequestIds'], 'required'],
+            [['transactionnum', 'collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose'], 'required'],
+			 ['RequestIds', 'required','message' => 'Please select Request.'],
             [['rstl_id', 'collectiontype_id', 'payment_mode_id', 'customer_id', 'created_receipt', 'allow_erratum'], 'integer'],
             [['order_date','RequestIds'], 'safe'],
             [['total_amount'], 'number'],

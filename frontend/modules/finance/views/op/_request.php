@@ -6,9 +6,9 @@ $js=<<<SCRIPT
       // alert(this.value);
         var keys = $('#grid').yiiGridView('getSelectedRows');
         var keylist= keys.join();
-        $("#orderofpayment-requestids").val(keys.join());
+        $("#op-requestids").val(keys.join());
         $.post({
-            url: '/finance/orderofpayment/calculate-total?id='+keylist, // your controller action
+            url: '/finance/op/calculate-total?id='+keylist, // your controller action
           // data: {keylist: keylist},
             success: function(data) {
                 var tot=parseFloat(data);
@@ -20,7 +20,7 @@ $js=<<<SCRIPT
    });    
    $(".select-on-check-all").change(function(){
         var keys = $('#grid').yiiGridView('getSelectedRows');
-        $("#orderofpayment-requestids").val(keys.join());
+        $("#op-requestids").val(keys.join());
    });
   
 SCRIPT;
@@ -68,15 +68,12 @@ $this->registerJs($js);
     ];
 ?>    
 
- <div class="table-scroll" style="">
-
-        <span style="float: right;display: inline-block!important;"><a href="#" id="max-scroll"><i class="fa fa-caret-down"></i> <span id="scroll-description"> Maximize </span> </a></span>
-        <div style="clear: both;"></div>	   
+	   
 	<?= GridView::widget([
         'dataProvider' => $dataProvider,
         'id'=>'grid',
         'pjax'=>true,
-       // 'containerOptions'=> ["style"  => 'overflow:auto;height:300px'],
+        'containerOptions'=> ["style"  => 'overflow:auto;height:300px'],
         'pjaxSettings' => [
             'options' => [
                 'enablePushState' => false,
@@ -105,4 +102,3 @@ $this->registerJs($js);
              
          ],*/
     ]); ?>
- </div>
