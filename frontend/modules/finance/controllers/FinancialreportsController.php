@@ -54,6 +54,13 @@ class FinancialreportsController extends \yii\web\Controller
            
             ]);
     }
+    
+    public function actionCashreceiptjournal()
+    {
+     return $this->render('cashreceiptjournal');
+    }
+    
+    
     public function actionIndex()
     {
         return $this->render('index');
