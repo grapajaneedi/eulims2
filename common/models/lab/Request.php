@@ -12,7 +12,7 @@ use yii\db\ActiveRecord;
  *
  * @property int $request_id
  * @property string $request_ref_num
- * @property int $request_datetime
+ * @property string $request_datetime
  * @property int $rstl_id
  * @property int $lab_id
  * @property int $customer_id
@@ -30,6 +30,7 @@ use yii\db\ActiveRecord;
  * @property int $posted
  * @property int $status_id
  * @property int $selected 
+ * @property int $is_referral
  *
  * @property Analysis[] $analyses
  * @property Cancelledrequest[] $cancelledrequests
@@ -61,9 +62,8 @@ class Request extends \yii\db\ActiveRecord
             'timestamp' => [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'creation_at',
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'request_datetime',
-                    ActiveRecord::EVENT_BEFORE_UPDATE => 'creation_at',
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'created_at',
                 ],
                 'value' => function() { 
                     return date('U'); // unix timestamp 
@@ -85,9 +85,9 @@ class Request extends \yii\db\ActiveRecord
     {
         return [
             [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
-            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id','selected'], 'integer'],
+            [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id','selected','is_referral'], 'integer'],
             [['discount', 'total'], 'number'],
-            [['report_due','customer_name'], 'safe'],
+            [['report_due','customer_name','request_datetime'], 'safe'],
             [['customer_name'],'string','max'=>200],
             [['request_ref_num', 'conforme', 'receivedBy'], 'string', 'max' => 50],
             [['request_ref_num'], 'unique'],
@@ -129,6 +129,7 @@ class Request extends \yii\db\ActiveRecord
             'status_id' => 'Status ID',
             'customer_name'=>'Customer Name',
             'selected' => 'Selected',
+            'is_referral' => 'Is Referral', 
         ];
     }
 

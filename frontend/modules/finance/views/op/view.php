@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use kartik\detail\DetailView;
 use kartik\grid\GridView;
 /* @var $this yii\web\View */
-/* @var $model common\models\finance\Orderofpayment */
+/* @var $model common\models\finance\Op */
 
 $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['index']];

@@ -52,7 +52,7 @@ class Collection extends \yii\db\ActiveRecord
             [['nature'], 'string', 'max' => 50],
             [['rstl_id'], 'unique'],
             [['orderofpayment_id'], 'unique'],
-            [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orderofpayment::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
+            [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Op::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
             [['payment_status_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentStatus::className(), 'targetAttribute' => ['payment_status_id' => 'payment_status_id']],
         ];
     }
@@ -80,7 +80,7 @@ class Collection extends \yii\db\ActiveRecord
      */
     public function getOrderofpayment()
     {
-        return $this->hasOne(Orderofpayment::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+        return $this->hasOne(Op::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
 
     /**

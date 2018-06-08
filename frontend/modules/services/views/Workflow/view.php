@@ -39,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
     $steps= explode(',', $model->workflow);
     $n=0;
     foreach ($steps as $s) {
+        $n++;
         $var = Procedure::findOne($s);
         echo '<li>
                 <i class="fa fa-exclamation bg-blue"></i>
@@ -54,12 +55,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                     </div>
               </li>'; 
-        $n++;
     }
 
 
     ?>
-
     <!-- timeline item -->
     
 
