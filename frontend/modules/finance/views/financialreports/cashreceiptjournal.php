@@ -1,6 +1,7 @@
 <?php
 
-use dosamigos\tableexport\ButtonTableExport;
+
+//var_dump($stringTable);
 
 
 /*
@@ -18,6 +19,8 @@ use dosamigos\tableexport\ButtonTableExport;
  */
 ?>
 <h1>Cash Receipt Journal</h1>
+
+
 <style type="text/css">
 
 
@@ -26,6 +29,13 @@ use dosamigos\tableexport\ButtonTableExport;
         text-align: center;
     }
 </style>
+
+<?php
+
+
+
+?>
+
 
 <div style="overflow: auto;height: 300px">
 
@@ -36,6 +46,13 @@ use dosamigos\tableexport\ButtonTableExport;
             <td style="width:302px">Sundry</td>
 
         </tr></table>
+    
+     <?php
+    echo $stringTable
+    ?>
+
+   
+    <!--
     <table style="width:1800px;">
 
 
@@ -62,6 +79,7 @@ use dosamigos\tableexport\ButtonTableExport;
         </tr>
 
     </table>
+    -->
 
 </div>
 
