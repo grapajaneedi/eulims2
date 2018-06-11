@@ -21,7 +21,6 @@ use yii\db\ActiveRecord;
  * @property string $discount
  * @property int $discount_id
  * @property int $purpose_id
- * @property int $or_id
  * @property string $total
  * @property string $report_due
  * @property string $conforme
@@ -83,8 +82,8 @@ class Request extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_ids', 'discount_id', 'purpose_id', 'or_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
-            [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id','selected','is_referral'], 'integer'],
+            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_ids', 'discount_id', 'purpose_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
+            [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'created_at', 'posted', 'status_id','selected','is_referral'], 'integer'],
             [['discount', 'total'], 'number'],
             [['report_due','customer_name','request_datetime'], 'safe'],
             [['customer_name'],'string','max'=>200],
@@ -117,7 +116,6 @@ class Request extends \yii\db\ActiveRecord
             'discount' => 'Discount',
             'discount_id' => 'Discount ID',
             'purpose_id' => 'Purpose ID',
-            'or_id' => 'Or ID',
             'total' => 'Total',
             'report_due' => 'Report Due',
             'conforme' => 'Conforme',
