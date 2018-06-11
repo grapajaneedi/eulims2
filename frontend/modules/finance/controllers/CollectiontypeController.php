@@ -101,7 +101,7 @@ class CollectiontypeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->collectiontype_id]);
+            return $this->redirect('index');
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,

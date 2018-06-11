@@ -32,7 +32,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     
   <div class="table-responsive">
     <?php 
-    $Buttontemplate='{view}{update}{delete}'; 
+    $Buttontemplate='{view}{update}'; 
     ?>
       
     <?= GridView::widget([
@@ -61,7 +61,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                     return $model->collectiontype->natureofcollection;
                 },
                 'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(CollectionTYpe::find()->asArray()->all(), 'collectiontype_id', 'natureofcollection'),
+                'filter' => ArrayHelper::map(Collectiontype::find()->asArray()->all(), 'collectiontype_id', 'natureofcollection'),
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
@@ -166,13 +166,18 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
             $session->close();
         }
         if (isset($session['savepopup'])) {
-            $func->CrudAlert("Saved Successfully","SUCCESS",true);
+            $func->CrudAlert("Successfully Saved","SUCCESS",true);
             unset($session['savepopup']);
             $session->close();
         }
         if (isset($session['errorpopup'])) {
             $func->CrudAlert("Transaction Error","ERROR",true);
             unset($session['errorpopup']);
+            $session->close();
+        }
+        if (isset($session['checkpopup'])) {
+            $func->CrudAlert("Insufficient Wallet Balance","INFO",true,false,false);
+            unset($session['checkpopup']);
             $session->close();
         }
     }
