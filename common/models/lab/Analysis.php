@@ -83,7 +83,7 @@ class Analysis extends \yii\db\ActiveRecord
             'request_id' => 'Request ID',
             'sample_id' => 'Sample ID',
             'sample_code' => 'Sample Code',
-            'testname' => 'Testname',
+            'testname' => 'Test name',
             'method' => 'Method',
             'references' => 'References',
             'quantity' => 'Quantity',
