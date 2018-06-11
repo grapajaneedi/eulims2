@@ -88,7 +88,7 @@ class Sample extends \yii\db\ActiveRecord
             'description' => 'Description',
             'sampling_date' => 'Sampling Date',
             'remarks' => 'Remarks',
-            'request_id' => 'Request ID',
+            'request_id' => 'Request Reference Number',
             'sample_month' => 'Sample Month',
             'sample_year' => 'Sample Year',
             'active' => 'Active',
