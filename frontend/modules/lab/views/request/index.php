@@ -5,6 +5,7 @@ use kartik\grid\GridView;
 use kartik\grid\ActionColumn;
 use \yii\helpers\ArrayHelper;
 use common\models\system\Rstl;
+use kartik\widgets\DatePicker;
 use common\models\lab\Lab;
 use common\models\lab\Request;
 use common\components\Functions;
@@ -52,13 +53,32 @@ $func=new Functions();
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             'request_ref_num',
-            [
+            /*[
                 'label'=>'Request Date',
                 'attribute'=>'request_datetime',
                 'filterType' => GridView::FILTER_DATE,
                 //'value'=>function($model){
                 //    return date('m/d/Y h:i:s A',$model->request_datetime);
                 //}
+            ],
+             * 
+             */
+            [
+                'label'=>'Request Date',
+                'attribute'=>'request_datetime',
+                'value'=>function($model){
+                    return date('d/m/Y H:i:s',strtotime($model->request_datetime));
+                },
+                'filter'=>DatePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'request_datetime',
+                    'value' => date('d-M-Y', strtotime('+2 days')),
+                    'options' => ['placeholder' => 'Select date ...'],
+                    'pluginOptions' => [
+                        'format' => 'yyyy-mm-dd',
+                        'todayHighlight' => true
+                    ]
+                ]),
             ],
             [
                 'attribute' => 'customer_id', 

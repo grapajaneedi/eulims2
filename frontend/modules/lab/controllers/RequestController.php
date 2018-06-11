@@ -109,7 +109,7 @@ class RequestController extends Controller
             $date = new DateTime();
             $model->request_datetime=date("Y-m-d h:i:s");
             $model->payment_type_id=1;
-            $model->modeofrelease_id=1;
+            $model->modeofrelease_ids='1';
             $model->discount_id=0;
             $model->discount='0.00';
             $model->total=0.00;

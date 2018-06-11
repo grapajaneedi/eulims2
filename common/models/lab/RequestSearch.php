@@ -18,8 +18,9 @@ class RequestSearch extends Request
     public function rules()
     {
         return [
-            [['request_id', 'request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id'], 'integer'],
+            [['request_id', 'request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id'], 'integer'],
             [['request_ref_num', 'report_due', 'conforme', 'receivedBy'], 'safe'],
+            [['modeofrelease_ids', 'receivedBy'], 'string', 'max' => 50],
             [['discount', 'total'], 'number'],
         ];
     }
@@ -65,7 +66,7 @@ class RequestSearch extends Request
             'lab_id' => $this->lab_id,
             'customer_id' => $this->customer_id,
             'payment_type_id' => $this->payment_type_id,
-            'modeofrelease_id' => $this->modeofrelease_id,
+            'modeofrelease_ids' => $this->modeofrelease_ids,
             'discount' => $this->discount,
             'discount_id' => $this->discount_id,
             'purpose_id' => $this->purpose_id,

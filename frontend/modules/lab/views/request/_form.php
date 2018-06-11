@@ -107,14 +107,19 @@ SCRIPT;
 </div>
 <div class="row">
     <div class="col-md-6">
-    <?= $form->field($model, 'modeofrelease_id')->widget(Select2::classname(), [
+    <?php  
+    echo '<label class="control-label">Mode of ReleaseIDs</label>';
+    echo Select2::widget([
+        'name' => 'modeofreleaseids',
+        'id' => 'modeofreleaseids',
         'data' => ArrayHelper::map(Modeofrelease::find()->all(),'modeofrelease_id','mode'),
-        'language' => 'en',
-        'options' => ['placeholder' => 'Select Mode'],
-        'pluginOptions' => [
-            'allowClear' => true
+        'value'=>$model->modeofrelease_ids,
+        'options' => [
+            'placeholder' => 'Select provinces ...',
+            'multiple' => true
         ],
-    ])->label('Mode of Release'); ?>
+    ]);
+    ?>
     </div>
     <div class="col-md-6">
     <?= $form->field($model, 'discount_id')->widget(Select2::classname(), [
