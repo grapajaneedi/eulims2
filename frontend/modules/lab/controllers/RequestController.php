@@ -107,11 +107,11 @@ class RequestController extends Controller
             return $this->redirect(['view', 'id' => $model->request_id]); ///lab/request/view?id=1
         } else {
             $date = new DateTime();
-            //$model->request_datetime=date("m/d/Y h:i:s P",$this->request_datetime);
-            $model->payment_type_id=0;
+            $model->request_datetime=date("Y-m-d h:i:s");
+            $model->payment_type_id=1;
             $model->modeofrelease_id=1;
             $model->discount_id=0;
-            $model->discount=0.00;
+            $model->discount='0.00';
             $model->total=0.00;
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('create', [

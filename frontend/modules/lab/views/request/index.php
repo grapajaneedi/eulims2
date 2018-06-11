@@ -56,9 +56,9 @@ $func=new Functions();
                 'label'=>'Request Date',
                 'attribute'=>'request_datetime',
                 'filterType' => GridView::FILTER_DATE,
-                'value'=>function($model){
-                    return date('m/d/Y h:i:s A',$model->request_datetime);
-                }
+                //'value'=>function($model){
+                //    return date('m/d/Y h:i:s A',$model->request_datetime);
+                //}
             ],
             [
                 'attribute' => 'customer_id', 
