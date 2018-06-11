@@ -3,13 +3,14 @@
 use yii\helpers\Html;
 use kartik\detail\DetailView;
 use kartik\grid\GridView;
+use common\models\finance\Collection;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
 
 $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['index']];
 
-
+$bal=($model->total_amount) -($model->collection->sub_total);
 //}
 ?>
 <div class="orderofpayment-view">
@@ -64,26 +65,51 @@ $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['inde
                 ],
                     
             ],
-            [
-                'columns' => [
-                    [
+           [
+              'columns' => [
+                  [
                         'label'=>'Date',
                         'format'=>'raw',
                         'value'=>$model->order_date,
                         'valueColOptions'=>['style'=>'width:30%'], 
+                        'displayOnly'=>true,
+                        'hAlign'=>'left',
+                  ],
+                  [
+                    //'attribute'=>'request_datetime',
+                    'label'=>' ',
+                    'format'=>'raw',
+                    'value'=>' ',
+                    'valueColOptions'=>['style'=>'width:30%'], 
+                    'displayOnly'=>true
+                  ],
+              ],
+           ],
+            
+            [
+                'group'=>true,
+                'label'=>'Payment Details',
+                'rowOptions'=>['class'=>'info']
+            ],
+            [
+                'columns' => [
+                    [
+                        'label'=>'Collection',
+                        'format'=>'raw',
+                        'value' => $model->collection->sub_total,
+                        'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
                     [
-                        'label'=>'Total Amount',
+                        'label'=>'Balance',
                         'format'=>'raw',
-                        'value'=>'',
+                        'value' => $bal,
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
                 ],
                     
             ],
-          
         ],
     ]) ?>
    </div>

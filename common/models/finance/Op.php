@@ -94,7 +94,7 @@ class Op extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCollections()
+    public function getCollection()
     {
         return $this->hasOne(Collection::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
