@@ -94,7 +94,7 @@ class Profile extends \yii\db\ActiveRecord
             'lastname' => 'Lastname',
             'firstname' => 'Firstname',
             'designation' => 'Designation',
-            'middleinitial' => 'Middle Initial',
+            'middleinitial' => 'Middlename',
             'rstl_id' => 'RSTL',
             'lab_id' => 'Lab',
             'contact_numbers' => 'Contact #',

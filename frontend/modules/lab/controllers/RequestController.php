@@ -13,6 +13,7 @@ use common\models\lab\Sample;
 use yii\db\Query;
 use common\models\lab\Customer;
 use DateTime;
+use common\models\system\Profile;
 
 /**
  * RequestController implements the CRUD actions for Request model.
@@ -77,10 +78,10 @@ class RequestController extends Controller
     }
     public function actionCustomerlist($q = null, $id = null) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $out = ['results' => ['customer_id' => '', 'text' => '']];
+        $out = ['results' => ['id' => '', 'text' => '']];
         if (!is_null($q)) {
             $query = new Query;
-            $query->select('customer_id, customer_name AS text')
+            $query->select('customer_id as id, customer_name AS text')
                     ->from('tbl_customer')
                     ->where(['like', 'customer_name', $q])
                     ->limit(20);
@@ -89,7 +90,7 @@ class RequestController extends Controller
             $data = $command->queryAll();
             $out['results'] = array_values($data);
         } elseif ($id > 0) {
-            $out['results'] = ['customer_id' => $id, 'text' =>Customer::find()->where(['customer_id'=>$customer_id])->customer_name];
+            $out['results'] = ['id' => $id, 'text' =>Customer::find()->where(['customer_id'=>$id])->customer_name];
         }
         return $out;
     }
@@ -107,12 +108,21 @@ class RequestController extends Controller
             return $this->redirect(['view', 'id' => $model->request_id]); ///lab/request/view?id=1
         } else {
             $date = new DateTime();
+            $date2 = new DateTime();
+            $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+            date_add($date2,date_interval_create_from_date_string("1 day"));
             $model->request_datetime=date("Y-m-d h:i:s");
+            $model->report_due=date_format($date2,"Y-m-d");
+            $model->created_at=date('U');
+            $model->rstl_id= $GLOBALS['rstl_id'];
             $model->payment_type_id=1;
-            $model->modeofrelease_id=1;
+            $model->modeofrelease_ids='1';
             $model->discount_id=0;
             $model->discount='0.00';
             $model->total=0.00;
+            $model->posted=0;
+            $model->status_id=1;
+            $model->receivedBy=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('create', [
                     'model' => $model,

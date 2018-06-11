@@ -63,6 +63,12 @@ Modal::end();*/
                 'format' => 'raw',
                 //'value' => function($data) { return $data->sampleType->sample_type;},
                 'value' => function($data){ return $data->sampleType->sample_type;},
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => $sampletypes,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Sample Type', 'id' => 'grid-op-search-sample_type_id']
             ],
             'sample_code',
             'samplename',

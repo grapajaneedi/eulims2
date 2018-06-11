@@ -83,7 +83,7 @@ class Analysis extends \yii\db\ActiveRecord
             'request_id' => 'Request ID',
             'sample_id' => 'Sample ID',
             'sample_code' => 'Sample Code',
-            'testname' => 'Testname',
+            'testname' => 'Test name',
             'method' => 'Method',
             'references' => 'References',
             'quantity' => 'Quantity',
@@ -133,6 +133,6 @@ class Analysis extends \yii\db\ActiveRecord
      */
     public function getTaggings()
     {
-        return $this->hasMany(Tagging::className(), ['analysis_id' => 'analysis_id']);
+        return $this->hasOne(Tagging::className(), ['analysis_id' => 'analysis_id']);
     }
 }

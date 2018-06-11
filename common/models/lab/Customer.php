@@ -20,11 +20,13 @@ use Yii;
  * @property int $customer_type_id
  * @property int $business_nature_id
  * @property int $industrytype_id
+ * @property int $classification_id 
  * @property int $created_at
  *
  * @property Customertype $customerType
  * @property Businessnature $businessNature
  * @property Industrytype $industrytype
+  * @property Classification $classification
  * @property Request[] $requests
  * @property Request[] $requests0
  */
@@ -70,8 +72,8 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'barangay_id', 'customer_type_id', 'business_nature_id', 'industrytype_id'], 'required'],
-            [['rstl_id', 'barangay_id', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'created_at'], 'integer'],
+            [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'barangay_id', 'customer_type_id', 'business_nature_id', 'industrytype_id','classification_id'], 'required'],
+            [['rstl_id', 'barangay_id', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'classification_id', 'created_at'], 'integer'],
             [['latitude', 'longitude'], 'number'],
             [['customer_code'], 'string', 'max' => 11],
             [['customer_name', 'address'], 'string', 'max' => 200],
@@ -81,6 +83,7 @@ class Customer extends \yii\db\ActiveRecord
             [['customer_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customertype::className(), 'targetAttribute' => ['customer_type_id' => 'customertype_id']],
             [['business_nature_id'], 'exist', 'skipOnError' => true, 'targetClass' => Businessnature::className(), 'targetAttribute' => ['business_nature_id' => 'business_nature_id']],
             [['industrytype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Industrytype::className(), 'targetAttribute' => ['industrytype_id' => 'industrytype_id']],
+            [['classification_id'], 'exist', 'skipOnError' => true, 'targetClass' => Classification::className(), 'targetAttribute' => ['classification_id' => 'classification_id']],
         ];
     }
     /**
@@ -103,6 +106,7 @@ class Customer extends \yii\db\ActiveRecord
             'customer_type_id' => 'Customer Type',
             'business_nature_id' => 'Business Nature',
             'industrytype_id' => 'Industrytype',
+            'classification_id' => 'Classification',
             'created_at' => 'Created At',
         ];
     }
@@ -133,5 +137,12 @@ class Customer extends \yii\db\ActiveRecord
     public function getRequests()
     {
         return $this->hasMany(Request::className(), ['customer_id' => 'customer_id']);
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClassification()
+    {
+        return $this->hasOne(Classification::className(), ['classification_id' => 'classification_id']);
     }
 }

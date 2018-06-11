@@ -17,11 +17,10 @@ use yii\db\ActiveRecord;
  * @property int $lab_id
  * @property int $customer_id
  * @property int $payment_type_id
- * @property int $modeofrelease_id
+ * @property string $modeofrelease_ids
  * @property string $discount
  * @property int $discount_id
  * @property int $purpose_id
- * @property int $or_id
  * @property string $total
  * @property string $report_due
  * @property string $conforme
@@ -41,7 +40,6 @@ use yii\db\ActiveRecord;
  * @property Purpose $purpose
  * @property Status $status
  * @property Customer $customer0
- * @property Modeofrelease $modeofrelease
  * @property Paymenttype $paymentType
  * @property Sample[] $samples
  * @property Testreport[] $testreports
@@ -84,12 +82,13 @@ class Request extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
-            [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'discount_id', 'purpose_id', 'or_id', 'created_at', 'posted', 'status_id','selected','is_referral'], 'integer'],
+            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_ids', 'discount_id', 'purpose_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
+            [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'created_at', 'posted', 'status_id','selected','is_referral'], 'integer'],
             [['discount', 'total'], 'number'],
+            ['request_ref_num', 'default', 'value' => NULL],
             [['report_due','customer_name','request_datetime'], 'safe'],
             [['customer_name'],'string','max'=>200],
-            [['request_ref_num', 'conforme', 'receivedBy'], 'string', 'max' => 50],
+            [['request_ref_num', 'conforme','modeofrelease_ids', 'receivedBy'], 'string', 'max' => 50],
             [['request_ref_num'], 'unique'],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'customer_id']],
@@ -97,7 +96,6 @@ class Request extends \yii\db\ActiveRecord
             [['purpose_id'], 'exist', 'skipOnError' => true, 'targetClass' => Purpose::className(), 'targetAttribute' => ['purpose_id' => 'purpose_id']],
             [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => Status::className(), 'targetAttribute' => ['status_id' => 'status_id']],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'customer_id']],
-            [['modeofrelease_id'], 'exist', 'skipOnError' => true, 'targetClass' => Modeofrelease::className(), 'targetAttribute' => ['modeofrelease_id' => 'modeofrelease_id']],
             [['payment_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Paymenttype::className(), 'targetAttribute' => ['payment_type_id' => 'payment_type_id']],
         ];
     }
@@ -115,11 +113,10 @@ class Request extends \yii\db\ActiveRecord
             'lab_id' => 'Lab ID',
             'customer_id' => 'Customer ID',
             'payment_type_id' => 'Payment Type ID',
-            'modeofrelease_id' => 'Modeofrelease ID',
+            'modeofrelease_ids' => 'Modeofrelease IDs',
             'discount' => 'Discount',
             'discount_id' => 'Discount ID',
             'purpose_id' => 'Purpose ID',
-            'or_id' => 'Or ID',
             'total' => 'Total',
             'report_due' => 'Report Due',
             'conforme' => 'Conforme',
@@ -204,15 +201,7 @@ class Request extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Customer::className(), ['customer_id' => 'customer_id']);
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getModeofrelease()
-    {
-        return $this->hasOne(Modeofrelease::className(), ['modeofrelease_id' => 'modeofrelease_id']);
-    }
-
+                                                                                                                                                    
     /**
      * @return \yii\db\ActiveQuery
      */
