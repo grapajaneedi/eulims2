@@ -108,6 +108,7 @@ class RequestController extends Controller
         } else {
             $date = new DateTime();
             $model->request_datetime=date("Y-m-d h:i:s");
+            $model->rstl_id= $GLOBALS['rstl_id'];
             $model->payment_type_id=1;
             $model->modeofrelease_ids='1';
             $model->discount_id=0;

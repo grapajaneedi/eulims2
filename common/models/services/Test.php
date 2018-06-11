@@ -21,6 +21,7 @@ use common\models\services\Workflow;
  *
  * @property Analysis[] $analyses
  * @property Analysis[] $analyses0
+ * @property Methodreference[] $methodreferences 
  * @property Lab $lab
  * @property Testcategory $testcategory
  * @property Sampletype $sampleType
@@ -50,7 +51,7 @@ class Test extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['testname', 'testcategory_id', 'sample_type_id'], 'required'],
+            [['rstl_id', 'testname', 'testcategory_id', 'sample_type_id'], 'required'],
             [['rstl_id', 'duration', 'testcategory_id', 'sample_type_id', 'lab_id'], 'integer'],
             [['fee'], 'number'],
             [['testname'], 'string', 'max' => 200],

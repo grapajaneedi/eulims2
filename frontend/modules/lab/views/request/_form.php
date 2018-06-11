@@ -29,11 +29,11 @@ SCRIPT;
 
 <div class="request-form">
     <?php $form = ActiveForm::begin(); ?>
-    <?= $form->field($model, 'rstl_id')->hiddenInput(['value'=>$GLOBALS['rstl_id']])->label(false) ?>
+    <?= $form->field($model, 'rstl_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'request_ref_num')->hiddenInput(['maxlength' => true])->label(false) ?>
-    <?= $form->field($model, 'or_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'posted')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'status_id')->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'modeofrelease_ids')->hiddenInput(['id'=>'modeofrelease_ids'])->label(false) ?>
     <?= $form->field($model, 'created_at')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'report_due')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'total')->hiddenInput(['maxlength' => true])->label(false) ?>
@@ -118,6 +118,12 @@ SCRIPT;
             'placeholder' => 'Select provinces ...',
             'multiple' => true
         ],
+        'pluginEvents' => [
+            "change" => "function() { 
+                $('#modeofrelease_ids').val($(this).val());
+            }
+            ",
+        ]
     ]);
     ?>
     </div>
