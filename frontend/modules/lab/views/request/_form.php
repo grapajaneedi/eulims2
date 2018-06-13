@@ -94,7 +94,7 @@ if($disabled){
     <div class="input-group col-md-6">
         <?php
             $func=new Functions();
-            echo $func->GetCustomerList($form,$model,$disabled);
+            echo $func->GetCustomerList($form,$model,$disabled,"Customer");
         ?> 
         <div class="input-group-append">
             <button type="button" class="btn btn-primary input-group-addon"><i class="fa fa-users"> Customers</i></button>

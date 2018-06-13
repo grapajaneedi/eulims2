@@ -58,7 +58,7 @@ class Functions extends Component{
         $ret=$Command->execute();
         return $ret;
     }
-    function GetCustomerList($form,$model,$disabled=false){
+    function GetCustomerList($form,$model,$disabled=false,$Label=false){
 $dataExp = <<< SCRIPT
     function (params, page) {
         return {
@@ -93,7 +93,7 @@ SCRIPT;
                     'results' => new JsExpression($dataResults)
                 ]
             ],
-        ])->label(false);
+        ])->label($Label);
     }
     function GenerateStatusLegend($Legend, $Ispayment){
         $StatusLegend="<fieldset>";
