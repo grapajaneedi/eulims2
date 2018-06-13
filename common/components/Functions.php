@@ -12,6 +12,7 @@ use yii\base\Component;
 use yii2mod\alert\Alert;
 use common\models\lab\Status;
 use common\models\finance\PaymentStatus;
+use common\models\lab\Customer;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
 /**
@@ -74,7 +75,7 @@ $dataResults = <<< SCRIPT
         };
     }
 SCRIPT;
-        $url = \yii\helpers\Url::to(['customerlist']);
+        $url = \yii\helpers\Url::to(['/lab/request/customerlist']);
         // Get the initial city description
         $cust_name = empty($model->customer) ? '' : Customer::findOne($model->customer_id)->customer_name;
         return $form->field($model, 'customer_id')->widget(Select2::classname(), [
