@@ -78,7 +78,7 @@ class AnalysisController extends Controller
             return $this->redirect(['view', 'id' => $model->analysis_id]);
         }
         
-        if (Yii::$app->request->isAjax) {
+        
 
             $samplesQuery = Sample::find()->where(['request_id' => 1]);
             $sampleDataProvider = new ActiveDataProvider([
@@ -92,7 +92,7 @@ class AnalysisController extends Controller
             $testcategory = $this->listTestcategory(1);
          
             $sampletype = [];
-    
+        if (Yii::$app->request->isAjax) {
             return $this->renderAjax('_form', [
                 'model' => $model,
                 'searchModel' => $searchModel,
@@ -103,7 +103,18 @@ class AnalysisController extends Controller
                 // 'labId' => $labId,
                 // 'sampletemplate' => $this->listSampletemplate(),
             ]);
-    }
+        }else{
+            return $this->render('_form', [
+                'model' => $model,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'sampleDataProvider' => $sampleDataProvider,
+                'testcategory' => $testcategory,
+                'sampletype' => $sampletype,
+                // 'labId' => $labId,
+                // 'sampletemplate' => $this->listSampletemplate(),
+            ]);
+        }
 
         // return $this->render('create', [
         //     'model' => $model,

@@ -131,8 +131,8 @@ class SampleController extends Controller
             $model->rstl_id = 11;
             //$model->sample_code = 0;
             $model->request_id = $request->request_id;
-            $model->sample_month = date('m', $request->request_datetime);
-            $model->sample_year = date('Y', $request->request_datetime);
+            $model->sample_month = date_format(date_create($request->request_datetime),'m');
+            $model->sample_year = date_format(date_create($request->request_datetime),'Y');
             //$model->sampling_date = date('Y-m-d');
 
             if(isset($_POST['qnty'])){
