@@ -11,19 +11,14 @@ use yii\helpers\Url;
 use yii\web\JsExpression;
 use kartik\widgets\TypeaheadBasic;
 use kartik\widgets\Typeahead;
-//use kartik\widgets\DateTimePicker;
-//use kartik\export\ExportMenu;
 use yii\helpers\ArrayHelper;
 use common\models\services\Testcategory;
 use common\models\services\Test;
-
-
 use common\models\services\Sampletype;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Analysis */
 /* @var $form yii\widgets\ActiveForm */
-
 
 $Testcategorylist= ArrayHelper::map(Testcategory::find()->all(),'testcategory_id','category_name');
 $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sample_type');
@@ -34,33 +29,38 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
 <div class="analysis-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 1px !important;">
+    <!-- <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 1px !important;">
      <a href="#" class="close" data-dismiss="alert" >×</a>
     <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
      
-    </div>
+    </div> -->
 
     <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
         //'filterModel' => $searchModel,
         'pjax'=>true,
+        'responsive'=>false,
+        'containerOptions'=>[
+            'style'=>'overflow:auto; height:180px',
+        ],
         'pjaxSettings' => [
             'options' => [
                 'enablePushState' => false,
             ]
         ],
-        // [
-        //     'class' => '\kartik\grid\CheckboxColumn',
+        'floatHeaderOptions' => ['scrollingTop' => true],
+        // 'panel' => [
+        //     'heading'=>'<h3 class="panel-title">Sample</h3>',
+        //     'type'=>'primary',
+
         //  ],
         'columns' => [
-          //  ['class' => 'yii\grid\SerialColumn'],
                [
             'class' => '\kartik\grid\CheckboxColumn',
          ],
             'samplename',
         ],
     ]); ?>
-
 
     <?= $form->field($model, 'rstl_id')->hiddenInput()->label(false) ?>
 
@@ -76,11 +76,7 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
 
     <?= $form->field($model, 'method')->hiddenInput(['maxlength' => true])->label(false) ?>
 
-   
-
     <?= $form->field($model, 'fee')->hiddenInput(['maxlength' => true])->label(false) ?>
-
-   
 
     <?= $form->field($model, 'cancelled')->hiddenInput()->label(false) ?>
 
@@ -90,30 +86,53 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
 
     <?= $form->field($model, 'is_package')->hiddenInput()->label(false)  ?>
 
-    
-
-   
-
         <div class="row">
         <div class="col-sm-6">
-             <?= $form->field($model, 'testcategory_id')->widget(Select2::classname(), [
-                        'data' => $Testcategorylist,
-                        'language' => 'en',
-                        'options' => ['placeholder' => 'Select Test Category'],
-                        'pluginOptions' => [
-                        'allowClear' => true
-                        ],
-                 ])->label("Test Category"); ?>
+             <?php
+            //  $form->field($model, 'testcategory_id')->widget(Select2::classname(), [
+            //             'data' => $Testcategorylist,
+            //             'language' => 'en',
+            //             'options' => ['placeholder' => 'Select Test Category'],
+            //             'pluginOptions' => [
+            //             'allowClear' => true
+            //             ],
+            //      ])->label("Test Category"); 
+                 ?>
+
+        <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
+                        'data' => $testcategory,
+                        'theme' => Select2::THEME_KRAJEE,
+                        //'theme' => Select2::THEME_BOOTSTRAP,
+                        'options' => ['id'=>'sample-testcategory_id'],
+                        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Testcategory'],
+                ])
+            ?>
         </div>
         <div class="col-sm-6">
-            <?= $form->field($model, 'sample_type_id')->widget(Select2::classname(), [
-                            'data' => $Sampletypelist,
-                            'language' => 'en',
-                            'options' => ['placeholder' => 'Select Sample Type'],
-                            'pluginOptions' => [
-                            'allowClear' => true
-                            ],
-                    ])->label("Sample Type"); ?>
+            <?php
+            //  $form->field($model, 'sample_type_id')->widget(Select2::classname(), [
+            //                 'data' => $Sampletypelist,
+            //                 'language' => 'en',
+            //                 'options' => ['placeholder' => 'Select Sample Type'],
+            //                 'pluginOptions' => [
+            //                 'allowClear' => true
+            //                 ],
+            //         ])->label("Sample Type"); 
+            ?>
+
+            <?= $form->field($model, 'sample_type_id')->widget(DepDrop::classname(), [
+                'type'=>DepDrop::TYPE_SELECT2,
+                'data'=>$sampletype,
+                'options'=>['id'=>'sample-sample_type_id'],
+                'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                'pluginOptions'=>[
+                    'depends'=>['sample-testcategory_id'],
+                    'placeholder'=>'Select Sampletype',
+                    'url'=>Url::to(['/lab/sample/listsampletype']),
+                    'loadingText' => 'Loading Sampletype...',
+                ]
+            ])
+            ?>
         </div>
     </div>
 
@@ -152,8 +171,7 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
                 <?php echo DateTimePicker::widget([
                 'model' => $model,
                 'attribute' => 'date_analysis',
-                    'readonly'=>true,
-                //    'disabled'=>$disabled,
+                'readonly'=>true,
                 'options' => ['placeholder' => 'Enter Date'],
                     'value'=>function($model){
                         return date("m/d/Y h:i:s P",$model->date_analysis);
@@ -170,7 +188,6 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
         </div>
     </div>
 
-
     <div class="form-group" style="padding-bottom: 3px;">
         <div style="float:right;">
             <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -180,5 +197,4 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
     </div>
 
     <?php ActiveForm::end(); ?>
-
 </div>
