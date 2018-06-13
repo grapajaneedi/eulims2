@@ -16,7 +16,7 @@ use common\models\services\Sampletype;
 
 $Testcategorylist= ArrayHelper::map(Testcategory::find()->all(),'testcategory_id','category_name');
 $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sample_type');
-//$TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','testname');
+
 
 ?>
 

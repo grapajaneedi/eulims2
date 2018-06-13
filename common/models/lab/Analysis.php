@@ -23,7 +23,8 @@ use Yii;
  * @property int $cancelled
  * @property int $status
  * @property int $user_id
- * @property int $is_package
+ * @property int $testcategory_id
+  * @property int $sample_type_id
  *
  * @property Test $test
  * @property Sample $sample
@@ -93,6 +94,8 @@ class Analysis extends \yii\db\ActiveRecord
             'status' => 'Status',
             'user_id' => 'User ID',
             'is_package' => 'Is Package',
+            'testcategory_id' => 'Test Category',
+            'sample_type_id' => 'Sample Type Id',
         ];
     }
 
