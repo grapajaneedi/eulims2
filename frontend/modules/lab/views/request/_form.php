@@ -57,7 +57,7 @@ if($disabled){
     <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
         'language' => 'en',
-        'options' => ['placeholder' => 'Select Lab','disabled'=>false],
+        'options' => ['placeholder' => 'Select Lab','disabled'=>$disabled],
         'pluginOptions' => [
             'allowClear' => true
         ]
@@ -227,8 +227,8 @@ if($disabled){
 </div>
 <div class="row">
     <div class="row" style="float: right;padding-right: 30px">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-danger']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['disabled'=>$disabled,'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::resetButton('Reset', ['disabled'=>$disabled,'class' => 'btn btn-danger']) ?>
         <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
     </div>
     <?php ActiveForm::end(); ?>
