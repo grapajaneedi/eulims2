@@ -73,7 +73,7 @@ if($disabled){
 	'model' => $model,
 	'attribute' => 'request_datetime',
         'readonly'=>true,
-        'disabled'=>$disabled,
+       'disabled'=>$disabled,
 	'options' => ['placeholder' => 'Enter Date'],
         'value'=>function($model){
              return date("m/d/Y h:i:s P",$model->request_datetime);
