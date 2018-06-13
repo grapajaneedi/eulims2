@@ -80,7 +80,7 @@ SCRIPT;
         $cust_name = empty($model->customer) ? '' : Customer::findOne($model->customer_id)->customer_name;
         return $form->field($model, 'customer_id')->widget(Select2::classname(), [
             'initValueText' => $cust_name, // set the initial display text
-            'options' => ['placeholder' => 'Search for a customer ...','disabled'=>$disabled,'class'=>'form-control'],
+            'options' => ['placeholder' => 'Search for a customer ...','disabled'=>$disabled,'class'=>'.input-group.input-group-sm'],
             'pluginOptions' => [
                 'allowClear' => true,
                 'minimumInputLength' => 3,

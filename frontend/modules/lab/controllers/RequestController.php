@@ -59,7 +59,7 @@ class RequestController extends Controller
     {
         $searchModel = new RequestSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $dataProvider->pagination->pageSize=10;
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $sampleDataProvider = new ActiveDataProvider([
                 'query' => $samplesQuery,
@@ -68,12 +68,12 @@ class RequestController extends Controller
                 ],
              
         ]);
-
+        
         return $this->render('view', [
             'model' => $this->findModel($id),
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'sampleDataProvider' => $sampleDataProvider,
+            'sampleDataProvider' => $sampleDataProvider
         ]);
     }
     public function actionCustomerlist($q = null, $id = null) {
@@ -94,7 +94,9 @@ class RequestController extends Controller
         }
         return $out;
     }
-
+    public function actionSaverequestransaction(){
+       
+    }
     /**
      * Creates a new Request model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -128,7 +130,7 @@ class RequestController extends Controller
                     'model' => $model,
                 ]);
             }else{
-                return $this->render('create', [
+                return $this->renderAjax('create', [
                     'model' => $model,
                 ]);
             }

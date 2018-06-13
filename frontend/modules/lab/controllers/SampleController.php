@@ -486,7 +486,7 @@ class SampleController extends Controller
         $lab = Lab::findOne($request->lab_id);
 
         //$year = date('Y', strtotime($request->request_datetime));
-        $year = date('Y', $request->request_datetime);
+        $year = date_format(date_create($request->request_datetime),'Y');
 
         /*$samplecode = Samplecode::find([
             'select' => 'MAX(number) as lastnumber',
@@ -611,7 +611,7 @@ class SampleController extends Controller
                     //$toinsert = $nextnumber + $i;
 
                     $modelSamplecode = new Samplecode();
-                    $modelSamplecode->rstl_id = 11;
+                    $modelSamplecode->rstl_id = $GLOBALS['rstl_id'];
                     $modelSamplecode->reference_num = $request->request_ref_num;
                     $modelSamplecode->sample_id = $sampleId;
                     $modelSamplecode->lab_id = $lab->lab_id;
@@ -625,7 +625,7 @@ class SampleController extends Controller
                         $sample->save();
                     } else {
                         //error
-                        $modelSamplecode->error();
+                        //$modelSamplecode->error();
                         exit;
                     }
                     //$count = $count + 1;

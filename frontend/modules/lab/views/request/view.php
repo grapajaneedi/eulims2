@@ -17,27 +17,15 @@ $sweetalert = new Functions();
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$js=<<<SCRIPT
+    $("#btnSaveRequest").click(function(){
+       alert("Saving Record...");
+    });  
+       
+SCRIPT;
+$this->registerJs($js);
 ?>
-
-<?php
-//Modal::begin([
-    //'headerOptions' => ['id' => 'modalSampleheader'],
-    //'size' => 'modal-sm',
-    //'tabindex' => false,
-    //keeps from closing modal with esc key or by clicking out of the modal.
-    // user must click cancel or X to close
-    //'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
-   // 'options' => [
- //       'id' => 'sampleModal',
-  //      'tabindex' => false // important for Select2 to work properly
-  // ],
-//]);
-//echo "<div id='modalContent'><div style='text-align:center;'><img src='/images/img-loader64.gif'></div></div>";
-//Modal::end();
-
-
-?>
-
 <div class="request-view">
     <!-- <h1><?= Html::encode($this->title) ?></h1> -->
 
@@ -403,16 +391,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     'enableSorting' => false,
                 ],
             ];
-
             echo GridView::widget([
                 'id' => 'analysis-grid',
                 'dataProvider'=> $dataProvider,
                 'summary' => '',
-                'responsive'=>true,
+                'responsive'=>true, 
                 'hover'=>true,
                 //'filterModel' => $searchModel, JANEEDI 
                 'panel' => [
-                    'heading'=>'<h3 class="panel-title">Analyses</h3>',
+                    'heading'=>'<h3 class="panel-title">Analysis</h3>',
                     'type'=>'primary',
                     //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['/lab/analysis/create'], ['class' => 'btn btn-success'],['id' => 'modalBtn']),
                     'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analyses', ['value' => Url::to(['analysis/create','request_id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
@@ -420,7 +407,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                    'after'=>false,
                   //  'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn']),
-                    //'footer'=>false,
+                   'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button id='btnSaveRequest' class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
                 ],
                 'columns' => $gridColumns,
                 'toolbar' => [

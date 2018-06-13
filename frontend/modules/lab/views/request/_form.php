@@ -15,29 +15,12 @@ use common\models\lab\Modeofrelease;
 use common\models\lab\Purpose;
 use kartik\widgets\SwitchInput;
 use common\components\Functions;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
 /* @var $form yii\widgets\ActiveForm */
 
-// script to parse the results into the format expected by Select2
-/*$dataExp = <<< SCRIPT
-  function (params, page) {
-    return {
-      q: params.term, // search term
-    };
-  }
-SCRIPT;
-
-$dataResults = <<< SCRIPT
-  function (data, page) {
-    return {
-      results: data.results
-    };
-  }
-SCRIPT;
- * 
- */
 $disabled= $model->posted ? true:false;
 if($disabled){
     $Color="#eee";
@@ -91,14 +74,16 @@ if($disabled){
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4">
-        <div class="input-group">
-            <?php
-            $func=new Functions();
-            echo $func->GetCustomerList($form,$model,$disabled);
-            ?> 
-            <button type="button" class="btn btn-primary input-group-addon"><i class="fa fa-users"></i></button>
-        </div>
+    <div class="col-md-6">
+            <div class="input-group">
+                <?php
+                $func = new Functions();
+                echo $func->GetCustomerList($form, $model, $disabled,'Customer');
+                ?> 
+                <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Customer', '/customer/info/create');" class="btn btn-default" type="button"><i class="fa fa-user-plus"></i></button>
+                </span>
+            </div>
     </div>
     
     <div class="col-md-6">
