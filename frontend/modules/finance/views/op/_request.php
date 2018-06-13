@@ -43,6 +43,9 @@ $this->registerJs($js);
        
         [
             'attribute'=>'request_datetime',
+             'value' => function($model) {
+                    return date($model->request_datetime);
+                },
             'pageSummary' => '<span style="float:right;">Total</span>',
             'enableSorting' => false,
         ],

@@ -4,6 +4,7 @@ use yii\widgets\ActiveForm;
 use common\models\lab\Businessnature;
 use common\models\lab\Industrytype;
 use common\models\lab\Customertype;
+use common\models\lab\Classification;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use common\models\address\CityMunicipality;
@@ -53,7 +54,7 @@ use kartik\widgets\DepDrop;
         </div>
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
             <?php 
             echo $form->field($model, 'business_nature_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(Businessnature::find()->all(), 'business_nature_id', 'nature'),
@@ -65,7 +66,7 @@ use kartik\widgets\DepDrop;
             ]);
             ?>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
              <?php 
             echo $form->field($model, 'industrytype_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(Industrytype::find()->all(), 'industrytype_id', 'industry'),
@@ -77,10 +78,22 @@ use kartik\widgets\DepDrop;
             ]);
             ?>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
             <?php 
             echo $form->field($model, 'customer_type_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(Customertype::find()->all(), 'customertype_id', 'type'),
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select  ...'],
+                'pluginOptions' => [
+                  'allowClear' => true
+                ],
+            ]);
+            ?>
+            </div>
+            <div class="col-md-6">
+            <?php 
+            echo $form->field($model, 'classification_id')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(Classification::find()->all(), 'classification_id', 'classification'),
                 'language' => 'en',
                 'options' => ['placeholder' => 'Select  ...'],
                 'pluginOptions' => [

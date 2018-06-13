@@ -28,5 +28,15 @@
             <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/customer/views/info/index.php</file>
             <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/index.php</file>
         </group>
+        <group>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/lab/views/request/view.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/common/models/finance/Op.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/controllers/OpController.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/Customerwallet/_form.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/op/_form.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/op/view.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/op/index.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/common/models/finance/Collection.php</file>
+        </group>
     </open-files>
 </project-private>

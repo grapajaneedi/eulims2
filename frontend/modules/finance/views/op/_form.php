@@ -137,8 +137,8 @@ use kartik\widgets\DatePicker;
 
 
         <div class="form-group pull-right">
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success mybtn' : 'btn btn-primary mybtn','disabled'=>$model->isNewRecord ? true : false]) ?>
-       
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
+                'id'=>'createOP']) ?>
             <?php if(Yii::$app->request->isAjax){ ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             <?php } ?>
@@ -156,5 +156,13 @@ use kartik\widgets\DatePicker;
     $('#op-customer_id').on('change',function() {
        $(this).select2('close');
         //alert('csdfsd');
+    });
+    
+    $("#createOP").click(function(){
+	$.post({
+           
+              
+            }
+        });
     });
 </script>

@@ -18,6 +18,7 @@ use yii\db\Query;
 use common\components\Functions;
 use kartik\editable\Editable;
 use yii\helpers\Json;
+use yii2mod\alert\Alert;
 /**
  * OrderofpaymentController implements the CRUD actions for Op model.
  */
@@ -99,16 +100,37 @@ class OpController extends Controller
              $transaction = Yii::$app->financedb->beginTransaction();
              $session = Yii::$app->session;
              try  {
-                 
-                        $request_ids=$model->RequestIds;
-                        $str_request = explode(',', $request_ids);
-                        $model->rstl_id=$GLOBALS['rstl_id'];
+                     $request_ids=$model->RequestIds;
+                     $str_request = explode(',', $request_ids);
+                     $wallet=$this->checkCustomerWallet($model->customer_id); 
+                     $arr_length = count($str_request); 
+                     $total_amount=0;
+                        for($i=0;$i<$arr_length;$i++){
+                            $request =$this->findRequest($str_request[$i]);
+                             $total_amount+=$request->total;
+                        }
+                   
+                    if($wallet['balance'] < $total_amount){
+                     //$session->set('checkpopup',"executed"); 
+                     //return $this->redirect(['/finance/op']);
+                     // echo 'gagi';
+                      /*  echo  Alert::widget([
+                        'options' => [
+                            'showCloseButton' => false,
+                            'showCancelButton' => false,
+                            'title' => 'ggvgvg',
+                            'type' => Alert::TYPE_INFO ,
+                            //'timer' => 1000
+                        ]
+                      ]);*/
+                         return ['message' => "Successfull"];
+                    }   
+                    else{
+                       $model->rstl_id=$GLOBALS['rstl_id'];
                         $model->transactionnum= $this->Gettransactionnum();
-
                         $model->save();
                        //Saving for Paymentitem
-                        $arr_length = count($str_request); 
-                       // $total_amount=0;
+                        
                         for($i=0;$i<$arr_length;$i++){
                              $request =$this->findRequest($str_request[$i]);
                              $paymentitem = new Paymentitem();
@@ -117,7 +139,7 @@ class OpController extends Controller
                              $paymentitem->orderofpayment_id = $model->orderofpayment_id;
                              $paymentitem->details =$request->request_ref_num;
                              $paymentitem->amount = $request->total;
-                            // $total_amount+=$request->total;
+                             $total_amount+=$request->total;
                              $paymentitem->save(); 
                         }
                         //----------------------//
@@ -132,8 +154,11 @@ class OpController extends Controller
                         //
                         $transaction->commit();
                         $this->postRequest($request_ids);
+                        $this->updateTotalOP($model->orderofpayment_id, $total_amount);
                         $session->set('savepopup',"executed");
-                         return $this->redirect(['/finance/op']);
+                         return $this->redirect(['/finance/op']); 
+                    }
+                        
                     
                 } catch (Exception $e) {
                     $transaction->rollBack();
@@ -238,17 +263,13 @@ class OpController extends Controller
     }
     
      public function Gettransactionnum(){
-        /*$year=date('Y');
-        $terminal_id=1;
-        $rstl_id=11;
-        $result = \Yii::$app->financedb->createCommand("CALL spGenerateTransactionNumber(:mYear, :mTerminalID, :mRSTLID)",[
-            ':mYear'=>$year,
-            ':mTerminalID'=>$terminal_id,
-            ':mRSTLID'=>$rstl_id
-            ])
-            ->queryAll();
-        $transnumber=$result[0]['transaction_number'];
-        return $transnumber;*/
+          $lastyear=(new Query)
+            ->select('MAX(transactionnum) AS lastnumber')
+            ->from('eulims_finance.tbl_orderofpayment')
+            ->one();
+          $lastyear=substr($lastyear["lastnumber"],0,4);
+          //echo $lastyear;
+          $year=date('Y');
           $year_month = date('Y-m');
           $last_trans_num=(new Query)
             ->select(['count(transactionnum)+ 1 AS lastnumber'])
@@ -256,10 +277,16 @@ class OpController extends Controller
             ->one();
           $str_trans_num=0;
           if($last_trans_num != ''){
-              $str_trans_num=str_pad($last_trans_num["lastnumber"], 4, "0", STR_PAD_LEFT);
+              if($lastyear < $year){
+                 $str_trans_num='0001'; 
+              }
+              else if($lastyear == $year){
+                  $str_trans_num=str_pad($last_trans_num["lastnumber"], 4, "0", STR_PAD_LEFT);
+              }
+              
           }
           else{
-               $str_trans_num='0000';
+               $str_trans_num='0001';
           }
          
          $next_transnumber=$year_month."-".$str_trans_num;
@@ -268,7 +295,6 @@ class OpController extends Controller
      }
      
      public function actionCalculateTotal($id) {
-        $post = Yii::$app->request->post();
         $total = 0;
         if($id == '' ){
             echo $total;
@@ -303,4 +329,22 @@ class OpController extends Controller
              ->execute(); 
             }
      }
+     
+     public function updateTotalOP($id,$total){
+        
+        Yii::$app->financedb->createCommand()
+      ->update('tbl_orderofpayment', ['total_amount' => $total], 'orderofpayment_id= '.$id)
+      ->execute(); 
+            
+     }
+     
+      public function checkCustomerWallet($customerid) {
+         $wallet=(new Query)
+            ->select('balance')
+            ->from('eulims_finance.tbl_customerwallet')
+            ->where(['customer_id' => $customerid])
+            ->one();
+         return $wallet;
+     }
+    
 }

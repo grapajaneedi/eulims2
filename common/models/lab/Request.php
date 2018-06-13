@@ -85,6 +85,7 @@ class Request extends \yii\db\ActiveRecord
             [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_ids', 'discount_id', 'purpose_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
             [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'created_at', 'posted', 'status_id','selected','is_referral'], 'integer'],
             [['discount', 'total'], 'number'],
+            ['request_ref_num', 'default', 'value' => NULL],
             [['report_due','customer_name','request_datetime'], 'safe'],
             [['customer_name'],'string','max'=>200],
             [['request_ref_num', 'conforme','modeofrelease_ids', 'receivedBy'], 'string', 'max' => 50],

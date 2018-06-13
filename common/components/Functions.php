@@ -77,7 +77,7 @@ class Functions extends Component{
         return $StatusLegend;
     }
     
-    function CrudAlert($title="Saved Successfully",$type="SUCCESS",$showclose=false,$showcancel=false) {
+    function CrudAlert($title="Saved Successfully",$type="SUCCESS",$showclose=true,$showcancel=false,$callback=true) {
         switch($type) {
             case "SUCCESS":
                 $dialog = Alert::TYPE_SUCCESS;
@@ -95,13 +95,16 @@ class Functions extends Component{
                 $dialog = Alert::TYPE_INPUT;
                 break;
         }
+        
+        if($callback==true) {
+        
         return  Alert::widget([
             'options' => [
                 'showCloseButton' => $showclose,
                 'showCancelButton' => $showcancel,
                 'title' => $title,
                 'type' => $dialog ,
-                'timer' => 1000
+                //'timer' => 1000
             ],
             'callback' => new \yii\web\JsExpression("
                         function () {
@@ -113,6 +116,17 @@ class Functions extends Component{
                         $('body').removeClass( \"stop-scrolling\" );
                         }"),
         ]);
+     }else{
+          return  Alert::widget([
+            'options' => [
+                'showCloseButton' => $showclose,
+                'showCancelButton' => $showcancel,
+                'title' => $title,
+                'type' => $dialog ,
+                //'timer' => 1000
+            ]
+              ]);
+     }
     }
     /**
      * 

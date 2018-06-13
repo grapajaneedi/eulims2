@@ -1,21 +1,21 @@
 <?php
 
-namespace frontend\modules\finance\controllers;
+namespace frontend\modules\customer\controllers;
 
 use Yii;
-use common\models\finance\Collectiontype;
-use common\models\finance\CollectiontypeSearch;
+use common\models\lab\Classification;
+use common\models\lab\ClassificationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * CollectiontypeController implements the CRUD actions for Collectiontype model.
+ * ClassificationController implements the CRUD actions for Classification model.
  */
-class CollectiontypeController extends Controller
+class ClassificationController extends Controller
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
@@ -30,12 +30,12 @@ class CollectiontypeController extends Controller
     }
 
     /**
-     * Lists all Collectiontype models.
+     * Lists all Classification models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new CollectiontypeSearch();
+        $searchModel = new ClassificationSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,75 +45,62 @@ class CollectiontypeController extends Controller
     }
 
     /**
-     * Displays a single Collectiontype model.
+     * Displays a single Classification model.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        if(Yii::$app->request->isAjax){
-            return $this->render('view', [
-                    'model' => $this->findModel($id),
-                ]);
-        }
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     /**
-     * Creates a new Collectiontype model.
+     * Creates a new Classification model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Collectiontype();
+        $model = new Classification();
 
-        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-           // if (Yii::$app->request->isAjax){
-                return $this->runAction('index');
-         //  }else{
-          //      return $this->redirect(['view', 'id' => $model->test_category_id]);
-         //   }
-          
-        } 
-          
-             if(Yii::$app->request->isAjax){
-                return $this->renderAjax('create', [
-                    'model' => $model,
-                   
-                ]);
-            }else{
-                return $this->render('create', [
-                    'model' => $model,
-                  
-                ]);
-            }
+            return $this->redirect(['view', 'id' => $model->classification_id]);
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
-     * Updates an existing Collectiontype model.
+     * Updates an existing Classification model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect('index');
-        } else {
-            return $this->renderAjax('update', [
-                'model' => $model,
-            ]);
+            return $this->redirect(['view', 'id' => $model->classification_id]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
-     * Deletes an existing Collectiontype model.
+     * Deletes an existing Classification model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
@@ -123,18 +110,18 @@ class CollectiontypeController extends Controller
     }
 
     /**
-     * Finds the Collectiontype model based on its primary key value.
+     * Finds the Classification model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Collectiontype the loaded model
+     * @return Classification the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Collectiontype::findOne($id)) !== null) {
+        if (($model = Classification::findOne($id)) !== null) {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
