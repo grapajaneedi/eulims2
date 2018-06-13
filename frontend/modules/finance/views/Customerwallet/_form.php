@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Customer;
 use kartik\select2\Select2;
+use common\components\Functions;
 
 
 /* @var $this yii\web\View */
@@ -17,16 +18,12 @@ use kartik\select2\Select2;
     <?php  $form = ActiveForm::begin(); ?>
 
     <?php 
-	// Normal select with ActiveForm & model
-	echo $form->field($model, 'customer_id')->widget(Select2::classname(), [
-    	'data' => ArrayHelper::map(Customer::find()->all(), 'customer_id', 'customer_name'),
-    	'language' => 'en',
-    	'options' => ['placeholder' => 'Select a customer ...'],
-    	'pluginOptions' => [
-      	  'allowClear' => true
-    	],
-	]);
 
+    $func=new Functions();
+    echo $func->GetCustomerList($form,$model,false,"Customer");
+    ?> 
+   
+    <?php
     echo $form->field($model, 'balance')->textInput(['maxlength' => true,'type'=>'number']);
 
     ?>
