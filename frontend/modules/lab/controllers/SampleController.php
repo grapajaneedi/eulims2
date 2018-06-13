@@ -484,9 +484,8 @@ class SampleController extends Controller
 
         $request = $this->findRequest($requestId);
         $lab = Lab::findOne($request->lab_id);
-
-        //$year = date('Y', strtotime($request->request_datetime));
-        $year = date_format(date_create($request->request_datetime),'Y');
+        $year = date('Y', strtotime($request->request_datetime));
+        //$year = date_format(date_create($request->request_datetime),'Y');
 
         /*$samplecode = Samplecode::find([
             'select' => 'MAX(number) as lastnumber',
@@ -571,7 +570,7 @@ class SampleController extends Controller
             $samplecode = (new Query)
             ->select(['MAX(number) AS lastnumber'])
             ->from('eulims_lab.tbl_samplecode')
-            ->where('rstl_id =:rstlId AND lab_id =:labId AND year =:year', [':rstlId'=>11,':labId'=>$lab->lab_id,':year'=>$year])
+            ->where('rstl_id =:rstlId AND lab_id =:labId AND year =:year', [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$lab->lab_id,':year'=>$year])
             ->all();
 
             if(count($samplecode) > 0)
@@ -625,7 +624,7 @@ class SampleController extends Controller
                         $sample->save();
                     } else {
                         //error
-                        //$modelSamplecode->error();
+                        $modelSamplecode->getErrors();
                         exit;
                     }
                     //$count = $count + 1;

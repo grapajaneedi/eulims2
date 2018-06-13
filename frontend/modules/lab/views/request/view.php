@@ -17,10 +17,20 @@ $sweetalert = new Functions();
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
+$rstlID=$GLOBALS['rstl_id'];
+$Year=date('Y', strtotime($model->request_datetime));
 $js=<<<SCRIPT
     $("#btnSaveRequest").click(function(){
-       alert("Saving Record...");
+        $.post(this.value, {
+            request_id: $model->request_id,
+            lab_id: $model->lab_id,
+            rstl_id: $rstlID,
+            year: $Year
+        }, function(result){
+           if(result){
+               location.reload();
+           }
+        });
     });  
        
 SCRIPT;
@@ -407,7 +417,7 @@ $this->registerJs($js);
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                    'after'=>false,
                   //  'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn']),
-                   'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button id='btnSaveRequest' class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
+                   'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button value='/lab/request/saverequestransaction' id='btnSaveRequest' class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
                 ],
                 'columns' => $gridColumns,
                 'toolbar' => [

@@ -41,6 +41,25 @@ class Functions extends Component{
         return $Rows;
     }
     /**
+     * 
+     * @param string $Proc
+     * @param array $Params
+     * @param CDBConnection $Connection
+     * @return array
+     */
+    public function ExecuteStoredProcedureOne($Proc,array $Params,$Connection){
+        if(!isset($Connection)){
+           $Connection=Yii::$app->db;
+        }
+        $Command=$Connection->createCommand("CALL $Proc");
+        //Iterate through arrays of parameters
+        foreach($Params as $Key=>$Value){
+           $Command->bindValue($Key, $Value); 
+        }
+        $Row=$Command->queryOne();
+        return $Row;
+    }
+    /**
      * @param description Executes the SQL statement. This method should only be used for executing non-query SQL statement, such as `INSERT`, `DELETE`, `UPDATE` SQLs. No result set will be returned.
      * @param type $Proc
      * @param array $Params the Parameter for Stored Procedure

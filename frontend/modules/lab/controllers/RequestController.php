@@ -5,6 +5,7 @@ namespace frontend\modules\lab\controllers;
 use Yii;
 use common\models\lab\Request;
 use common\models\lab\RequestSearch;
+use common\models\lab\Requestcode;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,6 +15,7 @@ use yii\db\Query;
 use common\models\lab\Customer;
 use DateTime;
 use common\models\system\Profile;
+use common\components\Functions;
 
 /**
  * RequestController implements the CRUD actions for Request model.
@@ -95,7 +97,47 @@ class RequestController extends Controller
         return $out;
     }
     public function actionSaverequestransaction(){
-       
+        $post= Yii::$app->request->post();
+        $request_id=(int)$post['request_id'];
+        $lab_id=(int)$post['lab_id'];
+        $rstl_id=(int)$post['rstl_id'];
+        $year=(int)$post['year'];
+        // Generate Reference Number
+        $func=new Functions();
+        $Proc="spGetNextGeneratedRequestSampleCode(:RSTLID,:LabID)";
+        $Params=[
+            ':RSTLID'=>$rstl_id,
+            ':LabID'=>$lab_id
+        ];
+        $Connection= Yii::$app->labdb;
+        $Transaction =$Connection->beginTransaction();
+        $Row=$func->ExecuteStoredProcedureOne($Proc, $Params, $Connection);
+        $ReferenceNumber=$Row['GeneratedRequestCode'];
+        $RequestIncrement=$Row['RequestIncrement'];
+        //Update the tbl_requestcode
+        $Requestcode= Requestcode::find()->where([
+            'rstl_id'=>$rstl_id,
+            'lab_id'=>$lab_id,
+            'year'=>$year
+        ])->one($Connection);
+        if(!$Requestcode){
+            $Requestcode=new Requestcode();
+        }
+        $Requestcode->request_ref_num=$ReferenceNumber;
+        $Requestcode->rstl_id=$rstl_id;
+        $Requestcode->lab_id=$lab_id;
+        $Requestcode->number=$RequestIncrement;
+        $Requestcode->year=$year;
+        $Requestcode->cancelled=0;
+        $Requestcode->save();
+        //Update tbl_request table
+        $Request= Request::find()->where(['request_id'=>$request_id])->one($Connection);
+        $Request->request_ref_num=$ReferenceNumber;
+        $Request->save();
+        $Transaction->commit();
+        return true;
+        // Generate Sample Code
+       // $this->runAction(["/lab/sample/generatesamplecode?request_id=$request_id"]);
     }
     /**
      * Creates a new Request model.
