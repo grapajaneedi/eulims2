@@ -91,15 +91,16 @@ if($disabled){
     </div>
 </div>
 <div class="row">
-    <div class="input-group col-md-6">
-        <?php
+    <div class="col-md-4">
+        <div class="input-group">
+            <?php
             $func=new Functions();
-            echo $func->GetCustomerList($form,$model,$disabled,"Customer");
-        ?> 
-        <div class="input-group-append">
-            <button type="button" class="btn btn-primary input-group-addon"><i class="fa fa-users"> Customers</i></button>
+            echo $func->GetCustomerList($form,$model,$disabled);
+            ?> 
+            <button type="button" class="btn btn-primary input-group-addon"><i class="fa fa-users"></i></button>
         </div>
     </div>
+    
     <div class="col-md-6">
         <label class="control-label">Payment Type</label>
         <div class="col-md-12">

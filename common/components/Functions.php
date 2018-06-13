@@ -74,7 +74,7 @@ $dataResults = <<< SCRIPT
         };
     }
 SCRIPT;
-        $url = \yii\helpers\Url::to(['customerlist']);
+        $url = \yii\helpers\Url::to(['/lab/request/customerlist']);
         // Get the initial city description
         $cust_name = empty($model->customer) ? '' : Customer::findOne($model->customer_id)->customer_name;
         return $form->field($model, 'customer_id')->widget(Select2::classname(), [
