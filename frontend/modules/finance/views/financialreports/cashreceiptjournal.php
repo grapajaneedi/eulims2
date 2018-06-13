@@ -2,7 +2,7 @@
 
 
 //var_dump($stringTable);
-
+//echo $values;
 
 /*
  * Project Name: eulims_ * 
@@ -18,15 +18,18 @@
  * @author mariano
  */
 ?>
+
+
+ 
+ 
 <h1>Cash Receipt Journal</h1>
 
 
 <style type="text/css">
-
-
     table, th, td {
         border: 1px solid black;
         text-align: center;
+       
     }
 </style>
 
@@ -35,84 +38,63 @@
 
 
 ?>
+<button onclick="exportTableToExcel('dvData')">Export Table Data To Excel File</button>
 
 
 <div style="overflow: auto;height: 300px">
 
-    <table id="tblCashreceipt" style="width:1800px"> <tr>
-            <td style="width:298px">Cell</td>
-            <td style="width:100px">Debit</td>
-            <td style="width:1100px">Credit</td>
-            <td style="width:302px">Sundry</td>
-
-        </tr></table>
+    <div id="dvData">
     
      <?php
     echo $stringTable
     ?>
-
+    </div>
    
-    <!--
-    <table style="width:1800px;">
-
-
-        <tr>
-            <td style="width:75px">Date</td>
-            <td style="width:75px">Reference</td>
-            <td style="width:75px">Jev No</td>
-            <td style="width:75px">Payor</td>
-            <td style="width:100px">1-01-014-010</td>
-
-            <td style="width:100px">(136)1-03-03-010</td>
-            <td style="width:100px">3</td>
-            <td style="width:100px">4</td>
-            <td style="width:100px">1</td><td style="width:100px">1</td><td style="width:100px">1</td><td style="width:100px">1</td>
-            <td style="width:100px">2</td>
-            <td style="width:100px">3</td>
-            <td style="width:100px">4</td>
-            <td style="width:100px">1</td>
-
-
-            <td style="width:100px">UACS Code</td>
-            <td style="width:100px">Debit</td>
-            <td style="width:100px">Credit</td>
-        </tr>
-
-    </table>
-    -->
+    
 
 </div>
 
 <br><br>
 
-<table style="width:1500px">
-    <tr>
-        <td>
-            <table style="width:200px">
-                <tr>
-                    <td>Date</td>
-                    <td>Reference</td>
-                    <td>Jev No</td>
-                    <td>Payor</td>
-                </tr>
+<script>  
+ 
+       
 
-            </table>  </td>
-        <td>
-            <table style="width:100px">
-                <tr>
-                    <td>Debit</td>
-                </tr>
-                <tr>
-                    <td>1-01-014-010</td>
-                </tr>
+ function exportTableToExcel(tableID, filename = ''){
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+    // Specify file name
+    filename = filename?filename+'.xls':'excel_data.xls';
+    
+    // Create download link element
+    downloadLink = document.createElement("a");
+    
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['\ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+    
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
+}
 
-            </table>  
-        </td>
-        <td></td>
 
-    </tr>
+ </script>  
 
-</table>
+
 
 
 
