@@ -14,13 +14,14 @@ use common\models\lab\Discount;
 use common\models\lab\Modeofrelease;
 use common\models\lab\Purpose;
 use kartik\widgets\SwitchInput;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
 /* @var $form yii\widgets\ActiveForm */
 
 // script to parse the results into the format expected by Select2
-$dataExp = <<< SCRIPT
+/*$dataExp = <<< SCRIPT
   function (params, page) {
     return {
       q: params.term, // search term
@@ -35,6 +36,8 @@ $dataResults = <<< SCRIPT
     };
   }
 SCRIPT;
+ * 
+ */
 $disabled= $model->posted ? true:false;
 if($disabled){
     $Color="#eee";
@@ -65,7 +68,8 @@ if($disabled){
     </div>
     <div class="col-md-6">
     <label class="control-label">Request Date</label>
-    <?php echo DateTimePicker::widget([
+    <?php 
+    echo DateTimePicker::widget([
 	'model' => $model,
 	'attribute' => 'request_datetime',
         'readonly'=>true,
@@ -82,35 +86,17 @@ if($disabled){
         'pluginEvents'=>[
             "change" => "function() { alert('change'); }",
         ]
-    ]); ?>
+    ]); 
+    ?>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
-        <label for="customer_id" class="control-label col-sm-3">Customer</label>
-        <div class='input-group col-sm-7'>
-    <?php
-    $url = \yii\helpers\Url::to(['customerlist']);
-    // Get the initial city description
-    $cust_name = empty($model->customer) ? '' : Customer::findOne($model->customer_id)->customer_name;
-    echo $form->field($model, 'customer_id')->widget(Select2::classname(), [
-        'initValueText' => $cust_name, // set the initial display text
-        'options' => ['placeholder' => 'Search for a customer ...','disabled'=>$disabled],
-        'pluginOptions' => [
-            'allowClear' => true,
-            'minimumInputLength' => 3,
-            'language' => [
-                'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
-            ],
-            'ajax' => [
-                'url' => $url,
-                'dataType' => 'json',
-                'data' => new JsExpression($dataExp),
-                'results' => new JsExpression($dataResults)
-            ]
-        ],
-    ])->label(false);
-    ?> 
+    <div class="input-group col-md-6">
+        <?php
+            $func=new Functions();
+            echo $func->GetCustomerList($form,$model,$disabled);
+        ?> 
+        <div class="input-group-append">
             <button type="button" class="btn btn-primary input-group-addon"><i class="fa fa-users"> Customers</i></button>
         </div>
     </div>

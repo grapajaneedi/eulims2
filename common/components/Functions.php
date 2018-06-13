@@ -12,6 +12,8 @@ use yii\base\Component;
 use yii2mod\alert\Alert;
 use common\models\lab\Status;
 use common\models\finance\PaymentStatus;
+use kartik\select2\Select2;
+use yii\web\JsExpression;
 /**
  * Description of Functions
  *
@@ -55,6 +57,43 @@ class Functions extends Component{
         }
         $ret=$Command->execute();
         return $ret;
+    }
+    function GetCustomerList($form,$model,$disabled=false){
+$dataExp = <<< SCRIPT
+    function (params, page) {
+        return {
+            q: params.term, // search term
+        };
+    }
+SCRIPT;
+
+$dataResults = <<< SCRIPT
+    function (data, page) {
+        return {
+          results: data.results
+        };
+    }
+SCRIPT;
+        $url = \yii\helpers\Url::to(['customerlist']);
+        // Get the initial city description
+        $cust_name = empty($model->customer) ? '' : Customer::findOne($model->customer_id)->customer_name;
+        return $form->field($model, 'customer_id')->widget(Select2::classname(), [
+            'initValueText' => $cust_name, // set the initial display text
+            'options' => ['placeholder' => 'Search for a customer ...','disabled'=>$disabled,'class'=>'form-control'],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'minimumInputLength' => 3,
+                'language' => [
+                    'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                ],
+                'ajax' => [
+                    'url' => $url,
+                    'dataType' => 'json',
+                    'data' => new JsExpression($dataExp),
+                    'results' => new JsExpression($dataResults)
+                ]
+            ],
+        ])->label(false);
     }
     function GenerateStatusLegend($Legend, $Ispayment){
         $StatusLegend="<fieldset>";
