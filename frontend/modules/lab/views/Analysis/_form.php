@@ -61,7 +61,6 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
         ],
     ]); ?>
 
-    <?= $form->field($model, 'date_analysis')->hiddenInput()->label(false) ?>
 
     <?= $form->field($model, 'rstl_id')->hiddenInput()->label(false) ?>
 
@@ -130,10 +129,47 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
                  ])->label("Test"); ?>
         </div>
            <div class="col-sm-6">
-        <?= $form->field($model, 'method')->textInput() ?>
+        <?= $form->field($model, 'method')->textInput(['readonly' => true]) ?>
+        </div>
     </div>
 
-    
+    <div class="row">
+        <div class="col-sm-6">
+              <?= $form->field($model, 'references')->textInput(['readonly' => true]) ?>
+        </div>
+           <div class="col-sm-6">
+           <?= $form->field($model, 'quantity')->textInput(['readonly' => true]) ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+              <?= $form->field($model, 'fee')->textInput(['readonly' => true]) ?>
+        </div>
+           <div class="col-sm-6">
+
+           <label class="control-label">Analysis Date</label>
+                <?php echo DateTimePicker::widget([
+                'model' => $model,
+                'attribute' => 'date_analysis',
+                    'readonly'=>true,
+                //    'disabled'=>$disabled,
+                'options' => ['placeholder' => 'Enter Date'],
+                    'value'=>function($model){
+                        return date("m/d/Y h:i:s P",$model->date_analysis);
+                    },
+                'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd h:i:s'
+                ],
+                    'pluginEvents'=>[
+                        "change" => "function() { alert('change'); }",
+                    ]
+                ]); ?>
+        </div>
+    </div>
+
 
     <div class="form-group" style="padding-bottom: 3px;">
         <div style="float:right;">

@@ -83,10 +83,6 @@ class SampleregisterController extends Controller
             ->joinWith('user')
             ->where('user_id =:userId',[':userId'=>$userId])
             ->one();
-
-        echo "<pre>";
-        var_dump($user);
-        echo "</pre>";
     }
 
 }
