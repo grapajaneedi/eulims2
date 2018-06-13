@@ -91,9 +91,7 @@ $this->registerJs($js);
         'panel' => [
             'heading'=>'<h3 class="panel-title">Request</h3>',
             'type'=>'primary',
-          
-            //
-            //'footer'=> false,
+
          ],
        
          'columns' =>$gridColumn,
