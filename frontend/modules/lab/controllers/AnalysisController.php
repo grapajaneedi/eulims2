@@ -9,6 +9,10 @@ use common\models\lab\AnalysisSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
+use common\models\lab\Sampletype;
+use common\models\lab\Testcategory;
 
 /**
  * AnalysisController implements the CRUD actions for Analysis model.
@@ -75,12 +79,27 @@ class AnalysisController extends Controller
         }
         
         if (Yii::$app->request->isAjax) {
+
+            $samplesQuery = Sample::find()->where(['request_id' => 1]);
+            $sampleDataProvider = new ActiveDataProvider([
+                    'query' => $samplesQuery,
+                    'pagination' => [
+                        'pageSize' => 10,
+                    ],
+                 
+            ]);
+
+            $testcategory = $this->listTestcategory(1);
+         
+            $sampletype = [];
+    
             return $this->renderAjax('_form', [
                 'model' => $model,
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
-                // 'testcategory' => $testcategory,
-                // 'sampletype' => $sampletype,
+                'sampleDataProvider' => $sampleDataProvider,
+                'testcategory' => $testcategory,
+                'sampletype' => $sampletype,
                 // 'labId' => $labId,
                 // 'sampletemplate' => $this->listSampletemplate(),
             ]);
@@ -220,6 +239,20 @@ class AnalysisController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
+
+     protected function listTestcategory($labId)
+     {
+         $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 
+            function($testcategory, $defaultValue) {
+                return $testcategory->category_name;
+         });
+ 
+         /*$testcategory = ArrayHelper::map(Testcategory::find()
+             ->where(['lab_id' => $labId])
+             ->all(), 'testcategory_id', 'category_name');*/
+ 
+         return $testcategory;
+     }
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);

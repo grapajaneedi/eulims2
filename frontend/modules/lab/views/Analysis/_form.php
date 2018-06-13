@@ -5,20 +5,30 @@ use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
 use kartik\widgets\DatePicker;
+use kartik\datetime\DateTimePicker;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use kartik\widgets\TypeaheadBasic;
 use kartik\widgets\Typeahead;
-use kartik\widgets\DateTimePicker;
+//use kartik\widgets\DateTimePicker;
 //use kartik\export\ExportMenu;
 use yii\helpers\ArrayHelper;
 use common\models\services\Testcategory;
+use common\models\services\Test;
 
+
+use common\models\services\Sampletype;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Analysis */
 /* @var $form yii\widgets\ActiveForm */
+
+
+$Testcategorylist= ArrayHelper::map(Testcategory::find()->all(),'testcategory_id','category_name');
+$Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sample_type');
+$TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','testname');
+
 ?>
 
 <div class="analysis-form">
@@ -31,7 +41,7 @@ use common\models\services\Testcategory;
     </div>
 
     <?= GridView::widget([
-        'dataProvider' => $dataProvider,
+        'dataProvider' => $sampleDataProvider,
         //'filterModel' => $searchModel,
         'pjax'=>true,
         'pjaxSettings' => [
@@ -39,53 +49,91 @@ use common\models\services\Testcategory;
                 'enablePushState' => false,
             ]
         ],
+        // [
+        //     'class' => '\kartik\grid\CheckboxColumn',
+        //  ],
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'analysis_id',
-            'date_analysis',
-            'rstl_id',
-            'pstcanalysis_id',
-            'request_id',
-            ['class' => 'yii\grid\ActionColumn'],
+          //  ['class' => 'yii\grid\SerialColumn'],
+               [
+            'class' => '\kartik\grid\CheckboxColumn',
+         ],
+            'samplename',
         ],
     ]); ?>
 
-    <?= $form->field($model, 'date_analysis')->textInput() ?>
+    <?= $form->field($model, 'date_analysis')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'rstl_id')->textInput() ?>
+    <?= $form->field($model, 'rstl_id')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'pstcanalysis_id')->textInput() ?>
+    <?= $form->field($model, 'pstcanalysis_id')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'request_id')->textInput() ?>
+    <?= $form->field($model, 'request_id')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'sample_id')->textInput() ?>
+    <?= $form->field($model, 'sample_id')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'sample_code')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'sample_code')->hiddenInput(['maxlength' => true])->label(false)?>
 
-    <?= $form->field($model, 'testname')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'testname')->hiddenInput(['maxlength' => true])->label(false) ?>
 
-    <?= $form->field($model, 'method')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'references')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'quantity')->textInput() ?>
-
-    <?= $form->field($model, 'fee')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'test_id')->textInput() ?>
-
-    <?= $form->field($model, 'cancelled')->textInput() ?>
-
-    <?= $form->field($model, 'status')->textInput() ?>
-
-    <?= $form->field($model, 'user_id')->textInput() ?>
-
-    <?= $form->field($model, 'is_package')->textInput() ?>
+    <?= $form->field($model, 'method')->hiddenInput(['maxlength' => true])->label(false) ?>
 
    
 
- 
+    <?= $form->field($model, 'fee')->hiddenInput(['maxlength' => true])->label(false) ?>
+
+   
+
+    <?= $form->field($model, 'cancelled')->hiddenInput()->label(false) ?>
+
+    <?= $form->field($model, 'status')->hiddenInput()->label(false) ?>
+
+    <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
+
+    <?= $form->field($model, 'is_package')->hiddenInput()->label(false)  ?>
+
+    
+
+   
+
+        <div class="row">
+        <div class="col-sm-6">
+             <?= $form->field($model, 'testcategory_id')->widget(Select2::classname(), [
+                        'data' => $Testcategorylist,
+                        'language' => 'en',
+                        'options' => ['placeholder' => 'Select Test Category'],
+                        'pluginOptions' => [
+                        'allowClear' => true
+                        ],
+                 ])->label("Test Category"); ?>
+        </div>
+        <div class="col-sm-6">
+            <?= $form->field($model, 'sample_type_id')->widget(Select2::classname(), [
+                            'data' => $Sampletypelist,
+                            'language' => 'en',
+                            'options' => ['placeholder' => 'Select Sample Type'],
+                            'pluginOptions' => [
+                            'allowClear' => true
+                            ],
+                    ])->label("Sample Type"); ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+             <?= $form->field($model, 'test_id')->widget(Select2::classname(), [
+                        'data' => $TestList,
+                        'language' => 'en',
+                        'options' => ['placeholder' => 'Select Test'],
+                        'pluginOptions' => [
+                        'allowClear' => true
+                        ],
+                 ])->label("Test"); ?>
+        </div>
+           <div class="col-sm-6">
+        <?= $form->field($model, 'method')->textInput() ?>
+    </div>
+
+    
 
     <div class="form-group" style="padding-bottom: 3px;">
         <div style="float:right;">
