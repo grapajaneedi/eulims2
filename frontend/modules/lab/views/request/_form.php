@@ -87,6 +87,8 @@ if($disabled){
 </div>
 <div class="row">
     <div class="col-md-6">
+        <label for="customer_id" class="control-label col-sm-3">Customer</label>
+        <div class='input-group col-sm-7'>
     <?php
     $url = \yii\helpers\Url::to(['customerlist']);
     // Get the initial city description
@@ -107,8 +109,10 @@ if($disabled){
                 'results' => new JsExpression($dataResults)
             ]
         ],
-    ])->label('Customer');
-    ?>
+    ])->label(false);
+    ?> 
+            <button type="button" class="btn btn-primary input-group-addon"><i class="fa fa-users"> Customers</i></button>
+        </div>
     </div>
     <div class="col-md-6">
         <label class="control-label">Payment Type</label>
