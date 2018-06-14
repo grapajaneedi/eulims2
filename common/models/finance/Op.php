@@ -19,7 +19,7 @@ use common\components\Functions;
  * @property string $purpose
  * @property int $created_receipt
  * @property int $allow_erratum
- * @property int $checkval
+ * 
  * @property Billing[] $billings
  * @property Collection $collection
  * @property Collectiontype $collectiontype
@@ -29,7 +29,7 @@ use common\components\Functions;
 class Op extends \yii\db\ActiveRecord
 {
     public $RequestIds;
-    public $checkval;
+   
     /**
      * {@inheritdoc}
      */
@@ -53,10 +53,9 @@ class Op extends \yii\db\ActiveRecord
     {
         return [
             [['transactionnum', 'collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose'], 'required'],
-			 ['RequestIds', 'required','message' => 'Please select Request.'],
+	    ['RequestIds', 'required','message' => 'Please select Request.'],
             [['rstl_id', 'collectiontype_id', 'payment_mode_id', 'customer_id', 'created_receipt', 'allow_erratum'], 'integer'],
-            [['order_date','RequestIds','checkval'], 'safe'],
-            ['checkval', 'string', 'min' => 1],
+            [['order_date','RequestIds'], 'safe'],
             [['total_amount'], 'number'],
             [['transactionnum','RequestIds'], 'string', 'max' => 100],
             [['purpose'], 'string', 'max' => 200],

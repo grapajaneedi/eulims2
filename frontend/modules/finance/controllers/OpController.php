@@ -105,12 +105,6 @@ class OpController extends Controller
                   //   $wallet=$this->checkCustomerWallet($model->customer_id); 
                      $arr_length = count($str_request); 
                      $total_amount=0;
-                        for($i=0;$i<$arr_length;$i++){
-                            $request =$this->findRequest($str_request[$i]);
-                             $total_amount+=$request->total;
-                        }
-                  
-                    
                         $model->rstl_id=$GLOBALS['rstl_id'];
                         $model->transactionnum= $this->Gettransactionnum();
                         $model->save();
