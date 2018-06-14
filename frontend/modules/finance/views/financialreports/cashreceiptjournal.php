@@ -2,7 +2,7 @@
 
 
 //var_dump($stringTable);
-//echo $values;
+echo $tableWidth;
 
 /*
  * Project Name: eulims_ * 
@@ -17,12 +17,28 @@
  *
  * @author mariano
  */
+echo '<style type="text/css">
+
+.box.box-solid.box-primary>.box-header {
+            width:' .$tableWidth. 'px;
+            background: #3c8dbc;
+        }
+
+        .dropdown-menu-right {
+            right: auto;
+            left: 0;
+        }
+        </style>';
+ 
 ?>
 
 
+
+
+
  
  
-<h1>Cash Receipt Journal</h1>
+
 
 
 <style type="text/css">
@@ -31,6 +47,14 @@
         text-align: center;
        
     }
+    .tdValue
+    {
+        text-align: right;
+        padding-right:5px;
+        color:#3c8dbc;
+        font-weight:bold;
+        font-style:italic;
+    }
 </style>
 
 <?php
@@ -38,17 +62,38 @@
 
 
 ?>
-<button onclick="exportTableToExcel('dvData')">Export Table Data To Excel File</button>
 
 
-<div style="overflow: auto;height: 300px">
 
-    <div id="dvData">
-    
-     <?php
-    echo $stringTable
-    ?>
+<div class="box box-primary box-solid" style="overflow: auto">
+    <div class="box-header with-border">
+              <h3 class="box-title">Cash Receipt Journal</h3>
+
+              <!-- /.box-tools -->
     </div>
+
+    <div class="box-body">
+    <div class="btn-group" style="padding-bottom:10px">
+        <button id="w1" class="btn btn-default dropdown-toggle" title="Export" data-toggle="dropdown">
+        <i class="glyphicon glyphicon-export"></i>  <span class="caret"></span></button>
+
+        <ul id="w2" class="dropdown-menu dropdown-menu-right">
+        <li role="presentation" class="dropdown-header">Export Page Data</li>
+        <li title="Microsoft Excel 95+"><a class="export-xls" href="#" onclick="exportTableToExcel('dvData')"><i class="text-success glyphicon glyphicon-floppy-remove"></i> Excel</a></li>
+        <li title="Portable Document Format"><a class="export-pdf" href="#"><i class="text-danger glyphicon glyphicon-floppy-disk"></i> PDF</a></li>
+       </div>
+       <br>
+        <div id="dvData">
+    
+            <?php
+            echo $stringTable
+            ?>
+        </div>
+        <br>
+       
+        
+    </div>
+    
    
     
 
