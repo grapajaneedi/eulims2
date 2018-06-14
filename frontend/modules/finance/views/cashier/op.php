@@ -16,6 +16,8 @@ use common\components\Functions;
 
 $func= new Functions();
 $this->title = 'Order of Payment';
+$this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
+$this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cashier']];
 $this->params['breadcrumbs'][] = 'Order of Payment';
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
@@ -24,15 +26,11 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     <?php
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
-    <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']); ?>
-    </p>
-    
     
     
   <div class="table-responsive">
     <?php 
-    $Buttontemplate='{view}{update}'; 
+    $Buttontemplate='{view}'; 
     ?>
       
     <?= GridView::widget([
@@ -122,9 +120,6 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 'filterInputOptions' => ['placeholder' => 'Customer Name', 'id' => 'grid-op-search-customer_id']
             ],
            
-            // 'amount',
-            // 'purpose',
-            // 'created_receipt',
             [
                //'attribute' => 'created_receipt',
                'label'=>'Status', 
@@ -142,7 +137,6 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                
             ],
             [
-              //'class' => 'yii\grid\ActionColumn'
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Buttontemplate,
             ],
