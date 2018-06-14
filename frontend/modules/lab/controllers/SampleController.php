@@ -349,6 +349,8 @@ class SampleController extends Controller
         return $sampletype;
     }
 
+  
+
     protected function listTestcategory($labId)
     {
         $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 

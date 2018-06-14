@@ -140,7 +140,8 @@ return [
         'allowActions' => [
             'site/*',
             '/admin/user/signup',
-            '/ajax/*'
+            '/ajax/*',
+            '/lab/analysis/listtest',
         ]
     ],
     'params' => $params,

@@ -88,38 +88,16 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
 
         <div class="row">
         <div class="col-sm-6">
-             <?php
-            //  $form->field($model, 'testcategory_id')->widget(Select2::classname(), [
-            //             'data' => $Testcategorylist,
-            //             'language' => 'en',
-            //             'options' => ['placeholder' => 'Select Test Category'],
-            //             'pluginOptions' => [
-            //             'allowClear' => true
-            //             ],
-            //      ])->label("Test Category"); 
-                 ?>
-
         <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
                         'data' => $testcategory,
                         'theme' => Select2::THEME_KRAJEE,
                         //'theme' => Select2::THEME_BOOTSTRAP,
                         'options' => ['id'=>'sample-testcategory_id'],
-                        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Testcategory'],
+                        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test category'],
                 ])
             ?>
         </div>
         <div class="col-sm-6">
-            <?php
-            //  $form->field($model, 'sample_type_id')->widget(Select2::classname(), [
-            //                 'data' => $Sampletypelist,
-            //                 'language' => 'en',
-            //                 'options' => ['placeholder' => 'Select Sample Type'],
-            //                 'pluginOptions' => [
-            //                 'allowClear' => true
-            //                 ],
-            //         ])->label("Sample Type"); 
-            ?>
-
             <?= $form->field($model, 'sample_type_id')->widget(DepDrop::classname(), [
                 'type'=>DepDrop::TYPE_SELECT2,
                 'data'=>$sampletype,
@@ -127,7 +105,7 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
                 'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                 'pluginOptions'=>[
                     'depends'=>['sample-testcategory_id'],
-                    'placeholder'=>'Select Sampletype',
+                    'placeholder'=>'Select Sample type',
                     'url'=>Url::to(['/lab/sample/listsampletype']),
                     'loadingText' => 'Loading Sampletype...',
                 ]
@@ -138,14 +116,30 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
 
     <div class="row">
         <div class="col-sm-6">
-             <?= $form->field($model, 'test_id')->widget(Select2::classname(), [
-                        'data' => $TestList,
-                        'language' => 'en',
-                        'options' => ['placeholder' => 'Select Test'],
-                        'pluginOptions' => [
-                        'allowClear' => true
-                        ],
-                 ])->label("Test"); ?>
+             <?php
+            //   $form->field($model, 'test_id')->widget(Select2::classname(), [
+            //             'data' => $TestList,
+            //             'language' => 'en',
+            //             'options' => ['placeholder' => 'Select Test'],
+            //             'pluginOptions' => [
+            //             'allowClear' => true
+            //             ],
+            //      ])->label("Test");
+                  ?>
+
+        <?= $form->field($model, 'test_id')->widget(DepDrop::classname(), [
+                'type'=>DepDrop::TYPE_SELECT2,
+                'data'=>$test,
+                'options'=>['id'=>'sample-test_id'],
+                'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                'pluginOptions'=>[
+                    'depends'=>['sample-sample_type_id'],
+                    'placeholder'=>'Select Test',
+                    'url'=>Url::to(['/lab/sample/listsampletype']),
+                    'loadingText' => 'Loading Test...',
+                ]
+            ])
+            ?>
         </div>
            <div class="col-sm-6">
         <?= $form->field($model, 'method')->textInput(['readonly' => true]) ?>
