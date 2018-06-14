@@ -5,11 +5,12 @@ namespace common\models\lab;
 use Yii;
 
 /**
- * This is the model class for table "tbl_requestcode_template".
+ * This is the model class for table "tbl_code_template".
  *
  * @property int $code_template_id
  * @property int $rstl_id
  * @property string $request_code_template
+ * @property string $sample_code_template
  */
 class CodeTemplate extends \yii\db\ActiveRecord
 {
@@ -35,9 +36,9 @@ class CodeTemplate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id'], 'required'],
+            [['rstl_id', 'request_code_template', 'sample_code_template'], 'required'],
             [['rstl_id'], 'integer'],
-            [['request_code_template'], 'string', 'max' => 100],
+            [['request_code_template', 'sample_code_template'], 'string', 'max' => 100],
         ];
     }
 
@@ -47,9 +48,10 @@ class CodeTemplate extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'code_template_id' => 'Requestcode Template ID',
+            'code_template_id' => 'Code Template ID',
             'rstl_id' => 'Rstl ID',
-            'request_code_template' => 'Requestcode Template',
+            'request_code_template' => 'Request Code Template',
+            'sample_code_template' => 'Sample Code Template',
         ];
     }
 }
