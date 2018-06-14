@@ -96,6 +96,7 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                     [
                         'label'=>'Collection',
                         'format'=>'raw',
+                         'format' => ['decimal', 2],
                         'value' => $model->collection->sub_total,
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
@@ -104,6 +105,7 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                         'label'=>'Balance',
                         'format'=>'raw',
                         'value' => $bal,
+                        'format' => ['decimal', 2],
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
