@@ -13,6 +13,7 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Sampletype;
 use common\models\lab\Testcategory;
+use common\models\lab\Test;
 
 /**
  * AnalysisController implements the CRUD actions for Analysis model.
@@ -62,6 +63,15 @@ class AnalysisController extends Controller
         ]);
     }
 
+    public function actionListtest() {
+        $test = ArrayHelper::map(Test::find()->all(), 'test_id', 
+            function($test, $defaultValue) {
+                return $test->testname;
+        });
+
+        return $test;
+    }
+
     /**
      * Creates a new Analysis model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -78,8 +88,6 @@ class AnalysisController extends Controller
             return $this->redirect(['view', 'id' => $model->analysis_id]);
         }
         
-        
-
             $samplesQuery = Sample::find()->where(['request_id' => 1]);
             $sampleDataProvider = new ActiveDataProvider([
                     'query' => $samplesQuery,
@@ -92,6 +100,8 @@ class AnalysisController extends Controller
             $testcategory = $this->listTestcategory(1);
          
             $sampletype = [];
+            $test = [];
+
         if (Yii::$app->request->isAjax) {
             return $this->renderAjax('_form', [
                 'model' => $model,
@@ -99,7 +109,8 @@ class AnalysisController extends Controller
                 'dataProvider' => $dataProvider,
                 'sampleDataProvider' => $sampleDataProvider,
                 'testcategory' => $testcategory,
-                'sampletype' => $sampletype,
+                'test' => $test,
+                'sampletype'=>$sampletype
                 // 'labId' => $labId,
                 // 'sampletemplate' => $this->listSampletemplate(),
             ]);
@@ -306,4 +317,6 @@ class AnalysisController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+   
 }
