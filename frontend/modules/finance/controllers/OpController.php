@@ -102,31 +102,16 @@ class OpController extends Controller
              try  {
                      $request_ids=$model->RequestIds;
                      $str_request = explode(',', $request_ids);
-                     $wallet=$this->checkCustomerWallet($model->customer_id); 
+                  //   $wallet=$this->checkCustomerWallet($model->customer_id); 
                      $arr_length = count($str_request); 
                      $total_amount=0;
                         for($i=0;$i<$arr_length;$i++){
                             $request =$this->findRequest($str_request[$i]);
                              $total_amount+=$request->total;
                         }
-                   
-                    if($wallet['balance'] < $total_amount){
-                     //$session->set('checkpopup',"executed"); 
-                     //return $this->redirect(['/finance/op']);
-                     // echo 'gagi';
-                      /*  echo  Alert::widget([
-                        'options' => [
-                            'showCloseButton' => false,
-                            'showCancelButton' => false,
-                            'title' => 'ggvgvg',
-                            'type' => Alert::TYPE_INFO ,
-                            //'timer' => 1000
-                        ]
-                      ]);*/
-                         return ['message' => "Successfull"];
-                    }   
-                    else{
-                       $model->rstl_id=$GLOBALS['rstl_id'];
+                  
+                    
+                        $model->rstl_id=$GLOBALS['rstl_id'];
                         $model->transactionnum= $this->Gettransactionnum();
                         $model->save();
                        //Saving for Paymentitem
@@ -157,7 +142,7 @@ class OpController extends Controller
                         $this->updateTotalOP($model->orderofpayment_id, $total_amount);
                         $session->set('savepopup',"executed");
                          return $this->redirect(['/finance/op']); 
-                    }
+                    
                         
                     
                 } catch (Exception $e) {
@@ -338,13 +323,13 @@ class OpController extends Controller
             
      }
      
-      public function checkCustomerWallet($customerid) {
+      public function actionCheckCustomerWallet($customerid) {
          $wallet=(new Query)
             ->select('balance')
             ->from('eulims_finance.tbl_customerwallet')
             ->where(['customer_id' => $customerid])
             ->one();
-         return $wallet;
+         echo $wallet["balance"];
      }
     
 }

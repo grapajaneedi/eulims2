@@ -4,21 +4,6 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/inetpub/wwwroot/eulims2/common/models/lab/Request.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/_form.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/controllers/RequestController.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/common/config/db.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/create.php</file>
-        </group>
-        <group>
-            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/lab/Request.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/_form.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/controllers/RequestController.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/inventory/views/products/index.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/customer/views/info/index.php</file>
-            <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/index.php</file>
-        </group>
-        <group>
-            <file>file:/C:/inetpub/wwwroot/eulims2/common/models/lab/Request.php</file>
             <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/finance/controllers/CustomerwalletController.php</file>
             <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/finance/views/Customerwallet/index.php</file>
             <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/_form.php</file>
@@ -37,6 +22,28 @@
             <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/op/view.php</file>
             <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/op/index.php</file>
             <file>file:/C:/UwAmp/www/eulims2/common/models/finance/Collection.php</file>
+        </group>
+        <group>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/lab/views/request/view.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/lab/controllers/SampleController.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/common/models/finance/Op.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/controllers/OpController.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/op/_request.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/lab/views/sample/_form.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/controllers/CollectiontypeController.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/op/_form.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/op/view.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/op/index.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/common/models/finance/Collection.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/common/components/Functions.php</file>
+        </group>
+        <group>
+            <file>file:/C:/UwAmp/www/eulims2/common/models/finance/Op.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/op/_request.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/models/SignupForm.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/op/_form.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/customer/views/info/_form.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/common/components/Functions.php</file>
         </group>
     </open-files>
 </project-private>

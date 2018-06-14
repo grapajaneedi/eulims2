@@ -8,7 +8,7 @@ use common\models\lab\Customer;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use kartik\widgets\DatePicker;
-
+use common\components\Functions;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
 /* @var $form yii\widgets\ActiveForm */
@@ -56,8 +56,14 @@ use kartik\widgets\DatePicker;
         </div>
         <div class="row">
             <div class="col-sm-6">
-            <?php
-                echo $form->field($model, 'customer_id')->widget(Select2::classname(), [
+              
+             <?php
+            $disabled=false;
+            $func=new Functions();
+            echo $func->GetCustomerList($form,$model,$disabled,"Customer");
+            ?>    
+           <?php
+                 /*echo $form->field($model, 'customer_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(Customer::find()->all(), 'customer_id', 'customer_name'),
                 'theme' => Select2::THEME_BOOTSTRAP,
                 'options' => ['placeholder' => 'Select a customer ...'],
@@ -98,7 +104,7 @@ use kartik\widgets\DatePicker;
                    
                      }",
                  ], 
-                ]);
+                ]);*/
              ?>
             </div>
              <div class="col-sm-6">
@@ -134,8 +140,8 @@ use kartik\widgets\DatePicker;
             </div>
         </div>
 
-
-
+        <input type="text" id="wallet" name="wallet">
+         <?php echo $form->field($model, 'checkval')->textInput()->label(false) ?>
         <div class="form-group pull-right">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
                 'id'=>'createOP']) ?>
@@ -152,17 +158,52 @@ use kartik\widgets\DatePicker;
         padding-top: 0px!important;
     }
 </style>
+
 <script type="text/javascript">
-    $('#op-customer_id').on('change',function() {
+    $('#op-customer_id').on('change',function(e) {
        $(this).select2('close');
-        //alert('csdfsd');
-    });
-    
-    $("#createOP").click(function(){
-	$.post({
-           
-              
+       e.preventDefault();
+        $('#prog').show();
+        $('#requests').hide();
+         jQuery.ajax( {
+            type: 'POST',
+            url: '/finance/op/check-customer-wallet?customerid='+$(this).val(),
+            dataType: 'html',
+            success: function ( response ) {
+
+               $('#wallet').val(response);
+               
+            },
+            error: function ( xhr, ajaxOptions, thrownError ) {
+                alert( thrownError );
             }
         });
+        jQuery.ajax( {
+            type: 'POST',
+            //data: {
+            //    customer_id:customer_id,
+           // },
+            url: '/finance/op/getlistrequest?id='+$(this).val(),
+            dataType: 'html',
+            success: function ( response ) {
+
+               setTimeout(function(){
+               $('#prog').hide();
+                 $('#requests').show();
+               $('#requests').html(response);
+                   }, 0);
+
+
+            },
+            error: function ( xhr, ajaxOptions, thrownError ) {
+                alert( thrownError );
+            }
+        });  
+        $(this).select2('open');
+      //  $(this).one('select-focus',select2Focus);
+      $(this).attr('tabIndex',1);
+       
     });
+    
+  
 </script>
