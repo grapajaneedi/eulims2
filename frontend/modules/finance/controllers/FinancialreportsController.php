@@ -76,7 +76,7 @@ class FinancialreportsController extends \yii\web\Controller
         $rowcount=mysqli_num_rows($res);
  
         $stringTable = '<table id="tblCashreceipt" style="width:' .$tableWidth . 'px;"> <tr>
-        <td style="width:397px">Cell</td>
+        <td  style="width:397px">Cell</td>
         <td style="width:97px">Debit</td>
         <td style="width:' .((count($columns)-1) * 100) . 'px">Credit</td>
         <td style="width:297px">Sundry</td></tr></table>';
@@ -108,14 +108,14 @@ class FinancialreportsController extends \yii\web\Controller
                     $tmpValue = $tmpValue + $values[$j][$columns[$i]] ;
                     }
                     $total = $total + $tmpValue;
-                    $stringTD = $stringTD . '<td style="width:100px">'. $tmpValue . '</td>';
+                    $stringTD = $stringTD . '<td class="tdValue" style="width:100px">'. number_format($tmpValue, 2, '.', ',') . '</td>';
             }
 
             $stringTable = $stringTable . '<tr><td style="width:100px"></td>
             <td style="width:100px"></td>
             <td style="width:100px"></td>
             <td style="width:100px">Various</td>
-            <td style="width:150px">'. $total . '</td>';
+            <td class="tdValue" style="width:150px">'. number_format($total, 2, '.', ',') . '</td>';
 
             $stringTable = $stringTable . $stringTD;   
             
@@ -141,7 +141,7 @@ class FinancialreportsController extends \yii\web\Controller
             <td style="width:100px"></td>
             <td style="width:100px"></td>
             <td style="width:100px">Total</td>
-            <td style="width:150px">'. $total . '</td>';
+            <td class="tdValue" style="width:150px">'. number_format($total, 2, '.', ',') . '</td>';
 
             $stringTable = $stringTable . $stringTD;   
             
@@ -153,7 +153,7 @@ class FinancialreportsController extends \yii\web\Controller
             $stringTable = $stringTable . '</table>';
    
     
-     return $this->render('cashreceiptjournal',['dataHeader'=>$dataHeader,'stringTable'=>$stringTable,'values'=>$test]);
+     return $this->render('cashreceiptjournal',['dataHeader'=>$dataHeader,'stringTable'=>$stringTable,'tableWidth'=>$tableWidth,'values'=>$test]);
     }
     
     
