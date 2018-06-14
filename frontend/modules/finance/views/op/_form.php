@@ -62,50 +62,7 @@ use common\components\Functions;
             $func=new Functions();
             echo $func->GetCustomerList($form,$model,$disabled,"Customer");
             ?>    
-           <?php
-                 /*echo $form->field($model, 'customer_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map(Customer::find()->all(), 'customer_id', 'customer_name'),
-                'theme' => Select2::THEME_BOOTSTRAP,
-                'options' => ['placeholder' => 'Select a customer ...'],
-                'pluginOptions' => [
-                  'allowClear' => true,
-                  'autoclose'=>false
-                ],
-                'pluginEvents' => [
-                    "change" => "function(e) {
-                         e.preventDefault();
-                        var customer_id=$(this).val();
-                        $('#prog').show();
-                        $('#requests').hide();
-                        jQuery.ajax( {
-                            type: \"POST\",
-                            //data: {
-                            //    customer_id:customer_id,
-                           // },
-                            url: \"/finance/op/getlistrequest?id=\"+$(this).val(),
-                            dataType: \"html\",
-                            success: function ( response ) {
-
-                               setTimeout(function(){
-                               $('#prog').hide();
-                                 $('#requests').show();
-                               $('#requests').html(response);
-                                   }, 0);
-
-
-                            },
-                            error: function ( xhr, ajaxOptions, thrownError ) {
-                                alert( thrownError );
-                            }
-                        });  
-                        $(this).select2('open');
-                      //  $(this).one('select-focus',select2Focus);
-                      $(this).attr('tabIndex',1);
-                   
-                     }",
-                 ], 
-                ]);*/
-             ?>
+           
             </div>
              <div class="col-sm-6">
             <?php
@@ -136,15 +93,15 @@ use common\components\Functions;
 		 <?php echo $form->field($model, 'RequestIds')->hiddenInput()->label(false) ?>
         <div class="row">
             <div class="col-lg-12"> 
-                <?= $form->field($model, 'purpose')->textarea(['maxlength' => true]); ?>
+                <?= $form->field($model, 'purpose')->textarea(['maxlength' => true,'disabled' =>true]); ?>
             </div>
         </div>
 
-        <input type="text" id="wallet" name="wallet">
-         <?php echo $form->field($model, 'checkval')->textInput()->label(false) ?>
+        <input type="text" id="wallet" name="wallet" hidden>
+        
         <div class="form-group pull-right">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
-                'id'=>'createOP']) ?>
+                'id'=>'createOP','disabled'=>true]) ?>
             <?php if(Yii::$app->request->isAjax){ ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             <?php } ?>
@@ -170,9 +127,7 @@ use common\components\Functions;
             url: '/finance/op/check-customer-wallet?customerid='+$(this).val(),
             dataType: 'html',
             success: function ( response ) {
-
                $('#wallet').val(response);
-               
             },
             error: function ( xhr, ajaxOptions, thrownError ) {
                 alert( thrownError );
@@ -205,5 +160,16 @@ use common\components\Functions;
        
     });
     
-  
+    $('#op-payment_mode_id').on('change',function(e) {
+        e.preventDefault();
+        var payment_mode=$(this).val();
+        if(payment_mode == 4){
+            $('#op-purpose').prop('disabled', true);
+            $('#createOP').prop('disabled', true);
+        }
+        else{
+            $('#op-purpose').prop('disabled', false);
+            $('#createOP').prop('disabled', false);
+        }
+    });
 </script>
