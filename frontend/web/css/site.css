@@ -27,7 +27,9 @@ body {
     margin: 0 auto -60px;
     padding: 0 0 60px;
 }
-
+.form-control:focus{
+    background-color: #fdf7f7
+}
 /**** Kartik Grivew ****/
 .kv-grid-table>thead{
     background-color: #337ab7;

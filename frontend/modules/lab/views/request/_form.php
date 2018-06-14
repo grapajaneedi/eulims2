@@ -27,6 +27,11 @@ if($disabled){
 }else{
     $Color="white";
 }
+if($model->lab_id==3){
+    $PanelStyle='';
+}else{
+    $PanelStyle='display: none';
+}
 ?>
 
 <div class="request-form">
@@ -46,6 +51,16 @@ if($disabled){
         'options' => ['placeholder' => 'Select Lab','disabled'=>$disabled],
         'pluginOptions' => [
             'allowClear' => true
+        ],
+        'pluginEvents'=>[
+            "change" => "function() { 
+                if(this.value==3){//Metrology
+                   $('#div_met').show();
+                }else{
+                   $('#div_met').hide();
+                }
+
+            }",
         ]
     ])->label('Laboratory'); ?>
     </div>
@@ -65,12 +80,144 @@ if($disabled){
             'autoclose' => true,
             'removeButton' => false,
             'format' => 'yyyy-mm-dd h:i:s'
-	],
-        'pluginEvents'=>[
-            "change" => "function() { alert('change'); }",
-        ]
+	]
     ]); 
     ?>
+    </div>
+</div>
+<div class="panel panel-success" id="div_met" style="<?= $PanelStyle ?>">
+    <div class="panel-heading">Metrology Request Details</div>
+    <div class="row" style="padding-left: 5px">
+        <div class="col-md-6">
+            <label class="control-label">Recommended Due Date</label>
+            <div class="col-md-12">
+                <?php
+                echo DatePicker::widget([
+                    'model' => $model,
+                    'attribute' => 'recommended_due_date',
+                    'readonly' => true,
+                    'disabled' => $disabled,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("m/d/Y", $model->recommended_due_date);
+                    },
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
+                    ]
+                ]);
+                ?>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="control-label">Estimated Date Completion</label>
+            <div class="col-md-12">
+                <?php
+                echo DatePicker::widget([
+                    'model' => $model,
+                    'attribute' => 'est_date_completion',
+                    'readonly' => true,
+                    'disabled' => $disabled,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("m/d/Y", $model->est_date_completion);
+                    },
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
+                    ]
+                ]);
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-left: 5px">
+        <div class="col-md-6">
+            <label class="control-label">Date Release of Equipment</label>
+            <div class="col-md-12">
+                <?php
+                echo DatePicker::widget([
+                    'model' => $model,
+                    'attribute' => 'equipment_release_date',
+                    'readonly' => true,
+                    'disabled' => $disabled,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("m/d/Y", $model->equipment_release_date);
+                    },
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
+                    ]
+                ]);
+                ?>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="control-label">Date Release of Certificate</label>
+            <div class="col-md-12">
+                <?php
+                echo DatePicker::widget([
+                    'model' => $model,
+                    'attribute' => 'certificate_release_date',
+                    'readonly' => true,
+                    'disabled' => $disabled,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("m/d/Y", $model->certificate_release_date);
+                    },
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
+                    ]
+                ]);
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-left: 5px">
+        <div class="col-md-6">
+            <label class="control-label">Position</label>
+            <div class="col-md-12">
+            <?= $form->field($model, 'position')->textInput(['readonly' => $disabled])->label(false) ?>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="control-label">Items Receive By</label>
+            <div class="col-md-12">
+            <?= $form->field($model, 'items_receive_by')->textInput(['readonly' => $disabled])->label(false) ?>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="control-label">Released By</label>
+            <div class="col-md-12">
+            <?= $form->field($model, 'released_by')->textInput(['readonly' => $disabled])->label(false) ?>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="control-label">Received By</label>
+            <div class="col-md-12">
+            <?= $form->field($model, 'received_by')->textInput(['readonly' => $disabled])->label(false) ?>
+            </div>
+        </div>
     </div>
 </div>
 <div class="row">
