@@ -324,5 +324,32 @@ class OpController extends Controller
             ->one();
          echo $wallet["balance"];
      }
+     /*public function actionListpaymentmode($customerid){
+         $func=new Functions();
+         $paymentlist=$func->GetPaymentModeList($customerid);
+         return $paymentlist;
+     }*/
     
+      public function actionListpaymentmode() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $func=new Functions();
+            $list = $func->GetPaymentModeList($id);
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $paymentlist) {
+                    $out[] = ['id' => $paymentlist['payment_mode_id'], 'name' => $paymentlist['payment_mode']];
+                    if ($i == 0) {
+                        $selected = $paymentlist['payment_mode_id'];
+                    }
+                }
+                // Shows how you can preselect a value
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
 }
