@@ -1,6 +1,16 @@
 <?php
 /* @var $this yii\web\View */
+//<div class="col-md-3 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/cashier/reports/"><img class="img-responsive center-block" src="/images/reportsquare.png" style="height:150px"/>Reports</a></div>
+       
 ?>
+
+<style type="text/css">
+
+img:hover{
+    border:5px solid #3c8dbc; 
+    border-radius: 25px;
+}
+</style>
 
 
 <div class="box box-primary box-solid" style="background:transparent">
@@ -22,3 +32,6 @@
     </div>
     
 </div>
+
+
+           
