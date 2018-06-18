@@ -1,6 +1,4 @@
 <?php
-
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -66,53 +64,65 @@ $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sa
         ],
     ]); ?>
 
-    <div class="row">
-             <div class="col-md-6">
-              
-                 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-             </div>
-
-             <div class="col-md-6">
-             <?= $form->field($model, 'rate')->textInput(['maxlength' => true]) ?>
-             
-             </div>
+         <div class="row">
+         <div class="col-sm-6">
+         <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
+                         'data' => $testcategory,
+                         'theme' => Select2::THEME_KRAJEE,
+                         //'theme' => Select2::THEME_BOOTSTRAP,
+                         'options' => ['id'=>'sample-testcategory_id'],
+                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test category'],
+                 ])
+             ?>
          </div>
+
+         <div class="col-sm-6">
+             <?= $form->field($model, 'sample_type_id')->widget(DepDrop::classname(), [
+                 'type'=>DepDrop::TYPE_SELECT2,
+                 'data'=>$sampletype,
+                 'options'=>['id'=>'sample-sample_type_id'],
+                 'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                 'pluginOptions'=>[
+                     'depends'=>['sample-testcategory_id'],
+                     'placeholder'=>'Select Sample type',
+                     'url'=>Url::to(['/lab/sample/listsampletype']),
+                     'loadingText' => 'Loading Sampletype...',
+                 ]
+             ])
+             ?>
+
+            </div>
+        </div>
 
          <div class="row">
              <div class="col-md-6">
-             <?= $form->field($model, 'testcategory_id')->widget(Select2::classname(), [
-                        'data' => $Testcategorylist,
-                        'language' => 'en',
-                        'options' => ['placeholder' => 'Select Test Category'],
-                        'pluginOptions' => [
-                        'allowClear' => true
-                        ],
-                 ])->label("Test Category"); ?>
-           
+             <?php
+            // $form->field($model, 'tests')->textInput(['maxlength' => true])
+              ?>
+
+            <?= $form->field($model, 'name')->widget(DepDrop::classname(), [
+                        'type'=>DepDrop::TYPE_SELECT2,
+                        'data'=>$test,
+                        'options'=>['id'=>'sample-name'],
+                        'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                        'pluginOptions'=>[
+                            'depends'=>['sample-name'],
+                            'placeholder'=>'Select Test',
+                            'url'=>Url::to(['/lab/analysis/listtest']),
+                            'loadingText' => 'Loading Package...',
+                        ]
+                    ])
+                    ?>
              </div>
 
              <div class="col-md-6">
-             <?= $form->field($model, 'sample_type_id')->widget(Select2::classname(), [
-                        'data' => $Sampletypelist,
-                        'language' => 'en',
-                         'options' => ['placeholder' => 'Select Sample Type'],
-                         'pluginOptions' => [
-                         'allowClear' => true
-                        ],
-                ])->label("Sample Type"); ?>
+             <?= $form->field($model, 'rate')->textInput(['readonly' => true]) ?>
+             <?= $form->field($model, 'rstl_id')->hiddenInput()->label(false) ?>
             
              </div>
          </div>
-         <div class="row">
-             <div class="col-md-6">
-             <?= $form->field($model, 'tests')->textInput(['maxlength' => true]) ?>
-             </div>
 
-             <div class="col-md-6">
-             <?= $form->field($model, 'rstl_id')->textInput() ?>
-            
-             </div>
-         </div>
+         <?= $form->field($model, 'tests')->textarea(['rows' => 4, 'readonly' => true]) ?>
     <div class="form-group pull-right">
     <?php if(Yii::$app->request->isAjax){ ?>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

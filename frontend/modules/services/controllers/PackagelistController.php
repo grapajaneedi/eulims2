@@ -112,7 +112,7 @@ class PackagelistController extends Controller
             $testcategory = $this->listTestcategory(1);
          
             $sampletype = [];
-            // $test = [];
+            $test = [];
 
         if (Yii::$app->request->isAjax) {
             return $this->renderAjax('_packageform', [
@@ -121,7 +121,7 @@ class PackagelistController extends Controller
                 'dataProvider' => $dataProvider,
                 'sampleDataProvider' => $sampleDataProvider,
                 'testcategory' => $testcategory,
-                // 'test' => $test,
+                'test' => $test,
                 'sampletype'=>$sampletype
                 // 'labId' => $labId,
                 // 'sampletemplate' => $this->listSampletemplate(),

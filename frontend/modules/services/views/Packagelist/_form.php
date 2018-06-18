@@ -71,16 +71,16 @@ $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sa
             
              </div>
          </div>
+
          <div class="row">
              <div class="col-md-6">
              <?= $form->field($model, 'tests')->textInput(['maxlength' => true]) ?>
              </div>
-
              <div class="col-md-6">
-             <?= $form->field($model, 'rstl_id')->textInput() ?>
-            
+             <?= $form->field($model, 'rstl_id')->textInput() ?>     
              </div>
          </div>
+         
     <div class="form-group pull-right">
     <?php if(Yii::$app->request->isAjax){ ?>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

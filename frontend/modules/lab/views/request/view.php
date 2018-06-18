@@ -384,24 +384,71 @@ $DateCancelled='';
     </div>
     <div class="container">
         <?php
-            $gridColumns = [
-                //['class' => 'yii\grid\SerialColumn'],
+            $analysisgridColumns = [
                 [
-                    'attribute'=>'request_id',
+                    'attribute'=>'sample_name',
+                    'header'=>'Sample',
+                    'format' => 'raw',
+                    'enableSorting' => false,
+                    'value' => function($model) {
+                        return $model->samples->sample_name;
+                    },
+                    'contentOptions' => ['style' => 'width:100%; white-space: normal;'],
+                   
+                ],
+                [
+                    'attribute'=>'sample_code',
+                    'header'=>'Sample Code',
+                    'value' => function($model) {
+                        return $model->samples->sample_code;
+                    },
                     'enableSorting' => false,
                 ],
                 [
-                    'attribute'=>'request_ref_num',
+                    'attribute'=>'testname',
+                    'header'=>'Test/ Calibration Requested',
+                    // 'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                    // },
                     'enableSorting' => false,
                 ],
                 [
-                    'attribute'=>'report_due',
+                    'attribute'=>'method',
+                    'header'=>'Test Method',
+                    // 'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                    // },
                     'enableSorting' => false,
                 ],
+                [
+                    'attribute'=>'quantity',
+                    'header'=>'Quantity',
+                    // 'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                    // },
+                    'enableSorting' => false,
+                ],
+                [
+                    'attribute'=>'fee',
+                    'header'=>'Unit Price',
+                    // 'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                    // },
+                    'enableSorting' => false,
+                ],
+                [
+                    'attribute'=>'status',
+                    'header'=>'Status',
+                    // 'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                    // },
+                    'enableSorting' => false,
+                ],
+               
             ];
             echo GridView::widget([
                 'id' => 'analysis-grid',
-                'dataProvider'=> $dataProvider,
+                'dataProvider'=> $analysisdataprovider,
                 'summary' => '',
                 'responsive'=>true, 
                 'hover'=>true,
@@ -417,7 +464,7 @@ $DateCancelled='';
                   //  'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn']),
                    'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button value='/lab/request/saverequestransaction' id='btnSaveRequest' class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
                 ],
-                'columns' => $gridColumns,
+                'columns' => $analysisgridColumns,
                 'toolbar' => [
                 ],
             ]);
