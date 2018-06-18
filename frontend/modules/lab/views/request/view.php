@@ -35,45 +35,43 @@ $js=<<<SCRIPT
        
 SCRIPT;
 $this->registerJs($js);
+if($model->request_ref_num==null || $model->status_id==2){
+    $CancelButton='';
+}else{
+    $CancelButton='<button id="btnCancel" type="button" style="float: right" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel</button>';
+}
+if($model->status_id==2){
+    // Cancelled Request
+    $CancelClass='request-cancelled';
+}else{
+    $CancelClass='cancelled-hide';
+}
+$Reasons='&nbsp;';
+$DateCancelled='';
 ?>
 <div class="request-view">
-    <!-- <h1><?= Html::encode($this->title) ?></h1> -->
-
-    <!-- <p>
-        <?= Html::a('Update', ['update', 'id' => $model->request_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->request_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p> -->
-
-   <!--  <?php /*= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'request_id',
-            'request_ref_num',
-            'request_datetime:datetime',
-            'rstl_id',
-            'lab_id',
-            'customer_id',
-            'payment_type_id',
-            'modeofrelease_id',
-            'discount',
-            'discount_id',
-            'purpose_id',
-            'or_id',
-            'total',
-            'report_due',
-            'conforme',
-            'receivedBy',
-            'created_at',
-            'posted',
-            'status_id',
-        ],
-    ])*/ ?> -->
+    <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
+        <div class="inner-div">
+        <img src="/images/cancelled.png" alt="" style="width: 300px;margin-left: 80px"/>
+        <div class="panel panel-primary">
+            <div class="panel-heading"></div>
+            <table class="table table-bordered table-responsive">
+                <tr>
+                    <th style="width: 180px;background-color: lightgray">Reason of Cancellation</th>
+                    <td style="width: 250px"><?= $Reasons ?></td>
+                </tr>
+                <tr>
+                    <th style="background-color: lightgray">Date Cancelled</th>
+                    <td><?= $DateCancelled ?></td>
+                </tr>
+                <tr>
+                    <th style="background-color: lightgray">Cancelled By</th>
+                    <td><?= $DateCancelled ?></td>
+                </tr>
+            </table>
+        </div>
+        </div>
+    </div>
     <div class="container">
         <?php
             echo DetailView::widget([
@@ -83,13 +81,14 @@ $this->registerJs($js);
             'mode'=>DetailView::MODE_VIEW,
             'panel'=>[
                 'heading'=>'<i class="glyphicon glyphicon-book"></i> Request # ' . $model->request_ref_num,
+               // 'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-plus"></i> Generate Samplecode', ['value' => Url::to(['sample/generatesamplecode','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                 'type'=>DetailView::TYPE_PRIMARY,
             ],
             'buttons1' => '',
             'attributes'=>[
                 [
                     'group'=>true,
-                    'label'=>'Request Details',
+                    'label'=>'Request Details '.$CancelButton,
                     'rowOptions'=>['class'=>'info']
                 ],
                 [
@@ -242,7 +241,6 @@ $this->registerJs($js);
         ]);
         ?>
     </div>
-
     <div class="container">
         <div class="table-responsive">
         <?php
@@ -427,16 +425,7 @@ $this->registerJs($js);
     </div>
 </div>
 <script type="text/javascript">
-   /*$("#modalBtn").click(function(){
-        $(".modal-title").html($(this).attr('title'));
-        $("#modal").modal('show')
-        //$("#sampleModal").modal('show')
-            .find('#modalContent')
-            .load($(this).attr('value'));
-    });*/
-
      $('#sample-grid tbody td').css('cursor', 'pointer');
-
     function updateSample(id){
        //var url = 'Url::to(['sample/update']) . "?id=' + id;
        var url = '/lab/sample/update?id='+id;
@@ -445,7 +434,6 @@ $this->registerJs($js);
             .find('#modalContent')
             .load(url);
     }
-
     function addSample(url,title){
        //var url = 'Url::to(['sample/update']) . "?id=' + id;
        //var url = '/lab/sample/update?id='+id;
