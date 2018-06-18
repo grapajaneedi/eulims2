@@ -78,6 +78,19 @@ class Functions extends Component{
         $ret=$Command->execute();
         return $ret;
     }
+    /**
+     * 
+     * @param integer $CustomerID
+     * @return array
+     */
+    function GetPaymentModeList($CustomerID){
+        $Connection=Yii::$app->financedb;
+        $Proc="CALL spGeneratePaymentModeList(:mCustomerID)";
+        $Command=$Connection->createCommand($Proc);
+        $Command->bindValue(':mCustomerID',$CustomerID);
+        $list = $Command->queryAll();
+        return $list;
+    }
     function GetCustomerList($form,$model,$disabled=false,$Label=false){
 $dataExp = <<< SCRIPT
     function (params, page) {
@@ -195,8 +208,5 @@ SCRIPT;
      */
     public function left($mString, $length){
         return substr($mString,0,$length);
-    }
-    public function GetLaboratoryList(){
-        
     }
 }
