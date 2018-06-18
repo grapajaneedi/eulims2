@@ -413,7 +413,7 @@ $this->registerJs($js);
                     'type'=>'primary',
                     //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['/lab/analysis/create'], ['class' => 'btn btn-success'],['id' => 'modalBtn']),
                     'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['analysis/create','request_id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
-                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['value' => Url::to(['/services/packagelist/createpackage','request_id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                    'after'=>false,
                   //  'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn']),

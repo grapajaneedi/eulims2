@@ -5,9 +5,17 @@ namespace frontend\modules\services\controllers;
 use Yii;
 use common\models\lab\Packagelist;
 use common\models\lab\PackagelistSearch;
+use common\models\lab\Analysis;
+use common\models\lab\AnalysisSearch;
+use common\models\lab\Sample;
+use common\models\lab\SampleSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
+use common\models\services\Testcategory;
+use common\models\services\TestcategorySearch;
 
 /**
  * PackagelistController implements the CRUD actions for Packagelist model.
@@ -81,6 +89,74 @@ class PackagelistController extends Controller
                      }
     }
 
+    public function actionCreatepackage()
+    {
+        $model = new Packagelist();
+
+        $searchModel = new PackageListSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->analysis_id]);
+        }
+        
+            $samplesQuery = Sample::find()->where(['request_id' => 1]);
+            $sampleDataProvider = new ActiveDataProvider([
+                    'query' => $samplesQuery,
+                    'pagination' => [
+                        'pageSize' => 10,
+                    ],
+                 
+            ]);
+
+            $testcategory = $this->listTestcategory(1);
+         
+            $sampletype = [];
+            // $test = [];
+
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('_packageform', [
+                'model' => $model,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'sampleDataProvider' => $sampleDataProvider,
+                'testcategory' => $testcategory,
+                // 'test' => $test,
+                'sampletype'=>$sampletype
+                // 'labId' => $labId,
+                // 'sampletemplate' => $this->listSampletemplate(),
+            ]);
+        }else{
+            return $this->render('_packageform', [
+                'model' => $model,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                // 'sampleDataProvider' => $sampleDataProvider,
+                // 'testcategory' => $testcategory,
+                // 'sampletype' => $sampletype,
+                // 'labId' => $labId,
+                // 'sampletemplate' => $this->listSampletemplate(),
+            ]);
+        }
+
+        // return $this->render('create', [
+        //     'model' => $model,
+        // ]);
+    }
+
+    protected function listTestcategory($labId)
+    {
+        $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 
+           function($testcategory, $defaultValue) {
+               return $testcategory->category_name;
+        });
+
+        /*$testcategory = ArrayHelper::map(Testcategory::find()
+            ->where(['lab_id' => $labId])
+            ->all(), 'testcategory_id', 'category_name');*/
+
+        return $testcategory;
+    }
     /**
      * Updates an existing Packagelist model.
      * If update is successful, the browser will be redirected to the 'view' page.

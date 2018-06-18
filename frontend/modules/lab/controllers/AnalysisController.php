@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
 use common\models\lab\Sampletype;
 use common\models\lab\Testcategory;
 use common\models\lab\Test;
+use common\models\lab\SampleSearch;
 
 /**
  * AnalysisController implements the CRUD actions for Analysis model.
@@ -63,13 +64,47 @@ class AnalysisController extends Controller
         ]);
     }
 
-    public function actionListtest() {
-        $test = ArrayHelper::map(Test::find()->all(), 'test_id', 
-            function($test, $defaultValue) {
-                return $test->testname;
+    // protected function listtest()
+    // {
+    //     $test = ArrayHelper::map(Test::find()->all(), 'test_id', 
+    //     function($test, $defaultValue) {
+    //         return $test->testname;
+    //      });
+
+    //      return $test;
+    // }
+
+    protected function listSampletype()
+    {
+        $sampletype = ArrayHelper::map(Sampletype::find()->all(), 'sample_type_id', 
+            function($sampletype, $defaultValue) {
+                return $sampletype->sample_type;
         });
 
-        return $test;
+        return $sampletype;
+    }
+
+    
+    public function actionListsampletype() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $list = Sampletype::find()->andWhere(['testcategory_id'=>$id])->asArray()->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $sampletype) {
+                    $out[] = ['id' => $sampletype['sample_type_id'], 'name' => $sampletype['sample_type']];
+                    if ($i == 0) {
+                        $selected = $sampletype['sample_type_id'];
+                    }
+                }
+                
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
     }
 
     /**
@@ -82,6 +117,7 @@ class AnalysisController extends Controller
         $model = new Analysis();
 
         $searchModel = new AnalysisSearch();
+        $samplesearchmodel = new SampleSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -106,6 +142,7 @@ class AnalysisController extends Controller
             return $this->renderAjax('_form', [
                 'model' => $model,
                 'searchModel' => $searchModel,
+                'samplesearchmodel'=>$samplesearchmodel,
                 'dataProvider' => $dataProvider,
                 'sampleDataProvider' => $sampleDataProvider,
                 'testcategory' => $testcategory,
@@ -119,6 +156,7 @@ class AnalysisController extends Controller
                 'model' => $model,
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
+                'samplesearchmodel'=>$samplesearchmodel,
                 'sampleDataProvider' => $sampleDataProvider,
                 'testcategory' => $testcategory,
                 'sampletype' => $sampletype,

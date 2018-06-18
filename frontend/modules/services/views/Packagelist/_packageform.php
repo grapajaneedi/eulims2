@@ -1,5 +1,6 @@
 <?php
 
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -17,22 +18,53 @@ use kartik\widgets\TypeaheadBasic;
 use kartik\widgets\Typeahead;
 use common\models\services\Test;
 
-
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Packagelist */
 /* @var $form yii\widgets\ActiveForm */
 
 $Testcategorylist= ArrayHelper::map(Testcategory::find()->all(),'testcategory_id','category_name');
 $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sample_type');
-
-
 ?>
 
 <div class="packagelist-form" style="padding-bottom: 10px">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    
+    <?= GridView::widget([
+        'dataProvider' => $sampleDataProvider,
+        //'filterModel' => $samplesearchmodel,
+        'pjax'=>true,
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'filterRowOptions' => ['class' => 'kartik-sheet-style'],
+        'bordered' => true,
+        'striped' => true,
+        'condensed' => true,
+        'responsive'=>false,
+        'containerOptions'=>[
+            'style'=>'overflow:auto; height:180px',
+        ],
+        'pjaxSettings' => [
+            'options' => [
+                'enablePushState' => false,
+            ]
+        ],
+        'floatHeaderOptions' => ['scrollingTop' => true],
+        'columns' => [
+               [
+            'class' => '\kartik\grid\CheckboxColumn',
+         ],
+            'samplename',
+            [
+                'attribute'=>'description',
+                'format' => 'raw',
+                'enableSorting' => false,
+                'value' => function($data){
+                    return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
+                },
+                'contentOptions' => ['style' => 'width:70%; white-space: normal;'],
+            ],
+        ],
+    ]); ?>
 
     <div class="row">
              <div class="col-md-6">
