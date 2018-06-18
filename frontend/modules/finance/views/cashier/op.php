@@ -8,6 +8,7 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
 use kartik\daterange\DateRangePicker;
 use yii\db\Query;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\Op */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -139,6 +140,15 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
             [
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Buttontemplate,
+                 'buttons'=>[
+                        'view'=>function ($url, $model) {
+                            //return Html::button('<span class="glyphicon glyphicon-eye-open"></span>',['onclick'=>Url::toRoute(['/finance/cashier/view&id='.$model->orderofpayment_id])]);
+                            //return Url::toRoute('/finance/cashier/view&id='.$model->orderofpayment_id); 
+                            //return <a href="/finance/cashier/op/">
+                              return Html::a(['/finance/cashier/view&id='.$model->orderofpayment_id], 
+                                ['class' => 'btn btn-primary']);
+                        },
+                  ],
             ],
 
         ],
