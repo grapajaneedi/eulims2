@@ -128,7 +128,7 @@ class SampleController extends Controller
                 $model->sampling_date = date('Y-m-d');
             }
 
-            $model->rstl_id = 11;
+            $model->rstl_id = $GLOBALS['rstl_id'];
             //$model->sample_code = 0;
             $model->request_id = $request->request_id;
             $model->sample_month = date_format(date_create($request->request_datetime),'m');
@@ -158,15 +158,15 @@ class SampleController extends Controller
                         } else {
                             $sample->sampling_date = date('Y-m-d');
                         }
-                        $sample->rstl_id = 11;
+                        $sample->rstl_id = $GLOBALS['rstl_id'];
                         //$sample->sample_code = 0;
                         $sample->testcategory_id = (int) $_POST['Sample']['testcategory_id'];
                         $sample->sample_type_id = (int) $_POST['Sample']['sample_type_id'];
                         $sample->samplename = $_POST['Sample']['samplename'];
                         $sample->description = $_POST['Sample']['description'];
                         $sample->request_id = $request->request_id;
-                        $sample->sample_month = date('m', $request->request_datetime);
-                        $sample->sample_year = date('Y', $request->request_datetime);
+                        $sample->sample_month = date('m', strtotime($request->request_datetime));
+                        $sample->sample_year = date('Y', strtotime($request->request_datetime));
                         $sample->save(false);
                    // }
                    /* echo "<pre>";
