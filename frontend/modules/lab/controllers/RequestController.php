@@ -4,6 +4,8 @@ namespace frontend\modules\lab\controllers;
 
 use Yii;
 use common\models\lab\Request;
+use common\models\lab\Analysis;
+use common\models\lab\AnalysisSearch;
 use common\models\lab\RequestSearch;
 use common\models\lab\Requestcode;
 use yii\web\Controller;
@@ -70,12 +72,22 @@ class RequestController extends Controller
                 ],
              
         ]);
+
+        $analysisQuery = Analysis::find()->where(['sample_id' => 1]);
+        $analysisdataprovider = new ActiveDataProvider([
+                'query' => $analysisQuery,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+             
+        ]);
         
         return $this->render('view', [
             'model' => $this->findModel($id),
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'sampleDataProvider' => $sampleDataProvider
+            'sampleDataProvider' => $sampleDataProvider,
+            'analysisdataprovider'=> $analysisdataprovider,
         ]);
     }
     public function actionCustomerlist($q = null, $id = null) {

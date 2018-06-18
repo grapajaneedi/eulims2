@@ -349,6 +349,8 @@ class SampleController extends Controller
         return $sampletype;
     }
 
+   
+
   
 
     protected function listTestcategory($labId)
@@ -379,7 +381,7 @@ class SampleController extends Controller
                         $selected = $sampletype['sample_type_id'];
                     }
                 }
-                // Shows how you can preselect a value
+                
                 echo Json::encode(['output' => $out, 'selected'=>$selected]);
                 return;
             }
