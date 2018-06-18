@@ -9,9 +9,12 @@ use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use kartik\widgets\DatePicker;
 use common\components\Functions;
+use kartik\widgets\DepDrop;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
 /* @var $form yii\widgets\ActiveForm */
+$paymentlist='';
 ?>
 
 <div class="orderofpayment-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
@@ -65,16 +68,19 @@ use common\components\Functions;
            
             </div>
              <div class="col-sm-6">
-            <?php
-                echo $form->field($model, 'payment_mode_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map(Paymentmode::find()->all(), 'payment_mode_id', 'payment_mode'),
-                'theme' => Select2::THEME_BOOTSTRAP,
-                'options' => ['placeholder' => 'Select Payment Mode ...'],
-                'pluginOptions' => [
-                  'allowClear' => true
-                ],
-                ]);
-             ?>
+                <?= $form->field($model, 'payment_mode_id')->widget(DepDrop::classname(), [
+                    'type'=>DepDrop::TYPE_SELECT2,
+                    //'data'=>$paymentlist,
+                    //'options'=>['id'=>'sample-sample_type_id'],
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'pluginOptions'=>[
+                        'depends'=>['op-customer_id'],
+                        'placeholder'=>'Select Payment Mode',
+                        'url'=>Url::to(['/finance/op/listpaymentmode?customerid='.$model->customer_id]),
+                        
+                    ]
+                ])
+                ?>
             </div>
         </div>
         <div class="row">
@@ -153,7 +159,9 @@ use common\components\Functions;
             error: function ( xhr, ajaxOptions, thrownError ) {
                 alert( thrownError );
             }
-        });  
+        });
+        
+       //alert(paymentmode);
         $(this).select2('open');
       //  $(this).one('select-focus',select2Focus);
       $(this).attr('tabIndex',1);

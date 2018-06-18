@@ -46,6 +46,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+                
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -141,13 +142,9 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Buttontemplate,
                  'buttons'=>[
-                        'view'=>function ($url, $model) {
-                            //return Html::button('<span class="glyphicon glyphicon-eye-open"></span>',['onclick'=>Url::toRoute(['/finance/cashier/view&id='.$model->orderofpayment_id])]);
-                            //return Url::toRoute('/finance/cashier/view&id='.$model->orderofpayment_id); 
-                            //return <a href="/finance/cashier/op/">
-                              return Html::a(['/finance/cashier/view&id='.$model->orderofpayment_id], 
-                                ['class' => 'btn btn-primary']);
-                        },
+                    'view'=>function ($url, $model) {
+                          return Html::a('View', ['/finance/cashier/view-op?id='.$model->orderofpayment_id], ['target'=>'_blank']);
+                    },
                   ],
             ],
 
@@ -188,12 +185,4 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     ?>
   </div>
 </div>
-<script type="text/javascript">
-    $('#btnOP').click(function(){
-        $('.modal-title').html($(this).attr('title'));
-        $('#modal').modal('show')
-            .find('#modalContent')
-            .load($(this).attr('value'));
-    });
-  
-</script>
+

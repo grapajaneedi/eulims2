@@ -6,6 +6,7 @@ use Yii;
 use common\models\finance\Op;
 use common\models\finance\OpSearch;
 use common\models\finance\Paymentitem;
+use common\models\finance\Receipt;
 use yii\data\ActiveDataProvider;
 class CashierController extends \yii\web\Controller
 {
@@ -25,10 +26,9 @@ class CashierController extends \yii\web\Controller
             'dataProvider' => $dataProvider,
             'model' => $model,
         ]);
-        //return $this->render('op');
     }
     
-    public function actionView($id)
+    public function actionViewOp($id)
     { 
          $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $id]);
          $paymentitemDataProvider = new ActiveDataProvider([
@@ -38,7 +38,7 @@ class CashierController extends \yii\web\Controller
                 ],
         ]);
          
-         return $this->render('view', [
+         return $this->render('view_op', [
             'model' => $this->findModel($id),
             'paymentitemDataProvider' => $paymentitemDataProvider,
         ]);
@@ -53,10 +53,34 @@ class CashierController extends \yii\web\Controller
         }
     }
     // End of Order of Payment
+    
+    //-------Receipt
     public function actionReceipt()
     {
         return $this->render('receipt');
     }
+     public function actionCreateReceipt()
+    {
+        $model = new Receipt();
+       // $searchModel = new ReceiptSearch();
+      //  $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+       // $dataProvider->pagination->pageSize=5;
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('create_receipt', [
+                'model' => $model,
+               // 'searchModel' => $searchModel,
+              //  'dataProvider' => $dataProvider,
+            ]);
+        }else{
+            return $this->render('create_receipt', [
+                'model' => $model,
+             //   'searchModel' => $searchModel,
+               // 'dataProvider' => $dataProvider,
+            ]);
+        }
+    }
+     
+    //End of Receipt
     public function actionDeposit()
     {
         return $this->render('deposit');

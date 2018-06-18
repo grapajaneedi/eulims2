@@ -25,7 +25,7 @@ $bal=($model->total_amount) -($model->collection->sub_total);
         'panel'=>[
             'heading'=>'<i class="glyphicon glyphicon-book"></i> Order of Payment: ' . $model->transactionnum,
             'type'=>DetailView::TYPE_PRIMARY,
-        ],
+         ],
         'buttons1' => '',
         'attributes' => [
             [
@@ -162,11 +162,23 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
                     'type'=>'primary',
+                    'after'=>false,
+                    'footer'=>"<div class='row' style='margin-left: 2px;'><button value='/finance/cashier/create-receipt' id='btnCreateReceipt' class='btn btn-success' title='Receipt from OP'><i class='fa fa-save'></i> Create Receipt</button></div>",
+       
                 ],
                 'columns' => $gridColumns,
                
             ]);
-             ?>
+            ?>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $('#btnCreateReceipt').click(function(){
+        $('.modal-title').html($(this).attr('title'));
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load($(this).attr('value'));
+    });
+  
+</script>
