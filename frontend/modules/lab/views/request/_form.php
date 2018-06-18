@@ -205,7 +205,7 @@ if($model->lab_id==3){
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" style="padding-left: 5px">
         <div class="col-md-6">
             <label class="control-label">Released By</label>
             <div class="col-md-12">
@@ -253,7 +253,7 @@ if($model->lab_id==3){
         'data' => ArrayHelper::map(Modeofrelease::find()->all(),'modeofrelease_id','mode'),
         'value'=>explode(',',$model->modeofrelease_ids),
         'options' => [
-            'placeholder' => 'Select provinces ...',
+            'placeholder' => 'Select Mode of Release...',
             'multiple' => true,
             'disabled'=>$disabled
         ],
@@ -351,7 +351,9 @@ if($model->lab_id==3){
 <div class="row">
     <div class="row" style="float: right;padding-right: 30px">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['disabled'=>$disabled,'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?php if($model->isNewRecord){ ?>
         <?= Html::resetButton('Reset', ['disabled'=>$disabled,'class' => 'btn btn-danger']) ?>
+        <?php } ?>
         <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
     </div>
     <?php ActiveForm::end(); ?>
