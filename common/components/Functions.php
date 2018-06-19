@@ -134,6 +134,48 @@ SCRIPT;
             ],
         ])->label($Label);
     }
+
+    //bergel cutara
+    function GetRequestList($form,$model,$disabled=false,$Label=false){
+$dataExp = <<< SCRIPT
+    function (params, page) {
+        return {
+            q: params.term, // search term
+        };
+    }
+SCRIPT;
+
+$dataResults = <<< SCRIPT
+    function (data, page) {
+        return {
+          results: data.results
+        };
+    }
+SCRIPT;
+        $url = \yii\helpers\Url::to(['/lab/request/requestlist']);
+        // Get the initial city description
+        $req_name = empty($model->request_id) ? '' : Request::findOne($model->request_id)->request_ref_num;
+        return $form->field($model, 'request_id')->widget(Select2::classname(), [
+            'initValueText' => $req_name, // set the initial display text
+            'options' => ['placeholder' => 'Search for a request ...','disabled'=>$disabled,'class'=>'form-control'],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'minimumInputLength' => 3,
+                'language' => [
+                    'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                ],
+                'ajax' => [
+                    'url' => $url,
+                    'dataType' => 'json',
+                    'data' => new JsExpression($dataExp),
+                    'results' => new JsExpression($dataResults)
+                ]
+            ],
+        ])->label($Label);
+    }
+
+
+
     function GenerateStatusLegend($Legend, $Ispayment){
         $StatusLegend="<fieldset>";
         $StatusLegend.="<legend>$Legend</legend>";
