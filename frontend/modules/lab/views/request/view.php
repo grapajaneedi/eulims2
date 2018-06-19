@@ -38,19 +38,20 @@ $this->registerJs($js);
 if($model->request_ref_num==null || $model->status_id==2){
     $CancelButton='';
 }else{
-    $CancelButton='<button id="btnCancel" type="button" style="float: right" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel</button>';
+    $CancelButton='<button disabled id="btnCancel" onclick="LoadModal(\'Cancel Request\',\'/lab/cancelrequest\')" type="button" style="float: right" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel</button>';
 }
 if($model->status_id==2){
     // Cancelled Request
     $CancelClass='request-cancelled';
+    $BackClass='background-cancel';
 }else{
     $CancelClass='cancelled-hide';
+    $BackClass='';
 }
 $Reasons='&nbsp;';
 $DateCancelled='';
 ?>
-<div class="request-view">
-    <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
+<div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
         <div class="inner-div">
         <img src="/images/cancelled.png" alt="" style="width: 300px;margin-left: 80px"/>
         <div class="panel panel-primary">
@@ -72,7 +73,10 @@ $DateCancelled='';
         </div>
         </div>
     </div>
-    <div class="container">
+<div class="section-request">  
+<div class="<?= $BackClass ?>"></div>
+<div class="request-view ">
+    <div class="container table-responsive">
         <?php
             echo DetailView::widget([
             'model'=>$model,
@@ -470,6 +474,7 @@ $DateCancelled='';
             ]);
         ?>
     </div>
+</div>
 </div>
 <script type="text/javascript">
      $('#sample-grid tbody td').css('cursor', 'pointer');
