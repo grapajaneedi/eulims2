@@ -16,11 +16,11 @@ use Yii;
  * @property string $receiptDate
  * @property int $payment_mode_id
  * @property int $check_id
- * @property int $customer_id
+ * @property string $payor
  * @property int $collectiontype_id
  * @property string $total
  * @property int $cancelled
- *
+ * @property int $or
  * @property Billing[] $billings
  * @property Check $check
  * @property Project $project
@@ -30,6 +30,7 @@ use Yii;
  */
 class Receipt extends \yii\db\ActiveRecord
 {
+    public $or;
     /**
      * {@inheritdoc}
      */
@@ -52,9 +53,9 @@ class Receipt extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'terminal_id', 'collection_id', 'project_id', 'or_number', 'receiptDate', 'payment_mode_id', 'customer_id', 'collectiontype_id', 'total', 'cancelled'], 'required'],
-            [['rstl_id', 'terminal_id', 'collection_id', 'project_id', 'payment_mode_id', 'check_id', 'customer_id', 'collectiontype_id', 'cancelled'], 'integer'],
-            [['receiptDate'], 'safe'],
+            [['rstl_id', 'terminal_id', 'collection_id', 'project_id', 'or_number', 'receiptDate', 'payment_mode_id', 'collectiontype_id', 'total', 'cancelled','payor'], 'required'],
+            [['rstl_id', 'terminal_id', 'collection_id', 'project_id', 'payment_mode_id', 'check_id','collectiontype_id', 'cancelled'], 'integer'],
+            [['receiptDate','payor','or'], 'safe'],
             [['total'], 'number'],
             [['or_number'], 'string', 'max' => 50],
             [['check_id'], 'exist', 'skipOnError' => true, 'targetClass' => Check::className(), 'targetAttribute' => ['check_id' => 'check_id']],
@@ -80,7 +81,6 @@ class Receipt extends \yii\db\ActiveRecord
             'receiptDate' => 'Receipt Date',
             'payment_mode_id' => 'Payment Mode ID',
             'check_id' => 'Check ID',
-            'customer_id' => 'Customer ID',
             'collectiontype_id' => 'Collectiontype ID',
             'total' => 'Total',
             'cancelled' => 'Cancelled',
