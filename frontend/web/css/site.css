@@ -30,6 +30,44 @@ body {
 .form-control:focus{
     background-color: #fdf7f7
 }
+/******** Cancelled Request *****/
+#cancelled-div{
+    position: absolute;
+    z-index: 10000;
+    top: 90px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+}
+.cancelled-hide{
+    display: none;
+}
+.center-div
+{
+     margin: 0 auto;
+     width: 480px; 
+     left: 20%;
+}
+.outer-div
+{
+  padding: 30px;
+}
+.inner-div
+{
+  margin: auto;
+  width: 450px;
+  height: auto;
+  border-radius: 3px;
+}
+.request-cancelled{
+    display: block;
+}
+#cancelled-img{
+    margin-top: 80px!important;
+    margin: auto;
+    width: 330px;
+}
+/********************************/
 /**** Kartik Grivew ****/
 .kv-grid-table>thead{
     background-color: #337ab7;

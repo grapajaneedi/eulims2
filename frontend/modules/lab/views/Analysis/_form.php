@@ -20,9 +20,9 @@ use common\models\services\Sampletype;
 /* @var $model common\models\lab\Analysis */
 /* @var $form yii\widgets\ActiveForm */
 
-$Testcategorylist= ArrayHelper::map(Testcategory::find()->all(),'testcategory_id','category_name');
-$Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sample_type');
-$TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','testname');
+// $Testcategorylist= ArrayHelper::map(Testcategory::find()->all(),'testcategory_id','category_name');
+// $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sample_type');
+// $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','testname');
 
 ?>
 
@@ -37,8 +37,13 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
 
     <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
-        //'filterModel' => $searchModel,
+        //'filterModel' => $samplesearchmodel,
         'pjax'=>true,
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'filterRowOptions' => ['class' => 'kartik-sheet-style'],
+        'bordered' => true,
+        'striped' => true,
+        'condensed' => true,
         'responsive'=>false,
         'containerOptions'=>[
             'style'=>'overflow:auto; height:180px',
@@ -49,16 +54,20 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
             ]
         ],
         'floatHeaderOptions' => ['scrollingTop' => true],
-        // 'panel' => [
-        //     'heading'=>'<h3 class="panel-title">Sample</h3>',
-        //     'type'=>'primary',
-
-        //  ],
         'columns' => [
                [
             'class' => '\kartik\grid\CheckboxColumn',
          ],
             'samplename',
+            [
+                'attribute'=>'description',
+                'format' => 'raw',
+                'enableSorting' => false,
+                'value' => function($data){
+                    return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
+                },
+                'contentOptions' => ['style' => 'width:70%; white-space: normal;'],
+            ],
         ],
     ]); ?>
 
@@ -135,7 +144,7 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
                 'pluginOptions'=>[
                     'depends'=>['sample-sample_type_id'],
                     'placeholder'=>'Select Test',
-                    'url'=>Url::to(['/lab/sample/listsampletype']),
+                    'url'=>Url::to(['/lab/analysis/listtest']),
                     'loadingText' => 'Loading Test...',
                 ]
             ])

@@ -59,9 +59,9 @@ class Packagelist extends \yii\db\ActiveRecord
             'package_id' => 'Package ID',
             'rstl_id' => 'Rstl ID',
             'lab_id' => 'Lab ID',
-            'testcategory_id' => 'Testcategory ID',
-            'sample_type_id' => 'Sample Type ID',
-            'name' => 'Name',
+            'testcategory_id' => 'Test Category',
+            'sample_type_id' => 'Sample Type',
+            'name' => 'Package',
             'rate' => 'Rate',
             'tests' => 'Tests',
         ];

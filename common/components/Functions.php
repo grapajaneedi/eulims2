@@ -15,6 +15,7 @@ use common\models\finance\PaymentStatus;
 use common\models\lab\Customer;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
+use Yii;
 /**
  * Description of Functions
  *
