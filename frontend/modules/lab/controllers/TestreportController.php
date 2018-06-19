@@ -8,6 +8,9 @@ use common\models\lab\TestreportSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\lab\Sample;
+use yii\data\ActiveDataProvider;
+
 
 /**
  * TestreportController implements the CRUD actions for Testreport model.
@@ -129,5 +132,23 @@ class TestreportController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionGetlistsamples($id)
+    {
+        $model= new Sample();
+        $query = Sample::find()->where(['request_id' => $id]);
+        
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+       // $dataProvider->pagination->pageSize=3;
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_samples', ['dataProvider'=>$dataProvider]);
+        }
+        else{
+            return $this->render('_samples', ['dataProvider'=>$dataProvider]);
+        }
+
     }
 }
