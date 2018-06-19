@@ -7,19 +7,19 @@ use Yii;
 /**
  * This is the model class for table "tbl_cancelledrequest".
  *
- * @property integer $canceledrequest_id
- * @property integer $request_id
+ * @property int $canceledrequest_id
+ * @property int $request_id
  * @property string $request_ref_num
  * @property string $reason
  * @property string $cancel_date
- * @property integer $cancelledby
+ * @property int $cancelledby
  *
  * @property Request $request
  */
 class Cancelledrequest extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -35,13 +35,16 @@ class Cancelledrequest extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
             [['request_id', 'request_ref_num', 'reason', 'cancel_date', 'cancelledby'], 'required'],
             [['request_id', 'cancelledby'], 'integer'],
+            [['request_id'], 'exist', 'skipOnError' => true, 'targetClass' => Request::className(), 'targetAttribute' => ['request_id' => 'request_id']],
+            [['request_id'], 'unique'],
+            [['reason'], 'string'],
             [['cancel_date'], 'safe'],
             [['request_ref_num', 'reason'], 'string', 'max' => 50],
             [['request_id'], 'exist', 'skipOnError' => true, 'targetClass' => Request::className(), 'targetAttribute' => ['request_id' => 'request_id']],
@@ -49,7 +52,7 @@ class Cancelledrequest extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {

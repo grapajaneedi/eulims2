@@ -4,9 +4,9 @@ use yii\helpers\Html;
 //use yii\widgets\DetailView;
 use kartik\detail\DetailView;
 use kartik\grid\GridView;
-use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use common\components\Functions;
+use common\models\lab\Cancelledrequest;
 
 
 $sweetalert = new Functions();
@@ -38,41 +38,71 @@ $this->registerJs($js);
 if($model->request_ref_num==null || $model->status_id==2){
     $CancelButton='';
 }else{
-    $CancelButton='<button id="btnCancel" type="button" style="float: right" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel</button>';
+    $Func="LoadModal('Cancel Request','/lab/cancelrequest/create?req=".$model->request_id."',true,500)";
+    $CancelButton='<button id="btnCancel" onclick="'.$Func.'" type="button" style="float: right" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel Request</button>';
 }
 if($model->status_id==2){
     // Cancelled Request
     $CancelClass='request-cancelled';
+    $BackClass='background-cancel';
 }else{
     $CancelClass='cancelled-hide';
+    $BackClass='';
 }
-$Reasons='&nbsp;';
-$DateCancelled='';
+$Request_Ref=$model->request_ref_num;
+$Cancelledrequest= Cancelledrequest::find()->where(['request_id'=>$model->request_id])->one();
+if($Cancelledrequest){
+    $Reasons=$Cancelledrequest->reason;
+    $DateCancelled=date('m/d/Y h:i A', strtotime($Cancelledrequest->cancel_date));
+    $CancelledBy=$sweetalert->GetProfileName($Cancelledrequest->cancelledby);
+}else{
+    $Reasons='$nbsp;';
+    $DateCancelled='';
+    $CancelledBy='';
+}
+if($Request_Ref){
+    $enableRequest=true;
+    $disableButton="disabled";
+    $ClickButton='';
+    $btnID="";
+}else{ // NO reference number yet
+    $enableRequest=false;
+    $ClickButton='addSample(this.value,this.title)';
+    $disableButton="";
+    $btnID="id='btnSaveRequest'";
+}
+
 ?>
-<div class="request-view">
-    <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
+<div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
         <div class="inner-div">
         <img src="/images/cancelled.png" alt="" style="width: 300px;margin-left: 80px"/>
         <div class="panel panel-primary">
             <div class="panel-heading"></div>
             <table class="table table-bordered table-responsive">
+                 <tr>
+                    <th style="background-color: lightgray">Date Cancelled</th>
+                    <td><?= $DateCancelled ?></td>
+                </tr>
+                 <tr>
+                    <th style="background-color: lightgray">Request Reference #</th>
+                    <td><?= $Request_Ref ?></td>
+                </tr>
                 <tr>
                     <th style="width: 180px;background-color: lightgray">Reason of Cancellation</th>
                     <td style="width: 250px"><?= $Reasons ?></td>
                 </tr>
                 <tr>
-                    <th style="background-color: lightgray">Date Cancelled</th>
-                    <td><?= $DateCancelled ?></td>
-                </tr>
-                <tr>
                     <th style="background-color: lightgray">Cancelled By</th>
-                    <td><?= $DateCancelled ?></td>
+                    <td><?= $CancelledBy ?></td>
                 </tr>
             </table>
         </div>
         </div>
     </div>
-    <div class="container">
+<div class="section-request">  
+<div class="<?= $BackClass ?>"></div>
+<div class="request-view ">
+    <div class="container table-responsive">
         <?php
             echo DetailView::widget([
             'model'=>$model,
@@ -333,7 +363,8 @@ $DateCancelled='';
                     'heading'=>'<h3 class="panel-title">Samples</h3>',
                     'type'=>'primary',
                     //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['/lab/sample/create','request_id'=>$model->request_id], ['class' => 'btn btn-success']),
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-plus"></i> Generate Samplecode', ['value' => Url::to(['sample/generatesamplecode','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    ////.Html::button('<i class="glyphicon glyphicon-plus"></i> Generate Samplecode', ['value' => Url::to(['sample/generatesamplecode','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                     //'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                     //'after'=>'',
                     'after'=>false,
@@ -457,12 +488,12 @@ $DateCancelled='';
                     'heading'=>'<h3 class="panel-title">Analysis</h3>',
                     'type'=>'primary',
                     //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['/lab/analysis/create'], ['class' => 'btn btn-success'],['id' => 'modalBtn']),
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['analysis/create','request_id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
-                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['value' => Url::to(['/services/packagelist/createpackage','request_id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".
-                    Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => Url::to(['analysis/create','request_id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','request_id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'modalBtn'])." ".
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','request_id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                    'after'=>false,
                   //  'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn']),
-                   'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button value='/lab/request/saverequestransaction' id='btnSaveRequest' class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
+                   'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
                 ],
                 'columns' => $analysisgridColumns,
                 'toolbar' => [
@@ -470,6 +501,7 @@ $DateCancelled='';
             ]);
         ?>
     </div>
+</div>
 </div>
 <script type="text/javascript">
      $('#sample-grid tbody td').css('cursor', 'pointer');
