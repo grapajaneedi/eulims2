@@ -107,7 +107,7 @@ $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sa
                         'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                         'pluginOptions'=>[
                             'depends'=>['sample-name'],
-                            'placeholder'=>'Select Test',
+                            'placeholder'=>'Select Package',
                             'url'=>Url::to(['/lab/analysis/listtest']),
                             'loadingText' => 'Loading Package...',
                         ]

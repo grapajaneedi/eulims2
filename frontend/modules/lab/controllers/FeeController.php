@@ -1,26 +1,31 @@
 <?php
 
-namespace frontend\modules\services\controllers;
+namespace frontend\modules\lab\controllers;
 
 use Yii;
-use common\models\lab\Packagelist;
-use common\models\lab\PackagelistSearch;
-use common\models\lab\Analysis;
-use common\models\lab\AnalysisSearch;
-use common\models\lab\Sample;
-use common\models\lab\SampleSearch;
+use common\models\lab\Fee;
+use common\models\lab\FeeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+use common\models\lab\Analysis;
+use common\models\lab\Sample;
+use common\models\lab\AnalysisSearch;
+
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
-use common\models\services\Testcategory;
-use common\models\services\TestcategorySearch;
+use common\models\lab\Sampletype;
+use common\models\lab\Testcategory;
+use common\models\lab\Test;
+use common\models\lab\SampleSearch;
+
+
 
 /**
- * PackagelistController implements the CRUD actions for Packagelist model.
+ * FeeController implements the CRUD actions for Fee model.
  */
-class PackagelistController extends Controller
+class FeeController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -38,12 +43,12 @@ class PackagelistController extends Controller
     }
 
     /**
-     * Lists all Packagelist models.
+     * Lists all Fee models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new PackagelistSearch();
+        $searchModel = new FeeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -53,40 +58,78 @@ class PackagelistController extends Controller
     }
 
     /**
-     * Displays a single Packagelist model.
+     * Displays a single Fee model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('view', [
-                    'model' => $this->findModel($id),
-                ]);
-        }
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     /**
-     * Creates a new Packagelist model.
+     * Creates a new Fee model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Packagelist();
+        $model = new Fee();
+        $searchModel = new FeeSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-      //  $model = new Sampletype();
-        
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                         return $this->runAction('index');
-                 } 
-                   
-                if(Yii::$app->request->isAjax){
-                         return $this->renderAjax('create', [
-                                 'model' => $model,
-                             ]);
-                     }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->fee_id]);
+        }
+
+        $samplesQuery = Sample::find()->where(['request_id' => 1]);
+        $sampleDataProvider = new ActiveDataProvider([
+                'query' => $samplesQuery,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+             
+        ]);
+
+        $testcategory = $this->listTestcategory(1);
+     
+        $sampletype = [];
+        $test = [];
+
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('_form', [
+                'model' => $model,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'sampleDataProvider' => $sampleDataProvider,
+                'testcategory' => $testcategory,
+                'test' => $test,
+                'sampletype'=>$sampletype
+            ]);
+        }else{
+            return $this->render('_form', [
+                'model' => $model,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+    }
+
+    protected function listTestcategory($labId)
+    {
+        $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 
+           function($testcategory, $defaultValue) {
+               return $testcategory->category_name;
+        });
+
+        /*$testcategory = ArrayHelper::map(Testcategory::find()
+            ->where(['lab_id' => $labId])
+            ->all(), 'testcategory_id', 'category_name');*/
+
+        return $testcategory;
     }
 
     public function actionCreatepackage()
@@ -115,7 +158,7 @@ class PackagelistController extends Controller
             $test = [];
 
         if (Yii::$app->request->isAjax) {
-            return $this->renderAjax('_packageform', [
+            return $this->renderAjax('_form', [
                 'model' => $model,
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
@@ -125,7 +168,7 @@ class PackagelistController extends Controller
                 'sampletype'=>$sampletype
             ]);
         }else{
-            return $this->render('_packageform', [
+            return $this->render('_form', [
                 'model' => $model,
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
@@ -133,21 +176,8 @@ class PackagelistController extends Controller
         }
     }
 
-    protected function listTestcategory($labId)
-    {
-        $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 
-           function($testcategory, $defaultValue) {
-               return $testcategory->category_name;
-        });
-
-        /*$testcategory = ArrayHelper::map(Testcategory::find()
-            ->where(['lab_id' => $labId])
-            ->all(), 'testcategory_id', 'category_name');*/
-
-        return $testcategory;
-    }
     /**
-     * Updates an existing Packagelist model.
+     * Updates an existing Fee model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -157,17 +187,17 @@ class PackagelistController extends Controller
     {
         $model = $this->findModel($id);
 
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->testcategory_id]);
-                } else if (Yii::$app->request->isAjax) {
-                    return $this->renderAjax('update', [
-                        'model' => $model,
-                    ]);
-                }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->fee_id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
-     * Deletes an existing Packagelist model.
+     * Deletes an existing Fee model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -181,15 +211,15 @@ class PackagelistController extends Controller
     }
 
     /**
-     * Finds the Packagelist model based on its primary key value.
+     * Finds the Fee model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Packagelist the loaded model
+     * @return Fee the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Packagelist::findOne($id)) !== null) {
+        if (($model = Fee::findOne($id)) !== null) {
             return $model;
         }
 
