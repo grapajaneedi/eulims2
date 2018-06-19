@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\components\Functions;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Testreport */
@@ -12,7 +14,11 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'request_id')->textInput() ?>
+    <?php 
+
+    $func=new Functions();
+    echo $func->GetRequestList($form,$model,false,"Request");
+    ?> 
 
     <?= $form->field($model, 'lab_id')->textInput() ?>
 

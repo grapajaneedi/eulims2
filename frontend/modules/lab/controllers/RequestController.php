@@ -188,4 +188,25 @@ class RequestController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    //bergel cutara
+    //contacted by function to return result to be displayed in select2
+    public function actionRequestlist($q = null, $id = null) {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = ['results' => ['id' => '', 'text' => '']];
+        if (!is_null($q)) {
+            $query = new Query;
+            $query->select('request_id as id, request_ref_num AS text')
+                    ->from('tbl_request')
+                    ->where(['like', 'request_ref_num', $q])
+                    ->limit(20);
+            $command = $query->createCommand();
+            $command->db= \Yii::$app->labdb;
+            $data = $command->queryAll();
+            $out['results'] = array_values($data);
+        } elseif ($id > 0) {
+            $out['results'] = ['id' => $id, 'text' =>Request::find()->where(['request_id'=>$id])->request_ref_num];
+        }
+        return $out;
+    }
 }
