@@ -2,7 +2,7 @@
 
 
 //var_dump($stringTable);
-
+echo $tableWidth;
 
 /*
  * Project Name: eulims_ * 
@@ -17,16 +17,43 @@
  *
  * @author mariano
  */
+echo '<style type="text/css">
+
+.box.box-solid.box-primary>.box-header {
+            width:' .$tableWidth. 'px;
+            background: #3c8dbc;
+        }
+
+        .dropdown-menu-right {
+            right: auto;
+            left: 0;
+        }
+        </style>';
+ 
 ?>
-<h1>Cash Receipt Journal</h1>
+
+
+
+
+
+ 
+ 
+
 
 
 <style type="text/css">
-
-
     table, th, td {
         border: 1px solid black;
         text-align: center;
+       
+    }
+    .tdValue
+    {
+        text-align: right;
+        padding-right:5px;
+        color:#3c8dbc;
+        font-weight:bold;
+        font-style:italic;
     }
 </style>
 
@@ -37,82 +64,82 @@
 ?>
 
 
-<div style="overflow: auto;height: 300px">
 
-    <table id="tblCashreceipt" style="width:1800px"> <tr>
-            <td style="width:298px">Cell</td>
-            <td style="width:100px">Debit</td>
-            <td style="width:1100px">Credit</td>
-            <td style="width:302px">Sundry</td>
+<div class="box box-primary box-solid" style="overflow: auto">
+    <div class="box-header with-border">
+              <h3 class="box-title">Cash Receipt Journal</h3>
 
-        </tr></table>
+              <!-- /.box-tools -->
+    </div>
+
+    <div class="box-body">
+    <div class="btn-group" style="padding-bottom:10px">
+        <button id="w1" class="btn btn-default dropdown-toggle" title="Export" data-toggle="dropdown">
+        <i class="glyphicon glyphicon-export"></i>  <span class="caret"></span></button>
+
+        <ul id="w2" class="dropdown-menu dropdown-menu-right">
+        <li role="presentation" class="dropdown-header">Export Page Data</li>
+        <li title="Microsoft Excel 95+"><a class="export-xls" href="#" onclick="exportTableToExcel('dvData')"><i class="text-success glyphicon glyphicon-floppy-remove"></i> Excel</a></li>
+        <li title="Portable Document Format"><a class="export-pdf" href="#"><i class="text-danger glyphicon glyphicon-floppy-disk"></i> PDF</a></li>
+       </div>
+       <br>
+        <div id="dvData">
     
-     <?php
-    echo $stringTable
-    ?>
-
+            <?php
+            echo $stringTable
+            ?>
+        </div>
+        <br>
+       
+        
+    </div>
+    
    
-    <!--
-    <table style="width:1800px;">
-
-
-        <tr>
-            <td style="width:75px">Date</td>
-            <td style="width:75px">Reference</td>
-            <td style="width:75px">Jev No</td>
-            <td style="width:75px">Payor</td>
-            <td style="width:100px">1-01-014-010</td>
-
-            <td style="width:100px">(136)1-03-03-010</td>
-            <td style="width:100px">3</td>
-            <td style="width:100px">4</td>
-            <td style="width:100px">1</td><td style="width:100px">1</td><td style="width:100px">1</td><td style="width:100px">1</td>
-            <td style="width:100px">2</td>
-            <td style="width:100px">3</td>
-            <td style="width:100px">4</td>
-            <td style="width:100px">1</td>
-
-
-            <td style="width:100px">UACS Code</td>
-            <td style="width:100px">Debit</td>
-            <td style="width:100px">Credit</td>
-        </tr>
-
-    </table>
-    -->
+    
 
 </div>
 
 <br><br>
 
-<table style="width:1500px">
-    <tr>
-        <td>
-            <table style="width:200px">
-                <tr>
-                    <td>Date</td>
-                    <td>Reference</td>
-                    <td>Jev No</td>
-                    <td>Payor</td>
-                </tr>
+<script>  
+ 
+       
 
-            </table>  </td>
-        <td>
-            <table style="width:100px">
-                <tr>
-                    <td>Debit</td>
-                </tr>
-                <tr>
-                    <td>1-01-014-010</td>
-                </tr>
+ function exportTableToExcel(tableID, filename = ''){
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+    // Specify file name
+    filename = filename?filename+'.xls':'excel_data.xls';
+    
+    // Create download link element
+    downloadLink = document.createElement("a");
+    
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['\ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+    
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
+}
 
-            </table>  
-        </td>
-        <td></td>
 
-    </tr>
+ </script>  
 
-</table>
+
 
 
 

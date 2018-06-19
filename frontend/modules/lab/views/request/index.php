@@ -10,6 +10,7 @@ use common\models\lab\Lab;
 use common\models\lab\Request;
 use common\components\Functions;
 use common\models\lab\Customer;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\RequestSearch */

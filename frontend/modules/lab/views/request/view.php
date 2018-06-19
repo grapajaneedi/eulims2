@@ -17,65 +17,61 @@ $sweetalert = new Functions();
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$rstlID=$GLOBALS['rstl_id'];
+$Year=date('Y', strtotime($model->request_datetime));
+$js=<<<SCRIPT
+    $("#btnSaveRequest").click(function(){
+        $.post(this.value, {
+            request_id: $model->request_id,
+            lab_id: $model->lab_id,
+            rstl_id: $rstlID,
+            year: $Year
+        }, function(result){
+           if(result){
+               location.reload();
+           }
+        });
+    });  
+       
+SCRIPT;
+$this->registerJs($js);
+if($model->request_ref_num==null || $model->status_id==2){
+    $CancelButton='';
+}else{
+    $CancelButton='<button id="btnCancel" type="button" style="float: right" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel</button>';
+}
+if($model->status_id==2){
+    // Cancelled Request
+    $CancelClass='request-cancelled';
+}else{
+    $CancelClass='cancelled-hide';
+}
+$Reasons='&nbsp;';
+$DateCancelled='';
 ?>
-
-<?php
-//Modal::begin([
-    //'headerOptions' => ['id' => 'modalSampleheader'],
-    //'size' => 'modal-sm',
-    //'tabindex' => false,
-    //keeps from closing modal with esc key or by clicking out of the modal.
-    // user must click cancel or X to close
-    //'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
-   // 'options' => [
- //       'id' => 'sampleModal',
-  //      'tabindex' => false // important for Select2 to work properly
-  // ],
-//]);
-//echo "<div id='modalContent'><div style='text-align:center;'><img src='/images/img-loader64.gif'></div></div>";
-//Modal::end();
-
-
-?>
-
 <div class="request-view">
-    <!-- <h1><?= Html::encode($this->title) ?></h1> -->
-
-    <!-- <p>
-        <?= Html::a('Update', ['update', 'id' => $model->request_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->request_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p> -->
-
-   <!--  <?php /*= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'request_id',
-            'request_ref_num',
-            'request_datetime:datetime',
-            'rstl_id',
-            'lab_id',
-            'customer_id',
-            'payment_type_id',
-            'modeofrelease_id',
-            'discount',
-            'discount_id',
-            'purpose_id',
-            'or_id',
-            'total',
-            'report_due',
-            'conforme',
-            'receivedBy',
-            'created_at',
-            'posted',
-            'status_id',
-        ],
-    ])*/ ?> -->
+    <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
+        <div class="inner-div">
+        <img src="/images/cancelled.png" alt="" style="width: 300px;margin-left: 80px"/>
+        <div class="panel panel-primary">
+            <div class="panel-heading"></div>
+            <table class="table table-bordered table-responsive">
+                <tr>
+                    <th style="width: 180px;background-color: lightgray">Reason of Cancellation</th>
+                    <td style="width: 250px"><?= $Reasons ?></td>
+                </tr>
+                <tr>
+                    <th style="background-color: lightgray">Date Cancelled</th>
+                    <td><?= $DateCancelled ?></td>
+                </tr>
+                <tr>
+                    <th style="background-color: lightgray">Cancelled By</th>
+                    <td><?= $DateCancelled ?></td>
+                </tr>
+            </table>
+        </div>
+        </div>
+    </div>
     <div class="container">
         <?php
             echo DetailView::widget([
@@ -85,13 +81,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'mode'=>DetailView::MODE_VIEW,
             'panel'=>[
                 'heading'=>'<i class="glyphicon glyphicon-book"></i> Request # ' . $model->request_ref_num,
+               // 'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-plus"></i> Generate Samplecode', ['value' => Url::to(['sample/generatesamplecode','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                 'type'=>DetailView::TYPE_PRIMARY,
             ],
             'buttons1' => '',
             'attributes'=>[
                 [
                     'group'=>true,
-                    'label'=>'Request Details',
+                    'label'=>'Request Details '.$CancelButton,
                     'rowOptions'=>['class'=>'info']
                 ],
                 [
@@ -244,7 +241,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ]);
         ?>
     </div>
-
     <div class="container">
         <div class="table-responsive">
         <?php
@@ -388,41 +384,87 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="container">
         <?php
-            $gridColumns = [
-                //['class' => 'yii\grid\SerialColumn'],
+            $analysisgridColumns = [
                 [
-                    'attribute'=>'request_id',
+                    'attribute'=>'sample_name',
+                    'header'=>'Sample',
+                    'format' => 'raw',
+                    'enableSorting' => false,
+                    'value' => function($model) {
+                        return $model->samples->sample_name;
+                    },
+                    'contentOptions' => ['style' => 'width:100%; white-space: normal;'],
+                   
+                ],
+                [
+                    'attribute'=>'sample_code',
+                    'header'=>'Sample Code',
+                    'value' => function($model) {
+                        return $model->samples->sample_code;
+                    },
                     'enableSorting' => false,
                 ],
                 [
-                    'attribute'=>'request_ref_num',
+                    'attribute'=>'testname',
+                    'header'=>'Test/ Calibration Requested',
+                    // 'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                    // },
                     'enableSorting' => false,
                 ],
                 [
-                    'attribute'=>'report_due',
+                    'attribute'=>'method',
+                    'header'=>'Test Method',
+                    // 'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                    // },
                     'enableSorting' => false,
                 ],
+                [
+                    'attribute'=>'quantity',
+                    'header'=>'Quantity',
+                    // 'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                    // },
+                    'enableSorting' => false,
+                ],
+                [
+                    'attribute'=>'fee',
+                    'header'=>'Unit Price',
+                    // 'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                    // },
+                    'enableSorting' => false,
+                ],
+                [
+                    'attribute'=>'status',
+                    'header'=>'Status',
+                    // 'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                    // },
+                    'enableSorting' => false,
+                ],
+               
             ];
-
             echo GridView::widget([
                 'id' => 'analysis-grid',
-                'dataProvider'=> $dataProvider,
+                'dataProvider'=> $analysisdataprovider,
                 'summary' => '',
-                'responsive'=>true,
+                'responsive'=>true, 
                 'hover'=>true,
                 //'filterModel' => $searchModel, JANEEDI 
                 'panel' => [
-                    'heading'=>'<h3 class="panel-title">Analyses</h3>',
+                    'heading'=>'<h3 class="panel-title">Analysis</h3>',
                     'type'=>'primary',
                     //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['/lab/analysis/create'], ['class' => 'btn btn-success'],['id' => 'modalBtn']),
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analyses', ['value' => Url::to(['analysis/create','request_id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
-                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['analysis/create','request_id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['value' => Url::to(['/services/packagelist/createpackage','request_id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                    'after'=>false,
                   //  'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn']),
-                    //'footer'=>false,
+                   'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button value='/lab/request/saverequestransaction' id='btnSaveRequest' class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
                 ],
-                'columns' => $gridColumns,
+                'columns' => $analysisgridColumns,
                 'toolbar' => [
                 ],
             ]);
@@ -430,16 +472,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 <script type="text/javascript">
-   /*$("#modalBtn").click(function(){
-        $(".modal-title").html($(this).attr('title'));
-        $("#modal").modal('show')
-        //$("#sampleModal").modal('show')
-            .find('#modalContent')
-            .load($(this).attr('value'));
-    });*/
-
      $('#sample-grid tbody td').css('cursor', 'pointer');
-
     function updateSample(id){
        //var url = 'Url::to(['sample/update']) . "?id=' + id;
        var url = '/lab/sample/update?id='+id;
@@ -448,7 +481,6 @@ $this->params['breadcrumbs'][] = $this->title;
             .find('#modalContent')
             .load(url);
     }
-
     function addSample(url,title){
        //var url = 'Url::to(['sample/update']) . "?id=' + id;
        //var url = '/lab/sample/update?id='+id;

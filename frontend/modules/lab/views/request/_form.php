@@ -15,34 +15,22 @@ use common\models\lab\Modeofrelease;
 use common\models\lab\Purpose;
 use kartik\widgets\SwitchInput;
 use common\components\Functions;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
 /* @var $form yii\widgets\ActiveForm */
 
-// script to parse the results into the format expected by Select2
-/*$dataExp = <<< SCRIPT
-  function (params, page) {
-    return {
-      q: params.term, // search term
-    };
-  }
-SCRIPT;
-
-$dataResults = <<< SCRIPT
-  function (data, page) {
-    return {
-      results: data.results
-    };
-  }
-SCRIPT;
- * 
- */
 $disabled= $model->posted ? true:false;
 if($disabled){
     $Color="#eee";
 }else{
     $Color="white";
+}
+if($model->lab_id==3){
+    $PanelStyle='';
+}else{
+    $PanelStyle='display: none';
 }
 ?>
 
@@ -63,6 +51,16 @@ if($disabled){
         'options' => ['placeholder' => 'Select Lab','disabled'=>$disabled],
         'pluginOptions' => [
             'allowClear' => true
+        ],
+        'pluginEvents'=>[
+            "change" => "function() { 
+                if(this.value==3){//Metrology
+                   $('#div_met').show();
+                }else{
+                   $('#div_met').hide();
+                }
+
+            }",
         ]
     ])->label('Laboratory'); ?>
     </div>
@@ -73,7 +71,7 @@ if($disabled){
 	'model' => $model,
 	'attribute' => 'request_datetime',
         'readonly'=>true,
-        'disabled'=>$disabled,
+       'disabled'=>$disabled,
 	'options' => ['placeholder' => 'Enter Date'],
         'value'=>function($model){
              return date("m/d/Y h:i:s P",$model->request_datetime);
@@ -82,24 +80,159 @@ if($disabled){
             'autoclose' => true,
             'removeButton' => false,
             'format' => 'yyyy-mm-dd h:i:s'
-	],
-        'pluginEvents'=>[
-            "change" => "function() { alert('change'); }",
-        ]
+	]
     ]); 
     ?>
     </div>
 </div>
-<div class="row">
-    <div class="input-group col-md-6">
-        <?php
-            $func=new Functions();
-            echo $func->GetCustomerList($form,$model,$disabled,"Customer");
-        ?> 
-        <div class="input-group-append">
-            <button type="button" class="btn btn-primary input-group-addon"><i class="fa fa-users"> Customers</i></button>
+<div class="panel panel-success" id="div_met" style="<?= $PanelStyle ?>">
+    <div class="panel-heading">Metrology Request Details</div>
+    <div class="row" style="padding-left: 5px">
+        <div class="col-md-6">
+            <label class="control-label">Recommended Due Date</label>
+            <div class="col-md-12">
+                <?php
+                echo DatePicker::widget([
+                    'model' => $model,
+                    'attribute' => 'recommended_due_date',
+                    'readonly' => true,
+                    'disabled' => $disabled,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("m/d/Y", $model->recommended_due_date);
+                    },
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
+                    ]
+                ]);
+                ?>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="control-label">Estimated Date Completion</label>
+            <div class="col-md-12">
+                <?php
+                echo DatePicker::widget([
+                    'model' => $model,
+                    'attribute' => 'est_date_completion',
+                    'readonly' => true,
+                    'disabled' => $disabled,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("m/d/Y", $model->est_date_completion);
+                    },
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
+                    ]
+                ]);
+                ?>
+            </div>
         </div>
     </div>
+    <div class="row" style="padding-left: 5px">
+        <div class="col-md-6">
+            <label class="control-label">Date Release of Equipment</label>
+            <div class="col-md-12">
+                <?php
+                echo DatePicker::widget([
+                    'model' => $model,
+                    'attribute' => 'equipment_release_date',
+                    'readonly' => true,
+                    'disabled' => $disabled,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("m/d/Y", $model->equipment_release_date);
+                    },
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
+                    ]
+                ]);
+                ?>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="control-label">Date Release of Certificate</label>
+            <div class="col-md-12">
+                <?php
+                echo DatePicker::widget([
+                    'model' => $model,
+                    'attribute' => 'certificate_release_date',
+                    'readonly' => true,
+                    'disabled' => $disabled,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("m/d/Y", $model->certificate_release_date);
+                    },
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
+                    ]
+                ]);
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-left: 5px">
+        <div class="col-md-6">
+            <label class="control-label">Position</label>
+            <div class="col-md-12">
+            <?= $form->field($model, 'position')->textInput(['readonly' => $disabled])->label(false) ?>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="control-label">Items Receive By</label>
+            <div class="col-md-12">
+            <?= $form->field($model, 'items_receive_by')->textInput(['readonly' => $disabled])->label(false) ?>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-left: 5px">
+        <div class="col-md-6">
+            <label class="control-label">Released By</label>
+            <div class="col-md-12">
+            <?= $form->field($model, 'released_by')->textInput(['readonly' => $disabled])->label(false) ?>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="control-label">Received By</label>
+            <div class="col-md-12">
+            <?= $form->field($model, 'received_by')->textInput(['readonly' => $disabled])->label(false) ?>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+            <div class="input-group">
+                <?php
+                $func = new Functions();
+                echo $func->GetCustomerList($form, $model, $disabled,'Customer');
+                ?> 
+                <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Customer', '/customer/info/create');" class="btn btn-default" type="button"><i class="fa fa-user-plus"></i></button>
+                </span>
+            </div>
+    </div>
+    
     <div class="col-md-6">
         <label class="control-label">Payment Type</label>
         <div class="col-md-12">
@@ -120,7 +253,7 @@ if($disabled){
         'data' => ArrayHelper::map(Modeofrelease::find()->all(),'modeofrelease_id','mode'),
         'value'=>explode(',',$model->modeofrelease_ids),
         'options' => [
-            'placeholder' => 'Select provinces ...',
+            'placeholder' => 'Select Mode of Release...',
             'multiple' => true,
             'disabled'=>$disabled
         ],
@@ -218,7 +351,9 @@ if($disabled){
 <div class="row">
     <div class="row" style="float: right;padding-right: 30px">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['disabled'=>$disabled,'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?php if($model->isNewRecord){ ?>
         <?= Html::resetButton('Reset', ['disabled'=>$disabled,'class' => 'btn btn-danger']) ?>
+        <?php } ?>
         <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
     </div>
     <?php ActiveForm::end(); ?>

@@ -102,31 +102,10 @@ class OpController extends Controller
              try  {
                      $request_ids=$model->RequestIds;
                      $str_request = explode(',', $request_ids);
-                     $wallet=$this->checkCustomerWallet($model->customer_id); 
+                  //   $wallet=$this->checkCustomerWallet($model->customer_id); 
                      $arr_length = count($str_request); 
                      $total_amount=0;
-                        for($i=0;$i<$arr_length;$i++){
-                            $request =$this->findRequest($str_request[$i]);
-                             $total_amount+=$request->total;
-                        }
-                   
-                    if($wallet['balance'] < $total_amount){
-                     //$session->set('checkpopup',"executed"); 
-                     //return $this->redirect(['/finance/op']);
-                     // echo 'gagi';
-                      /*  echo  Alert::widget([
-                        'options' => [
-                            'showCloseButton' => false,
-                            'showCancelButton' => false,
-                            'title' => 'ggvgvg',
-                            'type' => Alert::TYPE_INFO ,
-                            //'timer' => 1000
-                        ]
-                      ]);*/
-                         return ['message' => "Successfull"];
-                    }   
-                    else{
-                       $model->rstl_id=$GLOBALS['rstl_id'];
+                        $model->rstl_id=$GLOBALS['rstl_id'];
                         $model->transactionnum= $this->Gettransactionnum();
                         $model->save();
                        //Saving for Paymentitem
@@ -157,7 +136,7 @@ class OpController extends Controller
                         $this->updateTotalOP($model->orderofpayment_id, $total_amount);
                         $session->set('savepopup',"executed");
                          return $this->redirect(['/finance/op']); 
-                    }
+                    
                         
                     
                 } catch (Exception $e) {
@@ -268,7 +247,6 @@ class OpController extends Controller
             ->from('eulims_finance.tbl_orderofpayment')
             ->one();
           $lastyear=substr($lastyear["lastnumber"],0,4);
-          //echo $lastyear;
           $year=date('Y');
           $year_month = date('Y-m');
           $last_trans_num=(new Query)
@@ -288,7 +266,7 @@ class OpController extends Controller
           else{
                $str_trans_num='0001';
           }
-         
+        
          $next_transnumber=$year_month."-".$str_trans_num;
          return $next_transnumber;
         
@@ -338,13 +316,40 @@ class OpController extends Controller
             
      }
      
-      public function checkCustomerWallet($customerid) {
+      public function actionCheckCustomerWallet($customerid) {
          $wallet=(new Query)
             ->select('balance')
             ->from('eulims_finance.tbl_customerwallet')
             ->where(['customer_id' => $customerid])
             ->one();
-         return $wallet;
+         echo $wallet["balance"];
      }
+     /*public function actionListpaymentmode($customerid){
+         $func=new Functions();
+         $paymentlist=$func->GetPaymentModeList($customerid);
+         return $paymentlist;
+     }*/
     
+      public function actionListpaymentmode() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $func=new Functions();
+            $list = $func->GetPaymentModeList($id);
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $paymentlist) {
+                    $out[] = ['id' => $paymentlist['payment_mode_id'], 'name' => $paymentlist['payment_mode']];
+                    if ($i == 0) {
+                        $selected = $paymentlist['payment_mode_id'];
+                    }
+                }
+                // Shows how you can preselect a value
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
 }

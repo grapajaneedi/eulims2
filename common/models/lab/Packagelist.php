@@ -9,6 +9,9 @@ use Yii;
  *
  * @property int $package_id
  * @property int $rstl_id
+ * @property int $lab_id
+ * @property int $testcategory_id
+ * @property int $sample_type_id
  * @property string $name
  * @property string $rate
  * @property string $tests
@@ -39,8 +42,8 @@ class Packagelist extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'name', 'tests'], 'required'],
-            [['rstl_id'], 'integer'],
+            [['rstl_id', 'lab_id', 'testcategory_id', 'sample_type_id', 'name', 'tests'], 'required'],
+            [['rstl_id', 'lab_id', 'testcategory_id', 'sample_type_id'], 'integer'],
             [['rate'], 'number'],
             [['name'], 'string', 'max' => 50],
             [['tests'], 'string', 'max' => 100],
@@ -55,7 +58,10 @@ class Packagelist extends \yii\db\ActiveRecord
         return [
             'package_id' => 'Package ID',
             'rstl_id' => 'Rstl ID',
-            'name' => 'Name',
+            'lab_id' => 'Lab ID',
+            'testcategory_id' => 'Test Category',
+            'sample_type_id' => 'Sample Type',
+            'name' => 'Package',
             'rate' => 'Rate',
             'tests' => 'Tests',
         ];

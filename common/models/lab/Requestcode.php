@@ -44,6 +44,7 @@ class Requestcode extends \yii\db\ActiveRecord
             [['request_ref_num', 'rstl_id', 'lab_id', 'number', 'year', 'cancelled'], 'required'],
             [['rstl_id', 'lab_id', 'number', 'year', 'cancelled'], 'integer'],
             [['request_ref_num'], 'string', 'max' => 50],
+            [['lab_id', 'rstl_id', 'year'], 'unique', 'targetAttribute' => ['lab_id', 'rstl_id', 'year']], 
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
         ];
     }

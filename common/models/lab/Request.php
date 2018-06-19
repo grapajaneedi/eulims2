@@ -31,6 +31,15 @@ use yii\db\ActiveRecord;
  * @property int $selected 
  * @property int $is_referral
  *
+ * @property string $position 
+ * @property string $recommended_due_date 
+ * @property string $est_date_completion 
+ * @property string $items_receive_by 
+ * @property string $equipment_release_date 
+ * @property string $certificate_release_date 
+ * @property string $released_by 
+ * @property string $received_by 
+ * 
  * @property Analysis[] $analyses
  * @property Cancelledrequest[] $cancelledrequests
  * @property Generatedrequest[] $generatedrequests
@@ -83,12 +92,11 @@ class Request extends \yii\db\ActiveRecord
     {
         return [
             [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_ids', 'discount_id', 'purpose_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
-            [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'created_at', 'posted', 'status_id','selected','is_referral'], 'integer'],
+            [['request_datetime', 'report_due', 'recommended_due_date', 'est_date_completion', 'equipment_release_date', 'certificate_release_date'], 'safe'],
+            [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'created_at', 'posted', 'status_id', 'selected', 'is_referral'], 'integer'],
             [['discount', 'total'], 'number'],
-            ['request_ref_num', 'default', 'value' => NULL],
-            [['report_due','customer_name','request_datetime'], 'safe'],
-            [['customer_name'],'string','max'=>200],
-            [['request_ref_num', 'conforme','modeofrelease_ids', 'receivedBy'], 'string', 'max' => 50],
+            [['request_ref_num', 'modeofrelease_ids', 'conforme', 'receivedBy'], 'string', 'max' => 50],
+            [['position', 'items_receive_by', 'released_by', 'received_by'], 'string', 'max' => 100],
             [['request_ref_num'], 'unique'],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'customer_id']],
@@ -110,23 +118,31 @@ class Request extends \yii\db\ActiveRecord
             'request_ref_num' => 'Request Ref Num',
             'request_datetime' => 'Request Datetime',
             'rstl_id' => 'Rstl ID',
-            'lab_id' => 'Lab ID',
-            'customer_id' => 'Customer ID',
-            'payment_type_id' => 'Payment Type ID',
-            'modeofrelease_ids' => 'Modeofrelease IDs',
+            'lab_id' => 'Laboratory',
+            'customer_id' => 'Customer',
+            'payment_type_id' => 'Payment Type',
+            'modeofrelease_ids' => 'Modeofrelease',
             'discount' => 'Discount',
-            'discount_id' => 'Discount ID',
-            'purpose_id' => 'Purpose ID',
+            'discount_id' => 'Discount',
+            'purpose_id' => 'Purpose',
             'total' => 'Total',
             'report_due' => 'Report Due',
             'conforme' => 'Conforme',
             'receivedBy' => 'Received By',
             'created_at' => 'Created At',
             'posted' => 'Posted',
-            'status_id' => 'Status ID',
+            'status_id' => 'Status',
             'customer_name'=>'Customer Name',
             'selected' => 'Selected',
             'is_referral' => 'Is Referral', 
+            'position' => 'Position',
+            'recommended_due_date' => 'Recommended Due Date',
+            'est_date_completion' => 'Estimated Date of Completion',
+            'items_receive_by' => 'Items Receive By',
+            'equipment_release_date' => 'Date Release of Equipment',
+            'certificate_release_date' => 'Date Release of Certificate',
+            'released_by' => 'Released By',
+            'received_by' => 'Received By',
         ];
     }
 

@@ -15,6 +15,7 @@ use common\models\finance\PaymentStatus;
 use common\models\lab\Customer;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
+use Yii;
 /**
  * Description of Functions
  *
@@ -41,6 +42,25 @@ class Functions extends Component{
         return $Rows;
     }
     /**
+     * 
+     * @param string $Proc
+     * @param array $Params
+     * @param CDBConnection $Connection
+     * @return array
+     */
+    public function ExecuteStoredProcedureOne($Proc,array $Params,$Connection){
+        if(!isset($Connection)){
+           $Connection=Yii::$app->db;
+        }
+        $Command=$Connection->createCommand("CALL $Proc");
+        //Iterate through arrays of parameters
+        foreach($Params as $Key=>$Value){
+           $Command->bindValue($Key, $Value); 
+        }
+        $Row=$Command->queryOne();
+        return $Row;
+    }
+    /**
      * @param description Executes the SQL statement. This method should only be used for executing non-query SQL statement, such as `INSERT`, `DELETE`, `UPDATE` SQLs. No result set will be returned.
      * @param type $Proc
      * @param array $Params the Parameter for Stored Procedure
@@ -58,6 +78,19 @@ class Functions extends Component{
         }
         $ret=$Command->execute();
         return $ret;
+    }
+    /**
+     * 
+     * @param integer $CustomerID
+     * @return array
+     */
+    function GetPaymentModeList($CustomerID){
+        $Connection=Yii::$app->financedb;
+        $Proc="CALL spGeneratePaymentModeList(:mCustomerID)";
+        $Command=$Connection->createCommand($Proc);
+        $Command->bindValue(':mCustomerID',$CustomerID);
+        $list = $Command->queryAll();
+        return $list;
     }
     function GetCustomerList($form,$model,$disabled=false,$Label=false){
 $dataExp = <<< SCRIPT
@@ -80,7 +113,7 @@ SCRIPT;
         $cust_name = empty($model->customer) ? '' : Customer::findOne($model->customer_id)->customer_name;
         return $form->field($model, 'customer_id')->widget(Select2::classname(), [
             'initValueText' => $cust_name, // set the initial display text
-            'options' => ['placeholder' => 'Search for a customer ...','disabled'=>$disabled,'class'=>'form-control'],
+            'options' => ['placeholder' => 'Search for a customer ...','disabled'=>$disabled,'class'=>'.input-group.input-group-sm'],
             'pluginOptions' => [
                 'allowClear' => true,
                 'minimumInputLength' => 3,
@@ -218,8 +251,5 @@ SCRIPT;
      */
     public function left($mString, $length){
         return substr($mString,0,$length);
-    }
-    public function GetLaboratoryList(){
-        
     }
 }

@@ -219,10 +219,5 @@ use kartik\widgets\DepDrop;
         
     </div>
     
-    
-
-
-    
-
     <?php ActiveForm::end(); ?>
 </div>
