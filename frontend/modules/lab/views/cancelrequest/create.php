@@ -11,11 +11,9 @@ $this->params['breadcrumbs'][] = ['label' => 'Cancelledrequests', 'url' => ['ind
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cancelledrequest-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
+        'Req_id'=> $Req_id
     ]) ?>
 
 </div>

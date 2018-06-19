@@ -146,6 +146,8 @@ class RequestController extends Controller
         $Request= Request::find()->where(['request_id'=>$request_id])->one($Connection);
         $Request->request_ref_num=$ReferenceNumber;
         $Request->save();
+        // Generate Sample Code : Url::to(['sample/generatesamplecode','request_id'=>$model->request_id]
+        
         $Transaction->commit();
         return true;
         // Generate Sample Code

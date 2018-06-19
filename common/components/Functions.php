@@ -15,6 +15,7 @@ use common\models\finance\PaymentStatus;
 use common\models\lab\Customer;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
+use common\models\system\Profile;
 use Yii;
 /**
  * Description of Functions
@@ -78,6 +79,10 @@ class Functions extends Component{
         }
         $ret=$Command->execute();
         return $ret;
+    }
+    function GetProfileName($UserID){
+        $Profile=Profile::find()->where(['user_id'=>$UserID])->one();
+        return $Profile->fullname;      
     }
     /**
      * 

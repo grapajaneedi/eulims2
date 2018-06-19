@@ -8,7 +8,7 @@ use common\models\lab\CancelledrequestSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use common\models\lab\Request;
 /**
  * CancelrequestController implements the CRUD actions for Cancelledrequest model.
  */
@@ -63,14 +63,29 @@ class CancelrequestController extends Controller
      */
     public function actionCreate()
     {
+        $get= \Yii::$app->request->get();
         $model = new Cancelledrequest();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->canceledrequest_id]);
+            //Update Request
+            $Request= Request::find()->where(['request_id'=>$model->request_id])->one();
+            $Request->status_id=2;
+            $Request->save();
+            return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            $Request_id=$get['req'];
+            $model->cancel_date=date('Y-m-d H:i:s');
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('create', [
+                    'model' => $model,
+                    'Req_id'=> $Request_id
+                ]);
+            }else{
+                return $this->render('create', [
+                    'model' => $model,
+                    'Req_id'=> $Request_id
+                ]);
+            }
         }
     }
 
