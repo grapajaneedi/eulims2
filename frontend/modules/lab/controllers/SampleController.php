@@ -20,7 +20,6 @@ use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\web\Response;
 use yii\db\ActiveQuery;
-use common\components\Functions;
 
 /**
  * SampleController implements the CRUD actions for Sample model.
@@ -407,61 +406,256 @@ class SampleController extends Controller
         }
     }
 
-    public function actionGeneratesamplecode()
+    /*public function actionGeneratesamplecode($requestId)
     {
+        $samples = Sample::find()
+                ->where(['request_id = :requestId'])
+                ->params([':requestId'] => $requestId)
+                ->all();
+        $html = "";
+        $request = $this->findRequest($requestId);
+
+        if(count($samples->analysis) > 0){
+            foreach ($samples as $sample) {
+                if(count($sample->analysis) > 0){
+                    $labCode = Lab::model()->findOne($request->lab_id);
+                    $year = date('Y', strtotime($request->request_datetime));
+
+                    $samplecode = new Samplecode();
+                    $code = $samplecode->
+                } else {
+                    echo CJSON::encode(array(
+                        'status'=>'failure', 
+                        'div'=>'No analysis for this sample.'
+                        ));
+                    exit; 
+                }
+            }
+        } else {
+            echo CJSON::encode(array(
+                'status'=>'failure', 
+                'div'=>'No analysis.'
+                ));
+            exit; 
+        }
+
+
+        if($modelRequest->sampleCount && $modelRequest->anals){
+            foreach($modelRequest->samps as $sample)
+            {
+                $labCode = Lab::model()->findByPk($modelRequest->labId);
+                
+                $year = date('Y', strtotime($modelRequest->requestDate));
+                
+                $code=new Samplecode;
+                $sampleCode = $this->generateSampleCode($labCode, $year);
+                $number = explode('-', $sampleCode);
+                $this->appendSampleCode($modelRequest, $number[1]);
+                
+                Sample::model()->updateByPk($sample->id, array('sampleCode'=>$sampleCode));
+                
+                
+                foreach($sample->analysesForGeneration as $analysis)
+                {
+                    Analysis::model()->updateByPk($analysis->id, array('sampleCode'=>$sampleCode));
+                }
+                
+                $sampleNew = Sample::model()->findByPk($sample->id);
+                $html .= '<p>'.$sampleNew->sampleName.' : '.$sampleNew->sampleCode.'</p><br/>';
+            }
+            $this->updateGeneratedRequest($modelRequest);
+            echo CJSON::encode(array(
+                    'status'=>'success', 
+                    'div'=>$html.'<br \> Successfully Generated.'
+                    ));
+            exit; 
+        }else{
+            echo CJSON::encode(array(
+                    'status'=>'failure', 
+                    'div'=>'<div style="text-align:center;" class="alert alert-error"><i class="icon icon-warning-sign"></i><font style="font-size:14px;"> System Warning. </font><br \><br \><div>Cannot generate sample code. <br \>Please add at least one(1) sample and analysis.</div></div>'
+                    ));
+            exit;           
+        }
+    }*/
+
+    public function actionGeneratesamplecode(){
+        //echo "dkaklajlkdja";
+        //exit;
+
         $requestId = (int) Yii::$app->request->get('request_id');
+
         $request = $this->findRequest($requestId);
         $lab = Lab::findOne($request->lab_id);
         $year = date('Y', strtotime($request->request_datetime));
-        $connection= Yii::$app->labdb;
+        //$year = date_format(date_create($request->request_datetime),'Y');
 
-        foreach ($request->samples as $samp){
+        /*$samplecode = Samplecode::find([
+            'select' => 'MAX(number) as lastnumber',
+            'condition' => 'rstl_id =:rstlId AND lab_id =:labId AND year =:year',
+            'params' => [':rstlId'=>11,':labId'=>$lab->lab_id,':year'=>$year],
+        ])->all();*/
 
-            $transaction = $connection->beginTransaction();
-            try {
+       /* $samplecode = (new Query)
+            ->select(['MAX(number) AS lastnumber'])
+            ->from('eulims_lab.tbl_samplecode')
+            ->where('rstl_id =:rstlId AND lab_id =:labId AND year =:year', [':rstlId'=>11,':labId'=>$lab->lab_id,':year'=>$year])
+            ->all();*/
 
-                $function = new Functions();
-                $proc = 'spGenerateSampleCode(:rstlId,:labId,:requestId)';
-                $params = [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$lab->lab_id,':requestId'=>$requestId];
-                $row = $function->ExecuteStoredProcedureOne($proc, $params, $connection);
-                $samplecodeGenerated = $row['GeneratedSampleCode'];
-                $samplecodeIncrement = $row['SampleIncrement'];
+        /*$samplecode = Samplecode::find()
+        ->select('MAX(number) as lastnumber')
+        ->where('rstl_id =:rstlId AND lab_id =:labId AND year =:year', [':rstlId'=>11,':labId'=>$lab->lab_id,':year'=>$year])
+        ->all();*/
 
-                $sampleId = $samp->sample_id;
-                $sample = $this->findModel($sampleId);
+        //$sample = Sample::model()->find(['request_id'=>$request_id])->all();
+        //$sample = $this->findModel($sampleId);
 
-                //insert to tbl_samplecode
-                $samplecode = new Samplecode();
-                $samplecode->rstl_id = $GLOBALS['rstl_id'];
-                $samplecode->reference_num = $request->request_ref_num;
-                $samplecode->sample_id = $sampleId;
-                $samplecode->lab_id = $lab->lab_id;
-                $samplecode->number = $samplecodeIncrement;
-                $samplecode->year = $year;
 
-                if($samplecode->save())
-                {
-                    //update samplecode of tbl_sample
-                    $sample->sample_code = $samplecodeGenerated;
-                    $sample->save();
-                    $transaction->commit();
-                    //return true;
-                } else {
-                    //error
-                    $transaction->rollBack();
-                    $samplecode->getErrors();
-                    //exit;
-                }
-                //$transaction->commit();
+       /* $sampleCode = Samplecode::model()->find(array(
+                'select'=>'*',
+                'order'=>'number DESC, id DESC',
+                'condition'=>'rstl_id = :rstl_id AND labId = :labId AND year = :year AND cancelled = 0',
+                'params'=>array(':rstl_id' => Yii::app()->Controller->getRstlId(), ':labId' => $modelLab->id, ':year' => $year)
+            ));*/
 
-            } catch (\Exception $e) {
-               $transaction->rollBack();
-                throw $e;
-            } catch (\Throwable $e) {
-               $transaction->rollBack();
-               throw $e;
+        //$nextnumber = $samplecode['lastnumber'] + 1;
+
+        //print_r($samplecode);
+        //$year = date('Y',strtotime($request->request_datetime));
+
+       /* if(count($samplecode) > 0)
+        {
+            $number = $samplecode[0]['lastnumber'];
+            //echo $number;
+            //$nextnumber = 1;
+            //print_r($samplecode);
+            // echo "<pre>";
+            // print_r($samplecode);
+            // echo "</pre>";
+        } else {
+            $number = 0;
+            //print_r($samplecode);
+        }*/
+        
+        //$modelSamplecode->save();
+       // foreach ($request->samples as $samp) {
+            //$sampleId = $samp['sample']['id'];
+            //$sampleId = $samp->sample->id;
+            //print_r($samp);
+
+            //$sampleId = 3;
+            /*$sample = $this->findModel($sampleId);
+
+            $modelSamplecode = new Samplecode();
+            $modelSamplecode->rstl_id = 11;
+            $modelSamplecode->reference_num = $request->request_ref_num;
+            $modelSamplecode->sample_id = $sample->sample_id;
+            $modelSamplecode->lab_id = $lab->lab_id;
+            $modelSamplecode->number = $nextnumber;
+            $modelSamplecode->year = $year;*/
+
+            /*if($modelSamplecode->save())
+            {
+                //update samplecode to tbl_sample
+                $sample->sample_code = $lab->labcode."-".$nextnumber;
+                $sample->save();
+            } else {
+                //error
+                $modelSamplecode->error();
+                exit;
+            }*/
+        //}
+
+        //print_r(count($request->samples));
+
+        foreach ($request->samples as $samp) {
+
+            $samplecode = (new Query)
+            ->select(['MAX(number) AS lastnumber'])
+            ->from('eulims_lab.tbl_samplecode')
+            ->where('rstl_id =:rstlId AND lab_id =:labId AND year =:year', [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$lab->lab_id,':year'=>$year])
+            ->all();
+
+            if(count($samplecode) > 0)
+            {
+                $number = $samplecode[0]['lastnumber'];
+                //echo $number;
+                //$nextnumber = 1;
+                //print_r($samplecode);
+                // echo "<pre>";
+                // print_r($samplecode);
+                // echo "</pre>";
+            } else {
+                $number = 0;
+                //print_r($samplecode);
             }
+
+            //for ($i=1;$i<=count($request->samples);$i++)
+            //{
+                //$nextnumber = $number + 1;
+            //}
+
+                //$nextnumber = $number + 1;
+
+                //$count = 1;
+                //if(count($request->samples) >= $count)
+               // {
+                    //$count = 1;
+                //for($count=1;count($request->samples) >=$count;$count++)
+                //{
+                    $nextnumber = $number + 1;
+                    $appendNextnumber = str_pad($nextnumber, 4, "0", STR_PAD_LEFT);
+                //}
+                    //echo $samp['sample_id']."<br>";
+                    //echo "-".$nextnumber."<br>";
+                    $sampleId = $samp->sample_id;
+                    $sample = $this->findModel($sampleId);
+                    //$toinsert = $nextnumber + $i;
+
+                    $modelSamplecode = new Samplecode();
+                    $modelSamplecode->rstl_id = $GLOBALS['rstl_id'];
+                    $modelSamplecode->reference_num = $request->request_ref_num;
+                    $modelSamplecode->sample_id = $sampleId;
+                    $modelSamplecode->lab_id = $lab->lab_id;
+                    $modelSamplecode->number = $nextnumber;
+                    $modelSamplecode->year = $year;
+
+                    if($modelSamplecode->save())
+                    {
+                        //update samplecode to tbl_sample
+                        $sample->sample_code = $lab->labcode."-".$appendNextnumber;
+                        $sample->save();
+                    } else {
+                        //error
+                        $modelSamplecode->getErrors();
+                        exit;
+                    }
+                    //$count = $count + 1;
+                //}
+            //}
+           /* echo "<pre>";
+                print_r($_POST);
+            echo "</pre>";*/
         }
+
+        //echo "<pre>";
+        //print_r($request->samples->sample_id);
+        //echo "</pre>";
+
+
+        /*if(isset($sampleCode)){
+            return $modelLab->labCode.'-'.Yii::app()->Controller->addZeros($sampleCode->number + 1);
+        }else{
+            $initializeCode = Initializecode::model()->find(array(
+                'select'=>'*',
+                'condition'=>'rstl_id = :rstl_id AND lab_id = :lab_id AND codeType = :codeType',
+                'params'=>array(':rstl_id' => Yii::app()->Controller->getRstlId(), ':lab_id' => $modelLab->id, ':codeType' => 2)
+            ));
+            $startCode = Yii::app()->Controller->addZeros($initializeCode->startCode + 1);
+            return $modelLab->labCode.'-'.$startCode;
+        }*/
+
+        //return $modelSamplecode;
+        //return $samplecode;
     }
 
     protected function listSampletemplate()
