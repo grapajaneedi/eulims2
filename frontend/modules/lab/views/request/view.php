@@ -28,6 +28,7 @@ $js=<<<SCRIPT
             year: $Year
         }, function(result){
            if(result){
+               //alert(result);
                location.reload();
            }
         });

@@ -37,6 +37,7 @@ return array(
     'mdm\\admin\\' => array($vendorDir . '/mdmsoft/yii2-admin'),
     'maxmirazh33\\image\\' => array($vendorDir . '/maxmirazh33/yii2-uploadable-cropable-image/src'),
     'machour\\yii2\\notifications\\' => array($vendorDir . '/machour/yii2-notifications'),
+    'linslin\\yii2\\curl\\' => array($vendorDir . '/linslin/yii2-curl'),
     'kartik\\sortinput\\' => array($vendorDir . '/kartik-v/yii2-sortable-input'),
     'kartik\\sortable\\' => array($vendorDir . '/kartik-v/yii2-sortable'),
     'kartik\\select2\\' => array($vendorDir . '/kartik-v/yii2-widget-select2'),

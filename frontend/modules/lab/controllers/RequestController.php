@@ -18,7 +18,7 @@ use common\models\lab\Customer;
 use DateTime;
 use common\models\system\Profile;
 use common\components\Functions;
-
+use linslin\yii2\curl\Curl;
 /**
  * RequestController implements the CRUD actions for Request model.
  */
@@ -110,10 +110,12 @@ class RequestController extends Controller
     }
     public function actionSaverequestransaction(){
         $post= Yii::$app->request->post();
-        $request_id=(int)$post['request_id'];
-        $lab_id=(int)$post['lab_id'];
-        $rstl_id=(int)$post['rstl_id'];
-        $year=(int)$post['year'];
+        // echo $post['request_id'];
+        //exit;
+        $request_id=(int) $post['request_id'];
+        $lab_id=(int) $post['lab_id'];
+        $rstl_id=(int) $post['rstl_id'];
+        $year=(int) $post['year'];
         // Generate Reference Number
         $func=new Functions();
         $Proc="spGetNextGeneratedRequestSampleCode(:RSTLID,:LabID)";
@@ -145,11 +147,22 @@ class RequestController extends Controller
         //Update tbl_request table
         $Request= Request::find()->where(['request_id'=>$request_id])->one($Connection);
         $Request->request_ref_num=$ReferenceNumber;
-        $Request->save();
-        // Generate Sample Code : Url::to(['sample/generatesamplecode','request_id'=>$model->request_id]
-        
-        $Transaction->commit();
-        return true;
+        if($Request->save()){
+            $curl = new Curl();
+            $response = $curl->setGetParams([
+                'request_id' => $request_id
+            ])->post('/lab/sample/generatesamplecode');
+            if($response){
+                $Transaction->commit();
+                return true;
+            }else{
+                $Transaction->rollback();
+                return false;
+            }
+        }else{
+            $Transaction->rollback();
+            return false;
+        }
         // Generate Sample Code
        // $this->runAction(["/lab/sample/generatesamplecode?request_id=$request_id"]);
     }
