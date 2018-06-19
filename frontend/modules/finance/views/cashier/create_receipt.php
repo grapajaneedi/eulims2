@@ -9,10 +9,13 @@ use yii\helpers\Url;
 use common\models\finance\Project;
 use common\models\finance\Paymentmode;
 use common\models\finance\Collectiontype;
+use common\models\finance\Orseries;
+use common\components\Functions;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Receipt */
 /* @var $form yii\widgets\ActiveForm */
 $paymentlist='';
+$func= new Functions();
 ?>
 
 <div class="receipt-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
@@ -36,7 +39,7 @@ $paymentlist='';
                 'pluginOptions' => [
                   'allowClear' => true
                 ],
-                ]);
+                ])->label('Project');
             ?>
             </div>   
             <div class="col-sm-6">
@@ -56,16 +59,18 @@ $paymentlist='';
         </div>
         <div class="row">
           
-             <div class="col-sm-6">
-                <?= $form->field($model, 'payment_mode_id')->widget(Select2::classname(), [
-                    'pluginOptions'=>[
-                        'depends'=>['op-customer_id'],
-                        'placeholder'=>'Select Payment Mode',
-                        'url'=>Url::to(['/finance/op/listpaymentmode?customerid='.$model->customer_id]),
-                        'allowClear' => true
-                    ]
-                ])
-                ?>
+            <div class="col-sm-6">
+           <?php 
+
+                echo $form->field($model, 'payment_mode_id')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(Paymentmode::find()->all(), 'payment_mode_id', 'payment_mode'),
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['placeholder' => 'Select Payment mode ...'],
+                'pluginOptions' => [
+                  'allowClear' => true
+                ],
+                ])->label('Payment Mode');
+            ?>
             </div>
             <div class="col-sm-6">
            <?php 
@@ -77,17 +82,114 @@ $paymentlist='';
                 'pluginOptions' => [
                   'allowClear' => true
                 ],
-                ]);
+                ])->label('Collection Type');
             ?>
             </div>  
         </div>
-       
+        <div class="row">
+          
+            <div class="col-sm-6">
+           <?php 
+
+                echo $form->field($model, 'or_number')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(Orseries::find()->all(), 'or_series_id', 'or_series_name'),
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['placeholder' => 'O.R Series ...'],
+                'pluginOptions' => [
+                  'allowClear' => true
+                ],
+                ])->label('O.R Series');
+            ?>
+             <?php echo $form->field($model, 'or')->hiddenInput()->label(false) ?>   
+            </div> 
+             <div class="col-sm-6">
+                <!--<span  id ="nxt_or" class='alert alert-success'>O.R. #: <i class='glyphicon glyphicon-info-sign' title='Next O.R. number on selected series. \nO.R. # displayed herein is for guidance and reference only.'></i></span>
+            --> 
+           
+               <div style="margin-top:25px;">
+                   <span class="btn btn-block btn-success">O.R. #: <span id="next_or"></span> <i class='glyphicon glyphicon-info-sign' title='Next O.R. number on selected series. \nO.R. # displayed herein is for guidance and reference only.'></i></span>
+               </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+             
+            <?php echo $form->field($model, 'payor')->textInput(['value'=>$op_model->customer->customer_name])->label('Payor') ?>
+            </div>
+        </div>
+        <div class="form-group pull-right">
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
+                'id'=>'createOP']) ?>
+            <?php if(Yii::$app->request->isAjax){ ?>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <?php } ?>
+        </div>
     </div>
     <?php ActiveForm::end(); ?>
-
+ <?php
+    // This section will allow to popup a notification
+    $session = Yii::$app->session;
+    if ($session->isActive) {
+        $session->open();
+        if (isset($session['deletepopup'])) {
+            $func->CrudAlert("Deleted Successfully","WARNING");
+            unset($session['deletepopup']);
+            $session->close();
+        }
+        if (isset($session['updatepopup'])) {
+            $func->CrudAlert("Updated Successfully");
+            unset($session['updatepopup']);
+            $session->close();
+        }
+        if (isset($session['savepopup'])) {
+            $func->CrudAlert("Successfully Saved","SUCCESS",true);
+            unset($session['savepopup']);
+            $session->close();
+        }
+        if (isset($session['errorpopup'])) {
+            $func->CrudAlert("Transaction Error","ERROR",true);
+            unset($session['errorpopup']);
+            $session->close();
+        }
+        if (isset($session['checkpopup'])) {
+            $func->CrudAlert("Insufficient Wallet Balance","INFO",true,false,false);
+            unset($session['checkpopup']);
+            $session->close();
+        }
+    }
+?>
 </div>
 <style>
     .modal-body{
         padding-top: 0px!important;
     }
 </style>
+<script type="text/javascript">
+    $('#receipt-or_number').on('change',function(e) {
+        jQuery.ajax( {
+            type: 'POST',
+            url: '/finance/cashier/nextor?id='+$(this).val(),
+            dataType: 'json',
+            success: function ( response ) {
+                if(response.success === true)
+                {
+                    //$("span.btn").appendClass("btn-success");
+                    $('span.btn').removeClass("btn-warning");
+                    $('span.btn').addClass("btn-success");
+                    $('#next_or').html(response.nxtOR);
+                    $('#receipt-or').val(response.nxtOR);
+                } else {
+                    //$("span.btn").appendClass("btn-warning");
+                    $('span.btn').addClass("btn-warning");
+                    $('#next_or').html(response.nxtOR);
+                    $('#receipt-or').val('');
+                }
+            },
+            error: function ( xhr, ajaxOptions, thrownError ) {
+                alert( thrownError );
+            }
+        });
+       // alert('zdfsdf');
+       
+    });
+</script>
