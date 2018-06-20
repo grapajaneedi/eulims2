@@ -736,4 +736,13 @@ return array (
       '@kartik/sortinput' => $vendorDir . '/kartik-v/yii2-sortable-input',
     ),
   ),
+  'linslin/yii2-curl' => 
+  array (
+    'name' => 'linslin/yii2-curl',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@linslin/yii2/curl' => $vendorDir . '/linslin/yii2-curl',
+    ),
+  ),
 );

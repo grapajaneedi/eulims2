@@ -371,6 +371,7 @@ class SampleController extends Controller
 
         foreach ($request->samples as $samp){
             $transaction = $connection->beginTransaction();
+            $return="";
             try {
 
                 $function = new Functions();
@@ -398,22 +399,23 @@ class SampleController extends Controller
                     $sample->sample_code = $samplecodeGenerated;
                     $sample->save();
                     $transaction->commit();
-                    //return true;
+                    $return=true;
                 } else {
                     //error
                     $transaction->rollBack();
                     $samplecode->getErrors();
-                    //exit;
+                    $return=false;
                 }
                 //$transaction->commit();
 
             } catch (\Exception $e) {
                $transaction->rollBack();
-                throw $e;
+               $return=false;
             } catch (\Throwable $e) {
                $transaction->rollBack();
-               throw $e;
+               $return=false;
             }
+            return $return;
         }
     }
 

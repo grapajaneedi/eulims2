@@ -163,7 +163,7 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
                     'type'=>'primary',
                     'after'=>false,
-                    'footer'=>"<div class='row' style='margin-left: 2px;'><button value='/finance/cashier/create-receipt' id='btnCreateReceipt' class='btn btn-success' title='Receipt from OP'><i class='fa fa-save'></i> Create Receipt</button></div>",
+                    'footer'=>"<div class='row' style='margin-left: 2px;'><button value='/finance/cashier/create-receipt?op_id=$model->orderofpayment_id' id='btnCreateReceipt' class='btn btn-success' title='Receipt from OP'><i class='fa fa-save'></i> Create Receipt</button></div>",
        
                 ],
                 'columns' => $gridColumns,

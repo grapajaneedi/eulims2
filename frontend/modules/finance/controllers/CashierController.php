@@ -7,7 +7,10 @@ use common\models\finance\Op;
 use common\models\finance\OpSearch;
 use common\models\finance\Paymentitem;
 use common\models\finance\Receipt;
+use common\models\finance\Orseries;
+
 use yii\data\ActiveDataProvider;
+use yii\helpers\Json;
 class CashierController extends \yii\web\Controller
 {
     public function actionIndex()
@@ -55,31 +58,63 @@ class CashierController extends \yii\web\Controller
     // End of Order of Payment
     
     //-------Receipt
+   
     public function actionReceipt()
     {
         return $this->render('receipt');
     }
-     public function actionCreateReceipt()
+     public function actionCreateReceipt($op_id)
     {
+        $op_model=$this->findModel($op_id);
+       
         $model = new Receipt();
-       // $searchModel = new ReceiptSearch();
-      //  $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-       // $dataProvider->pagination->pageSize=5;
+        if ($model->load(Yii::$app->request->post())) {
+            $session = Yii::$app->session;
+             try  {
+                 //echo"gdfgtrd";
+                // exit();
+                $model->rstl_id=11;
+                $model->terminal_id=1;
+                $model->collection_id=$op_model->collection->collection_id;
+                $model->or_number=$model->or;
+                $model->check_id='';
+                $model->total=0;
+                $model->cancelled=0;
+                $model->save(false);
+                $session->set('savepopup',"executed");
+                return $this->redirect(['/finance/cashier/op']); 
+             } catch (Exception $e) {
+                   return $e;
+             }
+        }
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create_receipt', [
                 'model' => $model,
+                'op_model'=> $op_model,
                // 'searchModel' => $searchModel,
               //  'dataProvider' => $dataProvider,
             ]);
         }else{
             return $this->render('create_receipt', [
                 'model' => $model,
+                'op_model'=> $op_model,
              //   'searchModel' => $searchModel,
                // 'dataProvider' => $dataProvider,
             ]);
         }
     }
-     
+    public function actionNextor($id)
+    {
+        if(!empty($id))
+        {
+           // =123456;
+            $model = Orseries::findOne($id);
+            $nextOR=$model->nextor;
+            echo JSON::encode(['nxtOR'=>$nextOR,'success'=>true]);
+        } else {
+            echo JSON::encode(['nxtOR'=>"OR Series not selected.",'success'=>false]);
+        }
+    }
     //End of Receipt
     public function actionDeposit()
     {
