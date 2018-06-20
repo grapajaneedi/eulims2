@@ -12,6 +12,7 @@ use kartik\grid\DataColumn;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Accounting Codes';
+$this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $Buttontemplate ='{view}{update}';
@@ -30,8 +31,6 @@ $Buttontemplate ='{view}{update}';
 
 
 <div class="accountingcode-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
        
     <p>

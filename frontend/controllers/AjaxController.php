@@ -12,6 +12,7 @@ namespace frontend\controllers;
 
 use yii\web\Controller;
 use common\models\lab\Discount;
+use Yii;
 /**
  * Description of AjaxController
  *
@@ -39,6 +40,16 @@ class AjaxController extends Controller{
         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
         return $discount;
     }
-
+    public function actionTogglemenu(){
+        $session = Yii::$app->session;
+        $hideMenu= $session->get("hideMenu");
+        if(!isset($hideMenu)){
+           $hideMenu=false; 
+        }
+        $b=!$hideMenu;
+        $session->set('hideMenu',$b);
+        //return $hideMenu;
+        echo $session->get("hideMenu");
+    }
  
 }
