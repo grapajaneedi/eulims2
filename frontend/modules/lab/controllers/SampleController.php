@@ -368,7 +368,7 @@ class SampleController extends Controller
         $lab = Lab::findOne($request->lab_id);
         $year = date('Y', strtotime($request->request_datetime));
         $connection= Yii::$app->labdb;
-
+       
         foreach ($request->samples as $samp){
             $transaction = $connection->beginTransaction();
             $return="";
@@ -415,8 +415,9 @@ class SampleController extends Controller
                $transaction->rollBack();
                $return=false;
             }
-            return $return;
+            
         }
+        echo $return;
     }
 
     protected function listSampletemplate()
