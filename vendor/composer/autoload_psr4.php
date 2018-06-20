@@ -24,6 +24,7 @@ return array(
     'vova07\\imperavi\\tests\\' => array($vendorDir . '/vova07/yii2-imperavi-widget/tests'),
     'vova07\\imperavi\\' => array($vendorDir . '/vova07/yii2-imperavi-widget/src'),
     'thyseus\\message\\' => array($vendorDir . '/thyseus/yii2-message'),
+    'skeeks\\yii2\\curl\\' => array($vendorDir . '/skeeks/yii2-curl'),
     'rmrevin\\yii\\fontawesome\\' => array($vendorDir . '/rmrevin/yii2-fontawesome'),
     'reportico\\reportico\\' => array($vendorDir . '/reportico/yii2-reportico'),
     'phpnt\\exportFile\\' => array($vendorDir . '/phpnt/yii2-export'),

@@ -19,6 +19,7 @@ use DateTime;
 use common\models\system\Profile;
 use common\components\Functions;
 use linslin\yii2\curl\Curl;
+use kartik\mpdf\Pdf;
 /**
  * RequestController implements the CRUD actions for Request model.
  */
@@ -108,10 +109,22 @@ class RequestController extends Controller
         }
         return $out;
     }
+    public function actionPdf(){
+        $pdf=new \common\components\MyPDF();
+        $Content="<button>Click me</button>";
+        $pdf->renderPDF($Content,NULL,NULL,['orientation'=> Pdf::ORIENT_LANDSCAPE]);
+        
+    }
+    public function actionTest($id){
+        $Func=new Functions();
+        $response=$Func->GenerateSampleCode(12);
+        echo $response;
+    }
     public function actionSaverequestransaction(){
         $post= Yii::$app->request->post();
         // echo $post['request_id'];
         //exit;
+        $return="Failed";
         $request_id=(int) $post['request_id'];
         $lab_id=(int) $post['lab_id'];
         $rstl_id=(int) $post['rstl_id'];
@@ -148,23 +161,20 @@ class RequestController extends Controller
         $Request= Request::find()->where(['request_id'=>$request_id])->one($Connection);
         $Request->request_ref_num=$ReferenceNumber;
         if($Request->save()){
-            $curl = new Curl();
-            $response = $curl->setGetParams([
-                'request_id' => $request_id
-            ])->post('/lab/sample/generatesamplecode');
+            $Transaction->commit();
+            $Func=new Functions();
+            $response=$Func->GenerateSampleCode($Request->request_id);
             if($response){
-                $Transaction->commit();
-                return true;
+                $return="Success";
             }else{
                 $Transaction->rollback();
-                return false;
+                $return="Failed";
             }
         }else{
             $Transaction->rollback();
-            return false;
+            $return="Failed";
         }
-        // Generate Sample Code
-       // $this->runAction(["/lab/sample/generatesamplecode?request_id=$request_id"]);
+        return $return;
     }
     /**
      * Creates a new Request model.

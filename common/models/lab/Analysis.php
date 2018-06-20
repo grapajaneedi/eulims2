@@ -21,7 +21,6 @@ use Yii;
  * @property string $fee
  * @property int $test_id
  * @property int $cancelled
- * @property int $status
  * @property int $user_id
  * @property int $testcategory_id
   * @property int $sample_type_id
@@ -30,7 +29,7 @@ use Yii;
  * @property Sample $sample
  * @property Request $request
  * @property Test $test0
- * @property Tagging[] $taggings
+ * @property Tagging[] $tagging
  */
 class Analysis extends \yii\db\ActiveRecord
 {
@@ -56,9 +55,9 @@ class Analysis extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date_analysis', 'rstl_id', 'pstcanalysis_id', 'request_id', 'sample_id', 'sample_code', 'testname', 'method', 'references', 'quantity', 'test_id', 'cancelled', 'status'], 'required'],
+            [['date_analysis', 'rstl_id', 'pstcanalysis_id', 'request_id', 'sample_id', 'sample_code', 'testname', 'method', 'references', 'quantity', 'test_id', 'cancelled'], 'required'],
             [['date_analysis'], 'safe'],
-            [['rstl_id', 'pstcanalysis_id', 'request_id', 'sample_id', 'quantity', 'test_id', 'cancelled', 'status', 'user_id', 'is_package'], 'integer'],
+            [['rstl_id', 'pstcanalysis_id', 'request_id', 'sample_id', 'quantity', 'test_id', 'cancelled', 'user_id', 'is_package'], 'integer'],
             [['fee'], 'number'],
             [['sample_code'], 'string', 'max' => 20],
             [['testname'], 'string', 'max' => 200],
@@ -91,7 +90,6 @@ class Analysis extends \yii\db\ActiveRecord
             'fee' => 'Fee',
             'test_id' => 'Test',
             'cancelled' => 'Cancelled',
-            'status' => 'Status',
             'user_id' => 'User ID',
             'is_package' => 'Is Package',
             'testcategory_id' => 'Test Category',
@@ -134,7 +132,7 @@ class Analysis extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTaggings()
+    public function getTagging()
     {
         return $this->hasOne(Tagging::className(), ['analysis_id' => 'analysis_id']);
     }
