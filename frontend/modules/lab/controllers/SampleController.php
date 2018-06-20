@@ -375,7 +375,7 @@ class SampleController extends Controller
             try {
 
                 $function = new Functions();
-                $proc = 'spGenerateSampleCode(:rstlId,:labId,:requestId)';
+                $proc = 'spGetNextGenerateSampleCode(:rstlId,:labId,:requestId)';
                 $params = [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$lab->lab_id,':requestId'=>$requestId];
                 $row = $function->ExecuteStoredProcedureOne($proc, $params, $connection);
                 $samplecodeGenerated = $row['GeneratedSampleCode'];
