@@ -20,6 +20,10 @@ use common\models\services\Test;
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Fee */
 /* @var $form yii\widgets\ActiveForm */
+
+
+$namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
+
 ?>
 
 <div class="fee-form">
@@ -62,31 +66,46 @@ use common\models\services\Test;
         ],
     ]); ?>
 
-    <?= $form->field($model, 'fee_id')->hiddenInput()->label(false) ?>
+        <?= $form->field($model, 'fee_id')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'unit_cost')->textInput(['maxlength' => true]) ?>
-
+   
     <div class="row">
         <div class="col-sm-6">
-        <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
-                        'data' => $testcategory,
-                        'theme' => Select2::THEME_KRAJEE,
-                        'options' => ['id'=>'sample-testcategory_id'],
-                        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test category'],
-                ])
-            ?>
+
+        <?= $form->field($model, 'name')->widget(Select2::classname(), [
+                        'data' => $namelist,
+                        'language' => 'en',
+                         'options' => ['placeholder' => 'Select Name'],
+                         'pluginOptions' => [
+                         'allowClear' => true
+                        ],
+                ])->label("Name"); ?>
+
+        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+
+
         </div>
         <div class="col-sm-6">
-           
+        <?= $form->field($model, 'code')->textInput(['readonly' => true]) ?>
         </div>
     </div>
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    <div class="row">
+        <div class="col-sm-6">
+        <?= $form->field($model, 'unit_cost')->textInput(['readonly' => true]) ?>
+        </div>
+        <div class="col-sm-6">
+      
+        </div>
+    </div>
+
+    <div class="form-group" style="padding-bottom: 3px;">
+        <div style="float:right;">
+            <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::button('Cancel', ['class' => 'btn', 'onclick'=>'closeDialog()']) ?>
+            <br>
+        </div>
+    
     </div>
 
     <?php ActiveForm::end(); ?>
