@@ -111,7 +111,7 @@ class Functions extends Component{
             //$transaction = $connection->beginTransaction();
             $return="false";
             try {
-                $proc = 'spGenerateSampleCode(:rstlId,:labId,:requestId)';
+                $proc = 'spGetNextGenerateSampleCode(:rstlId,:labId,:requestId)';
                 $params = [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$lab->lab_id,':requestId'=>$request_id];
                 $row = $this->ExecuteStoredProcedureOne($proc, $params, $connection);
                 $samplecodeGenerated = $row['GeneratedSampleCode'];
