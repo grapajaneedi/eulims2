@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $rstlID=$GLOBALS['rstl_id'];
 $Year=date('Y', strtotime($model->request_datetime));
+// /lab/request/saverequestransaction
 $js=<<<SCRIPT
     $("#btnSaveRequest").click(function(){
         $.post(this.value, {
@@ -28,7 +29,6 @@ $js=<<<SCRIPT
             year: $Year
         }, function(result){
            if(result){
-               //alert(result);
                location.reload();
            }
         });

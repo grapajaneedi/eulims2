@@ -37,6 +37,7 @@ class SampleController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'generatesamplecode'=>['GET','POST']
                 ],
             ],
         ];
@@ -368,10 +369,10 @@ class SampleController extends Controller
         $lab = Lab::findOne($request->lab_id);
         $year = date('Y', strtotime($request->request_datetime));
         $connection= Yii::$app->labdb;
-       
+        
         foreach ($request->samples as $samp){
             $transaction = $connection->beginTransaction();
-            $return="";
+            $return="false";
             try {
 
                 $function = new Functions();
@@ -383,7 +384,7 @@ class SampleController extends Controller
 
                 $sampleId = $samp->sample_id;
                 $sample = $this->findModel($sampleId);
-
+                
                 //insert to tbl_samplecode
                 $samplecode = new Samplecode();
                 $samplecode->rstl_id = $GLOBALS['rstl_id'];
@@ -392,7 +393,7 @@ class SampleController extends Controller
                 $samplecode->lab_id = $lab->lab_id;
                 $samplecode->number = $samplecodeIncrement;
                 $samplecode->year = $year;
-
+               
                 if($samplecode->save())
                 {
                     //update samplecode to tbl_sample
@@ -406,6 +407,7 @@ class SampleController extends Controller
                     $samplecode->getErrors();
                     $return=false;
                 }
+                
                 //$transaction->commit();
 
             } catch (\Exception $e) {
