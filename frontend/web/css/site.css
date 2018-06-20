@@ -31,23 +31,9 @@ body {
     background-color: #fdf7f7
 }
 /******** Cancelled Request *****/
-.section-request{
-    position: relative;
-    width: 100%;
-}
-.background-cancel{
-    position: absolute;
-    background-image: url("/images/ui-diagonal.png");
-    opacity: 0.8;
-    z-index: 80000;
-    top: 0px;
-    left: 0px;
-    height: 100%;
-    width: 100%;
-}
 #cancelled-div{
     position: absolute;
-    z-index: 170000;
+    z-index: 10000;
     top: 90px;
     left: 0px;
     height: 100%;
@@ -72,7 +58,6 @@ body {
   width: 450px;
   height: auto;
   border-radius: 3px;
-  z-index: 9000000;
 }
 .request-cancelled{
     display: block;
