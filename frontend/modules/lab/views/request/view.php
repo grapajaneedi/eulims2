@@ -57,7 +57,7 @@ if($Cancelledrequest){
     $DateCancelled=date('m/d/Y h:i A', strtotime($Cancelledrequest->cancel_date));
     $CancelledBy=$sweetalert->GetProfileName($Cancelledrequest->cancelledby);
 }else{
-    $Reasons='$nbsp;';
+    $Reasons='&nbsp;';
     $DateCancelled='';
     $CancelledBy='';
 }
@@ -74,6 +74,7 @@ if($Request_Ref){
 }
 
 ?>
+<div class="section-request"> 
 <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
         <div class="inner-div">
         <img src="/images/cancelled.png" alt="" style="width: 300px;margin-left: 80px"/>
@@ -99,8 +100,7 @@ if($Request_Ref){
             </table>
         </div>
         </div>
-    </div>
-<div class="section-request">  
+</div> 
 <div class="<?= $BackClass ?>"></div>
 <div class="request-view ">
     <div class="container table-responsive">
