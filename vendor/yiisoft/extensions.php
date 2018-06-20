@@ -745,4 +745,13 @@ return array (
       '@linslin/yii2/curl' => $vendorDir . '/linslin/yii2-curl',
     ),
   ),
+  'skeeks/yii2-curl' => 
+  array (
+    'name' => 'skeeks/yii2-curl',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@skeeks/yii2/curl' => $vendorDir . '/skeeks/yii2-curl',
+    ),
+  ),
 );

@@ -16,6 +16,10 @@ use common\models\lab\Customer;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
 use common\models\system\Profile;
+use common\models\lab\Request;
+use common\models\lab\Sample;
+use common\models\lab\Samplecode;
+use common\models\lab\Lab;
 use Yii;
 /**
  * Description of Functions
@@ -96,6 +100,63 @@ class Functions extends Component{
         $Command->bindValue(':mCustomerID',$CustomerID);
         $list = $Command->queryAll();
         return $list;
+    }
+    function GenerateSampleCode($request_id){
+        $request =Request::find()->where(['request_id'=>$request_id])->one();
+        $lab = Lab::findOne($request->lab_id);
+        $year = date('Y', strtotime($request->request_datetime));
+        $connection= Yii::$app->labdb;
+        
+        foreach ($request->samples as $samp){
+            //$transaction = $connection->beginTransaction();
+            $return="false";
+            try {
+                $proc = 'spGenerateSampleCode(:rstlId,:labId,:requestId)';
+                $params = [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$lab->lab_id,':requestId'=>$request_id];
+                $row = $this->ExecuteStoredProcedureOne($proc, $params, $connection);
+                $samplecodeGenerated = $row['GeneratedSampleCode'];
+                $samplecodeIncrement = $row['SampleIncrement'];
+
+                $sampleId = $samp->sample_id;
+                $sample= Sample::find()->where(['sample_id'=>$sampleId])->one();
+                
+                //insert to tbl_samplecode
+                $samplecode = new Samplecode();
+                $samplecode->rstl_id = $GLOBALS['rstl_id'];
+                $samplecode->reference_num = $request->request_ref_num;
+                $samplecode->sample_id = $sampleId;
+                $samplecode->lab_id = $lab->lab_id;
+                $samplecode->number = $samplecodeIncrement;
+                $samplecode->year = $year;
+                
+                if($samplecode->save())
+                {
+                    //update samplecode to tbl_sample
+                    $sample->sample_code = $samplecodeGenerated;
+                    $sample->save();
+                    //$transaction->commit();
+                    $return=true;
+                } else {
+                    //error
+                    //$transaction->rollBack();
+                    $samplecode->getErrors();
+                    $return=false;
+                }
+                
+                //$transaction->commit();
+
+            } catch (\Exception $e) {
+               //$transaction->rollBack();
+                echo $e->getMessage();
+               $return=false;
+            } catch (\Throwable $e) {
+               //$transaction->rollBack();
+               $return=false;
+               echo $e->getMessage();
+            }
+            
+        }
+        return "$return";
     }
     function GetCustomerList($form,$model,$disabled=false,$Label=false){
 $dataExp = <<< SCRIPT
