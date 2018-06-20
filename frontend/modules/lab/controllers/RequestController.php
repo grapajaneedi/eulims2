@@ -112,9 +112,17 @@ class RequestController extends Controller
     public function actionPdf(){
         $pdf=new \common\components\MyPDF();
         $Content="<button>Click me</button>";
-        $pdf->renderPDF($Content,'DOST','SAMPLE',['orientation'=>Pdf::ORIENT_LANDSCAPE]);
+        $pdf->renderPDF($Content);
         
     }
+
+    public function actionPrintlabel(){
+        $pdf=new \common\components\MyPDF();
+        $Content= $this->renderPartial('_printlabel');
+        $pdf->renderPDF($Content);
+        
+    }
+
     public function actionTest($id){
         $curl = new Curl();
             $response = $curl->setPostParams([

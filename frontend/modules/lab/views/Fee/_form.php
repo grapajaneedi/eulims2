@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use common\models\lab\Lab;
+use common\models\lab\Fee;
 use common\models\services\Testcategory;
 use common\models\services\Sampletype;
 use kartik\widgets\DepDrop;
@@ -81,7 +82,7 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
                         ],
                 ])->label("Name"); ?>
 
-        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'name')->hiddenInput()->label(false) ?>
 
 
         </div>
@@ -98,14 +99,13 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
       
         </div>
     </div>
-
-    <div class="form-group" style="padding-bottom: 3px;">
-        <div style="float:right;">
-            <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-            <?= Html::button('Cancel', ['class' => 'btn', 'onclick'=>'closeDialog()']) ?>
-            <br>
-        </div>
     
+    <?= $form->field($model, 'tests')->textarea(['rows' => 4, 'readonly' => true]) ?>
+    <div class="row" style="float: right;padding-right: 30px">
+    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?php if($model->isNewRecord){ ?>
+        <?php } ?>
+    <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
