@@ -5,8 +5,9 @@
 <style type="text/css">
 
 img:hover{
-    border:5px solid #3c8dbc; 
     border-radius: 25px;
+    box-shadow: 0 0 0 5pt #3c8dbc;
+    transition: box-shadow 0.5s ease-in-out;
 }
 </style>
 

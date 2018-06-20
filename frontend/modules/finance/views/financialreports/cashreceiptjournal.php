@@ -2,7 +2,7 @@
 
 
 //var_dump($stringTable);
-echo $tableWidth;
+echo $values;
 
 /*
  * Project Name: eulims_ * 

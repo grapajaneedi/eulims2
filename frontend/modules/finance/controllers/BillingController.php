@@ -8,5 +8,7 @@ class BillingController extends \yii\web\Controller
     {
         return $this->render('index');
     }
-
+    public function actionManager(){
+        return $this->render('manager');
+    }
 }

@@ -46,6 +46,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         array (
             'thyseus\\message\\' => 16,
         ),
+        's' => 
+        array (
+            'skeeks\\yii2\\curl\\' => 17,
+        ),
         'r' => 
         array (
             'rmrevin\\yii\\fontawesome\\' => 24,
@@ -261,6 +265,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'thyseus\\message\\' => 
         array (
             0 => __DIR__ . '/..' . '/thyseus/yii2-message',
+        ),
+        'skeeks\\yii2\\curl\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/skeeks/yii2-curl',
         ),
         'rmrevin\\yii\\fontawesome\\' => 
         array (
