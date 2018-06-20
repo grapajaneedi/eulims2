@@ -112,7 +112,11 @@ class RequestController extends Controller
     public function actionPdf(){
         $pdf=new \common\components\MyPDF();
         $Content="<button>Click me</button>";
+<<<<<<< HEAD
         $pdf->renderPDF($Content);
+=======
+        $pdf->renderPDF($Content,NULL,NULL,['orientation'=> Pdf::ORIENT_LANDSCAPE]);
+>>>>>>> upstream/master
         
     }
 
@@ -124,16 +128,15 @@ class RequestController extends Controller
     }
 
     public function actionTest($id){
-        $curl = new Curl();
-            $response = $curl->setPostParams([
-                'request_id' => $id
-            ])->post('/lab/sample/generatesamplecode');
-            echo "Result: ".$response;
+        $Func=new Functions();
+        $response=$Func->GenerateSampleCode(12);
+        echo $response;
     }
     public function actionSaverequestransaction(){
         $post= Yii::$app->request->post();
         // echo $post['request_id'];
         //exit;
+        $return="Failed";
         $request_id=(int) $post['request_id'];
         $lab_id=(int) $post['lab_id'];
         $rstl_id=(int) $post['rstl_id'];
@@ -170,23 +173,20 @@ class RequestController extends Controller
         $Request= Request::find()->where(['request_id'=>$request_id])->one($Connection);
         $Request->request_ref_num=$ReferenceNumber;
         if($Request->save()){
-            $curl = new Curl();
-            $response = $curl->setGetParams([
-                'request_id' => $request_id
-            ])->get('/lab/sample/generatesamplecode');
+            $Transaction->commit();
+            $Func=new Functions();
+            $response=$Func->GenerateSampleCode($Request->request_id);
             if($response){
-                $Transaction->commit();
-                return true;
+                $return="Success";
             }else{
                 $Transaction->rollback();
-                return false;
+                $return="Failed";
             }
         }else{
             $Transaction->rollback();
-            return false;
+            $return="Failed";
         }
-        // Generate Sample Code
-       // $this->runAction(["/lab/sample/generatesamplecode?request_id=$request_id"]);
+        return $return;
     }
     /**
      * Creates a new Request model.

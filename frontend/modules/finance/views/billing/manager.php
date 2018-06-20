@@ -2,7 +2,9 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'Finance';
+$this->title = 'Manager';
+$this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance/']];
+$this->params['breadcrumbs'][] = ['label' => 'Billing', 'url' => ['/finance/billing']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

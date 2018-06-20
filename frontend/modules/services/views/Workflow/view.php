@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
             echo '<h3 class="timeline-header"><a href="#">"Error: Test ID not found"</a> ...</h3>';
 
         echo '              <div class="timeline-body">
-                            '.$var->procedure_name.'
+                            '.$var->procedure_code.'
                         </div>
                     </div>
               </li>'; 
@@ -60,6 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     ?>
     <!-- timeline item -->
+    
 
     <li class="time-label">
         <span class="bg-red">
