@@ -123,13 +123,12 @@ $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sa
          </div>
 
          <?= $form->field($model, 'tests')->textarea(['rows' => 4, 'readonly' => true]) ?>
-    <div class="form-group pull-right">
-    <?php if(Yii::$app->request->isAjax){ ?>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-    <?php } ?>
-    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
-
+            <div class="row" style="float: right;padding-right: 30px">
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+                <?php if($model->isNewRecord){ ?>
+                <?php } ?>
+            <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
+            </div>
     <?php ActiveForm::end(); ?>
 
 </div>
