@@ -51,6 +51,7 @@ class SampleController extends Controller
     {
         $searchModel = new SampleSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->pagination->pageSize=10;
 
         /*$dataProvider = new ActiveDataProvider([
             //'query' => $searchModel->search(Yii::$app->request->queryParams),
