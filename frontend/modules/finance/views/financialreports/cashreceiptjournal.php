@@ -2,7 +2,7 @@
 
 
 //var_dump($stringTable);
-echo $values;
+//echo $values;
 
 /*
  * Project Name: eulims_ * 
@@ -11,7 +11,9 @@ echo $values;
  * 06 7, 18 , 2:51:15 PM * 
  * Module: cashreceiptjournal * 
  */
-
+$this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
+$this->params['breadcrumbs'][] = ['label' => 'Financial Reports', 'url' => ['/finance/financialreports']];
+$this->params['breadcrumbs'][] = $moduleTitle;
 /**
  * Description of cashreceiptjournal
  *
@@ -67,7 +69,7 @@ echo '<style type="text/css">
 
 <div class="box box-primary box-solid" style="overflow: auto">
     <div class="box-header with-border">
-              <h3 class="box-title">Cash Receipt Journal</h3>
+              <h3 class="box-title"><?php echo $moduleTitle ?></h3>
 
               <!-- /.box-tools -->
     </div>
