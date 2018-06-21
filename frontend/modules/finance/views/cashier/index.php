@@ -1,7 +1,9 @@
 <?php
 /* @var $this yii\web\View */
 //<div class="col-md-3 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/cashier/reports/"><img class="img-responsive center-block" src="/images/reportsquare.png" style="height:150px"/>Reports</a></div>
-       
+$this->title = 'Cashier';
+$this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance/']];
+$this->params['breadcrumbs'][] = $this->title;     
 ?>
 
 <style type="text/css">

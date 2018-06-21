@@ -15,9 +15,16 @@
         </group>
         <group/>
         <group>
+<<<<<<< HEAD
+            <file>file:/C:/UwAmp/www/eulims2/common/models/finance/ReceiptSearch.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/controllers/CashierController.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/common/models/finance/Receipt.php</file>
+            <file>file:/C:/UwAmp/www/eulims2/frontend/modules/finance/views/cashier/receipt.php</file>
+=======
             <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/controllers/RequestController.php</file>
             <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/views/request/view.php</file>
             <file>file:/C:/inetpub/wwwroot/eulims2/frontend/modules/lab/controllers/SampleController.php</file>
+>>>>>>> upstream/master
         </group>
     </open-files>
 </project-private>

@@ -117,7 +117,7 @@ class Receipt extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPaymentMode()
+    public function getPaymentmode()
     {
         return $this->hasOne(Paymentmode::className(), ['payment_mode_id' => 'payment_mode_id']);
     }

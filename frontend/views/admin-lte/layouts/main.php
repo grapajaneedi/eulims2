@@ -14,6 +14,16 @@ if (Yii::$app->controller->action->id === 'login') {
         ['content' => $content]
     );
 } else {
+    $session = Yii::$app->session;
+    $hideMenu= $session->get("hideMenu");
+    if(!isset($hideMenu)){
+        $hideMenu=false; 
+    }
+    if($hideMenu){
+        $sidebarclass='sidebar-collapse';
+    }else{
+        $sidebarclass='';
+    }
     frontend\assets\AppAsset::register($this);
     dmstr\web\AdminLteAsset::register($this);
 
@@ -31,6 +41,13 @@ if (Yii::$app->controller->action->id === 'login') {
         <?php $this->head() ?>
         <?php echo PHP_EOL; ?>
         <script type="text/javascript">
+            function ToggleLeftMenu(){
+                $.post("/ajax/togglemenu", {}, function(result){
+                    if(result){
+                        //
+                    }
+                });
+            }
             function PreviewReport(PDFUrl){
                 /*
                 * This Function will preview Generated PDF
@@ -86,7 +103,7 @@ if (Yii::$app->controller->action->id === 'login') {
             }
         </script>
     </head>
-    <body class="hold-transition skin-blue sidebar-collapse">
+    <body class="hold-transition skin-blue <?= $sidebarclass ?>">
     <?php $this->beginBody() ?>
     <div class="wrapper">
 

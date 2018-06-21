@@ -1,5 +1,9 @@
 <?php
 /* @var $this yii\web\View */
+
+$this->title = 'Accounting';
+$this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance/']];
+$this->params['breadcrumbs'][] = $this->title;    
 ?>
 
 <style type="text/css">

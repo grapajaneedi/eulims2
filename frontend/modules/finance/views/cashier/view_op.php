@@ -11,8 +11,16 @@ $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cashier']];
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['/finance/cashier/op']];
-$bal=($model->total_amount) -($model->collection->sub_total);
-//}
+$this->params['breadcrumbs'][] = 'View';
+$bal=($model->total_amount) -($model->collection->amount);
+//echo $model->total_amount;
+//exit;
+if($model->collection->payment_status_id <> 1){
+    $footer="<div class='row' style='margin-left: 2px;'><button value='/finance/cashier/create-receipt?op_id=$model->orderofpayment_id' id='btnCreateReceipt' class='btn btn-success' title='Receipt from OP'><i class='fa fa-save'></i> Create Receipt</button></div>";                    
+}
+else{
+    $footer="";
+}
 ?>
 <div class="orderofpayment-view">
 
@@ -77,7 +85,6 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                         'hAlign'=>'left',
                   ],
                   [
-                    //'attribute'=>'request_datetime',
                     'label'=>' ',
                     'format'=>'raw',
                     'value'=>' ',
@@ -132,6 +139,7 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                 [
                     'attribute'=>'amount',
                     'enableSorting' => false,
+                    
                     'contentOptions' => [
                         'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
                     ],
@@ -163,7 +171,8 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
                     'type'=>'primary',
                     'after'=>false,
-                    'footer'=>"<div class='row' style='margin-left: 2px;'><button value='/finance/cashier/create-receipt?op_id=$model->orderofpayment_id' id='btnCreateReceipt' class='btn btn-success' title='Receipt from OP'><i class='fa fa-save'></i> Create Receipt</button></div>",
+                    
+                    'footer'=>$footer,
        
                 ],
                 'columns' => $gridColumns,
