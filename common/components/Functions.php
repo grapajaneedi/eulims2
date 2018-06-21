@@ -156,7 +156,7 @@ class Functions extends Component{
             }
             
         }
-        return "$return";
+        return $return;
     }
     function GetCustomerList($form,$model,$disabled=false,$Label=false){
 $dataExp = <<< SCRIPT
