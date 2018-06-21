@@ -49,7 +49,7 @@ class Testreport extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['request_id', 'lab_id', 'report_num', 'report_date', 'release_date', 'reissue', 'previous_id', 'new_id'], 'required'],
+            [['request_id', 'report_date'], 'required'],
             [['request_id', 'lab_id', 'status_id', 'reissue', 'previous_id', 'new_id'], 'integer'],
             [['report_date', 'release_date'], 'safe'],
             [['report_num'], 'string', 'max' => 50],

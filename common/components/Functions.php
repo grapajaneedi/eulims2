@@ -13,6 +13,7 @@ use yii2mod\alert\Alert;
 use common\models\lab\Status;
 use common\models\finance\PaymentStatus;
 use common\models\lab\Customer;
+use common\models\lab\Request;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
 use common\models\system\Profile;

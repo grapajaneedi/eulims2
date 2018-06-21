@@ -5,6 +5,7 @@ use yii\helpers\Html;
 
     $gridColumn = [
         [
+          'attribute'=>'sample_id',
           'class' => '\kartik\grid\CheckboxColumn',
         ],
         [
@@ -22,10 +23,10 @@ use yii\helpers\Html;
           'attribute'=>'description',
           'enableSorting' => false,
         ],
-        [
-          'attribute'=>'remarks',
-          'enableSorting' => false,
-        ],
+        // [
+        //   'attribute'=>'remarks',
+        //   'enableSorting' => false,
+        // ],
          /*[
             'attribute'=>'selected_request',
             'pageSummary' => '<span style="float:right;">Total</span>',
