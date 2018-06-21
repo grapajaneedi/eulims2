@@ -11,12 +11,17 @@ use yii\data\SqlDataProvider;
 use yii\helpers\ArrayHelper;
 use kartik\dynagrid\DynaGrid;
 
+use yii\base\Model;
+
 class FinancialreportsController extends \yii\web\Controller
 {
-    public function actionCollectionsummary()
+    public function actionCollectionsummary($iyear,$imonth)
     {
+        
+        $monthName = date("F", mktime(0, 0, 0, $imonth, 10));
+        $moduleTitle = "Collection Summary for " . $monthName . ', ' . $iyear;
        // $queryA = new yii\db\Query;
-        $queryNew =  'Call eulims_finance.spGetCollectionSummary();';
+        $queryNew =  'Call eulims_finance.spGetCollectionSummary('. $iyear .','. $imonth . ');';
          $columnArray = array();
           $columnArrayNew = array();
           
@@ -45,7 +50,7 @@ class FinancialreportsController extends \yii\web\Controller
         
         
         
-        return $this->render('collectionsummary',['dataProviderCollectionSummary' => $dataProviderCollectionSummary,
+        return $this->render('collectionsummary',['moduleTitle'=>$moduleTitle,'dataProviderCollectionSummary' => $dataProviderCollectionSummary,
             'columnArray'=>$columnArray,
             'columnHeaders' =>$columnHeaders,
             'columnArrayNew'=>$columnArrayNew,
@@ -55,15 +60,19 @@ class FinancialreportsController extends \yii\web\Controller
             ]);
     }
     
-    public function actionCashreceiptjournal()
+    public function actionCashreceiptjournal($iyear,$imonth)
     {
-     $dataHeader = Yii::$app->db->createCommand('Call eulims_finance.spGetCollectionSummary()');
+     $monthName = date("F", mktime(0, 0, 0, $imonth, 10));
+     $moduleTitle = "Cash Receipt Journal for " . $monthName . ', ' . $iyear;
+        
+     $sqlQueryString = 'Call eulims_finance.spGetCollectionSummary('. $iyear .','. $imonth . ');';    
+     $dataHeader = Yii::$app->db->createCommand($sqlQueryString);
      $stringTable="<table>";
      $arrayUACS =['2-03-01-020','1-01-01-010','1-01-02-020','1-01-04-010','4-03-01-010','1-01-01-010(TF)','','',];
      
      $mysqli = new mysqli('localhost', 'eulims', 'eulims', 'eulims_finance');
      
-     $sql = 'Call eulims_finance.spGetCollectionSummary()';
+     $sql = $sqlQueryString; //'Call eulims_finance.spGetCollectionSummary()';
         $res = $mysqli->query($sql);
 
         $values = $res->fetch_all(MYSQLI_ASSOC);
@@ -105,10 +114,15 @@ class FinancialreportsController extends \yii\web\Controller
                
                 for($j=0;$j<$rowcount;$j++)
                     {
-                    $tmpValue = $tmpValue + $values[$j][$columns[$i]] ;
+                   // $tmpValue = $tmpValue + $values[$j][$columns[$i]] ;
+                   if($values[$j][$columns[$i]] !="")
+                        {
+                            $tmpValue = $tmpValue +  $values[$j][$columns[$i]];
+                        }
                     }
                     $total = $total + $tmpValue;
                     $stringTD = $stringTD . '<td class="tdValue" style="width:100px">'. number_format($tmpValue, 2, '.', ',') . '</td>';
+                //    $stringTD = $stringTD . '<td class="tdValue" style="width:100px">' .$tmpValue. '</td>';
             }
 
             $stringTable = $stringTable . '<tr><td style="width:100px"></td>
@@ -153,12 +167,27 @@ class FinancialreportsController extends \yii\web\Controller
             $stringTable = $stringTable . '</table>';
    
     
-     return $this->render('cashreceiptjournal',['dataHeader'=>$dataHeader,'stringTable'=>$stringTable,'tableWidth'=>$tableWidth,'values'=>$test]);
+     return $this->render('cashreceiptjournal',['moduleTitle'=>$moduleTitle,'stringTable'=>$stringTable,'tableWidth'=>$tableWidth,'values'=>$test]);
     }
     
     
     public function actionIndex()
     {
+        $model = new YearMonth();
+        $listYear =['2018','2017','2016','2015'];
+        $listMonth = ["0" => "All",
+                    "1" => "January", "2" => "February", "3" => "March", "4" => "April",
+                    "5" => "May", "6" => "June", "7" => "July", "8" => "August",
+                    "9" => "September", "10" => "October", "11" => "November", "12" => "December"];
+        
+        
+        return $this->render('index',['model'=>$model,'listYear'=>$listYear,'listMonth'=>$listMonth]);
+    }
+    
+     public function actionSelectpage()
+    {
+     //   $model = new YearMonth();
+      //  $listYear =['2011','2012','2013','2014'];
         return $this->render('index');
     }
     
@@ -174,4 +203,27 @@ class FinancialreportsController extends \yii\web\Controller
     
     
 
+}
+
+
+
+
+
+
+
+class YearMonth extends Model
+{
+    public $intYear;
+    public $intMonth;
+    
+    public function attributeLabels()
+    {
+        return [
+             'intYear' => 'Year',
+            'intMonth' => 'Month'
+           
+          
+        ];
+    }
+    
 }

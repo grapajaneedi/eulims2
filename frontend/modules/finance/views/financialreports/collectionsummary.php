@@ -5,7 +5,9 @@ use yii\helpers\Html;
 
 //var_dump($dataProviderCollectionSummary);
 
-
+$this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
+$this->params['breadcrumbs'][] = ['label' => 'Financial Reports', 'url' => ['/finance/financialreports']];
+$this->params['breadcrumbs'][] = $moduleTitle;
 
 $i=0;
             
@@ -27,11 +29,7 @@ $i=0;
                 $columnArrayNew [$i]['format']= 'raw';
                 
                 $columnArrayNew [$i]['pageSummary']= true;
-              //  $columnArrayNew [$i]['format'] = ['decimal', 2];
-              //  $columnArrayNew [$i]['contentOptions']= function ($model, $key, $index, $column) {
-              //              return ['style' => 'background-color:' 
-              //                  . ($column->renderDataCell($model, $key, $index) == 0 ? 'red' : 'blue')];
-             //           };
+             
                 
               
                 $i++;
@@ -56,7 +54,7 @@ $i=0;
 }
 
 </style>
-<h1>Collection Summary</h1>
+
 
 
 
