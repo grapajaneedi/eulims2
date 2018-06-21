@@ -112,11 +112,9 @@ class RequestController extends Controller
     public function actionPdf(){
         $pdf=new \common\components\MyPDF();
         $Content="<button>Click me</button>";
-<<<<<<< HEAD
-        $pdf->renderPDF($Content);
-=======
+
         $pdf->renderPDF($Content,NULL,NULL,['orientation'=> Pdf::ORIENT_LANDSCAPE]);
->>>>>>> upstream/master
+
         
     }
 

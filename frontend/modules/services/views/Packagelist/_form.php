@@ -82,9 +82,9 @@ $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sa
          </div>
 
          <div class="row" style="float: right;padding-right: 30px">
-         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['disabled'=>$disabled,'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
          <?php if($model->isNewRecord){ ?>
-         <?= Html::resetButton('Reset', ['disabled'=>$disabled,'class' => 'btn btn-danger']) ?>
+         <?= Html::resetButton('Reset', ['class' => 'btn btn-danger']) ?>
          <?php } ?>
          <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
      </div>

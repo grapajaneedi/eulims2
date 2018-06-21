@@ -191,7 +191,7 @@ use common\models\services\Sampletype;
         </div>
     </div>
 
-    <?= $form->field($model, 'tests')->textarea(['rows' => 4, 'readonly' => true]) ?>
+
     <div class="row" style="float: right;padding-right: 30px">
     <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         <?php if($model->isNewRecord){ ?>
