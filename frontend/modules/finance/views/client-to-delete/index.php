@@ -10,7 +10,7 @@ use common\models\lab\Customer;
 /* @var $searchModel common\models\finance\clientSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'On Account';
+$this->title = 'Clients';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance/']];
 $this->params['breadcrumbs'][] = ['label' => 'Billing', 'url' => ['/finance/billing/']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -30,8 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'hover' => true,
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
-            'heading' => '<i class="fa fa-users"></i>  Manage On Account',
-            'before'=>Html::tag('button','Add On Account', ['title'=>'Add On Account','value'=>'/finance/billing/clientcreate','class' => 'btn btn-success','onclick'=>'LoadModal(this.title, this.value)']),
+            'heading' => '<i class="fa fa-users"></i>  Manage Clients',
+            'before'=>Html::a('Add New Client', ['create'], ['title'=>'Add New Client','value'=>'/finance/client/create','class' => 'btn btn-success','onclick'=>'LoadModal(this.title)']),
         ],
         'pjax' => true, // pjax is set to always true for this demo
         'pjaxSettings' => [
@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             [
                 'attribute' => 'account_number', 
-                'label'=>'On Account #',
+                'label'=>'Account #',
                 'value' => function ($model, $key, $index, $widget) { 
                     return $model->account_number;
                 },

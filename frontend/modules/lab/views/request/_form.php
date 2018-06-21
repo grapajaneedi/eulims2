@@ -16,6 +16,7 @@ use common\models\lab\Purpose;
 use kartik\widgets\SwitchInput;
 use common\components\Functions;
 use yii\bootstrap\Modal;
+use common\models\lab\RequestType;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
@@ -306,17 +307,14 @@ if($model->lab_id==3){
 </div>
 <div class="row">
     <div class="col-md-6">
-    <?php echo $form->field($model, 'is_referral')->widget(SwitchInput::classname(), [
-        'disabled' => $disabled,
+        <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(RequestType::find()->all(),'request_type_id','request_type'),
+        'language' => 'en',
+        'options' => ['placeholder' => 'Select Purpose','disabled'=>$disabled],
         'pluginOptions' => [
-            'size' => 'small',
-            'handleWidth'=>'53',
-            'onColor' => 'success',
-            'offColor' => 'danger',
-            'onText' => 'Yes',
-            'offText' => 'No',
-        ]
-    ])->label("Referral"); ?>
+            'allowClear' => true
+        ],
+    ])->label('Request Type'); ?>
     </div>
     <div class="col-md-6">
     <label class="control-label">Report Due</label>

@@ -48,6 +48,7 @@ class RequestSearch extends Request
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['request_ref_num'=>SORT_ASC]]
         ]);
 
         $this->load($params);

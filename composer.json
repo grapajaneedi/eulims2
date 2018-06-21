@@ -115,7 +115,8 @@
         "kartik-v/yii2-editable": "@dev",
         "kartik-v/yii2-sortable-input": "dev-master",
         "linslin/yii2-curl": "*",
-        "skeeks/yii2-curl": "*"
+        "skeeks/yii2-curl": "*",
+        "kartik-v/yii2-checkbox-x": "*"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "^2.0"

@@ -29,7 +29,7 @@ use yii\db\ActiveRecord;
  * @property int $posted
  * @property int $status_id
  * @property int $selected 
- * @property int $is_referral
+ * @property int $request_type_id
  *
  * @property string $position 
  * @property string $recommended_due_date 
@@ -78,6 +78,12 @@ class Request extends \yii\db\ActiveRecord
             ]
         ];
     }
+     public function beforeSave($insert) {
+        if ($insert) {
+            $this->request_ref_num=NULL;
+        }
+        return parent::beforeSave($insert);
+    }
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
@@ -91,9 +97,9 @@ class Request extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_ids', 'discount_id', 'purpose_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
+            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_ids', 'discount_id', 'purpose_id', 'report_due', 'conforme', 'receivedBy', 'created_at','request_type_id'], 'required'],
             [['request_datetime', 'report_due', 'recommended_due_date', 'est_date_completion', 'equipment_release_date', 'certificate_release_date'], 'safe'],
-            [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'created_at', 'posted', 'status_id', 'selected', 'is_referral'], 'integer'],
+            [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'created_at', 'posted', 'status_id', 'selected', 'request_type_id'], 'integer'],
             [['discount', 'total'], 'number'],
             [['request_ref_num', 'modeofrelease_ids', 'conforme', 'receivedBy'], 'string', 'max' => 50],
             [['position', 'items_receive_by', 'released_by', 'received_by'], 'string', 'max' => 100],
@@ -134,7 +140,7 @@ class Request extends \yii\db\ActiveRecord
             'status_id' => 'Status',
             'customer_name'=>'Customer Name',
             'selected' => 'Selected',
-            'is_referral' => 'Is Referral', 
+            'request_type_id' => 'Request_Type', 
             'position' => 'Position',
             'recommended_due_date' => 'Recommended Due Date',
             'est_date_completion' => 'Estimated Date of Completion',
