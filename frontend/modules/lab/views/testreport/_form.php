@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\components\Functions;
 use kartik\widgets\DatePicker;
+use kartik\widgets\SwitchInput;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Testreport */
@@ -18,9 +20,8 @@ use kartik\widgets\DatePicker;
 
     $func=new Functions();
     echo $func->GetRequestList($form,$model,false,"Request");
-    ?> 
+    ?>
 
-    <!-- <?= $form->field($model, 'lab_id')->textInput() ?> -->
 
     <!-- <?= $form->field($model, 'report_num')->textInput(['maxlength' => true]) ?> -->
 
@@ -37,6 +38,21 @@ use kartik\widgets\DatePicker;
          ]
      ]);
      ?>
+
+     <div class="row-form">
+        <?php echo $form->field($model, 'lab_id')->widget(SwitchInput::classname(), [
+        //'disabled' => $disabled,
+            'name'=>'chkmultiple',
+        'pluginOptions' => [
+            'size' => 'small',
+            'handleWidth'=>'53',
+            'onColor' => 'success',
+            'offColor' => 'danger',
+            'onText' => 'Yes',
+            'offText' => 'No',
+        ]
+    ])->label("Multiple Report?"); ?>
+    </div>
 
     <!-- <?= $form->field($model, 'status_id')->textInput() ?> -->
 

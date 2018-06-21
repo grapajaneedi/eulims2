@@ -69,10 +69,49 @@ class TestreportController extends Controller
     {
         $model = new Testreport();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            //on form submit the lab_id is used as flag for is_multiple
+            //get the request id
+            $req_id = $model->request_id;
+            //query for the request id info//get labid
+            $request = Request::findOne($req_id);
+
+            //check for config if the lab is active
+            $tr_config = Testreportconfig::findOne()->where(['lab_id'=>$Request->lab_id]);
+            if(!$tr_config){
+                //throw error
+                throw new \yii\base\Exception( "Lab Configuration is Inactive!" );
+                exit();
+            }
+            //check if multiple
+            if($model->lab_id){
+                //if multiple //code here
+            }else{
+                //if not multiple //code here
+                //retrieve the lab info using the $tr_config
+                $lab = Lab::findOne($tr_config->lab_id);
+
+                //update lab id on model
+                $model->lab_id=$request->lab_id;
+                //update the testreport number
+                $model->report_num= date('mmddY').'-'.$lab->labname.'-'.$tr_config->number;
+                if($model->save()){
+                    //update the config
+                    $tr_config->number = $tr_config->number +1 ; 
+                    //save the sample IDS for samples involve
+                    $sampleids =$_POST['Sample'];
+                    foreach ($sampleids as $key => $value) {
+                        $trsample = new TestreportSample();
+                        $trsample->testreport_id=$model->testreport_id;
+                        $trsample->sample_id=$value['sample_id'];
+                        $trsample->save();
+                     }
+                }
+            }
+
+            
             return $this->redirect(['view', 'id' => $model->testreport_id]);
         }
-
 
         if(Yii::$app->request->isAjax)
             return $this->renderAjax('create', [
