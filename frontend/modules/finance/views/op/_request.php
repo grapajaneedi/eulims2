@@ -3,46 +3,10 @@ use kartik\grid\GridView;
 use yii\helpers\Html;
 $js=<<<SCRIPT
    $(".kv-row-checkbox").click(function(){
-      // alert(this.value);
-         
-        var keys = $('#grid').yiiGridView('getSelectedRows');
-        var keylist= keys.join();
-        $("#op-requestids").val(keys.join());
-        $.post({
-            url: '/finance/op/calculate-total?id='+keylist, // your controller action
-          // data: {keylist: keylist},
-            success: function(data) {
-                var tot=parseFloat(data);
-                var total=CurrencyFormat(tot,2);
-                $('#total').html(total);
-                 var payment_mode=$('#op-payment_mode_id').val()
-                if(payment_mode==4){
-                    wallet=parseInt($('#wallet').val());
-                    totalVal = parseFloat($('#total').html().replace(/[^0-9-.]/g, ''));
-                   
-                    if( totalVal > wallet) {
-                       
-                       swal("Insufficient customer wallet");
-                      $('#op-purpose').prop('disabled', true);
-                      $('#createOP').prop('disabled', true);
-                    
-                    }
-                    else{
-                        if(total != 0){
-                            $('#op-purpose').prop('disabled', false);
-                            $('#createOP').prop('disabled', false);
-                        }
-                       
-                    }
-                }
-            },
-        });
-      
-        
+        settotal();
    });    
    $(".select-on-check-all").change(function(){
-        var keys = $('#grid').yiiGridView('getSelectedRows');
-        $("#op-requestids").val(keys.join());
+        settotal();
    });
   
 SCRIPT;
@@ -125,3 +89,39 @@ $this->registerJs($js);
              
          ],*/
     ]); ?>
+<script type="text/javascript">
+    function settotal(){
+         var keys = $('#grid').yiiGridView('getSelectedRows');
+        var keylist= keys.join();
+        $("#op-requestids").val(keys.join());
+        $.post({
+            url: '/finance/op/calculate-total?id='+keylist, // your controller action
+            success: function(data) {
+                var tot=parseFloat(data);
+                var total=CurrencyFormat(tot,2);
+                $('#total').html(total);
+                 var payment_mode=$('#op-payment_mode_id').val()
+                if(payment_mode===4){
+                    wallet=parseInt($('#wallet').val());
+                    totalVal = parseFloat($('#total').html().replace(/[^0-9-.]/g, ''));
+                   
+                    if( totalVal > wallet) {
+                       
+                       swal("Insufficient customer wallet");
+                      $('#op-purpose').prop('disabled', true);
+                      $('#createOP').prop('disabled', true);
+                    
+                    }
+                    else{
+                        if(total !== 0){
+                            $('#op-purpose').prop('disabled', false);
+                            $('#createOP').prop('disabled', false);
+                        }
+                       
+                    }
+                }
+            }
+        });
+    }
+    
+</script>
