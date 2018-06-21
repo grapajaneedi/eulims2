@@ -231,6 +231,7 @@ $DiscountContent=GridView::widget([
             <div class="panel-title"></div>
         </div>
         <div class="panel-body">
+            <button type="button" style="margin-bottom: 5px" onclick="LoadModal('Create Laboratory','/system/configurations/create')" class="btn btn-success"><i class="fa fa-address-card-o"> </i> Create Laboratory</button>
     <?php
             echo TabsX::widget([
                 'position' => TabsX::POS_ABOVE,

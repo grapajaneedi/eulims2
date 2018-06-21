@@ -71,13 +71,21 @@ class ConfigurationsController extends Controller
     public function actionCreate()
     {
         $model = new Lab();
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->lab_id]);
+            return $this->redirect(['/system/configurations/index']);
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            $model->labcount=0;
+            $model->active=0;
+            $model->nextrequestcode='';
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('create', [
+                    'model' => $model,
+                ]);
+            }else{
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
         }
     }
 
