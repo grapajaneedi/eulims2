@@ -55,20 +55,29 @@ SCRIPT;
 $this->registerJs($js);
 ?>
 <div class="lab-form">
-
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(); 
+    if($model->isNewRecord){
+        echo $form->field($model, 'lab_id')->hiddenInput()->label(false);
+        echo $form->field($model, 'active')->hiddenInput()->label(false);
+    }
+    ?>
+    
     <div class="row">
         <div class="col-md-6">
         <?php
-        echo $form->field($model, 'lab_id')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(Lab::find()->asArray()->all(), 'lab_id', 'labname'),
-            'language' => 'en-gb',
-            'options' => ['placeholder' => 'Select a Laboratory'],
-            'pluginOptions' => [
-                'allowClear' => true,
-                'disabled' => true,
-            ],
-        ])->label('Laboratory');
+        if($model->isNewRecord){
+            echo $form->field($model, 'labname')->textInput();
+        }else{
+            echo $form->field($model, 'lab_id')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(Lab::find()->asArray()->all(), 'lab_id', 'labname'),
+                'language' => 'en-gb',
+                'options' => ['placeholder' => 'Select a Laboratory'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'disabled' => true,
+                ],
+            ])->label('Laboratory');
+        }
         ?>
         </div>
         <div class="col-md-6">
@@ -83,6 +92,7 @@ $this->registerJs($js);
     <?= $form->field($model, 'nextrequestcode')->textInput(['maxlength' => true,'readonly'=>true])->label('Next Request Code') ?>
         </div>
      </div>
+    <?php if(!$model->isNewRecord){ ?>
     <div class="row">
         <?php if(\Yii::$app->user->can('access-configure-template')){ ?> 
         <div class="col-md-6">
@@ -107,6 +117,7 @@ $this->registerJs($js);
             ?>
         </div>
     </div>
+    <?php } ?>
     <hr>
     <div class="row" style="padding-bottom: 15px">
         <div class="collapse" id="collapseExample">

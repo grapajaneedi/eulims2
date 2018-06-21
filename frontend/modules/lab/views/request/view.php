@@ -79,7 +79,7 @@ if($Request_Ref){
         <img src="/images/cancelled.png" alt="" style="width: 300px;margin-left: 80px"/>
         <div class="panel panel-primary">
             <div class="panel-heading"></div>
-            <table class="table table-bordered table-responsive">
+            <table class="table table-condensed table-hover table-striped table-responsive">
                  <tr>
                     <th style="background-color: lightgray">Date Cancelled</th>
                     <td><?= $DateCancelled ?></td>
@@ -89,8 +89,8 @@ if($Request_Ref){
                     <td><?= $Request_Ref ?></td>
                 </tr>
                 <tr>
-                    <th style="width: 180px;background-color: lightgray">Reason of Cancellation</th>
-                    <td style="width: 250px"><?= $Reasons ?></td>
+                    <th style="width: 120px;background-color: lightgray">Reason of Cancellation</th>
+                    <td style="width: 230px"><?= $Reasons ?></td>
                 </tr>
                 <tr>
                     <th style="background-color: lightgray">Cancelled By</th>
