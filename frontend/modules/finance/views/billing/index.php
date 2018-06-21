@@ -25,11 +25,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="box-body">
    
     <div class="row">
-        <div class="col-md-3 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/billing/client"><img class="imgHover img-responsive center-block" src="/images/clientssquare.png" style="height:150px"/></a></div>
-        <div class="col-md-3 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/billing/invoices"><img class="imgHover img-responsive center-block" src="/images/invoicesquare.png" style="height:150px"/></a></div>
-        <div class="col-md-3 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/billing/reports"><img class="imgHover img-responsive center-block" src="/images/reportsquare.png" style="height:150px"/></a></div>
-        <div class="col-md-3 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/billing/ar"><img class="imgHover img-responsive center-block" src="/images/agingsquare.png" style="height:150px"/></a></div>
-        <div class="col-md-3 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/billing/manager"><img class="imgHover img-responsive center-block" src="/images/billingmanagersquare.png" style="height:150px"/></a></div>
+        <div class="col-md-2 col-md-offset-1 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/billing/client"><img class="imgHover img-responsive center-block" src="/images/clientssquare.png" style="height:150px"/></a></div>
+        <div class="col-md-2 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/billing/invoices"><img class="imgHover img-responsive center-block" src="/images/invoicesquare.png" style="height:150px"/></a></div>
+        <div class="col-md-2 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/billing/reports"><img class="imgHover img-responsive center-block" src="/images/reportsquare.png" style="height:150px"/></a></div>
+        <div class="col-md-2 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/billing/ar"><img class="imgHover img-responsive center-block" src="/images/agingsquare.png" style="height:150px"/></a></div>
+        <div class="col-md-2 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/billing/manager"><img class="imgHover img-responsive center-block" src="/images/billingmanagersquare.png" style="height:150px"/></a></div>
        
     </div>
    

@@ -204,6 +204,7 @@ class RequestController extends Controller
             date_add($date2,date_interval_create_from_date_string("1 day"));
             $model->request_datetime=date("Y-m-d h:i:s");
             $model->report_due=date_format($date2,"Y-m-d");
+            $model->request_ref_num=null;
             $model->created_at=date('U');
             $model->rstl_id= $GLOBALS['rstl_id'];
             $model->payment_type_id=1;
@@ -212,6 +213,7 @@ class RequestController extends Controller
             $model->discount='0.00';
             $model->total=0.00;
             $model->posted=0;
+            $model->request_type_id=1;
             $model->status_id=1;
             $model->receivedBy=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
             if(\Yii::$app->request->isAjax){

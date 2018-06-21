@@ -88,6 +88,7 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
             'kartik\\plugins\\popover\\' => 23,
             'kartik\\plugins\\fileinput\\' => 25,
             'kartik\\plugins\\dateformatter\\' => 29,
+            'kartik\\plugins\\checkbox\\' => 24,
             'kartik\\mpdf\\' => 12,
             'kartik\\helpers\\' => 15,
             'kartik\\form\\' => 12,
@@ -98,6 +99,7 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
             'kartik\\daterange\\' => 17,
             'kartik\\datecontrol\\' => 19,
             'kartik\\date\\' => 12,
+            'kartik\\checkbox\\' => 16,
             'kartik\\base\\' => 12,
         ),
         'j' => 
@@ -356,6 +358,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         array (
             0 => __DIR__ . '/..' . '/kartik-v/php-date-formatter',
         ),
+        'kartik\\plugins\\checkbox\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/bootstrap-checkbox-x',
+        ),
         'kartik\\mpdf\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-mpdf',
@@ -395,6 +401,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'kartik\\date\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-datepicker',
+        ),
+        'kartik\\checkbox\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-checkbox-x',
         ),
         'kartik\\base\\' => 
         array (

@@ -393,22 +393,6 @@ if($Request_Ref){
                             ]),
                     '{toggleData}',
                 ],
-                /*'toolbar' => [
-                    [
-                        'content'=>
-                            Html::button('<i class="glyphicon glyphicon-plus"></i>', [
-                                'type'=>'button', 
-                                //'title'=>Yii::t('kvgrid', 'Add Book'), 
-                                'class'=>'btn btn-success'
-                            ]) . ' '.
-                            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['request-grid'], [
-                                'class' => 'btn btn-default', 
-                                //'title' => Yii::t('kvgrid', 'Reset Grid')
-                            ]),
-                    ],
-                    //'{export}',
-                    //'{toggleData}'
-                ],*/
             ]);
         ?>
         </div>
