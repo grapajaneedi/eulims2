@@ -87,7 +87,13 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
 
         </div>
         <div class="col-sm-6">
-        <?= $form->field($model, 'code')->textInput(['readonly' => true]) ?>
+        <?php
+       // $form->field($model, 'code')->hiddenInput()->label(false) 
+        ?>
+
+        <?= Html::label('Quantity', 'xxx') ?>
+        <?= Html::textInput('xxx', '', ['class' => 'form-control'], ['readonly' => true]) ?>
+
         </div>
     </div>
 
@@ -96,11 +102,12 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
         <?= $form->field($model, 'unit_cost')->textInput(['readonly' => true]) ?>
         </div>
         <div class="col-sm-6">
-      
+        <?= Html::label('Total', 'xxx') ?>
+        <?= Html::textInput('xxx', '', ['class' => 'form-control'], ['readonly' => true]) ?>
         </div>
     </div>
     
-    <?= $form->field($model, 'tests')->textarea(['rows' => 4, 'readonly' => true]) ?>
+                        
     <div class="row" style="float: right;padding-right: 30px">
     <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         <?php if($model->isNewRecord){ ?>

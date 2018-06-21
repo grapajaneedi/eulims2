@@ -44,16 +44,16 @@ class MyPDF implements PDFEnum{
      */
     public function renderPDF($Content,$Header=NULL,$Footer=NULL,$options=[]){
         // Default Options values
-<<<<<<< HEAD
+
         //if(!array_key_exists('orientation',$options)){
         //    $options['orientation']=Pdf::ORIENT_LANDSCAPE;
         //}
 
-=======
+
         if(!array_key_exists('orientation',$options)){
             $options['orientation']=Pdf::ORIENT_PORTRAIT;
         }
->>>>>>> upstream/master
+
         if(!array_key_exists('marginLeft',$options)){
             $options['marginLeft']=2.0;
         }
@@ -77,8 +77,6 @@ class MyPDF implements PDFEnum{
         }
 
       
-
-        
         if(!array_key_exists('destination',$options)){
             $options['destination']=Pdf::DEST_BROWSER;
         }
