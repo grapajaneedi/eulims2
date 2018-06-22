@@ -575,8 +575,13 @@ $this->registerJs("
             $session->close();
         }
         if (isset($session['cancelmessage'])) {
-            $sweetalert->CrudAlert("Successfully Cancel","WARNING",true);
+            $sweetalert->CrudAlert("Successfully Cancelled","WARNING",true);
             unset($session['cancelmessage']);
+            $session->close();
+        }
+        if (isset($session['requestmessage'])) {
+            $sweetalert->CrudAlert("Successfully Generated Reference Number and Sample Code","WARNING",true);
+            unset($session['requestmessage']);
             $session->close();
         }
     }
