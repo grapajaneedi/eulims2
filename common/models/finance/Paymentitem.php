@@ -15,6 +15,7 @@ use Yii;
  * @property string $details
  * @property double $amount
  * @property int $cancelled
+ * @property int $status
  *
  * @property Orderofpayment $orderofpayment
  */
@@ -42,7 +43,8 @@ class Paymentitem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'request_id', 'referral_id', 'orderofpayment_id', 'cancelled'], 'integer'],
+            [['rstl_id', 'request_id', 'orderofpayment_id', 'details', 'amount'], 'required'],
+            [['rstl_id', 'request_id', 'referral_id', 'orderofpayment_id', 'cancelled', 'status'], 'integer'],
             [['amount'], 'number'],
             [['details'], 'string', 'max' => 50],
             [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Op::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
@@ -62,7 +64,8 @@ class Paymentitem extends \yii\db\ActiveRecord
             'orderofpayment_id' => 'Orderofpayment ID',
             'details' => 'Details',
             'amount' => 'Amount',
-            'cancelled' => 'Cancelled',             
+            'cancelled' => 'Cancelled',
+            'status' => 'Status',
         ];
     }
 
@@ -71,7 +74,6 @@ class Paymentitem extends \yii\db\ActiveRecord
      */
     public function getOrderofpayment()
     {
-        return $this->hasOne(Orderofpayment::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+        return $this->hasOne(Op::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
-   
 }
