@@ -17,7 +17,6 @@ use common\models\lab\Request;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
 use common\models\system\Profile;
-use common\models\lab\Request;
 use common\models\lab\Sample;
 use common\models\lab\Samplecode;
 use common\models\lab\Lab;

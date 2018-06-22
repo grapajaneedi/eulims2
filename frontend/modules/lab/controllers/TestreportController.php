@@ -10,6 +10,10 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\lab\Sample;
 use yii\data\ActiveDataProvider;
+use common\models\lab\Request;
+use common\models\lab\Testreportconfig;
+use common\models\lab\Lab;
+use common\models\lab\TestreportSample;
 
 
 /**
@@ -55,8 +59,16 @@ class TestreportController extends Controller
      */
     public function actionView($id)
     {
+        //retrieve the testreportsamples
+        $query = TestreportSample::find()->where(['testreport_id'=>$id]);
+        $sampledataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        //retrieve the analysis using the sample involve
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'trsamples'=>$sampledataProvider,
         ]);
     }
 
@@ -77,10 +89,10 @@ class TestreportController extends Controller
             $request = Request::findOne($req_id);
 
             //check for config if the lab is active
-            $tr_config = Testreportconfig::findOne()->where(['lab_id'=>$Request->lab_id]);
+            $tr_config = Testreportconfig::find()->where(['lab_id'=>$request->lab_id])->one();
             if(!$tr_config){
                 //throw error
-                throw new \yii\base\Exception( "Lab Configuration is Inactive!" );
+                throw new \yii\base\Exception( "Lab Configuration for the ref. num '$request->request_ref_num' is Inactive!" );
                 exit();
             }
             //check if multiple
@@ -94,7 +106,9 @@ class TestreportController extends Controller
                 //update lab id on model
                 $model->lab_id=$request->lab_id;
                 //update the testreport number
-                $model->report_num= date('mmddY').'-'.$lab->labname.'-'.$tr_config->number;
+                $model->report_num= date('mdY').'-'.$lab->labcode.'-'.$tr_config->number;
+                //reformat the report date
+                $model->report_date = date('Y-m-d', strtotime($model->report_date));
                 if($model->save()){
                     //update the config
                     $tr_config->number = $tr_config->number +1 ; 
@@ -109,7 +123,6 @@ class TestreportController extends Controller
                 }
             }
 
-            
             return $this->redirect(['view', 'id' => $model->testreport_id]);
         }
 
