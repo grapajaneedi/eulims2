@@ -191,12 +191,12 @@ use common\models\services\Sampletype;
         </div>
     </div>
 
-    <div class="form-group" style="padding-bottom: 3px;">
-        <div style="float:right;">
-            <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-            <?= Html::button('Cancel', ['class' => 'btn', 'onclick'=>'closeDialog()']) ?>
-            <br>
-        </div>
+
+    <div class="row" style="float: right;padding-right: 30px">
+    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?php if($model->isNewRecord){ ?>
+        <?php } ?>
+    <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

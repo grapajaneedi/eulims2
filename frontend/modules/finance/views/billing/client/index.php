@@ -6,6 +6,8 @@ use common\models\finance\Client;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Customer;
 use kartik\widgets\DatePicker;
+use kartik\daterange\DateRangePicker;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\clientSearch */
@@ -15,6 +17,7 @@ $this->title = 'On Account';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance/']];
 $this->params['breadcrumbs'][] = ['label' => 'Billing', 'url' => ['/finance/billing/']];
 $this->params['breadcrumbs'][] = $this->title;
+$Buttontemplate='{view}{update}{delete}';
 ?>
 <div class="client-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -71,34 +74,70 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw'
             ],
             'company_name',
-            [
-                'label'=>'Signature Date',
-                'attribute'=>'signature_date',
-                'value'=>function($model){
-                    return date('d/m/Y H:i:s',strtotime($model->signature_date));
+             [
+               'attribute'=>'signature_date',
+               'filterType'=> GridView::FILTER_DATE_RANGE,
+               'value' => function($model) {
+                    return date_format(date_create($model->signature_date),"m/d/Y");
                 },
-                'filter'=>DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'request_datetime',
-                    'value' => date('d-M-Y', strtotime('+2 days')),
-                    'options' => ['placeholder' => 'Select date ...'],
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true
-                    ]
-                ]),
-            ],
-            [
-                'attribute' => 'signature_date', 
-                'label'=>'Signature Date',
-                'value'=>function($model){
-                    return date('m/d/Y', strtotime($model->signature_date));
-                }
+                'filterWidgetOptions' => ([
+                     'model'=>$model,
+                     'useWithAddon'=>true,
+                     'attribute'=>'signature_date',
+                     'startAttribute'=>'StartDate',
+                     'endAttribute'=>'EndDate',
+                     'presetDropdown'=>TRUE,
+                     'convertFormat'=>TRUE,
+                     'pluginOptions'=>[
+                        'allowClear' => true,
+                        'todayHighlight' => true,
+                        'cancel'=>'Clear',
+                        'locale'=>[
+                            'format'=>'Y-m-d',
+                            'separator'=>' to ',
+                        ],
+                         'opens'=>'left',
+                      ],
+                      'pluginEvents'=>[
+                        "cancel.daterangepicker" => "function(ev, picker) {
+                        picker.element[0].children[1].textContent = '';
+                        $(picker.element[0].nextElementSibling).val('').trigger('change');
+                        }",
+                        
+                        'apply.daterangepicker' => 'function(ev, picker) { 
+                        var val = picker.startDate.format(picker.locale.format) + picker.locale.separator +
+                        picker.endDate.format(picker.locale.format);
+
+                        picker.element[0].children[1].textContent = val;
+                        $(picker.element[0].nextElementSibling).val(val);
+                        }',
+                      ] 
+                ]),        
+               
             ],
             // 'signed',
             // 'active',
-
-            ['class' => 'kartik\grid\ActionColumn'],
-        ],
+            [
+                'class' => 'kartik\grid\ActionColumn',
+                'template' => $Buttontemplate,
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => Url::to(['/finance/billing/clientview/','id'=>$model->client_id]), 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Client")]);
+                    },
+                    'update' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => Url::to(['/finance/billing/clientupdate/','id'=>$model->client_id]), 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Client")]);
+                    },
+                    'delete' => function($url, $model){
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'id' => $model->client_id], [
+                        "class" => "btn btn-danger",
+                        "data" => [
+                            "confirm" => "Are you absolutely sure you want to remove on Account of '<strong>".$model->customer->customer_name."'</strong>?",
+                            "method" => "post",
+                        ],
+                    ]);
+                    }
+                ],
+            ],
+    ],
     ]); ?>
 </div>

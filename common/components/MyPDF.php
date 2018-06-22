@@ -44,9 +44,16 @@ class MyPDF implements PDFEnum{
      */
     public function renderPDF($Content,$Header=NULL,$Footer=NULL,$options=[]){
         // Default Options values
+
+        //if(!array_key_exists('orientation',$options)){
+        //    $options['orientation']=Pdf::ORIENT_LANDSCAPE;
+        //}
+
+
         if(!array_key_exists('orientation',$options)){
             $options['orientation']=Pdf::ORIENT_PORTRAIT;
         }
+
         if(!array_key_exists('marginLeft',$options)){
             $options['marginLeft']=2.0;
         }
@@ -68,6 +75,8 @@ class MyPDF implements PDFEnum{
         if(!array_key_exists('format',$options)){
             $options['format']=Pdf::FORMAT_A4;
         }
+
+      
         if(!array_key_exists('destination',$options)){
             $options['destination']=Pdf::DEST_BROWSER;
         }
@@ -87,6 +96,7 @@ class MyPDF implements PDFEnum{
             'SetHeader'=>[$Header], 
             'SetFooter'=>[$Footer]
         ];
+        
         $mPDF->render();
         exit;
     } 

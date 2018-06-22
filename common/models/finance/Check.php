@@ -8,13 +8,14 @@ use Yii;
  * This is the model class for table "tbl_check".
  *
  * @property int $check_id
+ * @property int $receipt_id 
  * @property string $payee
  * @property string $bank
  * @property string $checknumber
  * @property string $checkdate
  * @property double $amount
  *
- * @property Receipt[] $receipts
+ * @property Receipt $receipt
  */
 class Check extends \yii\db\ActiveRecord
 {
@@ -40,11 +41,13 @@ class Check extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['payee', 'bank', 'checknumber', 'checkdate', 'amount'], 'required'],
+            [['receipt_id', 'payee', 'bank', 'checknumber', 'checkdate', 'amount'], 'required'],
+            [['receipt_id'], 'integer'],
             [['checkdate'], 'safe'],
             [['amount'], 'number'],
             [['payee'], 'string', 'max' => 200],
             [['bank', 'checknumber'], 'string', 'max' => 25],
+            [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::className(), 'targetAttribute' => ['receipt_id' => 'receipt_id']], 
         ];
     }
 
@@ -55,6 +58,7 @@ class Check extends \yii\db\ActiveRecord
     {
         return [
             'check_id' => 'Check ID',
+            'receipt_id' => 'Receipt ID',
             'payee' => 'Payee',
             'bank' => 'Bank',
             'checknumber' => 'Checknumber',
@@ -66,8 +70,8 @@ class Check extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getReceipts()
+    public function getReceipt()
     {
-        return $this->hasMany(Receipt::className(), ['check_id' => 'check_id']);
+        return $this->hasOne(Receipt::className(), ['receipt_id' => 'receipt_id']);
     }
 }

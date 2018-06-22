@@ -9,7 +9,7 @@ use common\models\finance\Paymentitem;
 use common\models\finance\Receipt;
 use common\models\finance\ReceiptSearch;
 use common\models\finance\Orseries;
-
+use common\models\finance\Collection;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
 class CashierController extends \yii\web\Controller
@@ -110,12 +110,26 @@ class CashierController extends \yii\web\Controller
     }
     public function actionViewReceipt($receiptid)
     { 
+        $receipt=$this->findModelReceipt($receiptid);
+        $collection_id=$receipt->collection_id;
+        $collection=$this->findModelCollection($collection_id);
+        $op_id=$collection->orderofpayment_id;
+        
+        $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $op_id])->andWhere(['status' => 1]);
+        $paymentitemDataProvider = new ActiveDataProvider([
+                'query' => $paymentitem_Query,
+                'pagination' => [
+                'pageSize' => 10,
+                ],
+        ]);
         return $this->render('view_receipt', [
-            'model' => $this->findModelReceipt($receiptid),
+            'model' => $receipt,
+            'op_model'=>$this->findModel($op_id),
+            'paymentitemDataProvider' => $paymentitemDataProvider,
         ]);
 
     }
-      protected function findModelReceipt($id)
+    protected function findModelReceipt($id)
     {
         if (($model = Receipt::findOne($id)) !== null) {
             return $model;
@@ -123,6 +137,7 @@ class CashierController extends \yii\web\Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+   
     public function actionNextor($id)
     {
         if(!empty($id))
@@ -145,10 +160,86 @@ class CashierController extends \yii\web\Controller
         }
      }
     //End of Receipt
+     //------------DEPOSIT
     public function actionDeposit()
     {
         return $this->render('deposit');
     }
+    //------------------END of DEPOSIT
+    //------------COLLECTION
+    protected function findModelCollection($id)
+   {
+       if (($model = Collection::findOne($id)) !== null) {
+           return $model;
+       } else {
+           throw new NotFoundHttpException('The requested page does not exist.');
+       }
+   }
+    protected function findPaymentitem($id)
+   {
+       if (($model = Paymentitem::findOne($id)) !== null) {
+           return $model;
+       } else {
+           throw new NotFoundHttpException('The requested page does not exist.');
+       }
+   }
+    public function actionAddCollection($opid,$receiptid)
+    {
+        $op=$this->findModel($opid);
+        $collection_id=$op->collection->collection_id;
+       // $collection=$this->findModelCollection($collection_id);
+        $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $opid])->andWhere(['status' => 0]);
+        $paymentitemDataProvider = new ActiveDataProvider([
+                'query' => $paymentitem_Query,
+        ]);
+        
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_paymentitem', ['dataProvider'=> $paymentitemDataProvider,'receiptid'=>$receiptid,'collection_id'=>$collection_id]);
+        }
+        else{
+            return $this->render('_paymentitem', ['dataProvider'=> $paymentitemDataProvider,'receiptid'=>$receiptid,'collection_id'=>$collection_id]);
+        }
+    }
+    public function actionSaveCollection($id,$receiptid,$collection_id){
+       // $receiptid=7;
+        //var_dump($id);
+       // exit;
+         if($id <> '' ){
+            $str_total = explode(',', $id);
+            $arr_length = count($str_total); 
+            $total=0;
+            for($i=0;$i<$arr_length;$i++){
+                 $paymentitem =$this->findPaymentitem($str_total[$i]);
+                  Yii::$app->financedb->createCommand()
+                    ->update('tbl_paymentitem', ['status' => 1], 'paymentitem_id= '.$str_total[$i])
+                    ->execute(); 
+                  $total+=$paymentitem->amount;
+            } 
+             Yii::$app->financedb->createCommand()
+                    ->update('tbl_collection', ['amount' => $total,'sub_total'=>+$total], 'collection_id= '.$collection_id)
+                    ->execute();
+         }else{
+             
+         }
+       // echo JSON::encode(['success'=>true]);
+        // return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]); 
+    }
+     public function actionCalculateTotal($id) {
+        $total = 0;
+        if($id == '' ){
+            echo $total;
+        }
+        else{
+            $str_total = explode(',', $id);
+            $arr_length = count($str_total); 
+            for($i=0;$i<$arr_length;$i++){
+                 $paymentitem =$this->findPaymentitem($str_total[$i]);
+                 $total+=$paymentitem->amount;
+            }
+            echo $total;
+        }
+     }
+    //-------------END of COLLECTION
     public function actionReports()
     {
         return $this->render('reports');
