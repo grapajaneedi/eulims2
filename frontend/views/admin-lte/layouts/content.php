@@ -1,8 +1,8 @@
 <?php
 use yii\widgets\Breadcrumbs;
-use dmstr\widgets\Alert;
 use yii\bootstrap\Modal;
 use kartik\dialog\Dialog;
+use yii2mod\alert\Alert;
 
 $StartYear=2014;
 $CurYear=date('Y');
