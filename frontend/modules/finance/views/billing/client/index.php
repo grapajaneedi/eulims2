@@ -6,6 +6,7 @@ use common\models\finance\Client;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Customer;
 use kartik\widgets\DatePicker;
+use kartik\daterange\DateRangePicker;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\clientSearch */
@@ -71,29 +72,35 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw'
             ],
             'company_name',
-            [
-                'label'=>'Signature Date',
-                'attribute'=>'signature_date',
-                'value'=>function($model){
-                    return date('d/m/Y H:i:s',strtotime($model->signature_date));
+             [
+               'attribute'=>'signature_date',
+               'filterType'=> GridView::FILTER_DATE_RANGE,
+               'value' => function($model) {
+                    return date_format(date_create($model->signature_date),"m/d/Y");
                 },
-                'filter'=>DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'request_datetime',
-                    'value' => date('d-M-Y', strtotime('+2 days')),
-                    'options' => ['placeholder' => 'Select date ...'],
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true
-                    ]
-                ]),
-            ],
-            [
-                'attribute' => 'signature_date', 
-                'label'=>'Signature Date',
-                'value'=>function($model){
-                    return date('m/d/Y', strtotime($model->signature_date));
-                }
+                'filterWidgetOptions' => ([
+                     'model'=>$dataProvider,
+                     'useWithAddon'=>true,
+                     'attribute'=>'signature_date',
+                     'startAttribute'=>'StartDate',
+                     'endAttribute'=>'EndDate',
+                     'presetDropdown'=>TRUE,
+                     'convertFormat'=>TRUE,
+                     'pluginOptions'=>[
+                        'allowClear' => true,
+                        'todayHighlight' => true,
+                        'locale'=>[
+                            'format'=>'Y-m-d',
+                            'separator'=>' to ',
+                        ],
+                         'opens'=>'left',
+                      ],
+                     'pluginEvents'=>[
+                        
+                      ] 
+                     
+                ]),        
+               
             ],
             // 'signed',
             // 'active',
