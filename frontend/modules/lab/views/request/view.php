@@ -309,10 +309,10 @@ if($Request_Ref){
                             $url ='/lab/sample/delete?id='.$model->sample_id;
                             return $url;
                         } 
-                        // if ($action === 'cancel') {
-                        //     $url ='/lab/sample/cancel?id='.$model->sample_id;
-                        //     return $url;
-                        // }
+                        if ($action === 'cancel') {
+                            $url ='/lab/sample/cancel?id='.$model->sample_id;
+                            return $url;
+                        }
                         // if ($action === 'update') {
                         //     $url ='/lab/sample/update?id='.$model->sample_id;
                         //     return $url;
@@ -339,18 +339,19 @@ if($Request_Ref){
                         'delete' => function ($url, $model) {
                             //return $model->sample_code != "" ? '' : Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['class'=>'btn btn-primary','title'=>'Update Sample',]);
                             if($model->sample_code == "" && $model->active == 1){
-                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'class'=>'btn btn-primary','title'=>'Delete Sample',]);
+                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'data-method'=>'post','class'=>'btn btn-primary','title'=>'Delete Sample','data-pjax'=>'0']);
                             } else {
                                 return null;
                             }
                         },
                         'cancel' => function ($url, $model){
                             //return $model->sample_code == "" ? '' : Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel ".$model->sample_code."?",'class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
-                            if($model->sample_code != ""){
-                                return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', '', ['data-confirm'=>"Are you sure you want to cancel <b>".$model->sample_code."</b>?",'class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
+                            if($model->sample_code != "" && $model->active == 1){
+                                return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel <b>".$model->sample_code."</b>?\nAll analyses that this sample contains will also be cancelled.",'data-method'=>'post','class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
                             } else {
                                 //return '<span class="glyphicon glyphicon-ban-circle"></span> Cancelled.';
-                                return null;
+                                return $model->active == 0 ? '<span class="text-danger" style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>' : '';
+                                //return null;
                             }
                         },
                     ],
@@ -486,7 +487,7 @@ if($Request_Ref){
 </div>
 </div>
 <script type="text/javascript">
-     $('#sample-grid tbody td').css('cursor', 'pointer');
+    $('#sample-grid tbody td').css('cursor', 'pointer');
     function updateSample(id){
        //var url = 'Url::to(['sample/update']) . "?id=' + id;
        var url = '/lab/sample/update?id='+id;
@@ -495,6 +496,22 @@ if($Request_Ref){
             .find('#modalContent')
             .load(url);
     }
+    // function deleteSample(id){
+    //    //var url = 'Url::to(['sample/update']) . "?id=' + id;
+    //    var url = '/lab/sample/update?id='+id;
+    //     $('.modal-title').html('Update Sample');
+    //     $('#modal').modal('show')
+    //         .find('#modalContent')
+    //         .load(url);
+    // }
+    // function cancelSample(id){
+    //    //var url = 'Url::to(['sample/update']) . "?id=' + id;
+    //    var url = '/lab/sample/update?id='+id;
+    //     $('.modal-title').html('Update Sample');
+    //     $('#modal').modal('show')
+    //         .find('#modalContent')
+    //         .load(url);
+    // }
     function addSample(url,title){
        //var url = 'Url::to(['sample/update']) . "?id=' + id;
        //var url = '/lab/sample/update?id='+id;
@@ -504,6 +521,38 @@ if($Request_Ref){
             .load(url);
     }
 </script>
+
+<?php
+$this->registerJs("
+   /* function loadMessage(url,id){
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            method: 'GET',
+            data: form.serialize(),
+            success: function (data, textStatus, jqXHR) {
+                //$('#sample-samplename').val(data.name);
+                //$('#sample-description').val(data.description);
+                $('.image-loader').removeClass( \"img-loader\" );
+                $('.modal-title').html('Sample');
+                var content = $('#modalContent').html(data.)
+                $('#modal').modal('show')
+                        .find(content)
+                        .load(url);
+            },
+            beforeSend: function (xhr) {
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('An error occured!');
+                alert('Error in ajax request');
+            }
+        });
+
+    }*/
+");
+?>
 
 <?php
     // This section will allow to popup a notification
