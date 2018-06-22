@@ -12,6 +12,8 @@ use common\models\finance\client;
  */
 class clientSearch extends client
 {
+    public $StartDate;
+    public $EndDate;
     /**
      * @inheritdoc
      */
@@ -61,13 +63,13 @@ class clientSearch extends client
         $query->andFilterWhere([
             'client_id' => $this->client_id,
             'customer_id' => $this->customer_id,
-            'signature_date' => $this->signature_date,
         ]);
 
         $query->andFilterWhere(['like', 'account_number', $this->account_number])
             ->andFilterWhere(['like', 'company_name', $this->company_name])
             ->andFilterWhere(['like', 'signed', $this->signed])
-            ->andFilterWhere(['like', 'active', $this->active]);
+            ->andFilterWhere(['like', 'active', $this->active])
+            ->andFilterWhere(['between', 'signature_date', $this->StartDate, $this->EndDate]);
 
         return $dataProvider;
     }
