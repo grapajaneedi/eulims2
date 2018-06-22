@@ -89,7 +89,7 @@ class PackagelistController extends Controller
                      }
     }
 
-    public function actionCreatepackage()
+    public function actionCreatepackage($id)
     {
         $model = new Packagelist();
 
@@ -100,7 +100,7 @@ class PackagelistController extends Controller
             return $this->redirect(['view', 'id' => $model->analysis_id]);
         }
         
-            $samplesQuery = Sample::find()->where(['request_id' => 1]);
+            $samplesQuery = Sample::find()->where(['request_id' => $id]);
             $sampleDataProvider = new ActiveDataProvider([
                     'query' => $samplesQuery,
                     'pagination' => [
