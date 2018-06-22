@@ -10,7 +10,7 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-use yii\grid\ActionColumn;
+use kartik\grid\ActionColumn;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\PackageSearch */
@@ -54,7 +54,7 @@ $Buttontemplate='{view}{update}{delete}';
                     'updated_at:date',
                     [
                         'class' => 'kartik\grid\ActionColumn',
-                        'template' => '{delete}',
+                        'template' => $Buttontemplate,
                         'buttons'=>[
                             'view'=>function ($url, $model) {
                                 return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/module/'.$model->PackageID, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Module</font>")]);

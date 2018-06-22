@@ -7,6 +7,7 @@ use yii\helpers\ArrayHelper;
 use common\models\lab\Customer;
 use kartik\widgets\DatePicker;
 use kartik\daterange\DateRangePicker;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\clientSearch */
@@ -16,6 +17,7 @@ $this->title = 'On Account';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance/']];
 $this->params['breadcrumbs'][] = ['label' => 'Billing', 'url' => ['/finance/billing/']];
 $this->params['breadcrumbs'][] = $this->title;
+$Buttontemplate='{view}{update}{delete}';
 ?>
 <div class="client-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -79,7 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return date_format(date_create($model->signature_date),"m/d/Y");
                 },
                 'filterWidgetOptions' => ([
-                     'model'=>$dataProvider,
+                     'model'=>$model,
                      'useWithAddon'=>true,
                      'attribute'=>'signature_date',
                      'startAttribute'=>'StartDate',
@@ -89,23 +91,53 @@ $this->params['breadcrumbs'][] = $this->title;
                      'pluginOptions'=>[
                         'allowClear' => true,
                         'todayHighlight' => true,
+                        'cancel'=>'Clear',
                         'locale'=>[
                             'format'=>'Y-m-d',
                             'separator'=>' to ',
                         ],
                          'opens'=>'left',
                       ],
-                     'pluginEvents'=>[
+                      'pluginEvents'=>[
+                        "cancel.daterangepicker" => "function(ev, picker) {
+                        picker.element[0].children[1].textContent = '';
+                        $(picker.element[0].nextElementSibling).val('').trigger('change');
+                        }",
                         
+                        'apply.daterangepicker' => 'function(ev, picker) { 
+                        var val = picker.startDate.format(picker.locale.format) + picker.locale.separator +
+                        picker.endDate.format(picker.locale.format);
+
+                        picker.element[0].children[1].textContent = val;
+                        $(picker.element[0].nextElementSibling).val(val);
+                        }',
                       ] 
-                     
                 ]),        
                
             ],
             // 'signed',
             // 'active',
-
-            ['class' => 'kartik\grid\ActionColumn'],
-        ],
+            [
+                'class' => 'kartik\grid\ActionColumn',
+                'template' => $Buttontemplate,
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => Url::to(['/finance/billing/clientview/','id'=>$model->client_id]), 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Client")]);
+                    },
+                    'update' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => Url::to(['/finance/billing/clientupdate/','id'=>$model->client_id]), 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Client")]);
+                    },
+                    'delete' => function($url, $model){
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'id' => $model->client_id], [
+                        "class" => "btn btn-danger",
+                        "data" => [
+                            "confirm" => "Are you absolutely sure you want to remove on Account of '<strong>".$model->customer->customer_name."'</strong>?",
+                            "method" => "post",
+                        ],
+                    ]);
+                    }
+                ],
+            ],
+    ],
     ]); ?>
 </div>
