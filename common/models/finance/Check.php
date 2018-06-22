@@ -9,7 +9,6 @@ use Yii;
  *
  * @property int $check_id
  * @property int $receipt_id 
- * @property string $payee
  * @property string $bank
  * @property string $checknumber
  * @property string $checkdate
@@ -41,7 +40,7 @@ class Check extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['receipt_id', 'payee', 'bank', 'checknumber', 'checkdate', 'amount'], 'required'],
+            [['receipt_id', 'bank', 'checknumber', 'checkdate', 'amount'], 'required'],
             [['receipt_id'], 'integer'],
             [['checkdate'], 'safe'],
             [['amount'], 'number'],
@@ -59,10 +58,9 @@ class Check extends \yii\db\ActiveRecord
         return [
             'check_id' => 'Check ID',
             'receipt_id' => 'Receipt ID',
-            'payee' => 'Payee',
             'bank' => 'Bank',
-            'checknumber' => 'Checknumber',
-            'checkdate' => 'Checkdate',
+            'checknumber' => 'Check Number',
+            'checkdate' => 'Check Date',
             'amount' => 'Amount',
         ];
     }
