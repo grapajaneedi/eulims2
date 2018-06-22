@@ -73,6 +73,7 @@ class RequestController extends Controller
                 ],
              
         ]);
+
         $analysisQuery = Analysis::find()->where(['sample_id' => 1]);
         $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
@@ -131,12 +132,18 @@ class RequestController extends Controller
         $pdf->marginLeft=0;
         $pdf->marginRight=0;
         $pdf->marginTop=0;
+   
+       $request= Request::find()->where(['request_id'=>$id])->one();
+       $samplesquery = Sample::find()->where(['request_id' => $id])->all();
+      
 
-        $requestQuery = Request::find()->where(['request_id' => $id]);
-
-        $Content= $this->renderPartial('_printlabel', ['requestQuery' => $requestQuery]);
+        $Content= $this->renderPartial('_printlabel', [
+            'samplesquery' => $samplesquery]);
+            
+        echo $Content;
+        exit;
         $pdf->content = $Content;
-        $pdf->render($Content);
+      //  $pdf->render($Content);
        }
     }
 
