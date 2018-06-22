@@ -11,6 +11,7 @@ use common\models\lab\Request;
 use common\models\lab\Lab;
 use common\models\lab\Samplecode;
 use common\models\lab\SampleName;
+use common\models\lab\Analysis;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -270,13 +271,69 @@ class SampleController extends Controller
         //$this->findModel($id)->delete();
         //return;
 
-        $delete = $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        //$sampleId = (int) $id;
+        $session = Yii::$app->session;
+        $analyses = Analysis::find()->where(['sample_id' => $id])->all();
 
-        if($delete) {
-            //$session->set('deletemessage',"executed");
-            return;
+        if(count($analyses) > 0){
+            return $model->samplename." has analysis. Remove first the analysis then delete this sample.";
         } else {
-            return $delete->error();
+            //$delete = $this->findModel($id);
+
+            if($model->delete()) {
+                //$session->set('deletemessage',"executed");
+                //return;
+                $session->set('deletemessage',"executed");
+                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+            } else {
+                return $model->error();
+            }
+        }
+    }
+
+    /**
+     * Cancel an existing Sample model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionCancel($id)
+    {
+        //$this->findModel($id)->delete();
+        //return;
+        $model = $this->findModel($id);
+        $session = Yii::$app->session;
+        $sampleId = (int) $id;
+        $analyses = Analysis::find()->where('sample_id =:sampleId', [':sampleId'=>$sampleId])->all();
+
+        if(count($analyses) > 0)
+        {
+            foreach ($analyses as $analysis) {
+                //$analysis->delete(); //to delete
+                $analyses->cancelled = 1;
+                $analyses->update(false); // skipping validation as no user input is involved
+            }
+
+            $model->active = 0;
+            if ($model->update() !== false) {
+                $session->set('cancelmessage',"executed");
+                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+            } else {
+                $model->error();
+                return false;
+            }
+        } else {
+
+            $model->active = 0;
+            //$model->update();
+
+            if ($model->update() !== false) {
+                $session->set('cancelmessage',"executed");
+                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+            } else {
+                $model->error();
+                return false;
+            }
         }
     }
 

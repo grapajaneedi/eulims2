@@ -8,7 +8,8 @@ use yii\widgets\ActiveForm;
 
 //<div class="col-md-4"><a href="/finance/financialreports/collectionsummary/"><img class="img-responsive center-block" src="/images/summaryreportsquare.png" style="height:150px"/></a></div>
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
-$this->params['breadcrumbs'][] = ['label' => 'Financial Reports', 'url' => ['/finance/financialreports']];
+
+$this->params['breadcrumbs'][] ='Financial Reports';
 $link2 = '/finance/financialreports/collectionsummary/';
 ?>
 <script type="text/javascript">
@@ -105,7 +106,7 @@ $form = ActiveForm::begin(
 
         <div class="row">
 
-            <div class="col-md-4">
+            <div class="col-md-6">
                     <?php
                     echo $form->field($model, 'intYear')->dropDownList($listYear, [
                         'id' => 'selYear',
@@ -113,15 +114,9 @@ $form = ActiveForm::begin(
                         'type'=>'post'
                     ]);
                     ?>
-                    
-                    
-                    
-                    
-                    
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
+            
+            <div class="col-md-6">
            
                 <?php
                     echo $form->field($model, 'intMonth')->dropDownList($listMonth, [
@@ -132,11 +127,7 @@ $form = ActiveForm::begin(
                     ?>
             </div>
         </div>
-        <?php
-        //$test ='2018'; //$_POST['selYear'];
-        $test = isset($_POST['selYear']) ? $model->intYear : '2012';
-        ?>
-        <br>
+        
         <div class="row">
            
             <div class="col-md-4"><a href="#" id="el"><img class="img-responsive center-block" src="/images/collectionreportsquare.png" style="height:150px"/></a></div>
