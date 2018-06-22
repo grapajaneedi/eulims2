@@ -301,18 +301,59 @@ if($Request_Ref){
                 ],
                 [
                     'class' => 'kartik\grid\ActionColumn',
-                    'template' => '{delete}',
+                    'template' => '{update} {delete} {cancel}',
                     'dropdown' => false,
                     'dropdownOptions' => ['class' => 'pull-right'],
                     'urlCreator' => function ($action, $model, $key, $index) {
                         if ($action === 'delete') {
                             $url ='/lab/sample/delete?id='.$model->sample_id;
                             return $url;
-                        }
+                        } 
+                        // if ($action === 'cancel') {
+                        //     $url ='/lab/sample/cancel?id='.$model->sample_id;
+                        //     return $url;
+                        // }
+                        // if ($action === 'update') {
+                        //     $url ='/lab/sample/update?id='.$model->sample_id;
+                        //     return $url;
+                        // }
 
                     },
-                    'deleteOptions' => ['title' => 'Delete Sample', 'data-toggle' => 'tooltip'],
+                    //'deleteOptions' => ['title' => 'Delete Sample', 'data-toggle' => 'tooltip'],
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
+                    'buttons' => [
+                        // 'view' => function ($url, $model) {
+                        //     return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
+                        //                 'title' => Yii::t('app', 'lead-view'),
+                        //     ]);
+                        // },
+
+                        'update' => function ($url, $model) {
+                            if($model->active == 1){
+                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '', ['class'=>'btn btn-primary','title'=>'Update Sample','onclick' => 'updateSample('.$model->sample_id.')']);
+                            } else {
+                                //return '<span class="glyphicon glyphicon-ban-circle"></span> Cancelled.';
+                                return null;
+                            }
+                        },
+                        'delete' => function ($url, $model) {
+                            //return $model->sample_code != "" ? '' : Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['class'=>'btn btn-primary','title'=>'Update Sample',]);
+                            if($model->sample_code == "" && $model->active == 1){
+                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'class'=>'btn btn-primary','title'=>'Delete Sample',]);
+                            } else {
+                                return null;
+                            }
+                        },
+                        'cancel' => function ($url, $model){
+                            //return $model->sample_code == "" ? '' : Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel ".$model->sample_code."?",'class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
+                            if($model->sample_code != ""){
+                                return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', '', ['data-confirm'=>"Are you sure you want to cancel <b>".$model->sample_code."</b>?",'class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
+                            } else {
+                                //return '<span class="glyphicon glyphicon-ban-circle"></span> Cancelled.';
+                                return null;
+                            }
+                        },
+                    ],
                 ],
             ];
 
@@ -334,13 +375,14 @@ if($Request_Ref){
                     'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
                     'after'=>false,
                 ],
-                'rowOptions' => function ($model, $key, $index, $grid) {
-                    return [
-                        'id' => $model->sample_id,
-                        'onclick' => 'updateSample('.$model->sample_id.');',
-                        'style' => 'cursor:pointer;',
-                    ];
-                },
+                // 'rowOptions' => function ($model, $key, $index, $grid) {
+                //     return [
+                //         'id' => $model->sample_id,
+                //         'onclick' => 'updateSample('.$model->sample_id.');',
+                //         'style' => 'cursor:pointer;',
+                //         'title' => 'Click to update sample',
+                //     ];
+                // },
                 'columns' => $gridColumns,
                 'toolbar' => [
                     'content'=> Html::a('<i class="glyphicon glyphicon-repeat"></i>', [Url::to(['request/view','id'=>$model->request_id])], [
@@ -462,62 +504,7 @@ if($Request_Ref){
             .load(url);
     }
 </script>
-<?php
-$this->registerJs("
-    /*$('td').click(function (e) {
-        var id = $(this).closest('tr').data('id');
-        if(e.target == this)
-            location.href = '" . Url::to(['accountinfo/update']) . "?id=' + id;
-    });*/
 
-
-    $('#sample-grid tbody td').css('cursor', 'pointer');
-    /*$('tbody td').click(function (e) {
-        var id = $(this).closest('tr').data('id');
-        if (e.target == this)
-            location.href = '" . Url::to(['sample/update']) . "?id=' + id;
-    });*/
-    // $('#sample-grid tbody td').click(function(e) {
-    // //$('#sample-grid-pjax tbody tr').click(function() {
-    //     e.preventDefault();
-    //     var id = $(this).closest('tr').data('id');
-    //     var url = '" . Url::to(['sample/update']) . "?id=' + id;
-    //     $('.modal-title').html('Update Sample');
-    //     $('#modal').modal('show')
-    //         .find('#modalContent')
-    //         .load(url);
-    // });
-/*$('#sample-grid tbody td').click(function() {
-    var id = $(this).closest('tr').data('id');
-    $('.modal-title').html('Update Sample');
-        $('#modal').modal('show')
-            .find('#modalContent').load(updateSample(id));
-    
-});*/
-
-/*function updateSample(id)
-{
-    //var id = $(this).closest('tr').data('id');
-    $.ajax({
-        type: 'GET',
-        // dataType: 'json',
-        // data: {
-        // 'user': 'A'
-        // },
-        //data: {id: $model->request_id},
-        url: '" . Url::to(['sample/update']) . "?id=' + id,
-        contentType: 'application/json',
-        success: function(data) {
-            console.log(typeof(data));
-            console.log(data)
-        },
-        error: function (data) {
-            console.log(data);
-        },
-    });
-}*/
-");
-?>
 <?php
     // This section will allow to popup a notification
     $session = Yii::$app->session;
@@ -536,6 +523,11 @@ $this->registerJs("
         if (isset($session['savemessage'])) {
             $sweetalert->CrudAlert("Successfully Saved","SUCCESS",true);
             unset($session['savemessage']);
+            $session->close();
+        }
+        if (isset($session['cancelmessage'])) {
+            $sweetalert->CrudAlert("Successfully Cancel","WARNING",true);
+            unset($session['cancelmessage']);
             $session->close();
         }
     }
