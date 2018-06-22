@@ -96,6 +96,7 @@ class MyPDF implements PDFEnum{
             'SetHeader'=>[$Header], 
             'SetFooter'=>[$Footer]
         ];
+        
         $mPDF->render();
         exit;
     } 

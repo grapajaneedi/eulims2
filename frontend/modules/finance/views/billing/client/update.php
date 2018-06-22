@@ -11,11 +11,7 @@ $this->params['breadcrumbs'][] = ['label' => $model->client_id, 'url' => ['view'
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="client-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
-
 </div>

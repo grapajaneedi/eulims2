@@ -21,7 +21,7 @@ class clientSearch extends client
     {
         return [
             [['client_id', 'customer_id'], 'integer'],
-            [['account_number', 'company_name', 'signature_date', 'signed', 'active'], 'safe'],
+            [['account_number', 'company_name', 'signature_date', 'signed', 'active','StartDate','EndDate'], 'safe'],
         ];
     }
 
@@ -61,14 +61,12 @@ class clientSearch extends client
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'client_id' => $this->client_id,
-            'customer_id' => $this->customer_id,
+            'client_id' => $this->client_id
         ]);
-
+        
         $query->andFilterWhere(['like', 'account_number', $this->account_number])
             ->andFilterWhere(['like', 'company_name', $this->company_name])
-            ->andFilterWhere(['like', 'signed', $this->signed])
-            ->andFilterWhere(['like', 'active', $this->active])
+           ->andFilterWhere(['=', 'customer_id', $this->customer_id])    
             ->andFilterWhere(['between', 'signature_date', $this->StartDate, $this->EndDate]);
 
         return $dataProvider;
