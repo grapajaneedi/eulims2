@@ -73,7 +73,6 @@ class RequestController extends Controller
                 ],
              
         ]);
-
         $analysisQuery = Analysis::find()->where(['sample_id' => 1]);
         $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,

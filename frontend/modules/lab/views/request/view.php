@@ -21,16 +21,30 @@ $Year=date('Y', strtotime($model->request_datetime));
 // /lab/request/saverequestransaction
 $js=<<<SCRIPT
     $("#btnSaveRequest").click(function(){
-        $.post(this.value, {
-            request_id: $model->request_id,
-            lab_id: $model->lab_id,
-            rstl_id: $rstlID,
-            year: $Year
-        }, function(result){
-           if(result){
-               location.reload();
-           }
-        });
+        var SampleRows=$sampleDataProvider->count;
+        var AnalysisRows=$analysisdataprovider->count;
+        var msg='';
+        if(SampleRows>0 && AnalysisRows>0){
+            $.post(this.value, {
+                request_id: $model->request_id,
+                lab_id: $model->lab_id,
+                rstl_id: $rstlID,
+                year: $Year
+            }, function(result){
+               if(result){
+                   location.reload();
+               }
+            });
+        }else{
+            if(SampleRows<=0 && AnalysisRows<=0){
+               msg='Please Add Sample and Analysis!';
+            }else if(SampleRows<=0 && AnalysisRows>0){
+               msg='Please Add Sample!';
+            }else if(SampleRows>0 && AnalysisRows<=0){
+               msg='Please Add Analysis!';
+            }
+            krajeeDialog.alert(msg);
+        }
     });  
        
 SCRIPT;
@@ -111,7 +125,6 @@ if($Request_Ref){
             'mode'=>DetailView::MODE_VIEW,
             'panel'=>[
                 'heading'=>'<i class="glyphicon glyphicon-book"></i> Request # ' . $model->request_ref_num,
-               // 'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-plus"></i> Generate Samplecode', ['value' => Url::to(['sample/generatesamplecode','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                 'type'=>DetailView::TYPE_PRIMARY,
             ],
             'buttons1' => '',
@@ -130,7 +143,6 @@ if($Request_Ref){
                             'valueColOptions'=>['style'=>'width:30%']
                         ],
                         [
-                            //'attribute'=>'request_datetime',
                             'label'=>'Customer / Agency',
                             'format'=>'raw',
                             'value'=>$model->customer->customer_name,
@@ -149,7 +161,6 @@ if($Request_Ref){
                             'displayOnly'=>true
                         ],
                         [
-                            //'attribute'=>'request_datetime',
                             'label'=>'Address',
                             'format'=>'raw',
                             'value'=>$model->customer->address,
@@ -169,7 +180,6 @@ if($Request_Ref){
                             'displayOnly'=>true
                         ],
                         [
-                            //'attribute'=>'request_datetime',
                             'label'=>'Tel no.',
                             'format'=>'raw',
                             'value'=>$model->customer->tel,
@@ -189,7 +199,6 @@ if($Request_Ref){
                             'displayOnly'=>true
                         ],
                         [
-                            //'attribute'=>'request_datetime',
                             'label'=>'Fax no.',
                             'format'=>'raw',
                             'value'=>$model->customer->fax,
@@ -206,14 +215,12 @@ if($Request_Ref){
                 [
                     'columns' => [
                         [
-                            //'attribute'=>'request_ref_num', 
                             'label'=>'OR No.',
                             'value'=>'',
                             'displayOnly'=>true,
                             'valueColOptions'=>['style'=>'width:30%']
                         ],
                         [
-                            //'attribute'=>'request_datetime',
                             'label'=>'Collection',
                             'format'=>'raw',
                             'value'=>'0',
@@ -225,14 +232,12 @@ if($Request_Ref){
                 [
                     'columns' => [
                         [
-                            //'attribute'=>'request_ref_num', 
                             'label'=>'OR Date',
                             'value'=>'',
                             'displayOnly'=>true,
                             'valueColOptions'=>['style'=>'width:30%']
                         ],
                         [
-                            //'attribute'=>'request_datetime',
                             'label'=>'Unpaid Balance',
                             'format'=>'raw',
                             'value'=>'0',
@@ -251,16 +256,13 @@ if($Request_Ref){
                     'columns' => [
                         [
                             'attribute'=>'receivedBy', 
-                            //'label'=>'Request Reference Number',
                             'format'=>'raw',
                             'displayOnly'=>true,
                             'valueColOptions'=>['style'=>'width:30%']
                         ],
                         [
                             'attribute'=>'conforme',
-                            //'label'=>'Conforme',
                             'format'=>'raw',
-                            //'value'=>$model->customer->customer_name,
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -275,7 +277,6 @@ if($Request_Ref){
         <div class="table-responsive">
         <?php
             $gridColumns = [
-                //['class' => 'yii\grid\SerialColumn'],
                 [
                     'attribute'=>'sample_code',
                     'enableSorting' => false,
@@ -303,38 +304,14 @@ if($Request_Ref){
                     'template' => '{delete}',
                     'dropdown' => false,
                     'dropdownOptions' => ['class' => 'pull-right'],
-                    //'urlCreator' => function($action, $model, $key, $index) { return '#'; },
                     'urlCreator' => function ($action, $model, $key, $index) {
-                        /*if ($action === 'update') {
-                            $url ='index.php?r=client-login/lead-update&id='.$model->id;
-                            return $url;
-                        }*/
                         if ($action === 'delete') {
                             $url ='/lab/sample/delete?id='.$model->sample_id;
                             return $url;
                         }
 
                     },
-                    /*'viewOptions' => ['title' => 'This will launch the book details page. Disabled for this demo!', 'data-toggle' => 'tooltip'],
-                    'updateOptions' => ['title' => 'This will launch the book update page. Disabled for this demo!', 'data-toggle' => 'tooltip'],*/
                     'deleteOptions' => ['title' => 'Delete Sample', 'data-toggle' => 'tooltip'],
-                    //'buttons' => [
-                        /*'view' => function ($url, $model) {
-                            return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-                                        'title' => Yii::t('app', 'lead-view'),
-                            ]);
-                        },
-
-                        'update' => function ($url, $model) {
-                            return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
-                                        'title' => Yii::t('app', 'lead-update'),
-                            ]);
-                        },*/
-                        /*'delete' => function ($url, $model) {
-                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url);
-                        }*/
-
-                    //],
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                 ],
             ];
@@ -342,12 +319,6 @@ if($Request_Ref){
             echo GridView::widget([
                 'id' => 'sample-grid',
                 'dataProvider'=> $sampleDataProvider,
-                //'summary' => '',
-                //'showPageSummary' => true,
-                //'showHeader' => true,
-                //'showPageSummary' => true,
-                //'showFooter' => true,
-                //'template' => '{update} {delete}',
                 'pjax'=>true,
                 'pjaxSettings' => [
                     'options' => [
@@ -357,33 +328,17 @@ if($Request_Ref){
                 'responsive'=>true,
                 'striped'=>true,
                 'hover'=>true,
-                //'filterModel' => $searchModel,
-               // 'toggleDataOptions' => ['minCount' => 10],
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Samples</h3>',
                     'type'=>'primary',
-                    //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['/lab/sample/create','request_id'=>$model->request_id], ['class' => 'btn btn-success']),
-                //  'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
-                  'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
-                    ////.Html::button('<i class="glyphicon glyphicon-plus"></i> Generate Samplecode', ['value' => Url::to(['sample/generatesamplecode','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
-                    //'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
-                    //'after'=>'',
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
                     'after'=>false,
-                    //'footer'=>false,
                 ],
                 'rowOptions' => function ($model, $key, $index, $grid) {
                     return [
-                        //'id' => $model->sample_id,
                         'id' => $model->sample_id,
-                        //'id' => $data['request_id'],
-                        //'onclick' => 'alert(this.id);',
                         'onclick' => 'updateSample('.$model->sample_id.');',
                         'style' => 'cursor:pointer;',
-                        //'onclick' => 'updateSample(this.id,this.request_id);',
-                        // [
-                        //     'data-id' => $model->sample_id,
-                        //     'data-request_id' => $model->request_id
-                        // ],
                     ];
                 },
                 'columns' => $gridColumns,
