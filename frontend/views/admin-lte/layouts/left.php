@@ -65,8 +65,10 @@ if(Yii::$app->user->isGuest){
             $modulePermission="access-".strtolower($Item->PackageName);
             $MenuItems= PackageDetails::find()->where(['PackageID'=>$Item->PackageID])->all();
             $ItemSubMenu[]=[
-                'label'=>'Dashboard',
-                'icon'=>'bars',
+              //  'label'=>'Dashboard',
+                'label' => '<img src="/images/icons/dashboard.png" style="width:20px">  <span>' . 'Dashboard' . '</span>', 
+              //  'icon'=>'bars',
+                 'icon'=>' " style="display:none;width:0px"',
                 'url'=>["/".$Item->PackageName],
                 'visible'=>true
             ];
@@ -78,8 +80,11 @@ if(Yii::$app->user->isGuest){
                 $pkgdetails2=str_replace(" ","-",$pkgdetails1);
                 $SubmodulePermission="access-".$pkgdetails2; //access-Order of Payment
                 $ItemS=[
-                   'label'=>$mItem->Package_Detail,
-                   'icon'=>$icon,
+                 //  'label'=>$mItem->Package_Detail,
+                   'label' =>'<img src="/images/icons/' .$mItem->icon. '.png" style="width:20px">  <span>' . $mItem->Package_Detail . '</span>', 
+               //    'icon'=>$icon,
+                    'icon'=>' " style="display:none;width:0px"',
+                   
                    'url'=>[$mItem->url],
                    'visible'=>Yii::$app->user->can($SubmodulePermission)
                 ];
@@ -87,8 +92,11 @@ if(Yii::$app->user->isGuest){
             }
             $MainIcon=substr($Item->icon,6,strlen($Item->icon)-6);
             $ItemMenu[]=[
-                'label' => ucwords($Item->PackageName) ,
-                'icon'=>$MainIcon, 
+              //  'label' => ucwords($Item->PackageName) ,
+              //  'label' => '<img src="/images/icons/customerpool.png" style="width:20px">  <span>' . ucwords($Item->PackageName) . '</span>', 
+                  'label' => '<img src="/images/icons/' .$Item->icon. '.png" style="width:20px">  <span>' . ucwords($Item->PackageName) . '</span>', 
+             //   'icon'=>$MainIcon, 
+                 'icon'=>' " style="display:none;width:0px"',
                 'url' => ["/".$Item->PackageName."/index"],
                 'items'=>$ItemSubMenu,
                 'visible'=>Yii::$app->user->can($modulePermission)
@@ -99,7 +107,8 @@ if(Yii::$app->user->isGuest){
          <?php echo dmstr\widgets\Menu::widget(
             [
                 'options' => ['class' => 'sidebar-menu tree', 'data-widget'=> 'tree'],
-                'items' => $ItemMenu
+                'items' => $ItemMenu,
+                'encodeLabels' => false,
             ]
         );
          //echo SideNav::widget(['items' => $ItemMenu, 'type' => SideNav::TYPE_INFO]);
