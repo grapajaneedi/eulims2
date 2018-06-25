@@ -11,7 +11,7 @@ use Yii;
  * @property int $rstl_id
  * @property int $terminal_id
  * @property int $collection_id
- * @property int $project_id
+ * @property int $deposit_type_id
  * @property string $or_number
  * @property string $receiptDate
  * @property int $payment_mode_id
@@ -19,17 +19,16 @@ use Yii;
  * @property int $collectiontype_id
  * @property string $total
  * @property int $cancelled
- * @property int $or
+ *
  * @property Billing[] $billings
  * @property Check[] $checks
- * @property Project $project
+ * @property DepositType $depositType
  * @property Paymentmode $paymentMode
  * @property Collectiontype $collectiontype
  * @property Collection $collection
  */
 class Receipt extends \yii\db\ActiveRecord
 {
-    public $or;
     /**
      * {@inheritdoc}
      */
@@ -52,14 +51,14 @@ class Receipt extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-
-            [['rstl_id', 'terminal_id', 'collection_id', 'project_id', 'or_number', 'receiptDate', 'payment_mode_id', 'collectiontype_id', 'total', 'cancelled','payor'], 'required'],
-            [['rstl_id', 'terminal_id', 'collection_id', 'project_id', 'payment_mode_id', 'collectiontype_id', 'cancelled'], 'integer'],
-            [['receiptDate','payor','or'], 'safe'],
+            [['rstl_id', 'terminal_id', 'collection_id', 'or_number', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled'], 'required'],
+            [['rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'payment_mode_id', 'collectiontype_id', 'cancelled'], 'integer'],
+            [['receiptDate'], 'safe'],
             [['total'], 'number'],
             [['or_number'], 'string', 'max' => 50],
             [['payor'], 'string', 'max' => 100],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'project_id']],
+            [['rstl_id', 'or_number'], 'unique', 'targetAttribute' => ['rstl_id', 'or_number']],
+            [['deposit_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => DepositType::className(), 'targetAttribute' => ['deposit_type_id' => 'deposit_type_id']],
             [['payment_mode_id'], 'exist', 'skipOnError' => true, 'targetClass' => Paymentmode::className(), 'targetAttribute' => ['payment_mode_id' => 'payment_mode_id']],
             [['collectiontype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collectiontype::className(), 'targetAttribute' => ['collectiontype_id' => 'collectiontype_id']],
             [['collection_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collection::className(), 'targetAttribute' => ['collection_id' => 'collection_id']],
@@ -76,7 +75,7 @@ class Receipt extends \yii\db\ActiveRecord
             'rstl_id' => 'Rstl ID',
             'terminal_id' => 'Terminal ID',
             'collection_id' => 'Collection ID',
-            'project_id' => 'Project ID',
+            'deposit_type_id' => 'Deposit Type ID',
             'or_number' => 'Or Number',
             'receiptDate' => 'Receipt Date',
             'payment_mode_id' => 'Payment Mode ID',
@@ -98,7 +97,7 @@ class Receipt extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCheck()
+    public function getChecks()
     {
         return $this->hasMany(Check::className(), ['receipt_id' => 'receipt_id']);
     }
@@ -106,15 +105,15 @@ class Receipt extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProject()
+    public function getDepositType()
     {
-        return $this->hasOne(Project::className(), ['project_id' => 'project_id']);
+        return $this->hasOne(DepositType::className(), ['deposit_type_id' => 'deposit_type_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPaymentmode()
+    public function getPaymentMode()
     {
         return $this->hasOne(Paymentmode::className(), ['payment_mode_id' => 'payment_mode_id']);
     }
