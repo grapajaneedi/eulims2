@@ -122,9 +122,17 @@ class StatisticController extends Controller
 		// ]);
 
 		//$modelRequest = new Request();
-		$modelRequest = Requestextend::find();
+		//$modelRequest = Requestextend::find();
+		$modelRequest = Requestextend::find()
+						->with('samples')
+						->where('status_id != :statusId', [':statusId'=>2])
+						->addParams([':statusId'=>2])
+						->groupBy(['DATE_FORMAT(request_datetime, "%Y-%m-%d")'])
+						->orderBy('request_datetime DESC');
+						//->all();
 		//$query = Post::find()->where(['status' => 1]);
 		//$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		//$modelRequest1 = Requestextend::find()->where('status_id =:statusId', [':statusId'=>2]);
 		$dataProvider = new ActiveDataProvider([
             //'query' => $searchModel->search(Yii::$app->request->queryParams),
             'query' =>$modelRequest,
@@ -157,7 +165,7 @@ class StatisticController extends Controller
         return $laboratory;
     }
 
-    public function countSample($labId,$startDate,$endDate,$summaryType,$requestType)
+    /*public function countSample($labId,$startDate,$endDate,$summaryType,$requestType)
     {
     	$query = Yii::$app->labdb->createCommand('CALL spSummaryforSamples(11,1,"2018-05-01","2018-06-21",1,1)')
 	    ->queryAll();
@@ -171,5 +179,5 @@ class StatisticController extends Controller
 	    ->queryAll();
 
 	    return $query;
-    }
+    }*/
 }

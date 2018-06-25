@@ -531,7 +531,6 @@ if($Request_Ref){
             .load(url);
     }
     function viewRemarkSample(id){
-       //var url = 'Url::to(['sample/update']) . "?id=' + id;
        var url = '/lab/sample/cancel?id='+id;
         $('.modal-title').html('View Cancel Remark');
         $('#modal').modal('show')
@@ -539,7 +538,6 @@ if($Request_Ref){
             .load(url);
     }
     function cancelSample(id){
-       //var url = 'Url::to(['sample/update']) . "?id=' + id;
        var url = '/lab/sample/cancel?id='+id;
         $('.modal-title').html('Cancel Sample');
         $('#modal').modal('show')
