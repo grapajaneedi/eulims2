@@ -16,6 +16,7 @@ use Yii;
  * @property int $nextor
  * @property int $endor
  *
+ * @property Deposit[] $deposits 
  * @property Orcategory $orCategory
  */
 class Orseries extends \yii\db\ActiveRecord
@@ -73,4 +74,11 @@ class Orseries extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Orcategory::className(), ['or_category_id' => 'or_category_id']);
     }
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+   public function getDeposits() 
+   { 
+       return $this->hasMany(Deposit::className(), ['or_series_id' => 'or_series_id']); 
+   } 
 }

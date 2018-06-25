@@ -20,6 +20,7 @@ use common\components\Functions;
  * @property int $created_receipt
  * @property int $allow_erratum
  * @property string $invoice_number 
+ * @property int $on_account 
  * 
  * @property Billing[] $billings
  * @property Collection $collection
@@ -55,7 +56,7 @@ class Op extends \yii\db\ActiveRecord
         return [
             [['transactionnum', 'collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose'], 'required'],
 	    ['RequestIds', 'required','message' => 'Please select Request.'],
-            [['rstl_id', 'collectiontype_id', 'payment_mode_id', 'customer_id', 'created_receipt', 'allow_erratum'], 'integer'],
+            [['rstl_id', 'collectiontype_id', 'payment_mode_id', 'customer_id', 'created_receipt', 'allow_erratum','on_account'], 'integer'],
             [['order_date','RequestIds'], 'safe'],
             [['total_amount'], 'number'],
             [['transactionnum','RequestIds','invoice_number'], 'string', 'max' => 100],
@@ -77,6 +78,7 @@ class Op extends \yii\db\ActiveRecord
             'collectiontype_id' => 'Collection Type',
             'invoice_number' => 'Invoice Number',
             'payment_mode_id' => 'Payment Mode',
+            'on_account' => 'On Account',
             'order_date' => 'Order Date',
             'total_amount' => 'Total Amount',
             'customer_id' => 'Customer Name',
