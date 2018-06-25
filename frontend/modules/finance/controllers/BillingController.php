@@ -72,6 +72,10 @@ class BillingController extends \yii\web\Controller
                 return $this->renderAjax('client/create', [
                     'model' => $model,
                 ]);
+            }else{
+                return $this->render('client/create', [
+                    'model' => $model,
+                ]);
             }
         }
     }

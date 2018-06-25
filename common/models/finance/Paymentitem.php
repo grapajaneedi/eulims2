@@ -10,7 +10,7 @@ use Yii;
  * @property int $paymentitem_id
  * @property int $rstl_id
  * @property int $request_id
- * @property int $referral_id
+ * @property int $request_type_id
  * @property int $orderofpayment_id
  * @property string $details
  * @property double $amount
@@ -43,8 +43,8 @@ class Paymentitem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'request_id', 'orderofpayment_id', 'details', 'amount'], 'required'],
-            [['rstl_id', 'request_id', 'referral_id', 'orderofpayment_id', 'cancelled', 'status'], 'integer'],
+            [['rstl_id', 'request_id', 'orderofpayment_id', 'details', 'amount','request_type_id'], 'required'],
+            [['rstl_id', 'request_id', 'request_type_id', 'orderofpayment_id', 'cancelled', 'status'], 'integer'],
             [['amount'], 'number'],
             [['details'], 'string', 'max' => 50],
             [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Op::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
@@ -60,7 +60,7 @@ class Paymentitem extends \yii\db\ActiveRecord
             'paymentitem_id' => 'Paymentitem ID',
             'rstl_id' => 'Rstl ID',
             'request_id' => 'Request ID',
-            'referral_id' => 'Referral ID',
+            'request_type_id' => 'Request Type',
             'orderofpayment_id' => 'Orderofpayment ID',
             'details' => 'Details',
             'amount' => 'Amount',
