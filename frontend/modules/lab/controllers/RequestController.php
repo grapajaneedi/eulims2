@@ -120,24 +120,20 @@ class RequestController extends Controller
     public function actionPrintlabel(){
 
        if(isset($_GET['request_id'])){
-
         $id = $_GET['request_id'];
-  
-        $request = Request::find()->where(['request_id' => $id]);
-        $samplesquery = Sample::find()->where(['request_id' => $id])->all();
-        $Content= $this->renderPartial('_printlabel', [
-                     'samplesquery' => $samplesquery, 'request'=>$request]);
         $mpdf = new \Mpdf\Mpdf([
             'mode' => 'utf-8', 
             'format' => [35,66], 
             'orientation' => 'L',
         ]);
     
-       ///
-       
-       ///
+        $request = Request::find()->where(['request_id' => $id]);
+        $samplesquery = Sample::find()->where(['request_id' => $id])->all();
+        $Content= $this->renderPartial('_printlabel', [
+                     'samplesquery' => $samplesquery, 'request'=>$request, 'mpdf'=>$mpdf]);
+      
         $mpdf->WriteHTML($Content);
-        //$mpdf->AddPage();
+       
       
        echo $mpdf->Output();
        }

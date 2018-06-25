@@ -126,19 +126,20 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
 $this->registerJs("$('#fee_list').on('change',function(){
     var id = $('#fee_list').val();
         $.ajax({
-            url: '".Url::toRoute("sample/getlisttemplate")."',
+            url: '".Url::toRoute("lab/fee/getlistfee")."',
             dataType: 'json',
             method: 'GET',
             //data: {id: $(this).val()},
-            data: {template_id: id},
+            data: {fee_id: id},
             success: function (data, textStatus, jqXHR) {
-                $('#sample-samplename').val(data.name);
-                $('#sample-description').val(data.description);
-                $('.image-loader').removeClass( \"img-loader\" );
+                // $('#sample-samplename').val(data.name);
+                // $('#sample-description').val(data.description);
+                // $('.image-loader').removeClass( \"img-loader\" );
+                alert('boom');
             },
             beforeSend: function (xhr) {
-                //alert('Please wait...');
-                $('.image-loader').addClass( \"img-loader\" );
+                alert('Please wait...');
+               //$('.image-loader').addClass( \"img-loader\" );
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('An error occured!');

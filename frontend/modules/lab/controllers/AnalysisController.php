@@ -15,6 +15,7 @@ use common\models\lab\Sampletype;
 use common\models\lab\Testcategory;
 use common\models\lab\Test;
 use common\models\lab\SampleSearch;
+use yii\helpers\Json;
 
 /**
  * AnalysisController implements the CRUD actions for Analysis model.
@@ -64,15 +65,51 @@ class AnalysisController extends Controller
         ]);
     }
 
-    // protected function listtest()
-    // {
-    //     $test = ArrayHelper::map(Test::find()->all(), 'test_id', 
-    //     function($test, $defaultValue) {
-    //         return $test->testname;
-    //      });
+    
+    public function actionGettest() {
+        if(isset($_GET['test_id'])){
+            $id = (int) $_GET['test_id'];
+            $modeltest=  Test::findOne(['test_id'=>$id]);
+            if(count($modeltest)>0){
+                $method = $modeltest->method;
+                $references = $modeltest->payment_references;
+            } else {
+                $method = "";
+                $references = "";
+            }
+        } else {
+            $method = "Error getting sample name";
+            $references = "Error getting description";
+        }
+        return Json::encode([
+            'method'=>$references,
+            'references'=>$references,
+        ]);
+    }
 
-    //      return $test;
-    // }
+
+    public function actionListtest()
+    {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $list = Test::find()->andWhere(['sample_type_id'=>$id])->asArray()->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $test) {
+                    $out[] = ['id' => $test['test_id'], 'name' => $test['testname']];
+                    if ($i == 0) {
+                        $selected = $test['test_id'];
+                    }
+                }
+                
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
 
     protected function listSampletype()
     {

@@ -18,7 +18,7 @@ class AnalysisSearch extends Analysis
     public function rules()
     {
         return [
-            [['analysis_id', 'rstl_id', 'pstcanalysis_id', 'request_id', 'sample_id', 'quantity', 'test_id', 'cancelled', 'status', 'user_id', 'is_package'], 'integer'],
+            [['analysis_id', 'rstl_id', 'pstcanalysis_id', 'request_id', 'sample_id', 'quantity', 'test_id', 'cancelled', 'user_id', 'is_package'], 'integer'],
             [['date_analysis', 'sample_code', 'testname', 'method', 'references'], 'safe'],
             [['fee'], 'number'],
         ];
@@ -70,7 +70,6 @@ class AnalysisSearch extends Analysis
             'fee' => $this->fee,
             'test_id' => $this->test_id,
             'cancelled' => $this->cancelled,
-            'status' => $this->status,
             'user_id' => $this->user_id,
             'is_package' => $this->is_package,
         ]);
