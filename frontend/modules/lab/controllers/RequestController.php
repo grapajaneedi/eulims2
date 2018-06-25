@@ -73,7 +73,7 @@ class RequestController extends Controller
                 ],
              
         ]);
-        $analysisQuery = Analysis::find()->where(['sample_id' => 1]);
+        $analysisQuery = Analysis::find()->where(['request_id' => $id]);
         $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
                 'pagination' => [
@@ -131,27 +131,15 @@ class RequestController extends Controller
             'mode' => 'utf-8', 
             'format' => [35,66], 
             'orientation' => 'L',
-            'margin-bottom'=>0,
-            'margin-left'=>0,
-            'margin-right'=>0,
-            'margin-top'=>0,
         ]);
-        // $html='<style>@page {
-        //     margin: 0px;
-        //    }</style>
+    
+       ///
        
-       
-        //    ';
+       ///
         $mpdf->WriteHTML($Content);
-        $mpdf->AddPage();
+        //$mpdf->AddPage();
       
-      //  echo $mpdf->Output('filename', 'I'); 
-        //
-        
-      //  $mpdf->WriteHTML($html);
-       echo   $mpdf->Output();
-        //
-
+       echo $mpdf->Output();
        }
     }
 
