@@ -89,7 +89,6 @@ use common\models\services\Sampletype;
 
     <?= $form->field($model, 'cancelled')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'status')->hiddenInput()->label(false) ?>
 
     <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
 
@@ -201,3 +200,32 @@ use common\models\services\Sampletype;
 
     <?php ActiveForm::end(); ?>
 </div>
+
+<?php
+$this->registerJs("$('#sample-test_id').on('change',function(){
+    var id = $('#sample-test_id').val();
+        $.ajax({
+            //url: '".Url::toRoute("sample/getlisttemplate")."',
+            url: '".Url::toRoute("analysis/gettest")."',
+            dataType: 'json',
+            method: 'GET',
+            //data: {id: $(this).val()},
+            data: {test_id: id},
+            success: function (data, textStatus, jqXHR) {
+                alert('boom');
+                $('#analysis-method').val(data.method);
+                $('#analysis-references').val(data.references);
+                $('#analysis-fee').val(data.fee);
+                $('.image-loader').removeClass( \"img-loader\" );
+            },
+            beforeSend: function (xhr) {
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('An error occured!');
+                alert('Error in ajax request');
+            }
+        });
+});");
+?>

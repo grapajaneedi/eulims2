@@ -1,5 +1,4 @@
-
-<barcode code="20889 CHE-0859" type="C39" />
+<!-- <barcode code="20889 CHE-0859" type="C39" /> -->
 
 <style>
 body {
@@ -14,11 +13,12 @@ body {
 	margin-footer: 0mm;
 	background-color:#ffffff;
 }
-
 </style>
 <?php
+    foreach ($samplesquery as $sample) {
+      
+      $mpdf->AddPage();
 
-foreach ($samplesquery as $sample) {
             //  $analysisquery = Analysis::find()->where(['sample_id' => $sample['sample_id']])->all();
               echo $sample['samplename']."<br>";
             // echo $sample['sample_code']."<br>";
@@ -26,13 +26,13 @@ foreach ($samplesquery as $sample) {
                   //    var_dump($analysisquery);
            //            echo "&nbsp;&nbsp;&nbsp;&nbsp;".$analysis['testname']."<br>";
                //    }
-                  // echo "<div className='page-break'></div>";
+                  // echo "<div className='page-break'></div>";        
             }
-           
           //  $pdf = new Pdf();
 
         
             
 ?>
+
 
 

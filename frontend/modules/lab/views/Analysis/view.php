@@ -42,7 +42,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'fee',
             'test_id',
             'cancelled',
-            'status',
             'user_id',
             'is_package',
         ],

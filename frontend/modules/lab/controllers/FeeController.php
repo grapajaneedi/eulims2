@@ -118,6 +118,28 @@ class FeeController extends Controller
         }
     }
 
+    public function actionGetlistfee() {
+        // if(isset($_GET['template_id'])){
+        //     $id = (int) $_GET['template_id'];
+        //     $modelSampletemplate =  SampleName::findOne(['sample_name_id'=>$id]);
+        //     if(count($modelSampletemplate)>0){
+        //         $sampleName = $modelSampletemplate->sample_name;
+        //         $sampleDescription = $modelSampletemplate->description;
+        //     } else {
+        //         $sampleName = "";
+        //         $sampleDescription = "";
+        //     }
+        // } else {
+            $sampleName = "Error getting sample name";
+            $sampleDescription = "Error getting description";
+        // }
+       // return "boom";
+         Json::encode([
+            'name'=>$sampleName,
+            'description'=>$sampleDescription,
+        ]);
+    }
+
     protected function listTestcategory($labId)
     {
         $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 
