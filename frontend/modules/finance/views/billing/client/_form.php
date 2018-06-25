@@ -6,10 +6,15 @@ use yii\helpers\ArrayHelper;
 use common\models\lab\Customer;
 use kartik\select2\Select2;
 use kartik\checkbox\CheckboxX;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\client */
 /* @var $form yii\widgets\ActiveForm */
+$func=new Functions();
+$rstl_id=$GLOBALS['rstl_id'];
+$customerList=$func->GetCustomerClientList($rstl_id);
+
 ?>
 <div class="client-form">
 
@@ -29,7 +34,7 @@ use kartik\checkbox\CheckboxX;
         </div>
         <div class="col-md-6">
             <?= $form->field($model, 'customer_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map(Customer::find()->all(), 'customer_id', 'customer_name'),
+                'data' => ArrayHelper::map($customerList, 'customer_id', 'customer_name'),
                 'language' => 'en',
                 'options' => ['placeholder' => 'Select Customer'],
                 'pluginOptions' => [

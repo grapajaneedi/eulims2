@@ -101,6 +101,19 @@ class Functions extends Component{
         $list = $Command->queryAll();
         return $list;
     }
+    /**
+     * 
+     * @param integer $CustomerID
+     * @return array
+     */
+    function GetCustomerClientList($rstl_id){
+        $Connection=Yii::$app->financedb;
+        $Proc="CALL spGetCustomerClient(:mrstl_id)";
+        $Command=$Connection->createCommand($Proc);
+        $Command->bindValue(':mrstl_id',$rstl_id);
+        $list = $Command->queryAll();
+        return $list;
+    }
     function GenerateSampleCode($request_id){
         $request =Request::find()->where(['request_id'=>$request_id])->one();
         $lab = Lab::findOne($request->lab_id);
