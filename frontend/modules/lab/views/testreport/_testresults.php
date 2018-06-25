@@ -1,6 +1,8 @@
  <?php
 
- use kartik\grid\GridView;
+ // use kartik\grid\GridView;
+ use yii\grid\GridView;
+
 
     $gridColumns = [
         ['class' => 'yii\grid\SerialColumn'],
@@ -18,10 +20,11 @@
             'enableSorting' => false,
         ],
         [
+            'header' => 'Analyst',
             'attribute'=>'user_id',
             'enableSorting' => false,
         ],
-            // 'headerOptions' => ['class' => 'kartik-sheet-style'],
+            // 'headerOptions' => ['class' => 'kartik-sheet-style'],	
     ];
 
     echo GridView::widget([
@@ -33,21 +36,21 @@
         //'showPageSummary' => true,
         //'showFooter' => true,
         //'template' => '{update} {delete}',
-        'pjax'=>true,
-        'pjaxSettings' => [
-            'options' => [
-                'enablePushState' => false,
-            ]
-        ],
-        'responsive'=>true,
+        // 'pjax'=>true,
+        // 'pjaxSettings' => [
+        //     'options' => [
+        //         'enablePushState' => false,
+        //     ]
+        // ],
+        // 'responsive'=>true,
         // 'striped'=>true,
-        'hover'=>true,
+        // 'hover'=>true,
         //'filterModel' => $searchModel,
        // 'toggleDataOptions' => ['minCount' => 10],
-        'panel' => [
-            'heading'=>'<h3 class="panel-title">Test Results</h3>',
-            'type'=>'primary',
-        ],
+        // 'panel' => [
+            // 'heading'=>'<h3 class="panel-title">Test Results</h3>',
+            // 'type'=>'primary',
+        // ],
         // 'rowOptions' => function ($model, $key, $index, $grid) {
         //     return [
                 //'id' => $model->sample_id,

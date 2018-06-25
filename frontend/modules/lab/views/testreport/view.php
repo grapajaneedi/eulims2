@@ -15,6 +15,12 @@ $this->params['breadcrumbs'][] = ['label' => 'Testreports', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="testreport-view">
+    <div class="form-row">
+        <div class="container table-responsive">
+            <button class="btn btn-warning pull-right"><i class="glyphicon glyphicon-check"></i> Reissue Report</button>
+        </div>
+    </div>
+    <br>
     <div class="container table-responsive">
           <?= DetailView::widget([
             'model' => $model,
@@ -39,7 +45,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ]) ?>
     </div>
-
     <div class="form-row">
     <div class="container table-responsive">
         <?php
@@ -71,8 +76,8 @@ $this->params['breadcrumbs'][] = $this->title;
                              'model'=>$analysisdataProvider,
                          ]);
                     },
-                        'headerOptions' => ['class' => 'kartik-sheet-style'],
-                        'expandOneOnly' => true
+                    'headerOptions' => ['class' => 'kartik-sheet-style'],
+                    'expandOneOnly' => true
                 ],
 
 
@@ -110,7 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'filterModel' => $searchModel,
                // 'toggleDataOptions' => ['minCount' => 10],
                 'panel' => [
-                    'heading'=>'<h3 class="panel-title">Samples</h3>',
+                    'heading'=>'<h3 class="panel-title"> <i class="glyphicon glyphicon-file"></i> Samples and Test Results</h3>',
                     'type'=>'primary',
                 ],
                 // 'rowOptions' => function ($model, $key, $index, $grid) {
@@ -133,6 +138,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ]);
         ?>
     </div>  
+    </div>
+    <div class="form-row">
+        <div class="container table-responsive">
+            <button class="btn btn-success">Print Function</button>
+        </div>
     </div>
     <!-- <h1><?= Html::encode($this->title) ?></h1> -->
 
