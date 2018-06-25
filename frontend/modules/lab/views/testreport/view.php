@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use yii\helpers\Url;
+use common\models\lab\Analysis;
+use yii\data\ActiveDataProvider;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Testreport */
@@ -47,6 +49,33 @@ $this->params['breadcrumbs'][] = $this->title;
                 //     'attribute'=>'sample_id',
                 //     'enableSorting' => false,
                 // ],
+                [
+                    'class' => 'kartik\grid\ExpandRowColumn',
+                    'width' => '50px',
+                    'value' => function ($model, $key, $index, $column) {
+                        return GridView::ROW_COLLAPSED;
+                    },
+                    'detail' => function ($model, $key, $index, $column) {
+                        //query on analysis to get those records with sample_ids involve
+
+                        $query = Analysis::find()->where(['sample_id'=>$model->sample_id]);
+                        $analysisdataProvider = new ActiveDataProvider([
+                            'query' => $query,
+                        ]);
+                        // // $transactions = $searchModel->searchbycustomerid($id);
+                        //  $dprovider = $sModel->search(Yii::$app->request->queryParams);
+                 
+                         return $this->render('_testresults.php', [
+                            //  'searchModel' => $sModel,
+                            //  'dataProvider' => $dprovider,
+                             'model'=>$analysisdataProvider,
+                         ]);
+                    },
+                        'headerOptions' => ['class' => 'kartik-sheet-style'],
+                        'expandOneOnly' => true
+                ],
+
+
                 [
                     'attribute'=>'sample.sample_code',
                     'enableSorting' => false,
