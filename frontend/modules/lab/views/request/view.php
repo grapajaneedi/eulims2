@@ -309,10 +309,10 @@ if($Request_Ref){
                             $url ='/lab/sample/delete?id='.$model->sample_id;
                             return $url;
                         } 
-                        if ($action === 'cancel') {
-                            $url ='/lab/sample/cancel?id='.$model->sample_id;
-                            return $url;
-                        }
+                        // if ($action === 'cancel') {
+                        //     $url ='/lab/sample/cancel?id='.$model->sample_id;
+                        //     return $url;
+                        // }
                         // if ($action === 'update') {
                         //     $url ='/lab/sample/update?id='.$model->sample_id;
                         //     return $url;
@@ -330,7 +330,7 @@ if($Request_Ref){
 
                         'update' => function ($url, $model) {
                             if($model->active == 1){
-                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '', ['class'=>'btn btn-primary','title'=>'Update Sample','onclick' => 'updateSample('.$model->sample_id.')']);
+                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', ['class'=>'btn btn-primary','title'=>'Update Sample','onclick' => 'updateSample('.$model->sample_id.')']);
                             } else {
                                 //return '<span class="glyphicon glyphicon-ban-circle"></span> Cancelled.';
                                 return null;
@@ -348,10 +348,10 @@ if($Request_Ref){
                             //return $model->sample_code == "" ? '' : Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel ".$model->sample_code."?",'class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
                             if($model->sample_code != "" && $model->active == 1){
                                 //return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel <b>".$model->sample_code."</b>?\nAll analyses that this sample contains will also be cancelled.",'data-method'=>'post','class'=>'btn btn-warning','title'=>'Cancel Sample','data-pjax'=>'0']);
-                                return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', '', ['class'=>'btn btn-warning','title'=>'Cancel Sample','onclick' => 'cancelSample('.$model->sample_id.')']);
+                                return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', '#', ['class'=>'btn btn-warning','title'=>'Cancel Sample','onclick' => 'cancelSample('.$model->sample_id.')']);
                             } else {
                                 //return '<span class="glyphicon glyphicon-ban-circle"></span> Cancelled.';
-                                return $model->active == 0 ? Html::a('<span style="font-size:12px;color:#222222;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>','',['class'=>'btn btn-warning','title'=>'View Cancel Remarks','onclick' => 'viewRemarkSample('.$model->sample_id.')']) : '';
+                                return $model->active == 0 ? Html::a('<span style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>','#',['class'=>'btn btn-danger','title'=>'View Cancel Remarks','onclick' => 'viewRemarkSample('.$model->sample_id.')']) : '';
                                 //return null;
                             }
                         },
