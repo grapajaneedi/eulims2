@@ -321,6 +321,7 @@ class SampleController extends Controller
                         $analyses->update(false); // skipping validation as no user input is involved
                     }
 
+                    $model->remarks = $_POST['Sample']['remarks'];
                     $model->active = 0;
                     if ($model->update() !== false) {
                         $session->set('cancelmessage',"executed");
@@ -332,6 +333,7 @@ class SampleController extends Controller
                     }
                 } else {
 
+                    $model->remarks = $_POST['Sample']['remarks'];
                     $model->active = 0;
                     //$model->update();
 
