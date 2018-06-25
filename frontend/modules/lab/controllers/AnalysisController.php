@@ -112,7 +112,7 @@ class AnalysisController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
         $model = new Analysis();
 
@@ -123,8 +123,7 @@ class AnalysisController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->analysis_id]);
         }
-        
-            $samplesQuery = Sample::find()->where(['request_id' => 1]);
+            $samplesQuery = Sample::find()->where(['request_id' => $id]);
             $sampleDataProvider = new ActiveDataProvider([
                     'query' => $samplesQuery,
                     'pagination' => [

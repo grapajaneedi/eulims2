@@ -10,6 +10,7 @@ use common\models\finance\Receipt;
 use common\models\finance\ReceiptSearch;
 use common\models\finance\Orseries;
 use common\models\finance\Collection;
+use common\models\finance\Check;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
 class CashierController extends \yii\web\Controller
@@ -122,10 +123,18 @@ class CashierController extends \yii\web\Controller
                 'pageSize' => 10,
                 ],
         ]);
+        $check_Query = Check::find()->where(['receipt_id' => $receiptid]);
+        $checkDataProvider = new ActiveDataProvider([
+                'query' => $check_Query,
+                'pagination' => [
+                'pageSize' => 10,
+                ],
+        ]);
         return $this->render('view_receipt', [
             'model' => $receipt,
             'op_model'=>$this->findModel($op_id),
             'paymentitemDataProvider' => $paymentitemDataProvider,
+            'check_model'=>$checkDataProvider,
         ]);
 
     }
@@ -185,6 +194,8 @@ class CashierController extends \yii\web\Controller
    }
     public function actionAddCollection($opid,$receiptid)
     {
+      //  var_dump($receiptid);
+       // exit;
         $op=$this->findModel($opid);
         $collection_id=$op->collection->collection_id;
        // $collection=$this->findModelCollection($collection_id);
@@ -218,6 +229,10 @@ class CashierController extends \yii\web\Controller
              Yii::$app->financedb->createCommand()
                     ->update('tbl_collection', ['amount' => $total,'sub_total'=>+$total], 'collection_id= '.$collection_id)
                     ->execute();
+             Yii::$app->financedb->createCommand()
+                    ->update('tbl_receipt', ['total' => $total], 'receipt_id= '.$receiptid)
+                    ->execute();
+             return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]); 
          }else{
              
          }
@@ -240,6 +255,41 @@ class CashierController extends \yii\web\Controller
         }
      }
     //-------------END of COLLECTION
+     //------CHECK
+    public function actionAddCheck($receiptid)
+    {
+         $model = new Check();
+         $receipt=$this->findModelReceipt($receiptid);
+         $total_collection=$receipt->total;
+         $sum = Check::find()->where(['receipt_id'=>$receiptid])->sum('amount');
+        if ($model->load(Yii::$app->request->post())) {
+            $session = Yii::$app->session;
+             try  {
+                $model->receipt_id=$receiptid;
+                $model->save(false);
+                 return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]);
+                //$session->set('savepopup',"executed");
+                
+             } catch (Exception $e) {
+                   return $e;
+             }
+        }
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('create_check', [
+                'model' => $model,
+                'check_amount'=>$sum,
+                'total_collection'=>$total_collection,
+            ]);
+        }else{
+            return $this->render('create_check', [
+                'model' => $model,
+                'check_amount'=>$sum,
+                'total_collection'=>$total_collection,
+            ]);
+        }
+    }
+    
+     //-----------END of CHECK
     public function actionReports()
     {
         return $this->render('reports');

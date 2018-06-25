@@ -118,26 +118,61 @@ class RequestController extends Controller
     }
 
     public function actionPrintlabel(){
-       // $pdf=new \common\components\MyPDF();
 
        if(isset($_GET['request_id'])){
 
         $id = $_GET['request_id'];
+  
+        $request = Request::find()->where(['request_id' => $id]);
+        $samplesquery = Sample::find()->where(['request_id' => $id])->all();
+        $Content= $this->renderPartial('_printlabel', [
+                     'samplesquery' => $samplesquery, 'request'=>$request]);
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'utf-8', 
+            'format' => [35,66], 
+            'orientation' => 'L',
+            'margin-bottom'=>0,
+            'margin-left'=>0,
+            'margin-right'=>0,
+            'margin-top'=>0,
+        ]);
+        // $html='<style>@page {
+        //     margin: 0px;
+        //    }</style>
+       
+       
+        //    ';
+        $mpdf->WriteHTML($Content);
+        $mpdf->AddPage();
+      
+      //  echo $mpdf->Output('filename', 'I'); 
+        //
+        
+      //  $mpdf->WriteHTML($html);
+       echo   $mpdf->Output();
+        //
 
-        $pdf = new Pdf();
-
-        $pdf->format=[66,35];
-        $pdf->marginBottom=0;
-        $pdf->marginLeft=0;
-        $pdf->marginRight=0;
-        $pdf->marginTop=0;
-
-        $requestQuery = Request::find()->where(['request_id' => $id]);
-
-        $Content= $this->renderPartial('_printlabel', ['requestQuery' => $requestQuery]);
-        $pdf->content = $Content;
-        $pdf->render($Content);
        }
+    }
+
+    public function actionjanPdf(){
+        $requestQuery = Request::find()->where(['request_id' => 11]);
+        
+        $Content= $this->renderPartial('_printlabel', ['requestQuery' => $requestQuery]);
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'utf-8', 
+            'format' => [66,35], 
+            'orientation' => 'L',
+            'marginBottom'=>0,
+            'marginLeft'=>0,
+            'marginRight'=>0,
+            'marginTop'=>0,
+        ]);
+        $mpdf->WriteHTML($Content);
+        $mpdf->AddPage();
+        $mpdf->AddPage();
+        $mpdf->AddPage();
+        echo $mpdf->Output('filename', 'I'); 
     }
 
     public function actionTest($id){

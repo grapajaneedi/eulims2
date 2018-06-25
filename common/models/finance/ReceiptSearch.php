@@ -24,7 +24,7 @@ class ReceiptSearch extends Receipt
     {
         return [
             [['receipt_id', 'rstl_id', 'terminal_id', 'collection_id', 'project_id', 'or_number', 'collectiontype_id', 'payment_mode_id', 'cancelled'], 'integer'],
-            [['receiptDate', 'check_id','total'], 'safe'],
+            [['receiptDate','total'], 'safe'],
             [['payor'], 'string'],
             [['createTimeRange'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
         ];
@@ -70,7 +70,6 @@ class ReceiptSearch extends Receipt
             'collection_id' => $this->collection_id,
             'project_id' => $this->project_id,
             'payment_mode_id' => $this->payment_mode_id,
-            'check_id' => $this->check_id,
             'collectiontype_id' => $this->collectiontype_id,
             'total' => $this->total,
             'cancelled' => $this->cancelled,
