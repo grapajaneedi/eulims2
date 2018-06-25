@@ -89,29 +89,58 @@ class TestreportController extends Controller
             $request = Request::findOne($req_id);
 
             //check for config if the lab is active
-            $tr_config = Testreportconfig::find()->where(['lab_id'=>$request->lab_id])->one();
+            $tr_config = Testreportconfig::find()->where(['lab_id'=>$request->lab_id,'config_year'=>date('Y')])->one();
             if(!$tr_config){
+                // $tr_config->setTestReportSeries();
+                Testreportconfig::setTestReportSeries2($request->lab_id);
+                $tr_config = Testreportconfig::find()->where(['lab_id'=>$request->lab_id,'config_year'=>date('Y')])->one();
                 //throw error
-                throw new \yii\base\Exception( "Lab Configuration for the ref. num '$request->request_ref_num' is Inactive!" );
-                exit();
+                // throw new \yii\base\Exception( "Lab Configuration for the ref. num '$request->request_ref_num' is Inactive!" );
+                // exit();
             }
+
+            //retrieve the lab info using the $tr_config
+            $lab = Lab::findOne($tr_config->lab_id);
+
+            
+
             //check if multiple
             if($model->lab_id){
                 //if multiple //code here
+
+                $rlabid = $request->lab_id;
+                //fetch the sample ids involve
+                $sampleids =$_POST['Sample'];
+                foreach ($sampleids as $key => $value) {
+                    //make the record of the testreport
+                    $newtsreport = New Testreport();
+                    $newtsreport->request_id = $model->request_id;
+                    $newtsreport->lab_id=$rlabid;
+                    $newtsreport->report_date= date('Y-m-d', strtotime($model->report_date));
+                    $newtsreport->report_num=date('mdY').'-'.$lab->labcode.'-'.$tr_config->getTestReportSeries();
+                    if($newtsreport->save()){
+                        $tr_config->setTestReportSeries();
+                        $trsample = new TestreportSample();
+                        $trsample->testreport_id=$newtsreport->testreport_id;
+                        $trsample->sample_id=$value['sample_id'];
+                        $trsample->save();
+                    }
+                 }
+                 return $this->redirect(['viewmultiple', 'id' => $model->testreport_id]);
             }else{
                 //if not multiple //code here
-                //retrieve the lab info using the $tr_config
-                $lab = Lab::findOne($tr_config->lab_id);
-
+    
                 //update lab id on model
                 $model->lab_id=$request->lab_id;
+
                 //update the testreport number
-                $model->report_num= date('mdY').'-'.$lab->labcode.'-'.$tr_config->number;
+                $model->report_num= date('mdY').'-'.$lab->labcode.'-'.$tr_config->getTestReportSeries();
+      
                 //reformat the report date
                 $model->report_date = date('Y-m-d', strtotime($model->report_date));
                 if($model->save()){
-                    //update the config
-                    $tr_config->number = $tr_config->number +1 ; 
+                    //update the config to increment the series number
+                    $tr_config->setTestReportSeries();
                     //save the sample IDS for samples involve
                     $sampleids =$_POST['Sample'];
                     foreach ($sampleids as $key => $value) {

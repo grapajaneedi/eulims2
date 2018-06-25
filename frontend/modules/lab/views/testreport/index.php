@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'previous_id',
             //'new_id',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'kartik\grid\ActionColumn'],
         ],
     ]); ?>
     </div>
