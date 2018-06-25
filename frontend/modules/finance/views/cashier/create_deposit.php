@@ -7,6 +7,8 @@ use kartik\select2\Select2;
 use kartik\widgets\DatePicker;
 use yii\helpers\Url;
 use common\components\Functions;
+use common\models\finance\Orseries; 
+use common\models\finance\DepositType; 
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Check */
 /* @var $form yii\widgets\ActiveForm */
@@ -25,33 +27,58 @@ use common\components\Functions;
     <div style="padding:0px!important;">
         <div class="row">
             <div class="col-sm-6">
-             <?php echo $form->field($model, 'bank')->textInput() ?>
+             <?php
+                echo $form->field($model, 'deposit_type_id')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(DepositType::find()->all(), 'deposit_type_id', 'deposit_type'),
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['placeholder' => 'Please Select ...'],
+                'pluginOptions' => [
+                  'allowClear' => true
+                ],
+                ])->label('Deposit Type');
+            ?>
             </div>   
             <div class="col-sm-6">
-             <?php echo $form->field($model, 'checknumber')->textInput() ?>
+              <?php 
+
+                echo $form->field($model, 'or_series_id')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(Orseries::find()->all(), 'or_series_id', 'or_series_name'),
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['placeholder' => 'O.R Series ...'],
+                'pluginOptions' => [
+                  'allowClear' => true
+                ],
+                ])->label('O.R Series');
+             ?>
             </div> 
         </div>
         <div class="row">
-          
             <div class="col-sm-6">
-           <?php
-             echo $form->field($model, 'checkdate')->widget(DatePicker::classname(), [
-             'options' => ['placeholder' => 'Select Date ...',
-             'autocomplete'=>'off'],
-             'type' => DatePicker::TYPE_COMPONENT_APPEND,
-                 'pluginOptions' => [
-                     'format' => 'yyyy-mm-dd',
-                     'todayHighlight' => true,
-                     'autoclose'=>true,   
-                 ]
-             ]);
-             ?>
+                <?php echo $form->field($model, 'start_or')->textInput() ?>
+            </div>
+            <div class="col-sm-6">
+                <?php echo $form->field($model, 'end_or')->textInput() ?>
+            </div>  
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <?php
+                echo $form->field($model, 'deposit_date')->widget(DatePicker::classname(), [
+                'options' => ['placeholder' => 'Select Date ...',
+                'autocomplete'=>'off'],
+                'type' => DatePicker::TYPE_COMPONENT_APPEND,
+                    'pluginOptions' => [
+                        'format' => 'yyyy-mm-dd',
+                        'todayHighlight' => true,
+                        'autoclose'=>true,   
+                    ]
+                ]);
+                ?>
             </div>
             <div class="col-sm-6">
                 <?php echo $form->field($model, 'amount')->textInput() ?>
             </div>  
         </div>
-      
         <div class="form-group pull-right">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
                 'id'=>'createCheck']) ?>

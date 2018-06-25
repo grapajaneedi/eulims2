@@ -11,6 +11,9 @@ use common\models\finance\ReceiptSearch;
 use common\models\finance\Orseries;
 use common\models\finance\Collection;
 use common\models\finance\Check;
+use common\models\finance\Deposit;
+
+use common\models\finance\DepositSearch;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
 class CashierController extends \yii\web\Controller
@@ -172,7 +175,43 @@ class CashierController extends \yii\web\Controller
      //------------DEPOSIT
     public function actionDeposit()
     {
-        return $this->render('deposit');
+        $model = new Deposit();
+        $searchModel = new DepositSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('deposit', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'model' => $model,
+        ]);
+    }
+    public function actionAddDeposit()
+    {
+        $model = new Deposit();
+        
+        if ($model->load(Yii::$app->request->post())) {
+            $session = Yii::$app->session;
+             try  {
+                 $model->rstl_id=$GLOBALS['rstl_id'];
+                //$model->receipt_id=$receiptid;
+                $model->save(false);
+                $session->set('savepopup',"executed");
+                 return $this->redirect(['/finance/cashier/deposit']);
+                //
+                
+             } catch (Exception $e) {
+                   return $e;
+             }
+        }
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('create_deposit', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->render('create_deposit', [
+                'model' => $model,
+            ]);
+        }
     }
     //------------------END of DEPOSIT
     //------------COLLECTION
@@ -262,6 +301,8 @@ class CashierController extends \yii\web\Controller
          $receipt=$this->findModelReceipt($receiptid);
          $total_collection=$receipt->total;
          $sum = Check::find()->where(['receipt_id'=>$receiptid])->sum('amount');
+        // var_dump($sum);
+        // exit;
         if ($model->load(Yii::$app->request->post())) {
             $session = Yii::$app->session;
              try  {

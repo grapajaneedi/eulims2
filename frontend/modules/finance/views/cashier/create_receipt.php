@@ -6,7 +6,7 @@ use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use kartik\widgets\DatePicker;
 use yii\helpers\Url;
-use common\models\finance\Project;
+use common\models\finance\DepositType;
 use common\models\finance\Paymentmode;
 use common\models\finance\Collectiontype;
 use common\models\finance\Orseries;
@@ -33,13 +33,13 @@ $func= new Functions();
            <?php 
 
                 echo $form->field($model, 'project_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map(Project::find()->all(), 'project_id', 'project'),
+                'data' => ArrayHelper::map(DepositType::find()->all(), 'deposit_type_id', 'deposit_type'),
                 'theme' => Select2::THEME_BOOTSTRAP,
                 'options' => ['placeholder' => 'Please Select ...'],
                 'pluginOptions' => [
                   'allowClear' => true
                 ],
-                ])->label('Project');
+                ])->label('Deposit Type');
             ?>
             </div>   
             <div class="col-sm-6">
