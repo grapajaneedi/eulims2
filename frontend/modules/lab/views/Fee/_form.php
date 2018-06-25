@@ -76,14 +76,16 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
         <?= $form->field($model, 'name')->widget(Select2::classname(), [
                         'data' => $namelist,
                         'language' => 'en',
-                         'options' => ['placeholder' => 'Select Name'],
+                         'options' => ['placeholder' => 'Select Name', 'id'=>'fee_list'],
                          'pluginOptions' => [
                          'allowClear' => true
+
                         ],
                 ])->label("Name"); ?>
 
         <?= $form->field($model, 'name')->hiddenInput()->label(false) ?>
 
+     
 
         </div>
         <div class="col-sm-6">
@@ -117,4 +119,32 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
 
     <?php ActiveForm::end(); ?>
 
+  
 </div>
+
+<?php
+$this->registerJs("$('#fee_list').on('change',function(){
+    var id = $('#fee_list').val();
+        $.ajax({
+            url: '".Url::toRoute("sample/getlisttemplate")."',
+            dataType: 'json',
+            method: 'GET',
+            //data: {id: $(this).val()},
+            data: {template_id: id},
+            success: function (data, textStatus, jqXHR) {
+                $('#sample-samplename').val(data.name);
+                $('#sample-description').val(data.description);
+                $('.image-loader').removeClass( \"img-loader\" );
+            },
+            beforeSend: function (xhr) {
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('An error occured!');
+                alert('Error in ajax request');
+            }
+        });
+});");
+?>
+

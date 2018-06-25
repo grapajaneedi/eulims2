@@ -391,7 +391,7 @@ if($Request_Ref){
         </div>
     </div>
     <div class="container">
-        <?php
+    <?php
             $analysisgridColumns = [
                 [
                     'attribute'=>'sample_name',
@@ -435,14 +435,21 @@ if($Request_Ref){
                     //     return $model->samples->sample_code;
                     // },
                     'enableSorting' => false,
+                    'pageSummary' => '<span style="float:right";>SUBTOTAL<br>DISCOUNT<br>TOTAL</span>',
                 ],
                 [
                     'attribute'=>'fee',
                     'header'=>'Unit Price',
-                    // 'value' => function($model) {
-                    //     return $model->samples->sample_code;
-                    // },
                     'enableSorting' => false,
+                    'contentOptions' => [
+                        'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                    ],
+                    'hAlign' => 'right', 
+                    'vAlign' => 'middle',
+                    'width' => '7%',
+                    'format' => ['decimal', 2],
+                    'pageSummary' => true,  
+                  
                 ],
                 [
                     'attribute'=>'status',
@@ -490,8 +497,10 @@ if($Request_Ref){
                             //     return $model->active == 0 ? '<span class="text-danger" style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>' : '';
                             // }
                         },
+                       
                     ],
                 ],
+             
                
             ];
             echo GridView::widget([
@@ -499,6 +508,7 @@ if($Request_Ref){
                 'dataProvider'=> $analysisdataprovider,
                 'summary' => '',
                 'responsive'=>true, 
+                'showPageSummary' => true,
                 'hover'=>true,
                 //'filterModel' => $searchModel, JANEEDI 
                 'panel' => [
