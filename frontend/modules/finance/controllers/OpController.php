@@ -118,6 +118,7 @@ class OpController extends Controller
                              $paymentitem->orderofpayment_id = $model->orderofpayment_id;
                              $paymentitem->details =$request->request_ref_num;
                              $paymentitem->amount = $request->total;
+                             $paymentitem->request_type_id =$request->request_type_id;
                              $total_amount+=$request->total;
                              $paymentitem->save(); 
                         }
@@ -189,7 +190,7 @@ class OpController extends Controller
      public function actionGetlistrequest($id)
     {
          $model= new Request();
-        $query = Request::find()->where(['customer_id' => $id,'posted' => 0]);
+        $query = Request::find()->where(['customer_id' => $id,'posted' => 0])->andWhere(['not', ['request_ref_num' => null]]);
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
