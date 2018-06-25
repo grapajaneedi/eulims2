@@ -309,22 +309,10 @@ if($Request_Ref){
                             $url ='/lab/sample/delete?id='.$model->sample_id;
                             return $url;
                         } 
-<<<<<<< HEAD
                         if ($action === 'cancel') {
                             $url ='/lab/sample/cancel?id='.$model->sample_id;
                             return $url;
                         }
-=======
-                        // if ($action === 'cancel') {
-                        //     $url ='/lab/sample/cancel?id='.$model->sample_id;
-                        //     return $url;
-                        // }
-                        // if ($action === 'update') {
-                        //     $url ='/lab/sample/update?id='.$model->sample_id;
-                        //     return $url;
-                        // }
-
->>>>>>> upstream/master
                     },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
