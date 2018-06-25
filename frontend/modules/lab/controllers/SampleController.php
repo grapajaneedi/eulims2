@@ -306,34 +306,53 @@ class SampleController extends Controller
         $sampleId = (int) $id;
         $analyses = Analysis::find()->where('sample_id =:sampleId', [':sampleId'=>$sampleId])->all();
 
-        if(count($analyses) > 0)
-        {
-            foreach ($analyses as $analysis) {
-                //$analysis->delete(); //to delete
-                $analyses->cancelled = 1;
-                $analyses->update(false); // skipping validation as no user input is involved
-            }
+        //if ($model->load(Yii::$app->request->post())) {
+        if (Yii::$app->request->post()){
 
-            $model->active = 0;
-            if ($model->update() !== false) {
-                $session->set('cancelmessage',"executed");
+            if(trim($_POST['Sample']['remarks']) == ""){
+                Yii::$app->session->setFlash('error', "Remarks should not be empty.");
                 return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
             } else {
-                $model->error();
-                return false;
+                if(count($analyses) > 0)
+                {
+                    foreach ($analyses as $analysis) {
+                        //$analysis->delete(); //to delete
+                        $analyses->cancelled = 1;
+                        $analyses->update(false); // skipping validation as no user input is involved
+                    }
+
+                    $model->active = 0;
+                    if ($model->update() !== false) {
+                        $session->set('cancelmessage',"executed");
+                        
+                        return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+                    } else {
+                        $model->error();
+                        return false;
+                    }
+                } else {
+
+                    $model->active = 0;
+                    //$model->update();
+
+                    if ($model->update() !== false) {
+                        $session->set('cancelmessage',"executed");
+                        return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+                    } else {
+                        $model->error();
+                        return false;
+                    }
+                }
             }
+
+        } elseif (Yii::$app->request->isAjax) {
+                return $this->renderAjax('_cancel', [
+                    'model' => $model,
+                ]);
         } else {
-
-            $model->active = 0;
-            //$model->update();
-
-            if ($model->update() !== false) {
-                $session->set('cancelmessage',"executed");
-                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-            } else {
-                $model->error();
-                return false;
-            }
+            return $this->render('_cancel', [
+                'model' => $model,
+            ]);
         }
     }
 

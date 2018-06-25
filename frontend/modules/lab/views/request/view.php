@@ -339,7 +339,7 @@ if($Request_Ref){
                         'delete' => function ($url, $model) {
                             //return $model->sample_code != "" ? '' : Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['class'=>'btn btn-primary','title'=>'Update Sample',]);
                             if($model->sample_code == "" && $model->active == 1){
-                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'data-method'=>'post','class'=>'btn btn-primary','title'=>'Delete Sample','data-pjax'=>'0']);
+                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'data-method'=>'post','class'=>'btn btn-danger','title'=>'Delete Sample','data-pjax'=>'0']);
                             } else {
                                 return null;
                             }
@@ -347,10 +347,11 @@ if($Request_Ref){
                         'cancel' => function ($url, $model){
                             //return $model->sample_code == "" ? '' : Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel ".$model->sample_code."?",'class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
                             if($model->sample_code != "" && $model->active == 1){
-                                return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel <b>".$model->sample_code."</b>?\nAll analyses that this sample contains will also be cancelled.",'data-method'=>'post','class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
+                                //return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel <b>".$model->sample_code."</b>?\nAll analyses that this sample contains will also be cancelled.",'data-method'=>'post','class'=>'btn btn-warning','title'=>'Cancel Sample','data-pjax'=>'0']);
+                                return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', '', ['class'=>'btn btn-warning','title'=>'Cancel Sample','onclick' => 'cancelSample('.$model->sample_id.')']);
                             } else {
                                 //return '<span class="glyphicon glyphicon-ban-circle"></span> Cancelled.';
-                                return $model->active == 0 ? '<span class="text-danger" style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>' : '';
+                                return $model->active == 0 ? Html::a('<span style="font-size:12px;color:#222222;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>','',['class'=>'btn btn-warning','title'=>'View Cancel Remarks','onclick' => 'viewRemarkSample('.$model->sample_id.')']) : '';
                                 //return null;
                             }
                         },
@@ -496,22 +497,22 @@ if($Request_Ref){
             .find('#modalContent')
             .load(url);
     }
-    // function deleteSample(id){
-    //    //var url = 'Url::to(['sample/update']) . "?id=' + id;
-    //    var url = '/lab/sample/update?id='+id;
-    //     $('.modal-title').html('Update Sample');
-    //     $('#modal').modal('show')
-    //         .find('#modalContent')
-    //         .load(url);
-    // }
-    // function cancelSample(id){
-    //    //var url = 'Url::to(['sample/update']) . "?id=' + id;
-    //    var url = '/lab/sample/update?id='+id;
-    //     $('.modal-title').html('Update Sample');
-    //     $('#modal').modal('show')
-    //         .find('#modalContent')
-    //         .load(url);
-    // }
+    function viewRemarkSample(id){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       var url = '/lab/sample/cancel?id='+id;
+        $('.modal-title').html('View Cancel Remark');
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
+    function cancelSample(id){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       var url = '/lab/sample/cancel?id='+id;
+        $('.modal-title').html('Cancel Sample');
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
     function addSample(url,title){
        //var url = 'Url::to(['sample/update']) . "?id=' + id;
        //var url = '/lab/sample/update?id='+id;
