@@ -4,6 +4,8 @@ namespace frontend\modules\finance\controllers;
 use Yii;
 use common\models\finance\clientSearch;
 use common\models\finance\Client;
+use common\models\finance\Op;
+use frontend\modules\finance\components\BillSearch;
 
 class BillingController extends \yii\web\Controller
 {
@@ -49,8 +51,17 @@ class BillingController extends \yii\web\Controller
                 return $this->renderAjax('client/update', [
                     'model' => $model,
                 ]);
+            }else{
+                 return $this->render('client/update', [
+                    'model' => $model,
+                ]);
             }
         }
+    }
+    public function actionClientdelete($id){
+        $model = Client::findOne($id);
+        $model->delete();
+        return $this->redirect(['/finance/billing/client']);
     }
     /**
      * Creates a new client model.
@@ -92,7 +103,15 @@ class BillingController extends \yii\web\Controller
         ]);
     }
     public function actionInvoices(){
-        return $this->render('invoices');
+        $model = new Op();
+        $searchModel = new BillSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('invoices/index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'model' => $model,
+        ]);
     }
     public function actionAr(){
         return $this->render('ar');

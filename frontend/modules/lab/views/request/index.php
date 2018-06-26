@@ -54,16 +54,6 @@ $func=new Functions();
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             'request_ref_num',
-            /*[
-                'label'=>'Request Date',
-                'attribute'=>'request_datetime',
-                'filterType' => GridView::FILTER_DATE,
-                //'value'=>function($model){
-                //    return date('m/d/Y h:i:s A',$model->request_datetime);
-                //}
-            ],
-             * 
-             */
             [
                 'label'=>'Request Date',
                 'attribute'=>'request_datetime',
