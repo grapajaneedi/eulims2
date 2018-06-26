@@ -1,5 +1,6 @@
 <?php
 namespace common\models\lab;
+use common\models\address\Barangay;
 use yii\db\ActiveRecord;
 use Yii;
 /**
@@ -144,5 +145,12 @@ class Customer extends \yii\db\ActiveRecord
     public function getClassification()
     {
         return $this->hasOne(Classification::className(), ['classification_id' => 'classification_id']);
+    }
+
+    public function getCompleteaddress()
+    {
+         // return $this->hasOne(Classification::className(), ['classification_id' => 'classification_id']);
+         $address = Barangay::findOne($this->barangay_id);
+         return $address->cityMunicipality->province->region->region.' '.$address->cityMunicipality->province->province.' '.$address->cityMunicipality->city_municipality.' '.$address->barangay;
     }
 }

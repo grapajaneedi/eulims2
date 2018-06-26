@@ -14,6 +14,7 @@ use common\models\lab\Request;
 use common\models\lab\Testreportconfig;
 use common\models\lab\Lab;
 use common\models\lab\TestreportSample;
+use common\models\lab\Batchtestreport;
 
 
 /**
@@ -94,9 +95,6 @@ class TestreportController extends Controller
                 // $tr_config->setTestReportSeries();
                 Testreportconfig::setTestReportSeries2($request->lab_id);
                 $tr_config = Testreportconfig::find()->where(['lab_id'=>$request->lab_id,'config_year'=>date('Y')])->one();
-                //throw error
-                // throw new \yii\base\Exception( "Lab Configuration for the ref. num '$request->request_ref_num' is Inactive!" );
-                // exit();
             }
 
             //retrieve the lab info using the $tr_config
@@ -108,6 +106,10 @@ class TestreportController extends Controller
             if($model->lab_id){
                 //if multiple //code here
 
+                $Batchtestreport = New Batchtestreport();
+                $Batchtestreport->request_id=$model->request_id;
+                $Batchtestreport->batch_date=date('Y-m-d', strtotime($model->report_date));
+                $tsr_ids = "";
                 $rlabid = $request->lab_id;
                 //fetch the sample ids involve
                 $sampleids =$_POST['Sample'];
@@ -119,6 +121,7 @@ class TestreportController extends Controller
                     $newtsreport->report_date= date('Y-m-d', strtotime($model->report_date));
                     $newtsreport->report_num=date('mdY').'-'.$lab->labcode.'-'.$tr_config->getTestReportSeries();
                     if($newtsreport->save()){
+                        $tsr_ids= $tsr_ids.",".$newtsreport->testreport_id;
                         $tr_config->setTestReportSeries();
                         $trsample = new TestreportSample();
                         $trsample->testreport_id=$newtsreport->testreport_id;
@@ -126,7 +129,9 @@ class TestreportController extends Controller
                         $trsample->save();
                     }
                  }
-                 return $this->redirect(['viewmultiple', 'id' => $model->testreport_id]);
+                 $Batchtestreport->testreport_ids=substr($tsr_ids, 1);
+                 $Batchtestreport->save();
+                 return $this->redirect(['viewmultiple', 'id' => $Batchtestreport->batchtestreport_id]);
             }else{
                 //if not multiple //code here
     
@@ -162,6 +167,15 @@ class TestreportController extends Controller
         else
             return $this->render('create', [
                 'model' => $model,
+            ]);
+    }
+
+    public function actionViewmultiple($id){
+        $batch = Batchtestreport::findOne($id);
+        // $request = Request::find($batch->request_id)->with("customer")->one();
+        return $this->render('viewmultiple',[
+            'model'=>$batch,
+            // 'request'=>$request
             ]);
     }
 
