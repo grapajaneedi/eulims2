@@ -128,7 +128,7 @@ $Buttontemplate='{view}{update}{delete}';
                         return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => Url::to(['/finance/billing/clientupdate/','id'=>$model->client_id]), 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Client")]);
                     },
                     'delete' => function($url, $model){
-                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'id' => $model->client_id], [
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['clientdelete', 'id' => $model->client_id], [
                         "class" => "btn btn-danger",
                         "data" => [
                             "confirm" => "Are you absolutely sure you want to remove on Account of '<strong>".$model->customer->customer_name."'</strong>?",

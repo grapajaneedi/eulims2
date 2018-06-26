@@ -8,6 +8,7 @@
 
 namespace common\components;
 
+use Yii;
 use yii\base\Component;
 use yii2mod\alert\Alert;
 use common\models\lab\Status;
@@ -20,7 +21,6 @@ use common\models\lab\Request;
 use common\models\lab\Sample;
 use common\models\lab\Samplecode;
 use common\models\lab\Lab;
-use Yii;
 /**
  * Description of Functions
  *
@@ -87,6 +87,10 @@ class Functions extends Component{
     function GetProfileName($UserID){
         $Profile=Profile::find()->where(['user_id'=>$UserID])->one();
         return $Profile->fullname;      
+    }
+    function GetCustomerName($CustomerID){
+        $Customer= Customer::find()->where(['customer_id'=>$CustomerID])->one();
+        return $Customer->customer_name;
     }
     /**
      * 

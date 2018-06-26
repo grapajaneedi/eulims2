@@ -14,7 +14,6 @@ use common\components\Functions;
 $func=new Functions();
 $rstl_id=$GLOBALS['rstl_id'];
 $customerList=$func->GetCustomerClientList($rstl_id);
-
 ?>
 <div class="client-form">
 
@@ -33,14 +32,20 @@ $customerList=$func->GetCustomerClientList($rstl_id);
     <?= $form->field($model, 'company_name')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-md-6">
-            <?= $form->field($model, 'customer_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map($customerList, 'customer_id', 'customer_name'),
-                'language' => 'en',
-                'options' => ['placeholder' => 'Select Customer'],
-                'pluginOptions' => [
-                    'allowClear' => true
-                ],
-            ]); ?>
+            <?php 
+            if($model->isNewRecord){
+                echo $form->field($model, 'customer_id')->widget(Select2::classname(), [
+                    'data' => ArrayHelper::map($customerList, 'customer_id', 'customer_name'),
+                    'language' => 'en',
+                    'options' => ['placeholder' => 'Select Customer'],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]); 
+            }else{
+                echo $func->GetCustomerList($form, $model, false,'Customer');  
+            }
+            ?>
         </div>
     </div>
     <div class="row">
