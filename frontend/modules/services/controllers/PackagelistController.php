@@ -16,6 +16,7 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use common\models\services\Testcategory;
 use common\models\services\TestcategorySearch;
+use yii\helpers\Json;
 
 /**
  * PackagelistController implements the CRUD actions for Packagelist model.
@@ -115,6 +116,7 @@ class PackagelistController extends Controller
             $test = [];
 
         if (Yii::$app->request->isAjax) {
+            $model->rstl_id = $GLOBALS['rstl_id'];
             return $this->renderAjax('_packageform', [
                 'model' => $model,
                 'searchModel' => $searchModel,
@@ -125,12 +127,61 @@ class PackagelistController extends Controller
                 'sampletype'=>$sampletype
             ]);
         }else{
+            $model->rstl_id = $GLOBALS['rstl_id'];
             return $this->render('_packageform', [
                 'model' => $model,
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
+                'sampleDataProvider' => $sampleDataProvider,
+                'testcategory' => $testcategory,
+                'test' => $test,
+                'sampletype'=>$sampletype
             ]);
         }
+    }
+
+    public function actionListpackage()
+    {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $list = Packagelist::find()->andWhere(['sample_type_id'=>$id])->asArray()->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $package) {
+                    $out[] = ['id' => $package['package_id'], 'name' => $package['name']];
+                    if ($i == 0) {
+                        $selected = $package['package_id'];
+                    }
+                }
+                
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
+
+    public function actionGetpackage() {
+        if(isset($_GET['packagelist_id'])){
+            $id = (int) $_GET['packagelist_id'];
+            $modelpackagelist =  Packagelist::findOne(['package_id'=>$id]);
+            if(count($modelpackagelist)>0){
+                $rate = $modelpackagelist->rate;
+                $tests = $modelpackagelist->tests;
+            } else {
+                $rate = "";
+                $tests = "";
+            }
+        } else {
+            $rate = "Error getting rate";
+            $tests = "Error getting tests";
+        }
+        return Json::encode([
+            'rate'=>$rate,
+            'tests'=>$tests,
+        ]);
     }
 
     protected function listTestcategory($labId)

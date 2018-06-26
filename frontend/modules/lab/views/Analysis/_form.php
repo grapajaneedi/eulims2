@@ -83,12 +83,7 @@ use common\models\services\Sampletype;
 
     <?= $form->field($model, 'testname')->hiddenInput(['maxlength' => true])->label(false) ?>
 
-    <?= $form->field($model, 'method')->hiddenInput(['maxlength' => true])->label(false) ?>
-
-    <?= $form->field($model, 'fee')->hiddenInput(['maxlength' => true])->label(false) ?>
-
     <?= $form->field($model, 'cancelled')->hiddenInput()->label(false) ?>
-
 
     <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
 
@@ -212,10 +207,10 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
             //data: {id: $(this).val()},
             data: {test_id: id},
             success: function (data, textStatus, jqXHR) {
-                alert('boom');
                 $('#analysis-method').val(data.method);
                 $('#analysis-references').val(data.references);
                 $('#analysis-fee').val(data.fee);
+                $('#analysis-quantity').val('1');
                 $('.image-loader').removeClass( \"img-loader\" );
             },
             beforeSend: function (xhr) {

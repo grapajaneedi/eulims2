@@ -451,14 +451,14 @@ if($Request_Ref){
                     'pageSummary' => true,  
                   
                 ],
-                [
-                    'attribute'=>'status',
-                    'header'=>'Status',
-                    // 'value' => function($model) {
-                    //     return $model->samples->sample_code;
-                    // },
-                    'enableSorting' => false,
-                ],
+                // [
+                //     'attribute'=>'status',
+                //     'header'=>'Status',
+                //     // 'value' => function($model) {
+                //     //     return $model->samples->sample_code;
+                //     // },
+                //     'enableSorting' => false,
+                // ],
                 [
                     'class' => 'kartik\grid\ActionColumn',
                     'template' => '{update} {delete} {cancel}',

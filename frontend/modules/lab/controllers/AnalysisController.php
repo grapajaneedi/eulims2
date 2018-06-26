@@ -73,17 +73,21 @@ class AnalysisController extends Controller
             if(count($modeltest)>0){
                 $method = $modeltest->method;
                 $references = $modeltest->payment_references;
+                $fee = $modeltest->fee;
             } else {
                 $method = "";
                 $references = "";
+                $fee = "";
             }
         } else {
-            $method = "Error getting sample name";
-            $references = "Error getting description";
+            $method = "Error getting method";
+            $references = "Error getting reference";
+            $fee = "Error getting fee";
         }
         return Json::encode([
             'method'=>$references,
             'references'=>$references,
+            'fee'=>$fee,
         ]);
     }
 
@@ -175,6 +179,18 @@ class AnalysisController extends Controller
             $test = [];
 
         if (Yii::$app->request->isAjax) {
+
+            //assign default value
+            $model->rstl_id = $GLOBALS['rstl_id'];
+            $model->pstcanalysis_id = $GLOBALS['rstl_id'];
+            $model->request_id = $GLOBALS['rstl_id'];
+            $model->testname = $GLOBALS['rstl_id'];
+            $model->cancelled = $GLOBALS['rstl_id'];
+
+
+            $model->sample_id = $GLOBALS['rstl_id'];
+            $model->sample_code = $GLOBALS['rstl_id'];
+
             return $this->renderAjax('_form', [
                 'model' => $model,
                 'searchModel' => $searchModel,
@@ -184,8 +200,6 @@ class AnalysisController extends Controller
                 'testcategory' => $testcategory,
                 'test' => $test,
                 'sampletype'=>$sampletype
-                // 'labId' => $labId,
-                // 'sampletemplate' => $this->listSampletemplate(),
             ]);
         }else{
             return $this->render('_form', [
@@ -196,8 +210,7 @@ class AnalysisController extends Controller
                 'sampleDataProvider' => $sampleDataProvider,
                 'testcategory' => $testcategory,
                 'sampletype' => $sampletype,
-                // 'labId' => $labId,
-                // 'sampletemplate' => $this->listSampletemplate(),
+                'test' => $test,
             ]);
         }
 

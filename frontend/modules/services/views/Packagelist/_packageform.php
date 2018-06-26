@@ -106,9 +106,9 @@ $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sa
                         'options'=>['id'=>'sample-name'],
                         'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                         'pluginOptions'=>[
-                            'depends'=>['sample-name'],
+                            'depends'=>['sample-sample_type_id'],
                             'placeholder'=>'Select Package',
-                            'url'=>Url::to(['/lab/analysis/listtest']),
+                            'url'=>Url::to(['/services/packagelist/listpackage']),
                             'loadingText' => 'Loading Package...',
                         ]
                     ])
@@ -132,3 +132,29 @@ $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sa
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$this->registerJs("$('#sample-name').on('change',function(){
+    var id = $('#sample-name').val();
+        $.ajax({
+            url: '".Url::toRoute("packagelist/getpackage")."',
+            dataType: 'json',
+            method: 'GET',
+            //data: {id: $(this).val()},
+            data: {packagelist_id: id},
+            success: function (data, textStatus, jqXHR) {
+                $('#packagelist-rate').val(data.rate);
+                $('#packagelist-tests').val(data.tests);
+                $('.image-loader').removeClass( \"img-loader\" );
+            },
+            beforeSend: function (xhr) {
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('An error occured!');
+                alert('Error in ajax request');
+            }
+        });
+});");
+?>
