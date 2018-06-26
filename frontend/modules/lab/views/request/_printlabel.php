@@ -14,11 +14,15 @@ body {
 	background-color:#ffffff;
 }
 </style>
-<?php
-    foreach ($samplesquery as $sample) {
-      
-      $mpdf->AddPage();
 
+
+<?php
+
+
+
+
+    foreach ($samplesquery as $sample) {
+       
             //  $analysisquery = Analysis::find()->where(['sample_id' => $sample['sample_id']])->all();
               echo $sample['samplename']."<br>";
             // echo $sample['sample_code']."<br>";
@@ -26,12 +30,9 @@ body {
                   //    var_dump($analysisquery);
            //            echo "&nbsp;&nbsp;&nbsp;&nbsp;".$analysis['testname']."<br>";
                //    }
-                  // echo "<div className='page-break'></div>";        
-            }
-          //  $pdf = new Pdf();
-
-        
-            
+                  // echo "<div className='page-break'></div>";  
+               $mpdf->AddPage('','','','','',0,0, 0, 0);
+            }       
 ?>
 
 

@@ -115,6 +115,58 @@ class PackagelistController extends Controller
             $sampletype = [];
             $test = [];
 
+            if ($model->load(Yii::$app->request->post())) {
+                // $analysis = new Analysis();
+                // $analysis->cancelled = (int) $_POST['Sample']['testcategory_id'];
+                // $analysis->pstcanalysis_id = (int) $_POST['Sample']['sample_type_id'];
+                // $analysis->request_id = (int) $_POST['Sample']['sample_type_id'];
+                // $analysis->rstl_id = (int) $_POST['Sample']['sample_type_id'];
+                // $analysis->sample_id = (int) $_POST['Sample']['sample_type_id'];
+                // $analysis->user_id = (int) $_POST['Sample']['sample_type_id'];
+                // $analysis->sample_type_id = (int) $_POST['Sample']['sample_type_id'];
+                // $analysis->testcategory_id = (int) $_POST['Sample']['sample_type_id'];
+                // $analysis->is_package = $_POST['Sample']['samplename'];
+                // $analysis->method = $_POST['Sample']['description'];
+                // $analysis->sample_code = $_POST['Sample']['description'];
+                // $analysis->fee = $request->request_id;
+                // $analysis->date_analysis = date('m', strtotime($request->request_datetime));
+                // $analysis->quantity = $request->request_id;
+                // $analysis->testname = $request->request_id;
+
+                $package = new Analysis();
+                $package->cancelled = 1;
+                $package->pstcanalysis_id = 1;
+                $package->request_id = 1;
+                $package->rstl_id = 1;
+                $package->test_id = 1;
+                $package->sample_id = 5;
+                $package->user_id = 6;
+                $analysis->sample_type_id = 7;
+                $analysis->testcategory_id = 8;
+                $analysis->is_package = 9;
+                $analysis->method = 10;
+                $analysis->testname = 10;
+                $analysis->references = 10;
+                $analysis->quantity = 10;
+                $analysis->sample_code = 11;
+                $analysis->date_analysis = '2018-06-14 7:35:0';
+                // $analysis->fee = $request->request_id;
+                // $analysis->date_analysis = date('m', strtotime($request->request_datetime));
+                // $analysis->quantity = $request->request_id;
+                // $analysis->testname = $request->request_id;
+              
+                $analysis->save(false);
+
+    //             return $this->redirect(['/lab/analysis/view', 'id' => $requestId]);
+    //         } else {
+    //             if($model->save(false)){
+                  
+    //              $session->set('savemessage',"executed");
+    //             return $this->redirect(['/lab/analysis/view', 'id' => $requestId]);
+                
+    //         }
+
+       } 
         if (Yii::$app->request->isAjax) {
             $model->rstl_id = $GLOBALS['rstl_id'];
             return $this->renderAjax('_packageform', [
