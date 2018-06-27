@@ -70,12 +70,10 @@ $paymentlist='';
              <div class="col-sm-6">
                 <?= $form->field($model, 'payment_mode_id')->widget(DepDrop::classname(), [
                     'type'=>DepDrop::TYPE_SELECT2,
-                    //'data'=>$paymentlist,
-                    //'options'=>['id'=>'sample-sample_type_id'],
+                    'options' => ['placeholder' => 'Select Payment Mode ...'],
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'depends'=>['op-customer_id'],
-                        'placeholder'=>'Select Payment Mode',
                         'url'=>Url::to(['/finance/op/listpaymentmode?customerid='.$model->customer_id]),
                         
                     ]
@@ -165,12 +163,15 @@ $paymentlist='';
         $(this).select2('open');
       //  $(this).one('select-focus',select2Focus);
       $(this).attr('tabIndex',1);
-       
+       checkpayment_mode();
     });
     
     $('#op-payment_mode_id').on('change',function(e) {
         e.preventDefault();
-        var payment_mode=$(this).val();
+        checkpayment_mode();
+    });
+    function checkpayment_mode(){
+        var payment_mode=$('#op-payment_mode_id').val();
         if(payment_mode == 4){
             $('#op-purpose').prop('disabled', true);
             $('#createOP').prop('disabled', true);
@@ -178,6 +179,6 @@ $paymentlist='';
         else{
             $('#op-purpose').prop('disabled', false);
             $('#createOP').prop('disabled', false);
-        }
-    });
+        }    
+    }
 </script>

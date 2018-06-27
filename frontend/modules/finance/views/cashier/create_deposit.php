@@ -9,6 +9,7 @@ use yii\helpers\Url;
 use common\components\Functions;
 use common\models\finance\Orseries; 
 use common\models\finance\DepositType; 
+use kartik\widgets\DepDrop;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Check */
 /* @var $form yii\widgets\ActiveForm */
@@ -41,12 +42,16 @@ use common\models\finance\DepositType;
             <div class="col-sm-6">
               <?php 
 
-                echo $form->field($model, 'or_series_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map(Orseries::find()->all(), 'or_series_id', 'or_series_name'),
-                'theme' => Select2::THEME_BOOTSTRAP,
-                'options' => ['placeholder' => 'O.R Series ...'],
-                'pluginOptions' => [
-                  'allowClear' => true
+                echo $form->field($model, 'or_series_id')->widget(DepDrop::classname(), [
+                    'type'=>DepDrop::TYPE_SELECT2,
+                   // 'data'=>$sampletype,
+                    'options'=>['id'=>'deposit-or_series_id'],
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'pluginOptions'=>[
+                        'depends'=>['deposit-deposit_type_id'],
+                        'placeholder'=>'Select O.R Series',
+                        'url'=>Url::to(['/finance/cashier/listorseries']),
+                        'loadingText' => 'Loading...',
                 ],
                 ])->label('O.R Series');
              ?>
@@ -54,7 +59,7 @@ use common\models\finance\DepositType;
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <?php echo $form->field($model, 'start_or')->textInput() ?>
+                <?php echo $form->field($model, 'start_or')->textInput(['disabled' => true]) ?>
             </div>
             <div class="col-sm-6">
                 <?php echo $form->field($model, 'end_or')->textInput() ?>
@@ -76,7 +81,7 @@ use common\models\finance\DepositType;
                 ?>
             </div>
             <div class="col-sm-6">
-                <?php echo $form->field($model, 'amount')->textInput() ?>
+                <?php echo $form->field($model, 'amount')->textInput(['disabled' => true]) ?>
             </div>  
         </div>
         <div class="form-group pull-right">
@@ -126,3 +131,22 @@ use common\models\finance\DepositType;
         padding-top: 0px!important;
     }
 </style>
+<script type="text/javascript">
+    $('#deposit-deposit_type_id').on('change',function(e) {
+       $('#deposit-or_series_id').prop('disabled',false);
+       /*e.preventDefault();
+         jQuery.ajax( {
+            type: 'POST',
+            url: '/finance/op/check-customer-wallet?customerid='+$(this).val(),
+            dataType: 'html',
+            success: function ( response ) {
+               $('#wallet').val(response);
+            },
+            error: function ( xhr, ajaxOptions, thrownError ) {
+                alert( thrownError );
+            }
+        });*/
+    });
+    
+    
+</script>
