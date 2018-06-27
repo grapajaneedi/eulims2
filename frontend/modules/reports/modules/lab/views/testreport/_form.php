@@ -98,7 +98,7 @@ use kartik\widgets\SwitchInput;
             //data: {
             //    customer_id:customer_id,
            // },
-            url: '/lab/testreport/getlistsamples?id='+$(this).val(),
+            url: '/reports/lab/testreport/getlistsamples?id='+$(this).val(),
             dataType: 'html',
             success: function ( response ) {
 

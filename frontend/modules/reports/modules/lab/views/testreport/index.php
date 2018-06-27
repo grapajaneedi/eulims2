@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
 
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Test Report', ['value'=>'/lab/testreport/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Test Report"),'name'=>'Create New Test Report']); ?>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Test Report', ['value'=>'/reports/lab/testreport/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Test Report"),'name'=>'Create New Test Report']); ?>
     </p>
 
     <div class="table-responsive">

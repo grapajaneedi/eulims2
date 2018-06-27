@@ -10,7 +10,7 @@ class lab extends \yii\base\Module
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'frontend\modules\lab\controllers';
+    public $controllerNamespace = 'frontend\modules\reports\modules\lab\controllers';
 
     /**
      * @inheritdoc
