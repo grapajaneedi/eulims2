@@ -81,11 +81,12 @@ class FeeController extends Controller
         $model = new Fee();
         $searchModel = new FeeSearch();
         $request_id = $_GET['id'];
+        $session = Yii::$app->session;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->fee_id]);
-        }
+        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        //     return $this->redirect(['view', 'id' => $model->fee_id]);
+        // }
 
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $sampleDataProvider = new ActiveDataProvider([
@@ -102,12 +103,13 @@ class FeeController extends Controller
         $test = [];
 
         if ($model->load(Yii::$app->request->post())) {
-            
+
             $sample_ids= $_POST['sample_ids'];
             $ids = explode(',', $sample_ids);  
             $post= Yii::$app->request->post();
 
             foreach ($ids as $sample_id){
+
                 $analysis = new Analysis();
                 $analysis->sample_id = $sample_id;
                 $analysis->cancelled = 1;
@@ -129,6 +131,7 @@ class FeeController extends Controller
                 $analysis->save();
                
             }        
+            $session->set('savemessage',"executed");  
             return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
     } 
          if (Yii::$app->request->isAjax) {
@@ -157,6 +160,10 @@ class FeeController extends Controller
                 'model' => $model,
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
+                'sampleDataProvider' => $sampleDataProvider,
+                'testcategory' => $testcategory,
+                'test' => $test,
+                'sampletype'=>$sampletype
             ]);
         }
     }
