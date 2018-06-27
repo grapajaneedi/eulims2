@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 use yii\data\SqlDataProvider;
 use yii\data\ArrayDataProvider;
+use yii\helpers\Json;
 
 class StatisticController extends Controller
 {
@@ -24,6 +25,10 @@ class StatisticController extends Controller
 
     public function actionSamples()
     {
+    	//$session = Yii::$app->session;
+
+    	$model = new Requestextend;
+
     	//$modelSample = new Sample();
     	//$searchModel = new SampleSearch();
         //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -123,16 +128,49 @@ class StatisticController extends Controller
 
 		//$modelRequest = new Request();
 		//$modelRequest = Requestextend::find();
+		if (Yii::$app->request->get())
+		{
+			$labId = (int) Yii::$app->request->get('lab_id');
+			
+			if($this->checkValidDate(Yii::$app->request->get('from_date')) == true)
+			{
+		        //$valid = true;
+		        $fromDate = Yii::$app->request->get('from_date');
+			} else {
+				//$fromDate = date('Y-m-01'); //first day of the month
+				//$valid = false;
+				// echo Json::encode([
+    //         		'status'=>'failure',
+    //     		]);
+				$fromDate = date('Y-m-d');
+				Yii::$app->session->setFlash('error', "Not a valid date!");
+			}
+
+			if($this->checkValidDate(Yii::$app->request->get('to_date')) == true){
+				//$valid = true;
+				$toDate = Yii::$app->request->get('to_date');
+			} else {
+				//$toDate = date('Y-m-d'); //as of today
+				// echo Json::encode([
+    //         		'status'=>'failure',
+    //     		]);
+				$toDate = date('Y-m-d');
+				Yii::$app->session->setFlash('error', "Not a valid date!");
+			}
+
+		} else {
+			$labId = 1;
+			$fromDate = date('Y-m-01'); //first day of the month
+			$toDate = date('Y-m-d'); //as of today
+		}
+
 		$modelRequest = Requestextend::find()
-						->with('samples')
-						->where('status_id != :statusId', [':statusId'=>2])
-						->addParams([':statusId'=>2])
+						//->with('samples')
+						->where('rstl_id =:rstlId AND status_id != :statusId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate', [':rstlId'=>$GLOBALS['rstl_id'],':statusId'=>2,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate])
+						//->addParams([':statusId'=>2])
 						->groupBy(['DATE_FORMAT(request_datetime, "%Y-%m-%d")'])
 						->orderBy('request_datetime DESC');
-						//->all();
-		//$query = Post::find()->where(['status' => 1]);
-		//$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		//$modelRequest1 = Requestextend::find()->where('status_id =:statusId', [':statusId'=>2]);
+
 		$dataProvider = new ActiveDataProvider([
             //'query' => $searchModel->search(Yii::$app->request->queryParams),
             'query' =>$modelRequest,
@@ -141,13 +179,65 @@ class StatisticController extends Controller
             ],
         ]);
 
-		return $this->render('samplestat', [
-            //'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'laboratories' => $this->listLaboratory(),
-        ]);
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('samplestat', [
+                'dataProvider' => $dataProvider,
+                'lab_id' => $labId,
+                'from_date' => $fromDate,
+                'to_date' => $toDate,
+                'model'=>$modelRequest,
+	            'laboratories' => $this->listLaboratory(),
+            ]);
+        } else {
+			return $this->render('samplestat', [
+	            //'searchModel' => $searchModel,
+	            'dataProvider' => $dataProvider,
+	            'lab_id' => $labId,
+	            'model'=>$modelRequest,
+                'from_date' => $fromDate,
+                'to_date' => $toDate,
+	            'laboratories' => $this->listLaboratory(),
+	        ]);
+		}
+
+		/*if(Yii::$app->request->get('request_id'))
+        {
+            $requestId = (int) Yii::$app->request->get('request_id');
+        }*/
+
+		// $modelRequest = Requestextend::find()
+		// 				->with('samples')
+		// 				->where('status_id != :statusId', [':statusId'=>2])
+		// 				->addParams([':statusId'=>2])
+		// 				->groupBy(['DATE_FORMAT(request_datetime, "%Y-%m-%d")'])
+		// 				->orderBy('request_datetime DESC');
+						//->all();
+		//$query = Post::find()->where(['status' => 1]);
+		//$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		//$modelRequest1 = Requestextend::find()->where('status_id =:statusId', [':statusId'=>2]);
 
     	//return $this->render('index');
+    }
+
+    public function actionGetlisttemplate() {
+        if(isset($_GET['template_id'])){
+            $id = (int) $_GET['template_id'];
+            $modelSampletemplate =  SampleName::findOne(['sample_name_id'=>$id]);
+            if(count($modelSampletemplate)>0){
+                $sampleName = $modelSampletemplate->sample_name;
+                $sampleDescription = $modelSampletemplate->description;
+            } else {
+                $sampleName = "";
+                $sampleDescription = "";
+            }
+        } else {
+            $sampleName = "Error getting sample name";
+            $sampleDescription = "Error getting description";
+        }
+        return Json::encode([
+            'name'=>$sampleName,
+            'description'=>$sampleDescription,
+        ]);
     }
 
     public function actionAccomplishment()
@@ -164,6 +254,37 @@ class StatisticController extends Controller
 
         return $laboratory;
     }
+
+    function checkmydate($date){
+		$tempDate = explode('-', $date);
+		// checkdate(month, day, year)
+
+		if(count($tempDate) < 3)
+		{
+			return "Not valid";
+		} else {
+			return checkdate($tempDate[1], $tempDate[2], $tempDate[0]);
+		}
+	}
+
+	function checkValidDate($date){
+		$tempdate = explode('-', $date);
+
+		if(count($tempdate) < 3 || count($tempdate) > 3)
+		{
+			return false;
+		} else {
+			$month = (int) $tempdate[1];
+			$year = (int) $tempdate[0];
+			$day = (int) $tempdate[2];
+			//var_dump(checkdate($month,$day,$year));
+			if(checkdate($month,$day,$year) == true){
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 
     /*public function countSample($labId,$startDate,$endDate,$summaryType,$requestType)
     {

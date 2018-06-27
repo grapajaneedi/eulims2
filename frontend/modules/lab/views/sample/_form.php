@@ -270,31 +270,6 @@ $this->registerJs("$('#saved_templates').on('change',function(){
         });
 });");
 ?>
-<?php
-$script = <<< JS
-    $('form#{Sample}').on('beforeSubmit', function(e){
-        var \$form = $(this);
-        $.post(
-            \$form.attr("action"), 
-            \$form.serialize()
-        )
-        .done(function(result){
-            if(result == 1)
-            {
-                //$(document).find('#modal').modal('hide');
-                $(\$form).trigger("reset");
-                $.pjax.reload({container:'#sample-grid-pjax'});
-            } else {
-                $("#message").html(result.message);
-            }
-        }).fail(function(){
-            console.log("server error");
-        });
-    return false;
-    });
-JS;
-$this->registerJs($script);
-?>
 <style type="text/css">
 /* Absolute Center Spinner */
 .img-loader {
