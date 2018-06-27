@@ -27,6 +27,7 @@ use Yii;
  * @property Paymentmode $paymentMode
  * @property Collectiontype $collectiontype
  * @property Collection $collection
+ * @property Deposit $deposit
  */
 class Receipt extends \yii\db\ActiveRecord
 {
@@ -63,6 +64,7 @@ class Receipt extends \yii\db\ActiveRecord
             [['payment_mode_id'], 'exist', 'skipOnError' => true, 'targetClass' => Paymentmode::className(), 'targetAttribute' => ['payment_mode_id' => 'payment_mode_id']],
             [['collectiontype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collectiontype::className(), 'targetAttribute' => ['collectiontype_id' => 'collectiontype_id']],
             [['collection_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collection::className(), 'targetAttribute' => ['collection_id' => 'collection_id']],
+            [['deposit_id'], 'exist', 'skipOnError' => true, 'targetClass' => Deposit::className(), 'targetAttribute' => ['deposit_id' => 'deposit_id']],
         ];
     }
 
@@ -134,5 +136,13 @@ class Receipt extends \yii\db\ActiveRecord
     public function getCollection()
     {
         return $this->hasOne(Collection::className(), ['collection_id' => 'collection_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDeposit()
+    {
+        return $this->hasOne(Deposit::className(), ['deposit_id' => 'deposit_id']);
     }
 }

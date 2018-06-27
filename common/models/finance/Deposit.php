@@ -18,6 +18,7 @@ use Yii;
  *
  * @property DepositType $depositType
  * @property Orseries $orSeries
+ * @property Receipt[] $receipts
  */
 class Deposit extends \yii\db\ActiveRecord
 {
@@ -83,5 +84,13 @@ class Deposit extends \yii\db\ActiveRecord
     public function getOrSeries()
     {
         return $this->hasOne(Orseries::className(), ['or_series_id' => 'or_series_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReceipts()
+    {
+        return $this->hasMany(Receipt::className(), ['deposit_id' => 'deposit_id']);
     }
 }
