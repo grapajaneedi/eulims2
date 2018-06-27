@@ -6,7 +6,7 @@ use Yii;
 use common\models\finance\Op;
 use common\models\finance\OpSearch;
 use common\models\finance\Paymentitem;
-use common\models\finance\Receipt;
+use frontend\modules\finance\components\models\Ext_Receipt as Receipt;
 use common\models\finance\ReceiptSearch;
 use common\models\finance\Orseries;
 use common\models\finance\Collection;
