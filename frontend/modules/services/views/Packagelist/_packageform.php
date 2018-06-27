@@ -22,7 +22,30 @@ use common\models\services\Test;
 
 $Testcategorylist= ArrayHelper::map(Testcategory::find()->all(),'testcategory_id','category_name');
 $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sample_type');
+
+$js=<<<SCRIPT
+$(".kv-row-checkbox").click(function(){
+   
+   var keys = $('#sample-grid').yiiGridView('getSelectedRows');
+   var keylist= keys.join();
+   $("#sample_ids").val(keylist);
+   
+});    
+$(".select-on-check-all").change(function(){
+
+ var keys = $('#sample-grid').yiiGridView('getSelectedRows');
+ var keylist= keys.join();
+  $("#sample_ids").val(keylist);
+ 
+});
+
+SCRIPT;
+$this->registerJs($js);
+
+
 ?>
+
+
 
 <div class="packagelist-form" style="padding-bottom: 10px">
 
@@ -35,6 +58,7 @@ $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sa
         'headerRowOptions' => ['class' => 'kartik-sheet-style'],
         'filterRowOptions' => ['class' => 'kartik-sheet-style'],
         'bordered' => true,
+        'id'=>'sample-grid',
         'striped' => true,
         'condensed' => true,
         'responsive'=>false,
@@ -117,7 +141,9 @@ $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sa
 
              <div class="col-md-6">
              <?= $form->field($model, 'rate')->textInput(['readonly' => true]) ?>
-             <?= $form->field($model, 'rstl_id')->hiddenInput()->label(false) ?>
+             <?= $form->field($model, 'rstl_id')->hiddenInput(['value'=> 1])->label(false) ?>
+
+             <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids',  'type'=>"hidden"], ['readonly' => true]) ?>
             
              </div>
          </div>

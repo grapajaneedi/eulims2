@@ -157,6 +157,7 @@ class AnalysisController extends Controller
     {
         $model = new Analysis();
 
+        $request_id = $_GET['id'];
         $session = Yii::$app->session;
 
         $searchModel = new AnalysisSearch();
@@ -177,38 +178,45 @@ class AnalysisController extends Controller
         $sampletype = [];
         $test = [];
 
-    //    if ($model->load(Yii::$app->request->post())) {
-    //             $analysis = new Analysis();
-    //             $analysis->cancelled = (int) $_POST['Analysis']['testcategory_id'];
-    //             $analysis->pstcanalysis_id = (int) $_POST['Analysis']['testcategory_id'];
-    //             $analysis->request_id = (int) $_POST['Analysis']['testcategory_id'];
-    //             $analysis->rstl_id = $GLOBALS['rstl_id'];
-    //             $analysis->test_id = (int) $_POST['Analysis']['testcategory_id'];
-    //             $analysis->sample_id = (int) $_POST['Analysis']['testcategory_id'];
-    //             $analysis->user_id = (int) $_POST['Analysis']['testcategory_id'];
-    //             $analysis->sample_type_id = (int) $_POST['Analysis']['testcategory_id'];
-    //             $analysis->testcategory_id = (int) $_POST['Analysis']['testcategory_id'];
-    //             $analysis->is_package = (int) $_POST['Analysis']['testcategory_id'];
-    //             $analysis->method = $_POST['Analysis']['description'];
-    //             $analysis->testname = $_POST['Analysis']['description'];
-    //             $analysis->references = $_POST['Analysis']['description'];
-    //             $analysis->quantity = $_POST['Analysis']['description'];
-    //             $analysis->sample_code = $_POST['Analysis']['description'];
-    //             $analysis->date_analysis = '2018-06-14 7:35:0';   
-    //             $analysis->save(false);
+       if ($model->load(Yii::$app->request->post())) {
+           $requestId = (int) Yii::$app->request->get('request_id');
+            
+                $sample_ids= $_POST['sample_ids'];
+                $ids = explode(',', $sample_ids);  
+                $post= Yii::$app->request->post();
 
-    //    } 
+                foreach ($ids as $sample_id){
+                    $analysis = new Analysis();
+                    $analysis->sample_id = $sample_id;
+                    $analysis->cancelled = (int) $post['Analysis']['cancelled'];
+                    $analysis->pstcanalysis_id = (int) $post['Analysis']['pstcanalysis_id'];
+                    $analysis->request_id = $request_id;
+                    $analysis->rstl_id = $GLOBALS['rstl_id'];
+                    $analysis->test_id = (int) $post['Analysis']['test_id'];
+                    $analysis->user_id = (int) $post['Analysis']['user_id'];
+                    $analysis->sample_type_id = (int) $post['Analysis']['sample_type_id'];
+                    $analysis->testcategory_id = (int) $post['Analysis']['testcategory_id'];
+                    $analysis->is_package = (int) $post['Analysis']['is_package'];
+                    $analysis->method = $post['Analysis']['method'];
+                    $analysis->testname = $post['Analysis']['testname'];
+                    $analysis->references = $post['Analysis']['references'];
+                    $analysis->quantity = $post['Analysis']['quantity'];
+                    $analysis->sample_code = $post['Analysis']['sample_code'];
+                    $analysis->date_analysis = '2018-06-14 7:35:0';   
+                    $analysis->save();
+                   
+                }        
+                return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
+       } 
         if (Yii::$app->request->isAjax) {
-            $model->rstl_id = $GLOBALS['rstl_id'];
-            $model->pstcanalysis_id = $GLOBALS['rstl_id'];
-            $model->request_id = $GLOBALS['rstl_id'];
-            $model->testname = $GLOBALS['rstl_id'];
-            $model->cancelled = $GLOBALS['rstl_id'];
-
-
-            $model->sample_id = $GLOBALS['rstl_id'];
-            $model->sample_code = $GLOBALS['rstl_id'];
-            $model->date_analysis = '2018-06-14 7:35:0';
+                $model->rstl_id = $GLOBALS['rstl_id'];
+                $model->pstcanalysis_id = $GLOBALS['rstl_id'];
+                $model->request_id = $GLOBALS['rstl_id'];
+                $model->testname = $GLOBALS['rstl_id'];
+                $model->cancelled = $GLOBALS['rstl_id'];
+                $model->sample_id = $GLOBALS['rstl_id'];
+                $model->sample_code = $GLOBALS['rstl_id'];
+                $model->date_analysis = '2018-06-14 7:35:0';
 
             return $this->renderAjax('_form', [
                 'model' => $model,

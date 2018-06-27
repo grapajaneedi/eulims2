@@ -133,10 +133,22 @@ class RequestController extends Controller
         
         foreach ($samplesquery as $sample) {
             $mpdf->AddPage('','','','','',0,0,0,0);
-           
-            $mpdf->WriteHTML("<barcode code='".$sample['samplename']."' type='C39' />");
-            $mpdf->WriteHTML($sample['samplename']);
-             $analysisquery = Analysis::find()->where(['sample_id' => $sample['sample_id']])->all();
+            $samplecode = '<font size="1">&nbsp;&nbsp;&nbsp;&nbsp;'.$sample['samplename'].'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;WI-003-F1<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Rev 03/03.01.18</font>';
+            
+            $mpdf->WriteHTML("<barcode code='CHE-0847' type='C39' />");
+            $mpdf->WriteHTML($samplecode);
+
+            $text = '<font size="6">WI-003-F1';
+            $text2 = '<font size="5"><b>Rev 03/03.01.18<b>';
+
+            $analysisquery = Analysis::find()->where(['sample_id' => $sample['sample_id']])->all();
                    foreach ($analysisquery as $analysis){
                         $mpdf->WriteHTML($analysis['testname']);
                    }               
