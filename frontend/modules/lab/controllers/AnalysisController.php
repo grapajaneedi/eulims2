@@ -73,17 +73,21 @@ class AnalysisController extends Controller
             if(count($modeltest)>0){
                 $method = $modeltest->method;
                 $references = $modeltest->payment_references;
+                $fee = $modeltest->fee;
             } else {
                 $method = "";
                 $references = "";
+                $fee = "";
             }
         } else {
-            $method = "Error getting sample name";
-            $references = "Error getting description";
+            $method = "Error getting method";
+            $references = "Error getting reference";
+            $fee = "Error getting fee";
         }
         return Json::encode([
             'method'=>$references,
             'references'=>$references,
+            'fee'=>$fee,
         ]);
     }
 
@@ -153,28 +157,59 @@ class AnalysisController extends Controller
     {
         $model = new Analysis();
 
+        $session = Yii::$app->session;
+
         $searchModel = new AnalysisSearch();
         $samplesearchmodel = new SampleSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->analysis_id]);
-        }
-            $samplesQuery = Sample::find()->where(['request_id' => $id]);
-            $sampleDataProvider = new ActiveDataProvider([
-                    'query' => $samplesQuery,
-                    'pagination' => [
-                        'pageSize' => 10,
-                    ],
-                 
-            ]);
+        $samplesQuery = Sample::find()->where(['request_id' => $id]);
+        $sampleDataProvider = new ActiveDataProvider([
+                'query' => $samplesQuery,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+             
+        ]);
 
-            $testcategory = $this->listTestcategory(1);
-         
-            $sampletype = [];
-            $test = [];
+        $testcategory = $this->listTestcategory(1);
+     
+        $sampletype = [];
+        $test = [];
 
+    //    if ($model->load(Yii::$app->request->post())) {
+    //             $analysis = new Analysis();
+    //             $analysis->cancelled = (int) $_POST['Analysis']['testcategory_id'];
+    //             $analysis->pstcanalysis_id = (int) $_POST['Analysis']['testcategory_id'];
+    //             $analysis->request_id = (int) $_POST['Analysis']['testcategory_id'];
+    //             $analysis->rstl_id = $GLOBALS['rstl_id'];
+    //             $analysis->test_id = (int) $_POST['Analysis']['testcategory_id'];
+    //             $analysis->sample_id = (int) $_POST['Analysis']['testcategory_id'];
+    //             $analysis->user_id = (int) $_POST['Analysis']['testcategory_id'];
+    //             $analysis->sample_type_id = (int) $_POST['Analysis']['testcategory_id'];
+    //             $analysis->testcategory_id = (int) $_POST['Analysis']['testcategory_id'];
+    //             $analysis->is_package = (int) $_POST['Analysis']['testcategory_id'];
+    //             $analysis->method = $_POST['Analysis']['description'];
+    //             $analysis->testname = $_POST['Analysis']['description'];
+    //             $analysis->references = $_POST['Analysis']['description'];
+    //             $analysis->quantity = $_POST['Analysis']['description'];
+    //             $analysis->sample_code = $_POST['Analysis']['description'];
+    //             $analysis->date_analysis = '2018-06-14 7:35:0';   
+    //             $analysis->save(false);
+
+    //    } 
         if (Yii::$app->request->isAjax) {
+            $model->rstl_id = $GLOBALS['rstl_id'];
+            $model->pstcanalysis_id = $GLOBALS['rstl_id'];
+            $model->request_id = $GLOBALS['rstl_id'];
+            $model->testname = $GLOBALS['rstl_id'];
+            $model->cancelled = $GLOBALS['rstl_id'];
+
+
+            $model->sample_id = $GLOBALS['rstl_id'];
+            $model->sample_code = $GLOBALS['rstl_id'];
+            $model->date_analysis = '2018-06-14 7:35:0';
+
             return $this->renderAjax('_form', [
                 'model' => $model,
                 'searchModel' => $searchModel,
@@ -184,8 +219,6 @@ class AnalysisController extends Controller
                 'testcategory' => $testcategory,
                 'test' => $test,
                 'sampletype'=>$sampletype
-                // 'labId' => $labId,
-                // 'sampletemplate' => $this->listSampletemplate(),
             ]);
         }else{
             return $this->render('_form', [
@@ -196,8 +229,7 @@ class AnalysisController extends Controller
                 'sampleDataProvider' => $sampleDataProvider,
                 'testcategory' => $testcategory,
                 'sampletype' => $sampletype,
-                // 'labId' => $labId,
-                // 'sampletemplate' => $this->listSampletemplate(),
+                'test' => $test,
             ]);
         }
 

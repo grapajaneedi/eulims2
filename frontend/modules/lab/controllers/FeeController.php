@@ -19,6 +19,7 @@ use common\models\lab\Sampletype;
 use common\models\lab\Testcategory;
 use common\models\lab\Test;
 use common\models\lab\SampleSearch;
+use yii\helpers\Json;
 
 
 
@@ -119,25 +120,22 @@ class FeeController extends Controller
     }
 
     public function actionGetlistfee() {
-        // if(isset($_GET['template_id'])){
-        //     $id = (int) $_GET['template_id'];
-        //     $modelSampletemplate =  SampleName::findOne(['sample_name_id'=>$id]);
-        //     if(count($modelSampletemplate)>0){
-        //         $sampleName = $modelSampletemplate->sample_name;
-        //         $sampleDescription = $modelSampletemplate->description;
-        //     } else {
-        //         $sampleName = "";
-        //         $sampleDescription = "";
-        //     }
-        // } else {
-            $sampleName = "Error getting sample name";
-            $sampleDescription = "Error getting description";
-        // }
-       // return "boom";
-         Json::encode([
-            'name'=>$sampleName,
-            'description'=>$sampleDescription,
+        if(isset($_GET['fee_id'])){
+            $id = (int) $_GET['fee_id'];
+            $modelFee =  Fee::findOne(['fee_id'=>$id]);
+            //echo "<pre>";
+            //var_dump($modelFee);
+            //echo "</pre>";
+            //exit;
+            $unit_cost = $modelFee->unit_cost;
+        } else {
+            $unit_cost = "Error getting unit cost";
+        }
+        return Json::encode([
+            'unit_cost'=>$unit_cost,
         ]);
+
+      //  echo "huhu";
     }
 
     protected function listTestcategory($labId)

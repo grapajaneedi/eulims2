@@ -20,11 +20,19 @@ use common\models\services\Sampletype;
 /* @var $model common\models\lab\Analysis */
 /* @var $form yii\widgets\ActiveForm */
 
-// $Testcategorylist= ArrayHelper::map(Testcategory::find()->all(),'testcategory_id','category_name');
-// $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sample_type');
-// $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','testname');
 
+$js=<<<SCRIPT
+   $(".kv-row-checkbox").click(function(){
+        settotal();
+   });    
+   $(".select-on-check-all").change(function(){
+        settotal();
+   });
+  
+SCRIPT;
+$this->registerJs($js);
 ?>
+
 
 <div class="analysis-form">
 
@@ -83,12 +91,7 @@ use common\models\services\Sampletype;
 
     <?= $form->field($model, 'testname')->hiddenInput(['maxlength' => true])->label(false) ?>
 
-    <?= $form->field($model, 'method')->hiddenInput(['maxlength' => true])->label(false) ?>
-
-    <?= $form->field($model, 'fee')->hiddenInput(['maxlength' => true])->label(false) ?>
-
     <?= $form->field($model, 'cancelled')->hiddenInput()->label(false) ?>
-
 
     <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
 
@@ -212,10 +215,10 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
             //data: {id: $(this).val()},
             data: {test_id: id},
             success: function (data, textStatus, jqXHR) {
-                alert('boom');
                 $('#analysis-method').val(data.method);
                 $('#analysis-references').val(data.references);
                 $('#analysis-fee').val(data.fee);
+                $('#analysis-quantity').val('1');
                 $('.image-loader').removeClass( \"img-loader\" );
             },
             beforeSend: function (xhr) {
@@ -229,3 +232,40 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
         });
 });");
 ?>
+
+<script type="text/javascript">
+    function settotal(){
+         var keys = $('#grid').yiiGridView('getSelectedRows');
+        var keylist= keys.join();
+        $("#op-requestids").val(keys.join());
+        $.post({
+            url: '/finance/op/calculate-total?id='+keylist, // your controller action
+            success: function(data) {
+                var tot=parseFloat(data);
+                var total=CurrencyFormat(tot,2);
+                $('#total').html(total);
+                 var payment_mode=$('#op-payment_mode_id').val()
+                if(payment_mode===4){
+                    wallet=parseInt($('#wallet').val());
+                    totalVal = parseFloat($('#total').html().replace(/[^0-9-.]/g, ''));
+                   
+                    if( totalVal > wallet) {
+                       
+                       swal("Insufficient customer wallet");
+                      $('#op-purpose').prop('disabled', true);
+                      $('#createOP').prop('disabled', true);
+                    
+                    }
+                    else{
+                        if(total !== 0){
+                            $('#op-purpose').prop('disabled', false);
+                            $('#createOP').prop('disabled', false);
+                        }
+                       
+                    }
+                }
+            }
+        });
+    }
+    
+</script>

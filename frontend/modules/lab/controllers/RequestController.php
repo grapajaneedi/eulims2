@@ -20,6 +20,8 @@ use common\models\system\Profile;
 use common\components\Functions;
 use linslin\yii2\curl\Curl;
 use kartik\mpdf\Pdf;
+use yii\helpers\Url;
+
 /**
  * RequestController implements the CRUD actions for Request model.
  */
@@ -122,20 +124,24 @@ class RequestController extends Controller
        if(isset($_GET['request_id'])){
         $id = $_GET['request_id'];
         $mpdf = new \Mpdf\Mpdf([
-            'mode' => 'utf-8', 
             'format' => [35,66], 
             'orientation' => 'L',
         ]);
     
         $request = Request::find()->where(['request_id' => $id]);
         $samplesquery = Sample::find()->where(['request_id' => $id])->all();
-        $Content= $this->renderPartial('_printlabel', [
-                     'samplesquery' => $samplesquery, 'request'=>$request, 'mpdf'=>$mpdf]);
-      
-        $mpdf->WriteHTML($Content);
-       
-      
-       echo $mpdf->Output();
+        
+        foreach ($samplesquery as $sample) {
+            $mpdf->AddPage('','','','','',0,0,0,0);
+           
+            $mpdf->WriteHTML("<barcode code='".$sample['samplename']."' type='C39' />");
+            $mpdf->WriteHTML($sample['samplename']);
+             $analysisquery = Analysis::find()->where(['sample_id' => $sample['sample_id']])->all();
+                   foreach ($analysisquery as $analysis){
+                        $mpdf->WriteHTML($analysis['testname']);
+                   }               
+            }  
+            $mpdf->Output();
        }
     }
 

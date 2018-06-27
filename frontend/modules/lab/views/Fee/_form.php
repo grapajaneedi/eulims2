@@ -23,7 +23,7 @@ use common\models\services\Test;
 /* @var $form yii\widgets\ActiveForm */
 
 
-$namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
+$namelist= ArrayHelper::map(Fee::find()->all(),'fee_id', 'name');
 
 ?>
 
@@ -67,7 +67,7 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
         ],
     ]); ?>
 
-        <?= $form->field($model, 'fee_id')->hiddenInput()->label(false) ?>
+      
 
    
     <div class="row">
@@ -83,7 +83,7 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
                         ],
                 ])->label("Name"); ?>
 
-        <?= $form->field($model, 'name')->hiddenInput()->label(false) ?>
+      
 
      
 
@@ -123,23 +123,45 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'name','name');
 </div>
 
 <?php
+// $this->registerJs("$('#fee_list').on('change',function(){
+//     var id = $('#fee_list').val();
+//         $.ajax({
+//             url: '".Url::toRoute("fee/getlistfee")."',
+//             dataType: 'json',
+//             method: 'GET',
+//             data: {fee_id: id},
+//             success: function (data, textStatus, jqXHR) {
+//                  $('.image-loader').removeClass( \"img-loader\" );
+//                 alert('boom');
+//             },
+//             beforeSend: function (xhr) {
+//                 alert('Please wait...');
+//                 image-loader').addClass( \"img-loader\" );
+//             },
+//             error: function (jqXHR, textStatus, errorThrown) {
+//                 console.log('An error occured!');
+//                 alert('Error in ajax request');
+//             }
+//         });
+// });");
+?>
+
+<?php
 $this->registerJs("$('#fee_list').on('change',function(){
     var id = $('#fee_list').val();
         $.ajax({
-            url: '".Url::toRoute("lab/fee/getlistfee")."',
+            url: '".Url::toRoute("fee/getlistfee")."',
             dataType: 'json',
             method: 'GET',
-            //data: {id: $(this).val()},
             data: {fee_id: id},
             success: function (data, textStatus, jqXHR) {
-                // $('#sample-samplename').val(data.name);
-                // $('#sample-description').val(data.description);
-                // $('.image-loader').removeClass( \"img-loader\" );
-                alert('boom');
+                  //  alert('boom');
+                    $('#fee-unit_cost').val(data.unit_cost);
+                $('.image-loader').removeClass( \"img-loader\" );
             },
             beforeSend: function (xhr) {
-                alert('Please wait...');
-               //$('.image-loader').addClass( \"img-loader\" );
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('An error occured!');
@@ -148,4 +170,3 @@ $this->registerJs("$('#fee_list').on('change',function(){
         });
 });");
 ?>
-
