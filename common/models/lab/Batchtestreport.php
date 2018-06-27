@@ -76,13 +76,13 @@ class Batchtestreport extends \yii\db\ActiveRecord
     {
         // return $this->hasOne(Testreport::className(), ['testreport_id' => 'testreport_id']);
         $ids = explode(",", $this->testreport_ids);
-        $testreport = Testreport::findOne($ids);
-        $query = new \yii\db\Query;
-        $query
-            ->select('*')
-            ->from('eulims_lab.tbl_testreport')
-            ->where(['eulims_lab.tbl_testreport.testreport_id' => $ids])->all();
-
+        // $query = Testreport::findOne($ids);
+        // $query = new \yii\db\Query;
+        // $query
+        //     ->select('*')
+        //     ->from('eulims_lab.tbl_testreport')
+        //     ->where(['eulims_lab.tbl_testreport.testreport_id' => $ids])->all();
+        $query=Testreport::find()->where(['testreport_id'=>$ids]);
          return $dataProvider = new ActiveDataProvider([
             'query' => $query,
             // 'totalCount'=>10

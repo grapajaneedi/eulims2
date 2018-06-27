@@ -74,102 +74,40 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php
             $gridColumns = [
                 ['class' => 'yii\grid\SerialColumn'],
-                'testreport_id',
-                'report_num',
-             //    [
-            	// 	'header'=>'Test Report Number',
-            	// 	'attribute'=>'request_id',
-             //    	'value'=>$mydata->testreportSamples[0]->sample_id
-            	// ],
-                // [
-                //     'attributec'=>'sample_id',
-                //     'enableSorting' => false,
-                // ],
-                // [
-                //     'class' => 'kartik\grid\ExpandRowColumn',
-                //     'width' => '50px',
-                //     'value' => function ($model, $key, $index, $column) {
-                //         return GridView::ROW_COLLAPSED;
-                //     },
-                //     'detail' => function ($model, $key, $index, $column) {
-                //         //query on analysis to get those records with sample_ids involve
-
-                //         $query = Analysis::find()->where(['sample_id'=>$model->sample_id]);
-                //         $analysisdataProvider = new ActiveDataProvider([
-                //             'query' => $query,
-                //         ]);
-                //         // // $transactions = $searchModel->searchbycustomerid($id);
-                //         //  $dprovider = $sModel->search(Yii::$app->request->queryParams);
-                 
-                //          return $this->render('_testresults.php', [
-                //             //  'searchModel' => $sModel,
-                //             //  'dataProvider' => $dprovider,
-                //              'model'=>$analysisdataProvider,
-                //          ]);
-                //     },
-                //     'headerOptions' => ['class' => 'kartik-sheet-style'],
-                //     'expandOneOnly' => true
-                // ],
-                //samplecode
-                //sample name
-                //reportnumber
-             //    [
-            	// 	'header'=>'Test Report Number',
-            	// 	'attribute'=>'request_id',
-             //    	'value'=>$model->testreport->report_num
-            	// ],
-            	// [
-            	// 	'header'=>'Sample Name',
-            	// 	'attribute'=>'request_id',
-             //    	'value'=>$model->testreport->request->sample->samplename
-            	// ],
-            	// [
-            	// 	'header'=>'Sample Code',
-            	// 	'attribute'=>'request_id',
-             //    	'value'=>$model->testreport->request->sample->samplecode
-            	// ],
-                    // 'headerOptions' => ['class' => 'kartik-sheet-style'],
+                [	
+                	'format'=>'raw',
+                	'attribute'=>'report_num',
+                	'value'=>function($model){
+                		$t = 'view?id='.$model->testreport_id;
+                		 return Html::a(Html::encode($model->report_num),$t,['target'=>'_blank']);
+                	}
+                ],
+                [
+            		'attribute'=>'sample_code',
+                	'value'=>function($model){
+                		return $model->testreportSamples[0]->sample->sample_code;
+                	}
+            	],
+            	 [
+            		// 'header'=>'Samplo',
+            		'attribute'=>'sample_name',
+                	// 'value'=>$model->testreportSamples[0]->sample_id
+                	'value'=>function($model){
+                		return $model->testreportSamples[0]->sample->samplename;
+                	}
+            	],
             ];
 
             echo GridView::widget([
                 'id' => 'sample-grid',
                 'dataProvider'=> $mydata,
-                //'summary' => '',
-                //'showPageSummary' => true,
-                //'showHeader' => true,
-                //'showPageSummary' => true,
-                //'showFooter' => true,
-                //'template' => '{update} {delete}',
-                // 'pjax'=>true,
-                // 'pjaxSettings' => [
-                //     'options' => [
-                //         'enablePushState' => false,
-                //     ]
-                // ],
                 'responsive'=>true,
                 'striped'=>true,
                 'hover'=>true,
-                //'filterModel' => $searchModel,
-               // 'toggleDataOptions' => ['minCount' => 10],
                 'panel' => [
                     'heading'=>'<h3 class="panel-title"> <i class="glyphicon glyphicon-file"></i>Test Results with Sample</h3>',
                     'type'=>'primary',
                 ],
-                // 'rowOptions' => function ($model, $key, $index, $grid) {
-                //     return [
-                        //'id' => $model->sample_id,
-                        // 'id' => $model->sample_id,
-                        //'id' => $data['request_id'],
-                        //'onclick' => 'alert(this.id);',
-                        // 'onclick' => 'updateSample('.$model->sample_id.');',
-                        // 'style' => 'cursor:pointer;',
-                        //'onclick' => 'updateSample(this.id,this.request_id);',
-                        // [
-                        //     'data-id' => $model->sample_id,
-                        //     'data-request_id' => $model->request_id
-                        // ],
-                //     ];
-                // },
                 'columns' => $gridColumns,
             
             ]);
@@ -181,8 +119,4 @@ $this->params['breadcrumbs'][] = $this->title;
             <button class="btn btn-success">Print Function</button>
         </div>
     </div>
-    <!-- <h1><?= Html::encode($this->title) ?></h1> -->
-
-  
-
 </div>
