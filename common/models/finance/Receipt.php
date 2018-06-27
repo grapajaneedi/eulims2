@@ -19,6 +19,7 @@ use Yii;
  * @property int $collectiontype_id
  * @property string $total
  * @property int $cancelled
+ * @property int $deposit_id
  *
  * @property Billing[] $billings
  * @property Check[] $checks
@@ -52,7 +53,7 @@ class Receipt extends \yii\db\ActiveRecord
     {
         return [
             [['rstl_id', 'terminal_id', 'collection_id', 'or_number', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled'], 'required'],
-            [['rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'payment_mode_id', 'collectiontype_id', 'cancelled'], 'integer'],
+            [['rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'payment_mode_id', 'collectiontype_id', 'cancelled', 'deposit_id'], 'integer'],
             [['receiptDate'], 'safe'],
             [['total'], 'number'],
             [['or_number'], 'string', 'max' => 50],
@@ -83,6 +84,7 @@ class Receipt extends \yii\db\ActiveRecord
             'collectiontype_id' => 'Collectiontype ID',
             'total' => 'Total',
             'cancelled' => 'Cancelled',
+            'deposit_id' => 'Deposit ID',
         ];
     }
 

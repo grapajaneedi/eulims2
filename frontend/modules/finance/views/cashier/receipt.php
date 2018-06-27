@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = 'Receipt';
                 'attribute' => 'payment_mode_id',
                 'label' => 'Payment Mode',
                 'value' => function($model) {
-                    return $model->paymentmode->payment_mode;
+                    return $model->paymentMode->payment_mode;
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Paymentmode::find()->asArray()->all(), 'payment_mode_id', 'payment_mode'),
