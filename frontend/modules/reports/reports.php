@@ -25,6 +25,12 @@ class reports extends \yii\base\Module{
     public function init()
     {
         parent::init();
+        //adding sub-module
+        $this->modules = [
+            'lab' => [
+                'class' => 'frontend\modules\reports\modules\lab\lab',
+            ]
+        ];
 
         // custom initialization code goes here
     }
