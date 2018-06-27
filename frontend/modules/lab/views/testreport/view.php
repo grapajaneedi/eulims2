@@ -6,6 +6,7 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 use common\models\lab\Analysis;
 use yii\data\ActiveDataProvider;
+use common\models\lab\Batchtestreport;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Testreport */
@@ -18,6 +19,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="form-row">
         <div class="container table-responsive">
             <button class="btn btn-warning pull-right"><i class="glyphicon glyphicon-check"></i> Reissue Report</button>
+             <?php
+            //checks if the testreport is from a batch generated reports
+            $chkbatch = Batchtestreport::find()->where('request_id')->one();
+            if($chkbatch){
+                $t = 'viewmultiple?id='.$chkbatch->batchtestreport_id;
+                echo Html::a('<i class="glyphicon glyphicon-check"></i> View Batch',$t,['target'=>'_blank','class'=>'btn btn-primary pull-right']);
+            }
+            ?>
+            <!-- <button class="btn btn-primary pull-right"><i class="glyphicon glyphicon-file"></i> View Batch</button> -->
         </div>
     </div>
     <br>
@@ -32,16 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'type'=>DetailView::TYPE_PRIMARY,
             ],
             'attributes' => [
-                // 'testreport_id',
-                // 'request_id',
-                // 'lab_id',
                 'report_num',
                 'report_date',
                 'status_id',
                 'release_date',
-                // 'reissue',
-                // 'previous_id',
-                // 'new_id',
                 ],
             ]) ?>
     </div>
@@ -50,10 +54,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php
             $gridColumns = [
                 ['class' => 'yii\grid\SerialColumn'],
-                // [
-                //     'attribute'=>'sample_id',
-                //     'enableSorting' => false,
-                // ],
                 [
                     'class' => 'kartik\grid\ExpandRowColumn',
                     'width' => '50px',
@@ -67,12 +67,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         $analysisdataProvider = new ActiveDataProvider([
                             'query' => $query,
                         ]);
-                        // // $transactions = $searchModel->searchbycustomerid($id);
-                        //  $dprovider = $sModel->search(Yii::$app->request->queryParams);
                  
                          return $this->render('_testresults.php', [
-                            //  'searchModel' => $sModel,
-                            //  'dataProvider' => $dprovider,
                              'model'=>$analysisdataProvider,
                          ]);
                     },
@@ -89,20 +85,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     'attribute'=>'sample.samplename',
                     'enableSorting' => false,
                 ],
-               
-                    // 'headerOptions' => ['class' => 'kartik-sheet-style'],
                 
             ];
 
             echo GridView::widget([
                 'id' => 'sample-grid',
                 'dataProvider'=> $trsamples,
-                //'summary' => '',
-                //'showPageSummary' => true,
-                //'showHeader' => true,
-                //'showPageSummary' => true,
-                //'showFooter' => true,
-                //'template' => '{update} {delete}',
                 'pjax'=>true,
                 'pjaxSettings' => [
                     'options' => [
@@ -112,27 +100,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'responsive'=>true,
                 'striped'=>true,
                 'hover'=>true,
-                //'filterModel' => $searchModel,
-               // 'toggleDataOptions' => ['minCount' => 10],
                 'panel' => [
                     'heading'=>'<h3 class="panel-title"> <i class="glyphicon glyphicon-file"></i> Samples and Test Results</h3>',
                     'type'=>'primary',
                 ],
-                // 'rowOptions' => function ($model, $key, $index, $grid) {
-                //     return [
-                        //'id' => $model->sample_id,
-                        // 'id' => $model->sample_id,
-                        //'id' => $data['request_id'],
-                        //'onclick' => 'alert(this.id);',
-                        // 'onclick' => 'updateSample('.$model->sample_id.');',
-                        // 'style' => 'cursor:pointer;',
-                        //'onclick' => 'updateSample(this.id,this.request_id);',
-                        // [
-                        //     'data-id' => $model->sample_id,
-                        //     'data-request_id' => $model->request_id
-                        // ],
-                //     ];
-                // },
                 'columns' => $gridColumns,
             
             ]);
@@ -145,7 +116,4 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
     <!-- <h1><?= Html::encode($this->title) ?></h1> -->
-
-  
-
 </div>
