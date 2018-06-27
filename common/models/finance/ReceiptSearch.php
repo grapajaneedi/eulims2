@@ -23,7 +23,7 @@ class ReceiptSearch extends Receipt
     public function rules()
     {
         return [
-            [['receipt_id', 'rstl_id', 'terminal_id', 'collection_id', 'project_id', 'or_number', 'collectiontype_id', 'payment_mode_id', 'cancelled'], 'integer'],
+            [['receipt_id', 'rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'or_number', 'collectiontype_id', 'payment_mode_id', 'cancelled'], 'integer'],
             [['receiptDate','total'], 'safe'],
             [['payor'], 'string'],
             [['createTimeRange'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
@@ -68,7 +68,7 @@ class ReceiptSearch extends Receipt
             'rstl_id' => $this->rstl_id,
             'terminal_id' => $this->terminal_id,
             'collection_id' => $this->collection_id,
-            'project_id' => $this->project_id,
+            'deposit_type_id' => $this->deposit_type_id,
             'payment_mode_id' => $this->payment_mode_id,
             'collectiontype_id' => $this->collectiontype_id,
             'total' => $this->total,

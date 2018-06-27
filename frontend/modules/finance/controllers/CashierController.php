@@ -16,6 +16,8 @@ use common\models\finance\Deposit;
 use common\models\finance\DepositSearch;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
+use yii\helpers\ArrayHelper;
+
 class CashierController extends \yii\web\Controller
 {
     public function actionIndex()
@@ -213,6 +215,64 @@ class CashierController extends \yii\web\Controller
             ]);
         }
     }
+    
+    public function actionListorseries() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $list = Orseries::find()->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                //$out[] = ['id' => '0', 'name' => 'Please Select'];
+                foreach ($list as $i => $or) {
+                    $out[] = ['id' => $or['or_series_id'], 'name' => $or['or_series_name']];
+                    if ($i == 0) {
+                        $selected = $or['or_series_id'];
+                    }
+                }
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
+  
+   /* function actionUpdateDropdown(){
+	$deposit=new Deposit();
+        if(isset($_POST['Deposit']['deposit_type_id'])){
+                $depositType = $_POST['Deposit']['deposit_type_id'];
+
+                $receipts=Receipt::model()->find();
+                $receipts = CHtml::listData($receipts, 'orseries_id', 'orseries.name', 'orseries.categoryName');
+                $orseries .=  CHtml::tag('option', array('value'=>''), CHtml::encode($name), true);
+                foreach($receipts as $value=>$name)
+                        foreach($name as $key=>$val)
+                                        $option.=CHtml::tag('option', array('value'=>$key), CHtml::encode($val), true);
+
+                        $orseries .= CHtml::tag('optgroup', array('label'=>$value), $option, true);		
+
+                echo CJSON::encode(array('orseries'=>$orseries));
+                exit;
+
+        }
+        if(isset($_POST['Deposit']['orseries_id'])){
+                $orseriesId = $_POST['Deposit']['orseries_id'];
+                $depositType = $_POST['depositType'];
+
+                $startOr = $deposit->getFirstOrBySeries($orseriesId, $depositType);
+                $endOr = $deposit->getLastOrJSONBySeries($orseriesId, $depositType);
+
+                echo CJSON::encode(
+                                        array(
+                                                'startOr'=>$startOr, 
+                                                'lastOr'=>$endOr,
+                                        )
+                                );
+                exit;
+        }
+		
+   }*/
     //------------------END of DEPOSIT
     //------------COLLECTION
     protected function findModelCollection($id)

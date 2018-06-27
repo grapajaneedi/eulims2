@@ -32,7 +32,7 @@ $func= new Functions();
             <div class="col-sm-6">
            <?php 
 
-                echo $form->field($model, 'project_id')->widget(Select2::classname(), [
+                echo $form->field($model, 'deposit_type_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(DepositType::find()->all(), 'deposit_type_id', 'deposit_type'),
                 'theme' => Select2::THEME_BOOTSTRAP,
                 'options' => ['placeholder' => 'Please Select ...'],

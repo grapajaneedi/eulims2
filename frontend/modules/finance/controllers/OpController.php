@@ -107,6 +107,11 @@ class OpController extends Controller
                      $total_amount=0;
                         $model->rstl_id=$GLOBALS['rstl_id'];
                         $model->transactionnum= $this->Gettransactionnum();
+                        if ($model->payment_mode_id == 6){
+                            $model->on_account=1;
+                        }else{
+                            $model->on_account=0;
+                        }
                         $model->save();
                        //Saving for Paymentitem
                         
