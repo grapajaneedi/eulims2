@@ -95,6 +95,7 @@ class PackagelistController extends Controller
         $model = new Packagelist();
         $request_id = $_GET['id'];
         $searchModel = new PackageListSearch();
+        $session = Yii::$app->session;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -142,6 +143,7 @@ class PackagelistController extends Controller
                      $analysis->save();
                     
                  }        
+                 $session->set('savemessage',"executed");  
                  return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
         } 
         if (Yii::$app->request->isAjax) {

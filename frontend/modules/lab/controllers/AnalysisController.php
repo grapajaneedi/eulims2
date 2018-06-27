@@ -205,8 +205,10 @@ class AnalysisController extends Controller
                     $analysis->date_analysis = '2018-06-14 7:35:0';   
                     $analysis->save();
                    
-                }        
+                }     
+                $session->set('savemessage',"executed");   
                 return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
+
        } 
         if (Yii::$app->request->isAjax) {
                 $model->rstl_id = $GLOBALS['rstl_id'];
