@@ -20,7 +20,7 @@ use Yii;
  * @property string $total
  * @property int $cancelled
  * @property int $deposit_id
- *
+ * @property int $or
  * @property Billing[] $billings
  * @property Check[] $checks
  * @property DepositType $depositType
@@ -31,6 +31,7 @@ use Yii;
  */
 class Receipt extends \yii\db\ActiveRecord
 {
+    public $or;
     /**
      * {@inheritdoc}
      */
@@ -55,7 +56,7 @@ class Receipt extends \yii\db\ActiveRecord
         return [
             [['rstl_id', 'terminal_id', 'collection_id', 'or_number', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled'], 'required'],
             [['rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'payment_mode_id', 'collectiontype_id', 'cancelled', 'deposit_id'], 'integer'],
-            [['receiptDate'], 'safe'],
+            [['receiptDate','or'], 'safe'],
             [['total'], 'number'],
             [['or_number'], 'string', 'max' => 50],
             [['payor'], 'string', 'max' => 100],
