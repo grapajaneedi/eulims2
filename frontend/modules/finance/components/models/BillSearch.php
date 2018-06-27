@@ -1,13 +1,11 @@
 <?php
 
-namespace frontend\modules\finance\components;
+namespace frontend\modules\finance\components\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\finance\Op;
-use kartik\daterange\DateRangeBehavior;
-
 /**
  * OrderofpaymentSearch represents the model behind the search form about `common\models\finance\Orderofpayment`.
  */
@@ -59,7 +57,7 @@ class BillSearch extends Op
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+            //$query->where('0=1');
             return $dataProvider;
         }
 
@@ -70,7 +68,7 @@ class BillSearch extends Op
             'collectiontype_id' => $this->collectiontype_id,
             'customer_id' => $this->customer_id,
             'created_receipt' => $this->created_receipt,
-            'invoice_number'=> $this->invoice_number
+            //'invoice_number'=> $this->invoice_number
         ]);
 
         $query->andFilterWhere(['like', 'transactionnum', $this->transactionnum])

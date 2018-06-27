@@ -162,7 +162,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-2 col-sm-6 col-xs-12 col-md-offset-1">
              
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                  <a href="/settings" title="Clients"><img class="imgHover" src="/images/clientssquare.png" style="height:120px;width: 120px" ></a>
+                  <a href="/finance/billing/client" title="Clients"><img class="imgHover" src="/images/clientssquare.png" style="height:120px;width: 120px" ></a>
               </div>
             </div>
             <!-- /.col -->
@@ -170,7 +170,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
 
              <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/gii" title="Invoice"><img class="imgHover"  src="/images/invoicesquare.png" style="height:120px;width: 120px"></a>
+                 <a href="/finance/billing/invoices" title="Invoice"><img class="imgHover"  src="/images/invoicesquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div>
             <!-- /.col -->
@@ -178,7 +178,7 @@ $this->params['breadcrumbs'][] = $this->title;
              
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                   <a href="/debug" title="Reports"><img class="imgHover" src="/images/reportsquare.png" style="height:120px;width:120px"></a>
+                   <a href="/reports/lab" title="Reports"><img class="imgHover" src="/images/reportsquare.png" style="height:120px;width:120px"></a>
               </div>
             </div>
             
@@ -186,7 +186,7 @@ $this->params['breadcrumbs'][] = $this->title;
              
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/module/manager" title="Aging of Accounts"><img class="imgHover" src="/images/agingsquare.png" style="height:120px;width: 120px"></a>
+                 <a href="/finance/billing/ar" title="Aging of Accounts"><img class="imgHover" src="/images/agingsquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div>
             
@@ -194,7 +194,7 @@ $this->params['breadcrumbs'][] = $this->title;
            
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/module/manager" title="Billing Manager"><img class="imgHover" src="/images/billingmanagersquare.png" style="height:120px;width: 120px"></a>
+                 <a href="/finance/billing/manager" title="Billing Manager"><img class="imgHover" src="/images/billingmanagersquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div>
             

@@ -5,7 +5,7 @@ use Yii;
 use common\models\finance\clientSearch;
 use common\models\finance\Client;
 use common\models\finance\Op;
-use frontend\modules\finance\components\BillSearch;
+use frontend\modules\finance\components\models\BillSearch;
 
 class BillingController extends \yii\web\Controller
 {
@@ -101,6 +101,12 @@ class BillingController extends \yii\web\Controller
             'dataProvider' => $dataProvider,
             'model'=>$model
         ]);
+    }
+    public function actionUpdate(){
+        echo "Update Billing";
+    }
+    public function actionCreate(){
+        echo "Create Billing";
     }
     public function actionInvoices(){
         $model = new Op();

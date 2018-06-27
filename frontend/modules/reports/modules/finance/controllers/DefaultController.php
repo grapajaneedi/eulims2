@@ -16,6 +16,11 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+        //$config = require(Yii::$app->basePath.'/config/_modules.php');
+        //$config= require(Yii::$app->basePath.'/config/_modules.php');
+        //echo "<pre>";
+        //var_dump($config);
+        //echo "</pre>";
         return $this->render('index');
     }
 }

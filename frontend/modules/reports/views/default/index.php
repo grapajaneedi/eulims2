@@ -1,3 +1,8 @@
+<?php
+
+$this->title = 'Reports';
+$this->params['breadcrumbs'][] = $this->title;
+?>
 <div class="Lab-default-index">
     <h1><?= $this->context->action->uniqueId ?></h1>
     <p>

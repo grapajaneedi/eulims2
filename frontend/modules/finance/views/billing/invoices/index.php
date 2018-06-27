@@ -9,7 +9,6 @@ use kartik\widgets\DatePicker;
 use kartik\daterange\DateRangePicker;
 use yii\db\Query;
 use yii\helpers\Url;
-use yii\db\Query;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\Op */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -30,16 +29,12 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
     <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Bill Invoice', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Bill Invoices"),'id'=>'btnInvoice']); ?>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Bill Invoice', ['value'=>'/finance/billing/create','click'=>'LoadModal(this.title,this.value,true,"300px")', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Bill Invoice"),'id'=>'btnInvoice']); ?>
     </p>
-    
-    
-    
   <div class="table-responsive">
     <?php 
     $Buttontemplate='{view}{update}'; 
-    ?>
-      
+    ?>      
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
