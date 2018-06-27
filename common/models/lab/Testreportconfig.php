@@ -1,7 +1,7 @@
 <?php
 
 namespace common\models\lab;
-
+use common\components\Functions;
 use Yii;
 
 /**
@@ -64,5 +64,29 @@ class Testreportconfig extends \yii\db\ActiveRecord
     public function getLab()
     {
         return $this->hasOne(Lab::className(), ['lab_id' => 'lab_id']);
+    }
+
+     public function getTestReportSeries(){
+        $func=new Functions();
+        $Connection= Yii::$app->labdb;
+        $series=$func->ExecuteStoredProcedureOne("spGetTestConfigSeries(:mLabID)", [':mLabID'=> $this->lab_id], $Connection);
+        //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        return $series['number'];
+    }
+
+    public function setTestReportSeries(){
+        $func=new Functions();
+        $Connection= Yii::$app->labdb;
+        $series=$func->ExecuteStoredProcedureOne("spSetTestConfigSeries(:mLabID)", [':mLabID'=> $this->lab_id], $Connection);
+        //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        return $series['number'];
+    }
+
+    public static function setTestReportSeries2($lab_id){
+        $func=new Functions();
+        $Connection= Yii::$app->labdb;
+        $series=$func->ExecuteStoredProcedureOne("spSetTestConfigSeries(:mLabID)", [':mLabID'=> $lab_id], $Connection);
+        //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        return $series['number'];
     }
 }
