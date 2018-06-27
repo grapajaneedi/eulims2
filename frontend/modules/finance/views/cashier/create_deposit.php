@@ -59,10 +59,36 @@ use kartik\widgets\DepDrop;
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <?php echo $form->field($model, 'start_or')->textInput(['disabled' => true]) ?>
+                <?php 
+
+                    echo $form->field($model, 'start_or')->widget(DepDrop::classname(), [
+                        'type'=>DepDrop::TYPE_SELECT2,
+                        'options'=>['id'=>'deposit-start_or'],
+                        'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                        'pluginOptions'=>[
+                            'depends'=>['deposit-or_series_id'],
+                            'placeholder'=>'Select Start O.R',
+                            'url'=>Url::to(['/finance/cashier/start-or']),
+                            'loadingText' => 'Loading...',
+                    ],
+                    ])->label('Start O.R');
+                 ?>
             </div>
             <div class="col-sm-6">
-                <?php echo $form->field($model, 'end_or')->textInput() ?>
+                <?php 
+
+                    echo $form->field($model, 'end_or')->widget(DepDrop::classname(), [
+                        'type'=>DepDrop::TYPE_SELECT2,
+                        'options'=>['id'=>'deposit-end_or'],
+                        'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                        'pluginOptions'=>[
+                            'depends'=>['deposit-end_or'],
+                            'placeholder'=>'Select End O.R',
+                            'url'=>Url::to(['/finance/cashier/end-or']),
+                            'loadingText' => 'Loading...',
+                    ],
+                    ])->label('End O.R');
+                 ?>
             </div>  
         </div>
         <div class="row">

@@ -84,25 +84,35 @@ class CashierController extends \yii\web\Controller
         $op_model=$this->findModel($op_id);
        
         $model = new Receipt();
+        
         if ($model->load(Yii::$app->request->post())) {
-            $session = Yii::$app->session;
+            $connection=Yii::$app->financedb;
+            $transaction =$connection->beginTransaction();
+             $session = Yii::$app->session;
              try  {
-                $model->rstl_id=11;
-                $model->terminal_id=1;
+               // $model->getDb()=$connection;
+                $model->rstl_id=$GLOBALS['rstl_id'];
+                $model->terminal_id=$GLOBALS['terminal_id'];
                 $model->collection_id=$op_model->collection->collection_id;
+                $this->update_nextor($model->or_series_id,$connection);
+               // $model->or_series_id=$model->or_series_id;
                 $model->or_number=$model->or;
-                $model->check_id='';
                 $model->total=0;
                 $model->cancelled=0;
                 $this->created_receipt($op_id);
+            
                 $model->save(false);
+                 $transaction->commit();
                 $session->set('savepopup',"executed");
                 return $this->redirect(['/finance/cashier/op']); 
              } catch (Exception $e) {
-                   return $e;
+                 $transaction->rollBack();
+                 return $e;
              }
         }
+         $model->receiptDate=date('Y-m-d');
         if(Yii::$app->request->isAjax){
+           
             return $this->renderAjax('create_receipt', [
                 'model' => $model,
                 'op_model'=> $op_model,
@@ -158,12 +168,25 @@ class CashierController extends \yii\web\Controller
         {
             $model = Orseries::findOne($id);
             $nextOR=$model->nextor;
-            echo JSON::encode(['nxtOR'=>$nextOR,'success'=>true]);
+            $endOR=$model->endor;
+            if($nextOR > $endOR){
+                echo JSON::encode(['nxtOR'=>'Please update O.R Series','success'=>false]);
+            }
+            else{
+                echo JSON::encode(['nxtOR'=>$nextOR,'success'=>true]);
+            }
+            
         } else {
             echo JSON::encode(['nxtOR'=>"OR Series not selected.",'success'=>false]);
         }
     }
-    
+     public function update_nextor($orseries_id,$connection){
+       $sql_update='UPDATE tbl_orseries SET nextor=nextor +1 WHERE or_series_id=:orseries_id';
+       $Command=$connection->createCommand($sql_update);
+       $Command->bindValue(':orseries_id',$orseries_id);
+       $Command->execute();
+     }
+     
     public function created_receipt($opID){
         if(!empty($opID))
         {
@@ -195,7 +218,7 @@ class CashierController extends \yii\web\Controller
             $session = Yii::$app->session;
              try  {
                  $model->rstl_id=$GLOBALS['rstl_id'];
-                //$model->receipt_id=$receiptid;
+              
                 $model->save(false);
                 $session->set('savepopup',"executed");
                  return $this->redirect(['/finance/cashier/deposit']);
@@ -237,7 +260,50 @@ class CashierController extends \yii\web\Controller
         }
         echo Json::encode(['output' => '', 'selected'=>'']);
     }
-  
+    
+    public function actionStartOr() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $list = Receipt::find()->andWhere(['or_series_id'=>$id])->andWhere(['deposit_id'=>null])->asArray()->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $test) {
+                    $out[] = ['id' => $test['receipt_id'], 'name' => $test['or_number']];
+                    if ($i == 0) {
+                        $selected = $test['receipt_id'];
+                    }
+                }
+                
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
+    
+    public function actionEndOr() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $list = Receipt::find()->andWhere(['or_series_id'=>$id])->andWhere(['deposit_id'=>null])->asArray()->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $test) {
+                    $out[] = ['id' => $test['receipt_id'], 'name' => $test['or_number']];
+                    if ($i == 0) {
+                        $selected = $test['receipt_id'];
+                    }
+                }
+                
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
    /* function actionUpdateDropdown(){
 	$deposit=new Deposit();
         if(isset($_POST['Deposit']['deposit_type_id'])){
