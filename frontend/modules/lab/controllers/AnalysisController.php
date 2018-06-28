@@ -186,6 +186,16 @@ class AnalysisController extends Controller
                 $post= Yii::$app->request->post();
 
                 foreach ($ids as $sample_id){
+
+                   // $testQuery = Test::find()->where(['test_id' => $post['Analysis']['test_id']]);
+
+                   $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
+
+                    // echo "<pre>";
+                    // var_dump($modeltest);
+                    // echo "</pre>";
+                    // exit;
+
                     $analysis = new Analysis();
                     $analysis->sample_id = $sample_id;
                     $analysis->cancelled = (int) $post['Analysis']['cancelled'];
@@ -193,12 +203,13 @@ class AnalysisController extends Controller
                     $analysis->request_id = $request_id;
                     $analysis->rstl_id = $GLOBALS['rstl_id'];
                     $analysis->test_id = (int) $post['Analysis']['test_id'];
-                    $analysis->user_id = (int) $post['Analysis']['user_id'];
+                   // $analysis->user_id = (int) $post['Analysis']['user_id'];
                     $analysis->sample_type_id = (int) $post['Analysis']['sample_type_id'];
                     $analysis->testcategory_id = (int) $post['Analysis']['testcategory_id'];
                     $analysis->is_package = (int) $post['Analysis']['is_package'];
                     $analysis->method = $post['Analysis']['method'];
-                    $analysis->testname = $post['Analysis']['testname'];
+                    $analysis->fee = $post['Analysis']['fee'];
+                    $analysis->testname = $modeltest->testname;
                     $analysis->references = $post['Analysis']['references'];
                     $analysis->quantity = $post['Analysis']['quantity'];
                     $analysis->sample_code = $post['Analysis']['sample_code'];
@@ -213,7 +224,7 @@ class AnalysisController extends Controller
         if (Yii::$app->request->isAjax) {
                 $model->rstl_id = $GLOBALS['rstl_id'];
                 $model->pstcanalysis_id = $GLOBALS['rstl_id'];
-                $model->request_id = $GLOBALS['rstl_id'];
+                $model->request_id = $request_id;
                 $model->testname = $GLOBALS['rstl_id'];
                 $model->cancelled = $GLOBALS['rstl_id'];
                 $model->sample_id = $GLOBALS['rstl_id'];
@@ -413,9 +424,22 @@ class AnalysisController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        // $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        // return $this->redirect(['index']);
+
+        $model = $this->findModel($id);
+    
+        $session = Yii::$app->session;
+       
+          
+            if($model->delete()) {
+                $session->set('deletemessage',"executed");
+                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+            } else {
+                return $model->error();
+            }
+        
     }
 
     /**
