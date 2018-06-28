@@ -435,7 +435,7 @@ if($Request_Ref){
                     //     return $model->samples->sample_code;
                     // },
                     'enableSorting' => false,
-                    'pageSummary' => '<span style="float:right";>SUBTOTAL<br>DISCOUNT<br>TOTAL</span>',
+                    'pageSummary' => '<span style="float:right";>TOTAL</span>',
                 ],
                 [
                     'attribute'=>'fee',

@@ -343,7 +343,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			$('.error-lab').html('');
 			$('.error-date').html('');
 
-			$.get('/lab/statistic/samples', {
+			$.get('/reports/lab/statistic/samples', {
 		        data : $('form').serialize(),
 			    }, function(response){
 		    	<?php if(Yii::$app->session->hasFlash('error')): ?>
@@ -352,7 +352,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	            	var lab_id = $('#lab_id').val();
 	            	var fromdate = $('#request_date_range-start').val();
 	            	var todate = $('#request_date_range-end').val();
-	            	$.pjax.reload({container:"#sample-summary-pjax",url: '/lab/statistic/samples?lab_id='+lab_id+'&from_date='+fromdate+'&to_date='+todate,replace:false,timeout: false});
+	            	$.pjax.reload({container:"#sample-summary-pjax",url: '/reports/lab/statistic/samples?lab_id='+lab_id+'&from_date='+fromdate+'&to_date='+todate,replace:false,timeout: false});
 	            <?php 
 	        		endif;
 	            	Yii::$app->session->setFlash('error', null);
