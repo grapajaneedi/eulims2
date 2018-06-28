@@ -5,7 +5,7 @@ use yii\helpers\Html;
 //use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use kartik\grid\GridView;
-//use kartik\daterange\DateRangePicker;
+use common\models\lab\Lab;
 use kartik\grid\Module;
 use kartik\daterange\DateRangePicker;
 use yii\widgets\ActiveForm;
@@ -24,7 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="panel panel-default col-xs-12">
         <div class="panel-heading"><i class="fa fa-adn"></i> </div>
         <div class="panel-body">
-        <?php //\yii\widgets\Pjax::begin(); ?>
     	<?php
     		$form = ActiveForm::begin([
 			    'id' => 'summary-sample-form',
@@ -33,8 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
 					//'data-pjax' => true,
 				],
 				'method' => 'get',
-				//'submit'=>"return false;",/* Disable normal form submit */
-				//'action'=>Yii::$app->controller->action->id,
 			])
     	?>
     		<div class="row">
@@ -58,24 +55,6 @@ $this->params['breadcrumbs'][] = $this->title;
 		         <div id="date_range" style="position: relative; float: left;margin-left: 20px;">
     				<?php
 				        echo '<label class="control-label">Request Date </label>';
-				        /*echo DateRangePicker::widget([
-					        'name'=>'date_range_3',
-					        //'value'=>'2015-10-19 - 2015-11-03',
-					        'value' => date("Y-m-d")." - ".date("Y-m-d"),
-					        'convertFormat'=>true,
-					        'options'=>[
-					            'style' => 'width:25%;padding:5px;',
-					        ],
-					        'pluginOptions'=>[
-					            //'timePicker'=>true,
-					            //'timePickerIncrement'=>15,
-					            //'locale'=>['format'=>'Y-m-d h:i A']
-					            'timePicker'=>false,
-					            'locale'=>['format'=>'Y-m-d'],
-					        ]            
-					    ]);*/
-		    		?>
-		    		<?php
 		    			echo '<div class="input-group drp-container">';
 						echo DateRangePicker::widget([
 						    'name'=>'request_date_range',
@@ -105,14 +84,10 @@ $this->params['breadcrumbs'][] = $this->title;
 		    	</div>
 		    </div>
 		    <?php ActiveForm::end(); ?>
-		    <?php //\yii\widgets\Pjax::end(); ?>
 		    <br>
 		    <div class="row">
 		    <?php //\yii\widgets\Pjax::begin(); ?>
         	<?php
-        		//$startDate = (isset($_GET['from_date'])) ? $_GET['from_date'] : date('Y-m-01');
-        		//$endDate = (isset($_GET['to_date'])) ? $_GET['to_date'] : date('Y-m-d');
-        		//$labId = (isset($_GET['to_date'])) ? $_GET['to_date'] : date('Y-m-d');
         		$startDate = Yii::$app->request->get('from_date', date('Y-m-01'));
         		$endDate = Yii::$app->request->get('to_date', date('Y-m-d'));
         		$labId = (int) Yii::$app->request->get('lab_id', 1);
@@ -120,14 +95,8 @@ $this->params['breadcrumbs'][] = $this->title;
 				        //['class'=>'kartik\grid\SerialColumn'],
 				        //'samplename',
 				        [
-				            //'attribute'=>'samplename',
 				            'label' => 'Date',
 				            'format' => 'raw',
-				            // 'value' => function($model, $key, $index, $widget){
-				            // 	//return Yii::$app->formatter->asDate($model->request->request_datetime, 'php:F j, Y');
-				            // 	return $model->sample->sample_code;
-				            // },
-				            //'value' => 'request_datetime',
 				            'value' => function($model, $key, $index, $widget){
 				            	//return Yii::$app->formatter->asDate($model->request->request_datetime, 'php:F j, Y');
 				            	return Yii::$app->formatter->asDate($model->request_datetime, 'php:Y-m-d');
@@ -141,13 +110,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				        	'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate) {
 				            	$countSample = $model->countSample($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,1,$model->request_type_id);
 				            	return ($countSample > 0) ? $countSample : 0;
-				            	//return $startDate." ".$endDate;
 				            },
 				            'headerOptions' => ['class' => 'text-center'],
 				            'contentOptions' => ['class' => 'text-center'],
 				        ],
 				        [
-				            //'attribute'=>'sampling_date',
 				            'label' => 'No. of Parameters',
 				            'format' => 'raw',
 				            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate){
@@ -228,23 +195,26 @@ $this->params['breadcrumbs'][] = $this->title;
 				    	//GridView::HTML => [],
 				   		GridView::PDF => [],
 				    	GridView::EXCEL => [],
-				        // GridView::EXCEL => [
-				        //     'label' => 'Excel',
-				        //     //'icon' => 'file-excel-o',
-				        //     'iconOptions' => ['class' => 'text-success'],
-				        //     'showHeader' => true,
-				        //     'showPageSummary' => true,
-				        //     'showFooter' => true,
-				        //     'showCaption' => true,
-				        //     'filename' => $this->title,
-				        //     'alertMsg' => 'The EXCEL export file will be generated for download.',
-				        //     'options' => ['title' => 'Microsoft Excel 95+'],
-				        //     'mime' => 'application/vnd.ms-excel',
-				        //     'config' => [
-				        //         'worksheet' => $this->title,
-				        //         'cssFile' => ''
-				        //     ]
-				        // ],
+				        GridView::EXCEL => [
+				            'label' => 'Excel',
+				            //'icon' => 'file-excel-o',
+				            //'iconOptions' => ['class' => 'text-success'],
+				            'showHeader' => true,
+				            'showPageSummary' => true,
+				            'showFooter' => true,
+				            'showCaption' => true,
+				            //'filename' => 'Summary of Samples',
+				            //'worksheet' => 'Summary of Samples',
+				            //'alertMsg' => 'The EXCEL export file will be generated for download.',
+				            'options' => ['title' => 'Microsoft Excel 95+'],
+				            'mime' => 'application/vnd.ms-excel',
+				            'extension' => 'xls',
+				            'filename' => Lab::findOne($labId)->labcode.'-Samples_('.$startDate."_".$endDate.")",
+				            'config' => [
+				                //'worksheet' => $this->title,
+				                'cssFile' => ''
+				            ]
+				        ],
 				        /*GridView::EXCEL => [
 				            'label' => 'Excel',
 				            //'icon' => 'file-excel-o',
@@ -312,20 +282,18 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <script type="text/javascript">
     function reloadGrid(){
-        //$('.modal-title').html($(this).attr('title'));
-        //var url = $(this).attr('value');
-        //$('#modal').modal('show')
-          //  .find('#modalContent')
-            //.load(url)
-            //.modal('hide');
-       //$.pjax.reload({container:"#sample-summary-pjax"});
-       //$.pjax.reload({container:"#sample-summary-pjax",url: '/lab/statistic/samples',replace:false,timeout: 5000});
-       //$.pjax.reload({container:"#sample-summary-pjax",url:'/lab/statistic/samples?lab_id=1&from_date=2018-06-01&to_date='.<?php echo date('Y-m-d'); ?>,replace:false,timeout: 3000});
-      //alert($.now());
     	var lab_id = 1;
 		var fromdate = <?= "'".date('Y-m-01')."'" ?>;
 		var todate = <?= "'".date('Y-m-d')."'" ?>;
-		$.pjax.reload({container:"#sample-summary-pjax",url: '/lab/statistic/samples?lab_id='+lab_id+'&from_date='+fromdate+'&to_date='+todate,replace:false,timeout: false});
+		$("#lab_id").val(lab_id).trigger('change');
+		$('#request_date_range-start').val(fromdate).trigger('change');
+		$('#request_date_range-end').val(todate).trigger('change');
+		$('#request_date_range').val(fromdate+' to '+todate);
+		//$('.daterangepicker .input-mini').val("").trigger('change');
+		//$('.daterangepicker_input').val("").trigger('change');
+		//$("input[name='daterangepicker_start']").val('').trigger('change');
+		//$("input[name='daterangepicker_end']").val('').trigger('change');
+		$.pjax.reload({container:"#sample-summary-pjax",url: '/reports/lab/statistic/samples?lab_id='+lab_id+'&from_date='+fromdate+'&to_date='+todate,replace:false,timeout: false});
     }
 
 	$('#sample-filter').on('click',function(event){
