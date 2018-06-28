@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\lab\models;
+namespace frontend\modules\reports\modules\models;
 
 use Yii;
 use common\models\system\Rstl;
