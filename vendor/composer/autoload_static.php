@@ -90,6 +90,7 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
             'kartik\\plugins\\dateformatter\\' => 29,
             'kartik\\plugins\\checkbox\\' => 24,
             'kartik\\mpdf\\' => 12,
+            'kartik\\money\\' => 13,
             'kartik\\helpers\\' => 15,
             'kartik\\form\\' => 12,
             'kartik\\file\\' => 12,
@@ -365,6 +366,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'kartik\\mpdf\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-mpdf',
+        ),
+        'kartik\\money\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-money',
         ),
         'kartik\\helpers\\' => 
         array (

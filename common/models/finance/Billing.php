@@ -9,15 +9,15 @@ use Yii;
  *
  * @property int $billing_id
  * @property int $user_id
+ * @property int $customer_id
  * @property string $soa_number
  * @property string $billing_date
  * @property string $due_date
- * @property int $orderofpayment_id
  * @property int $receipt_id
  * @property string $amount
  *
  * @property Receipt $receipt
- * @property Orderofpayment $orderofpayment
+ * @property OpBilling[] $opBillings
  */
 class Billing extends \yii\db\ActiveRecord
 {
@@ -43,13 +43,13 @@ class Billing extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'soa_number', 'billing_date', 'due_date', 'orderofpayment_id', 'receipt_id'], 'required'],
-            [['user_id', 'orderofpayment_id', 'receipt_id'], 'integer'],
+            [['user_id', 'customer_id', 'billing_date', 'due_date'], 'required'],
+            [['user_id', 'customer_id', 'receipt_id'], 'integer'],
             [['billing_date', 'due_date'], 'safe'],
             [['amount'], 'number'],
-            [['soa_number'], 'string', 'max' => 100],
+            ['amount', 'compare', 'compareValue' => 0, 'operator' => '>'],
+            [['soa_number','invoice_number'], 'string', 'max' => 100],
             [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::className(), 'targetAttribute' => ['receipt_id' => 'receipt_id']],
-            [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orderofpayment::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
         ];
     }
 
@@ -60,11 +60,12 @@ class Billing extends \yii\db\ActiveRecord
     {
         return [
             'billing_id' => 'Billing ID',
-            'user_id' => 'User ID',
+            'invoice_number' => 'Invoice #', 
+            'user_id' => 'User',
+            'customer_id' => 'Customer',
             'soa_number' => 'Soa Number',
             'billing_date' => 'Billing Date',
             'due_date' => 'Due Date',
-            'orderofpayment_id' => 'Orderofpayment ID',
             'receipt_id' => 'Receipt ID',
             'amount' => 'Amount',
         ];
@@ -81,8 +82,8 @@ class Billing extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOrderofpayment()
+    public function getOpBillings()
     {
-        return $this->hasOne(Orderofpayment::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+        return $this->hasMany(OpBilling::className(), ['billing_id' => 'billing_id']);
     }
 }

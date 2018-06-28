@@ -29,7 +29,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
     <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Bill Invoice', ['value'=>'/finance/billing/create','onclick'=>'ShowModal(this.title,this.value)', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Bill Invoice"),'id'=>'btnInvoice']); ?>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Bill Invoice', ['value'=>'/finance/ar/create','onclick'=>'ShowModal(this.title,this.value)', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Bill Invoice"),'id'=>'btnInvoice']); ?>
     </p>
   <div class="table-responsive">
     <?php 

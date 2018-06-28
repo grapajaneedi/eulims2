@@ -24,6 +24,7 @@ use common\components\Functions;
  * 
  * @property Billing[] $billings
  * @property Collection $collection
+ * @property OpBilling[] $opBillings
  * @property Collectiontype $collectiontype
  * @property Paymentmode $paymentMode
  * @property Paymentitem[] $paymentitems
@@ -88,12 +89,12 @@ class Op extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
+     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBillings()
+    public function getOpBillings()
     {
-        return $this->hasMany(Billing::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+        return $this->hasMany(OpBilling::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
 
     /**
