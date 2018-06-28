@@ -82,7 +82,7 @@ use kartik\widgets\DepDrop;
                         'options'=>['id'=>'deposit-end_or'],
                         'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                         'pluginOptions'=>[
-                            'depends'=>['deposit-end_or'],
+                            'depends'=>['deposit-start_or'],
                             'placeholder'=>'Select End O.R',
                             'url'=>Url::to(['/finance/cashier/end-or']),
                             'loadingText' => 'Loading...',
@@ -107,7 +107,7 @@ use kartik\widgets\DepDrop;
                 ?>
             </div>
             <div class="col-sm-6">
-                <?php echo $form->field($model, 'amount')->textInput(['disabled' => true]) ?>
+                <?php echo $form->field($model, 'amount')->textInput(['readonly' => true]) ?>
             </div>  
         </div>
         <div class="form-group pull-right">
@@ -159,7 +159,7 @@ use kartik\widgets\DepDrop;
 </style>
 <script type="text/javascript">
     $('#deposit-deposit_type_id').on('change',function(e) {
-       $('#deposit-or_series_id').prop('disabled',false);
+    //   $('#deposit-or_series_id').prop('disabled',false);
        /*e.preventDefault();
          jQuery.ajax( {
             type: 'POST',
@@ -173,6 +173,25 @@ use kartik\widgets\DepDrop;
             }
         });*/
     });
+    $('#deposit-start_or').on('change',function() {
+        $('#deposit-amount').val('');
+    });
+    $('#deposit-end_or').on('change',function() {
+        getTotal();
+    });
     
+    function getTotal(){
+        var start_or_id=$('#deposit-start_or').val();
+        var end_or_id=$('#deposit-end_or').val();
+        $.post({
+            url: '/finance/cashier/calculate-total-deposit?id='+start_or_id+'&endor='+end_or_id, // your controller action
+            dataType: 'html',
+            success: function(data) {
+                var tot=parseFloat(data);
+                var total=CurrencyFormat(tot,2);
+                $('#deposit-amount').val(total);
+            }
+        });
+    }
     
 </script>
