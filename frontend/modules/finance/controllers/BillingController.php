@@ -5,7 +5,7 @@ use Yii;
 use common\models\finance\clientSearch;
 use common\models\finance\Client;
 use common\models\finance\Op;
-use frontend\modules\finance\components\models\BillSearch;
+use common\models\finance\BillingSearch;
 
 class BillingController extends \yii\web\Controller
 {
@@ -110,7 +110,7 @@ class BillingController extends \yii\web\Controller
     }
     public function actionInvoices(){
         $model = new Op();
-        $searchModel = new BillSearch();
+        $searchModel = new BillingSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('invoices/index', [

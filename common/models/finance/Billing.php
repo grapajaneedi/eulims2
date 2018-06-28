@@ -3,7 +3,7 @@
 namespace common\models\finance;
 
 use Yii;
-
+use common\models\lab\Customer;
 /**
  * This is the model class for table "tbl_billing".
  *
@@ -16,6 +16,7 @@ use Yii;
  * @property int $receipt_id
  * @property string $amount
  *
+ * @property Customer[] $customer
  * @property Receipt $receipt
  * @property OpBilling[] $opBillings
  */
@@ -85,5 +86,9 @@ class Billing extends \yii\db\ActiveRecord
     public function getOpBillings()
     {
         return $this->hasMany(OpBilling::className(), ['billing_id' => 'billing_id']);
+    }
+     public function getCustomer()
+    {
+        return $this->hasOne(Customer::className(), ['customer_id' => 'customer_id']);
     }
 }
