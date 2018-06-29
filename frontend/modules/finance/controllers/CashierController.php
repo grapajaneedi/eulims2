@@ -4,7 +4,7 @@ namespace frontend\modules\finance\controllers;
 
 use Yii;
 use common\models\finance\Op;
-use common\models\finance\OpSearch;
+use frontend\modules\finance\components\models\CollectionSearch;
 use common\models\finance\Paymentitem;
 use frontend\modules\finance\components\models\Ext_Receipt as Receipt;
 use common\models\finance\ReceiptSearch;
@@ -28,8 +28,8 @@ class CashierController extends \yii\web\Controller
     //Order of Payment
     public function actionOp()
     {
-        $model = new Op();
-        $searchModel = new OpSearch();
+        $model =new Op();
+        $searchModel = new CollectionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('op', [
@@ -112,6 +112,8 @@ class CashierController extends \yii\web\Controller
              }
         }
          $model->receiptDate=date('Y-m-d');
+         $model->payment_mode_id=$op_model->payment_mode_id;
+         $model->collectiontype_id=$op_model->collectiontype_id;
         if(Yii::$app->request->isAjax){
            
             return $this->renderAjax('create_receipt', [
@@ -247,6 +249,8 @@ class CashierController extends \yii\web\Controller
     }
     
     public function actionListorseries() {
+        // var_dump($_POST['depdrop_parents']);
+        //exit();
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
@@ -269,12 +273,18 @@ class CashierController extends \yii\web\Controller
     }
     
     public function actionStartOr() {
+       // var_dump($_POST['depdrop_parents']);
+      // exit();
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
-            $id = end($_POST['depdrop_parents']);
-            $list = Receipt::find()->andWhere(['or_series_id'=>$id])->andWhere(['deposit_id'=>null])->asArray()->all();
+            $ids = end($_POST['depdrop_parents']);
+         $deposit_type_id = empty($ids[0]) ? null : $ids[0];
+         $or_series_id = empty($ids[1]) ? null : $ids[1];
+
+            $list = Receipt::find()->andWhere(['or_series_id'=>$or_series_id])->andWhere(['deposit_type_id'=>$deposit_type_id])->andWhere(['deposit_id'=>null])->asArray()->all();
+         //  $list = Receipt::find()->andWhere(['or_series_id'=>$ids])->andWhere(['deposit_id'=>null])->asArray()->all();
             $selected  = null;
-            if ($id != null && count($list) > 0) {
+            if ($ids != null && count($list) > 0) {
                 $selected = '';
                 foreach ($list as $i => $test) {
                     $out[] = ['id' => $test['receipt_id'], 'name' => $test['or_number']];
