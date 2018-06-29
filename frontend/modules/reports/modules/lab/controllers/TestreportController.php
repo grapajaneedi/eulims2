@@ -73,6 +73,35 @@ class TestreportController extends Controller
         ]);
     }
 
+    public function actionReissue($id){
+        //retrieve the testreport record
+        $testreport = Testreport::findOne($id);
+
+        //issue new record of the test report with "-R" as suffix
+        $newtestreport = new Testreport();
+        $newtestreport = $testreport;
+        $newtestreport->report_num = $newtestreport->report_num."-R";
+        // $newtestreport->testreport_id = ""; //to be safe
+
+        if($newtestreport->save()){
+            //create new records of testreportsamples too
+            $trsamples = TestreportSample::find()->where(['testreport_id'=>$testreport->testreport_id])->all();
+
+            foreach ($trsamples as $trsample) {
+                $newtrsample= new TestreportSample();
+                $newtrsample = $trsample;
+                $newtrsample->testreport_id =$newtestreport->testreport_id;
+                $newtrsample->save();
+            }
+
+            return $this->redirect(['view','id'=>$newtestreport->testreport_id]);
+        }
+
+        //reused the ids of the samples
+
+        //redirect to action view
+    }
+
     /**
      * Creates a new Testreport model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -137,6 +166,10 @@ class TestreportController extends Controller
     
                 //update lab id on model
                 $model->lab_id=$request->lab_id;
+
+                //retrieve lab code here
+
+                //
 
                 //update the testreport number
                 $model->report_num= date('mdY').'-'.$lab->labcode.'-'.$tr_config->getTestReportSeries();

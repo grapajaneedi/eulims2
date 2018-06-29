@@ -22,7 +22,6 @@ use kartik\widgets\SwitchInput;
     echo $func->GetRequestList($form,$model,false,"Request");
     ?>
 
-
     <!-- <?= $form->field($model, 'report_num')->textInput(['maxlength' => true]) ?> -->
 
     <?php
@@ -34,7 +33,6 @@ use kartik\widgets\SwitchInput;
              'format' => 'yyyy-mm-dd',
              'todayHighlight' => true,
              'autoclose'=>true,
-             
          ]
      ]);
      ?>
@@ -75,13 +73,16 @@ use kartik\widgets\SwitchInput;
         </div> 
     </div>
 
-    <div class="form-group pull-right">
-           <?php if(Yii::$app->request->isAjax){ ?>
-               <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-           <?php } ?>
-
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-     </div>
+     <div class="form-group pull-right">
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success mybtn' : 'btn btn-primary mybtn',
+            'data' => [
+                'confirm' => 'Are you sure you want to generate this Testreport ?',
+            ]]) ?>
+        <?php if(Yii::$app->request->isAjax){ ?>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <?php } ?>
+        
+    </div>
 
     <?php ActiveForm::end(); ?>
 
