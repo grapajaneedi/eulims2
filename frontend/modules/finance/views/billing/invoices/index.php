@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use common\models\lab\Customer;
+use common\models\finance\Client;
 use common\models\finance\Collectiontype;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
@@ -22,7 +23,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Billing', 'url' => ['/finance/bill
 $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
-
+$rstlID=$GLOBALS['rstl_id'];
 ?>
 <div class="billinvoice-index">
     <?php
@@ -58,7 +59,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                     return $model->customer->customer_name;
                 },
                 'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(Customer::find()->asArray()->all(), 'customer_id', 'customer_name'),
+                'filter' => ArrayHelper::map($func->GetClientList($rstlID), 'customer_id', 'customer_name'),
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
@@ -68,9 +69,27 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 'attribute'=>'invoice_number',
                 'label'=>'Bill Invoice #',
             ],
-            'billing_date',
-            'due_date',
-            'amount',
+            [
+                'attribute'=>'billing_date',
+                'hAlign' => 'center',
+                'value'=>function($model){
+                    return date('m/d/Y',strtotime($model->billing_date));
+                }
+            ],
+            [
+                'attribute'=>'due_date',
+                'hAlign' => 'center',
+                'value'=>function($model){
+                    return date('m/d/Y',strtotime($model->due_date));
+                }
+            ],
+            [
+                'attribute'=>'amount',
+                'hAlign' => 'right',
+                'value'=>function($model){
+                    return number_format($model->amount,2);
+                }
+            ],
             [
                'label'=>'Status', 
                'format'=>'raw',
@@ -85,65 +104,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 }
                
             ],
-            /*[
-                'attribute' => 'collectiontype_id',
-                'label' => 'Collection Type',
-                'value' => function($model) {
-                    return $model->collectiontype->natureofcollection;
-                },
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(Collectiontype::find()->asArray()->all(), 'collectiontype_id', 'natureofcollection'),
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['placeholder' => 'Collection Type', 'id' => 'grid-op-search-collectiontype_id']
-            ],
-             * 
-             */
-           /* [
-               'attribute'=>'billing_date',
-               'filterType'=> GridView::FILTER_DATE_RANGE,
-               'value' => function($model) {
-                    return date_format(date_create($model->billing_date),"m/d/Y");
-                },
-                'filterWidgetOptions' => ([
-                     'model'=>$model,
-                     'useWithAddon'=>true,
-                     'attribute'=>'order_date',
-                     'startAttribute'=>'createDateStart',
-                     'endAttribute'=>'createDateEnd',
-                     'presetDropdown'=>TRUE,
-                     'convertFormat'=>TRUE,
-                     'pluginOptions'=>[
-                         'allowClear' => true,
-                        'locale'=>[
-                            'format'=>'Y-m-d',
-                            'separator'=>' to ',
-                        ],
-                         'opens'=>'left',
-                      ],
-                     'pluginEvents'=>[
-                        "cancel.daterangepicker" => "function(ev, picker) {
-                        picker.element[0].children[1].textContent = '';
-                        $(picker.element[0].nextElementSibling).val('').trigger('change');
-                        }",
-                        
-                        'apply.daterangepicker' => 'function(ev, picker) { 
-                        var val = picker.startDate.format(picker.locale.format) + picker.locale.separator +
-                        picker.endDate.format(picker.locale.format);
-
-                        picker.element[0].children[1].textContent = val;
-                        $(picker.element[0].nextElementSibling).val(val);
-                        }',
-                      ] 
-                     
-                ]),        
-               
-            ],
-          */
-            
             [
-              //'class' => 'yii\grid\ActionColumn'
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Buttontemplate,
             ],

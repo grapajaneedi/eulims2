@@ -3,7 +3,8 @@
 namespace common\models\finance;
 
 use Yii;
-
+use yii\db\ActiveRecord;
+use common\models\finance\Billing;
 /**
  * This is the model class for table "tbl_op_billing".
  *
@@ -54,7 +55,7 @@ class OpBilling extends \yii\db\ActiveRecord
         return [
             [['orderofpayment_id', 'billing_id'], 'required'],
             [['orderofpayment_id', 'billing_id', 'created_at'], 'integer'],
-            [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orderofpayment::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
+            [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Op::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
             [['billing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Billing::className(), 'targetAttribute' => ['billing_id' => 'billing_id']],
         ];
     }
@@ -77,7 +78,7 @@ class OpBilling extends \yii\db\ActiveRecord
      */
     public function getOrderofpayment()
     {
-        return $this->hasOne(Orderofpayment::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+        return $this->hasOne(Op::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
 
     /**

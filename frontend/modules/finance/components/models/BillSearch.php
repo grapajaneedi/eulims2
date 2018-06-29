@@ -68,13 +68,14 @@ class BillSearch extends Op
             'collectiontype_id' => $this->collectiontype_id,
             'customer_id' => $this->customer_id,
             'created_receipt' => $this->created_receipt,
+            'on_account'=>1
             //'invoice_number'=> $this->invoice_number
         ]);
         //exit;
         $query->andFilterWhere(['like', 'transactionnum', $this->transactionnum])
             ->andFilterWhere(['like', 'purpose', $this->purpose])
-            ->andFilterWhere(['=', 'on_account', 1])
-            ->andFilterWhere(['like', 'invoice_number', $this->invoice_number]);
+            ->andFilterWhere(['like', 'invoice_number', $this->invoice_number])
+            ->andFilterWhere(['=', 'customer_id', $this->customer_id]);
             //->andFilterWhere(['between', 'order_date', '2018-05-22', '2018-05-23']);
            // ->andFilterWhere(['between', 'order_date', $this->createDateStart, $this->createDateEnd]);
         return $dataProvider;
