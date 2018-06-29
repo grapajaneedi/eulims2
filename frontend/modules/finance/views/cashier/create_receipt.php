@@ -49,6 +49,7 @@ $func= new Functions();
              'autocomplete'=>'off'],
              'type' => DatePicker::TYPE_COMPONENT_APPEND,
                  'pluginOptions' => [
+                     
                      'format' => 'yyyy-mm-dd',
                      'todayHighlight' => true,
                      'autoclose'=>true,   
@@ -91,7 +92,7 @@ $func= new Functions();
             <div class="col-sm-6">
            <?php 
 
-                echo $form->field($model, 'or_number')->widget(Select2::classname(), [
+                echo $form->field($model, 'or_series_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(Orseries::find()->all(), 'or_series_id', 'or_series_name'),
                 'theme' => Select2::THEME_BOOTSTRAP,
                 'options' => ['placeholder' => 'O.R Series ...'],
@@ -165,7 +166,7 @@ $func= new Functions();
     }
 </style>
 <script type="text/javascript">
-    $('#receipt-or_number').on('change',function(e) {
+    $('#ext_receipt-or_series_id').on('change',function(e) {
         jQuery.ajax( {
             type: 'POST',
             url: '/finance/cashier/nextor?id='+$(this).val(),
@@ -174,15 +175,15 @@ $func= new Functions();
                 if(response.success === true)
                 {
                     //$("span.btn").appendClass("btn-success");
-                    $('span.btn').removeClass("btn-warning");
+                    $('span.btn').removeClass("btn-danger");
                     $('span.btn').addClass("btn-success");
                     $('#next_or').html(response.nxtOR);
-                    $('#receipt-or').val(response.nxtOR);
+                    $('#ext_receipt-or').val(response.nxtOR);
                 } else {
                     //$("span.btn").appendClass("btn-warning");
-                    $('span.btn').addClass("btn-warning");
+                    $('span.btn').addClass("btn-danger");
                     $('#next_or').html(response.nxtOR);
-                    $('#receipt-or').val('');
+                    $('#ext_receipt-or').val('');
                 }
             },
             error: function ( xhr, ajaxOptions, thrownError ) {

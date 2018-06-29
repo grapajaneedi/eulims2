@@ -25,6 +25,26 @@ use common\models\services\Test;
 
 $namelist= ArrayHelper::map(Fee::find()->all(),'fee_id', 'name');
 
+$js=<<<SCRIPT
+$(".kv-row-checkbox").click(function(){
+   
+   var keys = $('#sample-grid').yiiGridView('getSelectedRows');
+   var keylist= keys.join();
+   $("#sample_ids").val(keylist);
+   
+});    
+$(".select-on-check-all").change(function(){
+
+ var keys = $('#sample-grid').yiiGridView('getSelectedRows');
+ var keylist= keys.join();
+  $("#sample_ids").val(keylist);
+ 
+});
+
+SCRIPT;
+$this->registerJs($js);
+
+
 ?>
 
 <div class="fee-form">
@@ -38,6 +58,7 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'fee_id', 'name');
         'headerRowOptions' => ['class' => 'kartik-sheet-style'],
         'filterRowOptions' => ['class' => 'kartik-sheet-style'],
         'bordered' => true,
+        'id'=>'sample-grid',
         'striped' => true,
         'condensed' => true,
         'responsive'=>false,
@@ -92,6 +113,8 @@ $namelist= ArrayHelper::map(Fee::find()->all(),'fee_id', 'name');
         <?php
        // $form->field($model, 'code')->hiddenInput()->label(false) 
         ?>
+
+        <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
 
         <?= Html::label('Quantity', 'xxx') ?>
         <?= Html::textInput('xxx', '', ['class' => 'form-control'], ['readonly' => true]) ?>

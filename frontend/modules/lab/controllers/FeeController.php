@@ -80,11 +80,13 @@ class FeeController extends Controller
     {
         $model = new Fee();
         $searchModel = new FeeSearch();
+        $request_id = $_GET['id'];
+        $session = Yii::$app->session;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->fee_id]);
-        }
+        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        //     return $this->redirect(['view', 'id' => $model->fee_id]);
+        // }
 
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $sampleDataProvider = new ActiveDataProvider([
@@ -100,7 +102,50 @@ class FeeController extends Controller
         $sampletype = [];
         $test = [];
 
-        if (Yii::$app->request->isAjax) {
+        if ($model->load(Yii::$app->request->post())) {
+
+            $sample_ids= $_POST['sample_ids'];
+            $ids = explode(',', $sample_ids);  
+            $post= Yii::$app->request->post();
+
+            foreach ($ids as $sample_id){
+
+                $analysis = new Analysis();
+                $analysis->sample_id = $sample_id;
+                $analysis->cancelled = 1;
+                $analysis->pstcanalysis_id = 1;
+                $analysis->request_id = $request_id;
+                $analysis->rstl_id = $GLOBALS['rstl_id'];
+                $analysis->test_id = 1;
+                $analysis->user_id = 1;
+                $analysis->sample_type_id = 1;
+                $analysis->testcategory_id = 1;
+                $analysis->is_package = 0;
+                $analysis->method = 1;
+
+                $analysis->testname = 1;
+                $analysis->references = 1;
+                $analysis->quantity = 1;
+                $analysis->sample_code = 1;
+                $analysis->date_analysis = '2018-06-14 7:35:0';   
+                $analysis->save();
+               
+            }        
+            $session->set('savemessage',"executed");  
+            return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
+    } 
+         if (Yii::$app->request->isAjax) {
+                 $analysismodel = new Analysis();
+
+                 $analysismodel->rstl_id = $GLOBALS['rstl_id'];
+                 $analysismodel->pstcanalysis_id = $GLOBALS['rstl_id'];
+                 $analysismodel->request_id = $GLOBALS['rstl_id'];
+                 $analysismodel->testname = $GLOBALS['rstl_id'];
+                 $analysismodel->cancelled = $GLOBALS['rstl_id'];
+                 $analysismodel->sample_id = $GLOBALS['rstl_id'];
+                 $analysismodel->sample_code = $GLOBALS['rstl_id'];
+                 $analysismodel->date_analysis = '2018-06-14 7:35:0';
+ 
             return $this->renderAjax('_form', [
                 'model' => $model,
                 'searchModel' => $searchModel,
@@ -115,6 +160,10 @@ class FeeController extends Controller
                 'model' => $model,
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
+                'sampleDataProvider' => $sampleDataProvider,
+                'testcategory' => $testcategory,
+                'test' => $test,
+                'sampletype'=>$sampletype
             ]);
         }
     }

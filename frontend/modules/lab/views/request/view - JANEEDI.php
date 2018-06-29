@@ -391,7 +391,7 @@ if($Request_Ref){
         </div>
     </div>
     <div class="container">
-    <?php
+        <?php
             $analysisgridColumns = [
                 [
                     'attribute'=>'sample_name',
@@ -435,7 +435,7 @@ if($Request_Ref){
                     //     return $model->samples->sample_code;
                     // },
                     'enableSorting' => false,
-                    'pageSummary' => '<span style="float:right";>TOTAL</span>',
+                    'pageSummary' => '<span style="float:right";>SUBTOTAL<br>DISCOUNT<br>TOTAL</span>',
                 ],
                 [
                     'attribute'=>'fee',
@@ -451,48 +451,48 @@ if($Request_Ref){
                     'pageSummary' => true,  
                   
                 ],
-                // [
-                //     'attribute'=>'status',
-                //     'header'=>'Status',
-                //     // 'value' => function($model) {
-                //     //     return $model->samples->sample_code;
-                //     // },
-                //     'enableSorting' => false,
-                // ],
+                [
+                    'attribute'=>'status',
+                    'header'=>'Status',
+                    // 'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                    // },
+                    'enableSorting' => false,
+                ],
                 [
                     'class' => 'kartik\grid\ActionColumn',
                     'template' => '{update} {delete} {cancel}',
                     'dropdown' => false,
                     'dropdownOptions' => ['class' => 'pull-right'],
                     'urlCreator' => function ($action, $model, $key, $index) {
-                        if ($action === 'delete') {
-                            $url ='/lab/analysis/delete?id='.$model->analysis_id;
-                            return $url;
-                        } 
-                        if ($action === 'cancel') {
-                            $url ='/lab/analysis/cancel?id='.$model->analysis_id;
-                            return $url;
-                        }
+                        // if ($action === 'delete') {
+                        //     $url ='/lab/sample/delete?id='.$model->sample_id;
+                        //     return $url;
+                        // } 
+                        // if ($action === 'cancel') {
+                        //     $url ='/lab/sample/cancel?id='.$model->sample_id;
+                        //     return $url;
+                        // }
                     },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
                         'update' => function ($url, $model) {
-                          //  if($model->active == 1){
-                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '', ['class'=>'btn btn-primary','title'=>'Update Analysis','onclick' => 'updateSample('.$model->analysis_id.')']);
-                         //   } else {
-                        //        return null;
-                        //    }
+                            // if($model->active == 1){
+                            //     return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '', ['class'=>'btn btn-primary','title'=>'Update Sample','onclick' => 'updateSample('.$model->sample_id.')']);
+                            // } else {
+                            //     return null;
+                            // }
                         },
                         'delete' => function ($url, $model) {
-                            //if($model->sample_code == "" && $model->active == 1){
-                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->testname."</b>?",'data-method'=>'post','class'=>'btn btn-primary','title'=>'Delete Analysis','data-pjax'=>'0']);
+                            // if($model->sample_code == "" && $model->active == 1){
+                            //     return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'data-method'=>'post','class'=>'btn btn-primary','title'=>'Delete Sample','data-pjax'=>'0']);
                             // } else {
                             //     return null;
                             // }
                         },
                         'cancel' => function ($url, $model){
                             // if($model->sample_code != "" && $model->active == 1){
-                               return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel <b>".$model->testname."</b>?\nAll analyses that this sample contains will also be cancelled.",'data-method'=>'post','class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
+                            //     return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel <b>".$model->sample_code."</b>?\nAll analyses that this sample contains will also be cancelled.",'data-method'=>'post','class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
                             // } else {
                             //     return $model->active == 0 ? '<span class="text-danger" style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>' : '';
                             // }
@@ -507,7 +507,7 @@ if($Request_Ref){
                 'id' => 'analysis-grid',
                 'dataProvider'=> $analysisdataprovider,
                 'summary' => '',
-                'responsive'=>true, 
+                'responsive'=>true,
                 'showPageSummary' => true,
                 'hover'=>true,
                 //'filterModel' => $searchModel, JANEEDI 
@@ -541,6 +541,7 @@ if($Request_Ref){
             .load(url);
     }
     function viewRemarkSample(id){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
        var url = '/lab/sample/cancel?id='+id;
         $('.modal-title').html('View Cancel Remark');
         $('#modal').modal('show')
@@ -548,6 +549,7 @@ if($Request_Ref){
             .load(url);
     }
     function cancelSample(id){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
        var url = '/lab/sample/cancel?id='+id;
         $('.modal-title').html('Cancel Sample');
         $('#modal').modal('show')

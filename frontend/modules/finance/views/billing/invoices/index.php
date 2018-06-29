@@ -29,7 +29,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
     <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Bill Invoice', ['value'=>'/finance/billing/create','click'=>'LoadModal(this.title,this.value,true,"300px")', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Bill Invoice"),'id'=>'btnInvoice']); ?>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Bill Invoice', ['value'=>'/finance/ar/create','onclick'=>'ShowModal(this.title,this.value)', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Bill Invoice"),'id'=>'btnInvoice']); ?>
     </p>
   <div class="table-responsive">
     <?php 
@@ -52,10 +52,40 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
+                'attribute' => 'customer_id',
+                'label' => 'Customer Name',
+                'value' => function($model) {
+                    return $model->customer->customer_name;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(Customer::find()->asArray()->all(), 'customer_id', 'customer_name'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Customer Name', 'id' => 'grid-op-search-customer_id']
+            ],
+            [
                 'attribute'=>'invoice_number',
                 'label'=>'Bill Invoice #',
             ],
+            'billing_date',
+            'due_date',
+            'amount',
             [
+               'label'=>'Status', 
+               'format'=>'raw',
+               'value'=>function($model){
+                    if($model->receipt_id){
+                       return "<button class='btn btn-block btn-success'>Paid</button>"; 
+                      // return "<button class='badge ".$Obj[0]['class']." legend-font'><span class=".$Obj[0]['icon']."></span> $Obj[0]['status']</span>";
+                    }else{
+                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
+                    }
+                   //
+                }
+               
+            ],
+            /*[
                 'attribute' => 'collectiontype_id',
                 'label' => 'Collection Type',
                 'value' => function($model) {
@@ -68,11 +98,13 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 ],
                 'filterInputOptions' => ['placeholder' => 'Collection Type', 'id' => 'grid-op-search-collectiontype_id']
             ],
-            [
-               'attribute'=>'order_date',
+             * 
+             */
+           /* [
+               'attribute'=>'billing_date',
                'filterType'=> GridView::FILTER_DATE_RANGE,
                'value' => function($model) {
-                    return date_format(date_create($model->order_date),"m/d/Y");
+                    return date_format(date_create($model->billing_date),"m/d/Y");
                 },
                 'filterWidgetOptions' => ([
                      'model'=>$model,
@@ -108,35 +140,8 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 ]),        
                
             ],
-          
-            [
-                'attribute' => 'customer_id',
-                'label' => 'Customer Name',
-                'value' => function($model) {
-                    return $model->customer->customer_name;
-                },
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(Customer::find()->asArray()->all(), 'customer_id', 'customer_name'),
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['placeholder' => 'Customer Name', 'id' => 'grid-op-search-customer_id']
-            ],
-            [
-               'label'=>'Status', 
-               'format'=>'raw',
-               'value'=>function($model){
-                    $Obj=$model->getCollectionStatus($model->orderofpayment_id);
-                    if($Obj){
-                       return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
-                      // return "<button class='badge ".$Obj[0]['class']." legend-font'><span class=".$Obj[0]['icon']."></span> $Obj[0]['status']</span>";
-                    }else{
-                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
-                    }
-                   //
-                }
-               
-            ],
+          */
+            
             [
               //'class' => 'yii\grid\ActionColumn'
                 'class' => kartik\grid\ActionColumn::className(),

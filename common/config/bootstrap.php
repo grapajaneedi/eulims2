@@ -26,6 +26,7 @@ if (isset($_SERVER['SERVER_NAME'])) {
     $GLOBALS['frontend_base_uri'] = $FrontendBaseURI;
     /********************** Global Configuration Settings **********************/
     $GLOBALS['rstl_id']=11; //RSTL ID
+    $GLOBALS['terminal_id']=1; // Unique Terminal ID for each RSTL Cashier
     /***************************************************************************/
 }
 

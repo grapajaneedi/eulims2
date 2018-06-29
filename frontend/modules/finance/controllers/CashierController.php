@@ -17,6 +17,7 @@ use common\models\finance\DepositSearch;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
+use yii\db\Query;
 
 class CashierController extends \yii\web\Controller
 {
@@ -84,25 +85,35 @@ class CashierController extends \yii\web\Controller
         $op_model=$this->findModel($op_id);
        
         $model = new Receipt();
+        
         if ($model->load(Yii::$app->request->post())) {
-            $session = Yii::$app->session;
+            $connection=Yii::$app->financedb;
+            $transaction =$connection->beginTransaction();
+             $session = Yii::$app->session;
              try  {
-                $model->rstl_id=11;
-                $model->terminal_id=1;
+               // $model->getDb()=$connection;
+                $model->rstl_id=$GLOBALS['rstl_id'];
+                $model->terminal_id=$GLOBALS['terminal_id'];
                 $model->collection_id=$op_model->collection->collection_id;
+                $this->update_nextor($model->or_series_id,$connection);
+               // $model->or_series_id=$model->or_series_id;
                 $model->or_number=$model->or;
-                $model->check_id='';
                 $model->total=0;
                 $model->cancelled=0;
                 $this->created_receipt($op_id);
+            
                 $model->save(false);
+                 $transaction->commit();
                 $session->set('savepopup',"executed");
                 return $this->redirect(['/finance/cashier/op']); 
              } catch (Exception $e) {
-                   return $e;
+                 $transaction->rollBack();
+                 return $e;
              }
         }
+         $model->receiptDate=date('Y-m-d');
         if(Yii::$app->request->isAjax){
+           
             return $this->renderAjax('create_receipt', [
                 'model' => $model,
                 'op_model'=> $op_model,
@@ -158,12 +169,25 @@ class CashierController extends \yii\web\Controller
         {
             $model = Orseries::findOne($id);
             $nextOR=$model->nextor;
-            echo JSON::encode(['nxtOR'=>$nextOR,'success'=>true]);
+            $endOR=$model->endor;
+            if($nextOR > $endOR){
+                echo JSON::encode(['nxtOR'=>'Please update O.R Series','success'=>false]);
+            }
+            else{
+                echo JSON::encode(['nxtOR'=>$nextOR,'success'=>true]);
+            }
+            
         } else {
             echo JSON::encode(['nxtOR'=>"OR Series not selected.",'success'=>false]);
         }
     }
-    
+     public function update_nextor($orseries_id,$connection){
+       $sql_update='UPDATE tbl_orseries SET nextor=nextor +1 WHERE or_series_id=:orseries_id';
+       $Command=$connection->createCommand($sql_update);
+       $Command->bindValue(':orseries_id',$orseries_id);
+       $Command->execute();
+     }
+     
     public function created_receipt($opID){
         if(!empty($opID))
         {
@@ -195,8 +219,14 @@ class CashierController extends \yii\web\Controller
             $session = Yii::$app->session;
              try  {
                  $model->rstl_id=$GLOBALS['rstl_id'];
-                //$model->receipt_id=$receiptid;
+                 $model->start_or=$this->findModelReceipt($model->start_or)->or_number;
+                 $model->end_or=$this->findModelReceipt($model->end_or)->or_number;
+                /* echo'<pre>';
+                 var_dump(Yii::$app->request->post());
+                  echo'</pre>';
+                 exit;*/
                 $model->save(false);
+                $this->update_receipt_depositid($model->start_or, $model->end_or, $model->deposit_id);
                 $session->set('savepopup',"executed");
                  return $this->redirect(['/finance/cashier/deposit']);
                 //
@@ -237,42 +267,98 @@ class CashierController extends \yii\web\Controller
         }
         echo Json::encode(['output' => '', 'selected'=>'']);
     }
-  
-   /* function actionUpdateDropdown(){
-	$deposit=new Deposit();
-        if(isset($_POST['Deposit']['deposit_type_id'])){
-                $depositType = $_POST['Deposit']['deposit_type_id'];
-
-                $receipts=Receipt::model()->find();
-                $receipts = CHtml::listData($receipts, 'orseries_id', 'orseries.name', 'orseries.categoryName');
-                $orseries .=  CHtml::tag('option', array('value'=>''), CHtml::encode($name), true);
-                foreach($receipts as $value=>$name)
-                        foreach($name as $key=>$val)
-                                        $option.=CHtml::tag('option', array('value'=>$key), CHtml::encode($val), true);
-
-                        $orseries .= CHtml::tag('optgroup', array('label'=>$value), $option, true);		
-
-                echo CJSON::encode(array('orseries'=>$orseries));
-                exit;
-
+    
+    public function actionStartOr() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $list = Receipt::find()->andWhere(['or_series_id'=>$id])->andWhere(['deposit_id'=>null])->asArray()->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $test) {
+                    $out[] = ['id' => $test['receipt_id'], 'name' => $test['or_number']];
+                    if ($i == 0) {
+                        $selected = $test['receipt_id'];
+                    }
+                }
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
         }
-        if(isset($_POST['Deposit']['orseries_id'])){
-                $orseriesId = $_POST['Deposit']['orseries_id'];
-                $depositType = $_POST['depositType'];
-
-                $startOr = $deposit->getFirstOrBySeries($orseriesId, $depositType);
-                $endOr = $deposit->getLastOrJSONBySeries($orseriesId, $depositType);
-
-                echo CJSON::encode(
-                                        array(
-                                                'startOr'=>$startOr, 
-                                                'lastOr'=>$endOr,
-                                        )
-                                );
-                exit;
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
+    
+    public function actionEndOr() {
+        //SELECT receipt_id,or_number FROM tbl_receipt WHERE deposit_type_id=1 AND or_series_id=1 AND (or_number BETWEEN 2900000 AND 2900001)
+     
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+            $receipt=$this->findModelReceipt($id);
+             $list=(new Query)
+            ->select('receipt_id,or_number')
+            ->from('eulims_finance.tbl_receipt')
+            ->where(['deposit_type_id' => $receipt->deposit_type_id])
+            ->andWhere(['or_series_id' => $receipt->or_series_id]) 
+            ->andWhere(['deposit_id'=>null]) 
+            ->andWhere(['>=', 'or_number',$receipt->or_number])
+                   //  ['<=', 'population', $upper]
+            ->all();
+        // echo $wallet["balance"];
+            //$list = Receipt::find()->andWhere(['receipt_id'=>$id])->andWhere(['deposit_id'=>null])->asArray()->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $test) {
+                    $out[] = ['id' => $test['receipt_id'], 'name' => $test['or_number']];
+                    if ($i == 0) {
+                        $selected = $test['receipt_id'];
+                    }
+                }
+                
+                echo Json::encode(['output' => $out, 'selected'=>'']);
+                return;
+            }
         }
-		
-   }*/
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
+   public function actionCalculateTotalDeposit($id,$endor) {
+        $total = 0;
+        $start_receipt=$this->findModelReceipt($id);
+        $start_or=$start_receipt->or_number;
+        $deposit_type_id= $start_receipt->deposit_type_id;
+        $or_series_id=$start_receipt->or_series_id;
+        $end_receipt=$this->findModelReceipt($endor);
+        $end_or=$end_receipt->or_number;
+        
+        $sum=(new Query)
+            ->select('receipt_id,or_number,total')
+            ->from('eulims_finance.tbl_receipt')
+            ->where(['deposit_type_id' => $deposit_type_id])
+            ->andWhere(['or_series_id' => $or_series_id]) 
+            ->andWhere(['deposit_id'=>null]) 
+            ->andWhere(['between', 'or_number',$start_or,$end_or])
+                   //  ['<=', 'population', $upper]
+            ->sum('total');
+        if($id == '' ){
+            echo 'why?huhuhu';
+        }
+        else{
+           //->sum('amount')
+            echo $sum;
+        }
+     }
+    
+     public function update_receipt_depositid($startor,$endor,$depositid){
+        if(!empty($startor) && !empty($endor) )
+        {
+            Yii::$app->financedb->createCommand()
+            ->update('tbl_receipt', ['deposit_id' => $depositid], ['between', 'or_number',$startor,$endor])
+            ->execute(); 
+            
+        }
+     }
     //------------------END of DEPOSIT
     //------------COLLECTION
     protected function findModelCollection($id)
@@ -311,9 +397,7 @@ class CashierController extends \yii\web\Controller
         }
     }
     public function actionSaveCollection($id,$receiptid,$collection_id){
-       // $receiptid=7;
-        //var_dump($id);
-       // exit;
+     
          if($id <> '' ){
             $str_total = explode(',', $id);
             $arr_length = count($str_total); 
@@ -335,8 +419,6 @@ class CashierController extends \yii\web\Controller
          }else{
              
          }
-       // echo JSON::encode(['success'=>true]);
-        // return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]); 
     }
      public function actionCalculateTotal($id) {
         $total = 0;

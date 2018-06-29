@@ -23,10 +23,18 @@ use common\models\services\Sampletype;
 
 $js=<<<SCRIPT
    $(".kv-row-checkbox").click(function(){
-        settotal();
+      
+      var keys = $('#sample-grid').yiiGridView('getSelectedRows');
+      var keylist= keys.join();
+      $("#sample_ids").val(keylist);
+      
    });    
    $(".select-on-check-all").change(function(){
-        settotal();
+
+    var keys = $('#sample-grid').yiiGridView('getSelectedRows');
+    var keylist= keys.join();
+     $("#sample_ids").val(keylist);
+    
    });
   
 SCRIPT;
@@ -37,11 +45,7 @@ $this->registerJs($js);
 <div class="analysis-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    <!-- <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 1px !important;">
-     <a href="#" class="close" data-dismiss="alert" >×</a>
-    <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
-     
-    </div> -->
+ 
 
     <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
@@ -50,6 +54,7 @@ $this->registerJs($js);
         'headerRowOptions' => ['class' => 'kartik-sheet-style'],
         'filterRowOptions' => ['class' => 'kartik-sheet-style'],
         'bordered' => true,
+        'id'=>'sample-grid',
         'striped' => true,
         'condensed' => true,
         'responsive'=>false,
@@ -96,6 +101,8 @@ $this->registerJs($js);
     <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
 
     <?= $form->field($model, 'is_package')->hiddenInput()->label(false)  ?>
+
+    <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
 
         <div class="row">
         <div class="col-sm-6">
@@ -199,6 +206,9 @@ $this->registerJs($js);
         <?php if($model->isNewRecord){ ?>
         <?php } ?>
     <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
+
+   
+
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -235,35 +245,35 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
 
 <script type="text/javascript">
     function settotal(){
-         var keys = $('#grid').yiiGridView('getSelectedRows');
+        var keys = $('#sample-grid').yiiGridView('getSelectedRows');
         var keylist= keys.join();
-        $("#op-requestids").val(keys.join());
+      //  $("#op-requestids").val(keys.join());
         $.post({
             url: '/finance/op/calculate-total?id='+keylist, // your controller action
             success: function(data) {
-                var tot=parseFloat(data);
-                var total=CurrencyFormat(tot,2);
-                $('#total').html(total);
-                 var payment_mode=$('#op-payment_mode_id').val()
-                if(payment_mode===4){
-                    wallet=parseInt($('#wallet').val());
-                    totalVal = parseFloat($('#total').html().replace(/[^0-9-.]/g, ''));
+                // var tot=parseFloat(data);
+                // var total=CurrencyFormat(tot,2);
+                // $('#total').html(total);
+                //  var payment_mode=$('#op-payment_mode_id').val()
+                // if(payment_mode===4){
+                //     wallet=parseInt($('#wallet').val());
+                //     totalVal = parseFloat($('#total').html().replace(/[^0-9-.]/g, ''));
                    
-                    if( totalVal > wallet) {
+                //     if( totalVal > wallet) {
                        
-                       swal("Insufficient customer wallet");
-                      $('#op-purpose').prop('disabled', true);
-                      $('#createOP').prop('disabled', true);
+                //        swal("Insufficient customer wallet");
+                //       $('#op-purpose').prop('disabled', true);
+                //       $('#createOP').prop('disabled', true);
                     
-                    }
-                    else{
-                        if(total !== 0){
-                            $('#op-purpose').prop('disabled', false);
-                            $('#createOP').prop('disabled', false);
-                        }
+                //     }
+                //     else{
+                //         if(total !== 0){
+                //             $('#op-purpose').prop('disabled', false);
+                //             $('#createOP').prop('disabled', false);
+                //         }
                        
-                    }
-                }
+                //     }
+                // }
             }
         });
     }
