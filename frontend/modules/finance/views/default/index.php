@@ -31,14 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-3 col-sm-6 col-xs-12">
               
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                  <a href="/settings" title="Customer Wallet"><img class="imgHover" src="/images/customerwalletsquare.png" style="height:120px;width: 120px" ></a>
+                  <a href="/finance/customerwallet" title="Customer Wallet"><img class="imgHover" src="/images/customerwalletsquare.png" style="height:120px;width: 120px" ></a>
               </div>
             </div>
             <!-- /.col -->
             <div class="col-md-3 col-sm-6 col-xs-12">
             
              <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/gii" title="Order of Payment"><img class="imgHover" src="/images/ordersquare.png" style="height:120px;width: 120px"></a>
+                 <a href="/finance/op" title="Order of Payment"><img class="imgHover" src="/images/ordersquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div>
             <!-- /.col -->
@@ -77,22 +77,23 @@ $this->params['breadcrumbs'][] = $this->title;
           <div class="row">
             <div class="col-md-3 col-sm-6 col-xs-12">
              
-               <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                  <a href="/settings" title="Receipt"><img class="imgHover" src="/images/receiptsquare.png" style="height:120px;width: 120px" ></a>
-              </div>
-            </div>
-            <!-- /.col -->
-            <div class="col-md-3 col-sm-6 col-xs-12">
-             
              <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/gii" title="Order of Payment"><img class="imgHover" src="/images/ordersquare.png" style="height:120px;width: 120px"></a>
+                 <a href="/finance/cashier/op" title="Collection"><img class="imgHover" src="/images/collectionsquare.png" style="height:120px;width: 120px"></a>
+              </div>
+            </div> 
+            
+            <!-- /.col -->
+           <div class="col-md-3 col-sm-6 col-xs-12">
+             
+               <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
+                  <a href="/finance/cashier/receipt" title="Receipt"><img class="imgHover" src="/images/receiptsquare.png" style="height:120px;width: 120px" ></a>
               </div>
             </div>
             <!-- /.col -->
             <div class="col-md-3 col-sm-6 col-xs-12">
              
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                   <a href="/debug" title="Deposit"><img class="imgHover" src="/images/depositsquare.png" style="height:120px;width: 120px"></a>
+                   <a href="/finance/cashier/deposit" title="Deposit"><img class="imgHover" src="/images/depositsquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div>
             

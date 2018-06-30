@@ -32,7 +32,8 @@ use kartik\widgets\DepDrop;
                 echo $form->field($model, 'deposit_type_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(DepositType::find()->all(), 'deposit_type_id', 'deposit_type'),
                 'theme' => Select2::THEME_BOOTSTRAP,
-                'options' => ['placeholder' => 'Please Select ...'],
+                'options'=>['id'=>'deposit-deposit_type_id'],
+             //   'options' => ['placeholder' => 'Please Select ...'],
                 'pluginOptions' => [
                   'allowClear' => true
                 ],
@@ -41,6 +42,15 @@ use kartik\widgets\DepDrop;
             </div>   
             <div class="col-sm-6">
               <?php 
+              
+//              echo $form->field($model, 'or_series_id')->widget(Select2::classname(), [
+//                'data' => ArrayHelper::map(Orseries::find()->all(), 'or_series_id', 'or_series_name'),
+//                'theme' => Select2::THEME_BOOTSTRAP,
+//                'options' => ['placeholder' => 'Please Select ...'],
+//                'pluginOptions' => [
+//                  'allowClear' => true
+//                ],
+//                ])->label('Series');
 
                 echo $form->field($model, 'or_series_id')->widget(DepDrop::classname(), [
                     'type'=>DepDrop::TYPE_SELECT2,
@@ -66,11 +76,16 @@ use kartik\widgets\DepDrop;
                         'options'=>['id'=>'deposit-start_or'],
                         'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                         'pluginOptions'=>[
-                            'depends'=>['deposit-or_series_id'],
+                            'depends'=>['deposit-or_series_id','deposit-deposit_type_id'],
                             'placeholder'=>'Select Start O.R',
                             'url'=>Url::to(['/finance/cashier/start-or']),
                             'loadingText' => 'Loading...',
                     ],
+                        'pluginEvents'=>[
+                            'depdrop:error'=>"function(event,id,value){
+                            alert(value);
+                            }"
+                        ],
                     ])->label('Start O.R');
                  ?>
             </div>

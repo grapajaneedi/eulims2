@@ -101,13 +101,12 @@ $this->registerJs($js);
                 var total=CurrencyFormat(tot,2);
                 $('#total').html(total);
                  var payment_mode=$('#op-payment_mode_id').val()
-                if(payment_mode===4){
+                if(payment_mode==4){
+                    
                     wallet=parseInt($('#wallet').val());
                     totalVal = parseFloat($('#total').html().replace(/[^0-9-.]/g, ''));
-                   
                     if( totalVal > wallet) {
-                       
-                       swal("Insufficient customer wallet");
+                      alert("Insufficient customer wallet");
                       $('#op-purpose').prop('disabled', true);
                       $('#createOP').prop('disabled', true);
                     

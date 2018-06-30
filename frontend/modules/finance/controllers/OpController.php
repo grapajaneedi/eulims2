@@ -102,7 +102,7 @@ class OpController extends Controller
              try  {
                      $request_ids=$model->RequestIds;
                      $str_request = explode(',', $request_ids);
-                  //   $wallet=$this->checkCustomerWallet($model->customer_id); 
+                     // $wallet=$this->checkCustomerWallet($model->customer_id); 
                      $arr_length = count($str_request); 
                      $total_amount=0;
                         $model->rstl_id=$GLOBALS['rstl_id'];
@@ -157,6 +157,7 @@ class OpController extends Controller
                
           
         } 
+        $model->order_date=date('Y-m-d');
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                 'model' => $model,

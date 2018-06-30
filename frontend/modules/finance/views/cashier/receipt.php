@@ -128,7 +128,7 @@ $this->params['breadcrumbs'][] = 'Receipt';
                 'template' => $Buttontemplate,
                  'buttons'=>[
                     'view'=>function ($url, $model) {
-                          return Html::a('View', ['/finance/cashier/view-receipt?receiptid='.$model->receipt_id], ['target'=>'_blank']);
+                          return Html::a('View', ['/finance/cashier/view-receipt?receiptid='.$model->receipt_id], ['target'=>'_blank','class'=>'btn btn-primary']);
                     },
                   ],
             ],
