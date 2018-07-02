@@ -10,7 +10,7 @@ use common\models\finance\Collection;
 $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cashier']];
-$this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['/finance/cashier/op']];
+$this->params['breadcrumbs'][] = ['label' => 'Collection', 'url' => ['/finance/cashier/collection']];
 $this->params['breadcrumbs'][] = 'View';
 $bal=($model->total_amount) -($model->collection->amount);
 //echo $model->total_amount;

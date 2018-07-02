@@ -25,8 +25,8 @@ img:hover{
     <div class="box-body">
    
     <div class="row">
-        <div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center"><a href="#"><img class="img-responsive center-block" src="/images/ordersquare.png" style="height:150px;"/></a></div>
-        <div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center"><a href="#"><img class="img-responsive center-block" src="/images/orderlabsquare.png" style="height:150px"/></a></div>
+        <div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/accounting/op/"><img class="img-responsive center-block" src="/images/ordersquare.png" style="height:150px;"/></a></div>
+        <div class="col-md-6 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/accounting/op-lab/"><img class="img-responsive center-block" src="/images/orderlabsquare.png" style="height:150px"/></a></div>
     </div>
 
     </div>

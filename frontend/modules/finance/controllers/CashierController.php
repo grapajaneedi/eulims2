@@ -12,7 +12,7 @@ use common\models\finance\Orseries;
 use common\models\finance\Collection;
 use common\models\finance\Check;
 use common\models\finance\Deposit;
-
+use yii\web\NotFoundHttpException;
 use common\models\finance\DepositSearch;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
@@ -26,13 +26,13 @@ class CashierController extends \yii\web\Controller
         return $this->render('index');
     }
     //Order of Payment
-    public function actionOp()
+    public function actionCollection()
     {
         $model =new Op();
         $searchModel = new CollectionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('op', [
+        return $this->render('collection/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'model' => $model,
@@ -50,7 +50,7 @@ class CashierController extends \yii\web\Controller
                 ],
         ]);
          
-         return $this->render('view_op', [
+         return $this->render('collection/view', [
             'model' => $this->findModel($id),
             'paymentitemDataProvider' => $paymentitemDataProvider,
         ]);
@@ -74,7 +74,7 @@ class CashierController extends \yii\web\Controller
         $searchModel = new ReceiptSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('receipt', [
+        return $this->render('receipt/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'model' => $model,
@@ -83,7 +83,6 @@ class CashierController extends \yii\web\Controller
      public function actionCreateReceipt($op_id)
     {
         $op_model=$this->findModel($op_id);
-       
         $model = new Receipt();
         
         if ($model->load(Yii::$app->request->post())) {
@@ -100,12 +99,11 @@ class CashierController extends \yii\web\Controller
                 $model->or_number=$model->or;
                 $model->total=0;
                 $model->cancelled=0;
-                $this->created_receipt($op_id);
-            
                 $model->save(false);
+                $this->created_receipt($op_id,$model->receipt_id);
                  $transaction->commit();
                 $session->set('savepopup',"executed");
-                return $this->redirect(['/finance/cashier/op']); 
+                return $this->redirect(['/finance/cashier/collection']); 
              } catch (Exception $e) {
                  $transaction->rollBack();
                  return $e;
@@ -116,12 +114,12 @@ class CashierController extends \yii\web\Controller
          $model->collectiontype_id=$op_model->collectiontype_id;
         if(Yii::$app->request->isAjax){
            
-            return $this->renderAjax('create_receipt', [
+            return $this->renderAjax('receipt/_form', [
                 'model' => $model,
                 'op_model'=> $op_model,
             ]);
         }else{
-            return $this->render('create_receipt', [
+            return $this->render('receipt/_form', [
                 'model' => $model,
                 'op_model'=> $op_model,
             ]);
@@ -148,7 +146,7 @@ class CashierController extends \yii\web\Controller
                 'pageSize' => 10,
                 ],
         ]);
-        return $this->render('view_receipt', [
+        return $this->render('receipt/view', [
             'model' => $receipt,
             'op_model'=>$this->findModel($op_id),
             'paymentitemDataProvider' => $paymentitemDataProvider,
@@ -190,11 +188,11 @@ class CashierController extends \yii\web\Controller
        $Command->execute();
      }
      
-    public function created_receipt($opID){
+    public function created_receipt($opID,$receiptid){
         if(!empty($opID))
         {
             Yii::$app->financedb->createCommand()
-            ->update('tbl_orderofpayment', ['created_receipt' => 1], 'orderofpayment_id= '.$opID)
+            ->update('tbl_orderofpayment', ['created_receipt' => $receiptid], 'orderofpayment_id= '.$opID)
             ->execute(); 
             
         }
@@ -207,7 +205,7 @@ class CashierController extends \yii\web\Controller
         $searchModel = new DepositSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('deposit', [
+        return $this->render('deposit/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'model' => $model,
@@ -223,6 +221,7 @@ class CashierController extends \yii\web\Controller
                  $model->rstl_id=$GLOBALS['rstl_id'];
                  $model->start_or=$this->findModelReceipt($model->start_or)->or_number;
                  $model->end_or=$this->findModelReceipt($model->end_or)->or_number;
+                // $model->amount=($model->amount);
                 /* echo'<pre>';
                  var_dump(Yii::$app->request->post());
                   echo'</pre>';
@@ -230,7 +229,7 @@ class CashierController extends \yii\web\Controller
                 $model->save(false);
                 $this->update_receipt_depositid($model->start_or, $model->end_or, $model->deposit_id);
                 $session->set('savepopup',"executed");
-                 return $this->redirect(['/finance/cashier/deposit']);
+                 return $this->redirect(['/finance/cashier/deposit/index']);
                 //
                 
              } catch (Exception $e) {
@@ -238,11 +237,11 @@ class CashierController extends \yii\web\Controller
              }
         }
         if(Yii::$app->request->isAjax){
-            return $this->renderAjax('create_deposit', [
+            return $this->renderAjax('deposit/_form', [
                 'model' => $model,
             ]);
         }else{
-            return $this->render('create_deposit', [
+            return $this->render('deposit/_form', [
                 'model' => $model,
             ]);
         }
@@ -277,19 +276,20 @@ class CashierController extends \yii\web\Controller
       // exit();
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
-            $ids = end($_POST['depdrop_parents']);
-         $deposit_type_id = empty($ids[0]) ? null : $ids[0];
-         $or_series_id = empty($ids[1]) ? null : $ids[1];
+        $ids = $_POST['depdrop_parents'];
+        $deposit_type_id = empty($ids[0]) ? null : $ids[0];
+        $or_series_id= empty($ids[1]) ? null : $ids[1];
+        
 
             $list = Receipt::find()->andWhere(['or_series_id'=>$or_series_id])->andWhere(['deposit_type_id'=>$deposit_type_id])->andWhere(['deposit_id'=>null])->asArray()->all();
          //  $list = Receipt::find()->andWhere(['or_series_id'=>$ids])->andWhere(['deposit_id'=>null])->asArray()->all();
             $selected  = null;
             if ($ids != null && count($list) > 0) {
                 $selected = '';
-                foreach ($list as $i => $test) {
-                    $out[] = ['id' => $test['receipt_id'], 'name' => $test['or_number']];
+                foreach ($list as $i => $or) {
+                    $out[] = ['id' => $or['receipt_id'], 'name' => $or['or_number']];
                     if ($i == 0) {
-                        $selected = $test['receipt_id'];
+                        $selected = $or['receipt_id'];
                     }
                 }
                 echo Json::encode(['output' => $out, 'selected'=>$selected]);
@@ -303,7 +303,7 @@ class CashierController extends \yii\web\Controller
         //SELECT receipt_id,or_number FROM tbl_receipt WHERE deposit_type_id=1 AND or_series_id=1 AND (or_number BETWEEN 2900000 AND 2900001)
      
         $out = [];
-        if (isset($_POST['depdrop_parents'])) {
+        if (isset($_POST['depdrop_parents']) <> '') {
             $id = end($_POST['depdrop_parents']);
             $receipt=$this->findModelReceipt($id);
              $list=(new Query)
@@ -331,7 +331,11 @@ class CashierController extends \yii\web\Controller
                 return;
             }
         }
-        echo Json::encode(['output' => '', 'selected'=>'']);
+        else{
+            echo Json::encode(['output' => '', 'selected'=>'']);
+            exit;
+        }
+        //
     }
    public function actionCalculateTotalDeposit($id,$endor) {
         $total = 0;
@@ -400,10 +404,10 @@ class CashierController extends \yii\web\Controller
         ]);
         
         if(Yii::$app->request->isAjax){
-            return $this->renderAjax('_paymentitem', ['dataProvider'=> $paymentitemDataProvider,'receiptid'=>$receiptid,'collection_id'=>$collection_id]);
+            return $this->renderAjax('collection/_paymentitem', ['dataProvider'=> $paymentitemDataProvider,'receiptid'=>$receiptid,'collection_id'=>$collection_id]);
         }
         else{
-            return $this->render('_paymentitem', ['dataProvider'=> $paymentitemDataProvider,'receiptid'=>$receiptid,'collection_id'=>$collection_id]);
+            return $this->render('collection/_paymentitem', ['dataProvider'=> $paymentitemDataProvider,'receiptid'=>$receiptid,'collection_id'=>$collection_id]);
         }
     }
     public function actionSaveCollection($id,$receiptid,$collection_id){
@@ -468,13 +472,13 @@ class CashierController extends \yii\web\Controller
              }
         }
         if(Yii::$app->request->isAjax){
-            return $this->renderAjax('create_check', [
+            return $this->renderAjax('check/_form', [
                 'model' => $model,
                 'check_amount'=>$sum,
                 'total_collection'=>$total_collection,
             ]);
         }else{
-            return $this->render('create_check', [
+            return $this->render('check/_form', [
                 'model' => $model,
                 'check_amount'=>$sum,
                 'total_collection'=>$total_collection,
@@ -485,7 +489,7 @@ class CashierController extends \yii\web\Controller
      //-----------END of CHECK
     public function actionReports()
     {
-        return $this->render('reports');
+        return $this->render('reports/index');
     }
     
 }
