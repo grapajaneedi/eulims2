@@ -16,6 +16,7 @@ use common\models\lab\Testcategory;
 use common\models\lab\Test;
 use common\models\lab\SampleSearch;
 use yii\helpers\Json;
+use DateTime;
 
 /**
  * AnalysisController implements the CRUD actions for Analysis model.
@@ -187,23 +188,16 @@ class AnalysisController extends Controller
 
                 foreach ($ids as $sample_id){
 
-                   // $testQuery = Test::find()->where(['test_id' => $post['Analysis']['test_id']]);
-
-                   $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
-
-                    // echo "<pre>";
-                    // var_dump($modeltest);
-                    // echo "</pre>";
-                    // exit;
-
+                    $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
                     $analysis = new Analysis();
+                    $date = new DateTime();
+                    date_add($date,date_interval_create_from_date_string("1 day"));
                     $analysis->sample_id = $sample_id;
                     $analysis->cancelled = (int) $post['Analysis']['cancelled'];
                     $analysis->pstcanalysis_id = (int) $post['Analysis']['pstcanalysis_id'];
                     $analysis->request_id = $request_id;
                     $analysis->rstl_id = $GLOBALS['rstl_id'];
                     $analysis->test_id = (int) $post['Analysis']['test_id'];
-                   // $analysis->user_id = (int) $post['Analysis']['user_id'];
                     $analysis->sample_type_id = (int) $post['Analysis']['sample_type_id'];
                     $analysis->testcategory_id = (int) $post['Analysis']['testcategory_id'];
                     $analysis->is_package = (int) $post['Analysis']['is_package'];
@@ -213,7 +207,7 @@ class AnalysisController extends Controller
                     $analysis->references = $post['Analysis']['references'];
                     $analysis->quantity = $post['Analysis']['quantity'];
                     $analysis->sample_code = $post['Analysis']['sample_code'];
-                    $analysis->date_analysis = '2018-06-14 7:35:0';   
+                    $analysis->date_analysis = date("Y-m-d h:i:s");;   
                     $analysis->save();
                    
                 }     
@@ -229,7 +223,7 @@ class AnalysisController extends Controller
                 $model->cancelled = $GLOBALS['rstl_id'];
                 $model->sample_id = $GLOBALS['rstl_id'];
                 $model->sample_code = $GLOBALS['rstl_id'];
-                $model->date_analysis = '2018-06-14 7:35:0';
+                $model->date_analysis = date("Y-m-d h:i:s");;
 
             return $this->renderAjax('_form', [
                 'model' => $model,
