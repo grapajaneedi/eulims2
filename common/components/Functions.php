@@ -20,9 +20,11 @@ use common\models\system\Profile;
 use common\models\lab\Sample;
 use common\models\lab\Samplecode;
 use common\models\lab\Lab;
+
+
 /**
  * Description of Functions
- *
+ * @property string $pesoSign
  * @author OneLab
  */
 class Functions extends Component{
@@ -44,6 +46,9 @@ class Functions extends Component{
         }
         $Rows=$Command->queryAll();
         return $Rows;
+    }
+    function getPesoSign(){
+        return "₱";
     }
     /**
      * 

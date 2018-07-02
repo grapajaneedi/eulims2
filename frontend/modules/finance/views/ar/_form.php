@@ -20,7 +20,9 @@ $func=new Functions();
     <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'soa_number')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'billing_date')->hiddenInput()->label(false) ?>
+    <?php if($model->isNewRecord){ ?>
     <?= $form->field($model, 'OpIds')->hiddenInput()->label(false) ?>
+    <?php } ?>
     <div class="row" style="padding-top: 0px;margin-top: 0px">
         <div class="col-md-6">
          <?= $form->field($model, 'invoice_number')->textInput(['readonly'=>true]) ?>
@@ -78,10 +80,6 @@ $func=new Functions();
     <div class="row">
         <div id="OPGridContainer" class="col-md-12">
            <?php
-                $query= Op::find()->where(['customer_id'=>-1,'on_account'=>1]);
-                $dataProvider = new ActiveDataProvider([
-                    'query' => $query,
-                ]);
                 echo $this->renderAjax('_opgrid', [
                     'dataProvider' => $dataProvider,
                 ]);

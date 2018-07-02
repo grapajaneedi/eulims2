@@ -248,6 +248,7 @@ class RequestController extends Controller
         $model = new Request();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Request Successfully Created!');
             return $this->redirect(['view', 'id' => $model->request_id]); ///lab/request/view?id=1
         } else {
             $date = new DateTime();
@@ -289,8 +290,12 @@ class RequestController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Request Successfully Updated!');
             return $this->redirect(['view', 'id' => $model->request_id]);
         } else {
+            if($model->request_ref_num){
+                $model->request_ref_num=NULL;
+            }
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('update', [
                     'model' => $model,

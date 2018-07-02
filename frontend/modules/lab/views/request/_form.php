@@ -33,12 +33,24 @@ if($model->lab_id==3){
 }else{
     $PanelStyle='display: none';
 }
+$js=<<<SCRIPT
+    if(this.value==1){//Paid
+        $("#request-discount_id").val(0).trigger('change');
+        $("#request-discount_id").prop('disabled',false);
+    }else{//Fully Subsidized
+        $("#request-discount_id").val(0).trigger('change');
+        $("#request-discount_id").prop('disabled',true);
+    }
+    $("#payment_type_id").val(this.value);   
+SCRIPT;
 ?>
 
 <div class="request-form">
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'rstl_id')->hiddenInput()->label(false) ?>
+    <?php if($model->request_ref_num!=NULL){ ?>
     <?= $form->field($model, 'request_ref_num')->hiddenInput(['maxlength' => true])->label(false) ?>
+    <?php } ?>
     <?= $form->field($model, 'posted')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'status_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'modeofrelease_ids')->hiddenInput(['id'=>'modeofrelease_ids'])->label(false) ?>
@@ -239,7 +251,7 @@ if($model->lab_id==3){
         <div class="col-md-12">
         <?php echo $form->field($model, 'payment_type_id')->radioList(
             ArrayHelper::map(Paymenttype::find()->all(),'payment_type_id','type'),
-            ['itemOptions' => ['disabled' => $disabled]]
+            ['itemOptions' => ['disabled' => $disabled,'id'=>'payment_type_id','onchange'=>$js]]
         )->label(false); ?>
         </div>
     </div>
@@ -271,7 +283,7 @@ if($model->lab_id==3){
     <?= $form->field($model, 'discount_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Discount::find()->all(),'discount_id','type'),
         'language' => 'en',
-        'options' => ['placeholder' => 'Select Discount','disabled'=>$disabled],
+        'options' => ['placeholder' => 'Select Discount','disabled'=>$disabled || $model->payment_type_id==2],
         'pluginOptions' => [
             'allowClear' => true
         ],

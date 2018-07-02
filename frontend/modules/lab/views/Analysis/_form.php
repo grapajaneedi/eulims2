@@ -189,13 +189,13 @@ $this->registerJs($js);
                         return date("m/d/Y h:i:s P",$model->date_analysis);
                     },
                 'pluginOptions' => [
-                        'autoclose' => true,
-                        'removeButton' => false,
+                     //   'autoclose' => true,
+                     //   'removeButton' => false,
                         'format' => 'yyyy-mm-dd h:i:s'
                 ],
-                    'pluginEvents'=>[
-                        "change" => "function() { alert('change'); }",
-                    ]
+                    // 'pluginEvents'=>[
+                    //     "change" => "function() { alert('change'); }",
+                    // ]
                 ]); ?>
         </div>
     </div>

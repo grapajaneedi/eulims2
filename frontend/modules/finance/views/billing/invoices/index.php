@@ -107,6 +107,14 @@ $rstlID=$GLOBALS['rstl_id'];
             [
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Buttontemplate,
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/ar/view?id=' . $model->billing_id,'onclick'=>'ShowModal(this.title,this.value)', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Billing")]);
+                    },
+                    'update' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/ar/update?id=' . $model->billing_id, 'onclick' => 'ShowModal(this.title,this.value)', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Billing")]);
+                    }
+                ],
             ],
 
         ],
