@@ -60,8 +60,6 @@ use kartik\widgets\SwitchInput;
 
     <!-- <?= $form->field($model, 'previous_id')->textInput() ?> -->
 
-    <!-- <?= $form->field($model, 'new_id')->textInput() ?> -->
-
     <div class="row-form">
          <div id="prog" style="position:relative;display:none;">
             <img style="display:block; margin:0 auto;" src="<?php echo  $GLOBALS['frontend_base_uri']; ?>/images/ajax-loader.gif">

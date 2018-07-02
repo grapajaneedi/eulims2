@@ -148,9 +148,6 @@ class InfoController extends Controller
     }
 
     public function actionGetprovince(){
-        // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        // echo end($_POST['depdrop_parents']);
-        // print_r($_POST['depdrop_parents']);
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
