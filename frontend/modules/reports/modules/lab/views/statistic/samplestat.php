@@ -92,83 +92,38 @@ $this->params['breadcrumbs'][] = $this->title;
         		$endDate = Yii::$app->request->get('to_date', date('Y-m-d'));
         		$labId = (int) Yii::$app->request->get('lab_id', 1);
         		$gridColumns = [
-				        //['class'=>'kartik\grid\SerialColumn'],
-				        //'samplename',
-				        [
-				            'label' => 'Date',
-				            'format' => 'raw',
-				            'value' => function($model, $key, $index, $widget){
-				            	//return Yii::$app->formatter->asDate($model->request->request_datetime, 'php:F j, Y');
-				            	return Yii::$app->formatter->asDate($model->request_datetime, 'php:Y-m-d');
-				            },
-				            'headerOptions' => ['class' => 'text-center'],
-				            'contentOptions' => ['class' => 'text-center'],
-				        ],
-				        [
-				        	'label' => 'No. of Samples',
-				        	'format' => 'raw',
-				        	'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate) {
-				            	$countSample = $model->countSample($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,1,$model->request_type_id);
-				            	return ($countSample > 0) ? $countSample : 0;
-				            },
-				            'headerOptions' => ['class' => 'text-center'],
-				            'contentOptions' => ['class' => 'text-center'],
-				        ],
-				        [
-				            'label' => 'No. of Parameters',
-				            'format' => 'raw',
-				            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate){
-				            	$countAnalysis = $model->countAnalysis($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,2,$model->request_type_id);
-				            	return ($countAnalysis > 0) ? $countAnalysis : 0;
-				            },
-				            'headerOptions' => ['class' => 'text-center'],
-				            'contentOptions' => ['class' => 'text-center'],
-				        ],
-				    ];
-				// $exportMenu = ExportMenu::widget([
-				//     'dataProvider' => $dataProvider,
-				//     'columns' => $gridColumns,
-				//     'target' => ExportMenu::TARGET_SELF,
-				//     'fontAwesome' => true,
-				//     //'showConfirmAlert' => false,
-				//     'asDropdown' => false,
-				//     'dropdownOptions' => [
-				//         'label' => 'Export',
-				//         'class' => 'btn btn-default'
-				//     ],
-				//     'exportConfig' => [
-				//         ExportMenu::FORMAT_TEXT => false,
-				//         ExportMenu::FORMAT_HTML => false,
-				//         ExportMenu::FORMAT_CSV => false,
-				//         ExportMenu::FORMAT_EXCEL => [
-				// 	        'label' => 'Excel 95 +',
-				// 	        'icon' =>	'file-excel-o',
-				// 	        'iconOptions' => ['class' => 'text-success'],
-				// 	        'linkOptions' => [],
-				// 	        'options' => ['title' => 'Microsoft Excel 95+ (xls)'],
-				// 	        'alertMsg' => 'The EXCEL 95+ (xls) export file will be generated for download.',
-				// 	        'mime' => 'application/vnd.ms-excel',
-				// 	        'extension' => 'xls',
-				// 	        'writer' => ExportMenu::FORMAT_EXCEL
-				// 	    ],
-				// 	    ExportMenu::FORMAT_EXCEL_X => [
-				// 	        'label' => 'Excel 2007+',
-				// 	        'icon' => 'file-excel-o',
-				// 	        'iconOptions' => ['class' => 'text-success'],
-				// 	        'linkOptions' => [],
-				// 	        'options' => ['title' => 'Microsoft Excel 2007+ (xlsx)'],
-				// 	        'alertMsg' => 'The EXCEL 2007+ (xlsx) export file will be generated for download.',
-				// 	        'mime' => 'application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-				// 	        'extension' => 'xlsx',
-				// 	        'writer' => ExportMenu::FORMAT_EXCEL_X
-				// 	    ],
-				//     ]
-				// ]);
-				    // echo ExportMenu::widget([
-				    //     'dataProvider' => $dataProvider,
-				    //     'columns' => $gridColumns,
-				    //     'fontAwesome' => true,
-				    // ]);
+			        //['class'=>'kartik\grid\SerialColumn'],
+			        [
+			            'label' => 'Date',
+			            'format' => 'raw',
+			            'value' => function($model, $key, $index, $widget){
+			            	//return Yii::$app->formatter->asDate($model->request->request_datetime, 'php:F j, Y');
+			            	return Yii::$app->formatter->asDate($model->request_datetime, 'php:Y-m-d');
+			            },
+			            'headerOptions' => ['class' => 'text-center'],
+			            'contentOptions' => ['class' => 'text-center'],
+			        ],
+			        [
+			        	'label' => 'No. of Samples',
+			        	'format' => 'raw',
+			        	'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate) {
+			            	$countSample = $model->countSummary($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,1,$model->request_type_id);
+			            	return ($countSample > 0) ? $countSample : 0;
+			            },
+			            'headerOptions' => ['class' => 'text-center'],
+			            'contentOptions' => ['class' => 'text-center'],
+			        ],
+			        [
+			            'label' => 'No. of Parameters',
+			            'format' => 'raw',
+			            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate){
+			            	$countAnalysis = $model->countSummary($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,2,$model->request_type_id);
+			            	return ($countAnalysis > 0) ? $countAnalysis : 0;
+			            },
+			            'headerOptions' => ['class' => 'text-center'],
+			            'contentOptions' => ['class' => 'text-center'],
+			        ],
+			    ];
         		echo GridView::widget([
         			'id' => 'sample-summary',
 				    'dataProvider' => $dataProvider,
@@ -194,7 +149,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				    	//GridView::CSV => [],
 				    	//GridView::HTML => [],
 				   		GridView::PDF => [],
-				    	GridView::EXCEL => [],
+				    	//GridView::EXCEL => [],
 				        GridView::EXCEL => [
 				            'label' => 'Excel',
 				            //'icon' => 'file-excel-o',
@@ -215,25 +170,6 @@ $this->params['breadcrumbs'][] = $this->title;
 				                'cssFile' => ''
 				            ]
 				        ],
-				        /*GridView::EXCEL => [
-				            'label' => 'Excel',
-				            //'icon' => 'file-excel-o',
-				            'iconOptions' => ['class' => 'text-success'],
-				            'showHeader' => true,
-				            'showPageSummary' => true,
-				            'showFooter' => true,
-				            'showCaption' => true,
-				            'filename' => $this->title,
-				            'alertMsg' => 'The EXCEL export file will be generated for download.',
-				            'options' => ['title' => 'Microsoft Excel 95+'],
-				            'mime' => 'application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-				            'extension' => 'xlsx',
-				            //'writer' => ExportMenu::FORMAT_EXCEL_X,
-				            'config' => [
-				                'worksheet' => $this->title,
-				                'cssFile' => ''
-				            ]
-				        ],*/
 				    ],
 					'columns' => $gridColumns,
 				    'toolbar' => [
@@ -242,14 +178,6 @@ $this->params['breadcrumbs'][] = $this->title;
 	                    'content' => Html::button('<i class="glyphicon glyphicon-repeat"></i> Reset Grid', ['title'=>'Reset Grid', 'onclick'=>'reloadGrid()', 'class' => 'btn btn-default'])
 	                	],
 	                	'{export}',
-	                    //['content' => Html::a('<i class="glyphicon glyphicon-repeat"></i> Reset', ['samples'], ['class' => 'btn btn-default','title' => 'Reset Grid'])
-	                    //],
-	                    //'{toggleData}',
-	           //          ['content'=>
-				        //     Html::button('<i class="glyphicon glyphicon-plus"></i>', ['type'=>'button', 'title'=>'Add Book', 'class'=>'btn btn-success', 'onclick'=>'alert("This will launch the book creation form.\n\nDisabled for this demo!");']) . ' '.
-				        //     Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['samples'], ['data-pjax'=>0,'class' => 'btn btn-default', 'title'=>'Reset Grid']).' '.
-				        //     Html::a('<i class="glyphicon glyphicon-repeat"></i> Reset', ['samples'], ['class' => 'btn btn-default','title' => 'Reset Grid']),
-				        // ],
 	                ],
 	                'autoXlFormat'=>true,
 	                'export'=>[
@@ -257,22 +185,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				        'fontAwesome'=>true,
 				        'showConfirmAlert'=>false,
 				        'target'=>GridView::TARGET_SELF,
-				     //    'dropdownOptions' => [
-					    //     'label' => 'Export All',
-					    //     'class' => 'btn btn-default'
-					    // ]
 				    ],
-	       //          'export' => [
-				    //     'fontAwesome' => true,
-				    //     'itemsAfter'=> [
-				    //         '<li role="presentation" class="divider"></li>',
-				    //         '<li class="dropdown-header">Export All Data</li>',
-				    //         $exportMenu
-				    //     ]
-				    // ],
-				    //'options'=>['class'=>'text-center'],
-				    //'headerOptions'=>['class'=>'text-center'],
-				    //'tableOptions' =>['class' => 'table table-striped table-bordered'],
 				]);
         	?>
         	<?php //\yii\widgets\Pjax::end(); ?>
@@ -289,10 +202,6 @@ $this->params['breadcrumbs'][] = $this->title;
 		$('#request_date_range-start').val(fromdate).trigger('change');
 		$('#request_date_range-end').val(todate).trigger('change');
 		$('#request_date_range').val(fromdate+' to '+todate);
-		//$('.daterangepicker .input-mini').val("").trigger('change');
-		//$('.daterangepicker_input').val("").trigger('change');
-		//$("input[name='daterangepicker_start']").val('').trigger('change');
-		//$("input[name='daterangepicker_end']").val('').trigger('change');
 		$.pjax.reload({container:"#sample-summary-pjax",url: '/reports/lab/statistic/samples?lab_id='+lab_id+'&from_date='+fromdate+'&to_date='+todate,replace:false,timeout: false});
     }
 

@@ -16,14 +16,9 @@ use yii\data\SqlDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Json;
 
-class StatisticController extends Controller
+class AccomplishmentController extends \yii\web\Controller
 {
-    // public function actionIndex()
-    // {
-    //     return $this->render('index');
-    // }
-
-    public function actionSamples()
+    public function actionIndex()
     {
     	$model = new Requestextend;
 		if (Yii::$app->request->get())
@@ -46,24 +41,25 @@ class StatisticController extends Controller
 			}
 		} else {
 			$labId = 1;
-			$fromDate = date('Y-m-01'); //first day of the month
+			$fromDate = date('Y-01-01'); //first day of the year
 			$toDate = date('Y-m-d'); //as of today
 		}
 
 		$modelRequest = Requestextend::find()
 					->where('rstl_id =:rstlId AND status_id != :statusId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate', [':rstlId'=>$GLOBALS['rstl_id'],':statusId'=>2,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate])
-					->groupBy(['DATE_FORMAT(request_datetime, "%Y-%m-%d")'])
+					->groupBy(['DATE_FORMAT(request_datetime, "%Y-%m")'])
 					->orderBy('request_datetime DESC');
 
 		$dataProvider = new ActiveDataProvider([
-            'query' =>$modelRequest,
-            'pagination' => [
-                'pagesize' => 10,
-            ],
+            'query' => $modelRequest,
+            'pagination' => false,
+            // 'pagination' => [
+            //     'pagesize' => 10,
+            // ],
         ]);
 
         if (Yii::$app->request->isAjax) {
-            return $this->renderAjax('samplestat', [
+            return $this->renderAjax('index', [
                 'dataProvider' => $dataProvider,
                 'lab_id' => $labId,
                 'from_date' => $fromDate,
@@ -72,8 +68,7 @@ class StatisticController extends Controller
 	            'laboratories' => $this->listLaboratory(),
             ]);
         } else {
-			return $this->render('samplestat', [
-	            //'searchModel' => $searchModel,
+			return $this->render('index', [
 	            'dataProvider' => $dataProvider,
 	            'lab_id' => $labId,
 	            'model'=>$modelRequest,
@@ -82,6 +77,8 @@ class StatisticController extends Controller
 	            'laboratories' => $this->listLaboratory(),
 	        ]);
 		}
+
+        //return $this->render('index');
     }
 
     protected function listLaboratory()
@@ -112,4 +109,5 @@ class StatisticController extends Controller
 			}
 		}
 	}
+
 }
