@@ -6,6 +6,8 @@ use common\models\finance\clientSearch;
 use common\models\finance\Client;
 use common\models\finance\Op;
 use common\models\finance\BillingSearch;
+use common\models\finance\BillingReceiptSearch;
+use common\models\finance\BillingReceipt;
 
 class BillingController extends \yii\web\Controller
 {
@@ -14,7 +16,39 @@ class BillingController extends \yii\web\Controller
         return $this->render('index');
     }
     public function actionManager(){
-        return $this->render('manager');
+        $searchModel = new BillingReceiptSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('/soa/index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    public function actionSoa(){
+        $searchModel = new BillingReceiptSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('../soa/index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    public function actionSoaCreate(){
+        $model = new BillingReceipt();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->billing_receipt_id]);
+        } else {
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('../soa/create', [
+                    'model' => $model,
+                ]);
+            }else{
+                return $this->render('../soa/create', [
+                    'model' => $model,
+                ]);
+            }
+        }
     }
     /**
      * Displays a single client model.

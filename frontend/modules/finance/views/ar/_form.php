@@ -16,7 +16,6 @@ $func=new Functions();
 
 <div class="billing-form" style="padding-top: 0px;margin-top: 0px">
     <?php $form = ActiveForm::begin(); ?>
-    <?= $form->field($model, 'receipt_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'soa_number')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'billing_date')->hiddenInput()->label(false) ?>

@@ -14,11 +14,9 @@ use common\models\lab\Customer;
  * @property string $invoice_number
  * @property string $billing_date
  * @property string $due_date
- * @property int $receipt_id
  * @property string $amount
  *
  * @property Customer[] $customer
- * @property Receipt $receipt
  * @property OpBilling[] $opBillings
  */
 class Billing extends \yii\db\ActiveRecord
@@ -46,7 +44,7 @@ class Billing extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'customer_id', 'billing_date', 'due_date'], 'required'],
-            [['user_id', 'customer_id', 'receipt_id'], 'integer'],
+            [['user_id', 'customer_id'], 'integer'],
             [['billing_date', 'due_date'], 'safe'],
             [['amount'], 'number'],
             ['amount', 'compare', 'compareValue' => 0, 'operator' => '>'],
@@ -68,19 +66,9 @@ class Billing extends \yii\db\ActiveRecord
             'soa_number' => 'Soa Number',
             'billing_date' => 'Billing Date',
             'due_date' => 'Due Date',
-            'receipt_id' => 'Receipt ID',
             'amount' => 'Amount',
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getReceipt()
-    {
-        return $this->hasOne(Receipt::className(), ['receipt_id' => 'receipt_id']);
-    }
-
     /**
      * @return \yii\db\ActiveQuery
      */
