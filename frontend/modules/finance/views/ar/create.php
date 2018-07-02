@@ -13,7 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="billing-create" style="margin-bottom: 0px;padding-top: 0px;margin-top: 0px">
     <?= $this->render('_form', [
         'model' => $model,
-        'searchModel' => $searchModel,
         'dataProvider' => $dataProvider,
     ]) ?>
 

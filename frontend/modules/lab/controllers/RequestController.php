@@ -291,6 +291,9 @@ class RequestController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->request_id]);
         } else {
+            if($model->request_ref_num){
+                $model->request_ref_num=NULL;
+            }
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('update', [
                     'model' => $model,
