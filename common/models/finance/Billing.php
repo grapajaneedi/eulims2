@@ -11,6 +11,7 @@ use common\models\lab\Customer;
  * @property int $user_id
  * @property int $customer_id
  * @property string $soa_number
+ * @property string $invoice_number
  * @property string $billing_date
  * @property string $due_date
  * @property int $receipt_id
@@ -50,7 +51,7 @@ class Billing extends \yii\db\ActiveRecord
             [['amount'], 'number'],
             ['amount', 'compare', 'compareValue' => 0, 'operator' => '>'],
             [['soa_number','invoice_number'], 'string', 'max' => 100],
-            [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::className(), 'targetAttribute' => ['receipt_id' => 'receipt_id']],
+           // [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::className(), 'targetAttribute' => ['receipt_id' => 'receipt_id']],
         ];
     }
 

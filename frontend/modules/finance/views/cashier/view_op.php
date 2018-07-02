@@ -15,11 +15,11 @@ $this->params['breadcrumbs'][] = 'View';
 $bal=($model->total_amount) -($model->collection->amount);
 //echo $model->total_amount;
 //exit;
-if($model->collection->payment_status_id <> 1){
+if($bal <> 0){
     $footer="<div class='row' style='margin-left: 2px;'><button value='/finance/cashier/create-receipt?op_id=$model->orderofpayment_id' id='btnCreateReceipt' class='btn btn-success' title='Receipt from OP'><i class='fa fa-save'></i> Create Receipt</button></div>";                    
 }
 else{
-    $footer="";
+    $footer=Html::a('View Receipt', ['/finance/cashier/view-receipt?receiptid='.$model->created_receipt], ['target'=>'_blank','class'=>'btn btn-primary']);
 }
 ?>
 <div class="orderofpayment-view">

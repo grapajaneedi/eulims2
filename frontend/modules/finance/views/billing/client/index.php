@@ -4,10 +4,8 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use common\models\finance\Client;
 use yii\helpers\ArrayHelper;
-use common\models\lab\Customer;
-use kartik\widgets\DatePicker;
-use kartik\daterange\DateRangePicker;
 use yii\helpers\Url;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\clientSearch */
@@ -18,6 +16,8 @@ $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance/']];
 $this->params['breadcrumbs'][] = ['label' => 'Billing', 'url' => ['/finance/billing/']];
 $this->params['breadcrumbs'][] = $this->title;
 $Buttontemplate='{view}{update}{delete}';
+$func= new Functions();
+$rstlID=$GLOBALS['rstl_id'];
 ?>
 <div class="client-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -66,7 +66,7 @@ $Buttontemplate='{view}{update}{delete}';
                     return $model->customer ? $model->customer->customer_name : '';
                 },
                 'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(Customer::find()->orderBy('customer_name')->asArray()->all(), 'customer_id', 'customer_name'), 
+                'filter' => ArrayHelper::map($func->GetClientList($rstlID), 'customer_id', 'customer_name'), 
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],

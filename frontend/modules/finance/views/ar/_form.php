@@ -5,38 +5,13 @@ use yii\widgets\ActiveForm;
 use common\components\Functions;
 use kartik\money\MaskMoney;
 use kartik\date\DatePicker;
-use kartik\grid\GridView;
+use common\models\finance\Op;
+use yii\data\ActiveDataProvider;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Billing */
 /* @var $form yii\widgets\ActiveForm */
 $func=new Functions();
-$js=<<<SCRIPT
-    function getKeys(dkeys){
-        var SearchFieldsTable = $(".kv-grid-table>tbody");
-        var trows = SearchFieldsTable[0].rows;
-        var Total=0.00;
-        var amt=0.00;
-        $.each(trows, function (index, row) {
-            var data_key=$(row).attr("data-key");
-            for (i = 0; i < dkeys.length; i++) { 
-                if(data_key==dkeys[i]){
-                    amt=StringToFloat(trows[index].cells[4].innerHTML);
-                    Total=Total+parseFloat(amt);
-                }
-            }
-        }); 
-        $("#billing-amount-disp").val(Total);
-        $("#billing-amount").val(Total);
-        $("#billing-amount-disp").maskMoney('mask', Total);
-    }
-   $(".kv-row-checkbox").change(function(){
-       var keys=$("#OPGrid").yiiGridView("getSelectedRows");
-       getKeys(keys);
-   });    
-        
-SCRIPT;
-$this->registerJs($js);
 ?>
 
 <div class="billing-form" style="padding-top: 0px;margin-top: 0px">
@@ -45,6 +20,7 @@ $this->registerJs($js);
     <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'soa_number')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'billing_date')->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'OpIds')->hiddenInput()->label(false) ?>
     <div class="row" style="padding-top: 0px;margin-top: 0px">
         <div class="col-md-6">
          <?= $form->field($model, 'invoice_number')->textInput(['readonly'=>true]) ?>
@@ -100,48 +76,16 @@ $this->registerJs($js);
     </div>
     <hr style="margin-bottom: 10px;margin-top: 10px">
     <div class="row">
-        <div class="col-md-12">
-        <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'id'=>'OPGrid',
-        'pjax'=>true,
-        'bordered' => true,
-        'striped' => true,
-        'condensed' => true,
-        'responsive' => true,
-        'hover' => true,
-        'containerOptions'=>['style'=>'overflow: auto;height: 200px'],
-        'pjaxSettings' => [
-            'options' => [
-                'enablePushState' => false,
-            ]
-        ],
-        'toolbar'=>[],
-        'panel' => [
-                'type' => GridView::TYPE_PRIMARY,
-               // 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-               'footer'=>false   
-            ],
-        'columns' => [
-            ['class' => 'kartik\grid\SerialColumn'],
-
-            [
-                'class'=>'kartik\grid\CheckboxColumn',
-            ],
-            'transactionnum',
-            'order_date',
-            [
-                'attribute'=>'total_amount',
-                'hAlign' => 'right',
-                'contentOptions' => ['class' => 'op-amount'],
-                'label'=>'Amount',
-                'value'=>function($model){
-                    return number_format($model->total_amount,2);
-                }
-            ],
-        ],
-    ]); ?>
+        <div id="OPGridContainer" class="col-md-12">
+           <?php
+                $query= Op::find()->where(['customer_id'=>-1,'on_account'=>1]);
+                $dataProvider = new ActiveDataProvider([
+                    'query' => $query,
+                ]);
+                echo $this->renderAjax('_opgrid', [
+                    'dataProvider' => $dataProvider,
+                ]);
+           ?>
         </div>
     </div>
     <div class="row">

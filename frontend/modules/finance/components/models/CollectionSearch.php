@@ -1,7 +1,13 @@
 <?php
 
-namespace common\models\finance;
-
+namespace frontend\modules\finance\components\models;
+/* 
+ * Project Name: eulims_ * 
+ * Copyright(C)2018 Department of Science & Technology -IX * 
+ * Developer: Eden Galleno  * 
+ * 06 29, 18 , 9:33:52 AM * 
+ * Module: CollectionSearch * 
+ */
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -11,7 +17,7 @@ use kartik\daterange\DateRangeBehavior;
 /**
  * OrderofpaymentSearch represents the model behind the search form about `common\models\finance\Orderofpayment`.
  */
-class OpSearch extends Op
+class CollectionSearch extends Op
 {
     public $createTimeRange;
     public $createDateStart;
@@ -73,9 +79,9 @@ class OpSearch extends Op
         ]);
 
         $query->andFilterWhere(['like', 'transactionnum', $this->transactionnum])
+                ->andFilterWhere(['<>','on_account',1])
             ->andFilterWhere(['like', 'purpose', $this->purpose])
             ->andFilterWhere(['between', 'order_date', $this->createDateStart, $this->createDateEnd]);
         return $dataProvider;
     }
-    
-}
+}  
