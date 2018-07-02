@@ -78,7 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-3 col-sm-6 col-xs-12">
              
              <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/finance/cashier/op" title="Collection"><img class="imgHover" src="/images/collectionsquare.png" style="height:120px;width: 120px"></a>
+                 <a href="/finance/cashier/collection" title="Collection"><img class="imgHover" src="/images/collectionsquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div> 
             
