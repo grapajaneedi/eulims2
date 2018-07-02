@@ -19,11 +19,20 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="form-row">
         <div class="container table-responsive">
              <?php
+             if($model->previous_id){
+                $t = 'view?id='.$model->previous_id;
+            echo Html::a('<i class="glyphicon glyphicon-arrow-left"></i> Go to Old Report',$t,['target'=>'_blank','class'=>'btn btn-success pull-right']);
 
-            $t = 'reissue?id='.$model->testreport_id;
+             }else{
+                $t = 'reissue?id='.$model->testreport_id;
             echo Html::a('<i class="glyphicon glyphicon-check"></i> Reissue',$t,['target'=>'_blank','class'=>'btn btn-danger pull-right','data' => [
                    'confirm' => 'Are you sure you want to Reissue this Report ?',
                 ]]);
+             }
+
+
+
+            
 
 
             //checks if the testreport is from a batch generated reports

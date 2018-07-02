@@ -79,21 +79,45 @@ class TestreportController extends Controller
 
         //issue new record of the test report with "-R" as suffix
         $newtestreport = new Testreport();
-        $newtestreport = $testreport;
-        $newtestreport->report_num = $newtestreport->report_num."-R";
-        // $newtestreport->testreport_id = ""; //to be safe
+        $newtestreport->attributes = $testreport->attributes;
+        //get the testconfig
+        $tr_config =  Testreportconfig::find()->where(['lab_id'=>$testreport->lab_id,'config_year'=>date('Y')])->one();
 
+         //check for config if the lab is active
+        // $tr_config = Testreportconfig::find()->where(['lab_id'=>$request->lab_id,'config_year'=>date('Y')])->one();
+        if(!$tr_config){
+            // $tr_config->setTestReportSeries();
+            Testreportconfig::setTestReportSeries2($testreport->lab_id);
+            $tr_config = Testreportconfig::find()->where(['lab_id'=>$testreport->lab_id,'config_year'=>date('Y')])->one();
+        }
+
+        //retrieve the lab info using the $tr_config
+        $lab = Lab::findOne($tr_config->lab_id);
+
+        //update the testreport number
+        $newtestreport->report_num= date('mdY').'-'.$lab->labcode.'-'.$tr_config->getTestReportSeries()."-R";
+        //$newtestreport->report_num = $newtestreport->report_num."-R";
+        $newtestreport->testreport_id = ""; //to be safe
+        $newtestreport->report_date = date('Y-m-d', strtotime(date("Y-m-d")));
+
+        //set the prev and new ids
+        $newtestreport->previous_id=$testreport->testreport_id;
+       
         if($newtestreport->save()){
+            // $testreport->new_id=$newtestreport->testreport_id;
+            $testreport->reissue=1;
+            $testreport->save(false);
+            $tr_config->setTestReportSeries();
             //create new records of testreportsamples too
             $trsamples = TestreportSample::find()->where(['testreport_id'=>$testreport->testreport_id])->all();
 
             foreach ($trsamples as $trsample) {
                 $newtrsample= new TestreportSample();
-                $newtrsample = $trsample;
+                $newtrsample->attributes= $trsample->attributes;
+                $newtrsample->testreport_sample_id=""; //tobe safe
                 $newtrsample->testreport_id =$newtestreport->testreport_id;
                 $newtrsample->save();
             }
-
             return $this->redirect(['view','id'=>$newtestreport->testreport_id]);
         }
 
