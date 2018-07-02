@@ -10,6 +10,7 @@ use yii\helpers\Json;
 use yii\data\SqlDataProvider;
 use yii\helpers\ArrayHelper;
 use kartik\dynagrid\DynaGrid;
+use yii\data\ActiveDataProvider;
 
 use yii\base\Model;
 
@@ -168,6 +169,57 @@ class FinancialreportsController extends \yii\web\Controller
    
     
      return $this->render('cashreceiptjournal',['moduleTitle'=>$moduleTitle,'stringTable'=>$stringTable,'tableWidth'=>$tableWidth,'values'=>$test]);
+    }
+    
+    public function actionCollectionreport($iyear,$imonth)
+    {
+        $monthName = date("F", mktime(0, 0, 0, $imonth, 10));
+         $moduleTitle = "Collection Report for " . $monthName . ', ' . $iyear;
+      //  $searchModel = new AccountingcodeSearch();
+     //   $dataProvider2 = $searchModel->search(Yii::$app->request->queryParams);
+        
+        $stringQuery ='SELECT Count(*)
+                        FROM eulims_finance.tbl_receipt 
+                        INNER JOIN eulims_finance.tbl_collection  ON eulims_finance.tbl_receipt.or_number = eulims_finance.tbl_collection.receiptId 
+                        INNER JOIN eulims_finance.tbl_deposit ON eulims_finance.tbl_receipt.deposit_id = eulims_finance.tbl_deposit.deposit_id 
+                        WHERE YEAR(eulims_finance.tbl_receipt.receiptDate)=' .$iyear. ' AND MONTH(eulims_finance.tbl_receipt.receiptDate)=' .$imonth;
+        
+       
+        $count = Yii::$app->db->createCommand($stringQuery)->queryScalar();
+        $queryNew = new yii\db\Query;
+
+        $stringWhere = 'YEAR(eulims_finance.tbl_receipt.receiptDate)=' .$iyear. ' AND MONTH(eulims_finance.tbl_receipt.receiptDate)=' .$imonth;
+        
+                               
+                               
+                               
+        $queryNewest =  'Call eulims_finance.spGetCollectionReportNew('. $iyear .','. $imonth . ');';    //'Call eulims_finance.spGetCollectionReportNew(2018,5);';
+    //     $queryNewest ='Call spGetCollectionReport(2018,5)';                      
+        $queryDaw =Yii::$app->db->createCommand('Call eulims_finance.spGetCollectionReportNew('. $iyear .','. $imonth . ');')->queryScalar(); 
+          
+      //  $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM eulims_finance.tbl_collectiontype')->queryScalar();
+      //  $columnHeaders = Yii::$app->db->createCommand('SELECT accountcode FROM eulims_finance.tbl_accountingcode')->queryAll();
+        
+       
+           
+            
+        $dataProvider = new SqlDataProvider([
+            'sql' => $queryNewest,
+            'totalCount' => $count,
+          //  'pagination' => false
+            'sort' =>false,
+        'pagination' => [
+            'pageSize' => 8,
+        ],
+        ]);
+        
+       
+        
+         return $this->render('collectionreport', [
+                  // 'count' => $counter,
+                    'dataProvider' => $dataProvider,
+                    'moduleTitle'=>$moduleTitle
+        ]);
     }
     
     
