@@ -148,4 +148,19 @@ class Receipt extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Deposit::className(), ['deposit_id' => 'deposit_id']);
     }
+    /** 
+    * @return \yii\db\ActiveQuery 
+    */ 
+   public function getSoaReceipts() 
+   { 
+       return $this->hasMany(SoaReceipt::className(), ['receipt_id' => 'receipt_id']); 
+   } 
+ 
+   /** 
+    * @return \yii\db\ActiveQuery 
+    */ 
+   public function getSoas() 
+   { 
+       return $this->hasMany(Soa::className(), ['soa_id' => 'soa_id'])->viaTable('tbl_soa_receipt', ['receipt_id' => 'receipt_id']); 
+   } 
 }

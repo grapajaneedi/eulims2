@@ -21,7 +21,7 @@ use Yii;
  * @property Billing $billing
  * @property Receipt $receipt
  */
-class BillingReceipt extends \yii\db\ActiveRecord
+class Soa extends \yii\db\ActiveRecord
 {
     public $bi_ids;
     /**
@@ -29,7 +29,7 @@ class BillingReceipt extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'tbl_billing_receipt';
+        return 'tbl_soa';
     }
 
     /**
@@ -46,13 +46,11 @@ class BillingReceipt extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['soa_date', 'customer_id', 'user_id', 'billing_id', 'soa_number'], 'required'],
+            [['soa_date', 'customer_id', 'user_id', 'soa_number'], 'required'],
             [['soa_date'], 'safe'],
-            [['customer_id', 'user_id', 'billing_id', 'receipt_id'], 'integer'],
+            [['customer_id', 'user_id'], 'integer'],
             [['previous_balance', 'current_amount'], 'number'],
-            [['soa_number','bi_ids'], 'string', 'max' => 100],
-            [['billing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Billing::className(), 'targetAttribute' => ['billing_id' => 'billing_id']],
-            [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::className(), 'targetAttribute' => ['receipt_id' => 'receipt_id']],
+            [['soa_number','bi_ids'], 'string', 'max' => 100]
         ];
     }
 
@@ -62,12 +60,10 @@ class BillingReceipt extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'billing_receipt_id' => 'Billing Receipt ID',
+            'soa_id' => 'Statement of Account ID',
             'soa_date' => 'Soa Date',
             'customer_id' => 'Customer ID',
             'user_id' => 'User ID',
-            'billing_id' => 'Billing ID',
-            'receipt_id' => 'Receipt ID',
             'soa_number' => 'Soa Number',
             'previous_balance' => 'Previous Balance',
             'current_amount' => 'Current Amount',
@@ -78,16 +74,23 @@ class BillingReceipt extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBilling()
-    {
-        return $this->hasOne(Billing::className(), ['billing_id' => 'billing_id']);
-    }
+   public function getSoaBillings()
+   {
+       return $this->hasMany(SoaBilling::className(), ['soa_id' => 'soa_id']);
+   }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getReceipt()
-    {
-        return $this->hasOne(Receipt::className(), ['receipt_id' => 'receipt_id']);
-    }
+    public function getSoaReceipts()
+   {
+       return $this->hasMany(SoaReceipt::className(), ['soa_id' => 'soa_id']);
+   }
+   /**
+    * @return \yii\db\ActiveQuery
+    */
+   public function getReceipts()
+   {
+       return $this->hasMany(Receipt::className(), ['receipt_id' => 'receipt_id'])->viaTable('tbl_soa_receipt', ['soa_id' => 'soa_id']);
+   }
 }

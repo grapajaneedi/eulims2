@@ -24,7 +24,7 @@ $customerJS=<<<SCRIPT
     }   
 SCRIPT;
 $js=<<<SCRIPT
-    $("#billingreceipt-customer_id").change(function(){
+    $("#soa-customer_id").change(function(){
        // $("#BIGridContainer").html("<div style='text-align:center;'><img src='/images/img-loader64.gif' alt='' /></div>"); 
         $.post("/ajax/getaccountnumber", {
             customer_id: this.value,
@@ -48,8 +48,6 @@ $this->registerJs($js);
 <div class="billing-receipt-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    <?= $form->field($model, 'billing_id')->hiddenInput()->label(false) ?>
-    <?= $form->field($model, 'receipt_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'bi_ids')->hiddenInput()->label(false) ?>
     <div class="row">

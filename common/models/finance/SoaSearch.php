@@ -5,12 +5,12 @@ namespace common\models\finance;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\finance\BillingReceipt;
+use common\models\finance\Soa;
 
 /**
  * BillingReceiptSearch represents the model behind the search form about `common\models\finance\BillingReceipt`.
  */
-class BillingReceiptSearch extends BillingReceipt
+class SoaSearch extends Soa
 {
     /**
      * @inheritdoc
@@ -18,7 +18,7 @@ class BillingReceiptSearch extends BillingReceipt
     public function rules()
     {
         return [
-            [['billing_receipt_id', 'customer_id', 'user_id', 'billing_id', 'receipt_id'], 'integer'],
+            [['soa_id', 'customer_id', 'user_id'], 'integer'],
             [['soa_date', 'soa_number'], 'safe'],
             [['previous_balance', 'current_amount'], 'number'],
         ];
@@ -42,7 +42,7 @@ class BillingReceiptSearch extends BillingReceipt
      */
     public function search($params)
     {
-        $query = BillingReceipt::find();
+        $query = Soa::find();
 
         // add conditions that should always apply here
 
@@ -60,12 +60,10 @@ class BillingReceiptSearch extends BillingReceipt
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'billing_receipt_id' => $this->billing_receipt_id,
+            'soa_id' => $this->soa_id,
             'soa_date' => $this->soa_date,
             'customer_id' => $this->customer_id,
             'user_id' => $this->user_id,
-            'billing_id' => $this->billing_id,
-            'receipt_id' => $this->receipt_id,
             'previous_balance' => $this->previous_balance,
             'current_amount' => $this->current_amount,
         ]);

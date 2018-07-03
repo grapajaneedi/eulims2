@@ -16,7 +16,7 @@ use kartik\grid\GridView;
 $js=<<<SCRIPT
     function getKeys(){
         var dkeys=$("#BIGrid").yiiGridView("getSelectedRows");
-        $("#billingreceipt-bi_ds").val(dkeys);
+        $("#soa-bi_ds").val(dkeys);
         var SearchFieldsTable = $(".kv-grid-table>tbody");
         var trows = SearchFieldsTable[0].rows;
         var Total=0.00;
@@ -30,9 +30,9 @@ $js=<<<SCRIPT
                 }
             }
         }); 
-        $("#billingreceipt-current_amount-disp").val(Total);
-        $("#billingreceipt-current_amount").val(Total);
-        $("#billingreceipt-current_amount-disp").maskMoney('mask', Total);
+        $("#soa-current_amount-disp").val(Total);
+        $("#soa-current_amount").val(Total);
+        $("#soa-current_amount-disp").maskMoney('mask', Total);
     }
     
     $(".kv-row-checkbox").change(function(){

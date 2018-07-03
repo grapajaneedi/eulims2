@@ -6,8 +6,8 @@ use common\models\finance\clientSearch;
 use common\models\finance\Client;
 use common\models\finance\Op;
 use common\models\finance\BillingSearch;
-use common\models\finance\BillingReceiptSearch;
-use common\models\finance\BillingReceipt;
+use common\models\finance\SoaSearch;
+use common\models\finance\Soa;
 use common\models\finance\Billing;
 use yii\data\ActiveDataProvider;
 
@@ -18,7 +18,7 @@ class BillingController extends \yii\web\Controller
         return $this->render('index');
     }
     public function actionManager(){
-        $searchModel = new BillingReceiptSearch();
+        $searchModel = new SoaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('/soa/index', [
@@ -27,7 +27,7 @@ class BillingController extends \yii\web\Controller
         ]);
     }
     public function actionSoa(){
-        $searchModel = new BillingReceiptSearch();
+        $searchModel = new SoaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('../soa/index', [
