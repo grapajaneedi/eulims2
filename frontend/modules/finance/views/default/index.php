@@ -19,10 +19,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="Lab-default-index">
     <div class="body-content">
         <div class="box box-primary color-palette-box" style="padding:0px">
-        <div class="box-header" style="background-color: #3c8dbc;color:#ffffff">
-          <h3 class="box-title"><i class="fa fa-tag"></i>Finance</h3>
+        <div class="box-header" style="background-color: #fff;color:#000" data-widget="collapse">
+          <h3 class="box-title" data-widget="collapse"><i class="fa fa-tag"></i>Finance</h3>
           <div class="box-tools pull-right" >
-                <button type="button" style="color:#ffffff" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                <button type="button" style="color:#000" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
               </div>
         </div>      
@@ -66,10 +66,10 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         
         <div class="box box-primary color-palette-box" style="padding:0px">
-        <div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-tag"></i>Cashier</h3>
+        <div class="box-header with-border" style="background-color: #fff;color:#000" data-widget="collapse">
+          <h3 class="box-title" data-widget="collapse"><i class="fa fa-tag"></i>Cashier</h3>
           <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                <button type="button" class="btn btn-box-tool" style="color:#000" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
               </div>
         </div>      
@@ -114,10 +114,10 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         
         <div class="box box-primary color-palette-box" style="padding:0px">
-        <div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-tag"></i>Accounting</h3>
+        <div class="box-header with-border" style="background-color: #fff;color:#000" data-widget="collapse">
+          <h3 class="box-title" data-widget="collapse"><i class="fa fa-tag"></i>Accounting</h3>
           <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                <button type="button" class="btn btn-box-tool" style="color:#000" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
               </div>
         </div>      
@@ -151,10 +151,10 @@ $this->params['breadcrumbs'][] = $this->title;
         
         
         <div class="box box-primary color-palette-box" style="padding:0px">
-        <div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-tag"></i>Billing</h3>
+        <div class="box-header with-border" style="background-color: #fff;color:#000" data-widget="collapse">
+          <h3 class="box-title" data-widget="collapse"><i class="fa fa-tag"></i>Billing</h3>
           <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                <button type="button" class="btn btn-box-tool" style="color:#000" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
               </div>
         </div>      

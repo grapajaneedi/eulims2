@@ -21,6 +21,6 @@ class DefaultController extends Controller
         //echo "<pre>";
         //var_dump($config);
         //echo "</pre>";
-        return $this->render('index');
+        return $this->render('/finance/financialreports');
     }
 }
