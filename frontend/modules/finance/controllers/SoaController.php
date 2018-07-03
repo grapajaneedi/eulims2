@@ -8,6 +8,8 @@ use common\models\finance\BillingReceiptSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\finance\Billing;
+use yii\data\ActiveDataProvider;
 
 /**
  * BillingreceiptController implements the CRUD actions for BillingReceipt model.
@@ -62,7 +64,20 @@ class SoaController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
-
+    public function actionGetbigrid(){
+        $get= Yii::$app->request->get();
+        $id=$get['id'];
+        $query= Billing::find()->where(['customer_id'=>$id,'soa_number'=>NULL]);
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+            ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_bigrid', ['dataProvider'=>$dataProvider]);
+        }
+        else{
+            return $this->render('_bigrid', ['dataProvider'=>$dataProvider]);
+        }
+    }
     /**
      * Creates a new BillingReceipt model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -75,9 +90,21 @@ class SoaController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->billing_receipt_id]);
         } else {
-            if(\Yii::$app->request->isAjax){
+            $query= Billing::find()->where(['customer_id'=>-1,'soa_number'=>NULL]);
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+            ]);
+            $model->soa_date=date("Y-m-d");
+            $model->user_id= Yii::$app->user->id;
+            if(Yii::$app->request->isAjax){
                 return $this->renderAjax('create', [
                     'model' => $model,
+                    'dataProvider'=>$dataProvider
+                ]);
+            }else{
+                return $this->render('create', [
+                    'model' => $model,
+                    'dataProvider'=>$dataProvider
                 ]);
             }
         }

@@ -13,6 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="billing-receipt-create">
     <?= $this->render('_form', [
         'model' => $model,
+        'dataProvider' => $dataProvider,
     ]) ?>
 
 </div>

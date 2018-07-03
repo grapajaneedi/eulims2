@@ -10,9 +10,11 @@
 
 namespace frontend\controllers;
 
+use Yii;
 use yii\web\Controller;
 use common\models\lab\Discount;
-use Yii;
+use common\models\finance\Client;
+
 /**
  * Description of AjaxController
  *
@@ -50,6 +52,18 @@ class AjaxController extends Controller{
         $session->set('hideMenu',$b);
         //return $hideMenu;
         echo $session->get("hideMenu");
+    }
+    public function actionGetaccountnumber(){
+        $post= Yii::$app->request->post();
+        $id=(int)$post['customer_id'];
+        $AccNumber="<no accountnumber>";
+        $Client= Client::find()->where(['customer_id'=>$id])->one();
+        if($Client){
+            $AccNumber=$Client->account_number;
+        }else{
+            $AccNumber="<no account number>";
+        }
+        return $AccNumber;
     }
  
 }

@@ -16,12 +16,14 @@ use Yii;
  * @property string $soa_number
  * @property string $previous_balance
  * @property string $current_amount
+ * @property string $bi_ids
  *
  * @property Billing $billing
  * @property Receipt $receipt
  */
 class BillingReceipt extends \yii\db\ActiveRecord
 {
+    public $bi_ids;
     /**
      * {@inheritdoc}
      */
@@ -48,7 +50,7 @@ class BillingReceipt extends \yii\db\ActiveRecord
             [['soa_date'], 'safe'],
             [['customer_id', 'user_id', 'billing_id', 'receipt_id'], 'integer'],
             [['previous_balance', 'current_amount'], 'number'],
-            [['soa_number'], 'string', 'max' => 100],
+            [['soa_number','bi_ids'], 'string', 'max' => 100],
             [['billing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Billing::className(), 'targetAttribute' => ['billing_id' => 'billing_id']],
             [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::className(), 'targetAttribute' => ['receipt_id' => 'receipt_id']],
         ];
@@ -69,6 +71,7 @@ class BillingReceipt extends \yii\db\ActiveRecord
             'soa_number' => 'Soa Number',
             'previous_balance' => 'Previous Balance',
             'current_amount' => 'Current Amount',
+            'bi_ds'=>'BIs'
         ];
     }
 

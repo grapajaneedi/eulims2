@@ -598,7 +598,7 @@ $this->registerJs("
 
 <?php
     // This section will allow to popup a notification
-    $session = Yii::$app->session;
+    /*$session = Yii::$app->session;
     if ($session->isActive) {
         $session->open();
         if (isset($session['deletemessage'])) {
@@ -626,5 +626,5 @@ $this->registerJs("
             unset($session['requestmessage']);
             $session->close();
         }
-    }
+    }*/
 ?>

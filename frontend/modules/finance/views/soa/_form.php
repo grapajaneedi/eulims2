@@ -1,11 +1,47 @@
 <?php
 
-use yii\helpers\Html;
+//use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\widgets\Select2;
+use kartik\widgets\DatePicker;
+use common\components\Functions;
+use yii\helpers\ArrayHelper;
+use kartik\helpers\Html;
+use kartik\money\MaskMoney;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\BillingReceipt */
 /* @var $form yii\widgets\ActiveForm */
+
+$func=new Functions();
+$rstl_id=$GLOBALS['rstl_id'];
+$ClientList=$func->GetClientList($rstl_id);
+$customerJS=<<<SCRIPT
+    function() { 
+        $("#BIGridContainer").html(""); 
+        
+    }   
+SCRIPT;
+$js=<<<SCRIPT
+    $("#billingreceipt-customer_id").change(function(){
+       // $("#BIGridContainer").html("<div style='text-align:center;'><img src='/images/img-loader64.gif' alt='' /></div>"); 
+        $.post("/ajax/getaccountnumber", {
+            customer_id: this.value,
+        }, function(result){
+           if(result){
+               $("#AccNumber").val(result);
+           }
+        });
+        $.get("/finance/soa/getbigrid", {
+            id: this.value,
+        }, function(result){
+           if(result){
+              $("#BIGridContainer").html(result); 
+           }
+        });
+    });     
+SCRIPT;
+$this->registerJs($js);
 ?>
 
 <div class="billing-receipt-form">
@@ -14,29 +50,98 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'billing_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'receipt_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
-    
+    <?= $form->field($model, 'bi_ids')->hiddenInput()->label(false) ?>
     <div class="row">
         <div class="col-md-6">
-    <?= $form->field($model, 'soa_date')->textInput() ?>
+        <?php
+             echo $form->field($model, 'soa_date')->widget(DatePicker::classname(), [
+             'options' => ['placeholder' => 'Select Date ...',
+             'autocomplete'=>'off'],
+             'type' => DatePicker::TYPE_COMPONENT_APPEND,
+                 'pluginOptions' => [
+                     'format' => 'yyyy-mm-dd',
+                     'todayHighlight' => true,
+                     'autoclose'=>true,   
+                 ]
+             ]);
+        ?>
         </div>
         <div class="col-md-6">
-    <?= $form->field($model, 'soa_number')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'soa_number')->textInput(['maxlength' => true,'disabled'=>true]) ?>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-    <?= $form->field($model, 'customer_id')->textInput() ?>
+            <label class="control-label" for="billingreceipt-customer_id">Customer</label>
+            <?php 
+                echo Select2::widget([
+                    'name' => 'customer_id',
+                    'id'=>'billingreceipt-customer_id',
+                    'value' => '',
+                    'data' => ArrayHelper::map($ClientList, 'customer_id', 'customer_name'),
+                    'options' => ['multiple' => false, 'placeholder' => 'Select states ...']
+                ]);
+               /*
+                echo $form->field($model, 'customer_id')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map($ClientList, 'customer_id', 'customer_name'),
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['placeholder' => 'Select Customer ...'],
+                //'pluginEvents' => [
+                //    "select2:select" => $customerJS,
+                //],
+                'pluginOptions' => [
+                  'allowClear' => true
+                ],
+                ])->label("Customer");
+                * 
+                */
+               
+            ?>
         </div>
         <div class="col-md-6">
-     <?= $form->field($model, 'previous_balance')->textInput(['maxlength' => true]) ?>
+            <label class="control-label" for="account_number">Account Number</label>
+            <p><?= Html::input('text', 'account_number', '',['class'=>'form-control','disabled'=>true,'id'=>'AccNumber'])  ?></p>
+        </div>
+    </div>
+    <div class="row">
+        <div id="BIGridContainer" class="col-md-12">
+           <?php
+                 $this->renderAjax('_bigrid', [
+                    'dataProvider' => $dataProvider,
+                ]);
+           ?>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-    <?= $form->field($model, 'current_amount')->textInput(['maxlength' => true]) ?>
+        <?php
+            echo $form->field($model, 'previous_balance')->widget(MaskMoney::classname(), [
+            'readonly'=>true,
+            'disabled'=>true,
+            'options'=>[
+                'style'=>'text-align: right'
+            ],
+            'pluginOptions' => [
+               'prefix' => '₱ ',
+               'allowNegative' => false,
+            ]
+           ])->label("Previous Balance");
+        ?>
         </div>
         <div class="col-md-6">
-    
+        <?php
+            echo $form->field($model, 'current_amount')->widget(MaskMoney::classname(), [
+            'readonly'=>true,
+            'disabled'=>true,
+            'options'=>[
+                'style'=>'text-align: right'
+            ],
+            'pluginOptions' => [
+               'prefix' => '₱ ',
+               'allowNegative' => false,
+            ]
+           ])->label("Current Amount");
+        ?>
         </div>
     </div>
     <div class="form-group pull-right">

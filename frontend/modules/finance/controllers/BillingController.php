@@ -8,6 +8,8 @@ use common\models\finance\Op;
 use common\models\finance\BillingSearch;
 use common\models\finance\BillingReceiptSearch;
 use common\models\finance\BillingReceipt;
+use common\models\finance\Billing;
+use yii\data\ActiveDataProvider;
 
 class BillingController extends \yii\web\Controller
 {
@@ -32,23 +34,6 @@ class BillingController extends \yii\web\Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
-    }
-    public function actionSoaCreate(){
-        $model = new BillingReceipt();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->billing_receipt_id]);
-        } else {
-            if(\Yii::$app->request->isAjax){
-                return $this->renderAjax('../soa/create', [
-                    'model' => $model,
-                ]);
-            }else{
-                return $this->render('../soa/create', [
-                    'model' => $model,
-                ]);
-            }
-        }
     }
     /**
      * Displays a single client model.

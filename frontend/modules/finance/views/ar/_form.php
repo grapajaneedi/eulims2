@@ -29,7 +29,7 @@ $func=new Functions();
         <div class="col-md-6">
         <label class="control-label" for="billing-invoice_number">Customer</label>
         <?php 
-        echo $func->GetCustomerList($form, $model)
+        echo $func->GetCustomerList($form, $model);
         ?>
         </div>
     </div>
