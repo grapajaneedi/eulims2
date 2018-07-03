@@ -19,7 +19,7 @@ $func= new Functions();
 $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Accounting', 'url' => ['/finance/accounting']];
-$this->params['breadcrumbs'][] = 'Order of Payment(None-Lab)';
+$this->params['breadcrumbs'][] = 'Order of Payment(Lab)';
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
 ?>
@@ -27,8 +27,8 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     <?php
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
-    <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/accounting/create-op', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']); ?>
+     <p>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/accounting/create-oplab', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']); ?>
     </p>
   <div class="table-responsive">
     <?php 
@@ -186,12 +186,4 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     ?>
   </div>
 </div>
-<script type="text/javascript">
-    $('#btnOP').click(function(){
-        $('.modal-title').html($(this).attr('title'));
-        $('#modal').modal('show')
-            .find('#modalContent')
-            .load($(this).attr('value'));
-    });
-  
-</script>
+

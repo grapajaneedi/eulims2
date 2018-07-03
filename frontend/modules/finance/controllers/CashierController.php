@@ -103,7 +103,7 @@ class CashierController extends \yii\web\Controller
                 $this->created_receipt($op_id,$model->receipt_id);
                  $transaction->commit();
                 $session->set('savepopup',"executed");
-                return $this->redirect(['/finance/cashier/collection']); 
+                return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]); 
              } catch (Exception $e) {
                  $transaction->rollBack();
                  return $e;
@@ -229,13 +229,14 @@ class CashierController extends \yii\web\Controller
                 $model->save(false);
                 $this->update_receipt_depositid($model->start_or, $model->end_or, $model->deposit_id);
                 $session->set('savepopup',"executed");
-                 return $this->redirect(['/finance/cashier/deposit/index']);
+                 return $this->redirect(['/finance/cashier/deposit/']);
                 //
                 
              } catch (Exception $e) {
                    return $e;
              }
         }
+        $model->deposit_date=date('Y-m-d');
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('deposit/_form', [
                 'model' => $model,
