@@ -8,7 +8,6 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
 use kartik\daterange\DateRangePicker;
 use yii\db\Query;
-use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\Op */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -27,11 +26,15 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     <?php
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
+    <p>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/accounting/create-oplab', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']); ?>
+    </p>
+    
     
     
   <div class="table-responsive">
     <?php 
-    $Buttontemplate='{view}'; 
+    $Buttontemplate='{view}{update}'; 
     ?>
       
     <?= GridView::widget([
@@ -46,7 +49,6 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-                
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -122,6 +124,9 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 'filterInputOptions' => ['placeholder' => 'Customer Name', 'id' => 'grid-op-search-customer_id']
             ],
            
+            // 'amount',
+            // 'purpose',
+            // 'created_receipt',
             [
                //'attribute' => 'created_receipt',
                'label'=>'Status', 
@@ -139,11 +144,12 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                
             ],
             [
+              //'class' => 'yii\grid\ActionColumn'
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Buttontemplate,
-                 'buttons'=>[
+                'buttons'=>[
                     'view'=>function ($url, $model) {
-                          return Html::a('View', ['/finance/cashier/view-op?id='.$model->orderofpayment_id], ['target'=>'_blank']);
+                          return Html::a('View', ['/finance/accounting/view-oplab?id='.$model->orderofpayment_id], ['target'=>'_blank','class'=>'btn btn-primary']);
                     },
                   ],
             ],
@@ -185,4 +191,12 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     ?>
   </div>
 </div>
-
+<script type="text/javascript">
+    $('#btnOP').click(function(){
+        $('.modal-title').html($(this).attr('title'));
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load($(this).attr('value'));
+    });
+  
+</script>
