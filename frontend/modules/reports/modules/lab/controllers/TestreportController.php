@@ -15,7 +15,7 @@ use common\models\lab\Testreportconfig;
 use common\models\lab\Lab;
 use common\models\lab\TestreportSample;
 use common\models\lab\Batchtestreport;
-
+use common\components\MyPDF;
 
 /**
  * TestreportController implements the CRUD actions for Testreport model.
@@ -157,6 +157,7 @@ class TestreportController extends Controller
 
             //check if multiple
             if($model->lab_id){
+                // var_dump($_POST); exit();
                 //if multiple //code here
 
                 $Batchtestreport = New Batchtestreport();
@@ -165,7 +166,7 @@ class TestreportController extends Controller
                 $tsr_ids = "";
                 $rlabid = $request->lab_id;
                 //fetch the sample ids involve
-                $sampleids =$_POST['Sample'];
+                $sampleids =$_POST['selection'];
                 foreach ($sampleids as $key => $value) {
                     //make the record of the testreport
                     $newtsreport = New Testreport();
@@ -178,12 +179,14 @@ class TestreportController extends Controller
                         $tr_config->setTestReportSeries();
                         $trsample = new TestreportSample();
                         $trsample->testreport_id=$newtsreport->testreport_id;
-                        $trsample->sample_id=$value['sample_id'];
+                        // $trsample->sample_id=$value['sample_id'];
+                        $trsample->sample_id=$value;
                         $trsample->save();
                     }
                  }
                  $Batchtestreport->testreport_ids=substr($tsr_ids, 1);
                  $Batchtestreport->save();
+                Yii::$app->session->setFlash('success', 'Testreport Successfully Save!');
                  return $this->redirect(['viewmultiple', 'id' => $Batchtestreport->batchtestreport_id]);
             }else{
                 //if not multiple //code here
@@ -204,15 +207,16 @@ class TestreportController extends Controller
                     //update the config to increment the series number
                     $tr_config->setTestReportSeries();
                     //save the sample IDS for samples involve
-                    $sampleids =$_POST['Sample'];
+                    $sampleids =$_POST['selection'];
                     foreach ($sampleids as $key => $value) {
                         $trsample = new TestreportSample();
                         $trsample->testreport_id=$model->testreport_id;
-                        $trsample->sample_id=$value['sample_id'];
+                        $trsample->sample_id=$value;
                         $trsample->save();
                      }
                 }
             }
+                Yii::$app->session->setFlash('success', 'Testreport Successfully Save!');
 
             return $this->redirect(['view', 'id' => $model->testreport_id]);
         }
@@ -302,5 +306,11 @@ class TestreportController extends Controller
             return $this->render('_samples', ['dataProvider'=>$dataProvider]);
         }
 
+    }
+
+    public function actionPrintview(){
+            $content= $this->renderPartial("_printview");
+            $PDF=new MyPDF();
+            $PDF->renderPDF($content);
     }
 }

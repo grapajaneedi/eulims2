@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\web\View;
 use common\components\Functions;
 use kartik\widgets\DatePicker;
 use kartik\widgets\SwitchInput;
@@ -73,6 +74,7 @@ use kartik\widgets\SwitchInput;
 
      <div class="form-group pull-right">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success mybtn' : 'btn btn-primary mybtn',
+            'id'=>'createTestReport',
             'data' => [
                 'confirm' => 'Are you sure you want to generate this Testreport ?',
             ]]) ?>
@@ -120,4 +122,15 @@ use kartik\widgets\SwitchInput;
     });
 
      $("#testreport-report_date").datepicker().datepicker("setDate", new Date());
+</script>
+
+
+<script type="text/javascript">
+    
+    $("#createTestReport").click(function(){
+        var checked=$("#samplegrid").yiiGridView("getSelectedRows");
+        var count=checked.length;
+        if(count<1){alert("Please select sample(s).");return false;}
+    });
+
 </script>
