@@ -13,6 +13,8 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 use common\models\lab\Request;
+use yii\helpers\Json;
+use common\components\Functions;
 
 class AccountingController extends Controller
 {
@@ -151,23 +153,19 @@ class AccountingController extends Controller
         }
         
     }
-    
+    //-----------------Order of Payment None Lab
      public function actionCreateOp()
     {
         $model = new Op();
         $searchModel = new OpSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
-        
+        $collection= new Collection();
          if ($model->load(Yii::$app->request->post())) {
              $transaction = Yii::$app->financedb->beginTransaction();
              $session = Yii::$app->session;
              try  {
-                     $request_ids=$model->RequestIds;
-                     $str_request = explode(',', $request_ids);
-                     // $wallet=$this->checkCustomerWallet($model->customer_id); 
-                     $arr_length = count($str_request); 
-                     $total_amount=0;
+                        $model->RequestIds='0';
                         $model->rstl_id=$GLOBALS['rstl_id'];
                         $model->transactionnum= $this->Gettransactionnum();
                         if ($model->payment_mode_id == 6){
@@ -193,18 +191,18 @@ class AccountingController extends Controller
                         //----------------------//
                         //---Saving for Collection-------
 
-                      /*  $collection_name= $this->getCollectionname($model->collectiontype_id);
+                        $collection_name= $this->getCollectionname($model->collectiontype_id);
                         $collection->nature=$collection_name['natureofcollection'];
                         $collection->rstl_id=$GLOBALS['rstl_id'];
                         $collection->orderofpayment_id=$model->orderofpayment_id;
                         $collection->referral_id=0;
-                        $collection->save(false);*/
+                        $collection->save(false);
                         //
                         $transaction->commit();
                         //$this->postRequest($request_ids);
                        // $this->updateTotalOP($model->orderofpayment_id, $total_amount);
-                        $session->set('savepopup',"executed");
-                         return $this->redirect(['/finance/accounting/op']); 
+                      $session->set('savepopup',"executed");
+                       return $this->redirect(['/finance/accounting/op']); 
                     
                         
                     
@@ -237,6 +235,17 @@ class AccountingController extends Controller
         
     }
     
+     public function actionAddCollection($opid)
+    {
+        $op_model=$this->findModel($opid);
+        $paymentitem= new Paymentitem();
+        $paymentitem->details= $op_model->collectiontype->natureofcollection;
+         return $this->renderAjax('op/_form_paymentitem', [
+            'model' => $op_model,
+            'paymentitem'=> $paymentitem,
+         ]);
+    }
+    //--------------------------------------------------------------------------
     public function actionViewOplab($id)
     { 
          $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $id]);
@@ -248,6 +257,23 @@ class AccountingController extends Controller
         ]);
          
          return $this->render('op_lab/view', [
+            'model' => $this->findModel($id),
+            'paymentitemDataProvider' => $paymentitemDataProvider,
+        ]);
+
+    }
+    
+    public function actionViewOp($id)
+    { 
+         $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $id]);
+         $paymentitemDataProvider = new ActiveDataProvider([
+                'query' => $paymentitem_Query,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+        ]);
+         
+         return $this->render('op/view', [
             'model' => $this->findModel($id),
             'paymentitemDataProvider' => $paymentitemDataProvider,
         ]);

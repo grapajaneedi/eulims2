@@ -144,10 +144,10 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 'template' => $Buttontemplate,
                  'buttons'=>[
                     'view'=>function ($url, $model) {
-                          return Html::a('View', ['/finance/cashier/view-op?id='.$model->orderofpayment_id], ['target'=>'_blank']);
+                          return Html::a('View', ['/finance/accounting/view-op?id='.$model->orderofpayment_id], ['target'=>'_blank']);
                     },
                   ],
-            ],
+            ], 
 
         ],
     ]); ?>

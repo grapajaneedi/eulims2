@@ -4,12 +4,15 @@ use yii\helpers\Html;
 use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use common\models\finance\Collection;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
 
 $this->title = 'Order of Payment';
-$this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['index']];
-
+$this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
+$this->params['breadcrumbs'][] = ['label' => 'Accouting', 'url' => ['/finance/accounting']];
+$this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['/finance/accounting/op']];
+$this->params['breadcrumbs'][] = 'View';
 $bal=($model->total_amount) -($model->collection->sub_total);
 //}
 ?>
@@ -160,7 +163,8 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                 'showPageSummary' => true,
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
-                    'type'=>'primary',
+                    'type'=>'primary', 'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add', ['value' => Url::to(['add-collection','opid'=>$model->orderofpayment_id]),'title'=>'Add Payment Item', 'onclick'=>'addPaymentitem(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    'after'=>false,
                 ],
                 'columns' => $gridColumns,
                
@@ -169,3 +173,15 @@ $bal=($model->total_amount) -($model->collection->sub_total);
         </div>
     </div>
 </div>
+<script type="text/javascript">
+   
+    function addPaymentitem(url,title){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       //var url = '/lab/sample/update?id='+id;
+        $(".modal-title").html(title);
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
+   
+</script>
