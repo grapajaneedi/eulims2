@@ -4,10 +4,12 @@ namespace frontend\modules\services\controllers;
 
 use Yii;
 use common\models\services\Test;
+use common\models\lab\Testcategory;
 use common\models\services\TestSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * TestController implements the CRUD actions for Test model.
@@ -67,20 +69,49 @@ class TestController extends Controller
         
      
         $model = new Test();
+        $session = Yii::$app->session;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $session = Yii::$app->session;
-            $session->set('savepopup',"executed");
-            return $this->redirect('index');
-        }
+        if ($model->load(Yii::$app->request->post())) {
+
+                      $model = new Test();
+                      $post= Yii::$app->request->post();                    
+                      $model->fee =  $post['Test']['fee'];
+                      $model->lab_id =  $post['Test']['lab_id'];
+                      $model->method = $post['Test']['method'];
+                      $model->payment_references = $post['Test']['payment_references'];
+                      $model->sample_type_id = $post['Test']['sample_type_id'];
+                      $model->testcategory_id = $post['Test']['testcategory_id'];
+                      $model->testname = $post['Test']['testname'];
+                      $model->duration = 1;
+                      $model->rstl_id = 1;
+
+                     if ($model->save()){
+                        Yii::$app->session->setFlash('success', 'Test Successfully created'); 
+                        return $this->redirect('index');  
+                     }else{
+                        Yii::$app->session->setFlash('danger', 'Test not saved'); 
+                        return $this->redirect('index');  
+                     }
+
+                      
+                            
+                  }   
             
+        $testcategory = $this->listTestcategory(1);
+        $sampletype = [];
+
        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('create', [
+            return $this->renderAjax('_form', [
                 'model' => $model,
+                'testcategory'=>$testcategory,
+                'sampletype'=>$sampletype,
             ]);
-       }else{
-            return $this->renderAjax('create', [
+       }
+       else{
+            return $this->renderAjax('_form', [
                 'model' => $model,
+                'testcategory'=>$testcategory,
+                'sampletype'=>$sampletype,
             ]);
        }
      }
@@ -111,6 +142,20 @@ class TestController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    protected function listTestcategory($labId)
+    {
+        $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 
+           function($testcategory, $defaultValue) {
+               return $testcategory->category_name;
+        });
+
+        /*$testcategory = ArrayHelper::map(Testcategory::find()
+            ->where(['lab_id' => $labId])
+            ->all(), 'testcategory_id', 'category_name');*/
+
+        return $testcategory;
     }
 
     /**

@@ -49,7 +49,6 @@ $this->registerJs($js);
 
     <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
-        //'filterModel' => $samplesearchmodel,
         'pjax'=>true,
         'headerRowOptions' => ['class' => 'kartik-sheet-style'],
         'filterRowOptions' => ['class' => 'kartik-sheet-style'],
@@ -109,7 +108,6 @@ $this->registerJs($js);
         <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
                         'data' => $testcategory,
                         'theme' => Select2::THEME_KRAJEE,
-                        //'theme' => Select2::THEME_BOOTSTRAP,
                         'options' => ['id'=>'sample-testcategory_id'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test category'],
                 ])
@@ -134,16 +132,6 @@ $this->registerJs($js);
 
     <div class="row">
         <div class="col-sm-6">
-             <?php
-            //   $form->field($model, 'test_id')->widget(Select2::classname(), [
-            //             'data' => $TestList,
-            //             'language' => 'en',
-            //             'options' => ['placeholder' => 'Select Test'],
-            //             'pluginOptions' => [
-            //             'allowClear' => true
-            //             ],
-            //      ])->label("Test");
-                  ?>
 
         <?= $form->field($model, 'test_id')->widget(DepDrop::classname(), [
                 'type'=>DepDrop::TYPE_SELECT2,
@@ -189,13 +177,8 @@ $this->registerJs($js);
                         return date("m/d/Y h:i:s P",$model->date_analysis);
                     },
                 'pluginOptions' => [
-                     //   'autoclose' => true,
-                     //   'removeButton' => false,
                         'format' => 'yyyy-mm-dd h:i:s'
                 ],
-                    // 'pluginEvents'=>[
-                    //     "change" => "function() { alert('change'); }",
-                    // ]
                 ]); ?>
         </div>
     </div>

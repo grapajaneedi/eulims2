@@ -175,7 +175,6 @@ class AnalysisController extends Controller
         ]);
 
         $testcategory = $this->listTestcategory(1);
-     
         $sampletype = [];
         $test = [];
 

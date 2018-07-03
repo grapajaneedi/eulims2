@@ -38,8 +38,8 @@ $this->registerJsFile("/js/services/services.js");
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'package_id',
-            'rstl_id',
+           // 'package_id',
+          //  'rstl_id',
             'testcategory_id',
             'sample_type_id',
             'name',

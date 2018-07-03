@@ -78,18 +78,25 @@ class PackagelistController extends Controller
         $model = new Packagelist();
 
       //  $model = new Sampletype();
+
+      $testcategory = $this->listTestcategory(1);
+      $sampletype = [];
+
         
                 if ($model->load(Yii::$app->request->post()) && $model->save()) {
                          return $this->runAction('index');
                  } 
                    
                 if(Yii::$app->request->isAjax){
-                         return $this->renderAjax('create', [
+                         return $this->renderAjax('_form', [
                                  'model' => $model,
+                                 'testcategory'=>$testcategory,
+                                 'sampletype'=>$sampletype,
                              ]);
                      }
     }
 
+  
     public function actionCreatepackage($id)
     {
         $model = new Packagelist();
