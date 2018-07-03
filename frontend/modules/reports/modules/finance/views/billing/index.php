@@ -6,5 +6,5 @@ $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/reports/fina
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="finance-default-index">
-   <h1>Reports\Finance Dashboard</h1>
+   <h1>Reports\Finance Dashboard Y</h1>
 </div>

@@ -5,5 +5,45 @@ $this->params['breadcrumbs'][] = ['label' => 'Reports', 'url' => ['/reports']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="Lab-default-index">
-   <h1>Reports\Customer Dashboard</h1>
-</div
+   <div class="body-content">
+        
+        
+        
+        
+        <div class="box box-primary color-palette-box" style="padding:0px">
+        <div class="box-header with-border" style="background-color: #fffff;color:#000" data-widget="collapse">
+          <h3 class="box-title" data-widget="collapse"><i class="fa fa-tag"></i>Customer</h3>
+          <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" style="color:#000" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+        </div>      
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              
+               <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
+                  <a href="#" title="Order of Payment"><img class="imgHover" src="/images/customerlistsquare.png" style="height:120px;width: 120px" ></a>
+              </div>
+            </div>
+            <!-- /.col -->
+            
+            <!-- /.col -->
+            
+            
+           
+            
+            <!-- /.col -->
+            
+            <!-- /.col -->  
+          </div>
+        </div>
+        <!-- /.box-body -->
+        </div>
+        
+        
+        
+        
+        
+    </div>
+</div>
