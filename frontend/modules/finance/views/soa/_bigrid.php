@@ -13,6 +13,38 @@ use kartik\grid\GridView;
  *
  * @author OneLab
  */
+$js=<<<SCRIPT
+    function getKeys(){
+        var dkeys=$("#BIGrid").yiiGridView("getSelectedRows");
+        $("#billingreceipt-bi_ds").val(dkeys);
+        var SearchFieldsTable = $(".kv-grid-table>tbody");
+        var trows = SearchFieldsTable[0].rows;
+        var Total=0.00;
+        var amt=0.00;
+        $.each(trows, function (index, row) {
+            var data_key=$(row).attr("data-key");
+            for (i = 0; i < dkeys.length; i++) { 
+                if(data_key==dkeys[i]){
+                    amt=StringToFloat(trows[index].cells[5].innerHTML);
+                    Total=Total+parseFloat(amt);
+                }
+            }
+        }); 
+        $("#billingreceipt-current_amount-disp").val(Total);
+        $("#billingreceipt-current_amount").val(Total);
+        $("#billingreceipt-current_amount-disp").maskMoney('mask', Total);
+    }
+    
+    $(".kv-row-checkbox").change(function(){
+       getKeys();
+    });   
+    $(".select-on-check-all").change(function(){
+       getKeys();
+    });     
+        
+SCRIPT;
+$this->registerJs($js);
+
 echo GridView::widget([
         'dataProvider' => $dataProvider,
         'id'=>'BIGrid',
@@ -64,3 +96,5 @@ echo GridView::widget([
             ],
         ],
     ]); 
+            
+?>

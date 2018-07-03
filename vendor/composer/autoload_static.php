@@ -11,8 +11,8 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '180092cfc969a12e06f2132a203a3184' => __DIR__ . '/..' . '/codeception/verify/src/Codeception/function.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
-        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
@@ -33,6 +33,7 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
             'yii\\bootstrap\\' => 14,
             'yii\\authclient\\' => 15,
             'yii\\' => 4,
+            'yii2tech\\spreadsheet\\' => 21,
             'yii2mod\\alert\\' => 14,
             'yii2assets\\printthis\\' => 21,
             'yii2assets\\pdfjs\\' => 17,
@@ -98,7 +99,6 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
             'kartik\\dialog\\' => 14,
             'kartik\\detail\\' => 14,
             'kartik\\daterange\\' => 17,
-            'kartik\\datecontrol\\' => 19,
             'kartik\\date\\' => 12,
             'kartik\\checkbox\\' => 16,
             'kartik\\base\\' => 12,
@@ -157,9 +157,11 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         ),
         'P' => 
         array (
+            'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'PhpOffice\\PhpWord\\' => 18,
+            'PhpOffice\\PhpSpreadsheet\\' => 25,
             'PhpOffice\\Common\\' => 17,
         ),
         'M' => 
@@ -244,6 +246,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'yii\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2',
+        ),
+        'yii2tech\\spreadsheet\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yii2tech/spreadsheet/src',
         ),
         'yii2mod\\alert\\' => 
         array (
@@ -399,10 +405,6 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-date-range',
         ),
-        'kartik\\datecontrol\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/kartik-v/yii2-datecontrol',
-        ),
         'kartik\\date\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-datepicker',
@@ -527,6 +529,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         array (
             0 => __DIR__ . '/..' . '/stecman/symfony-console-completion/src',
         ),
+        'Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
@@ -538,6 +544,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'PhpOffice\\PhpWord\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpword/src/PhpWord',
+        ),
+        'PhpOffice\\PhpSpreadsheet\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
         'PhpOffice\\Common\\' => 
         array (

@@ -8,6 +8,7 @@ use common\components\Functions;
 use yii\helpers\ArrayHelper;
 use kartik\helpers\Html;
 use kartik\money\MaskMoney;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\BillingReceipt */
@@ -72,16 +73,17 @@ $this->registerJs($js);
     </div>
     <div class="row">
         <div class="col-md-6">
-            <label class="control-label" for="billingreceipt-customer_id">Customer</label>
             <?php 
-                echo Select2::widget([
+                /*echo Select2::widget([
                     'name' => 'customer_id',
                     'id'=>'billingreceipt-customer_id',
                     'value' => '',
                     'data' => ArrayHelper::map($ClientList, 'customer_id', 'customer_name'),
                     'options' => ['multiple' => false, 'placeholder' => 'Select states ...']
                 ]);
-               /*
+                 * 
+                 */
+              
                 echo $form->field($model, 'customer_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map($ClientList, 'customer_id', 'customer_name'),
                 'theme' => Select2::THEME_BOOTSTRAP,
@@ -93,8 +95,7 @@ $this->registerJs($js);
                   'allowClear' => true
                 ],
                 ])->label("Customer");
-                * 
-                */
+               
                
             ?>
         </div>
@@ -105,11 +106,58 @@ $this->registerJs($js);
     </div>
     <div class="row">
         <div id="BIGridContainer" class="col-md-12">
-           <?php
-                 $this->renderAjax('_bigrid', [
-                    'dataProvider' => $dataProvider,
-                ]);
-           ?>
+             <?php
+             echo GridView::widget([
+                 'dataProvider' => $dataProvider,
+                 'id' => 'BIGrid',
+                 'pjax' => true,
+                 'bordered' => true,
+                 'striped' => true,
+                 'condensed' => true,
+                 'responsive' => false,
+                 'hover' => true,
+                 'containerOptions' => ['style' => 'overflow: auto;height: 200px'],
+                 'pjaxSettings' => [
+                     'options' => [
+                         'enablePushState' => false,
+                     ]
+                 ],
+                 'toolbar' => [],
+                 'panel' => [
+                     'type' => GridView::TYPE_PRIMARY,
+                     // 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+                     'footer' => false
+                 ],
+                 'columns' => [
+                     ['class' => 'kartik\grid\SerialColumn'],
+                     [
+                         'class' => 'kartik\grid\CheckboxColumn',
+                     ],
+                     [
+                         'attribute' => 'invoice_number',
+                         'label' => 'BI #',
+                         'hAlign' => 'center',
+                     ],
+                     [
+                         'attribute' => 'billing_date',
+                         'hAlign' => 'center',
+                     ],
+                     [
+                         'attribute' => 'due_date',
+                         'hAlign' => 'center',
+                     ],
+                     [
+                         'attribute' => 'amount',
+                         'hAlign' => 'right',
+                         'contentOptions' => ['class' => 'bi-amount'],
+                         'label' => 'Amount',
+                         'value' => function($model) {
+                             return number_format($model->amount, 2);
+                         }
+                     ],
+                 ],
+             ]);
+             ?>
         </div>
     </div>
     <div class="row">

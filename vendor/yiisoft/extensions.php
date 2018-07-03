@@ -228,15 +228,6 @@ return array (
       '@kartik/dialog' => $vendorDir . '/kartik-v/yii2-dialog',
     ),
   ),
-  'kartik-v/yii2-sortable' => 
-  array (
-    'name' => 'kartik-v/yii2-sortable',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@kartik/sortable' => $vendorDir . '/kartik-v/yii2-sortable',
-    ),
-  ),
   'kartik-v/yii2-grid' => 
   array (
     'name' => 'kartik-v/yii2-grid',
@@ -416,15 +407,6 @@ return array (
     'alias' => 
     array (
       '@machour/yii2/notifications' => $vendorDir . '/machour/yii2-notifications',
-    ),
-  ),
-  'kartik-v/yii2-datecontrol' => 
-  array (
-    'name' => 'kartik-v/yii2-datecontrol',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@kartik/datecontrol' => $vendorDir . '/kartik-v/yii2-datecontrol',
     ),
   ),
   'miserenkov/yii2-sms' => 
@@ -709,15 +691,6 @@ return array (
       '@reportico/reportico' => $vendorDir . '/reportico/yii2-reportico',
     ),
   ),
-  'yii2assets/yii2-pdfjs' => 
-  array (
-    'name' => 'yii2assets/yii2-pdfjs',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@yii2assets/pdfjs' => $vendorDir . '/yii2assets/yii2-pdfjs',
-    ),
-  ),
   'kartik-v/yii2-editable' => 
   array (
     'name' => 'kartik-v/yii2-editable',
@@ -736,10 +709,19 @@ return array (
       '@kartik/sortinput' => $vendorDir . '/kartik-v/yii2-sortable-input',
     ),
   ),
+  'yii2assets/yii2-pdfjs' => 
+  array (
+    'name' => 'yii2assets/yii2-pdfjs',
+    'version' => '1.0.2.0',
+    'alias' => 
+    array (
+      '@yii2assets/pdfjs' => $vendorDir . '/yii2assets/yii2-pdfjs',
+    ),
+  ),
   'linslin/yii2-curl' => 
   array (
     'name' => 'linslin/yii2-curl',
-    'version' => '9999999-dev',
+    'version' => '1.2.1.0',
     'alias' => 
     array (
       '@linslin/yii2/curl' => $vendorDir . '/linslin/yii2-curl',
@@ -748,7 +730,7 @@ return array (
   'skeeks/yii2-curl' => 
   array (
     'name' => 'skeeks/yii2-curl',
-    'version' => '9999999-dev',
+    'version' => '1.1.0.0',
     'alias' => 
     array (
       '@skeeks/yii2/curl' => $vendorDir . '/skeeks/yii2-curl',
@@ -757,7 +739,7 @@ return array (
   'kartik-v/yii2-checkbox-x' => 
   array (
     'name' => 'kartik-v/yii2-checkbox-x',
-    'version' => '9999999-dev',
+    'version' => '1.0.3.0',
     'alias' => 
     array (
       '@kartik/checkbox' => $vendorDir . '/kartik-v/yii2-checkbox-x',
@@ -766,10 +748,28 @@ return array (
   'kartik-v/yii2-money' => 
   array (
     'name' => 'kartik-v/yii2-money',
-    'version' => '9999999-dev',
+    'version' => '1.2.2.0',
     'alias' => 
     array (
       '@kartik/money' => $vendorDir . '/kartik-v/yii2-money',
+    ),
+  ),
+  'kartik-v/yii2-sortable' => 
+  array (
+    'name' => 'kartik-v/yii2-sortable',
+    'version' => '1.2.0.0',
+    'alias' => 
+    array (
+      '@kartik/sortable' => $vendorDir . '/kartik-v/yii2-sortable',
+    ),
+  ),
+  'yii2tech/spreadsheet' => 
+  array (
+    'name' => 'yii2tech/spreadsheet',
+    'version' => '1.0.2.0',
+    'alias' => 
+    array (
+      '@yii2tech/spreadsheet' => $vendorDir . '/yii2tech/spreadsheet/src',
     ),
   ),
 );
