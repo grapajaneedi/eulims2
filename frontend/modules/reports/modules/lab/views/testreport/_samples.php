@@ -5,7 +5,7 @@ use yii\helpers\Html;
 
     $gridColumn = [
         [
-          'attribute'=>'sample_id',
+          // 'attribute'=>'sample_id',
           'class' => '\kartik\grid\CheckboxColumn',
         ],
         [
@@ -39,8 +39,8 @@ use yii\helpers\Html;
 	   
 	<?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'id'=>'grid',
         'pjax'=>true,
+        'id'=>'samplegrid',
         'containerOptions'=> ["style"  => 'overflow:auto;height:300px'],
         'pjaxSettings' => [
             'options' => [
@@ -67,3 +67,5 @@ use yii\helpers\Html;
              
          ],*/
     ]); ?>
+
+    

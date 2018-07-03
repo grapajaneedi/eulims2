@@ -15,7 +15,7 @@ use common\models\lab\Testreportconfig;
 use common\models\lab\Lab;
 use common\models\lab\TestreportSample;
 use common\models\lab\Batchtestreport;
-
+use common\components\MyPDF;
 
 /**
  * TestreportController implements the CRUD actions for Testreport model.
@@ -73,6 +73,59 @@ class TestreportController extends Controller
         ]);
     }
 
+    public function actionReissue($id){
+        //retrieve the testreport record
+        $testreport = Testreport::findOne($id);
+
+        //issue new record of the test report with "-R" as suffix
+        $newtestreport = new Testreport();
+        $newtestreport->attributes = $testreport->attributes;
+        //get the testconfig
+        $tr_config =  Testreportconfig::find()->where(['lab_id'=>$testreport->lab_id,'config_year'=>date('Y')])->one();
+
+         //check for config if the lab is active
+        // $tr_config = Testreportconfig::find()->where(['lab_id'=>$request->lab_id,'config_year'=>date('Y')])->one();
+        if(!$tr_config){
+            // $tr_config->setTestReportSeries();
+            Testreportconfig::setTestReportSeries2($testreport->lab_id);
+            $tr_config = Testreportconfig::find()->where(['lab_id'=>$testreport->lab_id,'config_year'=>date('Y')])->one();
+        }
+
+        //retrieve the lab info using the $tr_config
+        $lab = Lab::findOne($tr_config->lab_id);
+
+        //update the testreport number
+        $newtestreport->report_num= date('mdY').'-'.$lab->labcode.'-'.$tr_config->getTestReportSeries()."-R";
+        //$newtestreport->report_num = $newtestreport->report_num."-R";
+        $newtestreport->testreport_id = ""; //to be safe
+        $newtestreport->report_date = date('Y-m-d', strtotime(date("Y-m-d")));
+
+        //set the prev and new ids
+        $newtestreport->previous_id=$testreport->testreport_id;
+       
+        if($newtestreport->save()){
+            // $testreport->new_id=$newtestreport->testreport_id;
+            $testreport->reissue=1;
+            $testreport->save(false);
+            $tr_config->setTestReportSeries();
+            //create new records of testreportsamples too
+            $trsamples = TestreportSample::find()->where(['testreport_id'=>$testreport->testreport_id])->all();
+
+            foreach ($trsamples as $trsample) {
+                $newtrsample= new TestreportSample();
+                $newtrsample->attributes= $trsample->attributes;
+                $newtrsample->testreport_sample_id=""; //tobe safe
+                $newtrsample->testreport_id =$newtestreport->testreport_id;
+                $newtrsample->save();
+            }
+            return $this->redirect(['view','id'=>$newtestreport->testreport_id]);
+        }
+
+        //reused the ids of the samples
+
+        //redirect to action view
+    }
+
     /**
      * Creates a new Testreport model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -104,6 +157,7 @@ class TestreportController extends Controller
 
             //check if multiple
             if($model->lab_id){
+                // var_dump($_POST); exit();
                 //if multiple //code here
 
                 $Batchtestreport = New Batchtestreport();
@@ -112,7 +166,7 @@ class TestreportController extends Controller
                 $tsr_ids = "";
                 $rlabid = $request->lab_id;
                 //fetch the sample ids involve
-                $sampleids =$_POST['Sample'];
+                $sampleids =$_POST['selection'];
                 foreach ($sampleids as $key => $value) {
                     //make the record of the testreport
                     $newtsreport = New Testreport();
@@ -125,18 +179,24 @@ class TestreportController extends Controller
                         $tr_config->setTestReportSeries();
                         $trsample = new TestreportSample();
                         $trsample->testreport_id=$newtsreport->testreport_id;
-                        $trsample->sample_id=$value['sample_id'];
+                        // $trsample->sample_id=$value['sample_id'];
+                        $trsample->sample_id=$value;
                         $trsample->save();
                     }
                  }
                  $Batchtestreport->testreport_ids=substr($tsr_ids, 1);
                  $Batchtestreport->save();
+                Yii::$app->session->setFlash('success', 'Testreport Successfully Save!');
                  return $this->redirect(['viewmultiple', 'id' => $Batchtestreport->batchtestreport_id]);
             }else{
                 //if not multiple //code here
     
                 //update lab id on model
                 $model->lab_id=$request->lab_id;
+
+                //retrieve lab code here
+
+                //
 
                 //update the testreport number
                 $model->report_num= date('mdY').'-'.$lab->labcode.'-'.$tr_config->getTestReportSeries();
@@ -147,15 +207,16 @@ class TestreportController extends Controller
                     //update the config to increment the series number
                     $tr_config->setTestReportSeries();
                     //save the sample IDS for samples involve
-                    $sampleids =$_POST['Sample'];
+                    $sampleids =$_POST['selection'];
                     foreach ($sampleids as $key => $value) {
                         $trsample = new TestreportSample();
                         $trsample->testreport_id=$model->testreport_id;
-                        $trsample->sample_id=$value['sample_id'];
+                        $trsample->sample_id=$value;
                         $trsample->save();
                      }
                 }
             }
+                Yii::$app->session->setFlash('success', 'Testreport Successfully Save!');
 
             return $this->redirect(['view', 'id' => $model->testreport_id]);
         }
@@ -245,5 +306,11 @@ class TestreportController extends Controller
             return $this->render('_samples', ['dataProvider'=>$dataProvider]);
         }
 
+    }
+
+    public function actionPrintview(){
+            $content= $this->renderPartial("_printview");
+            $PDF=new MyPDF();
+            $PDF->renderPDF($content);
     }
 }

@@ -16,12 +16,10 @@ use Yii;
  * @property string $release_date
  * @property integer $reissue
  * @property integer $previous_id
- * @property integer $new_id
  *
  * @property Lab $lab
  * @property Request $request
  * @property Status $status
- * @property Testreport $new
  * @property Testreport[] $testreports
  * @property TestreportSample[] $testreportSamples
  */
@@ -50,13 +48,13 @@ class Testreport extends \yii\db\ActiveRecord
     {
         return [
             [['request_id', 'report_date'], 'required'],
-            [['request_id', 'lab_id', 'status_id', 'reissue', 'previous_id', 'new_id'], 'integer'],
+            [['request_id', 'lab_id', 'status_id', 'reissue', 'previous_id'], 'integer'],
             [['report_date', 'release_date'], 'safe'],
             [['report_num'], 'string', 'max' => 50],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
             [['request_id'], 'exist', 'skipOnError' => true, 'targetClass' => Request::className(), 'targetAttribute' => ['request_id' => 'request_id']],
             [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => Status::className(), 'targetAttribute' => ['status_id' => 'status_id']],
-            [['new_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testreport::className(), 'targetAttribute' => ['new_id' => 'previous_id']],
+             [['previous_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testreport::className(), 'targetAttribute' => ['previous_id' => 'testreport_id']],
         ];
     }
 
@@ -75,7 +73,6 @@ class Testreport extends \yii\db\ActiveRecord
             'release_date' => 'Release Date',
             'reissue' => 'Reissue',
             'previous_id' => 'Previous ID',
-            'new_id' => 'New ID',
         ];
     }
 
@@ -106,9 +103,9 @@ class Testreport extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getNew()
+    public function getPrevious()
     {
-        return $this->hasOne(Testreport::className(), ['previous_id' => 'new_id']);
+       return $this->hasOne(Testreport::className(), ['testreport_id' => 'previous_id']);
     }
 
     /**
@@ -116,7 +113,7 @@ class Testreport extends \yii\db\ActiveRecord
      */
     public function getTestreports()
     {
-        return $this->hasMany(Testreport::className(), ['new_id' => 'previous_id']);
+       return $this->hasMany(Testreport::className(), ['previous_id' => 'testreport_id']);
     }
 
     /**

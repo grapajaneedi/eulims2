@@ -18,13 +18,28 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="testreport-view">
     <div class="form-row">
         <div class="container table-responsive">
-            <button class="btn btn-warning pull-right"><i class="glyphicon glyphicon-check"></i> Reissue Report</button>
              <?php
+             if($model->previous_id){
+                $t = 'view?id='.$model->previous_id;
+            echo Html::a('<i class="glyphicon glyphicon-arrow-left"></i> Go to Old Report',$t,['target'=>'_blank','class'=>'btn btn-success pull-right']);
+
+             }else{
+                $t = 'reissue?id='.$model->testreport_id;
+            echo Html::a('<i class="glyphicon glyphicon-check"></i> Reissue',$t,['target'=>'_blank','class'=>'btn btn-danger pull-right','data' => [
+                   'confirm' => 'Are you sure you want to Reissue this Report ?',
+                ]]);
+             }
+
+
+
+            
+
+
             //checks if the testreport is from a batch generated reports
-            $chkbatch = Batchtestreport::find()->where('request_id')->one();
+            $chkbatch = Batchtestreport::find()->where(['request_id'=>$model->request_id])->one();
             if($chkbatch){
                 $t = 'viewmultiple?id='.$chkbatch->batchtestreport_id;
-                echo Html::a('<i class="glyphicon glyphicon-check"></i> View Batch',$t,['target'=>'_blank','class'=>'btn btn-primary pull-right']);
+                echo Html::a('<i class="glyphicon glyphicon-arrow-up"></i> View Batch',$t,['target'=>'_blank','class'=>'btn btn-primary pull-right']);
             }
             ?>
             <!-- <button class="btn btn-primary pull-right"><i class="glyphicon glyphicon-file"></i> View Batch</button> -->

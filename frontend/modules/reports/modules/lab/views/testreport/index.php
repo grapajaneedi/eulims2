@@ -4,6 +4,9 @@ use yii\helpers\Html;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 use yii\grid\ActionColumn;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
+use common\models\lab\Lab;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\TestreportSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -18,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
 
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Test Report', ['value'=>'/lab/testreport/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Test Report"),'name'=>'Create New Test Report']); ?>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Test Report', ['value'=>'/reports/lab/testreport/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Test Report"),'name'=>'Create New Test Report']); ?>
     </p>
 
     <div class="table-responsive">
@@ -33,9 +36,27 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'testreport_id',
-            'request_id',
-            'lab_id',
+            // 'testreport_id',
+            // 'request_id',
+            // 'lab_id',
+            // 'lab.labname',
+            [
+                'attribute'=>'lab_id',
+                'value'=>'lab.labname',
+                'filter'=>Select2::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'lab_id',
+                    'data' => ArrayHelper::map(Lab::find()->all(), 'lab_id', 'labname'),
+                    'theme' => Select2::THEME_BOOTSTRAP,
+                    'hideSearch' => false,
+                    'options' => [
+                        'placeholder' => 'Select a Laboratory',
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                    ],
+                ]),
+            ],
             'report_num',
             'report_date',
             //'status_id',
@@ -44,7 +65,9 @@ $this->params['breadcrumbs'][] = $this->title;
             //'previous_id',
             //'new_id',
 
-            ['class' => 'kartik\grid\ActionColumn'],
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=> '{view}',
+            ],
         ],
     ]); ?>
     </div>

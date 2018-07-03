@@ -18,7 +18,7 @@ class TestreportSearch extends Testreport
     public function rules()
     {
         return [
-            [['testreport_id', 'request_id', 'lab_id', 'status_id', 'reissue', 'previous_id', 'new_id'], 'integer'],
+            [['testreport_id', 'request_id', 'lab_id', 'status_id', 'reissue', 'previous_id'], 'integer'],
             [['report_num', 'report_date', 'release_date'], 'safe'],
         ];
     }
@@ -67,7 +67,6 @@ class TestreportSearch extends Testreport
             'release_date' => $this->release_date,
             'reissue' => $this->reissue,
             'previous_id' => $this->previous_id,
-            'new_id' => $this->new_id,
         ]);
 
         $query->andFilterWhere(['like', 'report_num', $this->report_num]);

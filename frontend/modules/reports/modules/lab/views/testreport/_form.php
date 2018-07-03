@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\web\View;
 use common\components\Functions;
 use kartik\widgets\DatePicker;
 use kartik\widgets\SwitchInput;
@@ -22,7 +23,6 @@ use kartik\widgets\SwitchInput;
     echo $func->GetRequestList($form,$model,false,"Request");
     ?>
 
-
     <!-- <?= $form->field($model, 'report_num')->textInput(['maxlength' => true]) ?> -->
 
     <?php
@@ -34,7 +34,6 @@ use kartik\widgets\SwitchInput;
              'format' => 'yyyy-mm-dd',
              'todayHighlight' => true,
              'autoclose'=>true,
-             
          ]
      ]);
      ?>
@@ -62,8 +61,6 @@ use kartik\widgets\SwitchInput;
 
     <!-- <?= $form->field($model, 'previous_id')->textInput() ?> -->
 
-    <!-- <?= $form->field($model, 'new_id')->textInput() ?> -->
-
     <div class="row-form">
          <div id="prog" style="position:relative;display:none;">
             <img style="display:block; margin:0 auto;" src="<?php echo  $GLOBALS['frontend_base_uri']; ?>/images/ajax-loader.gif">
@@ -75,13 +72,17 @@ use kartik\widgets\SwitchInput;
         </div> 
     </div>
 
-    <div class="form-group pull-right">
-           <?php if(Yii::$app->request->isAjax){ ?>
-               <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-           <?php } ?>
-
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-     </div>
+     <div class="form-group pull-right">
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success mybtn' : 'btn btn-primary mybtn',
+            'id'=>'createTestReport',
+            'data' => [
+                'confirm' => 'Are you sure you want to generate this Testreport ?',
+            ]]) ?>
+        <?php if(Yii::$app->request->isAjax){ ?>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <?php } ?>
+        
+    </div>
 
     <?php ActiveForm::end(); ?>
 
@@ -98,7 +99,7 @@ use kartik\widgets\SwitchInput;
             //data: {
             //    customer_id:customer_id,
            // },
-            url: '/lab/testreport/getlistsamples?id='+$(this).val(),
+            url: '/reports/lab/testreport/getlistsamples?id='+$(this).val(),
             dataType: 'html',
             success: function ( response ) {
 
@@ -121,4 +122,15 @@ use kartik\widgets\SwitchInput;
     });
 
      $("#testreport-report_date").datepicker().datepicker("setDate", new Date());
+</script>
+
+
+<script type="text/javascript">
+    
+    $("#createTestReport").click(function(){
+        var checked=$("#samplegrid").yiiGridView("getSelectedRows");
+        var count=checked.length;
+        if(count<1){alert("Please select sample(s).");return false;}
+    });
+
 </script>

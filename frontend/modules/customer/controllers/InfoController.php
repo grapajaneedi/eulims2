@@ -15,7 +15,6 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
-
 /**
  * InfoController implements the CRUD actions for Customer model.
  */
@@ -81,8 +80,10 @@ class InfoController extends Controller
     public function actionCreate()
     {
         $model = new Customer();
-        $model->rstl_id=$GLOBALS['rstl_id'];
+        $model->rstl_id=$GLOBALS['rstl_id']; 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->customer_code=$model->rstl_id."-".$model->customer_id;
+            $model->save();
             $session = Yii::$app->session;
             $session->set('savepopup',"executed");
             // return $this->redirect(['view', 'id' => $model->customer_id]);
@@ -148,8 +149,6 @@ class InfoController extends Controller
     }
 
     public function actionGetprovince(){
-        // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
