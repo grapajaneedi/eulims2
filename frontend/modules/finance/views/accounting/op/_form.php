@@ -74,30 +74,17 @@ $paymentlist='';
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'depends'=>['op-customer_id'],
-                        'url'=>Url::to(['/finance/op/listpaymentmode?customerid='.$model->customer_id]),
+                        'url'=>Url::to(['/finance/accounting/listpaymentmode?customerid='.$model->customer_id]),
                         
                     ]
                 ])
                 ?>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12">  
-                 <div id="prog" style="position:relative;display:none;">
-                    <img style="display:block; margin:0 auto;" src="<?php echo  $GLOBALS['frontend_base_uri']; ?>/images/ajax-loader.gif">
-                     </div>
-                
-
-                <div id="requests" style="padding:0px!important;">    	
-                   <?php //echo $this->renderAjax('_request', ['dataProvider'=>$dataProvider]); ?>
-                </div> 
-
-            </div>
-        </div> 
-		 <?php echo $form->field($model, 'RequestIds')->hiddenInput()->label(false) ?>
+        <?php echo $form->field($model, 'RequestIds')->hiddenInput(['value'=>1])->label(false) ?>
         <div class="row">
             <div class="col-lg-12"> 
-                <?= $form->field($model, 'purpose')->textarea(['maxlength' => true,'disabled' =>true]); ?>
+                <?= $form->field($model, 'purpose')->textarea(['maxlength' => true]); ?>
             </div>
         </div>
 
@@ -105,7 +92,7 @@ $paymentlist='';
         
         <div class="form-group pull-right">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
-                'id'=>'createOP','disabled'=>true]) ?>
+                'id'=>'createOP']) ?>
             <?php if(Yii::$app->request->isAjax){ ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             <?php } ?>
@@ -128,7 +115,7 @@ $paymentlist='';
         $('#requests').hide();
          jQuery.ajax( {
             type: 'POST',
-            url: '/finance/op/check-customer-wallet?customerid='+$(this).val(),
+            url: '/finance/accounting/check-customer-wallet?customerid='+$(this).val(),
             dataType: 'html',
             success: function ( response ) {
                $('#wallet').val(response);
@@ -137,40 +124,18 @@ $paymentlist='';
                 alert( thrownError );
             }
         });
-        jQuery.ajax( {
-            type: 'POST',
-            //data: {
-            //    customer_id:customer_id,
-           // },
-            url: '/finance/op/getlistrequest?id='+$(this).val(),
-            dataType: 'html',
-            success: function ( response ) {
-
-               setTimeout(function(){
-               $('#prog').hide();
-                 $('#requests').show();
-               $('#requests').html(response);
-                   }, 0);
-
-
-            },
-            error: function ( xhr, ajaxOptions, thrownError ) {
-                alert( thrownError );
-            }
-        });
         
-       //alert(paymentmode);
         $(this).select2('open');
       //  $(this).one('select-focus',select2Focus);
       $(this).attr('tabIndex',1);
-       checkpayment_mode();
+       //checkpayment_mode();
     });
     
     $('#op-payment_mode_id').on('change',function(e) {
         e.preventDefault();
-        checkpayment_mode();
+        //checkpayment_mode();
     });
-    function checkpayment_mode(){
+  /*  function checkpayment_mode(){
         var payment_mode=$('#op-payment_mode_id').val();
         if(payment_mode == 4){
             $('#op-purpose').prop('disabled', true);
@@ -180,5 +145,5 @@ $paymentlist='';
             $('#op-purpose').prop('disabled', false);
             $('#createOP').prop('disabled', false);
         }    
-    }
+    } */
 </script>

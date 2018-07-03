@@ -74,7 +74,7 @@ $paymentlist='';
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'depends'=>['op-customer_id'],
-                        'url'=>Url::to(['/finance/op/listpaymentmode?customerid='.$model->customer_id]),
+                        'url'=>Url::to(['/finance/accounting/listpaymentmode?customerid='.$model->customer_id]),
                         
                     ]
                 ])
