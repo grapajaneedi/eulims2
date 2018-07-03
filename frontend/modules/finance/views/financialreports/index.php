@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use yii\widgets\ActiveForm;
+use common\components\Functions;
+use yii2mod\alert\Alert;
 
 /* @var $this yii\web\View */
 
@@ -28,7 +30,27 @@ $( document ).ready(function()
             //   window.location.href = siteNew;
             if($('#selMonth :selected').val() == '' || $('#selYear :selected').val() == '')
             {
-                alert('Year/Month not supplied');
+            //   CrudAlert('Year/Month not supplied','WARNING',true,true,false); // alert('Year/Month not supplied');
+               <?php
+               Alert::widget([
+            'options' => [
+                'showCloseButton' => true,
+                'showCancelButton' => true,
+                'title' => 'Year/Month not supplied',
+                'type' => 'WARNING',
+                //'timer' => 1000
+            ],
+            'callback' => new \yii\web\JsExpression("
+                        function () {
+                        $('.sweet-overlay').css('display','none');
+                        $('.sweet-alert').removeClass( \"showSweetAlert \" );
+                        $('.sweet-alert').removeClass( \"visible \" );
+                        $('.sweet-alert').addClass( \"hideSweetAlert \" );
+                        $('.sweet-alert').css('display','none');
+                        $('body').removeClass( \"stop-scrolling\" );
+                        }"),
+        ]);
+               ?>
             }
             else
             {
@@ -47,6 +69,8 @@ function loadUrl(obj)
        if($('#selMonth :selected').val() == '' || $('#selYear :selected').val() == '')
             {
                 alert('Year/Month not supplied');
+            //    CrudAlert('Year/Month not supplied','WARNING',true,true,false);
+            
             }
             else
             {
@@ -54,7 +78,7 @@ function loadUrl(obj)
              switch(obj)
              {
                  case 'collection':
-                     siteNew = '/finance/financialreports/collectionsummary?year=' + $('#selYear :selected').text() + '&month='+ $('#selMonth :selected').val();
+                     siteNew = '/finance/financialreports/collectionreport?iyear=' + $('#selYear :selected').text() + '&imonth='+ $('#selMonth :selected').val();
                      break;
                  case 'summary':
                      siteNew = '/finance/financialreports/collectionsummary?iyear=' + $('#selYear :selected').text() + '&imonth='+ $('#selMonth :selected').val();
@@ -130,9 +154,10 @@ $form = ActiveForm::begin(
         
         <div class="row">
            
-            <div class="col-md-4"><a href="#" id="el"><img class="img-responsive center-block" src="/images/collectionreportsquare.png" style="height:150px"/></a></div>
-            <div class="col-md-4"><a href="#" onclick="loadUrl('summary')"><img class="imgHover img-responsive center-block" src="/images/summaryreportsquare.png" style="height:150px"/></a></div>
-            <div class="col-md-4"><a href="#" onclick="loadUrl('receipt')"><img class="imgHover img-responsive center-block" src="/images/cashreceiptsquare.png" style="height:150px"/></a></div>
+         
+              <div class="col-md-4"><a href="#" onclick="loadUrl('collection')"><img class="imgHover img-responsive center-block" src="/images/collectionreportsquare.png" style="height:150px"/></a></div>
+              <div class="col-md-4"><a href="#" onclick="loadUrl('summary')"><img class="imgHover img-responsive center-block" src="/images/summaryreportsquare.png" style="height:150px"/></a></div>
+              <div class="col-md-4"><a href="#" onclick="loadUrl('receipt')"><img class="imgHover img-responsive center-block" src="/images/cashreceiptsquare.png" style="height:150px"/></a></div>
         </div>
 
 

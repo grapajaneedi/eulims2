@@ -35,6 +35,7 @@ $js=<<<SCRIPT
         $("#ext_billing-amount-disp").maskMoney('mask', Total);
     }
     $("#ext_billing-customer_id").change(function(){
+        $("#OPGridContainer").html("<div style='text-align:center;'><img src='/images/img-loader64.gif' alt=''></div>"); 
         $.get("/finance/ar/getopgrid", {
             id: this.value,
         }, function(result){

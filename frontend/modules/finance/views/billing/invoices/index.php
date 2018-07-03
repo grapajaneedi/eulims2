@@ -94,12 +94,12 @@ $rstlID=$GLOBALS['rstl_id'];
                'label'=>'Status', 
                'format'=>'raw',
                'value'=>function($model){
-                    if($model->receipt_id){
-                       return "<button class='btn btn-block btn-success'>Paid</button>"; 
+                    //if($model->receipt_id){
+                    //   return "<button class='btn btn-block btn-success'>Paid</button>"; 
                       // return "<button class='badge ".$Obj[0]['class']." legend-font'><span class=".$Obj[0]['icon']."></span> $Obj[0]['status']</span>";
-                    }else{
+                    //}else{
                        return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
-                    }
+                    //}
                    //
                 }
                

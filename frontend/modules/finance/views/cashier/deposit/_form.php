@@ -10,6 +10,7 @@ use common\components\Functions;
 use common\models\finance\Orseries; 
 use common\models\finance\DepositType; 
 use kartik\widgets\DepDrop;
+use kartik\money\MaskMoney;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Check */
 /* @var $form yii\widgets\ActiveForm */
@@ -32,8 +33,7 @@ use kartik\widgets\DepDrop;
                 echo $form->field($model, 'deposit_type_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(DepositType::find()->all(), 'deposit_type_id', 'deposit_type'),
                 'theme' => Select2::THEME_BOOTSTRAP,
-                'options'=>['id'=>'deposit-deposit_type_id'],
-             //   'options' => ['placeholder' => 'Please Select ...'],
+                'options'=>['id'=>'deposit-deposit_type_id','placeholder' => 'Select Deposit type'],
                 'pluginOptions' => [
                   'allowClear' => true
                 ],
@@ -42,19 +42,9 @@ use kartik\widgets\DepDrop;
             </div>   
             <div class="col-sm-6">
               <?php 
-              
-//              echo $form->field($model, 'or_series_id')->widget(Select2::classname(), [
-//                'data' => ArrayHelper::map(Orseries::find()->all(), 'or_series_id', 'or_series_name'),
-//                'theme' => Select2::THEME_BOOTSTRAP,
-//                'options' => ['placeholder' => 'Please Select ...'],
-//                'pluginOptions' => [
-//                  'allowClear' => true
-//                ],
-//                ])->label('Series');
 
                 echo $form->field($model, 'or_series_id')->widget(DepDrop::classname(), [
                     'type'=>DepDrop::TYPE_SELECT2,
-                   // 'data'=>$sampletype,
                     'options'=>['id'=>'deposit-or_series_id'],
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
@@ -76,7 +66,7 @@ use kartik\widgets\DepDrop;
                         'options'=>['id'=>'deposit-start_or'],
                         'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                         'pluginOptions'=>[
-                            'depends'=>['deposit-or_series_id','deposit-deposit_type_id'],
+                            'depends'=>['deposit-deposit_type_id','deposit-or_series_id'],
                             'placeholder'=>'Select Start O.R',
                             'url'=>Url::to(['/finance/cashier/start-or']),
                             'loadingText' => 'Loading...',
@@ -122,7 +112,18 @@ use kartik\widgets\DepDrop;
                 ?>
             </div>
             <div class="col-sm-6">
-                <?php echo $form->field($model, 'amount')->textInput(['readonly' => true]) ?>
+                  <?php
+                    echo $form->field($model, 'amount')->widget(MaskMoney::classname(), [
+                         'readonly'=>true,
+                         'options'=>[
+                             'style'=>'text-align: right'
+                         ],
+                         'pluginOptions' => [
+                            'prefix' => '₱ ',
+                            'allowNegative' => false,
+                         ]
+                        ])->label('Amount');
+                    ?>
             </div>  
         </div>
         <div class="form-group pull-right">
@@ -203,8 +204,9 @@ use kartik\widgets\DepDrop;
             dataType: 'html',
             success: function(data) {
                 var tot=parseFloat(data);
-                var total=CurrencyFormat(tot,2);
-                $('#deposit-amount').val(total);
+                $("#deposit-amount-disp").val(tot);
+                $("#deposit-amount").val(tot);
+                $("#deposit-amount-disp").maskMoney('mask', tot);
             }
         });
     }

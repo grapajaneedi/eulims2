@@ -57,12 +57,13 @@ $Buttontemplate ='{view}{update}';
                     'groupedRow'=>true,                    // move grouped column to a single grouped row
                     'groupOddCssClass'=>'kv-grouped-row',  // configure odd group cell css class
                     'groupEvenCssClass'=>'kv-grouped-row', // configure even group cell css class
-                ],
-            [
-                'attribute' =>  'natureofcollection',
-                'header' => 'Collection Type',
-                'subGroupOf'=>0
-                ]
-            ],
+                    ],
+                
+                    [
+                        'attribute' =>  'natureofcollection',
+                        'header' => 'Collection Type',
+                        'subGroupOf'=>0
+                        ]
+                    ],
     ]); ?>
 </div>

@@ -5,12 +5,12 @@ namespace common\models\finance;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\finance\Billing;
+use common\models\finance\BillingReceipt;
 
 /**
- * BillingSearch represents the model behind the search form about `common\models\finance\Billing`.
+ * BillingReceiptSearch represents the model behind the search form about `common\models\finance\BillingReceipt`.
  */
-class BillingSearch extends Billing
+class BillingReceiptSearch extends BillingReceipt
 {
     /**
      * @inheritdoc
@@ -18,9 +18,9 @@ class BillingSearch extends Billing
     public function rules()
     {
         return [
-            [['billing_id', 'user_id', 'customer_id'], 'integer'],
-            [['invoice_number', 'soa_number', 'billing_date', 'due_date'], 'safe'],
-            [['amount'], 'number'],
+            [['billing_receipt_id', 'customer_id', 'user_id', 'billing_id', 'receipt_id'], 'integer'],
+            [['soa_date', 'soa_number'], 'safe'],
+            [['previous_balance', 'current_amount'], 'number'],
         ];
     }
 
@@ -42,7 +42,7 @@ class BillingSearch extends Billing
      */
     public function search($params)
     {
-        $query = Billing::find();
+        $query = BillingReceipt::find();
 
         // add conditions that should always apply here
 
@@ -60,16 +60,17 @@ class BillingSearch extends Billing
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'billing_id' => $this->billing_id,
-            'user_id' => $this->user_id,
+            'billing_receipt_id' => $this->billing_receipt_id,
+            'soa_date' => $this->soa_date,
             'customer_id' => $this->customer_id,
-            'billing_date' => $this->billing_date,
-            'due_date' => $this->due_date,
-            'amount' => $this->amount,
+            'user_id' => $this->user_id,
+            'billing_id' => $this->billing_id,
+            'receipt_id' => $this->receipt_id,
+            'previous_balance' => $this->previous_balance,
+            'current_amount' => $this->current_amount,
         ]);
 
-        $query->andFilterWhere(['like', 'invoice_number', $this->invoice_number])
-            ->andFilterWhere(['like', 'soa_number', $this->soa_number]);
+        $query->andFilterWhere(['like', 'soa_number', $this->soa_number]);
 
         return $dataProvider;
     }

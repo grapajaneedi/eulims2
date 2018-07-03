@@ -47,7 +47,7 @@ class Deposit extends \yii\db\ActiveRecord
             [['rstl_id', 'or_series_id', 'start_or', 'end_or', 'deposit_date', 'amount'], 'required'],
             [['rstl_id', 'or_series_id', 'start_or', 'end_or', 'deposit_type_id'], 'integer'],
             [['deposit_date'], 'safe'],
-            [['amount'], 'number'],
+            [['amount'], 'safe'],
             [['deposit_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => DepositType::className(), 'targetAttribute' => ['deposit_type_id' => 'deposit_type_id']],
             [['or_series_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orseries::className(), 'targetAttribute' => ['or_series_id' => 'or_series_id']],
         ];
