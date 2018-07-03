@@ -39,13 +39,13 @@ $this->registerJsFile("/js/services/services.js");
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'test_id',
+           // 'test_id',
             // 'rstl_id',
             'testname',
-            // 'method',
+            'method',
             'payment_references',
             'fee',
-            // 'duration',
+            'duration',
             // 'test_category_id',
             // 'sample_type_id',
             // 'lab_id',
@@ -84,20 +84,30 @@ $this->registerJsFile("/js/services/services.js");
     $session = Yii::$app->session;
     if ($session->isActive) {
         $session->open();
-        if (isset($session['deletepopup'])) {
-            $func->CrudAlert("Deleted Successfully","WARNING");
-            unset($session['deletepopup']);
+        if (isset($session['deletemessage'])) {
+            $sweetalert->CrudAlert("Successfully Deleted","WARNING",true);
+            unset($session['deletemessage']);
             $session->close();
         }
-        if (isset($session['updatepopup'])) {
-            $func->CrudAlert("Updated Successfully");
-            unset($session['updatepopup']);
+        if (isset($session['updatemessage'])) {
+            $sweetalert->CrudAlert("Successfully Updated","SUCCESS",true);
+            unset($session['updatemessage']);
             $session->close();
         }
-        if (isset($session['savepopup'])) {
-            $func->CrudAlert("Saved Successfully","SUCCESS",true);
-            unset($session['savepopup']);
+        if (isset($session['savemessage'])) {
+            $sweetalert->CrudAlert("Successfully Saved","SUCCESS",true);
+            unset($session['savemessage']);
+            $session->close();
+        }
+        if (isset($session['cancelmessage'])) {
+            $sweetalert->CrudAlert("Successfully Cancelled","WARNING",true);
+            unset($session['cancelmessage']);
+            $session->close();
+        }
+        if (isset($session['requestmessage'])) {
+            $sweetalert->CrudAlert("Successfully Generated Reference Number and Sample Code","WARNING",true);
+            unset($session['requestmessage']);
             $session->close();
         }
     }
-    ?>
+?>

@@ -68,14 +68,14 @@ class Test extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'test_id' => 'Test ID',
+            'test_id' => 'Test',
             'rstl_id' => 'Rstl ID',
             'testname' => 'Test name',
             'payment_references' => 'References',
             'fee' => 'Fee',
             'duration' => 'Duration',
-            'testcategory_id' => 'Testcategory ID',
-            'sample_type_id' => 'Sample Type ID',
+            'testcategory_id' => 'Test Category',
+            'sample_type_id' => 'Sample Type',
             'lab_id' => 'Lab ID',
         ];
     }
