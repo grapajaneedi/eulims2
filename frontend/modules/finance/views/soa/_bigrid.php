@@ -16,7 +16,7 @@ use kartik\grid\GridView;
 $js=<<<SCRIPT
     function getKeys(){
         var dkeys=$("#BIGrid").yiiGridView("getSelectedRows");
-        $("#soa-bi_ids").val(dkeys);
+        $("#soaform-bi_ids").val(dkeys);
         var SearchFieldsTable = $(".kv-grid-table>tbody");
         var trows = SearchFieldsTable[0].rows;
         var Total=0.00;
@@ -30,9 +30,15 @@ $js=<<<SCRIPT
                 }
             }
         }); 
-        $("#soa-current_amount-disp").val(Total);
-        $("#soa-current_amount").val(Total);
-        $("#soa-current_amount-disp").maskMoney('mask', Total);
+        var prev_amount=$("#soaform-previous_balance").val();
+        $("#soaform-current_amount-disp").val(Total);
+        $("#soaform-current_amount").val(Total);
+        $("#soaform-current_amount-disp").maskMoney('mask', Total);
+        var total_amt=parseFloat(parseFloat(prev_amount)+Total);
+        var total=parseFloat(total_amt.toFixed(2));
+        $("#soaform-total_amount").val(total);
+        $("#soaform-total_amount-disp").val(total);
+        $("#soaform-total_amount-disp").maskMoney('mask',total);
     }
     
     $(".kv-row-checkbox").change(function(){

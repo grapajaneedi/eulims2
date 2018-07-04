@@ -24,13 +24,22 @@ $customerJS=<<<SCRIPT
     }   
 SCRIPT;
 $js=<<<SCRIPT
-    $("#soa-customer_id").change(function(){
+    $("#soaform-customer_id").change(function(){
         //$("#BIGridContainer").html("<div style='text-align:center;'><img src='/images/img-loader64.gif' alt='' /></div>"); 
         $.post("/ajax/getaccountnumber", {
             customer_id: this.value,
         }, function(result){
            if(result){
                $("#AccNumber").val(result);
+           }
+        });
+        $.post("/ajax/getsoabalance", {
+            customer_id: this.value,
+        }, function(result){
+           if(result){
+                $("#soaform-previous_balance").val(result);
+                $("#soaform-previous_balance-disp").val(result);
+                $("#soaform-previous_balance-disp").maskMoney('mask',result);
            }
         });
         $.get("/finance/soa/getbigrid", {
@@ -159,11 +168,10 @@ $this->registerJs($js);
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
         <?php
             echo $form->field($model, 'previous_balance')->widget(MaskMoney::classname(), [
             'readonly'=>true,
-            'disabled'=>true,
             'options'=>[
                 'style'=>'text-align: right'
             ],
@@ -174,11 +182,10 @@ $this->registerJs($js);
            ])->label("Previous Balance");
         ?>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
         <?php
             echo $form->field($model, 'current_amount')->widget(MaskMoney::classname(), [
             'readonly'=>true,
-            'disabled'=>true,
             'options'=>[
                 'style'=>'text-align: right'
             ],
@@ -187,6 +194,20 @@ $this->registerJs($js);
                'allowNegative' => false,
             ]
            ])->label("Current Amount");
+        ?>
+        </div>
+        <div class="col-md-4">
+        <?php
+            echo $form->field($model, 'total_amount')->widget(MaskMoney::classname(), [
+            'readonly'=>true,
+            'options'=>[
+                'style'=>'text-align: right'
+            ],
+            'pluginOptions' => [
+               'prefix' => '₱ ',
+               'allowNegative' => false,
+            ]
+           ])->label("Total Amount");
         ?>
         </div>
     </div>

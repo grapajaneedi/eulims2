@@ -7,23 +7,20 @@ use Yii;
 /**
  * This is the model class for table "tbl_billing_receipt".
  *
- * @property int $billing_receipt_id
+ * @property int $soa_id
  * @property string $soa_date
  * @property int $customer_id
  * @property int $user_id
- * @property int $billing_id
- * @property int $receipt_id
  * @property string $soa_number
  * @property string $previous_balance
  * @property string $current_amount
- * @property string $bi_ids
+ * @property string $total_amount
  *
  * @property Billing $billing
  * @property Receipt $receipt
  */
 class Soa extends \yii\db\ActiveRecord
 {
-    public $bi_ids;
     /**
      * {@inheritdoc}
      */
@@ -49,8 +46,8 @@ class Soa extends \yii\db\ActiveRecord
             [['soa_date', 'customer_id', 'user_id', 'soa_number'], 'required'],
             [['soa_date'], 'safe'],
             [['customer_id', 'user_id'], 'integer'],
-            [['previous_balance', 'current_amount'], 'number'],
-            [['soa_number','bi_ids'], 'string', 'max' => 100]
+            [['previous_balance', 'current_amount','total_amount'], 'number'],
+            [['soa_number'], 'string', 'max' => 100]
         ];
     }
 
@@ -67,7 +64,7 @@ class Soa extends \yii\db\ActiveRecord
             'soa_number' => 'Soa Number',
             'previous_balance' => 'Previous Balance',
             'current_amount' => 'Current Amount',
-            'bi_ds'=>'BIs'
+            'total_amount'=>'Total Amount'
         ];
     }
 
