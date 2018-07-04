@@ -16,7 +16,7 @@ use kartik\grid\GridView;
 $js=<<<SCRIPT
     function getKeys(){
         var dkeys=$("#BIGrid").yiiGridView("getSelectedRows");
-        $("#soa-bi_ds").val(dkeys);
+        $("#soa-bi_ids").val(dkeys);
         var SearchFieldsTable = $(".kv-grid-table>tbody");
         var trows = SearchFieldsTable[0].rows;
         var Total=0.00;

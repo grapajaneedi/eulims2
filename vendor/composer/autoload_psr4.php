@@ -22,6 +22,7 @@ return array(
     'yii2mod\\alert\\' => array($vendorDir . '/yii2mod/yii2-sweet-alert'),
     'yii2assets\\printthis\\' => array($vendorDir . '/yii2assets/yii2-printthis'),
     'yii2assets\\pdfjs\\' => array($vendorDir . '/yii2assets/yii2-pdfjs'),
+    'wbraganca\\dynamicform\\' => array($vendorDir . '/wbraganca/yii2-dynamicform'),
     'vova07\\imperavi\\tests\\' => array($vendorDir . '/vova07/yii2-imperavi-widget/tests'),
     'vova07\\imperavi\\' => array($vendorDir . '/vova07/yii2-imperavi-widget/src'),
     'thyseus\\message\\' => array($vendorDir . '/thyseus/yii2-message'),

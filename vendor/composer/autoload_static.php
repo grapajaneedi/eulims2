@@ -38,6 +38,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
             'yii2assets\\printthis\\' => 21,
             'yii2assets\\pdfjs\\' => 17,
         ),
+        'w' => 
+        array (
+            'wbraganca\\dynamicform\\' => 22,
+        ),
         'v' => 
         array (
             'vova07\\imperavi\\tests\\' => 22,
@@ -262,6 +266,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'yii2assets\\pdfjs\\' => 
         array (
             0 => __DIR__ . '/..' . '/yii2assets/yii2-pdfjs',
+        ),
+        'wbraganca\\dynamicform\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wbraganca/yii2-dynamicform',
         ),
         'vova07\\imperavi\\tests\\' => 
         array (

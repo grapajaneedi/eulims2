@@ -25,7 +25,7 @@ $customerJS=<<<SCRIPT
 SCRIPT;
 $js=<<<SCRIPT
     $("#soa-customer_id").change(function(){
-       // $("#BIGridContainer").html("<div style='text-align:center;'><img src='/images/img-loader64.gif' alt='' /></div>"); 
+        //$("#BIGridContainer").html("<div style='text-align:center;'><img src='/images/img-loader64.gif' alt='' /></div>"); 
         $.post("/ajax/getaccountnumber", {
             customer_id: this.value,
         }, function(result){
