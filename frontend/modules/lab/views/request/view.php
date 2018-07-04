@@ -451,14 +451,17 @@ if($Request_Ref){
                     'pageSummary' => true,  
                   
                 ],
-                // [
-                //     'attribute'=>'status',
-                //     'header'=>'Status',
-                //     // 'value' => function($model) {
-                //     //     return $model->samples->sample_code;
-                //     // },
-                //     'enableSorting' => false,
-                // ],
+                [
+                  //  'attribute'=>'status',
+                    'header'=>'Status',
+                    'hAlign'=>'center',
+                    'format'=>'raw',
+                    'value' => function($model) {
+                    //     return $model->samples->sample_code;
+                            return "<button class='btn btn-default btn-block'>Pending</button>";
+                    },
+                    'enableSorting' => false,
+                ],
                 [
                     'class' => 'kartik\grid\ActionColumn',
                     'template' => '{update} {delete} {cancel}',
@@ -477,25 +480,12 @@ if($Request_Ref){
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
                         'update' => function ($url, $model) {
-                          //  if($model->active == 1){
-                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '', ['class'=>'btn btn-primary','title'=>'Update Analysis','onclick' => 'updateSample('.$model->analysis_id.')']);
-                         //   } else {
-                        //        return null;
-                        //    }
+                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '', ['class'=>'btn btn-primary','title'=>'Update Analysis','onclick' => 'updateAnalysis('.$model->analysis_id.')']);
                         },
                         'delete' => function ($url, $model) {
-                            //if($model->sample_code == "" && $model->active == 1){
                             return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->testname."</b>?",'data-method'=>'post','class'=>'btn btn-primary','title'=>'Delete Analysis','data-pjax'=>'0']);
-                            // } else {
-                            //     return null;
-                            // }
                         },
                         'cancel' => function ($url, $model){
-                            // if($model->sample_code != "" && $model->active == 1){
-                               return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel <b>".$model->testname."</b>?\nAll analyses that this sample contains will also be cancelled.",'data-method'=>'post','class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
-                            // } else {
-                            //     return $model->active == 0 ? '<span class="text-danger" style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>' : '';
-                            // }
                         },
                        
                     ],
@@ -510,16 +500,13 @@ if($Request_Ref){
                 'responsive'=>true, 
                 'showPageSummary' => true,
                 'hover'=>true,
-                //'filterModel' => $searchModel, JANEEDI 
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Analysis</h3>',
                     'type'=>'primary',
-                    //'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['/lab/analysis/create'], ['class' => 'btn btn-success'],['id' => 'modalBtn']),
                     'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => Url::to(['analysis/create','id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'modalBtn'])." ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                    'after'=>false,
-                  //  'after'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Add Analysis', 'class' => 'btn btn-success','id' => 'modalBtn']),
                    'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
                 ],
                 'columns' => $analysisgridColumns,
@@ -533,7 +520,6 @@ if($Request_Ref){
 <script type="text/javascript">
     $('#sample-grid tbody td').css('cursor', 'pointer');
     function updateSample(id){
-       //var url = 'Url::to(['sample/update']) . "?id=' + id;
        var url = '/lab/sample/update?id='+id;
         $('.modal-title').html('Update Sample');
         $('#modal').modal('show')
@@ -558,6 +544,13 @@ if($Request_Ref){
        //var url = 'Url::to(['sample/update']) . "?id=' + id;
        //var url = '/lab/sample/update?id='+id;
         $(".modal-title").html(title);
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
+    function updateAnalysis(id){
+       var url = '/lab/analysis/update?id='+id;
+        $('.modal-title').html('Update Analysis');
         $('#modal').modal('show')
             .find('#modalContent')
             .load(url);
