@@ -4,6 +4,8 @@ namespace frontend\modules\lab\controllers;
 
 use Yii;
 use common\models\lab\Fee;
+use common\models\lab\Request;
+use common\models\lab\RequestSearch;
 use common\models\lab\FeeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -97,7 +99,10 @@ class FeeController extends Controller
              
         ]);
 
-        $testcategory = $this->listTestcategory(1);
+        $request = $this->findRequest($request_id);
+        $labId = $request->lab_id;
+
+        $testcategory = $this->listTestcategory($labId);
      
         $sampletype = [];
         $test = [];
@@ -122,10 +127,8 @@ class FeeController extends Controller
                 $analysis->testcategory_id = 1;
                 $analysis->is_package = 0;
                 $analysis->method = "method";
-
                 $analysis->references = "references";
                 $analysis->testname = "sdsdf";
-             
                 $analysis->quantity = 1;
                 $analysis->sample_code = "sample code";
                 $analysis->date_analysis = '2018-06-14 7:35:0';   
@@ -136,7 +139,8 @@ class FeeController extends Controller
                 // echo "</pre>";
                
             }        
-            $session->set('savemessage',"executed");  
+            
+            Yii::$app->session->setFlash('success', 'Additional Fee Successfully created');
             return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
     } 
          if (Yii::$app->request->isAjax) {
@@ -191,6 +195,16 @@ class FeeController extends Controller
 
       //  echo "huhu";
     }
+
+    protected function findRequest($requestId)
+    {
+        if (($model = Request::findOne($requestId)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
 
     protected function listTestcategory($labId)
     {

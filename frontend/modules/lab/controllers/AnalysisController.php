@@ -5,6 +5,8 @@ namespace frontend\modules\lab\controllers;
 use Yii;
 use common\models\lab\Analysis;
 use common\models\lab\Sample;
+use common\models\lab\Request;
+use common\models\lab\RequestSearch;
 use common\models\lab\AnalysisSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -170,11 +172,14 @@ class AnalysisController extends Controller
                 'query' => $samplesQuery,
                 'pagination' => [
                     'pageSize' => 10,
-                ],
-             
+                ],        
         ]);
 
-        $testcategory = $this->listTestcategory(1);
+        $request = $this->findRequest($request_id);
+        $labId = $request->lab_id;
+
+        $testcategory = $this->listTestcategory($labId);
+
         $sampletype = [];
         $test = [];
 
@@ -207,12 +212,10 @@ class AnalysisController extends Controller
                     $analysis->quantity = $post['Analysis']['quantity'];
                     $analysis->sample_code = $post['Analysis']['sample_code'];
                     $analysis->date_analysis = date("Y-m-d h:i:s");;   
-                    $analysis->save();
-                   
+                    $analysis->save(); 
                 }     
                 Yii::$app->session->setFlash('success', 'Analysis Successfully created'); 
                 return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
-
        } 
         if (Yii::$app->request->isAjax) {
                 $model->rstl_id = $GLOBALS['rstl_id'];
@@ -246,12 +249,10 @@ class AnalysisController extends Controller
                 'test' => $test,
             ]);
         }
-
         // return $this->render('create', [
         //     'model' => $model,
         // ]);
     }
-
     // public function actionCreate()
     // {
     //     $model = new Sample();
@@ -381,6 +382,15 @@ class AnalysisController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
+
+     protected function findRequest($requestId)
+     {
+         if (($model = Request::findOne($requestId)) !== null) {
+             return $model;
+         } else {
+             throw new NotFoundHttpException('The requested page does not exist.');
+         }
+     }
 
      protected function listTestcategory($labId)
      {

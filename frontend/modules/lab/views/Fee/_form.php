@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -43,8 +42,6 @@ $(".select-on-check-all").change(function(){
 
 SCRIPT;
 $this->registerJs($js);
-
-
 ?>
 
 <div class="fee-form">
@@ -88,9 +85,6 @@ $this->registerJs($js);
         ],
     ]); ?>
 
-      
-
-   
     <div class="row">
         <div class="col-sm-6">
 
@@ -103,16 +97,8 @@ $this->registerJs($js);
 
                         ],
                 ])->label("Name"); ?>
-
-      
-
-     
-
         </div>
         <div class="col-sm-6">
-        <?php
-       // $form->field($model, 'code')->hiddenInput()->label(false) 
-        ?>
 
         <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
 
@@ -128,7 +114,7 @@ $this->registerJs($js);
         </div>
         <div class="col-sm-6">
         <?= Html::label('Total', 'xxx') ?>
-        <?= Html::textInput('xxx', '', ['class' => 'form-control'], ['readonly' => true]) ?>
+        <?= Html::textInput('xxx', '', ['class' => 'form-control', 'readonly'=> true]) ?>
         </div>
     </div>
     
