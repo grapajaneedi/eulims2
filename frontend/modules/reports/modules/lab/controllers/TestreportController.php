@@ -15,7 +15,10 @@ use common\models\lab\Testreportconfig;
 use common\models\lab\Lab;
 use common\models\lab\TestreportSample;
 use common\models\lab\Batchtestreport;
-use common\components\MyPDF;
+use yii2tech\spreadsheet\Spreadsheet;
+use yii\data\ArrayDataProvider;
+
+use yii2tech\spreadsheet\Myspreadsheet;
 
 /**
  * TestreportController implements the CRUD actions for Testreport model.
@@ -309,8 +312,41 @@ class TestreportController extends Controller
     }
 
     public function actionPrintview(){
-            $content= $this->renderPartial("_printview");
-            $PDF=new MyPDF();
-            $PDF->renderPDF($content);
+            // $content= $this->renderPartial("_printview");
+            // $PDF=new MyPDF();
+            // $PDF->renderPDF($content);
+             $exporter = new Myspreadsheet([
+                  'dataProvider' => new ArrayDataProvider([
+                      'allModels' => [
+                          [
+                              'name' => 'report_num',
+                              'price' => '9879',
+                          ],
+                          [
+                              'name' => 'name 2',
+                              'price' => '79',
+                          ],
+                      ],
+                  ]),
+                  'columns' => [
+                      [
+                          'attribute' => 'name',
+                          'contentOptions' => [
+                              'alignment' => [
+                                  'horizontal' => 'center',
+                                  'vertical' => 'center',
+                              ],
+                          ],
+                     ],
+                     [
+                         'attribute' => 'price',
+                     ],
+                 ],
+             ]);
+             $exporter->loaddoc();
+             // $exporter->IOFactory::load('myfile.xls');
+              $exporter->send('file.xls');
+
+
     }
 }
