@@ -68,10 +68,9 @@ echo GridView::widget([
         ],
         'toolbar'=>[],
         'panel' => [
-                'type' => GridView::TYPE_PRIMARY,
-               // 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-               'footer'=>false   
-            ],
+            'type' => GridView::TYPE_PRIMARY,
+            'footer'=>false   
+        ],
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
 

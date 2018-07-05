@@ -17,15 +17,21 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Are you sure to delete this {item}?' => 'Opravdu si přejete smazat tuto {item}?',
     'Failed to update editable data due to an unknown server error' => '',
     'Invalid editable index or model form name' => '',
     'Invalid or bad editable data' => '',
     'No valid editable model found' => '',
+    'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> {totalCount, plural, one{{item}} other{{items}}}.'  =>  '{totalCount, plural, one{Zobrazen} few{Zobrazeny} other{Zobrazeno}} <b>{totalCount, plural, one{{begin, number}} other{{begin, number}-{end, number}}}</b> z <b>{totalCount, number}</b> {totalCount, plural, one{{item}} few{{items-few}} many{{items-many}} other{{items}}}.',
+    'Total <b>{count, number}</b> {count, plural, one{{item}} other{{items}}}.' => 'Celkem <b>{count, number}</b> {count, plural, one{{item}} few{{items-few}} many{{items-many}} other{{items}}}.',
+    'item' => 'záznamu',
+    'items' => 'záznamů',
+    'items-few' => 'záznamy',
+    'items-many' => 'záznamů',
     'Actions' => 'Akce',
     'Active' => 'Aktivní',
     'Add Book' => 'Přidat knihu',
     'All' => 'Vše',
-    'Are you sure to delete this item?' => 'Opravdu si přejete smazat tuto položku?',
     'Book Listing' => 'Seznam knih',
     'CSV' => 'CSV',
     'Clear selection' => 'Zrušit výběr',

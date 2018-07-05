@@ -124,6 +124,7 @@ function ShowModal(header,url,closebutton,width){
     if(closebutton===undefined){
         closebutton=true;
     }
+    
     if(width===undefined){
        width='600px'; 
     }

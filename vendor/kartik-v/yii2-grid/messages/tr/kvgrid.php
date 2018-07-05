@@ -17,16 +17,23 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Are you sure to delete this {item}?' => 'Bu öğeyi silmek istediğinize emin {item}?',
     'Failed to update editable data due to an unknown server error' => '',
     'Invalid editable index or model form name' => '',
     'Invalid or bad editable data' => '',
     'No valid editable model found' => '',
+    'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> {totalCount, plural, one{{item}} other{{items}}}.'  =>  '<b>{totalCount, number}</b>  {totalCount, plural, one{{item}} few{{items-few}} many{{items-many}} other{{items}}} <b>{begin, number}-{end, number} arası gösteriliyor.</b>',
     'There are {totalCount} records. Are you sure you want to display them all?' => '',
+    'Total <b>{count, number}</b> {count, plural, one{{item}} other{{items}}}.' => 
+    'Toplam <b>{count, number}</b> {count, plural, one{{item}} few{{items-few}} many{{items-many}} other{{items}}}.',
+    'item' => 'öğe',
+    'items' => 'öğenin',
+    'items-few' => 'öğenin',
+    'items-many' => 'öğenin',
     'Actions' => 'Eylemler',
     'Active' => 'Etkin',
     'Add Book' => 'Kitap Ekle',
     'All' => 'Tümü',
-    'Are you sure to delete this item?' => 'Bu öğeyi silmek istediğinize emin misiniz?',
     'Book Listing' => 'Kitap Listesi',
     'CSV' => 'CSV',
     'Clear selection' => 'Seçimi temizle',
