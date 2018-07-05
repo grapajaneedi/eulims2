@@ -65,5 +65,15 @@ class AjaxController extends Controller{
         }
         return $AccNumber;
     }
- 
+    public function actionGetsoabalance(){
+        $Connection=Yii::$app->financedb;
+        $post= Yii::$app->request->post();
+        $id=(int)$post['customer_id'];
+        $Proc="CALL spGetSoaPreviousAccount(:mCustomerID)";
+        $Command=$Connection->createCommand($Proc);
+        $Command->bindValue(':mCustomerID',$id);
+        $Row=$Command->queryOne();
+        $Balance=(float)$Row['Balance'];
+        return $Balance;
+    }
 }
