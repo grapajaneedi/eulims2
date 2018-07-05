@@ -5,6 +5,7 @@ use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use common\models\finance\Collection;
 use yii\helpers\Url;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
 

@@ -102,7 +102,7 @@ class CashierController extends \yii\web\Controller
                 $model->save(false);
                 $this->created_receipt($op_id,$model->receipt_id);
                  $transaction->commit();
-                $session->set('savepopup',"executed");
+              //  $session->set('savepopup',"executed");
                 return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]); 
              } catch (Exception $e) {
                  $transaction->rollBack();
@@ -412,7 +412,14 @@ class CashierController extends \yii\web\Controller
         }
     }
     public function actionSaveCollection($id,$receiptid,$collection_id){
-     
+        $collection=$this->findModelCollection($collection_id);
+        $op_id=$collection->orderofpayment_id;
+        $sub_total=$collection->sub_total;
+        $wallet_amount=$collection->wallet_amount;
+        $op_model=$this->findModel($op_id);
+        $amount=$op_model->total_amount;
+        $receipt_model=$this->findModelReceipt($receiptid);
+        $receipt_total=$receipt_model->total;
          if($id <> '' ){
             $str_total = explode(',', $id);
             $arr_length = count($str_total); 
@@ -424,12 +431,23 @@ class CashierController extends \yii\web\Controller
                     ->execute(); 
                   $total+=$paymentitem->amount;
             } 
+         $amount_total=$sub_total+$total;   
+         $sum_total=$sub_total+$total+$wallet_amount; 
+         $receipt_total_amount=$receipt_total+$total;
              Yii::$app->financedb->createCommand()
-                    ->update('tbl_collection', ['amount' => $total,'sub_total'=>+$total], 'collection_id= '.$collection_id)
+                    ->update('tbl_receipt', ['total' => $receipt_total_amount], 'receipt_id= '.$receiptid)
                     ->execute();
-             Yii::$app->financedb->createCommand()
-                    ->update('tbl_receipt', ['total' => $total], 'receipt_id= '.$receiptid)
+             
+             if($sum_total == $amount){
+                 Yii::$app->financedb->createCommand()
+                    ->update('tbl_collection', ['amount' => $amount_total,'sub_total'=>$sum_total,'payment_status_id' => 1], 'collection_id= '.$collection_id)
                     ->execute();
+             }
+             if($sum_total < $amount){
+                 Yii::$app->financedb->createCommand()
+                    ->update('tbl_collection', ['amount' => $amount_total,'sub_total'=>$sum_total,'payment_status_id' => 2], 'collection_id= '.$collection_id)
+                    ->execute();
+             }
              return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]); 
          }else{
              

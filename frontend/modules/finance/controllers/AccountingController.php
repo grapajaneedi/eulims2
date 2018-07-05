@@ -15,6 +15,8 @@ use yii\db\Query;
 use common\models\lab\Request;
 use yii\helpers\Json;
 use common\components\Functions;
+use frontend\modules\finance\components\models\Model;
+
 
 class AccountingController extends Controller
 {
@@ -208,8 +210,6 @@ class AccountingController extends Controller
                     
                 } catch (Exception $e) {
                     $transaction->rollBack();
-                   $session->set('errorpopup',"executed");
-                   return $this->redirect(['/finance/accounting/op']);
                 }
                 
               //  var_dump($total_amount);
@@ -238,12 +238,63 @@ class AccountingController extends Controller
      public function actionAddCollection($opid)
     {
         $op_model=$this->findModel($opid);
-        $paymentitem= new Paymentitem();
-        $paymentitem->details= $op_model->collectiontype->natureofcollection;
-         return $this->renderAjax('op/_form_paymentitem', [
-            'model' => $op_model,
-            'paymentitem'=> $paymentitem,
+        $paymentitem = [new Paymentitem()];
+        $op_amount=$op_model->total_amount;
+         if ($op_model->load(Yii::$app->request->post())) {
+            /* echo "<pre>";
+             var_dump(Yii::$app->request->post());
+             echo "</pre>";
+            exit;*/
+            Model::loadMultiple($paymentitem, Yii::$app->request->post());
+              
+            $paymentitem = Model::createMultiple(Paymentitem::classname());
+            
+            $valid = Model::validateMultiple($paymentitem);
+            
+           // if ($valid) {
+                $transaction = \Yii::$app->financedb->beginTransaction();
+                try {
+                    $posts=Yii::$app->request->post();
+                
+                     $total=0;
+                       $posts=$posts["Paymentitem"];
+                        foreach ($posts as $post) {
+                             $paymentitems = new Paymentitem();
+                             $paymentitems->rstl_id =$GLOBALS['rstl_id'];
+                             $paymentitems->request_id = 0;
+                             $paymentitems->orderofpayment_id = $opid;
+                             $paymentitems->details=$post['details'];
+                             $paymentitems->amount=$post['amount'];
+                             $paymentitems->save(false);
+                             $total+=$post['amount'];
+                        }
+                      $total_op_amount=$op_amount+$total;
+                      $this->updateTotalOP($opid, $total_op_amount);
+                  //  }
+                    //if ($flag) {
+                       $transaction->commit();
+                       Yii::$app->session->setFlash('success','Successfully Saved');
+                       return $this->redirect(['/finance/accounting/view-op', 'id' => $opid]);
+                   // }
+                } catch (Exception $e) {
+                    Yii::$app->session->setFlash('danger','Transaction failed');
+                    $transaction->rollBack();
+                }
+            //}
+       }
+       else{
+           //echo"erfer";
+           //exit;
+           $op_model->orderofpayment_id=$opid;
+          //$paymentitem->details= $op_model->collectiontype->natureofcollection;
+           return $this->renderAjax('op/_form_paymentitem', [
+            'op_model' => $op_model,
+            //'paymentitem'=> $paymentitem,
+            'paymentitem' => (empty($paymentitem)) ? [new Paymentitem()] : $paymentitem
          ]);
+       }
+      //  $paymentitem->details= $op_model->collectiontype->natureofcollection;
+         
     }
     //--------------------------------------------------------------------------
     public function actionViewOplab($id)
