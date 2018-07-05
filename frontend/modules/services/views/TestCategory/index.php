@@ -93,7 +93,6 @@ if (Yii::$app->user->can('access-testcategory-delete')){
          //   ['class' => 'yii\grid\ActionColumn'],
           ['class' => 'kartik\grid\ActionColumn',
           'contentOptions' => ['style' => 'width: 8.7%'],
-         // 'visible'=> Yii::$app->user->isGuest ? false : true,
           'template' => $button,
           'buttons'=>[
               'view'=>function ($url, $model) {
@@ -102,9 +101,6 @@ if (Yii::$app->user->can('access-testcategory-delete')){
               'update'=>function ($url, $model) {
                   return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/services/testcategory/update','id'=>$model->testcategory_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Test Category<font color='Blue'></font>")]);
               },
-            //   'delete'=>function ($url, $model) {
-            //     return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/services/testcategory/delete','id'=>$model->test_category_id]), 'class' => 'btn btn-danger']);
-            // },
           ],
       ],
     ]; 

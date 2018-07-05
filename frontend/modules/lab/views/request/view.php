@@ -435,7 +435,7 @@ if($Request_Ref){
                     //     return $model->samples->sample_code;
                     // },
                     'enableSorting' => false,
-                    'pageSummary' => '<span style="float:right";>TOTAL</span>',
+                    'pageSummary' => '<span style="float:right";>SUBTOTAL<br>DISCOUNT<br>TOTAL</span>',
                 ],
                 [
                     'attribute'=>'fee',
@@ -444,7 +444,7 @@ if($Request_Ref){
                     'contentOptions' => [
                         'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
                     ],
-                    'hAlign' => 'right', 
+                    'hAlign' => 'left', 
                     'vAlign' => 'middle',
                     'width' => '7%',
                     'format' => ['decimal', 2],
@@ -462,34 +462,18 @@ if($Request_Ref){
                     },
                     'enableSorting' => false,
                 ],
-                [
-                    'class' => 'kartik\grid\ActionColumn',
-                    'template' => '{update} {delete} {cancel}',
-                    'dropdown' => false,
-                    'dropdownOptions' => ['class' => 'pull-right'],
-                    'urlCreator' => function ($action, $model, $key, $index) {
-                        if ($action === 'delete') {
-                            $url ='/lab/analysis/delete?id='.$model->analysis_id;
-                            return $url;
-                        } 
-                        if ($action === 'cancel') {
-                            $url ='/lab/analysis/cancel?id='.$model->analysis_id;
-                            return $url;
-                        }
+                ['class' => 'kartik\grid\ActionColumn',
+                'contentOptions' => ['style' => 'width: 8.7%'],
+                'template' => '{update}{delete}',
+                'buttons'=>[
+                    'update'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/analysis/update','id'=>$model->request_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "Update Analysis <font color='Blue'></font>")]);
                     },
-                    'headerOptions' => ['class' => 'kartik-sheet-style'],
-                    'buttons' => [
-                        'update' => function ($url, $model) {
-                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '', ['class'=>'btn btn-primary','title'=>'Update Analysis','onclick' => 'updateAnalysis('.$model->analysis_id.')']);
-                        },
-                        'delete' => function ($url, $model) {
-                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->testname."</b>?",'data-method'=>'post','class'=>'btn btn-primary','title'=>'Delete Analysis','data-pjax'=>'0']);
-                        },
-                        'cancel' => function ($url, $model){
-                        },
-                       
-                    ],
+                    // 'delete'=>function ($url, $model) {
+                    //     return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/lab/analysis/delete','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-danger','title' => Yii::t('app', "Update Test Category<font color='Blue'></font>")]);
+                    // },
                 ],
+            ],
              
                
             ];

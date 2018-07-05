@@ -180,7 +180,7 @@ class PackagelistController extends Controller
                     //  $analysis->save();
                     
                  }        
-                 Yii::$app->session->setFlash('success', 'Package Successfully created');
+                 Yii::$app->session->setFlash('success', 'Package Successfully Created');
                  return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
         } 
         if (Yii::$app->request->isAjax) {

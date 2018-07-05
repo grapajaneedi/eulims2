@@ -137,15 +137,13 @@ class FeeController extends Controller
                 // echo "<pre>";
                 // var_dump($analysis);
                 // echo "</pre>";
-               
             }        
             
-            Yii::$app->session->setFlash('success', 'Additional Fee Successfully created');
+            Yii::$app->session->setFlash('success', 'Additional Fee Successfully Created');
             return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
     } 
          if (Yii::$app->request->isAjax) {
                  $analysismodel = new Analysis();
-
                  $analysismodel->rstl_id = $GLOBALS['rstl_id'];
                  $analysismodel->pstcanalysis_id = $GLOBALS['rstl_id'];
                  $analysismodel->request_id = $GLOBALS['rstl_id'];
