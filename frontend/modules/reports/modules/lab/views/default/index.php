@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
              
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="#" title="Summary of Samples"><img class="imgHover" src="/images/summarysamplessquare.png" style="height:120px;width: 120px"></a>
+                 <a href="/reports/lab/statistic/samples" title="Summary of Samples"><img class="imgHover" src="/images/summarysamplessquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div>
             
