@@ -203,10 +203,9 @@ class AccountingController extends Controller
                         $transaction->commit();
                         //$this->postRequest($request_ids);
                        // $this->updateTotalOP($model->orderofpayment_id, $total_amount);
-                      $session->set('savepopup',"executed");
-                       return $this->redirect(['/finance/accounting/op']); 
-                    
-                        
+                      // $session->set('savepopup',"executed");
+                      // return $this->redirect(['/finance/accounting/op']); 
+                      return $this->redirect(['/finance/accounting/view-op', 'id' => $model->orderofpayment_id]);                        
                     
                 } catch (Exception $e) {
                     $transaction->rollBack();
@@ -259,14 +258,14 @@ class AccountingController extends Controller
                      $total=0;
                        $posts=$posts["Paymentitem"];
                         foreach ($posts as $post) {
-                             $paymentitems = new Paymentitem();
-                             $paymentitems->rstl_id =$GLOBALS['rstl_id'];
-                             $paymentitems->request_id = 0;
-                             $paymentitems->orderofpayment_id = $opid;
-                             $paymentitems->details=$post['details'];
-                             $paymentitems->amount=$post['amount'];
-                             $paymentitems->save(false);
-                             $total+=$post['amount'];
+                            $paymentitems = new Paymentitem();
+                            $paymentitems->rstl_id =$GLOBALS['rstl_id'];
+                            $paymentitems->request_id = 0;
+                            $paymentitems->orderofpayment_id = $opid;
+                            $paymentitems->details=$post['details'];
+                            $paymentitems->amount=$post['amount'];
+                            $paymentitems->save(false);
+                            $total+=$post['amount'];
                         }
                       $total_op_amount=$op_amount+$total;
                       $this->updateTotalOP($opid, $total_op_amount);
@@ -283,18 +282,12 @@ class AccountingController extends Controller
             //}
        }
        else{
-           //echo"erfer";
-           //exit;
            $op_model->orderofpayment_id=$opid;
-          //$paymentitem->details= $op_model->collectiontype->natureofcollection;
            return $this->renderAjax('op/_form_paymentitem', [
             'op_model' => $op_model,
-            //'paymentitem'=> $paymentitem,
             'paymentitem' => (empty($paymentitem)) ? [new Paymentitem()] : $paymentitem
          ]);
-       }
-      //  $paymentitem->details= $op_model->collectiontype->natureofcollection;
-         
+       } 
     }
     //--------------------------------------------------------------------------
     public function actionViewOplab($id)

@@ -15,7 +15,15 @@ $bal=($model->total_amount) -($model->collection->sub_total);
 //}
 ?>
 <div class="orderofpayment-view">
-
+    <?php
+        if($model->created_receipt==0){
+            $CancelButton='';
+        }else{
+           
+            echo Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']);
+ 
+        }
+    ?>
    <div class="container">
     <?= DetailView::widget([
         'model'=>$model,

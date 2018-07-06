@@ -216,11 +216,11 @@ class OpController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionCancel($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+       // $this->findModel($id)->delete();
+       echo 'huhuhuh';
+       // return $this->redirect(['index']);
     }
 
     /**
