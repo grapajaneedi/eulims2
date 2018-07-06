@@ -126,14 +126,14 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-6 col-sm-6 col-xs-12">
               
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                  <a href="/settings" title="Order of Payment"><img class="imgHover" src="/images/ordersquare.png" style="height:120px;width: 120px" ></a>
+                  <a href="/finance/accounting/op" title="Order of Payment"><img class="imgHover" src="/images/ordersquare.png" style="height:120px;width: 120px" ></a>
               </div>
             </div>
             <!-- /.col -->
             <div class="col-md-6 col-sm-6 col-xs-12">
            
              <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/gii" title="Order of Payment (Laboratory)"><img class="imgHover" src="/images/orderlabsquare.png" style="height:120px;width: 120px"></a>
+                 <a href="/finance/accounting/op-lab" title="Order of Payment (Laboratory)"><img class="imgHover" src="/images/orderlabsquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div>
             <!-- /.col -->
