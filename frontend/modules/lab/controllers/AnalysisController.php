@@ -5,6 +5,8 @@ namespace frontend\modules\lab\controllers;
 use Yii;
 use common\models\lab\Analysis;
 use common\models\lab\Sample;
+use common\models\lab\Request;
+use common\models\lab\RequestSearch;
 use common\models\lab\AnalysisSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -170,11 +172,14 @@ class AnalysisController extends Controller
                 'query' => $samplesQuery,
                 'pagination' => [
                     'pageSize' => 10,
-                ],
-             
+                ],        
         ]);
 
-        $testcategory = $this->listTestcategory(1);
+        $request = $this->findRequest($request_id);
+        $labId = $request->lab_id;
+
+        $testcategory = $this->listTestcategory($labId);
+
         $sampletype = [];
         $test = [];
 
@@ -207,12 +212,10 @@ class AnalysisController extends Controller
                     $analysis->quantity = $post['Analysis']['quantity'];
                     $analysis->sample_code = $post['Analysis']['sample_code'];
                     $analysis->date_analysis = date("Y-m-d h:i:s");;   
-                    $analysis->save();
-                   
+                    $analysis->save(); 
                 }     
-                $session->set('savemessage',"executed");   
+                Yii::$app->session->setFlash('success', 'Analysis Successfully Created'); 
                 return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
-
        } 
         if (Yii::$app->request->isAjax) {
                 $model->rstl_id = $GLOBALS['rstl_id'];
@@ -246,134 +249,9 @@ class AnalysisController extends Controller
                 'test' => $test,
             ]);
         }
-
-        // return $this->render('create', [
-        //     'model' => $model,
-        // ]);
+     
     }
-
-    // public function actionCreate()
-    // {
-    //     $model = new Sample();
-
-    //     /*if(isset($_GET['lab_id']))
-    //     {
-    //         $labId = (int) $_GET['lab_id'];
-    //     } else {
-    //         $labId = 2;
-    //     }*/
-    //     $session = Yii::$app->session;
-    //     //$req = Yii::$app->request;
-
-    //     if(Yii::$app->request->get('request_id'))
-    //     {
-    //         $requestId = (int) Yii::$app->request->get('request_id');
-    //     }
-    //     $request = $this->findRequest($requestId);
-    //     $labId = $request->lab_id;
-
-    //     $testcategory = $this->listTestcategory($labId);
-    //     //$sampletype = $this->listSampletype();
-    //     /*$testcategory = ArrayHelper::map(Testcategory::find()
-    //         ->where(['lab_id' => $labId])
-    //         ->all(), 'testcategory_id', 'category_name');*/
-    //     $sampletype = [];
-
-    //     /*echo "<pre>";
-    //     print_r(date('Y-m-d', $request->request_datetime));
-    //     echo "</pre>";*/
-
-    //     //if ($model->load(Yii::$app->request->post()) && $model->save()) {
-    //     if ($model->load(Yii::$app->request->post())) {
-    //         if(isset($_POST['Sample']['sampling_date'])){
-    //             $model->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
-    //         } else {
-    //             $model->sampling_date = date('Y-m-d');
-    //         }
-
-    //         $model->rstl_id = 11;
-    //         //$model->sample_code = 0;
-    //         $model->request_id = $request->request_id;
-    //         $model->sample_month = date('m', $request->request_datetime);
-    //         $model->sample_year = date('Y', $request->request_datetime);
-    //         //$model->sampling_date = date('Y-m-d');
-
-    //         if(isset($_POST['qnty'])){
-    //             $quantity = (int) $_POST['qnty'];
-    //         } else {
-    //             $quantity = 1;
-    //         }
-
-    //         if(isset($_POST['sample_template']))
-    //         {
-    //             $this->saveSampleTemplate($_POST['Sample']['samplename'],$_POST['Sample']['description']);
-    //         }
-
-    //         if($quantity>1)
-    //         {
-    //             for ($i=1;$i<=$quantity;$i++)
-    //             {
-    //                 //foreach ($_POST as $sample) {
-    //                     $sample = new Sample();
-
-    //                     if(isset($_POST['Sample']['sampling_date'])){
-    //                         $sample->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
-    //                     } else {
-    //                         $sample->sampling_date = date('Y-m-d');
-    //                     }
-    //                     $sample->rstl_id = 11;
-    //                     //$sample->sample_code = 0;
-    //                     $sample->testcategory_id = (int) $_POST['Sample']['testcategory_id'];
-    //                     $sample->sample_type_id = (int) $_POST['Sample']['sample_type_id'];
-    //                     $sample->samplename = $_POST['Sample']['samplename'];
-    //                     $sample->description = $_POST['Sample']['description'];
-    //                     $sample->request_id = $request->request_id;
-    //                     $sample->sample_month = date('m', $request->request_datetime);
-    //                     $sample->sample_year = date('Y', $request->request_datetime);
-    //                     $sample->save(false);
-    //                // }
-    //                /* echo "<pre>";
-    //                     print_r($_POST);
-    //                 echo "</pre>";*/
-    //             }
-    //             //return $this->redirect('index');
-    //             $session->set('savemessage',"executed");
-    //             return $this->redirect(['/lab/request/view', 'id' => $requestId]);
-    //         } else {
-    //             if($model->save(false)){
-    //                 //return $this->redirect(['view', 'id' => $model->sample_id]);
-    //                 //echo Json::encode('Successfully saved.');
-    //                 $session->set('savemessage',"executed");
-    //                 return $this->redirect(['/lab/request/view', 'id' => $requestId]);
-    //             }
-    //         }
-
-    //         //for($i=1;$i<=$quantity;$i++)
-    //         //{
-    //            // echo $i."<br/>";
-    //         //}
-    //         //if($model->save(false)){
-    //          //   return $this->redirect(['view', 'id' => $model->sample_id]);
-    //        // }
-    //     } elseif (Yii::$app->request->isAjax) {
-    //             return $this->renderAjax('_form', [
-    //                 'model' => $model,
-    //                 'testcategory' => $testcategory,
-    //                 'sampletype' => $sampletype,
-    //                 'labId' => $labId,
-    //                 'sampletemplate' => $this->listSampletemplate(),
-    //             ]);
-    //     } else {
-    //         return $this->render('create', [
-    //             'model' => $model,
-    //             'testcategory' => $testcategory,
-    //             'sampletype' => $sampletype,
-    //             'labId' => $labId,
-    //             'sampletemplate' => $this->listSampletemplate(),
-    //         ]);
-    //     }
-    // }
-
+  
     /**
      * Updates an existing Analysis model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -381,6 +259,15 @@ class AnalysisController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
+
+     protected function findRequest($requestId)
+     {
+         if (($model = Request::findOne($requestId)) !== null) {
+             return $model;
+         } else {
+             throw new NotFoundHttpException('The requested page does not exist.');
+         }
+     }
 
      protected function listTestcategory($labId)
      {
@@ -397,15 +284,100 @@ class AnalysisController extends Controller
      }
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+                 $model = new Analysis();
+        
+                // $request_id = $_GET['id'];
+                // $session = Yii::$app->session;
+        
+                // $searchModel = new AnalysisSearch();
+                // $samplesearchmodel = new SampleSearch();
+                // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+               $samplesQuery = Sample::find()->where(['request_id' => $id]);
+                $sampleDataProvider = new ActiveDataProvider([
+                        'query' => $samplesQuery,
+                        'pagination' => [
+                            'pageSize' => 10,
+                        ],        
+                ]);
+        
+                // $request = $this->findRequest();
+                // $labId = $request->lab_id;
+        
+                 $testcategory = $this->listTestcategory(1);
+        
+                $sampletype = [];
+                $test = [];
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->analysis_id]);
-        }
+        if (Yii::$app->request->isAjax) {
 
-        return $this->render('update', [
+        return $this->renderAjax('_form', [
             'model' => $model,
+            // 'searchModel' => $searchModel,
+            // 'samplesearchmodel'=>$samplesearchmodel,
+            // 'dataProvider' => $dataProvider,
+             'sampleDataProvider' => $sampleDataProvider,
+             'testcategory' => $testcategory,
+            'test' => $test,
+            'sampletype'=>$sampletype
         ]);
+    }else{
+        return $this->render('_form', [
+            'model' => $model,
+            // 'searchModel' => $searchModel,
+            // 'dataProvider' => $dataProvider,
+            // 'samplesearchmodel'=>$samplesearchmodel,
+             'sampleDataProvider' => $sampleDataProvider,
+             'testcategory' => $testcategory,
+            'sampletype' => $sampletype,
+            'test' => $test,
+        ]);
+    }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                // $model = $this->findModel($id);
+        
+                // $session = Yii::$app->session;
+        
+                // $request = $this->findRequest($model->request_id);
+                // $labId = $request->lab_id;
+        
+                // $testcategory = $this->listTestcategory($labId);
+        
+                // $sampletype = ArrayHelper::map(Sampletype::find()
+                //         ->where(['testcategory_id' => $model->testcategory_id])
+                //         ->all(), 'sample_type_id', 'sample_type');
+        
+                // if ($model->load(Yii::$app->request->post())) {
+                //     if(isset($_POST['Sample']['sampling_date'])){
+                //         $model->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
+                //     } else {
+                //         $model->sampling_date = date('Y-m-d');
+                //     }
+        
+                //     if($model->save(false)){
+                //         $session->set('updatemessage',"executed");
+                //         return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+        
+                //     }
+                // } elseif (Yii::$app->request->isAjax) {
+                //         return $this->renderAjax('_form', [
+                //             'model' => $model,
+                //             'testcategory' => $testcategory,
+                //             'sampletype' => $sampletype,
+                //             'labId' => $labId,
+                //             'sampletemplate' => $this->listSampletemplate(),
+                //         ]);
+                // } else {
+                //     return $this->render('update', [
+                //         'model' => $model,
+                //         'testcategory' => $testcategory,
+                //         'sampletype' => $sampletype,
+                //         'labId' => $labId,
+                //         'sampletemplate' => $this->listSampletemplate(),
+                //     ]);
+                // }
     }
 
     /**
@@ -427,7 +399,7 @@ class AnalysisController extends Controller
        
           
             if($model->delete()) {
-                $session->set('deletemessage',"executed");
+                Yii::$app->session->setFlash('success', 'Analysis Successfully Deleted'); 
                 return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
             } else {
                 return $model->error();

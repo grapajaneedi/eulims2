@@ -61,14 +61,7 @@ $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sa
              <div class="col-md-6">
              <?=
              
-            //  $form->field($model, 'sample_type_id')->widget(Select2::classname(), [
-            //             'data' => $Sampletypelist,
-            //             'language' => 'en',
-            //              'options' => ['placeholder' => 'Select Sample Type'],
-            //              'pluginOptions' => [
-            //              'allowClear' => true
-            //             ],
-            //     ])->label("Sample Type");
+           
                 
                  $form->field($model, 'sample_type_id')->widget(DepDrop::classname(), [
                     'type'=>DepDrop::TYPE_SELECT2,

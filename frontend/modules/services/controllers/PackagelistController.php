@@ -7,6 +7,8 @@ use common\models\lab\Packagelist;
 use common\models\lab\PackagelistSearch;
 use common\models\lab\Analysis;
 use common\models\lab\AnalysisSearch;
+use common\models\lab\Request;
+use common\models\lab\RequestSearch;
 use common\models\lab\Sample;
 use common\models\lab\SampleSearch;
 use yii\web\Controller;
@@ -118,7 +120,10 @@ class PackagelistController extends Controller
                  
             ]);
 
-            $testcategory = $this->listTestcategory(1);
+            $request = $this->findRequest($request_id);
+            $labId = $request->lab_id;
+    
+            $testcategory = $this->listTestcategory($labId);
          
             $sampletype = [];
             $test = [];
@@ -175,7 +180,7 @@ class PackagelistController extends Controller
                     //  $analysis->save();
                     
                  }        
-                 $session->set('savemessage',"executed");  
+                 Yii::$app->session->setFlash('success', 'Package Successfully Created');
                  return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
         } 
         if (Yii::$app->request->isAjax) {
@@ -235,6 +240,15 @@ class PackagelistController extends Controller
             }
         }
         echo Json::encode(['output' => '', 'selected'=>'']);
+    }
+
+    protected function findRequest($requestId)
+    {
+        if (($model = Request::findOne($requestId)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
     public function actionGetpackage() {

@@ -21,10 +21,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'rstl_id',
             'testname',
             'method',
-            'references',
+            'payment_references',
             'fee',
             'duration',
-            'Testcategory.category_name',
+            'testcategory.category_name',
             'sampleType.sample_type'
         ],
     ]) ?>
