@@ -80,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		    		<span class="error-date text-danger" style="position:fixed;"></span>
 		    	</div>
 		    	 <div style="width:15%;position: relative; float:left;margin: 27px 0 0 10px;">
-		    		<button type="button" id="sample-filter" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
+		    		<button type="button" id="sample-filter" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Filter</button>
 		    	</div>
 		    </div>
 		    <?php ActiveForm::end(); ?>
