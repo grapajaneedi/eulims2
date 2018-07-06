@@ -195,7 +195,6 @@ $dataExp = <<< SCRIPT
         };
     }
 SCRIPT;
-
 $dataResults = <<< SCRIPT
     function (data, page) {
         return {

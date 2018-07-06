@@ -30,6 +30,7 @@ $js=<<<SCRIPT
                 }
             }
         }); 
+        
         var prev_amount=$("#soaform-previous_balance").val();
         $("#soaform-current_amount-disp").val(Total);
         $("#soaform-current_amount").val(Total);

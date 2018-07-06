@@ -36,7 +36,7 @@ class RequestController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['POST']
                 ],
             ],
         ];
@@ -321,9 +321,14 @@ class RequestController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $Request=$this->findModel($id);
+        if($Request){//Success
+            $Request->status_id=2;
+            $ret=$Request->save();
+        }else{
+            $ret=false;
+        }
+        return $ret;
     }
 
     /**

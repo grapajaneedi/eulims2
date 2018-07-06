@@ -73,7 +73,7 @@ class SoaForm extends Model{
         $Soamodel->payment_amount= $this->payment_amount;
         $Soamodel->active= $this->active;
         // Get the last generated id
-        $Soa= Soa::find()->orderBy('soa_id DESC')->one();
+        $Soa= Soa::find()->where(['customer_id'=>$this->customer_id])->orderBy('soa_id DESC')->one();
         if($Soa){
             $Pre_Soa_id=(int)$Soa->soa_id;
             $Soa->active=0;

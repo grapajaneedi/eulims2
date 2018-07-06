@@ -12,8 +12,50 @@ $this->title = 'Statement of Accounts';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Billing', 'url' => ['/finance/billing']];
 $this->params['breadcrumbs'][] = $this->title;
-$pdfHeader="Enhanced ULIMS";
-$pdfFooter="{PAGENO}";
+$Header="Department of Science and Technology<br>";
+$Header.="Statement of Accounts";
+$pdfHeader = [
+            'L' => [
+                'content' => "",
+                'font-size' => 0,
+                'color' => '#333333',
+            ],
+            'C' => [
+                'content' => $Header,
+                'font-size' => 20,
+                'margin-top'=>60,
+                'color' => '#333333',
+            ],
+            'R' => [
+                'content' =>'',
+                'font-size' => 0,
+                'color' => '#333333',
+            ],
+            'line'=>false
+        ];
+$pdfFooter = [
+            'L' => [
+                'content' => '',
+                'font-size' => 0,
+                'font-style' => 'B',
+                'color' => '#999999',
+            ],
+            'C' => [
+                'content' => '{PAGENO}',
+                'font-size' => 10,
+                'font-style' => 'B',
+                'font-family' => 'serif',
+                'color' => '#333333',
+            ],
+            'R' => [
+                'content' => '',
+                'font-size' => 0,
+                'font-style' => 'B',
+                'font-family' => 'serif',
+                'color' => '#333333',
+            ],
+            'line' => false,
+        ];
 ?>
 <div class="billing-receipt-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -47,13 +89,20 @@ $pdfFooter="{PAGENO}";
                 'alertMsg'        => 'The PDF export file will be generated for download.',
                 'config' => [
                     'methods' => [
-                        'SetHeader' => [$pdfHeader],
-                        'SetFooter' => [$pdfFooter]
+                        //'SetHeader' => [$pdfHeader,'line'=>0],
+                        //'SetFooter' => [$pdfFooter]
+                        'SetHeader' => [
+                            ['odd' => $pdfHeader, 'even' => $pdfHeader],
+                        ],
+                        'SetFooter' => [
+                            ['odd' => $pdfFooter, 'even' => $pdfFooter],
+                        ],
                     ],
                     'options' => [
                         'title' => 'Statement of Account List',
                         'subject' => 'SOA',
-                        'keywords' => 'pdf, preceptors, export, other, keywords, here'
+                        'keywords' => 'pdf, preceptors, export, other, keywords, here',
+                        'destination'=>'I'
                     ],
                 ]
             ],

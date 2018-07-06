@@ -19,7 +19,6 @@ $UserCancell=$Profile->fullname;
 ?>
 
 <div class="cancelledrequest-form">
-
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'request_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'cancelledby')->hiddenInput()->label(false) ?>
@@ -31,15 +30,13 @@ $UserCancell=$Profile->fullname;
     <?= $form->field($model, 'reason')->textarea(['style'=>'overflow-y: scroll']) ?>
     <label class="control-label" for="Cancelled By">Cancelled By:</label>                     
     <?= Html::tag('text',$UserCancell,['class'=>'form-control','readonly'=>true]) ?>
-
-    <div class="row">
-        <div class="row" style="float: right;padding-right: 30px;padding-top: 10px">
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['disabled'=>$disabled,'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-            <?php if($model->isNewRecord){ ?>
-            <?= Html::resetButton('Reset', ['disabled'=>$disabled,'class' => 'btn btn-danger']) ?>
-            <?php } ?>
-            <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
-        </div>
-        <?php ActiveForm::end(); ?>
+    <div class="row" style="float: right;padding-right: 15px;padding-top: 10px;margin-bottom: 10px">
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['disabled'=>$disabled,'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?php if($model->isNewRecord){ ?>
+        <?= Html::resetButton('Reset', ['disabled'=>$disabled,'class' => 'btn btn-danger']) ?>
+        <?php } ?>
+        <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
     </div>
+    <br>
+    <?php ActiveForm::end(); ?>
 </div>

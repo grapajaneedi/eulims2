@@ -31,6 +31,9 @@ $js=<<<SCRIPT
                 $("#soaform-previous_balance").val(result);
                 $("#soaform-previous_balance-disp").val(result);
                 $("#soaform-previous_balance-disp").maskMoney('mask',result);
+                var c_amount=$("#soaform-current_amount").val();
+                var tot=c_amount+parseFloat(result);
+                $("#createSOA").prop('disabled',tot<=0);
            }
         });
         $.get("/finance/soa/getbigrid", {
@@ -205,7 +208,7 @@ $this->registerJs($js);
     </div>
     <div class="form-group pull-right">
         <?= Html::submitButton($model->isNewRecord ? 'Create SOA' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
-            'id'=>'createSOA']) ?>
+            'id'=>'createSOA','disabled'=>true]) ?>
         <?php if(Yii::$app->request->isAjax){ ?>
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <?php } ?>
