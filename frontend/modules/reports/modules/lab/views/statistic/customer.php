@@ -119,7 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		    	 <div style="width:15%;position: relative; float:left;margin: 27px 0 0 10px;">
 		    		<!-- <button type="button" id="btn-filter" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Filter</button> -->
 		    		<?= Html::button('<span class="glyphicon glyphicon-search"></span> Filter', ['title'=>'Filter Result', 'id'=>'btn-filter', 'class' => 'btn btn-primary']) ?>
-		    		<?= Html::resetButton('<i class="glyphicon glyphicon-repeat"></i> Reset', ['title'=>'Reset Form', 'class' => 'btn btn-default']) ?>
+		    		<?= Html::resetButton('<i class="glyphicon glyphicon-repeat"></i> Reset', ['title'=>'Reset Form', 'class' => 'btn btn-default', 'onclick'=>'reloadGrid()']) ?>
 		    	</div>
 		    </div>
 		    <?php ActiveForm::end(); ?>
@@ -130,6 +130,15 @@ $this->params['breadcrumbs'][] = $this->title;
         		$startDate = Yii::$app->request->get('from_date', date('Y-m-01'));
         		$endDate = Yii::$app->request->get('to_date', date('Y-m-d'));
         		$labId = (int) Yii::$app->request->get('lab_id', 1);
+        		$filtertype = (int) Yii::$app->request->get('filtertype', 0);
+        		//$filterId = (int) Yii::$app->request->get('lab_id', 1);
+        		if($filtertype == 1){
+        			$filterId = (int) Yii::$app->request->get('businessnature_id');
+        		} elseif($filtertype == 2){
+        			$filterId = (int) Yii::$app->request->get('industrytype_id');
+        		} else {
+        			$filterId = 0;
+        		}
         		$gridColumns = [
 			        //['class'=>'kartik\grid\SerialColumn'],
 			        [
@@ -174,10 +183,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			        [
 			            'label' => 'No. of Requests',
 			            'format' => 'raw',
-			            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate){
-			            	//$countAnalysis = $model->countSummary($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,2,$model->request_type_id);
-			            	//return ($countAnalysis > 0) ? $countAnalysis : 0;
-			            	return 1;
+			            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate,$filtertype,$filterId){
+			            	$countRequest = Yii::$app->formatter->format($model->statCustomerServed($labId,$model->customer_id,$startDate,$endDate,1,$filtertype,$filterId,1),['decimal',0]);
+			            	return ($countRequest > 0) ? $countRequest : 0;
+			            	//return 1;
 			            },
 			            'headerOptions' => ['class' => 'text-center'],
 			            'contentOptions' => ['class' => 'text-center'],
@@ -185,10 +194,9 @@ $this->params['breadcrumbs'][] = $this->title;
 			        [
 			            'label' => 'No. of Samples',
 			            'format' => 'raw',
-			            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate){
-			            	//$countAnalysis = $model->countSummary($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,2,$model->request_type_id);
-			            	//return ($countAnalysis > 0) ? $countAnalysis : 0;
-			            	return 1;
+			            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate,$filtertype,$filterId){
+			            	$countSample = Yii::$app->formatter->format($model->statCustomerServed($labId,$model->customer_id,$startDate,$endDate,2,$filtertype,$filterId,1),['decimal',0]);
+			            	return ($countSample > 0) ? $countSample : 0;
 			            },
 			            'headerOptions' => ['class' => 'text-center'],
 			            'contentOptions' => ['class' => 'text-center'],
@@ -196,10 +204,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			        [
 			            'label' => 'No. of Testing Services Availed',
 			            'format' => 'raw',
-			            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate){
-			            	//$countAnalysis = $model->countSummary($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,2,$model->request_type_id);
-			            	//return ($countAnalysis > 0) ? $countAnalysis : 0;
-			            	return 1;
+			            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate,$filtertype,$filterId){
+			            	$countTest = Yii::$app->formatter->format($model->statCustomerServed($labId,$model->customer_id,$startDate,$endDate,3,$filtertype,$filterId,1),['decimal',0]);
+			            	//echo Yii::$app->formatter->format(0.125, ['percent', 2]); 
+			            	return ($countTest > 0) ? $countTest : 0;
 			            },
 			            'headerOptions' => ['class' => 'text-center'],
 			            'contentOptions' => ['class' => 'text-center'],
@@ -207,10 +215,9 @@ $this->params['breadcrumbs'][] = $this->title;
 			        [
 			            'label' => 'Total Income Generated (PHP)',
 			            'format' => 'raw',
-			            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate){
-			            	//$countAnalysis = $model->countSummary($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,2,$model->request_type_id);
-			            	//return ($countAnalysis > 0) ? $countAnalysis : 0;
-			            	return 1;
+			            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate,$filtertype,$filterId){
+			            	$totalIncome = $model->statCustomerServed($labId,$model->customer_id,$startDate,$endDate,4,$filtertype,$filterId,1);
+			            	return ($totalIncome > 0) ? $totalIncome : 0;
 			            },
 			            'headerOptions' => ['class' => 'text-center'],
 			            'contentOptions' => ['class' => 'text-center'],
