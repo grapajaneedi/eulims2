@@ -23,6 +23,7 @@ use common\components\Functions;
  * @property int $on_account 
  * 
  * @property Billing[] $billings
+ * @property CancelledOp[] $cancelledOps
  * @property Collection $collection
  * @property OpBilling[] $opBillings
  * @property Collectiontype $collectiontype
@@ -140,5 +141,12 @@ class Op extends \yii\db\ActiveRecord
         $rows=$func->ExecuteStoredProcedureRows("spGetCollectionStatus(:mOpID)", [':mOpID'=> $OpID], $Connection);
         //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
         return $rows;
+    }
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getCancelledOps()
+    {
+       return $this->hasMany(CancelledOp::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
 }

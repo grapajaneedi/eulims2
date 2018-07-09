@@ -7,6 +7,10 @@ body {
         color:#337ab7!important;
     }
 }
+/* Legendes */
+.legend-border{
+    font-family: monospace
+}
 .box-shadow{
     box-shadow: 5px 5px;
 }
