@@ -16,12 +16,13 @@ $bal=($model->total_amount) -($model->collection->sub_total);
 ?>
 <div class="orderofpayment-view">
     <?php
-        if($model->created_receipt==0){
-            $CancelButton='';
+        if($model->created_receipt == 0){
+            
+            $CancelButton = "<div style='float: right'>".Html::button('<span class="fa fa-remove" ></span> Cancel Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-danger','title' => Yii::t('app', "Cancel Order of Payment"),'id'=>'btnCancel'])."</div>";
+ 
         }else{
            
-            echo Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']);
- 
+            $CancelButton='';
         }
     ?>
    <div class="container">
@@ -36,6 +37,11 @@ $bal=($model->total_amount) -($model->collection->sub_total);
         ],
         'buttons1' => '',
         'attributes' => [
+            [
+                    'group'=>true,
+                    'label'=>'Order of Payment Details '.$CancelButton,
+                    'rowOptions'=>['class'=>'info']
+            ],
             [
                 'columns' => [
                     [
@@ -178,3 +184,8 @@ $bal=($model->total_amount) -($model->collection->sub_total);
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $('#btnCancel').on('click',function(e) {
+        alert('lez go');
+    });
+</script>

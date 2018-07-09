@@ -31,7 +31,9 @@ $this->params['breadcrumbs'][] = 'Deposit';
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'pjax'=>true,
-        'responsive'=>false,
+       'responsive'=>true,
+        'striped'=>true,
+        'showPageSummary' => true,
         'pjaxSettings' => [
             'options' => [
                 'enablePushState' => false,
@@ -43,8 +45,6 @@ $this->params['breadcrumbs'][] = 'Deposit';
                 
             ],
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             [
                'attribute'=>'deposit_date',
                'filterType'=> GridView::FILTER_DATE_RANGE,
@@ -86,8 +86,16 @@ $this->params['breadcrumbs'][] = 'Deposit';
                
             ],
             'start_or',
-            'end_or',            
-            'amount',
+            [
+                'attribute' => 'end_or', 
+                'pageSummary' => '<span style="float:right;">Total:</span>',
+            ],
+                        
+            [
+                 'attribute' => 'amount',
+                 'format' => ['decimal', 2],
+                 'pageSummary' => true
+            ],      
             [
                 'attribute' => 'deposit_type_id',
                 'label' => 'Deposit Type',
@@ -101,17 +109,6 @@ $this->params['breadcrumbs'][] = 'Deposit';
                 ],
                 'filterInputOptions' => ['placeholder' => 'Deposit Type', 'id' => 'grid-deposit-search-deposit_type_id']
             ],
-            
-            [
-                'class' => kartik\grid\ActionColumn::className(),
-                'template' => $Buttontemplate,
-                 'buttons'=>[
-                    'view'=>function ($url, $model) {
-                          //return Html::a('View', ['/finance/cashier/view-receipt?receiptid='.$model->receipt_id], ['target'=>'_blank']);
-                    },
-                  ],
-            ],
-
         ],
     ]); ?>
      
