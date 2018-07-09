@@ -134,23 +134,24 @@ class CashierController extends \yii\web\Controller
         
         $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $op_id])->andWhere(['status' => 1]);
         $paymentitemDataProvider = new ActiveDataProvider([
-                'query' => $paymentitem_Query,
-                'pagination' => [
-                'pageSize' => 10,
-                ],
+            'query' => $paymentitem_Query,
+            'pagination' => [
+            'pageSize' => 10,
+            ],
         ]);
         $check_Query = Check::find()->where(['receipt_id' => $receiptid]);
         $checkDataProvider = new ActiveDataProvider([
-                'query' => $check_Query,
-                'pagination' => [
-                'pageSize' => 10,
-                ],
+            'query' => $check_Query,
+            'pagination' => [
+            'pageSize' => 10,
+            ],
         ]);
         return $this->render('receipt/view', [
             'model' => $receipt,
             'op_model'=>$this->findModel($op_id),
             'paymentitemDataProvider' => $paymentitemDataProvider,
             'check_model'=>$checkDataProvider,
+            'receipt'=>$receipt,
         ]);
 
     }
@@ -248,9 +249,8 @@ class CashierController extends \yii\web\Controller
         }
     }
     
-    public function actionListorseries() {
-        // var_dump($_POST['depdrop_parents']);
-        //exit();
+    public function actionListorseries() 
+    {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
@@ -365,7 +365,8 @@ class CashierController extends \yii\web\Controller
         }
      }
     
-     public function update_receipt_depositid($startor,$endor,$depositid){
+     public function update_receipt_depositid($startor,$endor,$depositid)
+     {
         if(!empty($startor) && !empty($endor) )
         {
             Yii::$app->financedb->createCommand()
@@ -490,11 +491,13 @@ class CashierController extends \yii\web\Controller
                    return $e;
              }
         }
+        $model->checkdate=date('Y-m-d');
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('check/_form', [
                 'model' => $model,
                 'check_amount'=>$sum,
                 'total_collection'=>$total_collection,
+                
             ]);
         }else{
             return $this->render('check/_form', [
@@ -505,10 +508,30 @@ class CashierController extends \yii\web\Controller
         }
     }
     
+   protected function findModelCheck($checkid)
+   {
+       if (($model = Check::findOne($checkid)) !== null) {
+           return $model;
+       } else {
+           throw new NotFoundHttpException('The requested page does not exist.');
+       }
+   }
      //-----------END of CHECK
     public function actionReports()
     {
         return $this->render('reports/index');
     }
     
+   public function actionRemoveCheck($checkid)
+    {
+        $model = $this->findModelCheck($checkid);
+        $session = Yii::$app->session;
+       
+        if($model->delete()) {
+            Yii::$app->session->setFlash('success','Successfully Removed!');
+            return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]);
+        } else {
+            return $model->error();
+        }
+    }
 }

@@ -14,6 +14,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cash
 $this->params['breadcrumbs'][] = ['label' => 'Receipt', 'url' => ['/finance/cashier/receipt']];
 $this->params['breadcrumbs'][] = 'View';
 $enable=false;
+$receiptid=$receipt->receipt_id;
 ?>
 <div class="receipt-view">
 
@@ -170,7 +171,18 @@ $enable=false;
                 ],
                 [
                     'class' => 'kartik\grid\ActionColumn',
+                    'urlCreator' => function ($action, $model, $key, $index) {
+                        if ($action === 'delete') {
+                            $url ='/finance/cashier/remove-check?checkid='.$model->check_id;
+                            return $url;
+                        }
+                    },
                     'template' => '{delete}',
+                    'buttons'=>[
+                       'delete' => function ($url, $model) {
+                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete cheque #: <b>".$model->checknumber."</b>?",'data-method'=>'post','class'=>'btn btn-danger','title'=>'Delete','data-pjax'=>'0']);
+                        },
+                    ],
                     'dropdown' => false,
                     'dropdownOptions' => ['class' => 'pull-right'],
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
@@ -227,4 +239,8 @@ $enable=false;
             .find('#modalContent')
             .load(url);
     }
+    // ['/finance/cashier/remove-check?checkid='.$check_model->check_id], 
+   $('#btnRemoveCheck').on('click',function() {
+       alert('heheh');
+   });
 </script>
