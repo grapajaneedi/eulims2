@@ -20,6 +20,7 @@ use common\models\system\Profile;
 use common\models\lab\Sample;
 use common\models\lab\Samplecode;
 use common\models\lab\Lab;
+use yii\helpers\ArrayHelper;
 
 
 /**
@@ -49,6 +50,18 @@ class Functions extends Component{
     }
     function getPesoSign(){
         return "₱";
+    }
+    public function DisplayImageFromFolder(){
+        $files = glob("../../frontend/web/images/icons/*.png");
+        $list=[];
+        for ($i=1; $i<count($files); $i++)
+        {
+                $num = $files[$i];
+                $Filename = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($num));
+                $listval=['icon'=>$Filename,'text'=>$Filename];
+                array_push($list, $listval);
+        }
+        return ArrayHelper::map($list, 'icon', 'icon');
     }
     /**
      * 
