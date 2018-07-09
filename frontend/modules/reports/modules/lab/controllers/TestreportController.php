@@ -311,41 +311,17 @@ class TestreportController extends Controller
 
     }
 
-    public function actionPrintview(){
-            // $content= $this->renderPartial("_printview");
-            // $PDF=new MyPDF();
-            // $PDF->renderPDF($content);
-             $exporter = new Myspreadsheet([
-                  'dataProvider' => new ArrayDataProvider([
-                      'allModels' => [
-                          [
-                              'name' => 'report_num',
-                              'price' => '9879',
-                          ],
-                          [
-                              'name' => 'name 2',
-                              'price' => '79',
-                          ],
-                      ],
-                  ]),
-                  'columns' => [
-                      [
-                          'attribute' => 'name',
-                          'contentOptions' => [
-                              'alignment' => [
-                                  'horizontal' => 'center',
-                                  'vertical' => 'center',
-                              ],
-                          ],
-                     ],
-                     [
-                         'attribute' => 'price',
-                     ],
-                 ],
-             ]);
-             $exporter->loaddoc();
-             // $exporter->IOFactory::load('myfile.xls');
-              $exporter->send('file.xls');
+    public function actionPrintview($id,$template)
+    {
+      //find the record the testreport
+      $testreport = Testreport::findOne($id);
+
+      $exporter = new Myspreadsheet([
+        'template'=>$template,
+        'model'=>$testreport
+        ]);
+      $exporter->loaddoc();
+      $exporter->send('file.xls');
 
 
     }
