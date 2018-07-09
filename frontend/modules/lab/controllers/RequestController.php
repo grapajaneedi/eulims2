@@ -21,7 +21,6 @@ use common\components\Functions;
 use linslin\yii2\curl\Curl;
 use kartik\mpdf\Pdf;
 use yii\helpers\Url;
-
 /**
  * RequestController implements the CRUD actions for Request model.
  */
@@ -44,7 +43,7 @@ class RequestController extends Controller
 
     /**
      * Lists all Request models.
-     * @return mixed
+     * @return mixedfmkldcwnkldsnkdnfklnwfkwldnfdkwflnddnfwkdlnfdlwknclkwnxlkwcnwdlkdnkdnklewdnklewdnklewdnlkew
      */
     public function actionIndex()
     {
@@ -162,25 +161,7 @@ class RequestController extends Controller
        }
     }
 
-    public function actionjanPdf(){
-        $requestQuery = Request::find()->where(['request_id' => 11]);
-        
-        $Content= $this->renderPartial('_printlabel', ['requestQuery' => $requestQuery]);
-        $mpdf = new \Mpdf\Mpdf([
-            'mode' => 'utf-8', 
-            'format' => [66,35], 
-            'orientation' => 'L',
-            'marginBottom'=>0,
-            'marginLeft'=>0,
-            'marginRight'=>0,
-            'marginTop'=>0,
-        ]);
-        $mpdf->WriteHTML($Content);
-        $mpdf->AddPage();
-        $mpdf->AddPage();
-        $mpdf->AddPage();
-        echo $mpdf->Output('filename', 'I'); 
-    }
+  
 
     public function actionTest($id){
         $Func=new Functions();
