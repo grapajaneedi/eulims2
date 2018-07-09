@@ -13,6 +13,7 @@ $this->params['breadcrumbs'][] = 'Update';
 <div class="package-update">
     <?= $this->render('_form', [
         'model' => $model,
+        'ArrayIcons'=>$ArrayIcons
     ]) ?>
 
 </div>

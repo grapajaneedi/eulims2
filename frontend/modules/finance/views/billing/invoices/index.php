@@ -29,9 +29,6 @@ $rstlID=$GLOBALS['rstl_id'];
     <?php
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
-    <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Bill Invoice', ['value'=>'/finance/ar/create','onclick'=>'ShowModal(this.title,this.value)', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Bill Invoice"),'id'=>'btnInvoice']); ?>
-    </p>
   <div class="table-responsive">
     <?php 
     $Buttontemplate='{view}{update}'; 
@@ -49,6 +46,7 @@ $rstlID=$GLOBALS['rstl_id'];
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+                'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Bill Invoice', ['value'=>'/finance/ar/create','onclick'=>'ShowModal(this.title,this.value)', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Bill Invoice"),'id'=>'btnInvoice'])
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],

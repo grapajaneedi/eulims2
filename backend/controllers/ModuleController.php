@@ -10,6 +10,7 @@ use common\models\system\PackageSearch;
 use common\models\system\Package;
 use common\models\system\PackageDetailsSearch;
 use common\models\system\PackageDetails;
+use common\components\Functions;
 
 class ModuleController extends \yii\web\Controller
 {
@@ -24,7 +25,7 @@ class ModuleController extends \yii\web\Controller
 
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider
         ]);
     }
     /**
@@ -78,13 +79,17 @@ class ModuleController extends \yii\web\Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['/module']);
         } else {
+            $func=new Functions();
+            $ArrayIcons=$func->DisplayImageFromFolder();
             if(Yii::$app->request->isAjax){
                 return $this->renderAjax('update', [
                     'model' => $model,
+                    'ArrayIcons'=>$ArrayIcons
                 ]);
             }else{
                 return $this->render('update', [
                     'model' => $model,
+                    'ArrayIcons'=>$ArrayIcons
                 ]);
             }
         }
@@ -92,6 +97,8 @@ class ModuleController extends \yii\web\Controller
     public function actionDetails($action=null,$id=null){
         $searchModel = new PackageDetailsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $func=new Functions();
+        $ArrayIcons=$func->DisplayImageFromFolder();
         if($action=='create'){
             $model = new PackageDetails();
 
@@ -102,10 +109,12 @@ class ModuleController extends \yii\web\Controller
                 if(Yii::$app->request->isAjax){
                     return $this->renderAjax('packagedetails/create', [
                         'model' => $model,
+                        'ArrayIcons'=>$ArrayIcons
                     ]);
                 }else{
                     return $this->render('packagedetails/create', [
                         'model' => $model,
+                        'ArrayIcons'=>$ArrayIcons
                     ]);
                 }
             } 
@@ -120,18 +129,18 @@ class ModuleController extends \yii\web\Controller
                 if(Yii::$app->request->isAjax){
                     return $this->renderAjax('packagedetails/update', [
                         'model' => $model,
+                        'ArrayIcons'=>$ArrayIcons
                     ]);
                 }else{
                     return $this->render('packagedetails/update', [
                         'model' => $model,
+                        'ArrayIcons'=>$ArrayIcons
                     ]);
                 }
             }
         }elseif($action=='view'){
             return $this->runAction('viewpackage', ['id' => $id]);
-           // $model=PackageDetails::findOne($id);
-           // return $this->redirect(['packagedetails/view', 'id' => $model->Package_DetailID]);
-        }else{
+        }else{ // Index
             return $this->render('packagedetails/index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,

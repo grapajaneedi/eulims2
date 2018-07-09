@@ -14,6 +14,29 @@ $this->params['breadcrumbs'][] = $this->title;
 //$model=$dataProvider->getModels();
 $pdfHeader="DOST-IX Enhanced ULIMS";
 $pdfFooter="{PAGENO}";
+$html=<<<HTML
+<fieldset class="legend-border">
+    <legend class="scheduler-border">Legends</legend>
+    <div class="control-group">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Current SOA:</label>
+            </div>
+            <div class="col-md-1">
+                <span class="badge badge-success" style="background-color: green;width: 40px;height: 15px">&nbsp;</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label>Previous SOA:</label>
+            </div>
+            <div class="col-md-1">
+                <span class="badge badge-default" style="background-color: gray;width: 40px;height: 15px">&nbsp;</span>
+            </div>
+        </div>
+    </div>
+</fieldset>       
+HTML;
 ?>
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -69,13 +92,14 @@ $pdfFooter="{PAGENO}";
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
             'heading' =>"<span class='fa fa-user-o'></span> Account: " . $model->customer_name,
-            'before'=>""
+            'before'=>"",
+            'after'=>$html
         ],
         'rowOptions'=>function($model){
             if($model->payment_due_date<date("Y-m-d")){
-                return ['style' => 'color: gray;font-weight: regular'];
+                return ['style' => 'background-color: gray;font-weight: regular;color: white'];
             }elseif($model->active==1){
-                return ['style' => 'color: gray;font-weight: bold'];
+                return ['style' => 'background-color: green;font-weight: bold;color: white'];
             }
         },
         'columns' => [
@@ -124,6 +148,6 @@ $pdfFooter="{PAGENO}";
             ]
         ],
     ]); ?>
-        <div class="form-group pull-right">
+        <div class="form-group pull-right" style="font-family: monospace">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>

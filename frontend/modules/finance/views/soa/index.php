@@ -59,9 +59,7 @@ $pdfFooter = [
 ?>
 <div class="billing-receipt-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Statement of Account', ['value'=>'/finance/soa/create','onclick'=>'ShowModal(this.title,this.value)', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Statement of Account"),'id'=>'btnSOA']); ?>
-    </p>
+    
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -76,7 +74,8 @@ $pdfFooter = [
         ],
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
-            'heading' => "",
+            'heading' => '<i class="fa fa-paragraph"></i>  Statement of Account',
+            'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Statement of Account', ['value'=>'/finance/soa/create','onclick'=>'ShowModal(this.title,this.value)', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Statement of Account"),'id'=>'btnSOA'])
         ],
         'rowOptions'=>function($model){
             if($model->payment_due_date<date("Y-m-d")){
@@ -196,16 +195,4 @@ $pdfFooter = [
             ],
         ],
     ]); ?>
-</div>
-<div class="custom-controls-stacked">
-  <label class="custom-control custom-radio">
-    <input id="radioStacked1" name="radio-stacked" type="radio" class="custom-control-input">
-    <span class="custom-control-indicator"></span>
-    <span class="custom-control-description">Toggle this custom radio</span>
-  </label>
-  <label class="custom-control custom-radio">
-    <input id="radioStacked2" name="radio-stacked" type="radio" class="custom-control-input">
-    <span class="custom-control-indicator"></span>
-    <span class="custom-control-description">Or toggle this other custom radio</span>
-  </label>
 </div>

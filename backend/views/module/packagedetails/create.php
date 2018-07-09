@@ -14,5 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="package-details-create">
     <?= $this->render('_form', [
         'model' => $model,
+        'ArrayIcons'=>$ArrayIcons
     ]) ?>
 </div>
