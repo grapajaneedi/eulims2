@@ -20,7 +20,6 @@ use common\models\system\Profile;
 use common\models\lab\Sample;
 use common\models\lab\Samplecode;
 use common\models\lab\Lab;
-use yii\helpers\ArrayHelper;
 
 
 /**
@@ -69,18 +68,6 @@ class Functions extends Component{
         }
         $Row=$Command->queryOne();
         return $Row;
-    }
-    public function DisplayImageFromFolder(){
-        $files = glob("../../frontend/web/images/icons/*.png");
-        $list=[];
-        for ($i=1; $i<count($files); $i++)
-        {
-                $num = $files[$i];
-                $Filename = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($num));
-                $listval=['icon'=>$Filename,'text'=>$Filename];
-                array_push($list, $listval);
-        }
-        return ArrayHelper::map($list, 'icon', 'icon');
     }
     /**
      * @param description Executes the SQL statement. This method should only be used for executing non-query SQL statement, such as `INSERT`, `DELETE`, `UPDATE` SQLs. No result set will be returned.
@@ -200,7 +187,48 @@ class Functions extends Component{
         }
         return $return;
     }
-    function GetCustomerList($form,$model,$disabled=false,$Label=false){
+
+    function GetSampleCode($form,$model,$disabled=false,$Label=false){
+$dataExp = <<< SCRIPT
+         function (params, page) {
+                return {
+                    q: params.term, // search term
+                };
+            }
+SCRIPT;
+        $dataResults = <<< SCRIPT
+            function (data, page) {
+                return {
+                  results: data.results
+                };
+            }
+SCRIPT;
+                $url = \yii\helpers\Url::to(['/lab/tagging/getsamplecode']);
+              //  $url = '';
+                // Get the initial city description
+                $sample_code = empty($model->sample_code) ? '' : Sample::findOne($model->sample_code)->sample_code;
+                return $form->field($model, 'sample_code')->widget(Select2::classname(), [
+                    'initValueText' => $sample_code, // set the initial display text
+                    'options' => ['placeholder' => 'Search or Scan Sample Code ...','disabled'=>$disabled,'class'=>'.input-group.input-group-sm'],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'minimumInputLength' => 3,
+                        'language' => [
+                            'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                        ],
+                        'ajax' => [
+                            'url' => $url,
+                            'dataType' => 'json',
+                            'data' => new JsExpression($dataExp),
+                            'results' => new JsExpression($dataResults)
+                        ]
+                    ],
+                ])->label($Label);
+            }
+
+        
+
+function GetCustomerList($form,$model,$disabled=false,$Label=false){
 $dataExp = <<< SCRIPT
     function (params, page) {
         return {
