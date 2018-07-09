@@ -19,7 +19,7 @@ $FontAwesomeList=FA::getConstants();
     <?= $form->field($model, 'PackageName')->textInput(['maxlength' => true, 'readonly' => true]) ?>
     <?=
     $form->field($model, 'icon')->widget(Select2::classname(), [
-        'data' => $FontAwesomeList,
+        'data' => $ArrayIcons,
         'language' => 'en',
         'options' => ['placeholder' => 'Select Icon'],
         'pluginOptions' => [

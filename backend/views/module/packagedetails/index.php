@@ -55,23 +55,18 @@ $Buttontemplate='{view}{update}';
                 'label' => 'Icon',
                 'format' => 'raw',
                 'value' => function($model) {
-                    return "<span class='" . $model->icon . "'><span>";
+                    return $model->icon;
                 }
             ],
             'created_at:datetime',
             'updated_at:datetime',
             [
                 'class' => 'kartik\grid\ActionColumn',
-                //'class' => ActionColumn::className(),
-                //'template' => $Buttontemplate, 'class' => 'kartik\grid\ActionColumn',
                 'header' => 'Actions',
                 'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => '{view}{update}{delete}',
+                'template' => '{view}{update}',
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        //return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-                        //    'title' => Yii::t('app', 'lead-view'),
-                        //]);
                         return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', [
                                     'class' => 'btn btn-primary packageviewdetails',
                                     'title' => Yii::t('app', 'Package Details'),
@@ -80,9 +75,6 @@ $Buttontemplate='{view}{update}';
                         ]);
                     },
                     'update' => function ($url, $model) {
-                        //return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
-                        //    'title' => Yii::t('app', 'lead-update'),
-                        //]);
                         return Html::button('<span class="glyphicon glyphicon-pencil"></span>', [
                                     'class' => 'btn btn-success packageviewdetails',
                                     'title' => Yii::t('app', 'Package Details'),
@@ -90,13 +82,6 @@ $Buttontemplate='{view}{update}';
                                     'onclick' => 'LoadModal(this.title,this.value);'
                         ]);
                     },
-                    /*'delete' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-                            'title' => Yii::t('app', 'lead-delete'),
-                            'class'=>'btn btn-danger'
-                        ]);
-                    }*/
-                    
                 ], 
                 'urlCreator' => function ($action, $model, $key, $index) {
                     if ($action === 'view') {
@@ -104,16 +89,9 @@ $Buttontemplate='{view}{update}';
                         return $url;
                     }
                     if ($action === 'update') {
-                        //$url ='index.php?r=client-login/lead-update&id='.$model->Package_DetailID;
                         $url = '/module/details?action=update&id=' . $model->Package_DetailID;
                         return $url;
                     }
-                    /*if ($action === 'delete') {
-                        $url = '/module/deletedetails/' . $model->Package_DetailID;
-                        return $url;
-                    }
-                     * 
-                     */
                 }
             ],
         ],

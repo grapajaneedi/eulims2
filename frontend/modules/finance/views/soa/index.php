@@ -74,7 +74,7 @@ $pdfFooter = [
         ],
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
-            'heading' => "",
+            'heading' => '<i class="fa fa-paragraph"></i>  Statement of Account',
             'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Statement of Account', ['value'=>'/finance/soa/create','onclick'=>'ShowModal(this.title,this.value)', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Statement of Account"),'id'=>'btnSOA'])
         ],
         'rowOptions'=>function($model){
