@@ -68,7 +68,8 @@ $pdfFooter="{PAGENO}";
         ],
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
-            'heading' =>"<span class='fa fa-user-o'></span> Account: " . $model->customer_name
+            'heading' =>"<span class='fa fa-user-o'></span> Account: " . $model->customer_name,
+            'before'=>""
         ],
         'rowOptions'=>function($model){
             if($model->payment_due_date<date("Y-m-d")){

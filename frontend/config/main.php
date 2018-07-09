@@ -35,8 +35,24 @@ return [
         'assetManager' => [
             'bundles' => [
                 'yii\web\JqueryAsset' => [
+                    'js' => [
+                        //YII_ENV_DEV ? 'jquery.js' : 'jquery.min.js'
+                        'jquery.min.js'
+                    ],
                     'jsOptions' => ['position' => \yii\web\View::POS_HEAD],
                 ],
+                'yii\bootstrap\BootstrapAsset' => [
+                    'css' => [
+                       // YII_ENV_DEV ? 'css/bootstrap.min.css' : 'css/bootstrap.min.css',
+                        'css/bootstrap.min.css'
+                    ],
+                ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js' => [
+                        //YII_ENV_DEV ? 'js/bootstrap.js' : 'js/bootstrap.min.js',
+                        'js/bootstrap.min.js'
+                    ]
+                ]
             ],
         ],
         'maintenanceMode' => [
