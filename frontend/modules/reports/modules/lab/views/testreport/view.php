@@ -7,6 +7,8 @@ use yii\helpers\Url;
 use common\models\lab\Analysis;
 use yii\data\ActiveDataProvider;
 use common\models\lab\Batchtestreport;
+use yii\bootstrap\Modal;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Testreport */
@@ -127,8 +129,62 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="form-row">
         <div class="container table-responsive">
-            <button class="btn btn-success">Print Function</button>
+
+             <?= Html::button('<span class="glyphicon glyphicon-download"></span> Print', ['value'=>'/customer/info/create', 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Print Report"),'onclick'=>"ShowGModal('Select Template',true,'300px')"]); ?>
+
+
         </div>
     </div>
     <!-- <h1><?= Html::encode($this->title) ?></h1> -->
 </div>
+
+
+<?php
+    Modal::begin([
+    'options' => [
+        'id' => 'gmodal',
+        'tabindex' => false, // important for Select2 to work properly
+        //'class' => 'modal draggable fade',
+    ],
+    'header' => '<h4 class="modal-title">Select Test Report</h4>'
+    ]);
+    echo "<div>";
+    //echo "<div id='modalContent' style='margin-left: 5px; padding-bottom:10px;'><img src='/images/ajax-loader.gif' alt=''/></div>";
+   ?>
+    <div class="container table-responsive">
+         <?= Html::a('<span class="glyphicon glyphicon-download"></span> ISO', ['/reports/lab/testreport/printview?id='.$model->testreport_id.'&template="ISO"'], ['class'=>'btn btn-primary']) ?>
+         <?= Html::a('<span class="glyphicon glyphicon-download"></span> NON-ISO', ['/reports/lab/testreport/printview?id='.$model->testreport_id.'&template="NON-ISO"'], ['class'=>'btn btn-primary']) ?>
+         <?= Html::a('<span class="glyphicon glyphicon-download"></span> EMB', ['/reports/lab/testreport/printview?id='.$model->testreport_id.'&template="EMB"'], ['class'=>'btn btn-primary']) ?>
+    </div>
+   <?php
+    echo "<div>&nbsp;</div>";
+    echo "</div>";
+    Modal::end();
+    ?>
+
+    <script type="text/javascript">
+        function ShowGModal(header,closebutton,width){
+    if(closebutton==undefined){
+        closebutton=true;
+    }
+    if(width==undefined){
+       width='600px'; 
+    }
+    $(".close").prop('disabled',!closebutton);
+    //$('#searchTextField').val()="";
+    var dialog=$("#gmodal").modal({
+        backdrop: true,
+        show: true,
+        draggable: true
+    });
+    dialog.init(function(){
+        setTimeout(function(){
+            dialog.find('.modal-title').html(header);
+            dialog.find('.modal-dialog ').css({
+               width: width
+            });
+            //dialog.find('#modalContent').load(url);
+        }, 5);
+    });
+}
+    </script>
