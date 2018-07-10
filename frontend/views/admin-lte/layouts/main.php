@@ -123,8 +123,13 @@ if (Yii::$app->controller->action->id === 'login') {
             ['content' => $content, 'directoryAsset' => $directoryAsset]
         ) ?>
     </div>
-
+    <div id="ProgressSpinner">
+        <div class="animationload">
+            <div class="osahanloading"></div>
+        </div>
+    </div>
     <?php $this->endBody() ?>
+   
     </body>
     </html>
     <?php $this->endPage() ?>

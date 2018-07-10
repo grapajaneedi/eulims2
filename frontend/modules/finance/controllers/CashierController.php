@@ -12,6 +12,8 @@ use common\models\finance\Orseries;
 use common\models\finance\Collection;
 use common\models\finance\Check;
 use common\models\finance\Deposit;
+use common\models\finance\Soa;
+use common\models\finance\SoaSearch;
 use yii\web\NotFoundHttpException;
 use common\models\finance\DepositSearch;
 use yii\data\ActiveDataProvider;
@@ -39,7 +41,15 @@ class CashierController extends \yii\web\Controller
         ]);
     }
     public function actionBilling(){
-        $model =new Op();
+        $model=new Soa();
+        $searchModel = new SoaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        return $this->render('billing/index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'model' => $model,
+        ]);
+        /*$model =new Op();
         $searchModel = new CollectionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('billing/index', [
@@ -47,6 +57,8 @@ class CashierController extends \yii\web\Controller
             'dataProvider' => $dataProvider,
             'model' => $model,
         ]);
+         * 
+         */
     }
     public function actionViewOp($id)
     { 

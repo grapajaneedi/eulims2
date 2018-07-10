@@ -12,7 +12,13 @@ $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cashier']];
 $this->params['breadcrumbs'][] = ['label' => 'Collection', 'url' => ['/finance/cashier/collection']];
 $this->params['breadcrumbs'][] = 'View';
-$bal=($model->total_amount) -($model->collection->amount);
+//Check if exist collection to avoid Error: Edit by Nolan 7/10/2018
+if($model->collection){
+    $CollectionAmount=$model->collection->amount;
+}else{
+    $CollectionAmount=0.00;
+}
+$bal=($model->total_amount) -($CollectionAmount);
 //echo $model->total_amount;
 //exit;
 if($bal <> 0){
@@ -105,7 +111,8 @@ else{
                         'label'=>'Collection',
                         'format'=>'raw',
                          'format' => ['decimal', 2],
-                        'value' => $model->collection->sub_total,
+                        // Check if Collection Exist (edited: 7/9/2018)
+                        'value' => $model->collection ? $model->collection->sub_total : 0.00,
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],

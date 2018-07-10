@@ -15,7 +15,8 @@ class AppAsset extends AssetBundle
         'css/site.css',
         'css/breadcrumbs.css',
         'css/nprogress.css',
-        'css/modcss/servicesmod.css'
+        'css/modcss/servicesmod.css',
+        'css/progress-spinner.css'
     ];
     public $js = [
         'js/bootbox.min.js',

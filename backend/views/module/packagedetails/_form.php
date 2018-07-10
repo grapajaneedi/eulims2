@@ -17,6 +17,8 @@ $FontAwesomeList=FA::getConstants();
 ?>
 <div class="col-md-12">
     <?php $form = ActiveForm::begin(); ?>
+    <?= $form->field($model, 'created_at')->hiddenInput(['readonly' => true])->label(false) ?>
+    <?= $form->field($model, 'updated_at')->hiddenInput(['readonly' => true])->label(false) ?>
     <div class="row">
         <div class="col-md-6">
             <?=
@@ -53,15 +55,18 @@ $FontAwesomeList=FA::getConstants();
     </div>
     <div class="row">
         <div class="col-md-6">
-<?= $form->field($model, 'created_at')->textInput(['readonly' => true])->label("Created_At") ?>
+            <label class="control-label" for="packagedetails-icon">Create At</label>
+            <span class="form-control"><?= date("m/d/Y h:i:s A",$model->created_at) ?></span>
         </div>
         <div class="col-md-6">
-    <?= $form->field($model, 'updated_at')->textInput(['readonly' => true]) ?>
+            <label class="control-label" for="packagedetails-icon">Updated At</label>
+            <span class="form-control"><?= date("m/d/Y h:i:s A",$model->updated_at) ?></span>
         </div>
     </div>
-<div class="row pull-right" style="padding-right: 30px">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <button style='margin-left: 5px' type='button' class='btn btn-secondary pull-left-sm' data-dismiss='modal'>Cancel</button>
-</div>
+    <br>
+    <div class="row pull-right" style="padding-right: 15px">
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <button style='margin-left: 5px' type='button' class='btn btn-secondary pull-left-sm' data-dismiss='modal'>Cancel</button>
+    </div>
 <?php ActiveForm::end(); ?>
 </div>

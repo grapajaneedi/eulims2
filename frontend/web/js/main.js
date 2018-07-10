@@ -43,6 +43,13 @@ jQuery(document).ready(function ($) {
         return false;
     };
 });
+function ShowProgressSpinner(df){
+    if(df){
+        $("#ProgressSpinner").show();
+    }else{
+        $("#ProgressSpinner").hide();
+    }
+}
 function MessageBox(){
     krajeeDialog.dialog(
         'This is a <b>custom dialog</b>. The dialog box is <em>draggable</em> by default and <em>closable</em> ' +
