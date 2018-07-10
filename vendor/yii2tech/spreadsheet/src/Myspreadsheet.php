@@ -57,14 +57,14 @@ class Myspreadsheet extends Spreadsheet
         }       
 
 
-       // Set cell A2 with a numeric value
+        // Set cell A2 with a numeric value
         // $this->getDocument()->getActiveSheet()->setCellValue('A2', $this->template);
 
-        $this->getDocument()->getActiveSheet()->setCellValue('C8', $this->template);
-        $this->getDocument()->getActiveSheet()->setCellValue('C9', $this->template);
-        $this->getDocument()->getActiveSheet()->setCellValue('C10', $this->template);
-        $this->getDocument()->getActiveSheet()->setCellValue('C11', $this->template);
-        $this->getDocument()->getActiveSheet()->setCellValue('C12', $this->location.$labprefix);
+        $this->getDocument()->getActiveSheet()->setCellValue('C8', $this->model->request->request_ref_num);
+        $this->getDocument()->getActiveSheet()->setCellValue('C9', $this->model->request->samples[0]->sampling_date);//date submitted //shud get the first sample record only if not many
+        $this->getDocument()->getActiveSheet()->setCellValue('C10', $this->model->request->samples[0]->analyses[0]->date_analysis); //date analyzed //shud get the earliest sample record only if not many
+        $this->getDocument()->getActiveSheet()->setCellValue('C11', $this->listsamples($this->model->request->samples)); //sample submitted //just concat every sample there is in a request
+        $this->getDocument()->getActiveSheet()->setCellValue('C12', $this->model->request->samples[0]->description); //sample description
 
         // Parent::setDocument($document);
     }
@@ -73,6 +73,15 @@ class Myspreadsheet extends Spreadsheet
     {
         //overrides the render so that it would do nothing with cdataactiveprovider
         return $this;
+    }
+
+    public function listsamples($mdata){
+        $myvar = "";
+        foreach ($mdata as $datum) {
+            $myvar= $myvar.$datum->samplename.",";
+
+        }
+        return $myvar=substr($myvar, 0,-1);
     }
 
 }
