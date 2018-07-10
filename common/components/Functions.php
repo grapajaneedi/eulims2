@@ -143,6 +143,28 @@ class Functions extends Component{
         $list = $Command->queryAll();
         return $list;
     }
+
+    function GenerateStatusTagging($Legend, $Ispayment){
+        $StatusLegend="<fieldset>";
+        $StatusLegend.="<legend>$Legend</legend>";
+        $StatusLegend.="<div style='padding: 0 10px'>";
+        if($Ispayment == true){
+            $Stats= PaymentStatus::find()->orderBy('payment_status_id')->all();
+        }else{
+            $Stats= Status::find()->orderBy('status')->all();
+        }
+        foreach ($Stats as $Stat){
+            if($Ispayment){
+                $StatusLegend.="<span class='badge $Stat->class legend-font' ><span class='$Stat->icon'></span> $Stat->payment_status</span>";
+            }else{
+                $StatusLegend.="<span class='badge $Stat->class legend-font' ><span class='$Stat->icon'></span> $Stat->status</span>";
+            }
+        }
+        $StatusLegend.="</div>";
+        $StatusLegend.="</fieldset>";
+        return $StatusLegend;
+    }
+    
     function GenerateSampleCode($request_id){
         $request =Request::find()->where(['request_id'=>$request_id])->one();
         $lab = Lab::findOne($request->lab_id);

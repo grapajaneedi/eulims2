@@ -20,12 +20,16 @@ $this->params['breadcrumbs'][] = ['label' => 'Tagging', 'url' => ['/lab']];
 $this->params['breadcrumbs'][] = 'Sample Tagging';
 
 $this->registerJsFile("/js/services/services.js");
-
+$func=new Functions();
 
 ?>
 <div class="tagging-index">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <?php
+        echo $func->GenerateStatusTagging("Legend/Status",true);
+    ?>
 
     <p>
         <?php
@@ -37,7 +41,7 @@ $this->registerJsFile("/js/services/services.js");
                 <?php $form = ActiveForm::begin(); ?>
                 <?php
                         $disabled=false;
-                        $func=new Functions();
+                       
                         echo $func->GetSampleCode($form,$model,$disabled,"Scan or Search Sample Code");
                 ?>    
                 <?php ActiveForm::end(); ?>
@@ -72,3 +76,50 @@ $this->registerJsFile("/js/services/services.js");
         ],
     ]); ?>
 </div>
+
+<script type="text/javascript">
+    $('#sample-sample_code').on('change',function(e) {
+       $(this).select2('close');
+       e.preventDefault();
+        $('#prog').show();
+        $('#requests').hide();
+         jQuery.ajax( {
+            type: 'POST',
+            url: '/finance/op/check-customer-wallet?customerid='+$(this).val(),
+            dataType: 'html',
+            success: function ( response ) {
+               $('#wallet').val(response);
+            },
+            error: function ( xhr, ajaxOptions, thrownError ) {
+                alert( thrownError );
+            }
+        });
+        jQuery.ajax( {
+            type: 'POST',
+            //data: {
+            //    customer_id:customer_id,
+           // },
+            url: '/finance/op/getlistrequest?id='+$(this).val(),
+            dataType: 'html',
+            success: function ( response ) {
+
+               setTimeout(function(){
+               $('#prog').hide();
+                 $('#requests').show();
+               $('#requests').html(response);
+                   }, 0);
+
+
+            },
+            error: function ( xhr, ajaxOptions, thrownError ) {
+                alert( thrownError );
+            }
+        });
+        
+       //alert(paymentmode);
+        $(this).select2('open');
+      //  $(this).one('select-focus',select2Focus);
+      $(this).attr('tabIndex',1);
+       checkpayment_mode();
+    });
+    </script>
