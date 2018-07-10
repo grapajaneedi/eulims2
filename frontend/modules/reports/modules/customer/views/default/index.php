@@ -4,6 +4,15 @@ $this->title = 'Customer';
 $this->params['breadcrumbs'][] = ['label' => 'Reports', 'url' => ['/reports']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<style type="text/css">
+
+.imgHover:hover{
+    border-radius: 15px;
+    box-shadow: 0 0 0 4pt #3c8dbc;
+    transition: box-shadow 0.5s ease-in-out;
+}
+</style>
 <div class="Lab-default-index">
    <div class="body-content">
         
