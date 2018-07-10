@@ -189,7 +189,7 @@ $pdfFooter = [
                 'template' => "{view}",
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/soa/view?id=' . $model->customer_id,'onclick'=>'ShowModal(this.title,this.value,true,"900px")', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Statement of Accounts")]);
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/cashier/create-billing-receipt?id=' . $model->soa_id,'onclick'=>'ShowModal(this.title,this.value,true,"650px")', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "Billing Payment")]);
                     },
                 ],
             ],

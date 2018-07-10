@@ -55,7 +55,7 @@ class Receipt extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'terminal_id', 'or_number', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled','or_series_id'], 'required'],
+            [['rstl_id', 'terminal_id', 'or_number', 'receiptDate','deposit_type_id', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled','or_series_id'], 'required'],
             [['rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'payment_mode_id', 'collectiontype_id', 'cancelled', 'deposit_id','or_series_id'], 'integer'],
             [['receiptDate'], 'safe'],
             [['total'], 'number'],
