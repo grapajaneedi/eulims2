@@ -38,7 +38,16 @@ class CashierController extends \yii\web\Controller
             'model' => $model,
         ]);
     }
-    
+    public function actionBilling(){
+        $model =new Op();
+        $searchModel = new CollectionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        return $this->render('billing/index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'model' => $model,
+        ]);
+    }
     public function actionViewOp($id)
     { 
          

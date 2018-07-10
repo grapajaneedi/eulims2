@@ -103,8 +103,8 @@ class ModuleController extends \yii\web\Controller
             $model = new PackageDetails();
 
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect('details?action=view&id='.$model->Package_DetailID);
-                //return $this->redirect(['packagedetails/view', 'id' => $model->Package_DetailID]);
+                Yii::$app->session->setFlash('success', 'Module Details Successfully Created!');
+                return $this->redirect('/module/details');
             } else {
                 if(Yii::$app->request->isAjax){
                     return $this->renderAjax('packagedetails/create', [
@@ -119,12 +119,11 @@ class ModuleController extends \yii\web\Controller
                 }
             } 
         }elseif($action=='update'){
-            //$model = PackageDetails::find()->where(['Package_DetailID'=>$id])->one();
             $model=PackageDetails::findOne($id);
-            //if ($model->load(Yii::$app->request->post()) && $model->save()) {
             if (Yii::$app->request->post()){
                 $model->load(Yii::$app->request->post()) && $model->save();
-                return $this->redirect(['viewpackage', 'id' => $model->Package_DetailID]);
+                Yii::$app->session->setFlash('success', 'Module Details Successfully Updated!');
+                return $this->redirect('/module/details');
             } else {
                 if(Yii::$app->request->isAjax){
                     return $this->renderAjax('packagedetails/update', [

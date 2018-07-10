@@ -1,6 +1,6 @@
 <?php
 use yii\widgets\Breadcrumbs;
-use dmstr\widgets\Alert;
+use yii2mod\alert\Alert;
 use yii\bootstrap\Modal;
 
 $StartYear=2014;
