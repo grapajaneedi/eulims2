@@ -26,7 +26,7 @@ class Customerextend extends Customer
             [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$labId,':customerId'=>$customerId,':startDate'=>$startDate,':endDate'=>$endDate,':generateType'=>$generateType,':filterType'=>$filterType,':filterId'=>$filterId,':requestType'=>$requestType], $connection);
         return $query['Counter'];
 
-        //return $GLOBALS['rstl_id'].' '.$labId.' '.$customerId.' '.$startDate.' '.$endDate.' '.$generateType.' '.$filterType.' '.$filterId.' '.$requestType;
+        //echo $GLOBALS['rstl_id'].' '.$labId.' '.$customerId.' '.$startDate.' '.$endDate.' '.$generateType.' '.$filterType.' '.$filterId.' '.$requestType;
     }
 
     //(RSTLID INT(11),LabID INT(11), CustomerID INT(11), FromRequestDate VARCHAR(30),
