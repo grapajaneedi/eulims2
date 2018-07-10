@@ -186,7 +186,7 @@ $this->registerJs($soaJS);
     }
 </style>
 <script type="text/javascript">
-    $('#ext_receipt-or_series_id').on('change',function(e) {
+    $('#billingpayment-or_series_id').on('change',function(e) {
         jQuery.ajax( {
             type: 'POST',
             url: '/finance/cashier/nextor?id='+$(this).val(),

@@ -69,4 +69,7 @@ class BillingPayment extends Model{
            'checknumber'=>'Check #',
         ];
     }
+    public function save(){
+        
+    }
 }

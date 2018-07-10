@@ -6,7 +6,7 @@ use Yii;
 use common\models\finance\Op;
 use frontend\modules\finance\components\models\CollectionSearch;
 use common\models\finance\Paymentitem;
-use frontend\modules\finance\components\billing\BillingPayment as Receipt;
+use frontend\modules\finance\components\billing\BillingPayment;
 use common\models\finance\ReceiptSearch;
 use common\models\finance\Orseries;
 use common\models\finance\Collection;
@@ -41,7 +41,7 @@ class CashierController extends \yii\web\Controller
         ]);
     }
     public function actionCreateBillingReceipt($id){
-        $model = new Receipt();
+        $model = new BillingPayment();
         $model->receiptDate=date('Y-m-d');
         $model->payment_mode_id=1;
         $model->collectiontype_id=1;
