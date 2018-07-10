@@ -4,12 +4,14 @@ namespace frontend\modules\lab\controllers;
 
 use Yii;
 use common\models\lab\Tagging;
+use common\models\lab\Analysis;
 use common\models\lab\Sample;
 use common\models\TaggingSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
+use yii\data\ActiveDataProvider;
 
 /**
  * TaggingController implements the CRUD actions for Tagging model.
@@ -147,4 +149,78 @@ class TaggingController extends Controller
         }
         return $out;
     }
+
+    public function actionGetanalysis()
+	{
+
+        $id = $_GET['id'];
+        $model = new Tagging();
+         $samplesQuery = Sample::find()->where(['sample_id' => $id]);
+         $sampleDataProvider = new ActiveDataProvider([
+                 'query' => $samplesQuery,
+                 'pagination' => [
+                     'pageSize' => 10,
+                 ],
+              
+         ]);
+         $analysisQuery = Analysis::find()->where(['sample_id' => $id]);
+         $analysisdataprovider = new ActiveDataProvider([
+                 'query' => $analysisQuery,
+                 'pagination' => [
+                     'pageSize' => 10,
+                 ],
+              
+         ]);
+         
+         return $this->renderPartial('_viewAnalysis', [
+          //  'model' => $this->findModel(1),
+           //  'searchModel' => $searchModel,
+           //  'dataProvider' => $dataProvider,
+            'model'=>$model,
+             'sampleDataProvider' => $sampleDataProvider,
+             'analysisdataprovider'=> $analysisdataprovider,
+           //  'trsamples'=>$sampledataProvider,
+         ]);
+	// 	$barcode_data = explode(" ", $sample_code);
+	// 	$sample_id = $barcode_data[0];
+	// 	$analysiscount = Analysis::model()->findByAttributes(
+	// 					array('sampleCode'=>$barcode_data[2], 'sample_id'=>$barcode_data[0], 'analysisYear'=>$barcode_data[1])
+	// 					);
+	// 	$profile = Profiles::model()->findByAttributes(
+	// 				array('user_id'=>Yii::app()->user->id)
+	// 				);
+	// 	$lab= Lab::model()->findByPk($profile->labId);
+	// 	$s= Sample::model()->findByPk($barcode_data[0]);
+	// 	$request_id = $s->request_id;
+	// 			$sample=new CActiveDataProvider('Sample', 
+	// 					array(
+	// 						'criteria'=>array(
+	// 						'condition'=>"sampleCode='" .$barcode_data[2]."' 
+	// 						AND id='" .$barcode_data[0]."' AND sampleCode LIKE '".$lab->labCode."-%' ",	
+	// 					),
+	// 						)
+	// 					);		
+	// 			$analysis=new CActiveDataProvider('Analysis', 
+	// 				array(
+	// 					'criteria'=>array(
+	// 					'condition'=>"sampleCode='" .$barcode_data[2]."' AND sample_id='" .$barcode_data[0]."' AND package IN (1,0) AND sampleCode LIKE '".$lab->labCode."-%'",
+	// 						),
+    //                                              'pagination'=>false,
+	// 					)
+	// 				);
+	// 			$taggingcount = Tagging::model()->findAllByAttributes(
+	// 					array('status'=>2)
+	// 					);
+
+	// 			if ($analysis){
+	// 						$completed = count($taggingcount);
+
+	// 						echo    $this->renderPartial('_viewAnalysis', 
+	// 						array('analysis'=>$analysis, 'sample'=>$sample, 'sample_code'=>$sample_code, 'completed'=>$completed, 'sample_code'=>$sample_code, 'sample_id'=>$sample_id, 'request_id'=>$request_id)  ,true , true);
+					
+	// 			}else {
+	// 					echo "<div style='text-align:center;' class='alert alert-error'><i class='icon icon-warning-sign'>
+	// 					</i><font style='font-size:14px;'> Sample code not found. </font><br \>";
+	// 				  }
+	 }
 }

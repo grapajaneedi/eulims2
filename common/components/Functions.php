@@ -148,23 +148,18 @@ class Functions extends Component{
         $StatusLegend="<fieldset>";
         $StatusLegend.="<legend>$Legend</legend>";
         $StatusLegend.="<div style='padding: 0 10px'>";
-        if($Ispayment == true){
-            $Stats= PaymentStatus::find()->orderBy('payment_status_id')->all();
-        }else{
-            $Stats= Status::find()->orderBy('status')->all();
-        }
-        foreach ($Stats as $Stat){
-            if($Ispayment){
-                $StatusLegend.="<span class='badge $Stat->class legend-font' ><span class='$Stat->icon'></span> $Stat->payment_status</span>";
-            }else{
-                $StatusLegend.="<span class='badge $Stat->class legend-font' ><span class='$Stat->icon'></span> $Stat->status</span>";
-            }
-        }
+      
+                $StatusLegend.="<span class='badge btn-default legend-font' ><span class= 'glyphicon glyphicon-check'></span> PENDING</span>&nbsp;";
+                $StatusLegend.="<span class='badge btn-primary legend-font' ><span class= 'glyphicon glyphicon-check'></span> ONGOING</span>&nbsp;";
+                $StatusLegend.="<span class='badge btn-success legend-font' ><span class= 'glyphicon glyphicon-check'></span> COMPLETED</span>&nbsp;";
+                $StatusLegend.="<span class='badge btn-danger legend-font' ><span class= 'glyphicon glyphicon-check'></span> CANCELLED</span>&nbsp;";
+                $StatusLegend.="<span class='badge btn-warning legend-font' ><span class= 'glyphicon glyphicon-check'></span> ASSIGNED</span>&nbsp;";
+         
         $StatusLegend.="</div>";
         $StatusLegend.="</fieldset>";
         return $StatusLegend;
     }
-    
+
     function GenerateSampleCode($request_id){
         $request =Request::find()->where(['request_id'=>$request_id])->one();
         $lab = Lab::findOne($request->lab_id);
