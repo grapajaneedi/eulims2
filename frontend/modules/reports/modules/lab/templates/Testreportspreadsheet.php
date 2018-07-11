@@ -1,6 +1,6 @@
 <?php
 
-namespace yii2tech\spreadsheet;
+namespace frontend\modules\reports\modules\lab\templates;
 
 use yii2tech\spreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -9,7 +9,7 @@ use common\models\lab\Lab;
  /**
 * Bergel Cutara SRS-II
 */
-class Myspreadsheet extends Spreadsheet
+class Testreportspreadsheet extends Spreadsheet
 {
 
 	/**
