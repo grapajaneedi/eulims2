@@ -18,6 +18,7 @@ use kartik\grid\DataColumn;
 
 $this->title = 'Customer Served';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 <div class="samplestat-index">
@@ -127,7 +128,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		    <div class="row">
 		    <?php //\yii\widgets\Pjax::begin(); ?>
         	<?php
-        		$startDate = Yii::$app->request->get('from_date', date('Y-m-01'));
+        		$startDate = Yii::$app->request->get('from_date', date('Y-01-01'));
         		$endDate = Yii::$app->request->get('to_date', date('Y-m-d'));
         		$labId = (int) Yii::$app->request->get('lab_id', 1);
         		$filtertype = (int) Yii::$app->request->get('filtertype', 0);
@@ -139,6 +140,8 @@ $this->params['breadcrumbs'][] = $this->title;
         		} else {
         			$filterId = 0;
         		}
+        		//$filterId = 0;
+        		//echo isset($_GET['filtertype']) ? $filtertype = $_GET['filtertype'] : $filtertype = 0;
         		$gridColumns = [
 			        //['class'=>'kartik\grid\SerialColumn'],
 			        [
@@ -162,7 +165,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			        [
 			        	'label' => 'Address',
 			        	'format' => 'raw',
-			        	'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate) {
+			        	'value' => function($model, $key, $index, $widget) {
 			            	return $model->completeaddress;
 			            	//var_dump($model->completeaddress);
 			            	//return $model->address;
@@ -174,7 +177,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			        [
 			        	'label' => 'Contact Details',
 			        	'format' => 'raw',
-			        	'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate) {
+			        	'value' => function($model, $key, $index, $widget) {
 			            	return $model->tel;
 			            },
 			            'headerOptions' => ['class' => 'text-center'],
@@ -206,7 +209,6 @@ $this->params['breadcrumbs'][] = $this->title;
 			            'format' => 'raw',
 			            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate,$filtertype,$filterId){
 			            	$countTest = Yii::$app->formatter->format($model->statCustomerServed($labId,$model->customer_id,$startDate,$endDate,3,$filtertype,$filterId,1),['decimal',0]);
-			            	//echo Yii::$app->formatter->format(0.125, ['percent', 2]); 
 			            	return ($countTest > 0) ? $countTest : 0;
 			            },
 			            'headerOptions' => ['class' => 'text-center'],
@@ -216,7 +218,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			            'label' => 'Total Income Generated (PHP)',
 			            'format' => 'raw',
 			            'value' => function($model, $key, $index, $widget) use ($labId, $startDate,$endDate,$filtertype,$filterId){
-			            	$totalIncome = $model->statCustomerServed($labId,$model->customer_id,$startDate,$endDate,4,$filtertype,$filterId,1);
+			            	$totalIncome = Yii::$app->formatter->format($model->statCustomerServed($labId,$model->customer_id,$startDate,$endDate,4,$filtertype,$filterId,1),['decimal',2]);
 			            	return ($totalIncome > 0) ? $totalIncome : 0;
 			            },
 			            'headerOptions' => ['class' => 'text-center'],
@@ -273,9 +275,9 @@ $this->params['breadcrumbs'][] = $this->title;
 					'columns' => $gridColumns,
 				    'toolbar' => [
 	                    //'content'=> Html::button('<i class="glyphicon glyphicon-repeat"></i> Reset', ['value' => Url::to(['statistic/samples']),'class' => 'btn btn-default', 'title' => 'Reset Grid']),
-	                    [
-	                    'content' => Html::button('<i class="glyphicon glyphicon-repeat"></i> Reset Grid', ['title'=>'Reset Grid', 'onclick'=>'reloadGrid()', 'class' => 'btn btn-default'])
-	                	],
+	                 //    [
+	                 //    'content' => Html::button('<i class="glyphicon glyphicon-repeat"></i> Reset Grid', ['title'=>'Reset Grid', 'onclick'=>'reloadGrid()', 'class' => 'btn btn-default'])
+	                	// ],
 	                	'{export}',
 	                ],
 	                'autoXlFormat'=>true,
@@ -285,6 +287,25 @@ $this->params['breadcrumbs'][] = $this->title;
 				        'showConfirmAlert'=>false,
 				        'target'=>GridView::TARGET_SELF,
 				    ],
+				    // 'rowOptions' => function ($model, $key, $index, $grid) {
+        // 				return ['data-id' => $model->id];
+   					// },
+   					'rowOptions' => function ($model, $key, $index, $grid) use ($labId, $startDate,$endDate,$filtertype,$filterId) {
+	                    return [
+	                        //'id' => $model->sample_id,
+	                        'id' => $model->customer_id,
+	                        //'id' => $data['request_id'],
+	                        //'onclick' => 'alert(this.id);',
+	                        'onclick' => 'viewRequest('.$model->customer_id.','.$labId.',"'.$startDate.'","'.$endDate.'",'.$filtertype.','.$filterId.');',
+	                        'style' => 'cursor:pointer;',
+	                        'title' => 'Click to View Requests',
+	                        //'onclick' => 'updateSample(this.id,this.request_id);',
+	                        // [
+	                        //     'data-id' => $model->sample_id,
+	                        //     'data-request_id' => $model->request_id
+	                        // ],
+	                    ];
+	                },
 				]);
         	?>
         	<?php //\yii\widgets\Pjax::end(); ?>
@@ -293,15 +314,29 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 </div>
 <script type="text/javascript">
+	//$('#customer-serve tbody td').css('cursor', 'pointer');
+
     function reloadGrid(){
     	var lab_id = 1;
 		var fromdate = <?= "'".date('Y-01-01')."'" ?>;
 		var todate = <?= "'".date('Y-m-d')."'" ?>;
 		$("#lab_id").val(lab_id).trigger('change');
+		$("#businessnature_id").val(0).trigger('change');
+		$("#industrytype_id").val(0).trigger('change');
+		$("#lab_id").val(lab_id).trigger('change');
 		$('#request_date_range-start').val(fromdate).trigger('change');
 		$('#request_date_range-end').val(todate).trigger('change');
 		$('#request_date_range').val(fromdate+' to '+todate);
-		$.pjax.reload({container:"#customer-serve-pjax",url: '/reports/lab/statistic/customers?lab_id='+lab_id+'&from_date='+fromdate+'&to_date='+todate,replace:false,timeout: false});
+		var businessnature = $('#businessnature_id').val();
+		var industrytype = $('#industrytype_id').val();
+		var filtertype = $('input[name="filtertype"]:checked').val();
+		$(':radio').each(function () {
+			$(this).removeAttr('checked');
+			$('input[type="radio"]').prop('checked', false);
+			$("#businessnature_id").attr('disabled', true);
+			$("#industrytype_id").attr('disabled', true);
+		});
+		$.pjax.reload({container:"#customer-serve-pjax",url: '/reports/lab/statistic/customers?filtertype='+filtertype+'&lab_id='+lab_id+'&from_date='+fromdate+'&to_date='+todate+'&businessnature_id='+businessnature+'&industrytype_id='+industrytype,replace:false,timeout: false});
     }
 
 	$('#btn-filter').on('click',function(event){
@@ -350,7 +385,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	            	var lab_id = $('#lab_id').val();
 	            	var fromdate = $('#request_date_range-start').val();
 	            	var todate = $('#request_date_range-end').val();
-	            	$.pjax.reload({container:"#customer-serve-pjax",url: '/reports/lab/statistic/customers?lab_id='+lab_id+'&from_date='+fromdate+'&to_date='+todate,replace:false,timeout: false});
+	            	var businessnature = $('#businessnature_id').val();
+					var industrytype = $('#industrytype_id').val();
+					var filtertype = $('input[name="filtertype"]:checked').val();
+	            	$.pjax.reload({container:"#customer-serve-pjax",url: '/reports/lab/statistic/customers?filtertype='+filtertype+'&lab_id='+lab_id+'&from_date='+fromdate+'&to_date='+todate+'&businessnature_id='+businessnature+'&industrytype_id='+industrytype,replace:false,timeout: false});
 	            <?php 
 	        		endif;
 	            	Yii::$app->session->setFlash('error', null);
@@ -403,4 +441,12 @@ $this->params['breadcrumbs'][] = $this->title;
 		$('#business-nature').removeClass('has-error');
 		//validateInput();
 	});
+
+	function viewRequest(id,labId,startDate,endDate,filtertype,filterId){
+		var url = '/reports/lab/statistic/viewrequests?customerId='+id+'&labId='+labId+'&from_date='+startDate+'&to_date='+endDate+'&filtertype='+filtertype+'&filterId='+filterId;
+        $('.modal-title').html('View Customer Request');
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+	}
 </script>

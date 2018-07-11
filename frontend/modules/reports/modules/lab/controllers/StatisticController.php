@@ -5,8 +5,7 @@ namespace frontend\modules\reports\modules\lab\controllers;
 use Yii;
 use yii\web\Controller;
 use common\models\lab\Sample;
-//use common\models\lab\Customer;
-use common\models\lab\SampleSearch;
+use common\models\lab\Customer;
 use common\models\lab\Request;
 use frontend\modules\reports\modules\models\Requestextend;
 use frontend\modules\reports\modules\models\Customerextend;
@@ -92,9 +91,14 @@ class StatisticController extends Controller
     {
         //$model = new Customerextend;
 
+
+        $filtertype = (int) Yii::$app->request->get('filtertype',0);
+
         if (Yii::$app->request->get())
         {
             $labId = (int) Yii::$app->request->get('lab_id');
+            $businessnature = (int) Yii::$app->request->get('businessnature_id');
+            $industrytype = (int) Yii::$app->request->get('industrytype_id');
             
             if($this->checkValidDate(Yii::$app->request->get('from_date')) == true)
             {
@@ -116,12 +120,26 @@ class StatisticController extends Controller
             $toDate = date('Y-m-d'); //as of today
         }
 
-        $modelCustomer = Customerextend::find()
-                    //->leftJoin('tbl_requests', '`tbl_requests`.`customer_id` = `tbl_customer`.`customer_id`')
-                    ->innerJoinWith('requests')
-                    ->where('tbl_request.rstl_id =:rstlId AND tbl_request.lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate', [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate]);
-                    //->groupBy(['DATE_FORMAT(request_datetime, "%Y-%m")'])
-                    //->orderBy('request_datetime DESC');
+
+        if($filtertype == 1){
+            $modelCustomer = Customerextend::find()
+                //->leftJoin('tbl_requests', '`tbl_requests`.`customer_id` = `tbl_customer`.`customer_id`')
+                ->innerJoinWith('requests')
+                ->where('tbl_request.rstl_id =:rstlId AND tbl_request.lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND tbl_request.status_id <> :statusId AND business_nature_id =:businessnatureId', [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2,':businessnatureId'=>$businessnature])
+                ->groupBy(['tbl_customer.customer_id']);
+        } elseif($filtertype == 2) {
+            $modelCustomer = Customerextend::find()
+                //->leftJoin('tbl_requests', '`tbl_requests`.`customer_id` = `tbl_customer`.`customer_id`')
+                ->innerJoinWith('requests')
+                ->where('tbl_request.rstl_id =:rstlId AND tbl_request.lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND tbl_request.status_id <> :statusId AND industrytype_id =:industrytypeId', [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2,':industrytypeId'=>$industrytype])
+                ->groupBy(['tbl_customer.customer_id']);
+        } else {
+            $modelCustomer = Customerextend::find()
+                //->leftJoin('tbl_requests', '`tbl_requests`.`customer_id` = `tbl_customer`.`customer_id`')
+                ->innerJoinWith('requests')
+                ->where('tbl_request.rstl_id =:rstlId AND tbl_request.lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND tbl_request.status_id <> :statusId', [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2])
+                ->groupBy(['tbl_customer.customer_id']);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $modelCustomer,
@@ -151,6 +169,54 @@ class StatisticController extends Controller
                 'businessnature' => $this->listBusinessNature(),
                 'industrytype' => $this->listIndustryType(),
             ]);
+        }
+    }
+
+    public function actionViewrequests()
+    {
+        $customerId = (int) Yii::$app->request->get('customerId');
+        $labId = (int) Yii::$app->request->get('labId');
+        $fromDate = Yii::$app->request->get('from_date');
+        $toDate = Yii::$app->request->get('to_date');
+        $filtertype = (int) Yii::$app->request->get('filtertype',0);
+        $filterId = (int) Yii::$app->request->get('filterId',0);
+
+        if($customerId > 0){
+
+            $modelCustomer = Customer::findOne($customerId);
+
+            if($filtertype == 1){
+                $modelRequest = Request::find()
+                ->innerJoinWith('customer')
+                ->where('tbl_request.customer_id =:customerId AND tbl_request.rstl_id =:rstlId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND status_id <> :statusId AND business_nature_id =:businessnatureId', [':customerId'=>$customerId,':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2,':businessnatureId'=>$filterId]);
+            } elseif($filtertype == 2){
+                $modelRequest = Request::find()
+                ->innerJoinWith('customer')
+                ->where('tbl_request.customer_id =:customerId AND tbl_request.rstl_id =:rstlId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND status_id <> :statusId AND industrytype_id =:industrytypeId', [':customerId'=>$customerId,':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2,':industrytypeId'=>$filterId]);
+            } else {
+                $modelRequest = Request::find()
+                ->where('customer_id =:customerId AND rstl_id =:rstlId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND status_id <> :statusId',[':customerId'=>$customerId,':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2]);
+            }
+
+            $dataProvider = new ActiveDataProvider([
+                'query' => $modelRequest,
+                'pagination' => false,
+            ]);
+
+            if (Yii::$app->request->isAjax) {
+                return $this->renderAjax('_request', [
+                    'model' => $modelCustomer,
+                    'dataProvider'=>$dataProvider,
+                ]);
+            } else {
+                // return $this->renderAjax('_request', [
+                //     'model' => $modelCustomer,
+                //     'dataProvider'=>$dataProvider,
+                // ]);
+                Yii::$app->session->setFlash('error', "Invalid Request!");
+            }
+        } else {
+            Yii::$app->session->setFlash('error', "Invalid Request!");
         }
     }
 

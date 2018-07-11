@@ -6,7 +6,8 @@ use Yii;
 use common\models\finance\Op;
 use frontend\modules\finance\components\models\CollectionSearch;
 use common\models\finance\Paymentitem;
-use frontend\modules\finance\components\billing\BillingPayment as Receipt;
+use frontend\modules\finance\components\billing\BillingPayment;
+use frontend\modules\finance\components\models\Ext_Receipt as Receipt;
 use common\models\finance\ReceiptSearch;
 use common\models\finance\Orseries;
 use common\models\finance\Collection;
@@ -41,23 +42,25 @@ class CashierController extends \yii\web\Controller
         ]);
     }
     public function actionCreateBillingReceipt($id){
-        $model = new Receipt();
-        $model->receiptDate=date('Y-m-d');
-        $model->payment_mode_id=1;
-        $model->collectiontype_id=1;
-        $model->deposit_type_id=1;
-        $SoaModel= Soa::find()->where(['soa_id'=>$id])->one();
-        if(Yii::$app->request->isAjax){
-           
-            return $this->renderAjax('billing/_form', [
-                'model' => $model,
-                'SoaModel'=> $SoaModel,
-            ]);
-        }else{
-            return $this->render('billing/_form', [
-                'model' => $model,
-                'SoaModel'=> $SoaModel,
-            ]);
+        $model = new BillingPayment();
+        if ($model->load(Yii::$app->request->post())) {
+            $model->receiptDate=date('Y-m-d');
+            $model->payment_mode_id=1;
+            $model->collectiontype_id=1;
+            $model->deposit_type_id=1;
+            $SoaModel= Soa::find()->where(['soa_id'=>$id])->one();
+            if(Yii::$app->request->isAjax){
+
+                return $this->renderAjax('billing/_form', [
+                    'model' => $model,
+                    'SoaModel'=> $SoaModel,
+                ]);
+            }else{
+                return $this->render('billing/_form', [
+                    'model' => $model,
+                    'SoaModel'=> $SoaModel,
+                ]);
+            }
         }
     } 
     public function actionBilling(){
@@ -165,6 +168,9 @@ class CashierController extends \yii\web\Controller
                 'op_model'=> $op_model,
             ]);
         }
+    }
+    public function actionPrintOr(){
+        echo "OR Printing....";
     }
     public function actionViewReceipt($receiptid)
     { 
