@@ -7,6 +7,7 @@ use common\models\finance\Op;
 use frontend\modules\finance\components\models\CollectionSearch;
 use common\models\finance\Paymentitem;
 use frontend\modules\finance\components\billing\BillingPayment;
+use frontend\modules\finance\components\models\Ext_Receipt as Receipt;
 use common\models\finance\ReceiptSearch;
 use common\models\finance\Orseries;
 use common\models\finance\Collection;
