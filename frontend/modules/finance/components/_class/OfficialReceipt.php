@@ -13,7 +13,6 @@ use Yii;
 use yii\helpers\ReplaceArrayValue;
 use kartik\mpdf\Pdf;
 use common\models\collection\Collection;
-use DateTime;
 
 interface PDFEnum{
     const PDF_Browser="I";
