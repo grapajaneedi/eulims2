@@ -43,22 +43,24 @@ class CashierController extends \yii\web\Controller
     }
     public function actionCreateBillingReceipt($id){
         $model = new BillingPayment();
-        $model->receiptDate=date('Y-m-d');
-        $model->payment_mode_id=1;
-        $model->collectiontype_id=1;
-        $model->deposit_type_id=1;
-        $SoaModel= Soa::find()->where(['soa_id'=>$id])->one();
-        if(Yii::$app->request->isAjax){
-           
-            return $this->renderAjax('billing/_form', [
-                'model' => $model,
-                'SoaModel'=> $SoaModel,
-            ]);
-        }else{
-            return $this->render('billing/_form', [
-                'model' => $model,
-                'SoaModel'=> $SoaModel,
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->receiptDate=date('Y-m-d');
+            $model->payment_mode_id=1;
+            $model->collectiontype_id=1;
+            $model->deposit_type_id=1;
+            $SoaModel= Soa::find()->where(['soa_id'=>$id])->one();
+            if(Yii::$app->request->isAjax){
+
+                return $this->renderAjax('billing/_form', [
+                    'model' => $model,
+                    'SoaModel'=> $SoaModel,
+                ]);
+            }else{
+                return $this->render('billing/_form', [
+                    'model' => $model,
+                    'SoaModel'=> $SoaModel,
+                ]);
+            }
         }
     } 
     public function actionBilling(){
@@ -166,6 +168,9 @@ class CashierController extends \yii\web\Controller
                 'op_model'=> $op_model,
             ]);
         }
+    }
+    public function actionPrintOr(){
+        echo "OR Printing....";
     }
     public function actionViewReceipt($receiptid)
     { 
