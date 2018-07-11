@@ -66,7 +66,7 @@ $this->registerJsFile("/js/services/services.js");
                 },
             //     'delete'=>function ($url, $model) {
             //       $t = '/services/testcategory/delete';
-            //     //  return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>'/services/sampletype/delete?id='.$model->sample_type_id, 'class' => 'btn btn-danger','title' => Yii::t('app', "View History for  <font color='Blue'></font>")]);
+            //      return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['value'=>'/services/sampletype/delete?id='.$model->sample_type_id, 'class' => 'btn btn-danger','title' => Yii::t('app', "View History for  <font color='Blue'></font>")]);
     
             //   },
             ],

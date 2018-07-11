@@ -69,6 +69,7 @@ class SampletypeController extends Controller
         $model = new Sampletype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                 Yii::$app->session->setFlash('success', 'Sample Type Successfully Created'); 
                  return $this->runAction('index');
          } 
            
@@ -90,6 +91,7 @@ class SampletypeController extends Controller
         $model = $this->findModel($id);
         
                 if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    Yii::$app->session->setFlash('success', 'Sample Type Successfully Updated'); 
                     return $this->redirect(['view', 'id' => $model->testcategory_id]);
                 } else if (Yii::$app->request->isAjax) {
                     return $this->renderAjax('update', [
@@ -107,7 +109,7 @@ class SampletypeController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        Yii::$app->session->setFlash('success', 'Sample Type Successfully Deleted'); 
         return $this->redirect(['index']);
     }
 

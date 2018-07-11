@@ -165,7 +165,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		                'headerOptions' => ['class' => 'text-center'],
 			            'contentOptions' => ['class' => 'text-center'],
 			            'value'=>function ($model, $key, $index, $widget) use ($labId, $startDate,$endDate) {
-		                   $countCustomer = $model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,4,$model->request_type_id);
+		                   $countCustomer =  Yii::$app->formatter->format($model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,4,$model->request_type_id),['decimal',0]);
 			            	return ($countCustomer > 0) ? $countCustomer : 0;
 		                },
 		                'pageSummary'=>true,
@@ -178,7 +178,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		                'headerOptions' => ['class' => 'text-center'],
 			            'contentOptions' => ['class' => 'text-center'],
 			            'value'=>function ($model, $key, $index, $widget) use ($labId, $startDate,$endDate) {
-		                   $countRequest = $model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,1,$model->request_type_id);
+		                   $countRequest =  Yii::$app->formatter->format($model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,1,$model->request_type_id),['decimal',0]);
 			            	return ($countRequest > 0) ? $countRequest : 0;
 		                },
 		                'pageSummary'=>true,
@@ -191,7 +191,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		                'headerOptions' => ['class' => 'text-center'],
 			            'contentOptions' => ['class' => 'text-center'],
 			            'value'=>function ($model, $key, $index, $widget) use ($labId, $startDate,$endDate) {
-		                   $countSample = $model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,2,$model->request_type_id);
+		                   $countSample =  Yii::$app->formatter->format($model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,2,$model->request_type_id),['decimal',0]);
 			            	return ($countSample > 0) ? $countSample : 0;
 		                },
 		                'pageSummary'=>true,
@@ -204,7 +204,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		                'headerOptions' => ['class' => 'text-center'],
 			            'contentOptions' => ['class' => 'text-center'],
 			            'value'=>function ($model, $key, $index, $widget) use ($labId, $startDate,$endDate) {
-		                   $countAnalysis = $model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,3,$model->request_type_id);
+		                   $countAnalysis =  Yii::$app->formatter->format($model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,3,$model->request_type_id),['decimal',0]);
 			            	return ($countAnalysis > 0) ? $countAnalysis : 0;
 		                },
 		                'pageSummary'=>true,

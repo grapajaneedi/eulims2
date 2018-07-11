@@ -123,8 +123,21 @@ if (Yii::$app->controller->action->id === 'login') {
             ['content' => $content, 'directoryAsset' => $directoryAsset]
         ) ?>
     </div>
-
+    <div id="ProgressSpinner">
+        <div class="animationload">
+            <div class="osahanloading"></div>
+        </div>
+    </div>
     <?php $this->endBody() ?>
+    <script type="text/javascript">
+        function ShowProgressSpinner(df){
+            if(df){
+                $("#ProgressSpinner").show();
+            }else{
+                $("#ProgressSpinner").hide();
+            }
+        }  
+    </script>
     </body>
     </html>
     <?php $this->endPage() ?>

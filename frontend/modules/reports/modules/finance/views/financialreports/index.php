@@ -15,6 +15,76 @@ $this->params['breadcrumbs'][] = ['label' => 'Reports', 'url' => ['/reports']];
 $this->params['breadcrumbs'][] ='Financial Reports';
 $link2 = 'reports/finance/financialreports/collectionsummary/';
 ?>
+<style type="text/css">
+    .imgHover:hover{
+        border-radius: 25px;
+        box-shadow: 0 0 0 5pt #3c8dbc;
+        transition: box-shadow 0.5s ease-in-out;
+    }
+        
+    .animationload {
+    background-color: transparent;
+    height: 100%;
+    left: 0;
+    position: relative;
+    top: 0;
+    width: 100%;
+    z-index: 10000;
+    }
+    .osahanloading {
+    animation: 1.5s linear 0s normal none infinite running osahanloading;
+    background: #3c8dbc none repeat scroll 0 0;
+    border-radius: 50px;
+    height: 50px;
+    left: 50%;
+    margin-left: -25px;
+    margin-top: -25px;
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    }
+    .osahanloading::after {
+    animation: 1.5s linear 0s normal none infinite running osahanloading_after;
+    border-color: #3c8dbc transparent;
+    border-radius: 80px;
+    border-style: solid;
+    border-width: 10px;
+    content: "";
+    height: 80px;
+    left: -15px;
+    position: absolute;
+    top: -15px;
+    width: 80px;
+    }
+    @keyframes osahanloading 
+    {
+        0% {
+        transform: rotate(0deg);
+        }
+        50% {
+        background: #85d6de none repeat scroll 0 0;
+        transform: rotate(180deg);
+        }
+        100% {
+        transform: rotate(360deg);
+        }
+    }
+
+    .glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+    }
+
+    @-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+    }
+
+    .alert{
+    display: none;
+    }
+</style>
+
 <script type="text/javascript">
 $( document ).ready(function() 
 {
@@ -69,12 +139,35 @@ function loadUrl(obj)
     {
        if($('#selMonth :selected').val() == '' || $('#selYear :selected').val() == '')
             {
-                alert('Year/Month not supplied');
+          //     alert('Year/Month not supplied');
             //    CrudAlert('Year/Month not supplied','WARNING',true,true,false);
+           //  $('.alert').alert();
+           //    $('.alert').show();
+          
+           //    bootbox.alert({
+           //            message: "Year/Month not supplied!",
+             //   });
+                 
+                 bootbox.dialog({
+    title: 'Financial Reports',
+     buttons: {
+        close: {
+            label: '<i class="fa fa-times"></i>&nbsp;&nbsp;Close',
+            className: "btn-primary",
             
+
+        }
+    },
+    message: 'Year/Month not supplied!'
+}).addClass('');
+
+          // alert alert-warning alert-dismissible fade show
             }
             else
             {
+         //    alert('test');
+            // $("#divSpinner").css("display", "block");
+            $("#divSpinner").toggle();
              var siteNew='';
              switch(obj)
              {
@@ -99,14 +192,7 @@ function loadUrl(obj)
     
  
     
-<style type="text/css">
 
-    .imgHover:hover{
-        border-radius: 25px;
-        box-shadow: 0 0 0 5pt #3c8dbc;
-        transition: box-shadow 0.5s ease-in-out;
-    }
-</style>
 
 <?php
 Pjax::begin(['id' => 'pjax',
@@ -156,7 +242,7 @@ $form = ActiveForm::begin(
         <div class="row">
            
          
-              <div class="col-md-4"><a href="#" onclick="loadUrl('collection')"><img class="imgHover img-responsive center-block" src="/images/collectionreportsquare.png" style="height:150px"/></a></div>
+              <div class="col-md-4"><a href="#" onclick="loadUrl('collection')" data-dismiss="alert"><img class="imgHover img-responsive center-block" src="/images/collectionreportsquare.png" style="height:150px"/></a></div>
               <div class="col-md-4"><a href="#" onclick="loadUrl('summary')"><img class="imgHover img-responsive center-block" src="/images/summaryreportsquare.png" style="height:150px"/></a></div>
               <div class="col-md-4"><a href="#" onclick="loadUrl('receipt')"><img class="imgHover img-responsive center-block" src="/images/cashreceiptsquare.png" style="height:150px"/></a></div>
         </div>
@@ -164,12 +250,20 @@ $form = ActiveForm::begin(
 
 
 
+
+
     </div>
-
-
-
-
 </div>
+
+
+
+<div id="divSpinner" style="text-align:center;display:none;font-size:30px">
+     <div class="animationload">
+            <div class="osahanloading"></div>
+     </div>
+</div>
+
+
 
 
 <?php ActiveForm::end(); ?>

@@ -43,6 +43,7 @@ jQuery(document).ready(function ($) {
         return false;
     };
 });
+
 function MessageBox(){
     krajeeDialog.dialog(
         'This is a <b>custom dialog</b>. The dialog box is <em>draggable</em> by default and <em>closable</em> ' +
@@ -124,6 +125,7 @@ function ShowModal(header,url,closebutton,width){
     if(closebutton===undefined){
         closebutton=true;
     }
+    
     if(width===undefined){
        width='600px'; 
     }

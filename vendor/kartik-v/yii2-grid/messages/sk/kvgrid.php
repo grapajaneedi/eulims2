@@ -17,12 +17,18 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Are you sure to delete this {item}?' => 'Naozaj si prajete zmazať túto {item}?',
     'Failed to update editable data due to an unknown server error' => '',
+    'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> {totalCount, plural, one{{item}} other{{items}}}.'  =>  'Zobrazujem <b>{begin, number}-{end, number}</b> z <b>{totalCount, number}</b> {totalCount, plural, one{{item}} few{{items-few}} many{{items-many}} other{{items}}}.',
+    'Total <b>{count, number}</b> {count, plural, one{{item}} other{{items}}}.' => 'Celkovo <b>{count, number}</b> {count, plural, one{{item}} few{{items-few}} many{{items-many}} other{{items}}}.',
+    'item' => 'záznam',
+    'items' => 'záznamov',
+    'items-few' => 'záznamov',
+    'items-many' => 'záznamov',
     'Actions' => 'Akcia',
     'Active' => 'Aktívne',
     'Add Book' => 'Pridať knihu',
     'All' => 'Všetko',
-    'Are you sure to delete this item?' => 'Naozaj si prajete zmazať túto položku?',
     'Book Listing' => 'Zoznam kníh',
     'CSV' => 'CSV',
     'Clear selection' => 'Zrušiť výber',

@@ -16,17 +16,12 @@ use common\models\services\TestCategorySearch;
 /* @var $searchModel common\models\TestCategorySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-//$this->title = 'Test Categories';
 $this->title = 'Manage Test Category';
 $this->params['breadcrumbs'][] = ['label' => 'Services', 'url' => ['/services']];
 $this->params['breadcrumbs'][] = 'Manage Test Category';
 
-// echo date('Y-m-d H:i:s');
-// exit;
-
-//$this->params['breadcrumbs'][] = 'Test Categories';
 $this->registerJsFile("/js/services/services.js");
-$LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname' );//Yii::$app->user->identity->user_id
+$LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname' );
 
 if (Yii::$app->user->can('access-testcategory-delete')){
     $button='{view}{update}{delete}';
@@ -36,19 +31,11 @@ if (Yii::$app->user->can('access-testcategory-delete')){
 ?>
 
 <div class="test-category-index">
-
-   
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
     <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Test Category', ['value'=>'/services/testcategory/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Test Category")]); ?>
       
     </p>
     <div class="table-responsive">
-
-    <?php
-    // echo $searchmodel->testcategory->id;
-    ?>
 
     <?php 
     $gridColumn = [
@@ -61,22 +48,15 @@ if (Yii::$app->user->can('access-testcategory-delete')){
                 return GridView::ROW_COLLAPSED;
             },
             'detail' => function ($model, $key, $index, $column) {
-                // $sModel = new TestCategorySearch();
-                // // $transactions = $searchModel->searchbycustomerid($id);
-                //  $dprovider = $sModel->search(Yii::$app->request->queryParams);
          
                  return $this->render('view', [
-                    //  'searchModel' => $sModel,
-                    //  'dataProvider' => $dprovider,
                      'model'=>$model,
                  ]);
             },
             'headerOptions' => ['class' => 'kartik-sheet-style'],
             'expandOneOnly' => true
         ],
-      
-    
-      'category_name',
+          'category_name',
             [
                 'attribute' => 'lab_id',
                 'label' => 'Laboratory',
@@ -90,10 +70,8 @@ if (Yii::$app->user->can('access-testcategory-delete')){
                 ],
                 'filterInputOptions' => ['placeholder' => 'Laboratory', 'lab_id' => 'grid-products-search-category_type_id']
             ],
-         //   ['class' => 'yii\grid\ActionColumn'],
           ['class' => 'kartik\grid\ActionColumn',
           'contentOptions' => ['style' => 'width: 8.7%'],
-         // 'visible'=> Yii::$app->user->isGuest ? false : true,
           'template' => $button,
           'buttons'=>[
               'view'=>function ($url, $model) {
@@ -102,9 +80,6 @@ if (Yii::$app->user->can('access-testcategory-delete')){
               'update'=>function ($url, $model) {
                   return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/services/testcategory/update','id'=>$model->testcategory_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Test Category<font color='Blue'></font>")]);
               },
-            //   'delete'=>function ($url, $model) {
-            //     return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/services/testcategory/delete','id'=>$model->test_category_id]), 'class' => 'btn btn-danger']);
-            // },
           ],
       ],
     ]; 

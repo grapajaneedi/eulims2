@@ -35,6 +35,7 @@ $js=<<<SCRIPT
         $("#ext_billing-amount-disp").maskMoney('mask', Total);
     }
     $("#ext_billing-customer_id").change(function(){
+        $(this).select2('close');
         $("#OPGridContainer").html("<div style='text-align:center;'><img src='/images/img-loader64.gif' alt=''></div>"); 
         $.get("/finance/ar/getopgrid", {
             id: this.value,
@@ -43,6 +44,8 @@ $js=<<<SCRIPT
               $("#OPGridContainer").html(result); 
            }
         });
+        $(this).select2('open');
+        $(this).attr("tabIndex",1);
     });
     $(".kv-row-checkbox").change(function(){
        getKeys();

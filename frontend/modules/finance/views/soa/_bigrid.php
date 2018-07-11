@@ -30,6 +30,7 @@ $js=<<<SCRIPT
                 }
             }
         }); 
+        
         var prev_amount=$("#soaform-previous_balance").val();
         $("#soaform-current_amount-disp").val(Total);
         $("#soaform-current_amount").val(Total);
@@ -68,10 +69,9 @@ echo GridView::widget([
         ],
         'toolbar'=>[],
         'panel' => [
-                'type' => GridView::TYPE_PRIMARY,
-               // 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-               'footer'=>false   
-            ],
+            'type' => GridView::TYPE_PRIMARY,
+            'footer'=>false   
+        ],
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
 

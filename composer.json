@@ -119,7 +119,8 @@
         "kartik-v/yii2-checkbox-x": "*",
         "kartik-v/yii2-money": "*",
         "yii2tech/spreadsheet": "*",
-        "wbraganca/yii2-dynamicform": "*"
+        "wbraganca/yii2-dynamicform": "*",
+        "kartik-v/yii2-export": "*"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "^2.0"

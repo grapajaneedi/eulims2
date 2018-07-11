@@ -5,12 +5,13 @@ use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use common\models\finance\Collection;
 use yii\helpers\Url;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
 
 $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
-$this->params['breadcrumbs'][] = ['label' => 'Accouting', 'url' => ['/finance/accounting']];
+$this->params['breadcrumbs'][] = ['label' => 'Accounting', 'url' => ['/finance/accounting']];
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['/finance/accounting/op']];
 $this->params['breadcrumbs'][] = 'View';
 $bal=($model->total_amount) -($model->collection->sub_total);

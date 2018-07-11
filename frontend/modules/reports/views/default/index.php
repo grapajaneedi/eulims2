@@ -3,6 +3,16 @@
 $this->title = 'Reports';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<style type="text/css">
+
+.imgHover:hover{
+    border-radius: 15px;
+    box-shadow: 0 0 0 4pt #3c8dbc;
+    transition: box-shadow 0.5s ease-in-out;
+}
+</style>
+
 <div class="Lab-default-index">
    <div class="body-content">
         <div class="box box-primary color-palette-box" style="padding:0px">
@@ -88,7 +98,15 @@ $this->params['breadcrumbs'][] = $this->title;
              
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="#" title="Summary of Samples"><img class="imgHover" src="/images/summarysamplessquare.png" style="height:120px;width: 120px"></a>
+                 <a href="/reports/lab/statistic/samples" title="Summary of Samples"><img class="imgHover" src="/images/summarysamplessquare.png" style="height:120px;width: 120px"></a>
+              </div>
+            </div>
+			
+			<div class="col-md-3 col-sm-6 col-xs-12">
+             
+
+               <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
+                 <a href="/reports/lab/statistic/customers" title="Customer Served"><img class="imgHover" src="/images/summarysamplessquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div>
             

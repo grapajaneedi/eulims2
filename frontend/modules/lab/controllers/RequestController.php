@@ -21,7 +21,6 @@ use common\components\Functions;
 use linslin\yii2\curl\Curl;
 use kartik\mpdf\Pdf;
 use yii\helpers\Url;
-
 /**
  * RequestController implements the CRUD actions for Request model.
  */
@@ -36,7 +35,7 @@ class RequestController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['POST']
                 ],
             ],
         ];
@@ -44,7 +43,7 @@ class RequestController extends Controller
 
     /**
      * Lists all Request models.
-     * @return mixed
+     * @return mixedfmkldcwnkldsnkdnfklnwfkwldnfdkwflnddnfwkdlnfdlwknclkwnxlkwcnwdlkdnkdnklewdnklewdnklewdnlkew
      */
     public function actionIndex()
     {
@@ -141,41 +140,28 @@ class RequestController extends Controller
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Rev 03/03.01.18</font>';
-            
+            //$mpdf->SetHTMLHeader('huhuhu');
+            $mpdf->SetHeader('This is header');
+
+           
             $mpdf->WriteHTML("<barcode code='CHE-0847' type='C39' />");
             $mpdf->WriteHTML($samplecode);
 
-            $text = '<font size="6">WI-003-F1';
+            $mpdf->SetFooter('This is footer');
+
+            $text = '<font size="5">WI-003-F1';
             $text2 = '<font size="5"><b>Rev 03/03.01.18<b>';
 
             $analysisquery = Analysis::find()->where(['sample_id' => $sample['sample_id']])->all();
                    foreach ($analysisquery as $analysis){
-                        $mpdf->WriteHTML($analysis['testname']);
+                        $mpdf->WriteHTML("&nbsp;&nbsp;&nbsp;<font size='2'>".$analysis['testname']."</font>");
                    }               
             }  
             $mpdf->Output();
        }
     }
 
-    public function actionjanPdf(){
-        $requestQuery = Request::find()->where(['request_id' => 11]);
-        
-        $Content= $this->renderPartial('_printlabel', ['requestQuery' => $requestQuery]);
-        $mpdf = new \Mpdf\Mpdf([
-            'mode' => 'utf-8', 
-            'format' => [66,35], 
-            'orientation' => 'L',
-            'marginBottom'=>0,
-            'marginLeft'=>0,
-            'marginRight'=>0,
-            'marginTop'=>0,
-        ]);
-        $mpdf->WriteHTML($Content);
-        $mpdf->AddPage();
-        $mpdf->AddPage();
-        $mpdf->AddPage();
-        echo $mpdf->Output('filename', 'I'); 
-    }
+  
 
     public function actionTest($id){
         $Func=new Functions();
@@ -316,9 +302,14 @@ class RequestController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $Request=$this->findModel($id);
+        if($Request){//Success
+            $Request->status_id=2;
+            $ret=$Request->save();
+        }else{
+            $ret=false;
+        }
+        return $ret;
     }
 
     /**

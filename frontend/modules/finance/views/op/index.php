@@ -16,9 +16,11 @@ use common\components\Functions;
 
 $func= new Functions();
 $this->title = 'Order of Payment';
+$this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = 'Order of Payment';
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
+
 ?>
 <div class="orderofpayment-index">
     <?php
@@ -31,10 +33,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     
     
   <div class="table-responsive">
-    <?php 
-    $Buttontemplate='{view}{update}'; 
-    ?>
-      
+  
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -144,7 +143,8 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
             [
               //'class' => 'yii\grid\ActionColumn'
                 'class' => kartik\grid\ActionColumn::className(),
-                'template' => $Buttontemplate,
+                'template' => "{view}{update}",
+                
             ],
 
         ],

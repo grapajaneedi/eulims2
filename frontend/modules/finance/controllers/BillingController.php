@@ -29,7 +29,7 @@ class BillingController extends \yii\web\Controller
     public function actionSoa(){
         $searchModel = new SoaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        
         return $this->render('../soa/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

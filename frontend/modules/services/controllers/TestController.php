@@ -4,6 +4,8 @@ namespace frontend\modules\services\controllers;
 
 use Yii;
 use common\models\services\Test;
+use common\models\lab\Request;
+use common\models\lab\RequestSearch;
 use common\models\lab\Testcategory;
 use common\models\services\TestSearch;
 use yii\web\Controller;
@@ -129,18 +131,40 @@ class TestController extends Controller
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
            $session = Yii::$app->session;
-            $session->set('savepopup',"executed");
+           
+            Yii::$app->session->setFlash('success', 'Test Successfully Updated'); 
             return $this->redirect('index');
         }
 
+        $request = $this->findRequest($id);
+        $labId = $request->lab_id;
+
+        $testcategory = $this->listTestcategory($labId);
+
+        $sampletype = [];
+        $test = [];
+
         if (Yii::$app->request->isAjax) {
-            return $this->renderAjax('update', [
+            return $this->renderAjax('_form', [
                 'model' => $model,
+                'testcategory'=>$testcategory,
+                'sampletype'=>$sampletype,
             ]);
         }else{
-            return $this->render('update', [
+            return $this->render('_form', [
                 'model' => $model,
+                'testcategory'=>$testcategory,
+                'sampletype'=>$sampletype,
             ]);
+        }
+    }
+
+    protected function findRequest($requestId)
+    {
+        if (($model = Request::findOne($requestId)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 

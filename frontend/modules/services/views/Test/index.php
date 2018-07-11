@@ -79,35 +79,3 @@ $this->registerJsFile("/js/services/services.js");
         ],
     ]); ?>
 </div>
-<?php
-    // This section will allow to popup a notification
-    $session = Yii::$app->session;
-    if ($session->isActive) {
-        $session->open();
-        if (isset($session['deletemessage'])) {
-            $sweetalert->CrudAlert("Successfully Deleted","WARNING",true);
-            unset($session['deletemessage']);
-            $session->close();
-        }
-        if (isset($session['updatemessage'])) {
-            $sweetalert->CrudAlert("Successfully Updated","SUCCESS",true);
-            unset($session['updatemessage']);
-            $session->close();
-        }
-        if (isset($session['savemessage'])) {
-            $sweetalert->CrudAlert("Successfully Saved","SUCCESS",true);
-            unset($session['savemessage']);
-            $session->close();
-        }
-        if (isset($session['cancelmessage'])) {
-            $sweetalert->CrudAlert("Successfully Cancelled","WARNING",true);
-            unset($session['cancelmessage']);
-            $session->close();
-        }
-        if (isset($session['requestmessage'])) {
-            $sweetalert->CrudAlert("Successfully Generated Reference Number and Sample Code","WARNING",true);
-            unset($session['requestmessage']);
-            $session->close();
-        }
-    }
-?>

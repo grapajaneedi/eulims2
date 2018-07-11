@@ -7,6 +7,8 @@ use common\models\lab\Packagelist;
 use common\models\lab\PackagelistSearch;
 use common\models\lab\Analysis;
 use common\models\lab\AnalysisSearch;
+use common\models\lab\Request;
+use common\models\lab\RequestSearch;
 use common\models\lab\Sample;
 use common\models\lab\SampleSearch;
 use yii\web\Controller;
@@ -75,9 +77,7 @@ class PackagelistController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Packagelist();
-
-      //  $model = new Sampletype();
+     $model = new Packagelist();
 
       $testcategory = $this->listTestcategory(1);
       $sampletype = [];
@@ -118,7 +118,10 @@ class PackagelistController extends Controller
                  
             ]);
 
-            $testcategory = $this->listTestcategory(1);
+            $request = $this->findRequest($request_id);
+            $labId = $request->lab_id;
+    
+            $testcategory = $this->listTestcategory($labId);
          
             $sampletype = [];
             $test = [];
@@ -148,34 +151,8 @@ class PackagelistController extends Controller
                      $analysis->date_analysis = '2018-06-14 7:35:0';   
                      $analysis->save();
 
-                    //  echo "<pre>";
-                    //  var_dump($analysis);
-                    //  echo "</pre>";
-
-                    //  $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
-                    //  $analysis = new Analysis();
-                    //  $date = new DateTime();
-                    //  date_add($date,date_interval_create_from_date_string("1 day"));
-                    //  $analysis->sample_id = $sample_id;
-                    //  $analysis->cancelled = (int) $post['Analysis']['cancelled'];
-                    //  $analysis->pstcanalysis_id = (int) $post['Analysis']['pstcanalysis_id'];
-                    //  $analysis->request_id = $request_id;
-                    //  $analysis->rstl_id = $GLOBALS['rstl_id'];
-                    //  $analysis->test_id = (int) $post['Analysis']['test_id'];
-                    //  $analysis->sample_type_id = (int) $post['Analysis']['sample_type_id'];
-                    //  $analysis->testcategory_id = (int) $post['Analysis']['testcategory_id'];
-                    //  $analysis->is_package = (int) $post['Analysis']['is_package'];
-                    //  $analysis->method = $post['Analysis']['method'];
-                    //  $analysis->fee = $post['Analysis']['fee'];
-                    //  $analysis->testname = $modeltest->testname;
-                    //  $analysis->references = $post['Analysis']['references'];
-                    //  $analysis->quantity = $post['Analysis']['quantity'];
-                    //  $analysis->sample_code = $post['Analysis']['sample_code'];
-                    //  $analysis->date_analysis = date("Y-m-d h:i:s");;   
-                    //  $analysis->save();
-                    
                  }        
-                 $session->set('savemessage',"executed");  
+                 Yii::$app->session->setFlash('success', 'Package Successfully Created');
                  return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
         } 
         if (Yii::$app->request->isAjax) {
@@ -235,6 +212,15 @@ class PackagelistController extends Controller
             }
         }
         echo Json::encode(['output' => '', 'selected'=>'']);
+    }
+
+    protected function findRequest($requestId)
+    {
+        if (($model = Request::findOne($requestId)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
     public function actionGetpackage() {

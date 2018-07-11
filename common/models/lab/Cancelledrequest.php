@@ -40,7 +40,7 @@ class Cancelledrequest extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['request_id', 'request_ref_num', 'reason', 'cancel_date', 'cancelledby'], 'required'],
+            [['request_id', 'reason', 'cancel_date', 'cancelledby'], 'required'],
             [['request_id', 'cancelledby'], 'integer'],
             [['request_id'], 'exist', 'skipOnError' => true, 'targetClass' => Request::className(), 'targetAttribute' => ['request_id' => 'request_id']],
             [['request_id'], 'unique'],

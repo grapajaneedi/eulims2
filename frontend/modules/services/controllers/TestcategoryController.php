@@ -69,6 +69,7 @@ class TestcategoryController extends Controller
         $model = new TestCategory();
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                 Yii::$app->session->setFlash('success', 'Test Category Successfully Created'); 
                 return $this->runAction('index');
         } 
           
@@ -90,6 +91,7 @@ class TestcategoryController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Sample Type Successfully Updated'); 
             return $this->redirect(['view', 'id' => $model->testcategory_id]);
         } else if (Yii::$app->request->isAjax) {
             return $this->renderAjax('update', [

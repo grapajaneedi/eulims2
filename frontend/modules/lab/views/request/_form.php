@@ -23,6 +23,7 @@ use common\models\lab\RequestType;
 /* @var $form yii\widgets\ActiveForm */
 
 $disabled= $model->posted ? true:false;
+$disabled=$disabled || $model->status_id==2;
 if($disabled){
     $Color="#eee";
 }else{
@@ -239,9 +240,14 @@ SCRIPT;
                 <?php
                 $func = new Functions();
                 echo $func->GetCustomerList($form, $model, $disabled,'Customer');
+                if($disabled){
+                    $btnDisp=" disabled='disabled'";
+                }else{
+                    $btnDisp="";
+                }
                 ?> 
                 <span class="input-group-btn" style="padding-top: 25.5px">
-                    <button onclick="LoadModal('Create New Customer', '/customer/info/create');" class="btn btn-default" type="button"><i class="fa fa-user-plus"></i></button>
+                    <button onclick="LoadModal('Create New Customer', '/customer/info/create');"<?= $btnDisp ?> class="btn btn-default" type="button"><i class="fa fa-user-plus"></i></button>
                 </span>
             </div>
     </div>
@@ -251,7 +257,7 @@ SCRIPT;
         <div class="col-md-12">
         <?php echo $form->field($model, 'payment_type_id')->radioList(
             ArrayHelper::map(Paymenttype::find()->all(),'payment_type_id','type'),
-            ['itemOptions' => ['disabled' => $disabled,'id'=>'payment_type_id','onchange'=>$js]]
+            ['itemOptions' => ['disabled' => $disabled,'onchange'=>$js]]
         )->label(false); ?>
         </div>
     </div>

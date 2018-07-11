@@ -20,6 +20,7 @@ use common\models\system\Profile;
 use common\models\lab\Sample;
 use common\models\lab\Samplecode;
 use common\models\lab\Lab;
+use yii\helpers\ArrayHelper;
 
 
 /**
@@ -49,6 +50,18 @@ class Functions extends Component{
     }
     function getPesoSign(){
         return "₱";
+    }
+    public function DisplayImageFromFolder(){
+        $files = glob("../../frontend/web/images/icons/*.png");
+        $list=[];
+        for ($i=1; $i<count($files); $i++)
+        {
+                $num = $files[$i];
+                $Filename = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($num));
+                $listval=['icon'=>$Filename,'text'=>$Filename];
+                array_push($list, $listval);
+        }
+        return ArrayHelper::map($list, 'icon', 'icon');
     }
     /**
      * 
@@ -130,6 +143,23 @@ class Functions extends Component{
         $list = $Command->queryAll();
         return $list;
     }
+
+    function GenerateStatusTagging($Legend, $Ispayment){
+        $StatusLegend="<fieldset>";
+        $StatusLegend.="<legend>$Legend</legend>";
+        $StatusLegend.="<div style='padding: 0 10px'>";
+      
+                $StatusLegend.="<span class='badge btn-default legend-font' ><span class= 'glyphicon glyphicon-check'></span> PENDING</span>&nbsp;";
+                $StatusLegend.="<span class='badge btn-primary legend-font' ><span class= 'glyphicon glyphicon-check'></span> ONGOING</span>&nbsp;";
+                $StatusLegend.="<span class='badge btn-success legend-font' ><span class= 'glyphicon glyphicon-check'></span> COMPLETED</span>&nbsp;";
+                $StatusLegend.="<span class='badge btn-danger legend-font' ><span class= 'glyphicon glyphicon-check'></span> CANCELLED</span>&nbsp;";
+                $StatusLegend.="<span class='badge btn-warning legend-font' ><span class= 'glyphicon glyphicon-check'></span> ASSIGNED</span>&nbsp;";
+         
+        $StatusLegend.="</div>";
+        $StatusLegend.="</fieldset>";
+        return $StatusLegend;
+    }
+
     function GenerateSampleCode($request_id){
         $request =Request::find()->where(['request_id'=>$request_id])->one();
         $lab = Lab::findOne($request->lab_id);
@@ -187,7 +217,48 @@ class Functions extends Component{
         }
         return $return;
     }
-    function GetCustomerList($form,$model,$disabled=false,$Label=false){
+
+    function GetSampleCode($form,$model,$disabled=false,$Label=false){
+$dataExp = <<< SCRIPT
+         function (params, page) {
+                return {
+                    q: params.term, // search term
+                };
+            }
+SCRIPT;
+        $dataResults = <<< SCRIPT
+            function (data, page) {
+                return {
+                  results: data.results
+                };
+            }
+SCRIPT;
+                $url = \yii\helpers\Url::to(['/lab/tagging/getsamplecode']);
+              //  $url = '';
+                // Get the initial city description
+                $sample_code = empty($model->sample_code) ? '' : Sample::findOne($model->sample_code)->sample_code;
+                return $form->field($model, 'sample_code')->widget(Select2::classname(), [
+                    'initValueText' => $sample_code, // set the initial display text
+                    'options' => ['placeholder' => 'Search or Scan Sample Code ...','disabled'=>$disabled,'class'=>'.input-group.input-group-sm'],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'minimumInputLength' => 3,
+                        'language' => [
+                            'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                        ],
+                        'ajax' => [
+                            'url' => $url,
+                            'dataType' => 'json',
+                            'data' => new JsExpression($dataExp),
+                            'results' => new JsExpression($dataResults)
+                        ]
+                    ],
+                ])->label($Label);
+            }
+
+        
+
+function GetCustomerList($form,$model,$disabled=false,$Label=false){
 $dataExp = <<< SCRIPT
     function (params, page) {
         return {
@@ -195,7 +266,6 @@ $dataExp = <<< SCRIPT
         };
     }
 SCRIPT;
-
 $dataResults = <<< SCRIPT
     function (data, page) {
         return {
