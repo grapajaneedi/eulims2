@@ -9,6 +9,12 @@ use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use common\models\services\Testcategory;
 use common\components\Functions;
+use kartik\detail\DetailView;
+use yii\helpers\Url;
+use common\models\lab\Analysis;
+use yii\data\ActiveDataProvider;
+use common\models\lab\Batchtestreport;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\TaggingSearch */
@@ -231,3 +237,6 @@ ShowProgressSpinner(true);
         });
     });
     </script>
+
+
+    
