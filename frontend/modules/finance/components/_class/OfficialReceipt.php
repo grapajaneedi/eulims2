@@ -8,7 +8,7 @@
  * Module: MyPDF * 
  */
 
-namespace common\components;
+namespace frontend\modules\finance\components\_class;
 use Yii;
 use yii\helpers\ReplaceArrayValue;
 use kartik\mpdf\Pdf;
