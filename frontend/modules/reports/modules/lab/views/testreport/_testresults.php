@@ -15,10 +15,10 @@
             'attribute'=>'method',
             'enableSorting' => false,
         ],
-       	[
-            'attribute'=>'status',
-            'enableSorting' => false,
-        ],
+       	// [
+        //     'attribute'=>'status',
+        //     'enableSorting' => false,
+        // ],
         [
             'header' => 'Analyst',
             'attribute'=>'user_id',
