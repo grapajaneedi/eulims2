@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
 $rstlID=$GLOBALS['rstl_id'];
+
 ?>
 <div class="billinvoice-index">
     <?php

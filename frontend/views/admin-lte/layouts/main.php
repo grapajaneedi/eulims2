@@ -129,7 +129,15 @@ if (Yii::$app->controller->action->id === 'login') {
         </div>
     </div>
     <?php $this->endBody() ?>
-   
+    <script type="text/javascript">
+        function ShowProgressSpinner(df){
+            if(df){
+                $("#ProgressSpinner").show();
+            }else{
+                $("#ProgressSpinner").hide();
+            }
+        }  
+    </script>
     </body>
     </html>
     <?php $this->endPage() ?>

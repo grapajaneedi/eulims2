@@ -80,7 +80,7 @@ class Customer extends \yii\db\ActiveRecord
             [['customer_name', 'address'], 'string', 'max' => 200],
             [['head'], 'string', 'max' => 100],
             [['tel', 'fax', 'email'], 'string', 'max' => 50],
-            [['customer_name'], 'unique'],
+            [['customer_name', 'head', 'address'], 'unique', 'targetAttribute' => ['customer_name', 'head', 'address']],
             [['customer_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customertype::className(), 'targetAttribute' => ['customer_type_id' => 'customertype_id']],
             [['business_nature_id'], 'exist', 'skipOnError' => true, 'targetClass' => Businessnature::className(), 'targetAttribute' => ['business_nature_id' => 'business_nature_id']],
             [['industrytype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Industrytype::className(), 'targetAttribute' => ['industrytype_id' => 'industrytype_id']],
