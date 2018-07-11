@@ -21,6 +21,7 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
 use yii\db\Query;
+use frontend\modules\finance\components\_class\OfficialReceipt;
 
 class CashierController extends \yii\web\Controller
 {
@@ -170,7 +171,8 @@ class CashierController extends \yii\web\Controller
         }
     }
     public function actionPrintOr(){
-        echo "OR Printing....";
+        $or= new OfficialReceipt();
+        $or->PrintPDF('2000013', 'Sample');
     }
     public function actionViewReceipt($receiptid)
     { 
