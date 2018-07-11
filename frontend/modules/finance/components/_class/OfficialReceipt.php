@@ -16,6 +16,8 @@ use frontend\modules\finance\components\models\Ext_Receipt as Receipt;
 use yii\db\Query;
 use common\models\finance\Accountingcode;
 use common\models\finance\Paymentitem;
+use common\models\collection\Collection;
+
 interface PDFEnum{
     const PDF_Browser="I";
     const PDF_Download="D";

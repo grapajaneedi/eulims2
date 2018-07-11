@@ -21,21 +21,7 @@ $func= new Functions();
 $soaJS=<<<SCRIPT
     $('#billingpayment-payment_mode_id').on('select2:select', function (e) {
         var val=this.value;
-        if(val==2){// Cheque
-           $("#checkDetails").show();
-           $("#billingpayment-bank").prop('required',true);
-           $("#billingpayment-checknumber").prop('required',true);
-           $("#billingpayment-checkdate").prop('required',true);
-           $("#billingpayment-amount-disp").prop('required',true);
-           $("#billingpayment-amount").prop('required',true);
-        }else{
-           $("#checkDetails").hide();
-           $("#billingpayment-bank").prop('required',false);
-           $("#billingpayment-checknumber").prop('required',false);
-           $("#billingpayment-checkdate").prop('required',false);
-           $("#billingpayment-amount-disp").prop('required',true);
-           $("#billingpayment-amount").prop('required',false);
-        }
+        
     });
 SCRIPT;
 $this->registerJs($soaJS);
@@ -105,45 +91,7 @@ $this->registerJs($soaJS);
             </div>  
         </div>
         <div id="checkDetails" class="panel panel-primary" style="display: none">
-            <div class="panel-header btn-primary"><i class='fa fa-bank'></i> Bank Details</div>
-            <div class="panel-body">
-            <div class="col-sm-6">
-                <?php echo $form->field($model, 'bank')->textInput(['placeholder'=>'Bank Name'])->label('Bank') ?>
-            </div>
-            <div class="col-sm-6">
-                <?php echo $form->field($model, 'checknumber')->textInput(['placeholder'=>'Check #'])->label('Check #') ?>
-            </div>
-            <div class="col-sm-6">
-                 <?php
-             echo $form->field($model, 'checkdate')->widget(DatePicker::classname(), [
-             'options' => ['placeholder' => 'Select Date ...',
-             'autocomplete'=>'off'],
-             'type' => DatePicker::TYPE_COMPONENT_APPEND,
-                 'pluginOptions' => [
-                     
-                     'format' => 'yyyy-mm-dd',
-                     'todayHighlight' => true,
-                     'autoclose'=>true,   
-                 ]
-             ]);
-             ?>
-            </div>
-            <div class="col-sm-6">
-                <label class="control-label" for="billingpayment-amount">Amount</label>
-            <?php
-            echo $form->field($model, 'amount')->widget(MaskMoney::classname(), [
-                 'readonly'=>false,
-                 'options'=>[
-                     'style'=>'text-align: right'
-                 ],
-                 'pluginOptions' => [
-                    'prefix' => '₱ ',
-                    'allowNegative' => false,
-                 ]
-                ])->label(false);
-            ?>
-            </div>
-            </div>
+            
         </div>
         <div class="row"> 
             <div class="col-sm-6">

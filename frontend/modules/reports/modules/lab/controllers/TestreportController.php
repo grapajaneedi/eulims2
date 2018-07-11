@@ -19,6 +19,7 @@ use yii2tech\spreadsheet\Spreadsheet;
 use yii\data\ArrayDataProvider;
 
 use yii2tech\spreadsheet\Myspreadsheet;
+use frontend\modules\reports\modules\lab\templates\Testreportspreadsheet;
 
 /**
  * TestreportController implements the CRUD actions for Testreport model.
@@ -316,12 +317,12 @@ class TestreportController extends Controller
       //find the record the testreport
       $testreport = Testreport::findOne($id);
 
-      $exporter = new Myspreadsheet([
+      $exporter = new Testreportspreadsheet([
         'template'=>$template,
         'model'=>$testreport
         ]);
       $exporter->loaddoc();
-      $exporter->send('file.xls');
+      $exporter->send($testreport->report_num.'.xls');
 
 
     }

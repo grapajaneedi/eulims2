@@ -25,7 +25,7 @@ $js=<<<SCRIPT
         var AnalysisRows=$analysisdataprovider->count;
         var msg='';
         if(SampleRows>0 && AnalysisRows>0){
-            $.post(this.value, {
+            $.post('/lab/request/saverequestransaction', {
                 request_id: $model->request_id,
                 lab_id: $model->lab_id,
                 rstl_id: $rstlID,
@@ -367,7 +367,7 @@ if($Request_Ref){
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Samples</h3>',
                     'type'=>'primary',
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>!$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
                     'after'=>false,
                 ],
                 // 'rowOptions' => function ($model, $key, $index, $grid) {
@@ -571,37 +571,4 @@ $this->registerJs("
 
     }*/
 ");
-?>
-
-<?php
-    // This section will allow to popup a notification
-    /*$session = Yii::$app->session;
-    if ($session->isActive) {
-        $session->open();
-        if (isset($session['deletemessage'])) {
-            $sweetalert->CrudAlert("Successfully Deleted","WARNING",true);
-            unset($session['deletemessage']);
-            $session->close();
-        }
-        if (isset($session['updatemessage'])) {
-            $sweetalert->CrudAlert("Successfully Updated","SUCCESS",true);
-            unset($session['updatemessage']);
-            $session->close();
-        }
-        if (isset($session['savemessage'])) {
-            $sweetalert->CrudAlert("Successfully Saved","SUCCESS",true);
-            unset($session['savemessage']);
-            $session->close();
-        }
-        if (isset($session['cancelmessage'])) {
-            $sweetalert->CrudAlert("Successfully Cancelled","WARNING",true);
-            unset($session['cancelmessage']);
-            $session->close();
-        }
-        if (isset($session['requestmessage'])) {
-            $sweetalert->CrudAlert("Successfully Generated Reference Number and Sample Code","WARNING",true);
-            unset($session['requestmessage']);
-            $session->close();
-        }
-    }*/
 ?>
