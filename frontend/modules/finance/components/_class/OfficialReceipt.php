@@ -17,7 +17,7 @@ use yii\db\Query;
 use common\models\finance\Accountingcode;
 use common\models\finance\Paymentitem;
 use common\models\collection\Collection;
-
+use common\components\NumbersToWords;
 interface PDFEnum{
     const PDF_Browser="I";
     const PDF_Download="D";
@@ -41,6 +41,7 @@ class OfficialReceipt implements PDFEnum{
        
     }
     private function ORTemplate($ORNumber,$ORTitle){
+        $numbertowords=new NumbersToWords();
         $Collection= Receipt::find()->where(['or_number'=>$ORNumber])->one();
        // $modeofpayment=$Collection->mode
         $ORHeader="<table border='1' width=100% cellpadding='0' cellspacing='0'>";
@@ -141,8 +142,15 @@ class OfficialReceipt implements PDFEnum{
         for($x=1;$x<30;$x++){
             $space.="&nbsp;";
         }
+        $amountinwords=$numbertowords->convert($Collection->total);
+        $whole_number=(int)$Collection->total;
+        $remainder=$Collection->total - $whole_number;
+        if (!$remainder){
+            $amountinwords.=" And 00/100";
+        }
+        
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='8' style='word-wrap':break-word;height:34px;>".$space."One Million one thousand one hundred fifty two and 00/100</td>";
+        $ORHeader.="<td colspan='8' style='word-wrap':break-word;height:34px;>".$space." ".$amountinwords."</td>";
         $ORHeader.="</tr>";
         
         
