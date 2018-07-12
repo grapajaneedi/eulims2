@@ -12,6 +12,7 @@ use common\models\finance\ReceiptSearch;
 use common\models\finance\Orseries;
 use common\models\finance\Collection;
 use common\models\finance\Check;
+use common\models\finance\CheckSearch;
 use common\models\finance\Deposit;
 use common\models\finance\Soa;
 use common\models\finance\SoaSearch;
@@ -44,22 +45,30 @@ class CashierController extends \yii\web\Controller
     }
     public function actionCreateBillingReceipt($id){
         $model = new BillingPayment();
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {// Saving
+            
+        }else{
             $model->receiptDate=date('Y-m-d');
             $model->payment_mode_id=1;
             $model->collectiontype_id=1;
             $model->deposit_type_id=1;
             $SoaModel= Soa::find()->where(['soa_id'=>$id])->one();
+            $searchModel = new CheckSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
             if(Yii::$app->request->isAjax){
 
                 return $this->renderAjax('billing/_form', [
                     'model' => $model,
                     'SoaModel'=> $SoaModel,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
                 ]);
             }else{
                 return $this->render('billing/_form', [
                     'model' => $model,
                     'SoaModel'=> $SoaModel,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
                 ]);
             }
         }

@@ -20,8 +20,12 @@ $paymentlist='';
 $func= new Functions();
 $soaJS=<<<SCRIPT
     $('#billingpayment-payment_mode_id').on('select2:select', function (e) {
-        var val=this.value;
-        
+        var val=this.value; //2 Check
+        if(val==2){
+            $("#checkDetails").show();
+        }else{
+            $("#checkDetails").hide();
+        }
     });
 SCRIPT;
 $this->registerJs($soaJS);
@@ -91,7 +95,12 @@ $this->registerJs($soaJS);
             </div>  
         </div>
         <div id="checkDetails" class="panel panel-primary" style="display: none">
-            
+            <?php
+                echo $this->renderAjax('_check', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]);
+            ?>
         </div>
         <div class="row"> 
             <div class="col-sm-6">
