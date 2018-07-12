@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>      
         <div class="box-body">
           <div class="row">
-            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="col-md-2 col-sm-6 col-xs-12 col-md-offset-1">
              
              <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
                  <a href="#" title="Tagging"><img class="imgHover" src="/images/taggingsquare.png" style="height:120px;width: 120px"></a>
@@ -80,21 +80,21 @@ $this->params['breadcrumbs'][] = $this->title;
             </div> 
             
             <!-- /.col -->
-           <div class="col-md-3 col-sm-6 col-xs-12">
+           <div class="col-md-2 col-sm-6 col-xs-12">
              
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
                   <a href="#" title="Request"><img class="imgHover" src="/images/requestsquare.png" style="height:120px;width: 120px" ></a>
               </div>
             </div>
             <!-- /.col -->
-            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="col-md-2 col-sm-6 col-xs-12">
              
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
                    <a href="/reports/lab/accomplishment/" title="Accomplishment"><img class="imgHover" src="/images/accomplishmentsquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div>
             
-            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="col-md-2 col-sm-6 col-xs-12">
              
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
@@ -102,11 +102,11 @@ $this->params['breadcrumbs'][] = $this->title;
               </div>
             </div>
 			
-			<div class="col-md-3 col-sm-6 col-xs-12">
+	    <div class="col-md-2 col-sm-6 col-xs-12">
              
 
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                 <a href="/reports/lab/statistic/customers" title="Customer Served"><img class="imgHover" src="/images/summarysamplessquare.png" style="height:120px;width: 120px"></a>
+                 <a href="/reports/lab/statistic/customers" title="Customer Served"><img class="imgHover" src="/images/customerservedsquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div>
             
