@@ -158,61 +158,6 @@ setTimeout(function(){
 ?>
 
 
-<?php 
-    $gridColumn = [
-        [
-            'class' => 'kartik\grid\ExpandRowColumn',
-            'width' => '50px',
-            'value' => function ($model, $key, $index, $column) {
-                return GridView::ROW_COLLAPSED;
-            },
-            'detail' => function ($model, $key, $index, $column) {
-         
-                 return $this->render('_workflow', [
-                     'model'=>$model,
-                 ]);
-            },
-            'headerOptions' => ['class' => 'kartik-sheet-style'],
-            'expandOneOnly' => true
-        ],
-         
-    ]; 
-    ?>
-    <?= 
-    GridView::widget([
-        'dataProvider' => $analysisdataprovider,
-       // 'filterModel' => $searchModel,
-          'columns' => $gridColumn,
-        'pjax' => true,
-        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
-        'panel' => [
-                'type' => GridView::TYPE_PRIMARY,
-                'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-            ],
-       'toolbar' => [
-            '{export}',
-            ExportMenu::widget([
-                'dataProvider' => $analysisdataprovider,
-                'columns' => $gridColumn,
-                'target' => ExportMenu::TARGET_BLANK,
-                'fontAwesome' => true,
-                'dropdownOptions' => [
-                    'label' => 'Full',
-                    'class' => 'btn btn-default',
-                    'itemsBefore' => [
-                        '<li class="dropdown-header">Export All Data</li>',
-                    ],
-                ],
-            ]) ,
-        ],
-    ]);
+
+
     
-    // Html::a('Delete', ['delete', 'id' => $model->Package_DetailID], [
-    //     'class' => 'btn btn-danger',
-    //     'data' => [
-    //         'confirm' => 'Are you sure you want to delete this item?',
-    //         'method' => 'post',
-    //     ],
-    // ])  
-    
-    ?>

@@ -68,7 +68,6 @@ class AnalysisController extends Controller
         ]);
     }
 
-    
     public function actionGettest() {
         if(isset($_GET['test_id'])){
             $id = (int) $_GET['test_id'];
@@ -158,7 +157,7 @@ class AnalysisController extends Controller
      */
     public function actionCreate($id)
     {
-        $model = new Analysis();
+        $model = new Analysis;
 
         $request_id = $_GET['id'];
         $session = Yii::$app->session;
@@ -170,9 +169,9 @@ class AnalysisController extends Controller
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $sampleDataProvider = new ActiveDataProvider([
                 'query' => $samplesQuery,
-                'pagination' => [
-                    'pageSize' => 10,
-                ],        
+                // 'pagination' => [
+                //     'pageSize' => 10,
+                // ],        
         ]);
 
         $request = $this->findRequest($request_id);
@@ -218,13 +217,15 @@ class AnalysisController extends Controller
                 return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
        } 
         if (Yii::$app->request->isAjax) {
+
+            //please check on this
                 $model->rstl_id = $GLOBALS['rstl_id'];
                 $model->pstcanalysis_id = $GLOBALS['rstl_id'];
                 $model->request_id = $request_id;
                 $model->testname = $GLOBALS['rstl_id'];
                 $model->cancelled = $GLOBALS['rstl_id'];
-                $model->sample_id = $GLOBALS['rstl_id'];
-                $model->sample_code = $GLOBALS['rstl_id'];
+                 $model->sample_id = $GLOBALS['rstl_id'];
+              $model->sample_code = $GLOBALS['rstl_id'];
                 $model->date_analysis = date("Y-m-d h:i:s");;
 
             return $this->renderAjax('_form', [
@@ -284,38 +285,36 @@ class AnalysisController extends Controller
      }
     public function actionUpdate($id)
     {
-                 $model = new Analysis();
-        
-                // $request_id = $_GET['id'];
-                // $session = Yii::$app->session;
-        
-                // $searchModel = new AnalysisSearch();
-                // $samplesearchmodel = new SampleSearch();
-                // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
-               $samplesQuery = Sample::find()->where(['request_id' => $id]);
-                $sampleDataProvider = new ActiveDataProvider([
-                        'query' => $samplesQuery,
-                        'pagination' => [
-                            'pageSize' => 10,
+        $model = $this->findModel($id);
+
+        $samplesQuery = Sample::find()->where(['request_id' => $id]);
+        $analysisquery = Analysis::find()->where(['analysis_id' => $id])->one();
+        $requestquery = Analysis::find()->where([ 'request_id'=> $analysisquery->request_id])->one();
+
+            $sampleDataProvider = new ActiveDataProvider([
+                'query' => $samplesQuery,
+                'pagination' => [
+                 'pageSize' => 10,
                         ],        
                 ]);
-        
-                // $request = $this->findRequest();
-                // $labId = $request->lab_id;
         
                  $testcategory = $this->listTestcategory(1);
         
                 $sampletype = [];
                 $test = [];
 
-        if (Yii::$app->request->isAjax) {
+
+            if ($model->load(Yii::$app->request->post())) {
+                  
+                    if($model->save(false)){
+                        Yii::$app->session->setFlash('success', 'Analysis Successfully Updated'); 
+                        return $this->redirect(['/lab/request/view', 'id' =>$requestquery->request_id]);
+        
+                    }
+                } elseif (Yii::$app->request->isAjax) {
 
         return $this->renderAjax('_form', [
             'model' => $model,
-            // 'searchModel' => $searchModel,
-            // 'samplesearchmodel'=>$samplesearchmodel,
-            // 'dataProvider' => $dataProvider,
              'sampleDataProvider' => $sampleDataProvider,
              'testcategory' => $testcategory,
             'test' => $test,
@@ -324,9 +323,6 @@ class AnalysisController extends Controller
     }else{
         return $this->render('_form', [
             'model' => $model,
-            // 'searchModel' => $searchModel,
-            // 'dataProvider' => $dataProvider,
-            // 'samplesearchmodel'=>$samplesearchmodel,
              'sampleDataProvider' => $sampleDataProvider,
              'testcategory' => $testcategory,
             'sampletype' => $sampletype,
@@ -334,7 +330,7 @@ class AnalysisController extends Controller
         ]);
     }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
+      
 
                 // $model = $this->findModel($id);
         

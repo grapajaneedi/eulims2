@@ -370,14 +370,6 @@ if($Request_Ref){
                     'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>!$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
                     'after'=>false,
                 ],
-                // 'rowOptions' => function ($model, $key, $index, $grid) {
-                //     return [
-                //         'id' => $model->sample_id,
-                //         'onclick' => 'updateSample('.$model->sample_id.');',
-                //         'style' => 'cursor:pointer;',
-                //         'title' => 'Click to update sample',
-                //     ];
-                // },
                 'columns' => $gridColumns,
                 'toolbar' => [
                     'content'=> Html::a('<i class="glyphicon glyphicon-repeat"></i>', [Url::to(['request/view','id'=>$model->request_id])], [
@@ -427,15 +419,14 @@ if($Request_Ref){
                     //     return $model->samples->sample_code;
                     // },
                     'enableSorting' => false,
+                  
                 ],
                 [
                     'attribute'=>'quantity',
                     'header'=>'Quantity',
-                    // 'value' => function($model) {
-                    //     return $model->samples->sample_code;
-                    // },
                     'enableSorting' => false,
-                    'pageSummary' => '<span style="float:right";>SUBTOTAL<br>DISCOUNT<br>TOTAL</span>',
+                    'pageSummary' => '<span style="float:right";>SUBTOTAL</span>',
+                   
                 ],
                 [
                     'attribute'=>'fee',
@@ -445,12 +436,13 @@ if($Request_Ref){
                         'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
                     ],
                     'hAlign' => 'left', 
-                    'vAlign' => 'middle',
+                    'vAlign' => 'left',
                     'width' => '7%',
                     'format' => ['decimal', 2],
                     'pageSummary' => true,  
                   
                 ],
+                
                 [
                   //  'attribute'=>'status',
                     'header'=>'Status',
@@ -467,11 +459,11 @@ if($Request_Ref){
                 'template' => '{update}{delete}',
                 'buttons'=>[
                     'update'=>function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/analysis/update','id'=>$model->request_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "Update Analysis <font color='Blue'></font>")]);
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/analysis/update','id'=>$model->analysis_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "Update Analysis <font color='Blue'></font>")]);
                     },
-                    // 'delete'=>function ($url, $model) {
-                    //     return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/lab/analysis/delete','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-danger','title' => Yii::t('app', "Update Test Category<font color='Blue'></font>")]);
-                    // },
+                    'delete'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/lab/analysis/delete','id'=>$model->analysis_id]), 'class' => 'btn btn-danger']);
+                    },
                 ],
             ],
              
@@ -480,10 +472,18 @@ if($Request_Ref){
             echo GridView::widget([
                 'id' => 'analysis-grid',
                 'dataProvider'=> $analysisdataprovider,
-                'summary' => '',
-                'responsive'=>true, 
+                'pjax'=>true,
+                'pjaxSettings' => [
+                    'options' => [
+                        'enablePushState' => false,
+                    ]
+                ],
+                'responsive'=>true,
+                'striped'=>true,
+                'hover'=>true,
                 'showPageSummary' => true,
                 'hover'=>true,
+                
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Analysis</h3>',
                     'type'=>'primary',

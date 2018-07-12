@@ -130,12 +130,18 @@ class PackagelistController extends Controller
                  $sample_ids= $_POST['sample_ids'];
                  $ids = explode(',', $sample_ids);  
                  $post= Yii::$app->request->post();
- 
+                    //iloop yung mga tests dito (1,2,3,4,5)
+                    //separate loop ang tests
+
                  foreach ($ids as $sample_id){
                      $analysis = new Analysis();
+
+                     //yung package name mo na ituuu
+                     //test
+                    // $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
                      $analysis->sample_id = $sample_id;
-                     $analysis->cancelled = 1;
-                     $analysis->pstcanalysis_id = 1;
+                     $analysis->cancelled = 0;
+                     $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
                      $analysis->request_id = $request_id;
                      $analysis->rstl_id = $GLOBALS['rstl_id'];
                      $analysis->test_id = 1;
