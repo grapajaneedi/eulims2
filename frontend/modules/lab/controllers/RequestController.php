@@ -165,7 +165,7 @@ class RequestController extends Controller
 
     public function actionTest($id){
         $Func=new Functions();
-        $response=$Func->GenerateSampleCode(12);
+        $response=$Func->GenerateSampleCode($id);
         echo $response;
     }
     public function actionSaverequestransaction(){
@@ -211,7 +211,7 @@ class RequestController extends Controller
         if($Request->save()){
             $Transaction->commit();
             $Func=new Functions();
-            $response=$Func->GenerateSampleCode($Request->request_id);
+            $response=$Func->GenerateSampleCode($request_id);
             if($response){
                 $return="Success";
             }else{

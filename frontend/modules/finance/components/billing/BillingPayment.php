@@ -10,6 +10,13 @@
 
 namespace frontend\modules\finance\components\billing;
 use yii\base\Model;
+use common\models\finance\Receipt;
+use common\models\finance\Check;
+use common\models\finance\Soa;
+use common\models\lab\Request;
+use common\models\finance\Customerwallet;
+use common\models\finance\Orseries;
+use common\models\finance\SoaReceipt;
 
 /**
  * Description of BillingPayment
@@ -40,6 +47,11 @@ class BillingPayment extends Model{
     public $checknumber;
     public $checkdate;
     public $amount;
+    // SOA Attributes
+    public $soa_id;
+    public $customer_id;
+    public $payment_amount;
+    public $total_amount;
 
     public function init(){
         $this->isNewRecord=true;

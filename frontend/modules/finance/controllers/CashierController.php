@@ -7,6 +7,7 @@ use common\models\finance\Op;
 use frontend\modules\finance\components\models\CollectionSearch;
 use common\models\finance\Paymentitem;
 use frontend\modules\finance\components\billing\BillingPayment;
+use frontend\modules\finance\components\models\Ext_Receipt as Receipt;
 use common\models\finance\ReceiptSearch;
 use common\models\finance\Orseries;
 use common\models\finance\Collection;
@@ -20,6 +21,7 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
 use yii\db\Query;
+use frontend\modules\finance\components\_class\OfficialReceipt;
 
 class CashierController extends \yii\web\Controller
 {
@@ -42,22 +44,24 @@ class CashierController extends \yii\web\Controller
     }
     public function actionCreateBillingReceipt($id){
         $model = new BillingPayment();
-        $model->receiptDate=date('Y-m-d');
-        $model->payment_mode_id=1;
-        $model->collectiontype_id=1;
-        $model->deposit_type_id=1;
-        $SoaModel= Soa::find()->where(['soa_id'=>$id])->one();
-        if(Yii::$app->request->isAjax){
-           
-            return $this->renderAjax('billing/_form', [
-                'model' => $model,
-                'SoaModel'=> $SoaModel,
-            ]);
-        }else{
-            return $this->render('billing/_form', [
-                'model' => $model,
-                'SoaModel'=> $SoaModel,
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->receiptDate=date('Y-m-d');
+            $model->payment_mode_id=1;
+            $model->collectiontype_id=1;
+            $model->deposit_type_id=1;
+            $SoaModel= Soa::find()->where(['soa_id'=>$id])->one();
+            if(Yii::$app->request->isAjax){
+
+                return $this->renderAjax('billing/_form', [
+                    'model' => $model,
+                    'SoaModel'=> $SoaModel,
+                ]);
+            }else{
+                return $this->render('billing/_form', [
+                    'model' => $model,
+                    'SoaModel'=> $SoaModel,
+                ]);
+            }
         }
     } 
     public function actionBilling(){
@@ -165,6 +169,10 @@ class CashierController extends \yii\web\Controller
                 'op_model'=> $op_model,
             ]);
         }
+    }
+    public function actionPrintOr(){
+        $or= new OfficialReceipt();
+        $or->PrintPDF('2000013', 'Sample');
     }
     public function actionViewReceipt($receiptid)
     { 

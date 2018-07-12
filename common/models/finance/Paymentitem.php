@@ -16,8 +16,10 @@ use Yii;
  * @property double $amount
  * @property int $cancelled
  * @property int $status
+ * @property int $receipt_id
  *
  * @property Orderofpayment $orderofpayment
+ * @property Receipt $receipt 
  */
 class Paymentitem extends \yii\db\ActiveRecord
 {
@@ -44,10 +46,11 @@ class Paymentitem extends \yii\db\ActiveRecord
     {
         return [
             [['rstl_id', 'request_id', 'orderofpayment_id', 'details', 'amount','request_type_id'], 'required'],
-            [['rstl_id', 'request_id', 'request_type_id', 'orderofpayment_id', 'cancelled', 'status'], 'integer'],
+            [['rstl_id', 'request_id','receipt_id', 'request_type_id', 'orderofpayment_id', 'cancelled', 'status'], 'integer'],
             [['amount'], 'number'],
             [['details'], 'string', 'max' => 50],
             [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Op::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
+            [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::className(), 'targetAttribute' => ['receipt_id' => 'receipt_id']],
         ];
     }
 
@@ -66,6 +69,7 @@ class Paymentitem extends \yii\db\ActiveRecord
             'amount' => 'Amount',
             'cancelled' => 'Cancelled',
             'status' => 'Status',
+            'receipt_id' => 'Receipt ID', 
         ];
     }
 
@@ -76,4 +80,11 @@ class Paymentitem extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Op::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+   public function getReceipt()
+   {
+       return $this->hasOne(Receipt::className(), ['receipt_id' => 'receipt_id']);
+   }
 }

@@ -21,6 +21,7 @@ use common\models\lab\Sample;
 use common\models\lab\Samplecode;
 use common\models\lab\Lab;
 use yii\helpers\ArrayHelper;
+use common\models\lab\Request;
 
 
 /**
