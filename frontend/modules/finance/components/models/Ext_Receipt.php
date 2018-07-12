@@ -5,6 +5,8 @@ namespace frontend\modules\finance\components\models;
 use Yii;
 use yii\base\Model;
 use common\models\finance\Receipt;
+use common\models\system\Rstl;
+use common\models\finance\Accountingcodemapping;
 
 /**
  * OrderofpaymentSearch represents the model behind the search form about `common\models\finance\Orderofpayment`.
@@ -28,6 +30,14 @@ class Ext_Receipt extends Receipt
         ];
     }
     
-  
+    public function getRstl()
+    {
+       return $this->hasOne(Rstl::className(), ['rstl_id' => 'rstl_id']);
+    }
+    
+     public function getAccountingcodemap()
+    {
+       return $this->hasOne(Accountingcodemapping::className(), ['collectiontype_id' => 'collectiontype_id']);
+    }
 }
 ?>
