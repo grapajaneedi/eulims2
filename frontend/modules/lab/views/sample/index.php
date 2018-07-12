@@ -42,6 +42,12 @@ Modal::end();*/
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'pjax'=>true,
+        'pjaxSettings' => [
+            'options' => [
+                'enablePushState' => false,
+            ]
+        ],
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
 
