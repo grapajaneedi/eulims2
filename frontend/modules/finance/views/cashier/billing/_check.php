@@ -18,7 +18,7 @@ $gridColumns=[
 echo GridView::widget([
     'id' => 'kv-grid-demo',
     'dataProvider' => $dataProvider,
-    'filterModel' => $searchModel,
+    //'filterModel' => $searchModel,
     'columns' => $gridColumns, // check the configuration for grid columns by clicking button above
     'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
     'headerRowOptions' => ['class' => 'kartik-sheet-style'],
@@ -41,9 +41,17 @@ echo GridView::widget([
     'showPageSummary' => true,
     'panel' => [
         'type' => GridView::TYPE_PRIMARY,
-        'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+        'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode("Check Details"),
     ],
     'persistResize' => false,
     'toggleDataOptions' => ['minCount' => 10],
     
 ]);
+?>
+<div class="BankeDetails" style="position: fixed; top: 340px;background-color: gray">
+    <div class="row">
+        <div class="col-sm-6">
+            <input id="bank_name" type="text" placeholder="Enter Bank Name" class="form-control" />
+        </div>
+    </div>
+</div>
