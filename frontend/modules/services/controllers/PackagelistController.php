@@ -7,6 +7,8 @@ use common\models\lab\Packagelist;
 use common\models\lab\PackagelistSearch;
 use common\models\lab\Analysis;
 use common\models\lab\AnalysisSearch;
+use common\models\lab\Test;
+use common\models\lab\TestSearch;
 use common\models\lab\Request;
 use common\models\lab\RequestSearch;
 use common\models\lab\Sample;
@@ -138,7 +140,7 @@ class PackagelistController extends Controller
 
                      //yung package name mo na ituuu
                      //test
-                    // $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
+                     $modelpackage =  Packagelist::findOne(['package_id'=>$post['Packagelist']['name']]);
                      $analysis->sample_id = $sample_id;
                      $analysis->cancelled = 0;
                      $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
@@ -149,15 +151,42 @@ class PackagelistController extends Controller
                      $analysis->sample_type_id = (int) $post['Packagelist']['sample_type_id'];
                      $analysis->testcategory_id = (int) $post['Packagelist']['testcategory_id'];
                      $analysis->is_package = 1;
-                     $analysis->method = "method";
-                     $analysis->testname = $post['Packagelist']['tests'];
+                     $analysis->method = "-";
+                     $analysis->fee = $post['Packagelist']['rate'];
+                     $analysis->testname = $modelpackage->name;
                      $analysis->references = "references";
                      $analysis->quantity = 1;
                      $analysis->sample_code = "sample";
                      $analysis->date_analysis = '2018-06-14 7:35:0';   
                      $analysis->save();
 
-                 }        
+                 }      
+                 
+                //  foreach ($ids as $sample_id){
+                //     $analysis = new Analysis();
+
+                //     //yung package name mo na ituuu
+                //     //test
+                //    // $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
+                //     $analysis->sample_id = $sample_id;
+                //     $analysis->cancelled = 0;
+                //     $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
+                //     $analysis->request_id = $request_id;
+                //     $analysis->rstl_id = $GLOBALS['rstl_id'];
+                //     $analysis->test_id = 1;
+                //     $analysis->user_id = 1;
+                //     $analysis->sample_type_id = (int) $post['Packagelist']['sample_type_id'];
+                //     $analysis->testcategory_id = (int) $post['Packagelist']['testcategory_id'];
+                //     $analysis->is_package = 1;
+                //     $analysis->method = "method";
+                //     $analysis->testname = $post['Packagelist']['tests'];
+                //     $analysis->references = "references";
+                //     $analysis->quantity = 1;
+                //     $analysis->sample_code = "sample";
+                //     $analysis->date_analysis = '2018-06-14 7:35:0';   
+                //     $analysis->save();
+
+                // }      
                  Yii::$app->session->setFlash('success', 'Package Successfully Created');
                  return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
         } 
@@ -235,7 +264,20 @@ class PackagelistController extends Controller
             $modelpackagelist =  Packagelist::findOne(['package_id'=>$id]);
             if(count($modelpackagelist)>0){
                 $rate = $modelpackagelist->rate;
-                $tests = $modelpackagelist->tests;
+
+                $tet = $modelpackagelist->tests;
+
+                $t = explode(',', $tet);
+               
+
+                foreach ($t as $test_id){
+                    $test_id =  Test::findOne(['test_id'=>$id]);
+
+                    $testname = $test_id->testname;
+                    $newline = "\n";
+                    $tests = $testname.$newline.$testname;
+                } 
+                      
             } else {
                 $rate = "";
                 $tests = "";
