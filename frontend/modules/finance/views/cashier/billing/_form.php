@@ -5,13 +5,12 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use kartik\widgets\DatePicker;
-use yii\helpers\Url;
 use common\models\finance\DepositType;
 use common\models\finance\Paymentmode;
 use common\models\finance\Collectiontype;
 use common\models\finance\Orseries;
 use common\components\Functions;
-use kartik\money\MaskMoney;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Receipt */
