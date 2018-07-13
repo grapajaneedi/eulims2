@@ -17,6 +17,7 @@ use kartik\widgets\TypeaheadBasic;
 use kartik\widgets\Typeahead;
 use common\models\services\Test;
 
+
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Fee */
 /* @var $form yii\widgets\ActiveForm */
@@ -40,7 +41,20 @@ $(".select-on-check-all").change(function(){
  
 });
 
+$("#btnSaveRequest").click(function(){
+    
+});  
+
 SCRIPT;
+
+$jss=<<<SCRIPT
+
+$("#total").val($("#fee-unit_cost").val()*$("#qty").val());
+
+SCRIPT;
+
+
+
 $this->registerJs($js);
 ?>
 
@@ -102,8 +116,8 @@ $this->registerJs($js);
 
         <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
 
-        <?= Html::label('Quantity', 'xxx') ?>
-        <?= Html::textInput('xxx', '', ['class' => 'form-control'], ['readonly' => true]) ?>
+        <?= Html::label('Quantity', '') ?>
+        <?= Html::textInput('qty', '', ['class' => 'form-control', 'onchange'=>$jss, 'id'=>'qty'], ['readonly' => true]) ?>
 
         </div>
     </div>
@@ -114,7 +128,9 @@ $this->registerJs($js);
         </div>
         <div class="col-sm-6">
         <?= Html::label('Total', 'xxx') ?>
-        <?= Html::textInput('xxx', '', ['class' => 'form-control', 'readonly'=> true]) ?>
+        <?= Html::textInput('xxx', '', ['class' => 'form-control', 'readonly'=> true, 'id'=>'total']) ?>
+
+    
         </div>
     </div>
     

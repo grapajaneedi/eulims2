@@ -116,6 +116,14 @@ class FeeController extends Controller
             foreach ($ids as $sample_id){
 
                 $analysis = new Analysis();
+
+                $modelfee=  Fee::findOne(['fee_id'=>$post['Fee']['name']]);
+
+                //  echo "<pre>";
+                // var_dump($modelfee->name);
+                // echo "</pre>";
+                // exit;
+
                 $analysis->sample_id = $sample_id;
                 $analysis->cancelled = 1;
                 $analysis->pstcanalysis_id = 1;
@@ -126,11 +134,12 @@ class FeeController extends Controller
                 $analysis->sample_type_id = 1;
                 $analysis->testcategory_id = 1;
                 $analysis->is_package = 0;
-                $analysis->method = "method";
-                $analysis->references = "references";
-                $analysis->testname = "sdsdf";
-                $analysis->quantity = 1;
-                $analysis->sample_code = "sample code";
+                $analysis->method = "-";
+                $analysis->fee = $post['xxx'];
+                $analysis->references = "-";
+                $analysis->testname = $modelfee->name;
+                $analysis->quantity = $post['qty'];
+                $analysis->sample_code = "-";
                 $analysis->date_analysis = '2018-06-14 7:35:0';   
                 $analysis->save();
 

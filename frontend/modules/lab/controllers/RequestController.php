@@ -129,34 +129,48 @@ class RequestController extends Controller
     
         $request = Request::find()->where(['request_id' => $id]);
         $samplesquery = Sample::find()->where(['request_id' => $id])->all();
+
+        
+
+        $requestquery = Request::find()->where(['request_id' => $id])->one();
         
         foreach ($samplesquery as $sample) {
+            $limitreceived_date = substr($requestquery['request_datetime'], 0,10);
             $mpdf->AddPage('','','','','',0,0,0,0);
-            $samplecode = '<font size="1">&nbsp;&nbsp;&nbsp;&nbsp;'.$sample['samplename'].'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;WI-003-F1<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            Rev 03/03.01.18</font>';
+            $samplecode = '<font size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$sample['sample_code']."</b>&nbsp;&nbsp;".$sample['samplename'].
+            '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font size="1"><b>Received:&nbsp;&nbsp;</b>'.$limitreceived_date.'&nbsp;&nbsp;<b>Due:&nbsp;&nbsp;</b>'.$requestquery['report_due'];
+            
+            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            // &nbsp;&nbsp;&nbsp;WI-003-F1<br>
+            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            // Rev 03/03.01.18</font>';
             //$mpdf->SetHTMLHeader('huhuhu');
-            $mpdf->SetHeader('This is header');
+          //  $mpdf->SetHeader('This is header');
 
-           
-            $mpdf->WriteHTML("<barcode code='CHE-0847' type='C39' />");
+        
+            $mpdf->WriteHTML("<barcode code=".$sample['sample_code']." type='C39' />");
             $mpdf->WriteHTML($samplecode);
-
-            $mpdf->SetFooter('This is footer');
+         
+         //   $mpdf->SetFooter('This is footer');
 
             $text = '<font size="5">WI-003-F1';
             $text2 = '<font size="5"><b>Rev 03/03.01.18<b>';
 
+            $i = 1;
             $analysisquery = Analysis::find()->where(['sample_id' => $sample['sample_id']])->all();
                    foreach ($analysisquery as $analysis){
-                        $mpdf->WriteHTML("&nbsp;&nbsp;&nbsp;<font size='2'>".$analysis['testname']."</font>");
+                        $mpdf->WriteHTML("&nbsp;&nbsp;&nbsp;&nbsp;<font size='2'>".$analysis['testname']."</font>");
+
+                        if ($i++ == 3)
+                        break;
                    }               
             }  
+
+           
             $mpdf->Output();
        }
     }
