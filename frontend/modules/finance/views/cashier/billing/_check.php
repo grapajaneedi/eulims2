@@ -32,24 +32,35 @@ $js=<<<SCRIPT
       var cell3 = row.insertCell(2);
       var cell4 = row.insertCell(3);
       var cell5 = row.insertCell(4);
+      cell1.setAttribute("class", "kv-align-center");
       cell1.innerHTML = "";
       cell2.innerHTML = $("#bank_name").val();
+      cell3.setAttribute("class", "kv-align-center");
       cell3.innerHTML = $("#checknumber").val();
+      cell4.setAttribute("class", "kv-align-center");
       cell4.innerHTML = $("#checkdate").val(); //
+      cell5.setAttribute("class", "kv-align-right");
       cell5.innerHTML = $("#check_amount").val();//
       ClearDetails()
    }
 SCRIPT;
 $this->registerJs($js);
 $gridColumns=[
-    'receipt_id',
+    [
+        'attribute'=>'receipt_id',
+        'label'=>'ReceiptID',
+        'width'=>'20px'
+    ],
     'bank',
-    'checknumber',
-    'checkdate',
+    [
+        'attribute'=>'checknumber',
+        'label'=>'Check #',
+        'hAlign'=>'center'
+    ],
     [
         'attribute'=>'checkdate',
         'label'=>'Check Date',
-        'hAlign'=>'right'
+        'hAlign'=>'center'
     ],
     [
         'attribute'=>'amount',
