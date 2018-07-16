@@ -13,44 +13,52 @@ use kartik\widgets\DatePicker;
 
 /* @var $this yii\web\View */
 $js=<<<SCRIPT
+   var table=new tableobject("checkTable");
+   table.truncaterow();
+   table.insertfooter(['','','Total','0.00'],['kv-page-summary warning','kv-page-summary warning','kv-page-summary warning kv-align-right','kv-page-summary warning kv-align-right kv-total']);
    $("#btnAddBankDetails").click(function(){
         InsertRow();
-   });  
+   }); 
+   $(".form-control").on('select',function(){
+       $("#btnAddBankDetails").prop('disabled',false); 
+   });
+   
    function ClearDetails(){
       $("#bank_name").val("");
       $("#checknumber").val("");
       $("#check_amount-disp").maskMoney('mask', 0.00);
       $("#check_amount-disp").val(0.00);
       $("#check_amount-disp").val(0);
+      $("#btnAddBankDetails").prop('disabled',true);
    }
    function InsertRow(){
-      var table = document.getElementById("checkTable");
-      var totalRows=document.getElementById("checkTable").rows.length;
-      var row = table.insertRow(totalRows-1);
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
-      var cell3 = row.insertCell(2);
-      var cell4 = row.insertCell(3);
-      var cell5 = row.insertCell(4);
-      cell1.setAttribute("class", "kv-align-center");
-      cell1.innerHTML = "";
-      cell2.innerHTML = $("#bank_name").val();
-      cell3.setAttribute("class", "kv-align-center");
-      cell3.innerHTML = $("#checknumber").val();
-      cell4.setAttribute("class", "kv-align-center");
-      cell4.innerHTML = $("#checkdate").val(); //
-      cell5.setAttribute("class", "kv-align-right");
-      cell5.innerHTML = $("#check_amount").val();//
-      ClearDetails()
+      var totrow=table.contentrowcount;
+      var fields=[
+          $("#bank_name").val(),
+          $("#checknumber").val(),
+          $("#checkdate").val(),
+          CurrencyFormat($("#check_amount").val(),2)
+      ];
+      var fieldarr=[
+          "kv-align-left",
+          "kv-align-center",
+          "kv-align-center",
+          "kv-align-right kv-amount",
+      ];
+      table.insertrow(fields,fieldarr);
+      GetTotal();
+      ClearDetails();
    }
+   function GetTotal(){
+      var total=0;
+      $(".kv-amount").each(function (ix, element) {
+          total=total+parseFloat(StringToFloat(this.innerHTML));
+      });
+      $(".kv-total").html(CurrencyFormat(total,2));
+   }    
 SCRIPT;
 $this->registerJs($js);
 $gridColumns=[
-    [
-        'attribute'=>'receipt_id',
-        'label'=>'ReceiptID',
-        'width'=>'20px'
-    ],
     'bank',
     [
         'attribute'=>'checknumber',
@@ -60,12 +68,12 @@ $gridColumns=[
     [
         'attribute'=>'checkdate',
         'label'=>'Check Date',
-        'hAlign'=>'center'
+        'hAlign'=>'center',
     ],
     [
         'attribute'=>'amount',
         'label'=>'Amount',
-        'hAlign'=>'right'
+        'hAlign'=>'right',
     ]
 ];
 echo GridView::widget([
@@ -77,6 +85,7 @@ echo GridView::widget([
     'headerRowOptions' => ['class' => 'kartik-sheet-style'],
     'filterRowOptions' => ['class' => 'kartik-sheet-style'],
     'tableOptions'=>['id'=>'checkTable'],
+    'options'=>['class'=>'test'],
     'pjax' => true, // pjax is set to always true for this demo
     // set your toolbar
     'toolbar' =>  [
@@ -88,11 +97,10 @@ echo GridView::widget([
     ],
     // parameters from the demo form
     'bordered' => true,
-    'striped' => true,
+    'striped' => false,
     'condensed' => true,
     'responsive' => true,
-    'hover' => true,
-    'showPageSummary' => true,
+    'hover' => false,
     'panel' => [
         'type' => GridView::TYPE_PRIMARY,
         'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode("Check Details"),
@@ -103,7 +111,7 @@ echo GridView::widget([
     
 ]);
 ?>
-<div id="BankDetails" class="panel panel-primary col-md-10" style="position: fixed; top: 340px;display: none">
+<div id="BankDetails" class="panel panel-primary col-md-10" style="position: fixed; top: 340px;display: none;z-index: 1">
     <div class="panel-heading">Add Bank Details <button type="button" style="float: right" class="close" onclick="$('#BankDetails').hide()" aria-hidden="true">×</button></div>
     <div class="panel-body">
         <div class="row">
