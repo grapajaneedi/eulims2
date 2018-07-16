@@ -183,12 +183,19 @@ class OpController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $request_model= new Request();
+        $query = Request::find()->where(['customer_id' => $model->customer_id,'posted' => 1])->andWhere(['not', ['request_ref_num' => null]]);
+        
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->orderofpayment_id]);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
+                'dataProvider'=>$dataProvider,
+                'request_model'=>$request_model
             ]);
         }
     }
