@@ -44,39 +44,46 @@ class OfficialReceipt implements PDFEnum{
         $numbertowords=new NumbersToWords();
         $Collection= Receipt::find()->where(['or_number'=>$ORNumber])->one();
        // $modeofpayment=$Collection->mode
-        $ORHeader="<table border='1' width=100% cellpadding='0' cellspacing='0'>";
+        $ORHeader="<table border='0' width=100% cellpadding='0' cellspacing='0'>";
         $ORHeader.="<thead>";
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='8' style='height:167px'>&nbsp;</td>";
+        $ORHeader.="<td colspan='8' style='height:126px'>&nbsp;</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='3'></td>";
+        $ORHeader.="<td colspan='2' style='height:29px'></td>";
         $datetime=$Collection->receiptDate;
-        $ORHeader.="<td colspan='5' style='text-align:left;'>&nbsp;&nbsp;&nbsp;".date("m/d/Y h:i:s A", strtotime($datetime))."</td>";
+        $ORHeader.="<td colspan='6' style='text-align:left;'>".date("m/d/Y h:i:s A", strtotime($datetime))."&nbsp;</td>";
         $ORHeader.="</tr>";
         $ORHeader.="</thead>";
         $ORHeader.="<tbody>";
        
-        $ORHeader.="<tr>";
+        /*$ORHeader.="<tr>";
         $ORHeader.="<td colspan='8'>&nbsp;</td>";
+        $ORHeader.="</tr>";*/
+        $space="";
+        for($x=1;$x<30;$x++){
+            $space.="&nbsp;";
+        }
+        $space1="";
+        for($x=1;$x<18;$x++){
+            $space1.="&nbsp;";
+        }
+        
+        $ORHeader.="<tr>";
+        //$ORHeader.="<td colspan='1' ></td>";
+        $ORHeader.="<td colspan='8' style='height:35px'>".$space1."DOST-IX</td>";
+       
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td width=30>&nbsp;</td>";
-        $ORHeader.="<td colspan='5'>DOST-IX</td>";
-        $ORHeader.="<td>&nbsp;</td>";
-        $ORHeader.="<td>&nbsp;</td>";
+        //$ORHeader.="<td colspan='1' style='height:35px'></td>";
+        $ORHeader.="<td colspan='8' style='height:35px'>".$space1."Jollibee Food Corporation</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td>&nbsp;</td>";
-        $ORHeader.="<td colspan='7'>Jollibee Food Corporation</td>";
-        $ORHeader.="</tr>";
-        
-        $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='8' style='height:34px'>&nbsp;</td>";
+        $ORHeader.="<td colspan='8' style='height:40px'>&nbsp;</td>";
         $ORHeader.="</tr>";
        // echo $Collection->receipt_id;
       //  exit;
@@ -90,9 +97,9 @@ class OfficialReceipt implements PDFEnum{
         $accountcode=Accountingcode::find()->where(['accountingcode_id' => $accountcodeid])->one();
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='4'>&nbsp;&nbsp;&nbsp;".$Collection->collectiontype->natureofcollection."</td>";
-        $ORHeader.="<td colspan='2'>&nbsp;".$accountcode->accountcode."</td>";
-        $ORHeader.="<td colspan='2'>&nbsp;</td>";
+        $ORHeader.="<td colspan='2' style='height:22px;width:166px;'>&nbsp;&nbsp;&nbsp;".$Collection->collectiontype->natureofcollection."</td>";
+        $ORHeader.="<td colspan='3' style='text-align:left;'>&nbsp;".$accountcode->accountcode."</td>";
+        $ORHeader.="<td colspan='3'>&nbsp;</td>";
         $ORHeader.="</tr>";
         
         $paymentmode=$Collection->paymentMode->payment_mode;
@@ -113,9 +120,9 @@ class OfficialReceipt implements PDFEnum{
         foreach ($paymentitem_Query as $i => $or) {
            // echo $Collection->receipt_id;
             $ORHeader.="<tr>";
-            $ORHeader.="<td colspan='4'>&nbsp;".$or['details']."</td>";
-            $ORHeader.="<td colspan='2'>&nbsp;</td>";
-            $ORHeader.="<td colspan='2' style='text-align:right;padding-right: 10px'>&nbsp;".number_format($or['amount'],2)."</td>";
+            $ORHeader.="<td colspan='2' style='height:22px;width:166px;font-size:12px;'>&nbsp;&nbsp;".$or['details']."</td>";
+            $ORHeader.="<td colspan='3'>&nbsp;</td>";
+            $ORHeader.="<td colspan='3' style='text-align:right;padding-right: 10px'>&nbsp;".number_format($or['amount'],2)."</td>";
             $ORHeader.="</tr>";
             $count++;
         }
@@ -124,24 +131,21 @@ class OfficialReceipt implements PDFEnum{
        // exit;
         for($i=0;$i<$num;$i++){
             $ORHeader.="<tr>";
-            $ORHeader.="<td colspan='4'>&nbsp;</td>";
-            $ORHeader.="<td colspan='2'>&nbsp;</td>";
-            $ORHeader.="<td colspan='2'>&nbsp;</td>";
+            $ORHeader.="<td colspan='2' style='height:22px;width:166px;'>&nbsp;</td>";
+            $ORHeader.="<td colspan='3'>&nbsp;</td>";
+            $ORHeader.="<td colspan='3'>&nbsp;</td>";
             $ORHeader.="</tr>";
         }
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='6'>&nbsp;</td>";
+        $ORHeader.="<td colspan='6' style='height:27px'>&nbsp;</td>";
         $ORHeader.="<td colspan='2' style='text-align:right;padding-right: 10px'>&nbsp;".number_format($Collection->total,2)."</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='8' style='height:5px'></td>";
+        $ORHeader.="<td colspan='8' style='height:4px'></td>";
         $ORHeader.="</tr>";
-        $space="";
-        for($x=1;$x<30;$x++){
-            $space.="&nbsp;";
-        }
+        
         $amountinwords=$numbertowords->convert($Collection->total);
         $whole_number=(int)$Collection->total;
         $remainder=$Collection->total - $whole_number;
@@ -150,38 +154,32 @@ class OfficialReceipt implements PDFEnum{
         }
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='8' style='word-wrap':break-word;height:34px;>".$space." ".$amountinwords."</td>";
+        //$ORHeader.="<td colspan='8' style='height:22px'>&nbsp;</td>";
+        $ORHeader.="<td colspan='8' style='word-wrap:break-word;height:52px;padding-left: 10px'>".$space." ".$amountinwords."</td>";
         $ORHeader.="</tr>";
         
         
         $ORHeader.="<tr>";//Cash
-        $ORHeader.="<td colspan='8' style='word-wrap':break-word;height:34px;>&nbsp;&nbsp;".$cash."</td>";
+        $ORHeader.="<td colspan='8' style='word-wrap:break-word;height:24px;'>&nbsp;&nbsp;&nbsp;&nbsp;".$cash."</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";//Check
-        $ORHeader.="<td colspan='8' style='word-wrap':break-word;height:34px;>&nbsp;&nbsp;".$check."</td>";
+        $ORHeader.="<td colspan='8' style='word-wrap:break-word;height:24px;'>&nbsp;&nbsp;&nbsp;&nbsp;".$check."</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";//Money Order
-        $ORHeader.="<td colspan='8' style='word-wrap':break-word;height:34px;>&nbsp;&nbsp;".$mo."</td>";
+        $ORHeader.="<td colspan='8' style='word-wrap:break-word;height:24px;'>&nbsp;&nbsp;&nbsp;&nbsp;".$mo."</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="</tbody>";
         $ORHeader.="</table>";
       
-        $footer="<table border='0' width=100%>";
+     //   $footer="<table border='0' width=100%>";
        
-        $footer.="<tr>";
-        $footer.="<td colspan='2' style='font-size: 30px;text-align: center'>"."".strval($ORNumber)."</td>";
-        $footer.="</tr>";
-        $footer.="<tr><td colspan='2'>&nbsp;</td><tr>";
-        $footer.="<tr>";
-        $footer.="<td colspan='2' style='font-size: 25px;text-align: center'>Thank you have a nice day!</td>";
-        $footer.="</tr>";
-        $footer.="</table>";
+      //  $footer.="</table>";
         $ORTemplate=[
            0=> $ORHeader,
-           1=> $footer
+          // 1=> $footer
         ];
         return $ORTemplate;
     }
@@ -195,9 +193,9 @@ class OfficialReceipt implements PDFEnum{
         $mPDF = new Pdf();
         $mPDF->content=$mORTemplate[0];
         $mPDF->orientation=Pdf::ORIENT_PORTRAIT;
-        $mPDF->marginLeft=2.0;
-        $mPDF->marginRight=2.0;
-        $mPDF->marginTop=0.0;
+        $mPDF->marginLeft=7.0;
+        $mPDF->marginRight=7.0;
+        $mPDF->marginTop=13.0;
         $mPDF->marginBottom=0.5;
         $mPDF->defaultFontSize=9;
        // $mPDF->cssFile="/assets/251be39e/css/bootstrap.min.css";
@@ -207,7 +205,7 @@ class OfficialReceipt implements PDFEnum{
         //$Footer="<barcode code='$ORNumber' type='C39' size='1.5' height='0.5'/>";
         $mPDF->methods=[ 
             //'SetHeader'=>['Z.C. INTEGRATED PORT SERVICES, INC.'], 
-            'SetFooter'=>[$mORTemplate[1]]
+           // 'SetFooter'=>[$mORTemplate[1]]
         ];
         $mPDF->render();
         exit;

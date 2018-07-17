@@ -54,6 +54,7 @@ class CashierController extends \yii\web\Controller
             $model->deposit_type_id=1;
             $SoaModel= Soa::find()->where(['soa_id'=>$id])->one();
             $searchModel = new CheckSearch();
+            //$searchModel->receipt_id=-1;
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
             if(Yii::$app->request->isAjax){
 
