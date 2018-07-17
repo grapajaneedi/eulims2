@@ -1,6 +1,7 @@
 <?php
 use kartik\grid\GridView;
 use yii\helpers\Html;
+
 $js=<<<SCRIPT
    $(".kv-row-checkbox").click(function(){
         settotal();
@@ -11,6 +12,7 @@ $js=<<<SCRIPT
   
 SCRIPT;
 $this->registerJs($js);
+
 ?>
 
  <?php 
@@ -21,6 +23,9 @@ $this->registerJs($js);
          ],
          [
             'class' => '\kartik\grid\CheckboxColumn',
+            /*'checkboxOptions' => function($model, $key, $index, $column) {
+                return ['checked' => $model->isNewRecord ? false : true ];
+            }*/
          ],
         [
           'attribute'=>'request_ref_num',
@@ -82,6 +87,7 @@ $this->registerJs($js);
        
          'columns' =>$gridColumn,
          'showPageSummary' => true,
+         'toolbar'=> [],
          /*'afterFooter'=>[
              'columns'=>[
                  'content'=>'Total Selected'

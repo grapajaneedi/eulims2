@@ -5,13 +5,12 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use kartik\widgets\DatePicker;
-use yii\helpers\Url;
 use common\models\finance\DepositType;
 use common\models\finance\Paymentmode;
 use common\models\finance\Collectiontype;
 use common\models\finance\Orseries;
 use common\components\Functions;
-use kartik\money\MaskMoney;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Receipt */
@@ -20,21 +19,11 @@ $paymentlist='';
 $func= new Functions();
 $soaJS=<<<SCRIPT
     $('#billingpayment-payment_mode_id').on('select2:select', function (e) {
-        var val=this.value;
-        if(val==2){// Cheque
-           $("#checkDetails").show();
-           $("#billingpayment-bank").prop('required',true);
-           $("#billingpayment-checknumber").prop('required',true);
-           $("#billingpayment-checkdate").prop('required',true);
-           $("#billingpayment-amount-disp").prop('required',true);
-           $("#billingpayment-amount").prop('required',true);
+        var val=this.value; //2 Check
+        if(val==2){
+            $("#checkDetails").show();
         }else{
-           $("#checkDetails").hide();
-           $("#billingpayment-bank").prop('required',false);
-           $("#billingpayment-checknumber").prop('required',false);
-           $("#billingpayment-checkdate").prop('required',false);
-           $("#billingpayment-amount-disp").prop('required',true);
-           $("#billingpayment-amount").prop('required',false);
+            $("#checkDetails").hide();
         }
     });
 SCRIPT;
@@ -105,45 +94,12 @@ $this->registerJs($soaJS);
             </div>  
         </div>
         <div id="checkDetails" class="panel panel-primary" style="display: none">
-            <div class="panel-header btn-primary"><i class='fa fa-bank'></i> Bank Details</div>
-            <div class="panel-body">
-            <div class="col-sm-6">
-                <?php echo $form->field($model, 'bank')->textInput(['placeholder'=>'Bank Name'])->label('Bank') ?>
-            </div>
-            <div class="col-sm-6">
-                <?php echo $form->field($model, 'checknumber')->textInput(['placeholder'=>'Check #'])->label('Check #') ?>
-            </div>
-            <div class="col-sm-6">
-                 <?php
-             echo $form->field($model, 'checkdate')->widget(DatePicker::classname(), [
-             'options' => ['placeholder' => 'Select Date ...',
-             'autocomplete'=>'off'],
-             'type' => DatePicker::TYPE_COMPONENT_APPEND,
-                 'pluginOptions' => [
-                     
-                     'format' => 'yyyy-mm-dd',
-                     'todayHighlight' => true,
-                     'autoclose'=>true,   
-                 ]
-             ]);
-             ?>
-            </div>
-            <div class="col-sm-6">
-                <label class="control-label" for="billingpayment-amount">Amount</label>
             <?php
-            echo $form->field($model, 'amount')->widget(MaskMoney::classname(), [
-                 'readonly'=>false,
-                 'options'=>[
-                     'style'=>'text-align: right'
-                 ],
-                 'pluginOptions' => [
-                    'prefix' => '₱ ',
-                    'allowNegative' => false,
-                 ]
-                ])->label(false);
+                echo $this->renderAjax('_check', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]);
             ?>
-            </div>
-            </div>
         </div>
         <div class="row"> 
             <div class="col-sm-6">

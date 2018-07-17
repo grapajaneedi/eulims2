@@ -11,11 +11,11 @@ $this->params['breadcrumbs'][] = ['label' => $model->orderofpayment_id, 'url' =>
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="orderofpayment-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
+        'dataProvider'=>$dataProvider,
+        'request_model'=>$request_model,
+        'status' => 1,
     ]) ?>
 
 </div>

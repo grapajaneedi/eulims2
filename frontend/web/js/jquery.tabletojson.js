@@ -1,10 +1,3 @@
-/* 
- * Project Name: eulims * 
- * Copyright(C)2018 Department of Science & Technology -IX * 
- * Developer: Eng'r Nolan F. Sunico  * 
- * 04 24, 18 , 9:23:22 AM * 
- * Module: jquery.tabletojson * 
- */
 (function( $ ) {
   'use strict';
 
@@ -187,4 +180,3 @@
     return construct(this, headings);
   };
 })( jQuery );
-

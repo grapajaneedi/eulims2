@@ -18,6 +18,9 @@ use kartik\grid\DataColumn;
 
 $this->title = 'Accomplishment Report';
 $this->params['breadcrumbs'][] = $this->title;
+
+$pdfHeader="OneLab-Enhanced ULIMS";
+$pdfFooter="{PAGENO}";
 ?>
 
 <div class="accomplishment-index">
@@ -91,6 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
         		$startDate = Yii::$app->request->get('from_date', date('Y-01-01'));
         		$endDate = Yii::$app->request->get('to_date', date('Y-m-d'));
         		$labId = (int) Yii::$app->request->get('lab_id', 1);
+        		$labCode = Lab::findOne($labId)->labcode;
 
 				$gridColumns = [
 	    		    [
@@ -213,8 +217,8 @@ $this->params['breadcrumbs'][] = $this->title;
 		            ],
 		            [
 		                'attribute'=>'request_ref_num',
-		                'header' => 'Income Generated<br/>(Actual Fees Collected)',
-		                'headerOptions' => ['class' => 'text-center'],
+		                'header' => 'Income Generated (Actual Fees Collected)',
+		                'headerOptions' => ['class' => 'text-center','style'=>'width:15%'],
 			            'contentOptions' => ['class' => 'text-right'],
 			            'format'=>['decimal', 2],
 			            'value'=>function ($model, $key, $index, $widget) use ($labId, $startDate,$endDate) {
@@ -294,8 +298,44 @@ $this->params['breadcrumbs'][] = $this->title;
 				        'exportConfig' => [
 					    	//GridView::CSV => [],
 					    	//GridView::HTML => [],
-					   		GridView::PDF => [],
-					    	GridView::EXCEL => [],
+					   		//GridView::PDF => [],
+					    	//GridView::EXCEL => [],
+					    	GridView::PDF => [
+				                'filename' => $labCode.'-Accomplishment_Report('.$startDate.'_'.$endDate.')',
+				                'alertMsg'        => 'The PDF export file will be generated for download.',
+				                'config' => [
+				                    'methods' => [
+				                        'SetHeader' => [$pdfHeader],
+				                        'SetFooter' => [$pdfFooter]
+				                    ],
+				                    'options' => [
+				                        'title' => 'Accomplishment Report',
+				                        'subject' => 'Accomplishment_Report',
+				                        'keywords' => 'pdf, preceptors, export, other, keywords, here'
+				                    ],
+				                ]
+				            ],
+				            GridView::EXCEL => [
+				                'label'           => 'Excel',
+				                //'icon'            => 'file-excel-o',
+				                'methods' => [
+				                    'SetHeader' => [$pdfHeader],
+				                    'SetFooter' => [$pdfFooter]
+				                ],
+				                'iconOptions'     => ['class' => 'text-success'],
+				                'showHeader'      => TRUE,
+				                'showPageSummary' => TRUE,
+				                'showFooter'      => TRUE,
+				                'showCaption'     => TRUE,
+				                'filename'        =>  $labCode.'-Accomplishment_Report('.$startDate.'_'.$endDate.')',
+				                'alertMsg'        => 'The EXCEL export file will be generated for download.',
+				                'options'         => ['title' => 'Department of Science OneLab'],
+				                'mime'            => 'application/vnd.ms-excel',
+				                'config'          => [
+				                    'worksheet' => 'Accomplishment',
+				                    'cssFile'   => ''
+				                ]
+				            ],
 					    ],
 				        'columns'=> $gridColumns,
 				        'toolbar' => [

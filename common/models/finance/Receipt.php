@@ -12,6 +12,7 @@ use Yii;
  * @property int $terminal_id
  * @property int $collection_id
  * @property int $deposit_type_id
+ * @property int $or_series_id
  * @property string $or_number
  * @property string $receiptDate
  * @property int $payment_mode_id
@@ -20,19 +21,19 @@ use Yii;
  * @property string $total
  * @property int $cancelled
  * @property int $deposit_id
- * @property int $or
- * @property int $or_series_id
- * @property Billing[] $billings
+ *
  * @property Check[] $checks
+ * @property Paymentitem[] $paymentitems
  * @property DepositType $depositType
  * @property Paymentmode $paymentMode
  * @property Collectiontype $collectiontype
  * @property Collection $collection
  * @property Deposit $deposit
+ * @property SoaReceipt[] $soaReceipts
+ * @property Soa[] $soas
  */
 class Receipt extends \yii\db\ActiveRecord
 {
-   
     /**
      * {@inheritdoc}
      */
@@ -55,8 +56,8 @@ class Receipt extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'terminal_id', 'or_number', 'receiptDate','deposit_type_id', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled','or_series_id'], 'required'],
-            [['rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'payment_mode_id', 'collectiontype_id', 'cancelled', 'deposit_id','or_series_id'], 'integer'],
+            [['rstl_id', 'terminal_id', 'deposit_type_id', 'or_series_id', 'or_number', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled'], 'required'],
+            [['rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'or_series_id', 'payment_mode_id', 'collectiontype_id', 'cancelled', 'deposit_id'], 'integer'],
             [['receiptDate'], 'safe'],
             [['total'], 'number'],
             [['or_number'], 'string', 'max' => 50],
@@ -81,6 +82,7 @@ class Receipt extends \yii\db\ActiveRecord
             'terminal_id' => 'Terminal ID',
             'collection_id' => 'Collection ID',
             'deposit_type_id' => 'Deposit Type ID',
+            'or_series_id' => 'Or Series ID',
             'or_number' => 'Or Number',
             'receiptDate' => 'Receipt Date',
             'payment_mode_id' => 'Payment Mode ID',
@@ -89,16 +91,7 @@ class Receipt extends \yii\db\ActiveRecord
             'total' => 'Total',
             'cancelled' => 'Cancelled',
             'deposit_id' => 'Deposit ID',
-            'or_series_id' => 'Or Series'
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getBillings()
-    {
-        return $this->hasMany(Billing::className(), ['receipt_id' => 'receipt_id']);
     }
 
     /**
@@ -107,6 +100,14 @@ class Receipt extends \yii\db\ActiveRecord
     public function getChecks()
     {
         return $this->hasMany(Check::className(), ['receipt_id' => 'receipt_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPaymentitems()
+    {
+        return $this->hasMany(Paymentitem::className(), ['receipt_id' => 'receipt_id']);
     }
 
     /**
@@ -148,19 +149,20 @@ class Receipt extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Deposit::className(), ['deposit_id' => 'deposit_id']);
     }
-    /** 
-    * @return \yii\db\ActiveQuery 
-    */ 
-   public function getSoaReceipts() 
-   { 
-       return $this->hasMany(SoaReceipt::className(), ['receipt_id' => 'receipt_id']); 
-   } 
- 
-   /** 
-    * @return \yii\db\ActiveQuery 
-    */ 
-   public function getSoas() 
-   { 
-       return $this->hasMany(Soa::className(), ['soa_id' => 'soa_id'])->viaTable('tbl_soa_receipt', ['receipt_id' => 'receipt_id']); 
-   } 
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSoaReceipts()
+    {
+        return $this->hasMany(SoaReceipt::className(), ['receipt_id' => 'receipt_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSoas()
+    {
+        return $this->hasMany(Soa::className(), ['soa_id' => 'soa_id'])->viaTable('tbl_soa_receipt', ['receipt_id' => 'receipt_id']);
+    }
 }

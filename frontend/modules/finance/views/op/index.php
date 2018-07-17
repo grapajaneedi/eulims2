@@ -144,7 +144,17 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
               //'class' => 'yii\grid\ActionColumn'
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => "{view}{update}",
-                
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/op/view?id=' . $model->orderofpayment_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Order of Payment")]);
+                    },
+                    'update' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/op/update?id=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Order of Payment]")]);
+                    },
+                    /*'delete' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/lab/cancelrequest/create?req=' . $model->request_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$model->status_id==2, 'title' => Yii::t('app', "Cancel Request")]);
+                    }*/
+                ],
             ],
 
         ],

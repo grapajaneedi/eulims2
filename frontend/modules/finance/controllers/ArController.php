@@ -13,6 +13,7 @@ use yii\filters\VerbFilter;
 use common\models\finance\OpBilling;
 use common\models\finance\Op;
 use yii\data\ActiveDataProvider;
+use common\components\TableJSON;
 
 /**
  * ArController implements the CRUD actions for Billing model.
@@ -40,6 +41,33 @@ class ArController extends Controller
      */
     public function actionIndex()
     {
+        $HTMLJ=new TableJSON();
+        $html=<<<HTML
+    <table>
+<thead>
+<tr>
+<th>#</th>
+<th>Metal</th>
+<th>Density</th>
+<th>size</th>
+</tr>
+<thead>
+<tr>
+<td>1</td>
+<td>Gold</td>
+<td>0.03</td>
+<td>2.3mm
+</tr>
+<tr>
+<td>2</td>
+<td>Silver</td>
+<td>1.08</td>
+<td>3.2mm
+</tr>
+</table>           
+HTML;
+        echo $HTMLJ->TableToJSON($html);
+        exit;
         $searchModel = new BillingSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

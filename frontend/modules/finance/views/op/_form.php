@@ -15,8 +15,25 @@ use yii\helpers\Url;
 /* @var $model common\models\finance\Op */
 /* @var $form yii\widgets\ActiveForm */
 $paymentlist='';
+$disable='';
+ if($status == 0){
+ $disable=true;
+ }
+ else{
+ $disable=false;    
+ }
 ?>
-
+<?php
+    if(!$model->isNewRecord){
+    ?>
+    <script type="text/javascript">
+       $(document).ready(function(){
+           $(".select-on-check-all").click();
+        });
+    </script>
+    <?php
+    }
+?>
 <div class="orderofpayment-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
 
     <?php $form = ActiveForm::begin(); ?>
@@ -68,16 +85,29 @@ $paymentlist='';
            
             </div>
              <div class="col-sm-6">
-                <?= $form->field($model, 'payment_mode_id')->widget(DepDrop::classname(), [
-                    'type'=>DepDrop::TYPE_SELECT2,
-                    'options' => ['placeholder' => 'Select Payment Mode ...'],
-                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                    'pluginOptions'=>[
-                        'depends'=>['op-customer_id'],
-                        'url'=>Url::to(['/finance/op/listpaymentmode?customerid='.$model->customer_id]),
-                        
-                    ]
-                ])
+                <?php
+                if($status == 0){
+                    echo $form->field($model, 'payment_mode_id')->widget(DepDrop::classname(), [
+                        'type'=>DepDrop::TYPE_SELECT2,
+                        'options' => ['placeholder' => 'Select Payment Mode ...'],
+                        'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                        'pluginOptions'=>[
+                            'depends'=>['op-customer_id'],
+                            'url'=>Url::to(['/finance/op/listpaymentmode?customerid='.$model->customer_id]),
+
+                        ]
+                    ]);
+                }
+                else{
+                      echo $form->field($model, 'payment_mode_id')->widget(Select2::classname(), [
+                        'data' => ArrayHelper::map(Paymentmode::find()->all(), 'payment_mode_id', 'payment_mode'),
+                        'theme' => Select2::THEME_BOOTSTRAP,
+                        'options' => ['placeholder' => 'Select Payment mode ...'],
+                        'pluginOptions' => [
+                          'allowClear' => true
+                        ]
+                        ])->label('Payment Mode');
+                }
                 ?>
             </div>
         </div>
@@ -89,15 +119,20 @@ $paymentlist='';
                 
 
                 <div id="requests" style="padding:0px!important;">    	
-                   <?php //echo $this->renderAjax('_request', ['dataProvider'=>$dataProvider]); ?>
+                   <?php
+                   if (!$model->isNewRecord){
+                       echo $this->renderAjax('_request', ['dataProvider'=>$dataProvider,'model'=>$request_model]);
+                   }
+                    
+                   ?>
                 </div> 
 
             </div>
         </div> 
-		 <?php echo $form->field($model, 'RequestIds')->hiddenInput()->label(false) ?>
+		 <?php echo $form->field($model, 'RequestIds')->textInput()->label(false) ?>
         <div class="row">
             <div class="col-lg-12"> 
-                <?= $form->field($model, 'purpose')->textarea(['maxlength' => true,'disabled' =>true]); ?>
+                <?= $form->field($model, 'purpose')->textarea(['maxlength' => true,'disabled' => $disable]); ?>
             </div>
         </div>
 
@@ -105,7 +140,7 @@ $paymentlist='';
         
         <div class="form-group pull-right">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
-                'id'=>'createOP','disabled'=>true]) ?>
+                'id'=>'createOP','disabled'=>$disable]) ?>
             <?php if(Yii::$app->request->isAjax){ ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             <?php } ?>
