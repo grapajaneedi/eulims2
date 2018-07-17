@@ -104,7 +104,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width: 8.7%'],
                 'visible'=> Yii::$app->user->isGuest ? false : true,
-                'template' => '{add}{view}',
+                'template' => '{view}',
                 'buttons'=>[
                     'add'=>function ($url, $model) {
                         $t = '/finance/customertransaction/create?customerwallet_id='.$model->customerwallet_id;

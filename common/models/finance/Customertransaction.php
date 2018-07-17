@@ -14,10 +14,11 @@ use Yii;
  * @property string $amount
  * @property string $balance
  * @property int $customerwallet_id
- * @property int $collection_id 
+ * @property int $collection_id
+ * @property string $source
  *
  * @property Customerwallet $customerwallet
- * @property Collection $collection 
+ * @property Collection $collection
  */
 class Customertransaction extends \yii\db\ActiveRecord
 {
@@ -47,7 +48,8 @@ class Customertransaction extends \yii\db\ActiveRecord
             [['updated_by', 'transactiontype', 'customerwallet_id', 'collection_id'], 'integer'],
             [['date'], 'safe'],
             [['amount', 'balance'], 'number'],
-            [['collection_id'], 'unique'], 
+            [['source'], 'string', 'max' => 200],
+            [['collection_id'], 'unique'],
             [['customerwallet_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customerwallet::className(), 'targetAttribute' => ['customerwallet_id' => 'customerwallet_id']],
             [['collection_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collection::className(), 'targetAttribute' => ['collection_id' => 'collection_id']],
         ];
@@ -66,7 +68,8 @@ class Customertransaction extends \yii\db\ActiveRecord
             'amount' => 'Amount',
             'balance' => 'Balance',
             'customerwallet_id' => 'Customerwallet ID',
-            'collection_id' => 'Collection ID', 
+            'collection_id' => 'Collection ID',
+            'source' => 'Source',
         ];
     }
 
@@ -77,11 +80,12 @@ class Customertransaction extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Customerwallet::className(), ['customerwallet_id' => 'customerwallet_id']);
     }
-    /** 
-    * @return \yii\db\ActiveQuery 
-    */ 
-    public function getCollection() 
-    { 
-        return $this->hasOne(Collection::className(), ['collection_id' => 'collection_id']); 
-    } 
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCollection()
+    {
+        return $this->hasOne(Collection::className(), ['collection_id' => 'collection_id']);
+    }
 }
