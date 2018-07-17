@@ -160,6 +160,12 @@ class CustomertransactionController extends Controller
         }
     }
 
+    public function actionSetwallet($customer_id,$amount,$source,$transactiontype){
+        $myvar = setTransaction($customer_id,$amount,$source,$transactiontype);
+
+        return $myvar;
+    }
+
     protected function setTransaction($customer_id,$amount,$source,$transactiontype){
         //$transactiontype 0 = credit, 1= debit ,2= initial
         $transac = new Customertransaction();
@@ -224,24 +230,6 @@ class CustomertransactionController extends Controller
             }
             return false;
         }
-
-
-
-        $model->date= date('Y-m-d h:i:s');
-            //0 = credit ,1 = debit
-            $model->transactiontype=0;
-            $model->updated_by=Yii::$app->user->id;
-            // if($model->save(false)){
-                $wallet = Customerwallet::find()->where(['customerwallet_id' => $model->customerwallet_id])->one();
-                $wallet->balance = $wallet->balance + $model->amount;
-                // $wallet->last_update=date('Y-m-d  h:i:s');
-                if($wallet->save()){
-                    $session = Yii::$app->session;
-                    $model->balance= $wallet->balance;
-                    $model->save();
-                    $session->set('savepopup',"executed");
-                    return $this->redirect(['/finance/customerwallet']);
-                }
 
     }
 }
