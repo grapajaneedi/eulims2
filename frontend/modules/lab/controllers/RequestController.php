@@ -175,8 +175,6 @@ class RequestController extends Controller
        }
     }
 
-  
-
     public function actionTest($id){
         $Func=new Functions();
         $response=$Func->GenerateSampleCode($id);
