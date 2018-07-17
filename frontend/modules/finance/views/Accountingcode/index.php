@@ -33,19 +33,21 @@ $Buttontemplate ='{view}{update}';
 <div class="accountingcode-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
        
-    <p>
-      
-         <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Accounting Code', ['value'=>'/finance/accountingcode/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create Accounting Code"),'name'=>'Create Accounting Code']); ?>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span>Account Code Mapping', ['value'=>'/finance/accountingcodemapping/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Account Code Mapping"),'name'=>'Account Code Mapping']); ?>
-      
-    </p>
-    
+
    
       
         
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+            'toolbar' =>  [
+        ['content' => 
+           Html::button('<span class="glyphicon glyphicon-plus"></span> Create Accounting Code', ['value'=>'/finance/accountingcode/create', 'class' => 'btn btn-primary btn-modal','title' => Yii::t('app', "Create Accounting Code"),'name'=>'Create Accounting Code'])  . ' '.
+            Html::button('<span class="glyphicon glyphicon-plus"></span>Account Code Mapping', ['value'=>'/finance/accountingcodemapping/create', 'class' => 'btn btn-primary btn-modal','title' => Yii::t('app', "Account Code Mapping"),'name'=>'Account Code Mapping'])
+            ],
+        '{export}',
+        '{toggleData}',
+    ],
          'panel'=>['type'=>'primary', 'heading'=>'Account Code Mapping'],
        // 'filterModel' => $searchModel,
             'columns' => [

@@ -168,6 +168,7 @@ function loadUrl(obj)
          //    alert('test');
             // $("#divSpinner").css("display", "block");
             $("#divSpinner").toggle();
+          //  $("#divSpinner").hide();
              var siteNew='';
              switch(obj)
              {
@@ -258,9 +259,9 @@ $form = ActiveForm::begin(
 
 
 <div id="divSpinner" style="text-align:center;display:none;font-size:30px">
-     <div class="animationload">
-            <div class="osahanloading"></div>
-     </div>
+    
+    <img src='/images/img-loader64.gif' alt=''>
+    
 </div>
 
 
