@@ -13,11 +13,20 @@
     var fieldarr=["kv-align-center","kv-align-left","kv-align-center","kv-align-center","kv-align-center","kv-align-center",""];
     table.insertrow(fields,fieldarr);
  */
-function selectRow(ctrl,id){
+
+function selectRow(ctrl){
     $(ctrl).addClass('info').siblings().removeClass('info');
-    tableobject.currentRowIndex=$(ctrl).attr("data-key");
-    //this.currentRowIndex=
-    
+    var index=$(ctrl).attr("data_key");
+    ctrl.currentRowIndex=index;
+    var e = jQuery.Event("select");
+    e.index = index; // # Some key code value
+    $(ctrl).trigger(e);
+}
+function keydown(ctrl){
+    var event = jQuery.Event("keydown");
+    var index=$(ctrl).attr("data_key");
+    event.index=index;
+    $(ctrl).trigger(event);
 }
 /**
  * 
@@ -27,10 +36,17 @@ function selectRow(ctrl,id){
 class tableobject{
     constructor(table_id){
         this.id=table_id;
-        this.table = document.getElementById(table_id).getElementsByTagName('tbody')[0];
+        this.table=document.getElementById(table_id);
+        this.tablebody = document.getElementById(table_id).getElementsByTagName('tbody')[0];
         this.contentrowcount=parseInt($("#"+this.id+">tbody>tr").length);
         this.currentRowIndex=0;
         return this;
+    }
+    selectRow(){
+        $(this).addClass('info').siblings().removeClass('info');
+        var index=$(this).attr("data-key");
+        console.log(index);
+        this.currentRowIndex=index;
     }
     /**
      * @description return row as an array
@@ -38,14 +54,14 @@ class tableobject{
      * @returns {TableObject.table.rows}
      */
     row(index){
-       return this.table.rows[index]; 
+       return this.tablebody.rows[index]; 
     }
     /**
      * @description return rows as an aray
      * @returns {TableObject.table.rows}
      */
     rows(){
-       return this.table.rows;  
+       return this.tablebody.rows;  
     }
     /**
      * 
@@ -74,13 +90,16 @@ class tableobject{
     * @returns {TableObject.insertrow.row}
     */
     insertrow(fields=[],fieldsclass=[],index=-1){
-        if(index==-1){
-            index=this.table.rows.length;
+        if(index<0){
+            index=parseInt(this.tablebody.rows.length)+1;
         }
-        var row=this.table.insertRow(index);
+        var row=this.tablebody.insertRow(index);
         row.setAttribute("class", "clickable-row");
-        row.setAttribute("data-key",index);
-        row.setAttribute("onClick", "selectRow(this,"+this.id+")");
+        row.setAttribute("id","table_obj"+index);
+        row.setAttribute("data_key",index);
+        row.setAttribute("tabindex",index);//tabindex
+        row.setAttribute("onClick", "selectRow(this)");//selectRow(this)
+        row.setAttribute("onkeydown", "keydown(this)");
         for (var i = 0; i < fields.length; i++) { 
             var cell = row.insertCell(i);
             if(fieldsclass[i]){//check if there is class for td
@@ -98,12 +117,19 @@ class tableobject{
         $("#"+this.id+" tbody>tr").remove(); 
     }
     /**
+     * @description Removes selected row
+     * @returns {none}
+     */
+    deletecurrentrow(){
+        $("#table_obj"+this.currentRowIndex).remove();
+    }
+    /**
      * 
      * @param {integer} index
      * @returns {none}
      */
     deleterow(index){
-        this.table.deleteRow(index);
+        $("#table_obj"+index).remove();
     }
     /**
      * @description Converts the html table to json format

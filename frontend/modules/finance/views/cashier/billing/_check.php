@@ -22,7 +22,31 @@ $js=<<<SCRIPT
    $(".form-control").on('select',function(){
        $("#btnAddBankDetails").prop('disabled',false); 
    });
-   
+   $("#checkTable").on('select',function(e){
+       
+   });
+   $("#checkTable").on('keydown',function(e){
+       if(e.which==46){//delete key
+          bootbox.confirm({
+            title: "Remove Row",
+            message: "Do you want to remove the current row?",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
+                }
+            },
+            callback: function (result) {
+                if(result){
+                    table.deletecurrentrow();
+                    GetTotal();
+                }
+            }
+        });
+       }
+   });
    function ClearDetails(){
       $("#bank_name").val("");
       $("#checknumber").val("");
@@ -45,7 +69,7 @@ $js=<<<SCRIPT
           "kv-align-center",
           "kv-align-right kv-amount",
       ];
-      table.insertrow(fields,fieldarr);
+      table.insertrow(fields,fieldarr,-1);
       GetTotal();
       ClearDetails();
    }
