@@ -24,9 +24,9 @@ $this->registerJsFile("/js/services/services.js");
 $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname' );
 
 if (Yii::$app->user->can('access-testcategory-delete')){
-    $button='{view}{update}{delete}';
+    $button='{view}{update}';
 }else{
-    $button='{view}{update}{delete}';
+    $button='{view}{update}';
 }
 ?>
 

@@ -16,6 +16,7 @@ use yii\web\JsExpression;
 use kartik\widgets\TypeaheadBasic;
 use kartik\widgets\Typeahead;
 use common\models\services\Test;
+use kartik\money\MaskMoney;
 
 
 /* @var $this yii\web\View */
@@ -31,6 +32,7 @@ $(".kv-row-checkbox").click(function(){
    var keys = $('#sample-grid').yiiGridView('getSelectedRows');
    var keylist= keys.join();
    $("#sample_ids").val(keylist);
+   $("#fee_list").prop('disabled', false);
    
 });    
 $(".select-on-check-all").change(function(){
@@ -38,6 +40,7 @@ $(".select-on-check-all").change(function(){
  var keys = $('#sample-grid').yiiGridView('getSelectedRows');
  var keylist= keys.join();
   $("#sample_ids").val(keylist);
+  $("#fee_list").prop('disabled', false);
  
 });
 
@@ -105,6 +108,7 @@ $this->registerJs($js);
         <?= $form->field($model, 'name')->widget(Select2::classname(), [
                         'data' => $namelist,
                         'language' => 'en',
+                        'disabled'=>true,
                          'options' => ['placeholder' => 'Select Name', 'id'=>'fee_list'],
                          'pluginOptions' => [
                          'allowClear' => true
@@ -116,7 +120,7 @@ $this->registerJs($js);
 
         <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
 
-        <?= Html::label('Quantity', '') ?>
+        <?= Html::label('Quantity', '')?>
         <?= Html::textInput('qty', '', ['class' => 'form-control', 'onchange'=>$jss, 'id'=>'qty'], ['readonly' => true]) ?>
 
         </div>
