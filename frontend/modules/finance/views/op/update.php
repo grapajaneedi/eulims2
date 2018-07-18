@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = 'Update';
     <?= $this->render('_form', [
         'model' => $model,
         'dataProvider'=>$dataProvider,
-        'request_model'=>$request_model,
+        'request_model'=>$paymentitem_model,
         'status' => 1,
     ]) ?>
 

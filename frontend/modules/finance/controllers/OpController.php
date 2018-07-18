@@ -183,26 +183,70 @@ class OpController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $request_model= new Request();
-        $query = Request::find()->where(['customer_id' => $model->customer_id,'posted' => 1])->andWhere(['not', ['request_ref_num' => null]]);
+        $paymentitem_model= new Paymentitem();
         
+        $query = Paymentitem::find()->where(['orderofpayment_id' => $model->orderofpayment_id]);
+        
+        //$lists=Request::find()->where(['customer_id' => $model->customer_id,'posted' => 1])->andWhere(['not', ['request_ref_num' => null]])->all();
+      
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+        $session = Yii::$app->session;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->orderofpayment_id]);
+            $arr_id =($model->RequestIds);
+            $str_request = explode(',', $model->RequestIds);
+            $opid=$model->orderofpayment_id;
+            
+            
+            $lists=(new Query)
+            ->select(['GROUP_CONCAT(`tbl_paymentitem`.`request_id`) as `ids`'])
+            ->from('`eulims_finance`.`tbl_paymentitem`')
+             ->where(['orderofpayment_id' => $model->orderofpayment_id])
+            ->andWhere(['not', ['paymentitem_id' => $str_request]])
+            ->one();
+            
+            $sum = Paymentitem::find()->where(['orderofpayment_id' => $model->orderofpayment_id])
+                 ->andWhere(['not', ['paymentitem_id' => $str_request]])
+                 ->sum('amount');
+            $total=$model->total_amount - $sum;
+            
+            //Update to be able to select the request in creating op
+            $connection1= Yii::$app->labdb;
+            $sql_query1 = $connection1->createCommand('UPDATE tbl_request set posted=0 WHERE request_id IN('.$lists['ids'].')');
+            $sql_query1->execute();
+            
+            
+            //Delete in payment item
+            
+            $connection= Yii::$app->financedb;
+            $sql_query = $connection->createCommand('DELETE FROM tbl_paymentitem WHERE paymentitem_id NOT IN('.$arr_id.') AND orderofpayment_id=:op_id');
+            $sql_query->bindParam(':op_id',$opid );
+            $sql_query->execute();
+            
+            $sql_query2 = $connection->createCommand('UPDATE tbl_orderofpayment set total_amount=:total WHERE orderofpayment_id=:op_id');
+            $sql_query2->bindParam(':total',$total);
+            $sql_query2->bindParam(':op_id',$opid);
+            $sql_query2->execute();
+            
+            
+            $session->set('updatepopup',"executed");
+            return $this->redirect(['/finance/op']); 
+         
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,
                 'dataProvider'=>$dataProvider,
-                'request_model'=>$request_model
+                'paymentitem_model'=>$paymentitem_model
             ]);
         }
+        
+       
     }
 
      public function actionGetlistrequest($id)
     {
-         $model= new Request();
+        $model= new Request();
         $query = Request::find()->where(['customer_id' => $id,'posted' => 0])->andWhere(['not', ['request_ref_num' => null]]);
         
         $dataProvider = new ActiveDataProvider([
@@ -249,6 +293,15 @@ class OpController extends Controller
     protected function findRequest($requestId)
     {
         if (($model = Request::findOne($requestId)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+    
+    protected function findPaymentitem($id)
+    {
+        if (($model = Paymentitem::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -302,6 +355,21 @@ class OpController extends Controller
         }
      }
      
+     public function actionCalculatePaymentitem($id) {
+        $total = 0;
+        if($id == '' ){
+            echo $total;
+        }
+        else{
+            $str_total = explode(',', $id);
+            $arr_length = count($str_total); 
+            for($i=0;$i<$arr_length;$i++){
+                 $paymentitem =$this->findPaymentitem($str_total[$i]);
+                 $total+=$paymentitem->amount;
+            }
+            echo $total;
+        }
+     }
      public function getCollectionname($collectionid) {
          $collection_name=(new Query)
             ->select('natureofcollection')
@@ -365,5 +433,18 @@ class OpController extends Controller
             }
         }
         echo Json::encode(['output' => '', 'selected'=>'']);
+    }
+    
+    public function actionPaymentitem($id)
+    {
+        $model = $this->findModelCheck($checkid);
+        $session = Yii::$app->session;
+       
+        if($model->delete()) {
+            Yii::$app->session->setFlash('success','Successfully Removed!');
+            return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]);
+        } else {
+            return $model->error();
+        }
     }
 }
