@@ -500,12 +500,12 @@ class CashierController extends \yii\web\Controller
              
              if($sum_total == $amount){
                  Yii::$app->financedb->createCommand()
-                    ->update('tbl_collection', ['amount' => $amount_total,'sub_total'=>$sum_total,'payment_status_id' => 1], 'collection_id= '.$collection_id)
+                    ->update('tbl_collection', ['amount' => $amount_total,'sub_total'=>$sum_total,'payment_status_id' => 2], 'collection_id= '.$collection_id)
                     ->execute();
              }
              if($sum_total < $amount){
                  Yii::$app->financedb->createCommand()
-                    ->update('tbl_collection', ['amount' => $amount_total,'sub_total'=>$sum_total,'payment_status_id' => 2], 'collection_id= '.$collection_id)
+                    ->update('tbl_collection', ['amount' => $amount_total,'sub_total'=>$sum_total,'payment_status_id' => 3], 'collection_id= '.$collection_id)
                     ->execute();
              }
              return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]); 

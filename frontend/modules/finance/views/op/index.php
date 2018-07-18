@@ -27,7 +27,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
     <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']); ?>
+       
     </p>
     
     
@@ -45,6 +45,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         ],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
+                'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
         'columns' => [

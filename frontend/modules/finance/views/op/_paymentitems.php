@@ -21,25 +21,15 @@ $this->registerJs($js);
             'class' => '\kartik\grid\SerialColumn',
             
          ],
-       
-         [
+        [
              'class' => '\kartik\grid\CheckboxColumn',
          ],
         [
-          'attribute'=>'request_ref_num',
+          'attribute'=>'details',
           'enableSorting' => false,
         ],
-       
         [
-            'attribute'=>'request_datetime',
-             'value' => function($model) {
-                    return date($model->request_datetime);
-                },
-            'pageSummary' => '<span style="float:right;">Total</span>',
-            'enableSorting' => false,
-        ],
-        [
-            'attribute'=>'total',
+            'attribute'=>'amount',
             'enableSorting' => false,
             'contentOptions' => [
                 'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
@@ -51,6 +41,7 @@ $this->registerJs($js);
             'pageSummary' => '<span id="total">0.00</span>',
              
         ],
+                      
          /*[
             'attribute'=>'selected_request',
             'pageSummary' => '<span style="float:right;">Total</span>',
@@ -86,24 +77,20 @@ $this->registerJs($js);
          'columns' =>$gridColumn,
          'showPageSummary' => true,
          'toolbar'=> [],
-         /*'afterFooter'=>[
-             'columns'=>[
-                 'content'=>'Total Selected'
-             ],
-             
-         ],*/
+        
     ]); ?>
 <script type="text/javascript">
-    function settotal(){
+   function settotal(){
          var keys = $('#grid').yiiGridView('getSelectedRows');
         var keylist= keys.join();
         $("#op-requestids").val(keys.join());
        // $("#ext_op-requestid_update").val(keys.join());
         $.post({
-            url: '/finance/op/calculate-total?id='+keylist, // your controller action
+            url: '/finance/op/calculate-paymentitem?id='+keylist, // your controller action
             success: function(data) {
                 var tot=parseFloat(data);
                 var total=CurrencyFormat(tot,2);
+                
                 $('#total').html(total);
                  var payment_mode=$('#op-payment_mode_id').val()
                 if(payment_mode==4){
