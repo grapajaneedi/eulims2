@@ -6,6 +6,7 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 use common\components\Functions;
 use common\models\lab\Cancelledrequest;
+use common\models\lab\Discount;
 
 
 $sweetalert = new Functions();
@@ -425,7 +426,7 @@ if($Request_Ref){
                     'attribute'=>'quantity',
                     'header'=>'Quantity',
                     'enableSorting' => false,
-                    'pageSummary' => '<span style="float:right";>SUBTOTAL</span>',
+                    'pageSummary' => '<span style="float:right";>SUBTOTAL<BR>DISCOUNT<BR><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL</B></span>',
                    
                 ],
                 [
@@ -435,11 +436,16 @@ if($Request_Ref){
                     'contentOptions' => [
                         'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
                     ],
-                    'hAlign' => 'left', 
+                    'hAlign' => 'right', 
                     'vAlign' => 'left',
                     'width' => '7%',
                     'format' => ['decimal', 2],
-                    'pageSummary' => true,  
+                    'pageSummary' =>  function($model) {
+                                 // $discountquery = Discount::find()->where(['discount_id' => $model->request->discount_id])->one();
+                                // return "300<br>300".$discountquery->rate;
+                                return "300";
+                               // return $model->sample->samplename;
+                        }, 
                   
                 ],
                 

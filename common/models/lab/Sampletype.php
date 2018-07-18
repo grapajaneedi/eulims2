@@ -42,7 +42,7 @@ class Sampletype extends \yii\db\ActiveRecord
             [['sample_type', 'testcategory_id'], 'required'],
             [['testcategory_id'], 'integer'],
             [['sample_type'], 'string', 'max' => 75],
-            [['test_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
+            [['testcategory_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
         ];
     }
 
@@ -71,7 +71,7 @@ class Sampletype extends \yii\db\ActiveRecord
      */
     public function getTestCategory()
     {
-        return $this->hasOne(Testcategory::className(), ['testcategory_id' => 'test_category_id']);
+        return $this->hasOne(Testcategory::className(), ['testcategory_id' => 'testcategory_id']);
     }
 
     /**
