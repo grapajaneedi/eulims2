@@ -322,7 +322,8 @@ class PackagelistController extends Controller
         $sampletype = [];
 
           if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->testcategory_id]);
+                    Yii::$app->session->setFlash('success', 'Package Successfully Updated');
+                    return $this->runAction('index');
                 } else if (Yii::$app->request->isAjax) {
                     return $this->renderAjax('_form', [
                         'model' => $model,

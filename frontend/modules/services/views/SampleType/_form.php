@@ -5,6 +5,8 @@ use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use common\models\services\Testcategory;
 use yii\helpers\ArrayHelper;
+use kartik\widgets\DepDrop;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\services\Sampletype */
@@ -15,10 +17,14 @@ $LabList= ArrayHelper::map(Testcategory::find()->orderBy('category_name')->all()
 
 ?>
 
+<div class="sample-type-form" style="padding-bottom: 10px">
+<?php $form = ActiveForm::begin(); ?>
 <?=
 ///////
 
 //insert lab in sample type
+
+
 $form->field($model,'testcategory_id')->widget(Select2::classname(),[
                         'data' => $testcategory,
                         'theme' => Select2::THEME_KRAJEE,

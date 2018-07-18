@@ -4,10 +4,12 @@ namespace frontend\modules\services\controllers;
 
 use Yii;
 use common\models\services\Sampletype;
+use common\models\services\Testcategory;
 use common\models\services\SampletypeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * SampletypeController implements the CRUD actions for Sampletype model.
@@ -58,6 +60,19 @@ class SampletypeController extends Controller
                 ]);
         }
     }
+    protected function listTestcategory($labId)
+    {
+        $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 
+           function($testcategory, $defaultValue) {
+               return $testcategory->category_name;
+        });
+
+        /*$testcategory = ArrayHelper::map(Testcategory::find()
+            ->where(['lab_id' => $labId])
+            ->all(), 'testcategory_id', 'category_name');*/
+
+        return $testcategory;
+    }
 
     /**
      * Creates a new Sampletype model.
@@ -67,6 +82,8 @@ class SampletypeController extends Controller
     public function actionCreate()
     {
         $model = new Sampletype();
+        $testcategory = $this->listTestcategory(1);
+        $sampletype = [];
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
                  Yii::$app->session->setFlash('success', 'Sample Type Successfully Created'); 
@@ -74,8 +91,10 @@ class SampletypeController extends Controller
          } 
            
         if(Yii::$app->request->isAjax){
-                 return $this->renderAjax('create', [
+                 return $this->renderAjax('_form', [
                          'model' => $model,
+                         'testcategory'=>$testcategory,
+                         'sampletype' => $sampletype,
                      ]);
              }
         }  
@@ -89,13 +108,18 @@ class SampletypeController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        
+        $testcategory = $this->listTestcategory(1);
+        $sampletype = [];
+
+
                 if ($model->load(Yii::$app->request->post()) && $model->save()) {
                     Yii::$app->session->setFlash('success', 'Sample Type Successfully Updated'); 
-                    return $this->redirect(['view', 'id' => $model->testcategory_id]);
+                    return $this->runAction('index');
                 } else if (Yii::$app->request->isAjax) {
-                    return $this->renderAjax('update', [
+                    return $this->renderAjax('_form', [
                         'model' => $model,
+                        'testcategory'=>$testcategory,
+                        'sampletype'=>$sampletype,
                     ]);
                 }
     }
