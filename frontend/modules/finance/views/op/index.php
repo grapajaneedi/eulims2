@@ -8,6 +8,7 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
 use kartik\daterange\DateRangePicker;
 use yii\db\Query;
+use common\models\finance\PaymentStatus;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\Op */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -21,6 +22,50 @@ $this->params['breadcrumbs'][] = 'Order of Payment';
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
 
+$Header="Department of Science and Technology<br>";
+$Header.="Order of Payment";
+$pdfHeader = [
+            'L' => [
+                'content' => "",
+                'font-size' => 0,
+                'color' => '#333333',
+            ],
+            'C' => [
+                'content' => $Header,
+                'font-size' => 20,
+                'margin-top'=>60,
+                'color' => '#333333',
+            ],
+            'R' => [
+                'content' =>'',
+                'font-size' => 0,
+                'color' => '#333333',
+            ],
+            'line'=>false
+        ];
+$pdfFooter = [
+            'L' => [
+                'content' => '',
+                'font-size' => 0,
+                'font-style' => 'B',
+                'color' => '#999999',
+            ],
+            'C' => [
+                'content' => '{PAGENO}',
+                'font-size' => 10,
+                'font-style' => 'B',
+                'font-family' => 'serif',
+                'color' => '#333333',
+            ],
+            'R' => [
+                'content' => '',
+                'font-size' => 0,
+                'font-style' => 'B',
+                'font-family' => 'serif',
+                'color' => '#333333',
+            ],
+            'line' => false,
+        ];
 ?>
 <div class="orderofpayment-index">
     <?php
@@ -48,6 +93,51 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
+        'exportConfig'=>[
+            GridView::PDF => [
+                'filename' => 'order_of_payment',
+                'alertMsg'        => 'The PDF export file will be generated for download.',
+                'config' => [
+                    'methods' => [
+                        //'SetHeader' => [$pdfHeader,'line'=>0],
+                        //'SetFooter' => [$pdfFooter]
+                        'SetHeader' => [
+                            ['odd' => $pdfHeader, 'even' => $pdfHeader],
+                        ],
+                        'SetFooter' => [
+                            ['odd' => $pdfFooter, 'even' => $pdfFooter],
+                        ],
+                    ],
+                    'options' => [
+                        'title' => 'Order of Payment',
+                        'subject' => 'OP',
+                        'keywords' => 'pdf, preceptors, export, other, keywords, here',
+                        'destination'=>'I'
+                    ],
+                ]
+            ],
+            GridView::EXCEL => [
+                'label'           => 'Excel',
+                //'icon'            => 'file-excel-o',
+                'methods' => [
+                    'SetHeader' => [$pdfHeader],
+                    'SetFooter' => [$pdfFooter]
+                ],
+                'iconOptions'     => ['class' => 'text-success'],
+                'showHeader'      => TRUE,
+                'showPageSummary' => TRUE,
+                'showFooter'      => TRUE,
+                'showCaption'     => TRUE,
+                'filename'        => "order_of_payment",
+                'alertMsg'        => 'The EXCEL export file will be generated for download.',
+                'options'         => ['title' => 'Department of Science OneLab'],
+                'mime'            => 'application/vnd.ms-excel',
+                'config'          => [
+                    'worksheet' => 'Order of Payment',
+                    'cssFile'   => ''
+                ]
+            ],
+        ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -122,11 +212,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 'filterInputOptions' => ['placeholder' => 'Customer Name', 'id' => 'grid-op-search-customer_id']
             ],
            
-            // 'amount',
-            // 'purpose',
-            // 'created_receipt',
             [
-               //'attribute' => 'created_receipt',
                'label'=>'Status', 
                'format'=>'raw',
                'value'=>function($model){
@@ -138,20 +224,25 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                        return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
                     }
                    //
-                }
-               
+                },   
             ],
             [
               //'class' => 'yii\grid\ActionColumn'
                 'class' => kartik\grid\ActionColumn::className(),
-                'template' => "{view}{update}",
+                'template' => "{view}{update}{delete}",
                 'buttons' => [
                     'view' => function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/op/view?id=' . $model->orderofpayment_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Order of Payment")]);
                     },
                     'update' => function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/op/update?id=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Order of Payment]")]);
+                        $Obj=$model->getCollectionStatus($model->orderofpayment_id);
+                        return $Obj[0]['payment_status'] === 'Unpaid' ? Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/op/update?id=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Order of Payment]")]) : '';
+                        //return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/op/update?id=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Order of Payment]")]);
                     },
+                    'delete' => function ($url, $model) {
+                        $Obj=$model->getCollectionStatus($model->orderofpayment_id);
+                        return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/finance/cancelop/create?op=' . $model->orderofpayment_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$Obj[0]['payment_status'] <> 'Unpaid', 'title' => Yii::t('app', "Cancel Request")]);
+                    }        
                     /*'delete' => function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/lab/cancelrequest/create?req=' . $model->request_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$model->status_id==2, 'title' => Yii::t('app', "Cancel Request")]);
                     }*/

@@ -206,32 +206,33 @@ class OpController extends Controller
             ->andWhere(['not', ['paymentitem_id' => $str_request]])
             ->one();
             
-            $sum = Paymentitem::find()->where(['orderofpayment_id' => $model->orderofpayment_id])
+            if($lists['ids']){
+              $sum = Paymentitem::find()->where(['orderofpayment_id' => $model->orderofpayment_id])
                  ->andWhere(['not', ['paymentitem_id' => $str_request]])
                  ->sum('amount');
-            $total=$model->total_amount - $sum;
-            
-            //Update to be able to select the request in creating op
-            $connection1= Yii::$app->labdb;
-            $sql_query1 = $connection1->createCommand('UPDATE tbl_request set posted=0 WHERE request_id IN('.$lists['ids'].')');
-            $sql_query1->execute();
-            
-            
-            //Delete in payment item
-            
-            $connection= Yii::$app->financedb;
-            $sql_query = $connection->createCommand('DELETE FROM tbl_paymentitem WHERE paymentitem_id NOT IN('.$arr_id.') AND orderofpayment_id=:op_id');
-            $sql_query->bindParam(':op_id',$opid );
-            $sql_query->execute();
-            
-            $sql_query2 = $connection->createCommand('UPDATE tbl_orderofpayment set total_amount=:total WHERE orderofpayment_id=:op_id');
-            $sql_query2->bindParam(':total',$total);
-            $sql_query2->bindParam(':op_id',$opid);
-            $sql_query2->execute();
-            
-            
+                $total=$model->total_amount - $sum;
+
+                //Update to be able to select the request in creating op
+                $connection1= Yii::$app->labdb;
+                $sql_query1 = $connection1->createCommand('UPDATE tbl_request set posted=0 WHERE request_id IN('.$lists['ids'].')');
+                $sql_query1->execute();
+
+
+                //Delete in payment item
+
+                $connection= Yii::$app->financedb;
+                $sql_query = $connection->createCommand('DELETE FROM tbl_paymentitem WHERE paymentitem_id NOT IN('.$arr_id.') AND orderofpayment_id=:op_id');
+                $sql_query->bindParam(':op_id',$opid );
+                $sql_query->execute();
+
+                $sql_query2 = $connection->createCommand('UPDATE tbl_orderofpayment set total_amount=:total WHERE orderofpayment_id=:op_id');
+                $sql_query2->bindParam(':total',$total);
+                $sql_query2->bindParam(':op_id',$opid);
+                $sql_query2->execute();
+
+            }
             $session->set('updatepopup',"executed");
-            return $this->redirect(['/finance/op']); 
+            return $this->redirect(['/finance/op']);  
          
         } else {
             return $this->renderAjax('update', [

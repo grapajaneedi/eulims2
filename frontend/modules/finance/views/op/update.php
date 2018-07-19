@@ -11,11 +11,24 @@ $this->params['breadcrumbs'][] = ['label' => $model->orderofpayment_id, 'url' =>
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="orderofpayment-update">
-    <?= $this->render('_form', [
+    <?php
+    $Obj=$model->getCollectionStatus($model->orderofpayment_id);
+    /*if($Obj[0]['payment_status'] == 'Paid'){
+       echo "<script>
+        alert('Cannot update this Order of payment');
+        window.location.href='/finance/op';
+        </script>";
+       exit;
+    }
+    else{*/
+        echo $this->render('_form', [
         'model' => $model,
         'dataProvider'=>$dataProvider,
         'request_model'=>$paymentitem_model,
         'status' => 1,
-    ]) ?>
+          ]);
+   // }
+    
+     ?>
 
 </div>
