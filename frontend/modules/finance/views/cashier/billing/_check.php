@@ -26,6 +26,7 @@ $js=<<<SCRIPT
        
    });
    $("#checkTable").on('keydown',function(e){
+       var index=e.index;
        if(e.which==46){//delete key
           bootbox.confirm({
             title: "Remove Row",
@@ -75,9 +76,15 @@ $js=<<<SCRIPT
    }
    function GetTotal(){
       var total=0;
-      $(".kv-amount").each(function (ix, element) {
-          total=total+parseFloat(StringToFloat(this.innerHTML));
-      });
+      var rows=table.rows();
+      for (var i = 0; i < rows.length; i++) { 
+          var row=rows[i];
+          row.setAttribute("id","table_obj"+i);
+          row.setAttribute("data_key",i);
+          row.setAttribute("tabindex",i);
+          var cell=row.cells[3];
+          total=total+parseFloat(StringToFloat(cell.innerHTML));
+      }
       $(".kv-total").html(CurrencyFormat(total,2));
    }    
 SCRIPT;
@@ -185,7 +192,7 @@ echo GridView::widget([
         </div>
         <div class="row" style="padding-top: 15px;background-color: white">
             <div class="col-md-12 pull-right">
-                <button id="btnCheckClose" type="button" onclick="$('#BankDetails').hide()" class="btn btn-default pull-right">Close</button>
+                <button id="btnCheckClose" type="button" onclick="GetTotal();//$('#BankDetails').hide()" class="btn btn-default pull-right">Close</button>
                 <button id="btnAddBankDetails" type="button" class="btn btn-primary pull-right" style="padding-right: 20px"><i class="fa fa-save"> </i> Add Bank Details</button>
             </div>
         </div>

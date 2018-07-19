@@ -91,8 +91,9 @@ class tableobject{
     */
     insertrow(fields=[],fieldsclass=[],index=-1){
         if(index<0){
-            index=parseInt(this.tablebody.rows.length)+1;
+            index=parseInt(this.tablebody.rows.length);
         }
+        console.log(index);
         var row=this.tablebody.insertRow(index);
         row.setAttribute("class", "clickable-row");
         row.setAttribute("id","table_obj"+index);

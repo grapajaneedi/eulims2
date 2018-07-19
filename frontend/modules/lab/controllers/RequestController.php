@@ -48,6 +48,7 @@ class RequestController extends Controller
     public function actionIndex()
     {
         $searchModel = new RequestSearch();
+        $searchModel->customer_id=1;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=6;
         return $this->render('index', [
