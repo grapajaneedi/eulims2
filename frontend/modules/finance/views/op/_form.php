@@ -22,6 +22,7 @@ $disable='';
  else{
  $disable=false;    
  }
+
 ?>
 <?php
     if(!$model->isNewRecord){
@@ -32,6 +33,7 @@ $disable='';
         });
     </script>
     <?php
+    
     }
 ?>
 <div class="orderofpayment-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
