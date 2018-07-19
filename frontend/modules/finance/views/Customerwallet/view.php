@@ -52,9 +52,8 @@ use yii\grid\ActionColumn;
                 },
             ],
             'amount',
-            'balance'
-             
-
+            'balance',
+            'source'
         ],
     ]); ?>
 
