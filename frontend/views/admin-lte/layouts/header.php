@@ -38,9 +38,8 @@ if(Yii::$app->user->isGuest){
        $UsernameDesignation=$CurrentUserName.'-'.$CurrentUserDesignation;
     }
 }
-
-$moduleDir= Yii::$app->basePath.'\modules';
-$Directories = scandir($moduleDir);
+//$moduleDir= Yii::$app->basePath.'\modules';
+//$Directories = scandir($moduleDir);
 $Packages= Package::find()->all();
 $conditions = ['to' => Yii::$app->user->id, 'status' => 0];
 $messages=Message::find()->where($conditions)->all();

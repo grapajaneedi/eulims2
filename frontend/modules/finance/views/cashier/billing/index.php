@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\grid\BooleanColumn;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\BillingReceiptSearch */
@@ -14,48 +15,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cash
 $this->params['breadcrumbs'][] = $this->title;
 $Header="Department of Science and Technology<br>";
 $Header.="Statement of Accounts";
-$pdfHeader = [
-            'L' => [
-                'content' => "",
-                'font-size' => 0,
-                'color' => '#333333',
-            ],
-            'C' => [
-                'content' => $Header,
-                'font-size' => 20,
-                'margin-top'=>60,
-                'color' => '#333333',
-            ],
-            'R' => [
-                'content' =>'',
-                'font-size' => 0,
-                'color' => '#333333',
-            ],
-            'line'=>false
-        ];
-$pdfFooter = [
-            'L' => [
-                'content' => '',
-                'font-size' => 0,
-                'font-style' => 'B',
-                'color' => '#999999',
-            ],
-            'C' => [
-                'content' => '{PAGENO}',
-                'font-size' => 10,
-                'font-style' => 'B',
-                'font-family' => 'serif',
-                'color' => '#333333',
-            ],
-            'R' => [
-                'content' => '',
-                'font-size' => 0,
-                'font-style' => 'B',
-                'font-family' => 'serif',
-                'color' => '#333333',
-            ],
-            'line' => false,
-        ];
+$func=new Functions();
 ?>
 <div class="billing-receipt-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -82,51 +42,7 @@ $pdfFooter = [
                 return ['style' => 'color: red;font-weight: bold'];
             }
         },
-        'exportConfig'=>[
-            GridView::PDF => [
-                'filename' => 'statement_of_account',
-                'alertMsg'        => 'The PDF export file will be generated for download.',
-                'config' => [
-                    'methods' => [
-                        //'SetHeader' => [$pdfHeader,'line'=>0],
-                        //'SetFooter' => [$pdfFooter]
-                        'SetHeader' => [
-                            ['odd' => $pdfHeader, 'even' => $pdfHeader],
-                        ],
-                        'SetFooter' => [
-                            ['odd' => $pdfFooter, 'even' => $pdfFooter],
-                        ],
-                    ],
-                    'options' => [
-                        'title' => 'Statement of Account List',
-                        'subject' => 'SOA',
-                        'keywords' => 'pdf, preceptors, export, other, keywords, here',
-                        'destination'=>'I'
-                    ],
-                ]
-            ],
-            GridView::EXCEL => [
-                'label'           => 'Excel',
-                //'icon'            => 'file-excel-o',
-                'methods' => [
-                    'SetHeader' => [$pdfHeader],
-                    'SetFooter' => [$pdfFooter]
-                ],
-                'iconOptions'     => ['class' => 'text-success'],
-                'showHeader'      => TRUE,
-                'showPageSummary' => TRUE,
-                'showFooter'      => TRUE,
-                'showCaption'     => TRUE,
-                'filename'        => "statement of account",
-                'alertMsg'        => 'The EXCEL export file will be generated for download.',
-                'options'         => ['title' => 'Department of Science OneLab'],
-                'mime'            => 'application/vnd.ms-excel',
-                'config'          => [
-                    'worksheet' => 'Statement of Account',
-                    'cssFile'   => ''
-                ]
-            ],
-        ],
+        'exportConfig'=>$func->exportConfig("Statement of Account", "statement of account", $Header),
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
 

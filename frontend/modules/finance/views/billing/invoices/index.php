@@ -10,11 +10,10 @@ use kartik\widgets\DatePicker;
 use kartik\daterange\DateRangePicker;
 use yii\db\Query;
 use yii\helpers\Url;
+use common\components\Functions;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\Op */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
-use common\components\Functions;
 
 $func= new Functions();
 $this->title = 'Invoices';
@@ -24,7 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
 $rstlID=$GLOBALS['rstl_id'];
-
+$Header="Department of Science and Technology<br>";
+$Header.="Billing Invoices";
 ?>
 <div class="billinvoice-index">
     <?php
@@ -49,6 +49,7 @@ $rstlID=$GLOBALS['rstl_id'];
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
                 'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Bill Invoice', ['value'=>'/finance/ar/create','onclick'=>'ShowModal(this.title,this.value)', 'class' => 'btn btn-success','title' => Yii::t('app', "Create Bill Invoice"),'id'=>'btnInvoice'])
             ],
+        'exportConfig'=>$func->exportConfig("Bill Invoices", "laboratory request", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [

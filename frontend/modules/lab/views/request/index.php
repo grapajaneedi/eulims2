@@ -20,6 +20,8 @@ $this->title = 'Requests';
 $this->params['breadcrumbs'][] = ['label' => 'Lab', 'url' => ['/lab']];
 $this->params['breadcrumbs'][] = $this->title;
 $func=new Functions();
+$Header="Department of Science and Technology<br>";
+$Header.="Laboratory Request";
 ?>
 <div class="request-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -51,6 +53,7 @@ $func=new Functions();
                     'enablePushState' => false,
               ],
         ],
+        'exportConfig'=>$func->exportConfig("Laboratory Request", "laboratory request", $Header),
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             'request_ref_num',
