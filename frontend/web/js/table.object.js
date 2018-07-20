@@ -137,7 +137,7 @@ class tableobject{
      * @returns {JSON Format}
      */
     rowsToJSON(){
-        var table = $('#'+this.id).tableToJSON(); 
+        var table = $('#'+this.id+">tbody").tableToJSON(); 
         return JSON.stringify(table);
     }
     /**

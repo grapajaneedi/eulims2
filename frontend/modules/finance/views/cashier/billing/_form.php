@@ -31,8 +31,9 @@ $this->registerJs($soaJS);
 ?>
 
 <div class="receipt-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
-
     <?php $form = ActiveForm::begin(); ?>
+    <input type="hidden" name="check_details" id="check_details" value=""> 
+    <input type="hidden" name="BillingPayment[or_number]" id="or_number" value="<?= $model->or_number ?>"> 
     <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 1px !important;">
         <a href="#" class="close" data-dismiss="alert" >×</a>
         <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p> 
@@ -156,6 +157,7 @@ $this->registerJs($soaJS);
                     $('span.btn').addClass("btn-success");
                     $('#next_or').html(response.nxtOR);
                     $('#ext_receipt-or').val(response.nxtOR);
+                    $('#or_number').val(response.nxtOR);
                 } else {
                     //$("span.btn").appendClass("btn-warning");
                     $('span.btn').addClass("btn-danger");
