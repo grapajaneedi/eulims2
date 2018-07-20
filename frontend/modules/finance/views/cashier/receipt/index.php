@@ -20,6 +20,8 @@ $this->title = 'Receipt';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cashier']];
 $this->params['breadcrumbs'][] = 'Receipt';
+$Header="Department of Science and Technology<br>";
+$Header.="Receipt";
 ?>
 <div class="orderofpayment-index">
     
@@ -42,7 +44,8 @@ $this->params['breadcrumbs'][] = 'Receipt';
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
                 
-            ],
+        ],
+        'exportConfig'=>$func->exportConfig("Receipt", "receipt", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 

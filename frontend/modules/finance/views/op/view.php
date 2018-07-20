@@ -200,6 +200,9 @@ if($model->created_receipt == 0){
         <div class="table-responsive">
              <?php
             $gridColumns = [
+                ['class' => 'kartik\grid\SerialColumn',
+                  //'pageSummary' => false,  
+                ],
                 [
                     'attribute'=>'details',
                     'enableSorting' => false,
@@ -207,7 +210,27 @@ if($model->created_receipt == 0){
                         'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
                     ],
                     //'hAlign' => 'right',
+                    
+                ],
+                [
+                    'attribute'=>'status',
+                    'format'=>'raw',
+                    'enableSorting' => false,
+                    'contentOptions' => [
+                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                    ],
+                    'value'=>function($model){
+                    $Obj=$model->getCollectionStatus($model->orderofpayment_id);
+                    if($Obj){
+                       return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
+                    }else{
+                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
+                    }
+                   //
+                     },   
+                    'width' => '40%',
                     'pageSummary' => '<span style="float:right;">Total</span>',
+                    
                 ],
                 [
                     'attribute'=>'amount',
@@ -217,19 +240,11 @@ if($model->created_receipt == 0){
                     ],
                     'hAlign' => 'right', 
                     'vAlign' => 'middle',
-                    'width' => '7%',
+                    'width' => '10%',
                     'format' => ['decimal', 2],
                     'pageSummary' => true
                 ],
-               [
-                    'attribute'=>'status',
-                    'enableSorting' => false,
-                    'contentOptions' => [
-                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
-                    ],
-                    //'hAlign' => 'right',
-                    //'pageSummary' => '<span style="float:right;">Total</span>',
-                ],
+               
               ];
               
              echo GridView::widget([

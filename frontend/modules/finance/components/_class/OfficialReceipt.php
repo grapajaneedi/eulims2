@@ -93,12 +93,16 @@ class OfficialReceipt implements PDFEnum{
        // exit;
         $count=0;
         
-        $accountcodeid=$Collection->accountingcodemap->accountingcode_id;
-        $accountcode=Accountingcode::find()->where(['accountingcode_id' => $accountcodeid])->one();
+        //$accountcodeid=$Collection->accountingcodemap->accountingcode_id;
+        //$accountcode=Accountingcode::find()->where(['accountingcode_id' => $accountcodeid])->one();
+        
+        //$accountcodeid=$Collection->accountingcodemap->accountingcode_id;
+        $accountcode="";
+        
         
         $ORHeader.="<tr>";
         $ORHeader.="<td colspan='2' style='height:22px;width:166px;'>&nbsp;&nbsp;&nbsp;".$Collection->collectiontype->natureofcollection."</td>";
-        $ORHeader.="<td colspan='3' style='text-align:left;'>&nbsp;".$accountcode->accountcode."</td>";
+        $ORHeader.="<td colspan='3' style='text-align:left;'>&nbsp;".$accountcode."</td>";
         $ORHeader.="<td colspan='3'>&nbsp;</td>";
         $ORHeader.="</tr>";
         
@@ -187,9 +191,11 @@ class OfficialReceipt implements PDFEnum{
      * 
      * @param type $dest
      */
-    public function PrintPDF($ORNumber, $ORTitle){
-        $ORNumber='2437937';
-        $mORTemplate= $this->ORTemplate($ORNumber, $ORTitle);
+    public function PrintPDF(){
+        $get= \Yii::$app->request->get();
+       // $Request_id=$get['req'];
+        $ORNumber=$get['or_number'];
+        $mORTemplate= $this->ORTemplate($ORNumber, "");
         $mPDF = new Pdf();
         $mPDF->content=$mORTemplate[0];
         $mPDF->orientation=Pdf::ORIENT_PORTRAIT;

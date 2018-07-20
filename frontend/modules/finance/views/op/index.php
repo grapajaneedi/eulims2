@@ -24,48 +24,6 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
 
 $Header="Department of Science and Technology<br>";
 $Header.="Order of Payment";
-$pdfHeader = [
-            'L' => [
-                'content' => "",
-                'font-size' => 0,
-                'color' => '#333333',
-            ],
-            'C' => [
-                'content' => $Header,
-                'font-size' => 20,
-                'margin-top'=>60,
-                'color' => '#333333',
-            ],
-            'R' => [
-                'content' =>'',
-                'font-size' => 0,
-                'color' => '#333333',
-            ],
-            'line'=>false
-        ];
-$pdfFooter = [
-            'L' => [
-                'content' => '',
-                'font-size' => 0,
-                'font-style' => 'B',
-                'color' => '#999999',
-            ],
-            'C' => [
-                'content' => '{PAGENO}',
-                'font-size' => 10,
-                'font-style' => 'B',
-                'font-family' => 'serif',
-                'color' => '#333333',
-            ],
-            'R' => [
-                'content' => '',
-                'font-size' => 0,
-                'font-style' => 'B',
-                'font-family' => 'serif',
-                'color' => '#333333',
-            ],
-            'line' => false,
-        ];
 ?>
 <div class="orderofpayment-index">
     <?php
@@ -93,51 +51,7 @@ $pdfFooter = [
                 'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
-        'exportConfig'=>[
-            GridView::PDF => [
-                'filename' => 'order_of_payment',
-                'alertMsg'        => 'The PDF export file will be generated for download.',
-                'config' => [
-                    'methods' => [
-                        //'SetHeader' => [$pdfHeader,'line'=>0],
-                        //'SetFooter' => [$pdfFooter]
-                        'SetHeader' => [
-                            ['odd' => $pdfHeader, 'even' => $pdfHeader],
-                        ],
-                        'SetFooter' => [
-                            ['odd' => $pdfFooter, 'even' => $pdfFooter],
-                        ],
-                    ],
-                    'options' => [
-                        'title' => 'Order of Payment',
-                        'subject' => 'OP',
-                        'keywords' => 'pdf, preceptors, export, other, keywords, here',
-                        'destination'=>'I'
-                    ],
-                ]
-            ],
-            GridView::EXCEL => [
-                'label'           => 'Excel',
-                //'icon'            => 'file-excel-o',
-                'methods' => [
-                    'SetHeader' => [$pdfHeader],
-                    'SetFooter' => [$pdfFooter]
-                ],
-                'iconOptions'     => ['class' => 'text-success'],
-                'showHeader'      => TRUE,
-                'showPageSummary' => TRUE,
-                'showFooter'      => TRUE,
-                'showCaption'     => TRUE,
-                'filename'        => "order_of_payment",
-                'alertMsg'        => 'The EXCEL export file will be generated for download.',
-                'options'         => ['title' => 'Department of Science OneLab'],
-                'mime'            => 'application/vnd.ms-excel',
-                'config'          => [
-                    'worksheet' => 'Order of Payment',
-                    'cssFile'   => ''
-                ]
-            ],
-        ],
+        'exportConfig'=>$func->exportConfig("Order of Payment", "op", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -219,7 +133,6 @@ $pdfFooter = [
                     $Obj=$model->getCollectionStatus($model->orderofpayment_id);
                     if($Obj){
                        return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
-                      // return "<button class='badge ".$Obj[0]['class']." legend-font'><span class=".$Obj[0]['icon']."></span> $Obj[0]['status']</span>";
                     }else{
                        return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
                     }
