@@ -22,6 +22,9 @@ $this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cash
 $this->params['breadcrumbs'][] = 'Collection';
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
+
+$Header="Department of Science and Technology<br>";
+$Header.="Collection";
 ?>
 <div class="orderofpayment-index">
     <?php
@@ -47,7 +50,8 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
                 
-            ],
+        ],
+        'exportConfig'=>$func->exportConfig("Collection", "collection", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 

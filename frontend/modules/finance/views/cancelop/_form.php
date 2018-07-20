@@ -2,16 +2,16 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use common\models\lab\Request;
+use common\models\finance\Op;
 use common\models\system\Profile;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Cancelledrequest */
 /* @var $form yii\widgets\ActiveForm */
 $disabled=false;
-$Request=  Request::find()->where(['request_id'=>$Req_id])->one();
-$model->request_ref_num=$Request->request_ref_num;
-$model->request_id=$Request->request_id;
+$Op=  Op::find()->where(['orderofpayment_id'=>$op_id])->one();
+$model->transactionnum=$Op->transactionnum;
+$model->orderofpayment_id=$Op->orderofpayment_id;
 $model->cancelledby= Yii::$app->user->id;
 // Query Profile Name
 $Profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
@@ -20,10 +20,10 @@ $UserCancell=$Profile->fullname;
 
 <div class="cancelledrequest-form">
     <?php $form = ActiveForm::begin(); ?>
-    <?= $form->field($model, 'request_id')->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'orderofpayment_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'cancelledby')->hiddenInput()->label(false) ?>
     
-    <?= $form->field($model, 'request_ref_num')->textInput(['maxlength' => true,'readonly'=>true])->label("Request Reference #") ?>
+    <?= $form->field($model, 'transactionnum')->textInput(['maxlength' => true,'readonly'=>true])->label("Transaction #") ?>
 
     <?= $form->field($model, 'cancel_date')->textInput(['readonly'=>true])->label('Date') ?>
     

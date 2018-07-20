@@ -3,7 +3,7 @@
 namespace common\models\finance;
 
 use Yii;
-
+use common\models\finance\Op;
 /**
  * This is the model class for table "tbl_cancelled_op".
  *
@@ -45,7 +45,7 @@ class CancelledOp extends \yii\db\ActiveRecord
             [['reason'], 'string'],
             [['cancel_date'], 'safe'],
             [['transactionnum'], 'string', 'max' => 100],
-            [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orderofpayment::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
+            [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Op::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
         ];
     }
 
@@ -69,6 +69,6 @@ class CancelledOp extends \yii\db\ActiveRecord
      */
     public function getOrderofpayment()
     {
-        return $this->hasOne(Orderofpayment::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+        return $this->hasOne(Op::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
 }

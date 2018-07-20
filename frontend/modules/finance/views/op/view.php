@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use common\models\finance\Collection;
+use common\models\finance\CancelledOp;
+use common\components\Functions;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
 
@@ -13,18 +15,82 @@ $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['inde
 
 $bal=($model->total_amount) -($model->collection->sub_total);
 //}
+$sweetalert = new Functions();
+
+if($model->collection->payment_status_id==0){
+    $CancelButton='';
+    $CancelClass='request-cancelled';
+    $BackClass='background-cancel';
+}else{
+    if($model->created_receipt == 0){
+        $CancelClass='cancelled-hide';
+        $BackClass='';
+        $Func="LoadModal('Cancel Order of Payment','/finance/cancelop/create?op=".$model->orderofpayment_id."',true,500)";
+        $CancelButton='<button id="btnCancel" onclick="'.$Func.'" type="button" style="float: right" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel Order of Payment</button>';
+    }
+    else{
+        $CancelClass='cancelled-hide';
+        $BackClass='';
+        $CancelButton='';
+    }
+    
+}
+
+//$Request_Ref=$model->request_ref_num;
+$Cancelledop= CancelledOp::find()->where(['orderofpayment_id'=>$model->orderofpayment_id])->one();
+if($Cancelledop){
+    $transnum=$Cancelledop->transactionnum;
+    $Reasons=$Cancelledop->reason;
+    $DateCancelled=date('m/d/Y h:i A', strtotime($Cancelledop->cancel_date));
+    $CancelledBy=$sweetalert->GetProfileName($Cancelledop->cancelledby);
+}else{
+    $Reasons='&nbsp;';
+    $DateCancelled='';
+    $CancelledBy='';
+    $transnum='';
+}
+/*
+if($model->created_receipt == 0){
+    $enableRequest=true;
+    $disableButton="disabled";
+    $ClickButton='';
+    $btnID="";
+}else{ // NO reference number yet
+    $enableRequest=false;
+    $ClickButton='addSample(this.value,this.title)';
+    $disableButton="";
+    $btnID="id='btnSaveRequest'";
+}
+*/
 ?>
-<div class="orderofpayment-view">
-    <?php
-        if($model->created_receipt == 0){
-            
-            $CancelButton = "<div style='float: right'>".Html::button('<span class="fa fa-remove" ></span> Cancel Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-danger','title' => Yii::t('app', "Cancel Order of Payment"),'id'=>'btnCancel'])."</div>";
- 
-        }else{
-           
-            $CancelButton='';
-        }
-    ?>
+<div class="orderofpayment-view" style="position:relative;">
+   <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
+        <div class="inner-div">
+        <img src="/images/cancelled.png" alt="" style="width: 300px;margin-left: 80px"/>
+        <div class="panel panel-primary">
+            <div class="panel-heading"></div>
+            <table class="table table-condensed table-hover table-striped table-responsive">
+                 <tr>
+                    <th style="background-color: lightgray">Date Cancelled</th>
+                    <td><?= $DateCancelled ?></td>
+                </tr>
+                 <tr>
+                    <th style="background-color: lightgray">Transaction #</th>
+                    <td><?= $transnum ?></td>
+                </tr>
+                <tr>
+                    <th style="width: 120px;background-color: lightgray">Reason of Cancellation</th>
+                    <td style="width: 230px"><?= $Reasons ?></td>
+                </tr>
+                <tr>
+                    <th style="background-color: lightgray">Cancelled By</th>
+                    <td><?= $CancelledBy ?></td>
+                </tr>
+            </table>
+        </div>
+        </div>
+    </div> 
+<div class="<?= $BackClass ?>"></div>
    <div class="container">
     <?= DetailView::widget([
         'model'=>$model,
@@ -134,6 +200,9 @@ $bal=($model->total_amount) -($model->collection->sub_total);
         <div class="table-responsive">
              <?php
             $gridColumns = [
+                ['class' => 'kartik\grid\SerialColumn',
+                  //'pageSummary' => false,  
+                ],
                 [
                     'attribute'=>'details',
                     'enableSorting' => false,
@@ -141,22 +210,41 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                         'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
                     ],
                     //'hAlign' => 'right',
+                    
+                ],
+                [
+                    'attribute'=>'status',
+                    'format'=>'raw',
+                    'enableSorting' => false,
+                    'contentOptions' => [
+                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                    ],
+                    'value'=>function($model){
+                    $Obj=$model->getCollectionStatus($model->orderofpayment_id);
+                    if($Obj){
+                       return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
+                    }else{
+                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
+                    }
+                   //
+                     },   
+                    'width' => '40%',
                     'pageSummary' => '<span style="float:right;">Total</span>',
+                    
                 ],
                 [
                     'attribute'=>'amount',
                     'enableSorting' => false,
                     'contentOptions' => [
-                        'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                       // 'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
                     ],
                     'hAlign' => 'right', 
                     'vAlign' => 'middle',
-                    'width' => '7%',
+                    'width' => '10%',
                     'format' => ['decimal', 2],
                     'pageSummary' => true
                 ],
                
-              
               ];
               
              echo GridView::widget([
@@ -184,8 +272,3 @@ $bal=($model->total_amount) -($model->collection->sub_total);
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $('#btnCancel').on('click',function(e) {
-        alert('lez go');
-    });
-</script>

@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use common\models\finance\Collection;
+use common\components\Functions;
+use common\models\finance\CancelledOp;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
 
@@ -27,9 +29,59 @@ if($bal <> 0){
 else{
     $footer=Html::a('View Receipt', ['/finance/cashier/view-receipt?receiptid='.$model->created_receipt], ['target'=>'_blank','class'=>'btn btn-primary']);
 }
-?>
-<div class="orderofpayment-view">
 
+$sweetalert = new Functions();
+
+if($model->collection->payment_status_id==0){
+    $CancelButton='';
+    $CancelClass='request-cancelled';
+    $BackClass='background-cancel';
+}else{
+    $CancelClass='cancelled-hide';
+    $BackClass='';
+    $CancelButton='';
+}
+$Cancelledop= CancelledOp::find()->where(['orderofpayment_id'=>$model->orderofpayment_id])->one();
+if($Cancelledop){
+    $transnum=$Cancelledop->transactionnum;
+    $Reasons=$Cancelledop->reason;
+    $DateCancelled=date('m/d/Y h:i A', strtotime($Cancelledop->cancel_date));
+    $CancelledBy=$sweetalert->GetProfileName($Cancelledop->cancelledby);
+}else{
+    $Reasons='&nbsp;';
+    $DateCancelled='';
+    $CancelledBy='';
+    $transnum='';
+}
+?>
+<div class="orderofpayment-view" style="position:relative;">
+<div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
+        <div class="inner-div">
+        <img src="/images/cancelled.png" alt="" style="width: 300px;margin-left: 80px"/>
+        <div class="panel panel-primary">
+            <div class="panel-heading"></div>
+            <table class="table table-condensed table-hover table-striped table-responsive">
+                 <tr>
+                    <th style="background-color: lightgray">Date Cancelled</th>
+                    <td><?= $DateCancelled ?></td>
+                </tr>
+                 <tr>
+                    <th style="background-color: lightgray">Transaction #</th>
+                    <td><?= $transnum ?></td>
+                </tr>
+                <tr>
+                    <th style="width: 120px;background-color: lightgray">Reason of Cancellation</th>
+                    <td style="width: 230px"><?= $Reasons ?></td>
+                </tr>
+                <tr>
+                    <th style="background-color: lightgray">Cancelled By</th>
+                    <td><?= $CancelledBy ?></td>
+                </tr>
+            </table>
+        </div>
+        </div>
+</div> 
+<div class="<?= $BackClass ?>"></div>
    <div class="container">
     <?= DetailView::widget([
         'model'=>$model,
