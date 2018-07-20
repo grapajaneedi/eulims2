@@ -13,9 +13,12 @@ use kartik\widgets\DatePicker;
 
 /* @var $this yii\web\View */
 $js=<<<SCRIPT
+   var TotalSoa=$("#TotalSoa").val();
    var table=new tableobject("checkTable");
    table.truncaterow();
-   table.insertfooter(['','','Total','0.00'],['kv-page-summary warning','kv-page-summary warning','kv-page-summary warning kv-align-right','kv-page-summary warning kv-align-right kv-total']);
+   table.insertfooter(['','','Balance:','0.00'],['kv-page-summary warning','kv-page-summary warning','kv-page-summary warning kv-align-right','kv-page-summary warning kv-align-right kv-balance']);     
+   table.insertfooter(['','','Total Check Amount:','0.00'],['kv-page-summary warning','kv-page-summary warning','kv-page-summary warning kv-align-right','kv-page-summary warning kv-align-right kv-total-check']);
+   table.insertfooter(['','','Total SOA',TotalSoa],['kv-page-summary warning','kv-page-summary warning','kv-page-summary warning kv-align-right','kv-page-summary warning kv-align-right kv-total']);
    $("#btnAddBankDetails").click(function(){
         InsertRow();
    }); 
@@ -83,9 +86,12 @@ $js=<<<SCRIPT
           row.setAttribute("data_key",i);
           row.setAttribute("tabindex",i);
           var cell=row.cells[3];
-          total=total+parseFloat(StringToFloat(cell.innerHTML));
+          total=total+StringToFloat(cell.innerHTML);
       }
-      $(".kv-total").html(CurrencyFormat(total,2));
+      var totalchk=CurrencyFormat(total,2);
+      $(".kv-total-check").html(totalchk);
+      var Balance=StringToFloat(TotalSoa)-total;
+      $(".kv-balance").html(CurrencyFormat(Balance,2));
    }    
 SCRIPT;
 $this->registerJs($js);
@@ -142,6 +148,7 @@ echo GridView::widget([
     
 ]);
 ?>
+<input type="hidden" id="TotalSoa" value="<?= number_format($SoaModel->total_amount,2) ?>" />
 <div id="BankDetails" class="panel panel-primary col-md-10" style="position: fixed; top: 340px;display: none;z-index: 1">
     <div class="panel-heading">Add Bank Details <button type="button" style="float: right" class="close" onclick="$('#BankDetails').hide()" aria-hidden="true">×</button></div>
     <div class="panel-body">
@@ -192,7 +199,7 @@ echo GridView::widget([
         </div>
         <div class="row" style="padding-top: 15px;background-color: white">
             <div class="col-md-12 pull-right">
-                <button id="btnCheckClose" type="button" onclick="GetTotal();//$('#BankDetails').hide()" class="btn btn-default pull-right">Close</button>
+                <button id="btnCheckClose" type="button" onclick="$('#BankDetails').hide()" class="btn btn-default pull-right">Close</button>
                 <button id="btnAddBankDetails" type="button" class="btn btn-primary pull-right" style="padding-right: 20px"><i class="fa fa-save"> </i> Add Bank Details</button>
             </div>
         </div>
