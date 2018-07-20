@@ -29,45 +29,42 @@ $paymentlist='';
     <div style="padding:0px!important;">
         <div class="row">
             <div class="col-sm-6">
-           <?php 
+            <?php 
 
-                echo $form->field($model, 'collectiontype_id')->widget(Select2::classname(), [
-                'data' => ArrayHelper::map(Collectiontype::find()->all(), 'collectiontype_id', 'natureofcollection'),
-                'theme' => Select2::THEME_BOOTSTRAP,
-                'options' => ['placeholder' => 'Select Collection Type ...'],
-                'pluginOptions' => [
-                  'allowClear' => true
-                ],
-                ]);
-            ?>
+                 echo $form->field($model, 'collectiontype_id')->widget(Select2::classname(), [
+                 'data' => ArrayHelper::map(Collectiontype::find()->all(), 'collectiontype_id', 'natureofcollection'),
+                 'theme' => Select2::THEME_BOOTSTRAP,
+                 'options' => ['placeholder' => 'Select Collection Type ...'],
+                 'pluginOptions' => [
+                   'allowClear' => true
+                 ],
+                 ]);
+             ?>
             </div>   
             <div class="col-sm-6">
              <?php
-             echo $form->field($model, 'order_date')->widget(DatePicker::classname(), [
-             'options' => ['placeholder' => 'Select Date ...',
-                 'autocomplete'=>'off'],
-             'type' => DatePicker::TYPE_COMPONENT_APPEND,
-                 'pluginOptions' => [
-                     'format' => 'yyyy-mm-dd',
-                     'todayHighlight' => true,
-                     'autoclose'=>true,
-                     
-                 ]
-             ]);
+                echo $form->field($model, 'order_date')->widget(DatePicker::classname(), [
+                'options' => ['placeholder' => 'Select Date ...',
+                    'autocomplete'=>'off'],
+                'type' => DatePicker::TYPE_COMPONENT_APPEND,
+                    'pluginOptions' => [
+                        'format' => 'yyyy-mm-dd',
+                        'todayHighlight' => true,
+                        'autoclose'=>true,
+                    ]
+                ]);
              ?>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-              
-             <?php
-            $disabled=false;
-            $func=new Functions();
-            echo $func->GetCustomerList($form,$model,$disabled,"Customer");
-            ?>    
-           
+               <?php
+                    $disabled=false;
+                    $func=new Functions();
+                    echo $func->GetCustomerList($form,$model,$disabled,"Customer");
+                ?>  
             </div>
-             <div class="col-sm-6">
+            <div class="col-sm-6">
                 <?= $form->field($model, 'payment_mode_id')->widget(DepDrop::classname(), [
                     'type'=>DepDrop::TYPE_SELECT2,
                     'options' => ['placeholder' => 'Select Payment Mode ...'],
@@ -109,8 +106,8 @@ $paymentlist='';
 
 <script type="text/javascript">
     $('#op-customer_id').on('change',function(e) {
-       $(this).select2('close');
-       e.preventDefault();
+        $(this).select2('close');
+        e.preventDefault();
         $('#prog').show();
         $('#requests').hide();
          jQuery.ajax( {
@@ -127,23 +124,10 @@ $paymentlist='';
         
         $(this).select2('open');
       //  $(this).one('select-focus',select2Focus);
-      $(this).attr('tabIndex',1);
-       //checkpayment_mode();
+        $(this).attr('tabIndex',1);
     });
     
     $('#op-payment_mode_id').on('change',function(e) {
         e.preventDefault();
-        //checkpayment_mode();
     });
-  /*  function checkpayment_mode(){
-        var payment_mode=$('#op-payment_mode_id').val();
-        if(payment_mode == 4){
-            $('#op-purpose').prop('disabled', true);
-            $('#createOP').prop('disabled', true);
-        }
-        else{
-            $('#op-purpose').prop('disabled', false);
-            $('#createOP').prop('disabled', false);
-        }    
-    } */
 </script>

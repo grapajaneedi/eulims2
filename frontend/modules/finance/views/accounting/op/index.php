@@ -51,9 +51,6 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-           // 'orderofpayment_id',
-           // 'rstl_id',
             'transactionnum',
             [
                 'attribute' => 'collectiontype_id',
@@ -83,12 +80,12 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                      'presetDropdown'=>TRUE,
                      'convertFormat'=>TRUE,
                      'pluginOptions'=>[
-                         'allowClear' => true,
+                        'allowClear' => true,
                         'locale'=>[
                             'format'=>'Y-m-d',
                             'separator'=>' to ',
                         ],
-                         'opens'=>'left',
+                        'opens'=>'left',
                       ],
                      'pluginEvents'=>[
                         "cancel.daterangepicker" => "function(ev, picker) {
@@ -124,20 +121,16 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
             ],
            
             [
-               //'attribute' => 'created_receipt',
                'label'=>'Status', 
                'format'=>'raw',
                'value'=>function($model){
                     $Obj=$model->getCollectionStatus($model->orderofpayment_id);
                     if($Obj){
                        return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
-                      // return "<button class='badge ".$Obj[0]['class']." legend-font'><span class=".$Obj[0]['icon']."></span> $Obj[0]['status']</span>";
-                    }else{
+                     }else{
                        return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
                     }
-                   //
                 }
-               
             ],
             [
                 'class' => kartik\grid\ActionColumn::className(),
@@ -152,7 +145,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         ],
     ]); ?>
       
-     <?php
+    <?php
     // This section will allow to popup a notification
     $session = Yii::$app->session;
     if ($session->isActive) {

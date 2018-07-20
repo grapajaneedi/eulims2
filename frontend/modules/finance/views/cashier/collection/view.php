@@ -6,6 +6,7 @@ use kartik\grid\GridView;
 use common\models\finance\Collection;
 use common\components\Functions;
 use common\models\finance\CancelledOp;
+use common\models\finance\PaymentStatus;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
 
@@ -186,6 +187,8 @@ if($Cancelledop){
         <div class="table-responsive">
              <?php
             $gridColumns = [
+                ['class' => 'kartik\grid\SerialColumn', 
+                ],
                 [
                     'attribute'=>'details',
                     'enableSorting' => false,
@@ -208,8 +211,24 @@ if($Cancelledop){
                     'format' => ['decimal', 2],
                     'pageSummary' => true
                 ],
-               
-              
+               [
+                    'attribute'=>'status',
+                    'format'=>'raw',
+                    'enableSorting' => false,
+                    'contentOptions' => [
+                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                    ],
+                    'value'=>function($model){
+                    $paymentitem= PaymentStatus::find()->where(['payment_status_id'=>$model->status])->one();
+                    if($paymentitem){
+                       return "<button class='btn ".$paymentitem['class']." btn-block'><span class=".$paymentitem['icon']."></span>".$paymentitem['payment_status']."</button>"; 
+                    }else{
+                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
+                    }
+                   //
+                     },   
+                    'width' => '10%', 
+                ],
               ];
               
              echo GridView::widget([

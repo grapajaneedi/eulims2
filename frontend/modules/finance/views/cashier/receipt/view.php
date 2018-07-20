@@ -77,6 +77,8 @@ $receiptid=$receipt->receipt_id;
         <div class="table-responsive">
         <?php
             $gridColumns = [
+                ['class' => 'kartik\grid\SerialColumn', 
+                ],
                 [
                     'attribute'=>'details',
                     'enableSorting' => false,
@@ -94,23 +96,6 @@ $receiptid=$receipt->receipt_id;
                     'pageSummary' => true
                 ],
               
-                [
-                    'class' => 'kartik\grid\ActionColumn',
-                    'template' => '{delete}',
-                    'dropdown' => false,
-                    'dropdownOptions' => ['class' => 'pull-right'],
-                    //'urlCreator' => function($action, $model, $key, $index) { return '#'; },
-                   /* 'urlCreator' => function ($action, $model, $key, $index) {
-                        if ($action === 'delete') {
-                            $url ='/lab/sample/delete?id='.$model->sample_id;
-                            return $url;
-                        }
-
-                    },
-                    'deleteOptions' => ['title' => 'Delete Collection', 'data-toggle' => 'tooltip'],
-                  */
-                    'headerOptions' => ['class' => 'kartik-sheet-style'],
-                ],
             ];
 
             echo GridView::widget([
