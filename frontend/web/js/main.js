@@ -119,7 +119,7 @@ function StringToFloat(str, decimalForm){
 	v=parseFloat(v);
 	//console.log(v);
 	var v=v.toFixed(decimalForm);
-	return v;
+	return parseFloat(v);
 }
 function ShowModal(header,url,closebutton,width){
     if(closebutton===undefined){

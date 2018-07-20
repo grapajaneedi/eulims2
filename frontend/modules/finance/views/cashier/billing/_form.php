@@ -98,6 +98,7 @@ $this->registerJs($soaJS);
                 echo $this->renderAjax('_check', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
+                    'SoaModel'=>$SoaModel
                 ]);
             ?>
         </div>
