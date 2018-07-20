@@ -54,7 +54,7 @@ class CollectiontypeController extends Controller
         if(Yii::$app->request->isAjax){
             return $this->render('view', [
                     'model' => $this->findModel($id),
-                ]);
+            ]);
         }
     }
 
@@ -66,30 +66,19 @@ class CollectiontypeController extends Controller
     public function actionCreate()
     {
         $model = new Collectiontype();
-
-        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-           // if (Yii::$app->request->isAjax){
-                return $this->runAction('index');
-         //  }else{
-          //      return $this->redirect(['view', 'id' => $model->test_category_id]);
-         //   }
-          
+            return $this->runAction('index');
         } 
-          
-             if(Yii::$app->request->isAjax){
-                return $this->renderAjax('create', [
-                    'model' => $model,
-                   
-                ]);
-            }else{
-                return $this->render('create', [
-                    'model' => $model,
-                  
-                ]);
-            }
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('create', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
     }
-
     /**
      * Updates an existing Collectiontype model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -118,7 +107,6 @@ class CollectiontypeController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
         return $this->redirect(['index']);
     }
 

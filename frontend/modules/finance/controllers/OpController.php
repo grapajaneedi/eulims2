@@ -65,11 +65,11 @@ class OpController extends Controller
     { 
          $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $id]);
          $paymentitemDataProvider = new ActiveDataProvider([
-                'query' => $paymentitem_Query,
-                'pagination' => [
-                    'pageSize' => 10,
-                ],
-        ]);
+            'query' => $paymentitem_Query,
+            'pagination' => [
+                'pageSize' => 10,
+             ],
+         ]);
          
          return $this->render('view', [
             'model' => $this->findModel($id),
@@ -92,70 +92,57 @@ class OpController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
         
-        //echo "<pre>";
-        //print_r($this->Gettransactionnum());
-        //echo "</pre>";
-        
-         if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
              $transaction = Yii::$app->financedb->beginTransaction();
              $session = Yii::$app->session;
              try  {
-                     $request_ids=$model->RequestIds;
-                     $str_request = explode(',', $request_ids);
-                     // $wallet=$this->checkCustomerWallet($model->customer_id); 
-                     $arr_length = count($str_request); 
-                     $total_amount=0;
-                        $model->rstl_id=$GLOBALS['rstl_id'];
-                        $model->transactionnum= $this->Gettransactionnum();
-                        if ($model->payment_mode_id == 6){
-                            $model->on_account=1;
-                        }else{
-                            $model->on_account=0;
-                        }
-                        $model->save();
-                       //Saving for Paymentitem
-                        
-                        for($i=0;$i<$arr_length;$i++){
-                             $request =$this->findRequest($str_request[$i]);
-                             $paymentitem = new Paymentitem();
-                             $paymentitem->rstl_id =$GLOBALS['rstl_id'];
-                             $paymentitem->request_id = $str_request[$i];
-                             $paymentitem->orderofpayment_id = $model->orderofpayment_id;
-                             $paymentitem->details =$request->request_ref_num;
-                             $paymentitem->amount = $request->total;
-                             $paymentitem->request_type_id =$request->request_type_id;
-                             $total_amount+=$request->total;
-                             $paymentitem->save(); 
-                        }
-                        //----------------------//
-                        //---Saving for Collection-------
+                $request_ids=$model->RequestIds;
+                $str_request = explode(',', $request_ids);
+                $arr_length = count($str_request); 
+                $total_amount=0;
+                $model->rstl_id=$GLOBALS['rstl_id'];
+                $model->transactionnum= $this->Gettransactionnum();
+                if ($model->payment_mode_id == 6){
+                    $model->on_account=1;
+                }else{
+                    $model->on_account=0;
+                }
+                $model->save();
+                //Saving for Paymentitem
+                for($i=0;$i<$arr_length;$i++){
+                    $request =$this->findRequest($str_request[$i]);
+                    $paymentitem = new Paymentitem();
+                    $paymentitem->rstl_id =$GLOBALS['rstl_id'];
+                    $paymentitem->request_id = $str_request[$i];
+                    $paymentitem->orderofpayment_id = $model->orderofpayment_id;
+                    $paymentitem->details =$request->request_ref_num;
+                    $paymentitem->amount = $request->total;
+                    $paymentitem->request_type_id =$request->request_type_id;
+                    $total_amount+=$request->total;
+                    $paymentitem->save(); 
+                }
+                //----------------------//
+                //---Saving for Collection-------
 
-                        $collection_name= $this->getCollectionname($model->collectiontype_id);
-                        $collection->nature=$collection_name['natureofcollection'];
-                        $collection->rstl_id=$GLOBALS['rstl_id'];
-                        $collection->orderofpayment_id=$model->orderofpayment_id;
-                        $collection->referral_id=0;
-                        $collection->save(false);
-                        //
-                        $transaction->commit();
-                        $this->postRequest($request_ids);
-                        $this->updateTotalOP($model->orderofpayment_id, $total_amount);
-                        $session->set('savepopup',"executed");
-                         return $this->redirect(['/finance/op']); 
-                    
-                        
-                    
+                $collection_name= $this->getCollectionname($model->collectiontype_id);
+                $collection->nature=$collection_name['natureofcollection'];
+                $collection->rstl_id=$GLOBALS['rstl_id'];
+                $collection->orderofpayment_id=$model->orderofpayment_id;
+                $collection->referral_id=0;
+                $collection->save(false);
+                //
+                $transaction->commit();
+                $this->postRequest($request_ids);
+                $this->updateTotalOP($model->orderofpayment_id, $total_amount);
+                $session->set('savepopup',"executed");
+                 return $this->redirect(['/finance/op']); 
+                   
                 } catch (Exception $e) {
                     $transaction->rollBack();
                    $session->set('errorpopup',"executed");
                    return $this->redirect(['/finance/op']);
                 }
-                
-              //  var_dump($total_amount);
-              //  exit;
                 //-------------------------------------------------------------//
-               
-          
         } 
         $model->order_date=date('Y-m-d');
         if(Yii::$app->request->isAjax){
@@ -186,9 +173,6 @@ class OpController extends Controller
         $paymentitem_model= new Paymentitem();
         
         $query = Paymentitem::find()->where(['orderofpayment_id' => $model->orderofpayment_id]);
-        
-        //$lists=Request::find()->where(['customer_id' => $model->customer_id,'posted' => 1])->andWhere(['not', ['request_ref_num' => null]])->all();
-      
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -197,20 +181,18 @@ class OpController extends Controller
             $arr_id =($model->RequestIds);
             $str_request = explode(',', $model->RequestIds);
             $opid=$model->orderofpayment_id;
-            
-            
             $lists=(new Query)
-            ->select(['GROUP_CONCAT(`tbl_paymentitem`.`request_id`) as `ids`'])
-            ->from('`eulims_finance`.`tbl_paymentitem`')
-             ->where(['orderofpayment_id' => $model->orderofpayment_id])
-            ->andWhere(['not', ['paymentitem_id' => $str_request]])
-            ->one();
+                ->select(['GROUP_CONCAT(`tbl_paymentitem`.`request_id`) as `ids`'])
+                ->from('`eulims_finance`.`tbl_paymentitem`')
+                 ->where(['orderofpayment_id' => $model->orderofpayment_id])
+                ->andWhere(['not', ['paymentitem_id' => $str_request]])
+                ->one();
             
             if($lists['ids']){
-              $sum = Paymentitem::find()->where(['orderofpayment_id' => $model->orderofpayment_id])
+               $sum = Paymentitem::find()->where(['orderofpayment_id' => $model->orderofpayment_id])
                  ->andWhere(['not', ['paymentitem_id' => $str_request]])
                  ->sum('amount');
-                $total=$model->total_amount - $sum;
+               $total=$model->total_amount - $sum;
 
                 //Update to be able to select the request in creating op
                 $connection1= Yii::$app->labdb;
@@ -219,7 +201,6 @@ class OpController extends Controller
 
 
                 //Delete in payment item
-
                 $connection= Yii::$app->financedb;
                 $sql_query = $connection->createCommand('DELETE FROM tbl_paymentitem WHERE paymentitem_id NOT IN('.$arr_id.') AND orderofpayment_id=:op_id');
                 $sql_query->bindParam(':op_id',$opid );
@@ -253,7 +234,6 @@ class OpController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-       // $dataProvider->pagination->pageSize=3;
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_request', ['dataProvider'=>$dataProvider,'model'=>$model]);
         }
@@ -268,13 +248,7 @@ class OpController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionCancel($id)
-    {
-       // $this->findModel($id)->delete();
-       echo 'huhuhuh';
-       // return $this->redirect(['index']);
-    }
-
+  
     /**
      * Finds the Op model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -327,17 +301,15 @@ class OpController extends Controller
                  $str_trans_num='0001'; 
               }
               else if($lastyear == $year){
-                  $str_trans_num=str_pad($last_trans_num["lastnumber"], 4, "0", STR_PAD_LEFT);
-              }
-              
+                 $str_trans_num=str_pad($last_trans_num["lastnumber"], 4, "0", STR_PAD_LEFT);
+              } 
           }
           else{
-               $str_trans_num='0001';
+              $str_trans_num='0001';
           }
         
          $next_transnumber=$year_month."-".$str_trans_num;
          return $next_transnumber;
-        
      }
      
      public function actionCalculateTotal($id) {
@@ -383,23 +355,21 @@ class OpController extends Controller
        // updating request as posted upon saving order of payment
      public function postRequest($reqID){
          $str_total = explode(',', $reqID);
-          $arr_length = count($str_total); 
-            for($i=0;$i<$arr_length;$i++){
-               Yii::$app->labdb->createCommand()
-             ->update('tbl_request', ['posted' => 1], 'request_id= '.$str_total[$i])
-             ->execute(); 
-            }
+         $arr_length = count($str_total); 
+         for($i=0;$i<$arr_length;$i++){
+            Yii::$app->labdb->createCommand()
+            ->update('tbl_request', ['posted' => 1], 'request_id= '.$str_total[$i])
+            ->execute(); 
+         }
      }
      
      public function updateTotalOP($id,$total){
-        
-        Yii::$app->financedb->createCommand()
-      ->update('tbl_orderofpayment', ['total_amount' => $total], 'orderofpayment_id= '.$id)
-      ->execute(); 
-            
+         Yii::$app->financedb->createCommand()
+        ->update('tbl_orderofpayment', ['total_amount' => $total], 'orderofpayment_id= '.$id)
+        ->execute();       
      }
      
-      public function actionCheckCustomerWallet($customerid) {
+     public function actionCheckCustomerWallet($customerid) {
          $wallet=(new Query)
             ->select('balance')
             ->from('eulims_finance.tbl_customerwallet')
@@ -407,13 +377,8 @@ class OpController extends Controller
             ->one();
          echo $wallet["balance"];
      }
-     /*public function actionListpaymentmode($customerid){
-         $func=new Functions();
-         $paymentlist=$func->GetPaymentModeList($customerid);
-         return $paymentlist;
-     }*/
     
-      public function actionListpaymentmode() {
+     public function actionListpaymentmode() {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);

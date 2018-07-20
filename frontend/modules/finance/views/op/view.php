@@ -6,6 +6,7 @@ use kartik\grid\GridView;
 use common\models\finance\Collection;
 use common\models\finance\CancelledOp;
 use common\components\Functions;
+use common\models\finance\PaymentStatus;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
 
@@ -210,27 +211,7 @@ if($model->created_receipt == 0){
                         'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
                     ],
                     //'hAlign' => 'right',
-                    
-                ],
-                [
-                    'attribute'=>'status',
-                    'format'=>'raw',
-                    'enableSorting' => false,
-                    'contentOptions' => [
-                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
-                    ],
-                    'value'=>function($model){
-                    $Obj=$model->getCollectionStatus($model->orderofpayment_id);
-                    if($Obj){
-                       return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
-                    }else{
-                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
-                    }
-                   //
-                     },   
-                    'width' => '40%',
-                    'pageSummary' => '<span style="float:right;">Total</span>',
-                    
+                    'pageSummary' => '<span style="float:right;">Total:</span>',
                 ],
                 [
                     'attribute'=>'amount',
@@ -240,9 +221,27 @@ if($model->created_receipt == 0){
                     ],
                     'hAlign' => 'right', 
                     'vAlign' => 'middle',
-                    'width' => '10%',
+                    'width' => '20%',
                     'format' => ['decimal', 2],
                     'pageSummary' => true
+                ],
+                [
+                    'attribute'=>'status',
+                    'format'=>'raw',
+                    'enableSorting' => false,
+                    'contentOptions' => [
+                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                    ],
+                    'value'=>function($model){
+                    $paymentitem= PaymentStatus::find()->where(['payment_status_id'=>$model->status])->one();
+                    if($paymentitem){
+                       return "<button class='btn ".$paymentitem['class']." btn-block'><span class=".$paymentitem['icon']."></span>".$paymentitem['payment_status']."</button>"; 
+                    }else{
+                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
+                    }
+                   //
+                     },   
+                    'width' => '10%', 
                 ],
                
               ];
