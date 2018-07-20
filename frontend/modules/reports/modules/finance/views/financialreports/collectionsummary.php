@@ -4,7 +4,7 @@ use kartik\grid\GridView;
 use yii\helpers\Html;
 
 //var_dump($dataProviderCollectionSummary);
-
+$this->title = $moduleTitle;
 $this->params['breadcrumbs'][] = ['label' => 'Reports', 'url' => ['/reports']];
 $this->params['breadcrumbs'][] = ['label' => 'Financial Reports', 'url' => ['/reports/finance/financialreports']];
 $this->params['breadcrumbs'][] = $moduleTitle;
@@ -63,7 +63,7 @@ $i=0;
     
      <?= GridView::widget([
          'id'=>'tblCollection',
-         
+         'summary' => $moduleTitle,
         'dataProvider' => $dataProviderCollectionSummary,
          'panel'=>[
              'type'=>'primary', 
