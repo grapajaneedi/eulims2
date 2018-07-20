@@ -10,7 +10,7 @@ class finance extends \yii\base\Module
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'frontend\modules\finance\controllers';
+    public $controllerNamespace = 'frontend\modules\reports\modules\finance\controllers';
 
     /**
      * @inheritdoc

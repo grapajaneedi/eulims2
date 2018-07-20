@@ -10,6 +10,7 @@ use yii2mod\alert\Alert;
 
 //<div class="col-md-4"><a href="/finance/financialreports/collectionsummary/"><img class="img-responsive center-block" src="/images/summaryreportsquare.png" style="height:150px"/></a></div>
 
+$this->title = 'Financial Reports';
 $this->params['breadcrumbs'][] = ['label' => 'Reports', 'url' => ['/reports']];
 
 $this->params['breadcrumbs'][] ='Financial Reports';

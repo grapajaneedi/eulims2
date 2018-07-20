@@ -11,6 +11,8 @@
  * 06 7, 18 , 2:51:15 PM * 
  * Module: cashreceiptjournal * 
  */
+
+$this->title = $moduleTitle;
 $this->params['breadcrumbs'][] = ['label' => 'Reports', 'url' => ['/reports']];
 $this->params['breadcrumbs'][] = ['label' => 'Financial Reports', 'url' => ['/reports/finance/financialreports']];
 $this->params['breadcrumbs'][] = $moduleTitle;
