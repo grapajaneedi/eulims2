@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\lab\controllers;
+namespace frontend\modules\finance\controllers;
 
 use Yii;
 //use common\models\lab\Cancelledrequest;
@@ -11,6 +11,10 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\finance\CancelledOp;
 use common\models\finance\CancelledopSearch;
+use common\models\finance\Op;
+use common\models\finance\Collection;
+use common\models\finance\Paymentitem;
+use yii\db\Query;
 /**
  * CancelrequestController implements the CRUD actions for Cancelledrequest model.
  */
@@ -66,26 +70,47 @@ class CancelopController extends Controller
     public function actionCreate()
     {
         $get= \Yii::$app->request->get();
-        $model = new Cancelled();
+        $model = new CancelledOp();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //Update Request
-            $Request= Request::find()->where(['request_id'=>$model->request_id])->one();
-            $Request->status_id=2;
-            $Request->save();
-            return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+             $op_id=$model->orderofpayment_id;
+              $collection= Collection::find()->where(['orderofpayment_id'=>$op_id])->one();
+              $collection->payment_status_id=0;
+            // var_dump($collection->orderofpayment_id);
+            // exit;
+            //  $paymentitem= Paymentitem::find()->where([])
+                $connection= Yii::$app->financedb;
+                $sql_query = $connection->createCommand('UPDATE tbl_paymentitem set status=0 WHERE orderofpayment_id=:op_id');
+                $sql_query->bindParam(':op_id',$op_id);
+                $sql_query->execute();
+                
+                $lists=(new Query)
+                ->select(['GROUP_CONCAT(`tbl_paymentitem`.`request_id`) as `ids`'])
+                ->from('`eulims_finance`.`tbl_paymentitem`')
+                 ->where(['orderofpayment_id' => $model->orderofpayment_id])
+                ->one();
+                
+                if($lists['ids']){
+                    $connection1= Yii::$app->labdb;
+                    $sql_query1 = $connection1->createCommand('UPDATE tbl_request set posted=0 WHERE request_id IN('.$lists['ids'].')');
+                    $sql_query1->execute();
+                }
+                
+              $collection->save(false);
+              return $this->redirect(['/finance/op/view', 'id' => $model->orderofpayment_id]);
         } else {
-            $Request_id=$get['req'];
+            $orderofpayment_id=$get['op'];
             $model->cancel_date=date('Y-m-d H:i:s');
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('create', [
                     'model' => $model,
-                    'Req_id'=> $Request_id
+                    'op_id'=> $orderofpayment_id
                 ]);
             }else{
                 return $this->render('create', [
                     'model' => $model,
-                    'Req_id'=> $Request_id
+                    'op_id'=> $orderofpayment_id
                 ]);
             }
         }

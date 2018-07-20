@@ -191,7 +191,9 @@ class CashierController extends \yii\web\Controller
         $collection=$this->findModelCollection($collection_id);
         $op_id=$collection->orderofpayment_id;
         
-        $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $op_id])->andWhere(['status' => 1]);
+        $paymentitem_Query = Paymentitem::find()->where(['receipt_id' => $receiptid])->andWhere(['status' => 2]);
+       // var_dump($paymentitem_Query->count());
+       // exit;
         $paymentitemDataProvider = new ActiveDataProvider([
             'query' => $paymentitem_Query,
             'pagination' => [
@@ -459,7 +461,7 @@ class CashierController extends \yii\web\Controller
         $op=$this->findModel($opid);
         $collection_id=$op->collection->collection_id;
        // $collection=$this->findModelCollection($collection_id);
-        $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $opid])->andWhere(['status' => 0]);
+        $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $opid])->andWhere(['status' => 1]);
         $paymentitemDataProvider = new ActiveDataProvider([
                 'query' => $paymentitem_Query,
         ]);
@@ -487,7 +489,7 @@ class CashierController extends \yii\web\Controller
             for($i=0;$i<$arr_length;$i++){
                  $paymentitem =$this->findPaymentitem($str_total[$i]);
                   Yii::$app->financedb->createCommand()
-                    ->update('tbl_paymentitem', ['status' => 1], 'paymentitem_id= '.$str_total[$i])
+                    ->update('tbl_paymentitem', ['status' => 2,'receipt_id'=>$receiptid], 'paymentitem_id= '.$str_total[$i])
                     ->execute(); 
                   $total+=$paymentitem->amount;
             } 
