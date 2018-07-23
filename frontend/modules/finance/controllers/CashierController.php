@@ -588,4 +588,9 @@ class CashierController extends \yii\web\Controller
             return $model->error();
         }
     }
+    
+    public function actionPrintOr() {
+        $or=New OfficialReceipt();
+        $or->PrintPDF();
+    }
 }
