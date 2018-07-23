@@ -10,6 +10,7 @@ use common\models\finance\Accountingcode;
 use common\models\finance\Paymentitem;
 use common\models\collection\Collection;
 use common\components\NumbersToWords;
+use common\models\system\Rstl;
 interface PDFEnum{
     const PDF_Browser="I";
     const PDF_Download="D";
@@ -35,25 +36,10 @@ class OfficialReceipt implements PDFEnum{
     private function ORTemplate($ORNumber,$ORTitle){
         $numbertowords=new NumbersToWords();
         $Collection= Receipt::find()->where(['or_number'=>$ORNumber])->one();
+        $rstl= Rstl::find()->where(['rstl_id'=>$Collection->rstl_id])->one();
+       // var_dump($rstl);
+       // exit;
        // $modeofpayment=$Collection->mode
-        $ORHeader="<table border='0' width=100% cellpadding='0' cellspacing='0'>";
-        $ORHeader.="<thead>";
-        
-        $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='8' style='height:126px'>&nbsp;</td>";
-        $ORHeader.="</tr>";
-        
-        $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='2' style='height:29px'></td>";
-        $datetime=$Collection->receiptDate;
-        $ORHeader.="<td colspan='6' style='text-align:left;'>".date("m/d/Y h:i:s A", strtotime($datetime))."&nbsp;</td>";
-        $ORHeader.="</tr>";
-        $ORHeader.="</thead>";
-        $ORHeader.="<tbody>";
-       
-        /*$ORHeader.="<tr>";
-        $ORHeader.="<td colspan='8'>&nbsp;</td>";
-        $ORHeader.="</tr>";*/
         $space="";
         for($x=1;$x<30;$x++){
             $space.="&nbsp;";
@@ -63,15 +49,35 @@ class OfficialReceipt implements PDFEnum{
             $space1.="&nbsp;";
         }
         
+        $ORHeader="<table border='0' width=100% cellpadding='0' cellspacing='0'>";
+        $ORHeader.="<thead>";
+        
+        $ORHeader.="<tr>";
+        $ORHeader.="<td colspan='8' style='height:126px'>&nbsp;</td>";
+        $ORHeader.="</tr>";
+        
+        $ORHeader.="<tr>";
+        $ORHeader.="<td colspan='1' style='height:29px'></td>";
+        $datetime=$Collection->receiptDate;
+        $ORHeader.="<td colspan='7' style='text-align:left;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".date("m/d/Y h:i:s A", strtotime($datetime))."&nbsp;</td>";
+        $ORHeader.="</tr>";
+        $ORHeader.="</thead>";
+        $ORHeader.="<tbody>";
+       
+        /*$ORHeader.="<tr>";
+        $ORHeader.="<td colspan='8'>&nbsp;</td>";
+        $ORHeader.="</tr>";*/
+        
+        
         $ORHeader.="<tr>";
         //$ORHeader.="<td colspan='1' ></td>";
-        $ORHeader.="<td colspan='8' style='height:35px'>".$space1."DOST-IX</td>";
+        $ORHeader.="<td colspan='8' style='height:35px'>".$space1."".$rstl->name."</td>";
        
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
         //$ORHeader.="<td colspan='1' style='height:35px'></td>";
-        $ORHeader.="<td colspan='8' style='height:35px'>".$space1."Jollibee Food Corporation</td>";
+        $ORHeader.="<td colspan='8' style='height:35px'>".$space1."".$Collection->payor."</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
