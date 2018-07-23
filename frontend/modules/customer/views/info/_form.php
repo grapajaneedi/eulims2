@@ -109,7 +109,7 @@ use kartik\widgets\DepDrop;
                 <?php 
                 echo Select2::widget([
                     'name' => 'cregion',
-                    'data' => ArrayHelper::map(Region::find()->all(), 'region_id', 'region'),
+                    'data' => ArrayHelper::map(Region::find()->all(), 'region_id', 'reg_desc'),
                     'theme' => Select2::THEME_BOOTSTRAP,
                     'hideSearch' => false,
                     'options' => [
@@ -158,7 +158,7 @@ use kartik\widgets\DepDrop;
                 ?>
                 <?= $form->field($model, 'barangay_id')->widget(DepDrop::classname(), [
                     'type'           => DepDrop::TYPE_SELECT2,
-                    'data'           =>  $model->isNewRecord ? null : ArrayHelper::map(Barangay::find()->all(), 'barangay_id', 'barangay'),
+                    'data'           =>  $model->isNewRecord ? null : ArrayHelper::map(Barangay::find()->all(), 'barangay_id', 'brgy_desc'),
                     'options'        => ['id' => 'customer-barangay_id', 'name' => 'Customer[barangay_id]'],
                     'select2Options' => ['pluginOptions' => ['allowClear' => false]],
                     'pluginOptions'=>[
