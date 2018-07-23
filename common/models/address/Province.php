@@ -9,10 +9,13 @@ use Yii;
  *
  * @property int $province_id
  * @property int $region_id
- * @property string $province
- * @property string $code
+ * @property string $psgc_code
+ * @property string $prov_desc
+ * @property string $reg_code
+ * @property string $prov_code
  *
- * @property CityMunicipality[] $cityMunicipalities
+ * @property Barangay[] $barangays
+ * @property MunicipalityCity[] $municipalityCities
  * @property Region $region
  */
 class Province extends \yii\db\ActiveRecord
@@ -39,10 +42,10 @@ class Province extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['region_id', 'province', 'code'], 'required'],
+            [['region_id'], 'required'],
             [['region_id'], 'integer'],
-            [['province'], 'string', 'max' => 50],
-            [['code'], 'string', 'max' => 10],
+            [['prov_desc'], 'string'],
+            [['psgc_code', 'reg_code', 'prov_code'], 'string', 'max' => 255],
             [['region_id'], 'exist', 'skipOnError' => true, 'targetClass' => Region::className(), 'targetAttribute' => ['region_id' => 'region_id']],
         ];
     }
@@ -55,17 +58,27 @@ class Province extends \yii\db\ActiveRecord
         return [
             'province_id' => 'Province ID',
             'region_id' => 'Region ID',
-            'province' => 'Province',
-            'code' => 'Code',
+            'psgc_code' => 'Psgc Code',
+            'prov_desc' => 'Prov Desc',
+            'reg_code' => 'Reg Code',
+            'prov_code' => 'Prov Code',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCityMunicipalities()
+    public function getBarangays()
     {
-        return $this->hasMany(CityMunicipality::className(), ['province_id' => 'province_id']);
+        return $this->hasMany(Barangay::className(), ['province_id' => 'province_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMunicipalityCities()
+    {
+        return $this->hasMany(MunicipalityCity::className(), ['province_id' => 'province_id']);
     }
 
     /**

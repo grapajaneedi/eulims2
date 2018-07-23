@@ -8,11 +8,15 @@ use Yii;
  * This is the model class for table "tbl_barangay".
  *
  * @property int $barangay_id
- * @property int $city_municipality_id
- * @property int $district
- * @property string $barangay
+ * @property int $province_id
+ * @property int $municipality_city_id
+ * @property string $brgy_code
+ * @property string $brgy_desc
+ * @property string $reg_code
+ * @property string $district
  *
- * @property CityMunicipality $cityMunicipality
+ * @property Province $province
+ * @property MunicipalityCity $municipalityCity
  */
 class Barangay extends \yii\db\ActiveRecord
 {
@@ -38,10 +42,13 @@ class Barangay extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['city_municipality_id', 'barangay'], 'required'],
-            [['city_municipality_id', 'district'], 'integer'],
-            [['barangay'], 'string', 'max' => 250],
-            [['city_municipality_id'], 'exist', 'skipOnError' => true, 'targetClass' => CityMunicipality::className(), 'targetAttribute' => ['city_municipality_id' => 'city_municipality_id']],
+            [['province_id', 'municipality_city_id'], 'required'],
+            [['province_id', 'municipality_city_id'], 'integer'],
+            [['brgy_desc'], 'string'],
+            [['brgy_code', 'reg_code'], 'string', 'max' => 255],
+            [['district'], 'string', 'max' => 2],
+            [['province_id'], 'exist', 'skipOnError' => true, 'targetClass' => Province::className(), 'targetAttribute' => ['province_id' => 'province_id']],
+            [['municipality_city_id'], 'exist', 'skipOnError' => true, 'targetClass' => MunicipalityCity::className(), 'targetAttribute' => ['municipality_city_id' => 'municipality_city_id']],
         ];
     }
 
@@ -52,17 +59,28 @@ class Barangay extends \yii\db\ActiveRecord
     {
         return [
             'barangay_id' => 'Barangay ID',
-            'city_municipality_id' => 'City Municipality ID',
+            'province_id' => 'Province ID',
+            'municipality_city_id' => 'Municipality City ID',
+            'brgy_code' => 'Brgy Code',
+            'brgy_desc' => 'Brgy Desc',
+            'reg_code' => 'Reg Code',
             'district' => 'District',
-            'barangay' => 'Barangay',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCityMunicipality()
+    public function getProvince()
     {
-        return $this->hasOne(CityMunicipality::className(), ['city_municipality_id' => 'city_municipality_id']);
+        return $this->hasOne(Province::className(), ['province_id' => 'province_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMunicipalityCity()
+    {
+        return $this->hasOne(MunicipalityCity::className(), ['municipality_city_id' => 'municipality_city_id']);
     }
 }
