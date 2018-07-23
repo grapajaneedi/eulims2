@@ -65,7 +65,6 @@ $this->registerJsFile("/js/customer/customer.js");
                         $t = '/customer/info/view?id='.$model->customer_id;
                         return Html::button('<span class="fa fa-eye"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-primary btn-modal','title' => Yii::t('app', "View Info of ".$model->customer_name),'name' => Yii::t('app', "View Info of  <font color='#272727'>[<b>".$model->customer_name."</b>]</font>")]);
                     },
-                    
                 ],
             ],
             ],
@@ -77,7 +76,7 @@ $this->registerJsFile("/js/customer/customer.js");
     'options' => [
         'id' => 'gmodal',
         'tabindex' => false, // important for Select2 to work properly
-        //'class' => 'modal draggable fade',
+        'class' => 'modal draggable fade',
     ],
     'header' => '<h4 class="modal-title">New Profile</h4>'
     ]);
@@ -95,11 +94,17 @@ $this->registerJsFile("/js/customer/customer.js");
     ?>
 
 <?php 
-
 $this->registerJsFile("/js/customer/autocomplete.js");
 $this->registerJsFile("/js/customer/google-map-marker.js");
-
 ?>
+
+<script type="text/javascript">
+    $("#gmodal").on("hidden.bs.modal", function () {
+    // put your default event here
+ document.getElementById("modal").focus();
+});
+
+</script>
         
 
 <?php

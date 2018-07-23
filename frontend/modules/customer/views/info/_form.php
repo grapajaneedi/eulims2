@@ -18,20 +18,7 @@ use kartik\widgets\DepDrop;
 ?>
 <div class="customer-form"  style="padding-bottom: 10px">
 
-    <?php $form = ActiveForm::begin(); ?>
-
-    
-
-    <!-- <div class="row">
-        <div class="col-md-6">
-        <?= $form->field($model, 'rstl_id')->textInput() ?>
-        </div>
-        <div class="col-md-6">
-        <?= $form->field($model, 'customer_code')->textInput(['maxlength' => true]) ?>
-        </div>
-    </div> -->
-    
-    
+    <?php $form = ActiveForm::begin(); ?>    
         <div class="row">
             <div class="col-md-6">
             <?= $form->field($model, 'customer_name')->textInput(['maxlength' => true]) ?>
@@ -54,7 +41,7 @@ use kartik\widgets\DepDrop;
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
             <?php 
             echo $form->field($model, 'business_nature_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(Businessnature::find()->all(), 'business_nature_id', 'nature'),
@@ -66,7 +53,7 @@ use kartik\widgets\DepDrop;
             ]);
             ?>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
              <?php 
             echo $form->field($model, 'industrytype_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(Industrytype::find()->all(), 'industrytype_id', 'industry'),
@@ -78,7 +65,7 @@ use kartik\widgets\DepDrop;
             ]);
             ?>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
             <?php 
             echo $form->field($model, 'customer_type_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(Customertype::find()->all(), 'customertype_id', 'type'),
@@ -90,7 +77,7 @@ use kartik\widgets\DepDrop;
             ]);
             ?>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
             <?php 
             echo $form->field($model, 'classification_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(Classification::find()->all(), 'classification_id', 'classification'),
@@ -105,16 +92,20 @@ use kartik\widgets\DepDrop;
         </div>
         <div class="row">
              <div class="col-md-6" style="border-right: 4px dotted blue;">
-               <?= Html::button('<span class="glyphicon glyphicon-search"></span> Locate', ['value'=>'/customer/info/create', 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Locate Customer"),'onclick'=>"ShowGModal('Locate Customer',true,'900px')"]); ?>
+               <?= Html::button('<span class="glyphicon glyphicon-search"></span> Locate on map', ['value'=>'/customer/info/create', 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Locate Customer"),'onclick'=>"ShowGModal('Locate Customer',true,'900px')"]); ?>
 
                  <?= $form->field($model, 'address')->textarea(['maxlength' => true,'readonly'=>'true']) ?>
-
-                <?= $form->field($model, 'latitude')->textInput(['readonly'=>'true']) ?>
-
-                <?= $form->field($model, 'longitude')->textInput(['readonly'=>'true']) ?>
+                 <div class="row">
+                 <div class="col-md-6">
+                     <?= $form->field($model, 'latitude')->textInput(['readonly'=>'true']) ?>
+                 </div>
+                 <div class="col-md-6">
+                     <?= $form->field($model, 'longitude')->textInput(['readonly'=>'true']) ?>
+                 </div>
+                 </div>
             </div>
             <div class="col-md-6">
-                <label class="control-label">Region</label><br>
+                <label class="control-label">Region</label>
                 <?php 
                 echo Select2::widget([
                     'name' => 'cregion',
@@ -127,8 +118,7 @@ use kartik\widgets\DepDrop;
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Region'],
                 ]);
                 ?>
-                <br>
-                <label class="control-label">Province</label><br>
+                <label class="control-label">Province</label>
                 <?php 
                 echo DepDrop::widget([
                     'type'=>DepDrop::TYPE_SELECT2,
@@ -148,8 +138,7 @@ use kartik\widgets\DepDrop;
                     ]
                 ]);
                 ?>
-                <br>
-                <label class="control-label">Municipality</label><br>
+                <label class="control-label">Municipality</label>
                  <?php 
                 echo DepDrop::widget([
                     'type'=>DepDrop::TYPE_SELECT2,
@@ -167,8 +156,6 @@ use kartik\widgets\DepDrop;
                     ],
                     ]);
                 ?>
-                <br>
-
                 <?= $form->field($model, 'barangay_id')->widget(DepDrop::classname(), [
                     'type'           => DepDrop::TYPE_SELECT2,
                     'data'           =>  $model->isNewRecord ? null : ArrayHelper::map(Barangay::find()->all(), 'barangay_id', 'barangay'),
@@ -183,29 +170,6 @@ use kartik\widgets\DepDrop;
                     'pluginEvents' => [ "depdrop:afterChange"=>"function(event, id, value) { 
                         if (value == '') { $('.mybtn').prop('disabled',true);}else{ $('.mybtn').prop('disabled',false); } }", ],
                 ])->label('Barangay'); ?>
-
-
-                 <?php 
-                // echo DepDrop::widget([
-                //     'type'=>DepDrop::TYPE_SELECT2,
-                //     // 'name' => 'customer-barangay_id',
-                //     'data' => $model->isNewRecord ? null : ArrayHelper::map(Barangay::find()->all(), 'barangay_id', 'barangay'),
-                //     'options' => [
-                //         'id'=>'customer-barangay_id',
-                //         'name' => 'customer[barangay_id]',
-                //         'required'=>true
-                //     ],
-                //     'model'=>$model,
-                //     'attribute'=>'barangay_id',
-                //     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                //     'pluginOptions'=>[
-                //         'depends'=>['cmunicipality'],
-                //         'placeholder'=>'Select Barangay',
-                //         'url'=>Url::to(['/customer/info/getbarangay']),
-                //         'loadingText' => 'Loading barangay...',
-                //     ]
-                // ]);
-                ?>
             </div>
         </div>
     <div class="form-group">
