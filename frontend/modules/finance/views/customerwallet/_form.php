@@ -16,7 +16,11 @@ use common\components\Functions;
 <div class="customerwallet-form" style="padding-bottom: 10px">
 
     <?php  $form = ActiveForm::begin(); ?>
-
+    <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 1px !important;">
+     <a href="#" class="close" data-dismiss="alert" >×</a>
+    <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
+     
+    </div>
     <?php 
 
     $func=new Functions();
