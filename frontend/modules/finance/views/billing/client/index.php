@@ -15,7 +15,11 @@ $this->title = 'On Account';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance/']];
 $this->params['breadcrumbs'][] = ['label' => 'Billing', 'url' => ['/finance/billing/']];
 $this->params['breadcrumbs'][] = $this->title;
-$Buttontemplate='{view}{update}{delete}';
+if(Yii::$app->user->can('allow-on-account-delete')){
+    $Buttontemplate='{view}{update}{delete}';
+}else{
+    $Buttontemplate='{view}{update}';
+}
 $func= new Functions();
 $rstlID=$GLOBALS['rstl_id'];
 ?>

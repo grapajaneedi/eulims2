@@ -104,12 +104,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{view}',
                 'buttons'=>[
                     'add'=>function ($url, $model) {
+                        $CustomerName=$model->customer ? $model->customer->customer_name : '';
                         $t = '/finance/customertransaction/create?customerwallet_id='.$model->customerwallet_id;
-                        return Html::button('<span class="glyphicon glyphicon-plus"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Add Funds for ".$model->customer->customer_name),'name' => Yii::t('app', "Add Funds for <font color='#272727'>[<b>".$model->customer->customer_name."</b>]</font>")]);
+                        return Html::button('<span class="glyphicon glyphicon-plus"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Add Funds for ".$CustomerName),'name' => Yii::t('app', "Add Funds for <font color='#272727'>[<b>".$CustomerName."</b>]</font>")]);
                     },
                     'view'=>function ($url, $model) {
+                        $CustomerName=$model->customer ? $model->customer->customer_name : '';
                         $t = '/finance/customerwallet/view?id='.$model->customerwallet_id;
-                        return Html::button('<span class="fa fa-eye"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-primary btn-modal','title' => Yii::t('app', "View History for ".$model->customer->customer_name),'name' => Yii::t('app', "View History for  <font color='#272727'>[<b>".$model->customer->customer_name."</b>]</font>")]);
+                        return Html::button('<span class="fa fa-eye"></span>', ['value'=>Url::to($t), 'class' => 'btn btn-primary btn-modal','title' => Yii::t('app', "View History for ".$CustomerName),'name' => Yii::t('app', "View History for  <font color='#272727'>[<b>".$CustomerName."</b>]</font>")]);
                     },
                     
                 ],

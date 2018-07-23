@@ -56,7 +56,7 @@ $Header.="Billing Invoices";
                 'attribute' => 'customer_id',
                 'label' => 'Customer Name',
                 'value' => function($model) {
-                    return $model->customer->customer_name;
+                    return $model->customer ? $model->customer->customer_name : "";
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map($func->GetClientList($rstlID), 'customer_id', 'customer_name'),

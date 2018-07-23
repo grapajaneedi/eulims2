@@ -14,6 +14,11 @@ $this->params['breadcrumbs'][] = $this->title;
 //$model=$dataProvider->getModels();
 $pdfHeader="DOST-IX Enhanced ULIMS";
 $pdfFooter="{PAGENO}";
+if($model){
+    $CustomerName=$model->customer_name;
+}else{
+    $CustomerName="";
+}
 $html=<<<HTML
 <fieldset class="legend-border">
     <legend class="scheduler-border">Legends</legend>
@@ -91,7 +96,7 @@ HTML;
         ],
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
-            'heading' =>"<span class='fa fa-user-o'></span> Account: " . $model->customer_name,
+            'heading' =>"<span class='fa fa-user-o'></span> Account: " . $CustomerName,
             'before'=>"",
             'after'=>$html
         ],
