@@ -6,6 +6,8 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 use common\components\Functions;
 use common\models\lab\Cancelledrequest;
+use common\models\lab\Discount;
+use common\models\lab\Request;
 
 
 $sweetalert = new Functions();
@@ -418,14 +420,13 @@ if($Request_Ref){
                     // 'value' => function($model) {
                     //     return $model->samples->sample_code;
                     // },
-                    'enableSorting' => false,
-                  
+                    'enableSorting' => false,                
                 ],
                 [
                     'attribute'=>'quantity',
                     'header'=>'Quantity',
                     'enableSorting' => false,
-                    'pageSummary' => '<span style="float:right";>SUBTOTAL</span>',
+                    'pageSummary' => '<span style="float:right";>SUBTOTAL<BR>DISCOUNT<BR><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL</B></span>',
                    
                 ],
                 [
@@ -434,13 +435,44 @@ if($Request_Ref){
                     'enableSorting' => false,
                     'contentOptions' => [
                         'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
+        
                     ],
-                    'hAlign' => 'left', 
+                    'hAlign' => 'right', 
                     'vAlign' => 'left',
                     'width' => '7%',
-                    'format' => ['decimal', 2],
-                    'pageSummary' => true,  
-                  
+                    'format' => 'raw',
+                  //  'format' => ['decimal', 2],
+                    // 'value' =>  function($model) {
+                       //  $discountquery = Discount::find()->where(['discount_id' => $model->request->discount_id])->one();
+                    //         return "<span>300<br>300<>".$discountquery->rate."</span>";
+                    //           //  return print_r($model);
+                    //        // return $model->analysis_id;
+                    //       // return true;
+                    //     }, 
+                      //  'pageSummary'=>'<div id="subtotal">0.00</div><div id="discount">0.00</div><div id="total">0.00</div>',
+                      'pageSummary'=> function (){
+
+                            $url = \Yii::$app->request->url;
+                            $id = substr($url, 21);
+                            $requestquery = Request::find()->where(['request_id' => $id])->one();
+                            $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
+
+                            $rate =  $discountquery->rate;
+
+                            $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=$id";
+                            $Connection = Yii::$app->labdb;
+                            $command = $Connection->createCommand($sql);
+                            $row = $command->queryOne();
+
+                            $subtotal = $row['subtotal'];
+
+                            $total = $subtotal - $rate;
+                           
+
+                           
+
+                          return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($rate, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                      },
                 ],
                 
                 [

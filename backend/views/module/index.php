@@ -18,7 +18,7 @@ use kartik\grid\ActionColumn;
 
 $this->title = 'Module List';
 $this->params['breadcrumbs'][] = $this->title;
-$Buttontemplate='{view}{update}{delete}';
+$Buttontemplate='{view}{update}';
 ?>
 <div class="package-index">
     <div class="panel panel-primary col-xs-12">

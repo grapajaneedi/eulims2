@@ -77,6 +77,8 @@ $receiptid=$receipt->receipt_id;
         <div class="table-responsive">
         <?php
             $gridColumns = [
+                ['class' => 'kartik\grid\SerialColumn', 
+                ],
                 [
                     'attribute'=>'details',
                     'enableSorting' => false,
@@ -94,23 +96,6 @@ $receiptid=$receipt->receipt_id;
                     'pageSummary' => true
                 ],
               
-                [
-                    'class' => 'kartik\grid\ActionColumn',
-                    'template' => '{delete}',
-                    'dropdown' => false,
-                    'dropdownOptions' => ['class' => 'pull-right'],
-                    //'urlCreator' => function($action, $model, $key, $index) { return '#'; },
-                   /* 'urlCreator' => function ($action, $model, $key, $index) {
-                        if ($action === 'delete') {
-                            $url ='/lab/sample/delete?id='.$model->sample_id;
-                            return $url;
-                        }
-
-                    },
-                    'deleteOptions' => ['title' => 'Delete Collection', 'data-toggle' => 'tooltip'],
-                  */
-                    'headerOptions' => ['class' => 'kartik-sheet-style'],
-                ],
             ];
 
             echo GridView::widget([
@@ -128,7 +113,7 @@ $receiptid=$receipt->receipt_id;
                 'hover'=>true,
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Collection</h3>',
-                    'type'=>'primary', 'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Collection', ['disabled'=>$enable, 'value' => Url::to(['add-collection','opid'=>$op_model->orderofpayment_id,'receiptid'=>$model->receipt_id]),'title'=>'Add Collection', 'onclick'=>'addCollection(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    'type'=>'primary', 'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Collection', ['disabled'=>$enable, 'value' => Url::to(['add-collection','opid'=>$op_model->orderofpayment_id,'receiptid'=>$model->receipt_id]),'title'=>'Add Collection', 'onclick'=>'addCollection(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Receipt', ['disabled'=>$enable, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/reports/preview?url=/finance/cashier/print-or','or_number'=>$model->or_number]) . "';" ,'title'=>'Print Receipt',  'class' => 'btn btn-success']),
                     'after'=>false,
                 ],
                 'columns' => $gridColumns,

@@ -74,4 +74,15 @@ class Packagelist extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Sample::className(), ['package_id' => 'package_id']);
     }
+
+    public function getTestCategory()
+    {
+        return $this->hasOne(Testcategory::className(), ['testcategory_id' => 'testcategory_id']);
+    }
+
+    public function getSampleType()
+    {
+        return $this->hasOne(Sampletype::className(), ['sample_type_id' => 'sample_type_id']);
+    }
+
 }

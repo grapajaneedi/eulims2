@@ -81,14 +81,32 @@ class PackagelistController extends Controller
     {
      $model = new Packagelist();
 
+    //  $request_id = $_GET['id'];
+
+    //   $request = $this->findRequest($request_id);
+    //   $labId = $request->lab_id;
+
       $testcategory = $this->listTestcategory(1);
       $sampletype = [];
 
-        
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                         return $this->runAction('index');
-                 } 
-                   
+                 if ($model->load(Yii::$app->request->post())) {
+
+                         $post= Yii::$app->request->post();
+                        $packagelist = new Packagelist();
+                        $packagelist->rstl_id = (int) $post['Packagelist']['rstl_id'];
+                        $packagelist->lab_id = (int) $post['Packagelist']['testcategory_id'];
+                        $packagelist->testcategory_id = $post['Packagelist']['testcategory_id'];
+                        $packagelist->sample_type_id = $post['Packagelist']['sample_type_id'];
+                        $packagelist->name = $post['Packagelist']['name'];
+                        $packagelist->rate = $post['Packagelist']['rate'];  
+                        $packagelist->tests = $post['Packagelist']['tests']; 
+                        $packagelist->save();
+                        Yii::$app->session->setFlash('success', 'Package Successfully Created');
+                        return $this->runAction('index');
+               
+                    }      
+                                
+                     
                 if(Yii::$app->request->isAjax){
                          return $this->renderAjax('_form', [
                                  'model' => $model,
@@ -107,9 +125,19 @@ class PackagelistController extends Controller
         $session = Yii::$app->session;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->analysis_id]);
-        }
+        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        //     return $this->redirect(['view', 'id' => $model->analysis_id]);
+        // }
+
+        if ($model->load(Yii::$app->request->post())) {
+            $sample_ids= $_POST['sample_ids'];
+            $ids = explode(',', $sample_ids);  
+            $post= Yii::$app->request->post();
+               //iloop yung mga tests dito (1,2,3,4,5)
+               //separate loop ang tests
+
+           
+   }
         
             $samplesQuery = Sample::find()->where(['request_id' => $id]);
             $sampleDataProvider = new ActiveDataProvider([
@@ -159,34 +187,9 @@ class PackagelistController extends Controller
                      $analysis->sample_code = "sample";
                      $analysis->date_analysis = '2018-06-14 7:35:0';   
                      $analysis->save();
-
                  }      
                  
-                //  foreach ($ids as $sample_id){
-                //     $analysis = new Analysis();
-
-                //     //yung package name mo na ituuu
-                //     //test
-                //    // $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
-                //     $analysis->sample_id = $sample_id;
-                //     $analysis->cancelled = 0;
-                //     $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
-                //     $analysis->request_id = $request_id;
-                //     $analysis->rstl_id = $GLOBALS['rstl_id'];
-                //     $analysis->test_id = 1;
-                //     $analysis->user_id = 1;
-                //     $analysis->sample_type_id = (int) $post['Packagelist']['sample_type_id'];
-                //     $analysis->testcategory_id = (int) $post['Packagelist']['testcategory_id'];
-                //     $analysis->is_package = 1;
-                //     $analysis->method = "method";
-                //     $analysis->testname = $post['Packagelist']['tests'];
-                //     $analysis->references = "references";
-                //     $analysis->quantity = 1;
-                //     $analysis->sample_code = "sample";
-                //     $analysis->date_analysis = '2018-06-14 7:35:0';   
-                //     $analysis->save();
-
-                // }      
+              
                  Yii::$app->session->setFlash('success', 'Package Successfully Created');
                  return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
         } 
@@ -315,12 +318,17 @@ class PackagelistController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $testcategory = $this->listTestcategory(1);
+        $sampletype = [];
 
           if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->testcategory_id]);
+                    Yii::$app->session->setFlash('success', 'Package Successfully Updated');
+                    return $this->runAction('index');
                 } else if (Yii::$app->request->isAjax) {
-                    return $this->renderAjax('update', [
+                    return $this->renderAjax('_form', [
                         'model' => $model,
+                        'testcategory'=>$testcategory,
+                        'sampletype'=>$sampletype,
                     ]);
                 }
     }

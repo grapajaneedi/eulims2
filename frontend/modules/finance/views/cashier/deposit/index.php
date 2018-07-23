@@ -19,6 +19,8 @@ $this->title = 'Deposit';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cashier']];
 $this->params['breadcrumbs'][] = 'Deposit';
+$Header="Department of Science and Technology<br>";
+$Header.="Deposit";
 ?>
 <div class="deposit-index">
      <div class="table-responsive">
@@ -43,7 +45,8 @@ $this->params['breadcrumbs'][] = 'Deposit';
                 'type'=>'primary', 'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Create Deposit', ['value' => Url::to(['add-deposit']),'title'=>'Create Deposit', 'onclick'=>'addDeposit(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
                 
-            ],
+        ],
+        'exportConfig'=>$func->exportConfig("Deposit", "deposit", $Header),
         'columns' => [
             [
                'attribute'=>'deposit_date',

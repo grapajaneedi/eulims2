@@ -22,6 +22,7 @@ $disable='';
  else{
  $disable=false;    
  }
+
 ?>
 <?php
     if(!$model->isNewRecord){
@@ -32,6 +33,7 @@ $disable='';
         });
     </script>
     <?php
+    
     }
 ?>
 <div class="orderofpayment-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
@@ -79,6 +81,10 @@ $disable='';
               
              <?php
             $disabled=false;
+            if($status == 1){
+            $disabled=true;
+            }
+            
             $func=new Functions();
             echo $func->GetCustomerList($form,$model,$disabled,"Customer");
             ?>    
@@ -121,7 +127,10 @@ $disable='';
                 <div id="requests" style="padding:0px!important;">    	
                    <?php
                    if (!$model->isNewRecord){
-                       echo $this->renderAjax('_request', ['dataProvider'=>$dataProvider,'model'=>$request_model]);
+                      // $model->RequestIds=1;
+                      // echo$form->field($model, 'requestid_update')->textInput()->label(false);
+                       echo $this->renderAjax('_paymentitems', ['dataProvider'=>$dataProvider,'model'=>$request_model]);
+                      
                    }
                     
                    ?>
@@ -129,7 +138,7 @@ $disable='';
 
             </div>
         </div> 
-		 <?php echo $form->field($model, 'RequestIds')->textInput()->label(false) ?>
+		 <?php echo $form->field($model, 'RequestIds')->hiddenInput()->label(false) ?>
         <div class="row">
             <div class="col-lg-12"> 
                 <?= $form->field($model, 'purpose')->textarea(['maxlength' => true,'disabled' => $disable]); ?>

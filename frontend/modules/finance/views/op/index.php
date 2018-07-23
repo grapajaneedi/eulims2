@@ -8,6 +8,7 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
 use kartik\daterange\DateRangePicker;
 use yii\db\Query;
+use common\models\finance\PaymentStatus;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\Op */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -21,13 +22,15 @@ $this->params['breadcrumbs'][] = 'Order of Payment';
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
 
+$Header="Department of Science and Technology<br>";
+$Header.="Order of Payment";
 ?>
 <div class="orderofpayment-index">
     <?php
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
     <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']); ?>
+       
     </p>
     
     
@@ -45,8 +48,10 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         ],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
+                'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
+        'exportConfig'=>$func->exportConfig("Order of Payment", "op", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -121,36 +126,36 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                 'filterInputOptions' => ['placeholder' => 'Customer Name', 'id' => 'grid-op-search-customer_id']
             ],
            
-            // 'amount',
-            // 'purpose',
-            // 'created_receipt',
             [
-               //'attribute' => 'created_receipt',
                'label'=>'Status', 
                'format'=>'raw',
                'value'=>function($model){
                     $Obj=$model->getCollectionStatus($model->orderofpayment_id);
                     if($Obj){
                        return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
-                      // return "<button class='badge ".$Obj[0]['class']." legend-font'><span class=".$Obj[0]['icon']."></span> $Obj[0]['status']</span>";
                     }else{
                        return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
                     }
                    //
-                }
-               
+                },   
             ],
             [
               //'class' => 'yii\grid\ActionColumn'
                 'class' => kartik\grid\ActionColumn::className(),
-                'template' => "{view}{update}",
+                'template' => "{view}{update}{delete}",
                 'buttons' => [
                     'view' => function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/op/view?id=' . $model->orderofpayment_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Order of Payment")]);
                     },
                     'update' => function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/op/update?id=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Order of Payment]")]);
+                        $Obj=$model->getCollectionStatus($model->orderofpayment_id);
+                        return $Obj[0]['payment_status_id'] ? ($Obj[0]['payment_status_id'] == 1 ? Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/op/update?id=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Order of Payment]")]) : '') : "";
+                        //return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/op/update?id=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Order of Payment]")]);
                     },
+                    'delete' => function ($url, $model) {
+                        $Obj=$model->getCollectionStatus($model->orderofpayment_id);
+                        return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/finance/cancelop/create?op=' . $model->orderofpayment_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$Obj[0]['payment_status'] <> 'Unpaid', 'title' => Yii::t('app', "Cancel Order of Payment")]);
+                    }        
                     /*'delete' => function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/lab/cancelrequest/create?req=' . $model->request_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$model->status_id==2, 'title' => Yii::t('app', "Cancel Request")]);
                     }*/

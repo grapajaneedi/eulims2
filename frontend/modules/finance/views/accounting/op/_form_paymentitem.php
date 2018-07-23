@@ -32,16 +32,15 @@ $val=$op_model->collectiontype->natureofcollection;
 
     <?php $form = ActiveForm::begin(['id' => 'dynamic-form']); ?>
     <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 1px !important;">
-     <a href="#" class="close" data-dismiss="alert" >×</a>
-    <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
-     
+        <a href="#" class="close" data-dismiss="alert" >×</a>
+        <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
     </div>
-   <div class="row">
+    <div class="row">
         <div class="col-sm-6">
             <?= $form->field($op_model, 'orderofpayment_id')->hiddenInput(['maxlength' => true])->label(false) ?>
         </div>
     </div>
-      <div class="panel panel-default">
+    <div class="panel panel-default">
         <div class="panel-heading"><i class="glyphicon glyphicon-list"></i></div>
         <div class="panel-body">
              <?php DynamicFormWidget::begin([
@@ -65,7 +64,7 @@ $val=$op_model->collectiontype->natureofcollection;
            
                 <div class="item panel panel-default">
                     <div class="panel-heading">
-                         <span class="panel-title-item">Payment Item: <?= ($index + 1) ?></span>
+                        <span class="panel-title-item">Payment Item: <?= ($index + 1) ?></span>
                         <div class="pull-right">
                             <button type="button" class="add-item btn btn-success btn-xs"><i class="glyphicon glyphicon-plus"></i></button>
                             <button type="button" class="remove-item btn btn-danger btn-xs"><i class="glyphicon glyphicon-minus"></i></button>
@@ -81,11 +80,11 @@ $val=$op_model->collectiontype->natureofcollection;
                         ?>
                        <div class="row">
                             <div class="col-sm-6">
-                             <?php echo $form->field($paymentitems, "[{$index}]details")->textInput(['value'=>$val])->label('Details') ?>
+                                 <?php echo $form->field($paymentitems, "[{$index}]details")->textInput(['value'=>$val])->label('Details') ?>
                             </div>
                              <div class="col-sm-6">
-                              <?php echo $form->field($paymentitems, "[{$index}]amount")->textInput()->label('Amount') ?>
-                            </div>
+                                <?php echo $form->field($paymentitems, "[{$index}]amount")->textInput()->label('Amount') ?>
+                             </div>
                         </div>
                        
                     </div>
@@ -102,10 +101,7 @@ $val=$op_model->collectiontype->natureofcollection;
            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <?php } ?>
     </div>
-
     <?php ActiveForm::end(); ?>
-
-
 </div>
 <style>
     .modal-body{
@@ -115,7 +111,7 @@ $val=$op_model->collectiontype->natureofcollection;
 
 <script type="text/javascript">
   $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
-    console.log("beforeInsert");
+  console.log("beforeInsert");
     
 });
 

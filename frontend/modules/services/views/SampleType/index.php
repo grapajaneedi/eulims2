@@ -56,7 +56,7 @@ $this->registerJsFile("/js/services/services.js");
             ['class' => 'kartik\grid\ActionColumn',
             'contentOptions' => ['style' => 'width: 8.7%'],
            // 'visible'=> Yii::$app->user->isGuest ? false : true,
-            'template' => '{view}{update}{delete}',
+            'template' => '{view}{update}',
             'buttons'=>[
                 'view'=>function ($url, $model) {
                     return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/services/sampletype/view?id='.$model->sample_type_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Sample Type<font color='Blue'></font>")]);

@@ -4,28 +4,28 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\finance\OpSearch */
+/* @var $model common\models\lab\CancelledrequestSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="orderofpayment-search">
+<div class="cancelledrequest-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'orderofpayment_id') ?>
+    <?= $form->field($model, 'canceledrequest_id') ?>
 
-    <?= $form->field($model, 'rstl_id') ?>
+    <?= $form->field($model, 'request_id') ?>
 
-    <?= $form->field($model, 'transactionnum') ?>
+    <?= $form->field($model, 'request_ref_num') ?>
 
-    <?= $form->field($model, 'collectiontype_id') ?>
+    <?= $form->field($model, 'reason') ?>
 
-    <?= $form->field($model, 'order_date') ?>
+    <?= $form->field($model, 'cancel_date') ?>
 
-    <?php  echo $form->field($model, 'customer_id') ?>
+    <?php // echo $form->field($model, 'cancelledby') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

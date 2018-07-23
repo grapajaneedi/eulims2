@@ -4,8 +4,30 @@
  * Date Created: 14 Jul, 2018
  * Time Created: 10:43:39 AM
  * Module: TableObject
- * Project: Port_Management_System.
+ * Project: EULIMS.
+ * sample on how to access html table using this class
+    var table=new tableobject("tblOR"); 
+    var tot=table.contentrowcount;//get the total rows in tbody
+    var fields=[tot+1,"2018010130881",1,1,1,2,""];// array contains the data 
+    // array that contained the class of each td
+    var fieldarr=["kv-align-center","kv-align-left","kv-align-center","kv-align-center","kv-align-center","kv-align-center",""];
+    table.insertrow(fields,fieldarr);
  */
+
+function selectRow(ctrl){
+    $(ctrl).addClass('info').siblings().removeClass('info');
+    var index=$(ctrl).attr("data_key");
+    ctrl.currentRowIndex=index;
+    var e = jQuery.Event("select");
+    e.index = index; // # Some key code value
+    $(ctrl).trigger(e);
+}
+function keydown(ctrl){
+    var event = jQuery.Event("keydown");
+    var index=$(ctrl).attr("data_key");
+    event.index=index;
+    $(ctrl).trigger(event);
+}
 /**
  * 
  * @param {string} table_id
@@ -14,9 +36,17 @@
 class tableobject{
     constructor(table_id){
         this.id=table_id;
-        this.table = document.getElementById(table_id);
+        this.table=document.getElementById(table_id);
+        this.tablebody = document.getElementById(table_id).getElementsByTagName('tbody')[0];
         this.contentrowcount=parseInt($("#"+this.id+">tbody>tr").length);
+        this.currentRowIndex=0;
         return this;
+    }
+    selectRow(){
+        $(this).addClass('info').siblings().removeClass('info');
+        var index=$(this).attr("data-key");
+        console.log(index);
+        this.currentRowIndex=index;
     }
     /**
      * @description return row as an array
@@ -24,14 +54,33 @@ class tableobject{
      * @returns {TableObject.table.rows}
      */
     row(index){
-       return this.table.rows[index]; 
+       return this.tablebody.rows[index]; 
     }
     /**
      * @description return rows as an aray
      * @returns {TableObject.table.rows}
      */
     rows(){
-       return this.table.rows;  
+       return this.tablebody.rows;  
+    }
+    /**
+     * 
+     * @param {array} fields
+     * @param {array} fieldsclass
+     * @returns {tableobject.insertfooter.row|tableobject.insertfooter@pro;table@call;insertRow}
+     */
+    insertfooter(fields=[],fieldsclass=[]){
+       var mtable=document.getElementById(this.id);
+       var footer=mtable.createTFoot();
+       var row=footer.insertRow(0);
+        for (var i = 0; i < fields.length; i++) { 
+            var cell = row.insertCell(i);
+            if(fieldsclass[i]){//check if there is class for td
+                cell.setAttribute("class", fieldsclass[i]);
+            }
+            cell.innerHTML=fields[i];
+        }
+        return row;
     }
    /**
     * 
@@ -41,7 +90,17 @@ class tableobject{
     * @returns {TableObject.insertrow.row}
     */
     insertrow(fields=[],fieldsclass=[],index=-1){
-        var row=this.table.insertRow(index);
+        if(index<0){
+            index=parseInt(this.tablebody.rows.length);
+        }
+        console.log(index);
+        var row=this.tablebody.insertRow(index);
+        row.setAttribute("class", "clickable-row");
+        row.setAttribute("id","table_obj"+index);
+        row.setAttribute("data_key",index);
+        row.setAttribute("tabindex",index);//tabindex
+        row.setAttribute("onClick", "selectRow(this)");//selectRow(this)
+        row.setAttribute("onkeydown", "keydown(this)");
         for (var i = 0; i < fields.length; i++) { 
             var cell = row.insertCell(i);
             if(fieldsclass[i]){//check if there is class for td
@@ -52,19 +111,33 @@ class tableobject{
         return row;
     }
     /**
+     * @description Removes all rows from the table
+     * @returns {none}
+     */
+    truncaterow(){
+        $("#"+this.id+" tbody>tr").remove(); 
+    }
+    /**
+     * @description Removes selected row
+     * @returns {none}
+     */
+    deletecurrentrow(){
+        $("#table_obj"+this.currentRowIndex).remove();
+    }
+    /**
      * 
      * @param {integer} index
      * @returns {none}
      */
     deleterow(index){
-        this.table.deleteRow(index);
+        $("#table_obj"+index).remove();
     }
     /**
      * @description Converts the html table to json format
      * @returns {JSON Format}
      */
     rowsToJSON(){
-        var table = $('#'+this.id).tableToJSON(); 
+        var table = $('#'+this.id+">tbody").tableToJSON(); 
         return JSON.stringify(table);
     }
     /**

@@ -9,7 +9,8 @@
  */
 
 
-namespace frontend\modules\reports\controllers;
+namespace frontend\modules\reports\modules\finance\controllers;
+// namespace frontend\modules\reports\modules\lab\controllers;
 
 
 
@@ -37,12 +38,12 @@ class FinancialreportsController extends \yii\web\Controller
         $monthName = date("F", mktime(0, 0, 0, $imonth, 10));
         $moduleTitle = "Collection Summary for " . $monthName . ', ' . $iyear;
        // $queryA = new yii\db\Query;
-        $queryNew =  'Call eulims_finance.spGetCollectionSummary('. $iyear .','. $imonth . ');';
+        $queryNew =  'Call eulims_finance_migration.spGetCollectionSummary('. $iyear .','. $imonth . ');';
          $columnArray = array();
           $columnArrayNew = array();
           
-        $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM eulims_finance.tbl_collectiontype')->queryScalar();
-        $columnHeaders = Yii::$app->db->createCommand('SELECT accountcode FROM eulims_finance.tbl_accountingcode')->queryAll();
+        $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM eulims_finance_migration.tbl_collectiontype')->queryScalar();
+        $columnHeaders = Yii::$app->db->createCommand('SELECT accountcode FROM eulims_finance_migration.tbl_accountingcode')->queryAll();
         
         $columnArray[] = 'natureofcollection';
         foreach ($columnHeaders as $col)
@@ -81,7 +82,7 @@ class FinancialreportsController extends \yii\web\Controller
      $monthName = date("F", mktime(0, 0, 0, $imonth, 10));
      $moduleTitle = "Cash Receipt Journal for " . $monthName . ', ' . $iyear;
         
-     $sqlQueryString = 'Call eulims_finance.spGetCollectionSummary('. $iyear .','. $imonth . ');';    
+     $sqlQueryString = 'Call eulims_finance_migration.spGetCollectionSummary('. $iyear .','. $imonth . ');';    
      $dataHeader = Yii::$app->db->createCommand($sqlQueryString);
      $stringTable="<table>";
      $arrayUACS =['2-03-01-020','1-01-01-010','1-01-02-020','1-01-04-010','4-03-01-010','1-01-01-010(TF)','','',];
@@ -194,38 +195,35 @@ class FinancialreportsController extends \yii\web\Controller
      //   $dataProvider2 = $searchModel->search(Yii::$app->request->queryParams);
         
         $stringQuery ='SELECT Count(*)
-                        FROM eulims_finance.tbl_receipt 
-                        INNER JOIN eulims_finance.tbl_collection  ON eulims_finance.tbl_receipt.or_number = eulims_finance.tbl_collection.receiptId 
-                        INNER JOIN eulims_finance.tbl_deposit ON eulims_finance.tbl_receipt.deposit_id = eulims_finance.tbl_deposit.deposit_id 
-                        WHERE YEAR(eulims_finance.tbl_receipt.receiptDate)=' .$iyear. ' AND MONTH(eulims_finance.tbl_receipt.receiptDate)=' .$imonth;
+                        FROM eulims_finance_migration.tbl_receipt 
+                        INNER JOIN eulims_finance_migration.tbl_collection  ON eulims_finance_migration.tbl_receipt.or_number = eulims_finance_migration.tbl_collection.oldColumn_receiptId 
+                        INNER JOIN eulims_finance_migration.tbl_deposit ON eulims_finance_migration.tbl_receipt.deposit_id = eulims_finance_migration.tbl_deposit.deposit_id 
+                        WHERE YEAR(eulims_finance_migration.tbl_receipt.receiptDate)=' .$iyear. ' AND MONTH(eulims_finance_migration.tbl_receipt.receiptDate)=' .$imonth;
         
        
         $count = Yii::$app->db->createCommand($stringQuery)->queryScalar();
         $queryNew = new yii\db\Query;
 
-        $stringWhere = 'YEAR(eulims_finance.tbl_receipt.receiptDate)=' .$iyear. ' AND MONTH(eulims_finance.tbl_receipt.receiptDate)=' .$imonth;
+        $stringWhere = 'YEAR(eulims_finance_migration.tbl_receipt.receiptDate)=' .$iyear. ' AND MONTH(eulims_finance_migration.tbl_receipt.receiptDate)=' .$imonth;
         
                                
                                
                                
-        $queryNewest =  'Call eulims_finance.spGetCollectionReportNew('. $iyear .','. $imonth . ');';    //'Call eulims_finance.spGetCollectionReportNew(2018,5);';
+        $queryNewest =  'Call eulims_finance_migration.spGetCollectionReportNew('. $iyear .','. $imonth . ');';    //'Call eulims_finance.spGetCollectionReportNew(2018,5);';
     //     $queryNewest ='Call spGetCollectionReport(2018,5)';                      
-        $queryDaw =Yii::$app->db->createCommand('Call eulims_finance.spGetCollectionReportNew('. $iyear .','. $imonth . ');')->queryScalar(); 
+        $queryDaw =Yii::$app->db->createCommand('Call eulims_finance_migration.spGetCollectionReportNew('. $iyear .','. $imonth . ');')->queryScalar(); 
           
       //  $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM eulims_finance.tbl_collectiontype')->queryScalar();
       //  $columnHeaders = Yii::$app->db->createCommand('SELECT accountcode FROM eulims_finance.tbl_accountingcode')->queryAll();
         
-       
-           
+                  
             
         $dataProvider = new SqlDataProvider([
             'sql' => $queryNewest,
             'totalCount' => $count,
-          //  'pagination' => false
+            'pagination' => false,
             'sort' =>false,
-        'pagination' => [
-            'pageSize' => 8,
-        ],
+        
         ]);
         
        

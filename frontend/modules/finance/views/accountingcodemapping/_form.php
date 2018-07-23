@@ -16,6 +16,9 @@ use yii\helpers\Url;
 //var_dump($mar);
 ?>
 <script type="text/javascript">
+    $.fn.modalmanager.defaults.spinner = '<div class="animationload"><div class="osahanloading"></div></div>';
+$.fn.modal.defaults.spinner = '<div class="animationload"><div class="osahanloading"></div></div>';
+
     $('#accountingcodemapping-accountingcode_id').on("select2:select", function (e) {
         //Do stuff
         alert('test');
@@ -67,7 +70,7 @@ use yii\helpers\Url;
     </div>
 
 
-
+ 
 
     <div class="form-group">
 <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

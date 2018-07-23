@@ -27,13 +27,15 @@ $js=<<<SCRIPT
       var keys = $('#sample-grid').yiiGridView('getSelectedRows');
       var keylist= keys.join();
       $("#sample_ids").val(keylist);
+      $("#sample_ids").val(keylist);
+      $("#sample-testcategory_id").prop('disabled', false);
       
    });    
    $(".select-on-check-all").change(function(){
 
     var keys = $('#sample-grid').yiiGridView('getSelectedRows');
     var keylist= keys.join();
-     $("#sample_ids").val(keylist);
+    $("#sample-testcategory_id").prop('disabled', false);
     
    });
   
@@ -107,6 +109,7 @@ $this->registerJs($js);
         <div class="col-sm-6">
         <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
                         'data' => $testcategory,
+                        'disabled'=>true,
                         'theme' => Select2::THEME_KRAJEE,
                         'options' => ['id'=>'sample-testcategory_id'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test category'],

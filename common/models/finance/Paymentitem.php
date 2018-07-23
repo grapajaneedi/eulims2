@@ -87,4 +87,5 @@ class Paymentitem extends \yii\db\ActiveRecord
    {
        return $this->hasOne(Receipt::className(), ['receipt_id' => 'receipt_id']);
    }
+   
 }
