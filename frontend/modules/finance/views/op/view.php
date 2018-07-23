@@ -121,7 +121,7 @@ if($model->created_receipt == 0){
                     [
                         'label'=>'Customer Name',
                         'format'=>'raw',
-                        'value'=>$model->customer->customer_name,
+                        'value'=>$model->customer ? $model->customer->customer_name : "",
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
@@ -140,7 +140,7 @@ if($model->created_receipt == 0){
                     [
                         'label'=>'Address',
                         'format'=>'raw',
-                        'value'=>$model->customer->address,
+                        'value'=>$model->customer ? $model->customer->address : "",
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],

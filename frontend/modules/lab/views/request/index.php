@@ -22,6 +22,11 @@ $this->params['breadcrumbs'][] = $this->title;
 $func=new Functions();
 $Header="Department of Science and Technology<br>";
 $Header.="Laboratory Request";
+if(Yii::$app->user->can('allow-cancel-request')){
+    $Button="{view}{update}{delete}";
+}else{
+    $Button="{view}{update}";
+}
 ?>
 <div class="request-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -139,7 +144,7 @@ $Header.="Laboratory Request";
             ],
             [
                 'class' => kartik\grid\ActionColumn::className(),
-                'template' => "{view}{update}{delete}",
+                'template' => $Button,
                 'buttons' => [
                     'view' => function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/lab/request/view?id=' . $model->request_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Request")]);
@@ -147,7 +152,7 @@ $Header.="Laboratory Request";
                     'update' => function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/lab/request/update?id=' . $model->request_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Request")]);
                     },
-                    'delete' => function ($url, $model) {
+                    'delete' => function ($url, $model) { //Cancel
                         return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/lab/cancelrequest/create?req=' . $model->request_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$model->status_id==2, 'title' => Yii::t('app', "Cancel Request")]);
                     }
                 ],
