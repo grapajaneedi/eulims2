@@ -162,7 +162,6 @@ class CustomertransactionController extends Controller
 
     public function actionSetwallet($customer_id,$amount,$source,$transactiontype){
         $myvar = setTransaction($customer_id,$amount,$source,$transactiontype);
-
         return $myvar;
     }
 
