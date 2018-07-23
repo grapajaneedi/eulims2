@@ -131,7 +131,7 @@ $rstlID=$GLOBALS['rstl_id'];
                         return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['clientdelete', 'id' => $model->client_id], [
                         "class" => "btn btn-danger",
                         "data" => [
-                            "confirm" => "Are you absolutely sure you want to remove on Account of '<strong>".$model->customer->customer_name."'</strong>?",
+                            "confirm" => "Are you absolutely sure you want to remove this Account</strong>?",
                             "method" => "post",
                         ],
                     ]);

@@ -45,7 +45,6 @@ class tableobject{
     selectRow(){
         $(this).addClass('info').siblings().removeClass('info');
         var index=$(this).attr("data-key");
-        console.log(index);
         this.currentRowIndex=index;
     }
     /**
@@ -137,7 +136,7 @@ class tableobject{
      * @returns {JSON Format}
      */
     rowsToJSON(){
-        var table = $('#'+this.id+">tbody").tableToJSON(); 
+        var table = $('#'+this.id).tableToJSON(); 
         return JSON.stringify(table);
     }
     /**

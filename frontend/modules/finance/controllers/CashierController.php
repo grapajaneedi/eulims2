@@ -47,27 +47,36 @@ class CashierController extends \yii\web\Controller
         $model = new BillingPayment();
         $post=Yii::$app->request->post();
         if ($post) {// Saving
+            //echo "<pre>";
+            //var_dump($post);
+            //echo "</pre>";
+            //exit;
+            $Billing=$post['BillingPayment'];
             $Receipt=new Receipt();
             $Receipt->rstl_id=$GLOBALS['rstl_id'];
             $Receipt->terminal_id=$GLOBALS['terminal_id'];
             $Receipt->collection_id=NULL;
-            $Receipt->deposit_type_id=$post['deposit_type_id'];
-            $Receipt->or_series_id=$post['or_series_id'];
-            $Receipt->or_number=$post['or_number'];
-            $Receipt->receiptDate=$post['receiptDate'];
-            $Receipt->payment_mode_id=$post['payment_mode_id'];
-            $Receipt->payor=$post['payor'];
-            $Receipt->collectiontype_id=$post['collectiontype_id'];
+            $Receipt->deposit_type_id=$Billing['deposit_type_id'];
+            $Receipt->or_series_id=$Billing['or_series_id'];
+            $Receipt->or_number=$Billing['or_number'];
+            $Receipt->receiptDate=$Billing['receiptDate'];
+            $Receipt->payment_mode_id=$Billing['payment_mode_id'];
+            $Receipt->payor=$Billing['payor'];
+            $Receipt->collectiontype_id=$Billing['collectiontype_id'];
             $Receipt->total=$post['amount'];
             $Receipt->cancelled=0;
             $Receipt->deposit_id=NULL;
             //Save
-            $Receipt->save();
-            $jsonchecks= json_decode($post['check_details']);
-            foreach ($jsonchecks as $jsoncheck){
-                
+            $success=$Receipt->save();
+            if($success){
+                $jsonchecks= json_decode($post['check_details']);
+                foreach ($jsonchecks as $jsoncheck){
+
+                }
+                Yii::$app->session->setFlash('success', 'Billing Statement Successfully Paid!');
+            }else{
+                Yii::$app->session->setFlash('danger', 'Billing Statement Payment Unsuccessful!'); 
             }
-            Yii::$app->session->setFlash('success', 'Billing Statement Successfully Paid!');
         }else{
             $model->receiptDate=date('Y-m-d');
             $model->payment_mode_id=1;
@@ -578,5 +587,10 @@ class CashierController extends \yii\web\Controller
         } else {
             return $model->error();
         }
+    }
+    
+    public function actionPrintOr() {
+        $or=New OfficialReceipt();
+        $or->PrintPDF();
     }
 }

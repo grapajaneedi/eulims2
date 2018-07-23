@@ -28,10 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="customerwallet-index">
 
-    <p>
-
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Wallet', ['value'=>'/finance/customerwallet/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Wallet"),'name'=>'Create New Wallet']); ?>
-    </p>
 <div class="table-responsive">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -40,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
         // 'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
+                'before'=> Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Wallet', ['value'=>'/finance/customerwallet/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Wallet"),'name'=>'Create New Wallet']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
         'columns' => [

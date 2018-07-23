@@ -92,7 +92,7 @@ $js=<<<SCRIPT
       $(".kv-total-check").html(totalchk);
       var Balance=StringToFloat(TotalSoa)-total;
       $(".kv-balance").html(CurrencyFormat(Balance,2));
-      console.log(table.rowsToJSON());
+      console.log("Result: "+table.rowsToJSON());
       $("#check_details").val(table.rowsToJSON());
    }    
 SCRIPT;
