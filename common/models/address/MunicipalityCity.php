@@ -5,23 +5,27 @@ namespace common\models\address;
 use Yii;
 
 /**
- * This is the model class for table "tbl_city_municipality".
+ * This is the model class for table "tbl_municipality_city".
  *
- * @property int $city_municipality_id
+ * @property int $municipality_city_id
  * @property int $province_id
- * @property string $city_municipality
+ * @property string $citymun_code
+ * @property string $psgc_code
+ * @property string $citymun_desc
+ * @property string $reg_desc
+ * @property string $district
  *
  * @property Barangay[] $barangays
  * @property Province $province
  */
-class CityMunicipality extends \yii\db\ActiveRecord
+class MunicipalityCity extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'tbl_city_municipality';
+        return 'tbl_municipality_city';
     }
 
     /**
@@ -38,9 +42,11 @@ class CityMunicipality extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['province_id', 'city_municipality'], 'required'],
+            [['province_id'], 'required'],
             [['province_id'], 'integer'],
-            [['city_municipality'], 'string', 'max' => 100],
+            [['citymun_desc'], 'string'],
+            [['citymun_code', 'psgc_code', 'reg_desc'], 'string', 'max' => 255],
+            [['district'], 'string', 'max' => 2],
             [['province_id'], 'exist', 'skipOnError' => true, 'targetClass' => Province::className(), 'targetAttribute' => ['province_id' => 'province_id']],
         ];
     }
@@ -51,9 +57,13 @@ class CityMunicipality extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'city_municipality_id' => 'City Municipality ID',
+            'municipality_city_id' => 'Municipality City ID',
             'province_id' => 'Province ID',
-            'city_municipality' => 'City Municipality',
+            'citymun_code' => 'Citymun Code',
+            'psgc_code' => 'Psgc Code',
+            'citymun_desc' => 'Citymun Desc',
+            'reg_desc' => 'Reg Desc',
+            'district' => 'District',
         ];
     }
 
@@ -62,7 +72,7 @@ class CityMunicipality extends \yii\db\ActiveRecord
      */
     public function getBarangays()
     {
-        return $this->hasMany(Barangay::className(), ['city_municipality_id' => 'city_municipality_id']);
+        return $this->hasMany(Barangay::className(), ['municipality_city_id' => 'municipality_city_id']);
     }
 
     /**

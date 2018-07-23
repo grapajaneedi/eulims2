@@ -8,8 +8,9 @@ use Yii;
  * This is the model class for table "tbl_region".
  *
  * @property int $region_id
- * @property string $code
- * @property string $region
+ * @property string $psgc_code
+ * @property string $reg_desc
+ * @property string $reg_code
  *
  * @property Province[] $provinces
  */
@@ -37,9 +38,8 @@ class Region extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['code', 'region'], 'required'],
-            [['code'], 'string', 'max' => 20],
-            [['region'], 'string', 'max' => 200],
+            [['reg_desc'], 'string'],
+            [['psgc_code', 'reg_code'], 'string', 'max' => 255],
         ];
     }
 
@@ -50,8 +50,9 @@ class Region extends \yii\db\ActiveRecord
     {
         return [
             'region_id' => 'Region ID',
-            'code' => 'Code',
-            'region' => 'Region',
+            'psgc_code' => 'Psgc Code',
+            'reg_desc' => 'Reg Desc',
+            'reg_code' => 'Reg Code',
         ];
     }
 

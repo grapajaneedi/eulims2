@@ -6,7 +6,7 @@ use Yii;
 use common\models\lab\Customer;
 use common\models\lab\CustomerSearch;
 use common\models\address\Province;
-use common\models\address\CityMunicipality;
+use common\models\address\MunicipalityCity;
 use common\models\address\Barangay;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -157,7 +157,7 @@ class InfoController extends Controller
             if ($id != null && count($list) > 0) {
                 $selected = '';
                 foreach ($list as $i => $province) {
-                    $out[] = ['id' => $province['province_id'], 'name' => $province['province']];
+                    $out[] = ['id' => $province['province_id'], 'name' => $province['prov_desc']];
                     if ($i == 0) {
                         $selected = $province['province_id'];
                     }
@@ -177,14 +177,14 @@ class InfoController extends Controller
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
-            $list = CityMunicipality::find()->andWhere(['province_id'=>$id])->asArray()->all();
+            $list = MunicipalityCity::find()->andWhere(['province_id'=>$id])->asArray()->all();
             $selected  = null;
             if ($id != null && count($list) > 0) {
                 $selected = '';
                 foreach ($list as $i => $city_municipality) {
-                    $out[] = ['id' => $city_municipality['city_municipality_id'], 'name' => $city_municipality['city_municipality']];
+                    $out[] = ['id' => $city_municipality['municipality_city_id'], 'name' => $city_municipality['citymun_desc']];
                     if ($i == 0) {
-                        $selected = $city_municipality['city_municipality_id'];
+                        $selected = $city_municipality['municipality_city_id'];
                     }
                 }
                 // Shows how you can preselect a value
@@ -206,7 +206,7 @@ class InfoController extends Controller
             if ($id != null && count($list) > 0) {
                 $selected = '';
                 foreach ($list as $i => $barangay) {
-                    $out[] = ['id' => $barangay['barangay_id'], 'name' => $barangay['barangay']];
+                    $out[] = ['id' => $barangay['barangay_id'], 'name' => $barangay['brgy_desc']];
                     if ($i == 0) {
                         $selected = $barangay['barangay_id'];
                     }
