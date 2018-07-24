@@ -26,6 +26,8 @@ $js=<<<SCRIPT
       
       var keys = $('#sample-grid').yiiGridView('getSelectedRows');
       var keylist= keys.join();
+
+      
       $("#sample_ids").val(keylist);
       $("#sample_ids").val(keylist);
       $("#sample-testcategory_id").prop('disabled', false);
