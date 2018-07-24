@@ -1,6 +1,6 @@
 <?php
 return [
-    'adminEmail' => 'nolansunico@gmail.com',
+    'adminEmail' => 'admin@ulimsportal.com',
     'uploadPath'=>"\web\uploads\user\photo",
     'uploadUrl'=>"/uploads/user/photo/",
 ];
