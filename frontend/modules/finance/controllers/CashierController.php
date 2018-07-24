@@ -191,6 +191,7 @@ class CashierController extends \yii\web\Controller
                  return $e;
              }
         }
+            $model->deposit_type_id=1;
             $model->receiptDate=date('Y-m-d');
             $model->payment_mode_id=$op_model->payment_mode_id;
             $model->collectiontype_id=$op_model->collectiontype_id;

@@ -6,6 +6,7 @@ use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use common\models\services\Testcategory;
+use common\components\Functions;
 //use yii\grid\GridView;
 
 /* @var $this yii\web\View */
@@ -19,6 +20,11 @@ $testcategorylist= ArrayHelper::map(testCategory::find()->all(),'testcategory_id
 
 //$this->params['breadcrumbs'][] = 'Test Categories';
 $this->registerJsFile("/js/services/services.js");
+
+$func=new Functions();
+$Header="Department of Science and Technology<br>";
+$Header.="List of Sample Types";
+
 ?>
 <div class="sampletype-index">
 
@@ -36,6 +42,7 @@ $this->registerJsFile("/js/services/services.js");
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
+        'exportConfig'=>$func->exportConfig("Laboratory Request", "laboratory request", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'sample_type',

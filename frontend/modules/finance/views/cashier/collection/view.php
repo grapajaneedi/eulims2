@@ -32,8 +32,8 @@ else{
 }
 
 $sweetalert = new Functions();
-
-if($model->collection->payment_status_id==0){
+$PstatusId=$model->collection ? $model->collection->payment_status_id : 1;
+if($PstatusId==0){
     $CancelButton='';
     $CancelClass='request-cancelled';
     $BackClass='background-cancel';
@@ -107,7 +107,7 @@ if($Cancelledop){
                     [
                         'label'=>'Customer Name',
                         'format'=>'raw',
-                        'value'=>$model->customer->customer_name,
+                        'value'=>$model->customer ? $model->customer->customer_name : '',
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
@@ -126,7 +126,7 @@ if($Cancelledop){
                     [
                         'label'=>'Address',
                         'format'=>'raw',
-                        'value'=>$model->customer->address,
+                        'value'=>$model->customer ? $model->customer->address : '',
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
