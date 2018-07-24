@@ -16,14 +16,11 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile("/js/customer/customer.js");
 ?>
 <div class="customer-index">
-
-    <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Customer', ['value'=>'/customer/info/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Customer"),'name'=>'Create New Customer']); ?>
-
-         <!-- <?= Html::a('Create New Customer', ['create'], ['class' => 'btn btn-success','target'=>'_']) ?> -->
-
-    </p>
-
+    <div>
+        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Customer', ['value'=>'/customer/info/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Customer"),'name'=>'Create New Customer']); ?>    
+        <?= Html::button('<span class="glyphicon glyphicon-cloud"></span> Sync Customer', ['value'=>'/customer/info/sync', 'class' => 'btn btn-success btn-modal pull-right','title' => Yii::t('app', "Sync Customer in cloud"),'name'=>'Sync customer']); ?>
+    </div>
+    <br/>
     <div class="table-responsive">
         <?= GridView::widget([
             'dataProvider' => $dataProvider,

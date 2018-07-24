@@ -45,9 +45,12 @@ class CustomerSearch extends Customer
         $query = Customer::find();
 
         // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=>['defaultOrder' => ['customer_name'=>SORT_ASC]],
+            'pagination' => [
+              'pageSize' => 10,
+            ],
         ]);
 
         $this->load($params);

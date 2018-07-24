@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
+use linslin\yii2\curl\Curl;
 
 /**
  * InfoController implements the CRUD actions for Customer model.
@@ -53,6 +54,28 @@ class InfoController extends Controller
         ]);
     }
 
+    public function actionSync(){
+        //fetch the customer pool
+        $customers = Customer::find()->all();
+
+        // POST RAW JSON
+        // $curl = new Curl();
+
+        // $response = $curl->setRawPostData(
+        //      Json::encode([
+        //         'data' => $customers,
+        //      ]))
+        //      ->post($GLOBALS['api_url']."sync_customer");
+
+        $curl = new Curl();
+
+        //get http://example.com/
+        $response = $curl->get('http://google.com/');
+
+
+        echo $response;
+    }
+
     /**
      * Displays a single Customer model.
      * @param integer $id
@@ -80,7 +103,7 @@ class InfoController extends Controller
     public function actionCreate()
     {
         $model = new Customer();
-        $model->rstl_id=$GLOBALS['rstl_id']; 
+        $model->rstl_id=$GLOBALS['rstl_id'];
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model->customer_code=$model->rstl_id."-".$model->customer_id;
             $model->save();
