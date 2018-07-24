@@ -70,7 +70,7 @@ $func=new Functions();
                 'attribute'=>'customer_id',
                 'label'=>'Customer',
                 'value'=>function($model){
-                    return $model->customer->customer_name;
+                    return $model->customer ? $model->customer->customer_name : '';
                 },
                 'hAlign' => 'left',
                 'pageSummary'=>'TOTAL'
