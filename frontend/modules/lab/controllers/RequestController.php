@@ -264,7 +264,11 @@ class RequestController extends Controller
             $model->total=0.00;
             $model->posted=0;
             $model->status_id=1;
-            $model->receivedBy=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
+            if($profile){
+                $model->receivedBy=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
+            }else{
+                $model->receivedBy="";
+            }
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('create', [
                     'model' => $model,

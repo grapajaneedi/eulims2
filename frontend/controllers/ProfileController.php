@@ -117,7 +117,8 @@ class ProfileController extends Controller
                     $image->saveAs($path);
                 }
                 //return "Saved...";
-                return $this->redirect(['view', 'id'=>$model->user_id]);
+                Yii::$app->session->setFlash('success', 'Profile Successfully Created!');
+                return $this->redirect('/profile');
             }else{
                 //Yii::$app->getSession()->setFlash('danger','Duplicate Entry, Username is Unique');
                 //Yii::$app->session->setFlash('danger', "Duplicate Entry, Username is Unique");
@@ -185,8 +186,8 @@ class ProfileController extends Controller
                     //unlink(Yii::$app->params['uploadPath'].$OldAvatar);
                     $this->actionDeleteimage( Yii::$app->params['uploadPath'] . $OldAvatar);
                 }
-                //return "Saved...";
-                return $this->redirect(['/profile']);
+                Yii::$app->session->setFlash('success', 'Profile Successfully Created!');
+                return $this->redirect('/profile');
             } else {
                 throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');
             }

@@ -24,6 +24,11 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
 
 $Header="Department of Science and Technology<br>";
 $Header.="Order of Payment";
+if(Yii::$app->user->can('allow-cancel-op')){
+    $Button="{view}{update}{delete}";
+}else{
+    $Button="{view}{update}";
+}
 ?>
 <div class="orderofpayment-index">
     <?php
@@ -116,7 +121,11 @@ $Header.="Order of Payment";
                 'attribute' => 'customer_id',
                 'label' => 'Customer Name',
                 'value' => function($model) {
-                    return $model->customer->customer_name;
+                    if($model->customer){
+                        return $model->customer->customer_name;
+                    }else{
+                        return "";
+                    }
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Customer::find()->asArray()->all(), 'customer_id', 'customer_name'),
@@ -142,19 +151,22 @@ $Header.="Order of Payment";
             [
               //'class' => 'yii\grid\ActionColumn'
                 'class' => kartik\grid\ActionColumn::className(),
-                'template' => "{view}{update}{delete}",
+                'template' => $Button,
                 'buttons' => [
                     'view' => function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/op/view?id=' . $model->orderofpayment_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Order of Payment")]);
                     },
                     'update' => function ($url, $model) {
                         $Obj=$model->getCollectionStatus($model->orderofpayment_id);
-                        return $Obj[0]['payment_status_id'] ? ($Obj[0]['payment_status_id'] == 1 ? Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/op/update?id=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Order of Payment]")]) : '') : "";
-                        //return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/op/update?id=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Order of Payment]")]);
+                        if($Obj){
+                            return $Obj[0]['payment_status_id'] ? ($Obj[0]['payment_status_id'] == 1 ? Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/op/update?id=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Order of Payment]")]) : '') : "";
+                        }//return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/op/update?id=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Order of Payment]")]);
                     },
                     'delete' => function ($url, $model) {
                         $Obj=$model->getCollectionStatus($model->orderofpayment_id);
-                        return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/finance/cancelop/create?op=' . $model->orderofpayment_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$Obj[0]['payment_status'] <> 'Unpaid', 'title' => Yii::t('app', "Cancel Order of Payment")]);
+                        if($Obj){
+                            return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/finance/cancelop/create?op=' . $model->orderofpayment_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$Obj[0]['payment_status'] <> 'Unpaid', 'title' => Yii::t('app', "Cancel Order of Payment")]);
+                        }
                     }        
                     /*'delete' => function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/lab/cancelrequest/create?req=' . $model->request_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$model->status_id==2, 'title' => Yii::t('app', "Cancel Request")]);
