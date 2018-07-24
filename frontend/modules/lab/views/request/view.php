@@ -88,6 +88,8 @@ if($Request_Ref){
     $btnID="id='btnSaveRequest'";
 }
 
+
+
 ?>
 <div class="section-request"> 
 <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
@@ -441,15 +443,6 @@ if($Request_Ref){
                     'vAlign' => 'left',
                     'width' => '7%',
                     'format' => 'raw',
-                  //  'format' => ['decimal', 2],
-                    // 'value' =>  function($model) {
-                       //  $discountquery = Discount::find()->where(['discount_id' => $model->request->discount_id])->one();
-                    //         return "<span>300<br>300<>".$discountquery->rate."</span>";
-                    //           //  return print_r($model);
-                    //        // return $model->analysis_id;
-                    //       // return true;
-                    //     }, 
-                      //  'pageSummary'=>'<div id="subtotal">0.00</div><div id="discount">0.00</div><div id="total">0.00</div>',
                       'pageSummary'=> function (){
 
                             $url = \Yii::$app->request->url;
@@ -458,15 +451,24 @@ if($Request_Ref){
                             $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
 
                             $rate =  $discountquery->rate;
-                            
+                           
                             $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=$id";
                             $Connection = Yii::$app->labdb;
                             $command = $Connection->createCommand($sql);
                             $row = $command->queryOne();
                             $subtotal = $row['subtotal'];
-                            $total = $subtotal - $rate;
+                            $discounted = ($subtotal * ($rate/100));
+                            $total = $subtotal - $discounted;
+
+
+                            //$request_total =  '<input type="hidden" name="request_total" value="'.$total.'">'; //Html::hiddenInput('request_total', $total);
                            
-                          return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($rate, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                            if ($total <= 0){
+                                return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                            }else{
+                                return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($discounted, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                            }
+                         
                       },
                 ],
                 
