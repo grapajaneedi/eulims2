@@ -458,19 +458,14 @@ if($Request_Ref){
                             $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
 
                             $rate =  $discountquery->rate;
-
+                            
                             $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=$id";
                             $Connection = Yii::$app->labdb;
                             $command = $Connection->createCommand($sql);
                             $row = $command->queryOne();
-
                             $subtotal = $row['subtotal'];
-
                             $total = $subtotal - $rate;
                            
-
-                           
-
                           return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($rate, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
                       },
                 ],

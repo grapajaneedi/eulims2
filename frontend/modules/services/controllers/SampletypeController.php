@@ -67,10 +67,6 @@ class SampletypeController extends Controller
                return $testcategory->category_name;
         });
 
-        /*$testcategory = ArrayHelper::map(Testcategory::find()
-            ->where(['lab_id' => $labId])
-            ->all(), 'testcategory_id', 'category_name');*/
-
         return $testcategory;
     }
 
@@ -82,21 +78,32 @@ class SampletypeController extends Controller
     public function actionCreate()
     {
         $model = new Sampletype();
-        $testcategory = $this->listTestcategory(1);
-        $sampletype = [];
+        // $testcategory = $this->listTestcategory(1);
+        // $sampletype = [];
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
                  Yii::$app->session->setFlash('success', 'Sample Type Successfully Created'); 
                  return $this->runAction('index');
          } 
+
+        //  echo "<pre>";
+        //  print_r($testcategory);
+        //  echo "</pre>";
+        //  exit;
            
-        if(Yii::$app->request->isAjax){
-                 return $this->renderAjax('_form', [
-                         'model' => $model,
-                         'testcategory'=>$testcategory,
-                         'sampletype' => $sampletype,
-                     ]);
-             }
+        // if(Yii::$app->request->isAjax){
+        //          return $this->renderAjax('_form', [
+        //                  'model' => $model,
+        //                  //'testcategory'=>$testcategory,
+        //                  //'sampletype' => $sampletype,
+        //              ]);
+        //      }
+
+             if(Yii::$app->request->isAjax){
+                return $this->renderAjax('create', [
+                        'model' => $model,
+                    ]);
+            }   
         }  
 
     /**
