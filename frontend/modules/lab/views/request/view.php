@@ -460,7 +460,6 @@ if($Request_Ref){
                             $discounted = ($subtotal * ($rate/100));
                             $total = $subtotal - $discounted;
 
-
                             //$request_total =  '<input type="hidden" name="request_total" value="'.$total.'">'; //Html::hiddenInput('request_total', $total);
                            
                             if ($total <= 0){

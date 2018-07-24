@@ -182,14 +182,23 @@ class AnalysisController extends Controller
         $sampletype = [];
         $test = [];
 
+       
+       
+
        if ($model->load(Yii::$app->request->post())) {
            $requestId = (int) Yii::$app->request->get('request_id');
             
-                $sample_ids= $_POST['sample_ids'];
-                $ids = explode(',', $sample_ids);  
+             $sample_ids= $_POST['selection'];
+
+            //  echo "<pre>";
+            //  var_dump($sample_ids);
+            // echo "</pre>";
+            //  exit;
+
+               // $ids = explode(',', $sample_ids);  
                 $post= Yii::$app->request->post();
 
-                foreach ($ids as $sample_id){
+                foreach ($sample_ids as $sample_id){
 
                     $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
                     $analysis = new Analysis();
@@ -210,8 +219,10 @@ class AnalysisController extends Controller
                     $analysis->references = $post['Analysis']['references'];
                     $analysis->quantity = $post['Analysis']['quantity'];
                     $analysis->sample_code = $post['Analysis']['sample_code'];
-                    $analysis->date_analysis = date("Y-m-d h:i:s");;   
+                    $analysis->date_analysis = date("Y-m-d h:i:s");
                     $analysis->save(); 
+
+                 
                 }     
                 Yii::$app->session->setFlash('success', 'Analysis Successfully Created'); 
                 return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
