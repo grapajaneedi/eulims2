@@ -12,7 +12,9 @@ $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Accouting', 'url' => ['/finance/accounting']];
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['/finance/accounting/op-lab']];
 $this->params['breadcrumbs'][] = 'View';
-$bal=($model->total_amount) -($model->collection->sub_total);
+$totalAmount=$model->total_amount ? $model->total_amount : 0.00;
+$subTotal=$model->collection ? $model->collection->sub_total : 0.00;
+$bal=$totalAmount - $subTotal;
 //}
 ?>
 <div class="orderofpayment-view">
@@ -41,7 +43,7 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                     [
                         'label'=>'Customer Name',
                         'format'=>'raw',
-                        'value'=>$model->customer->customer_name,
+                        'value'=>$model->customer ? $model->customer->customer_name : '',
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
@@ -60,7 +62,7 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                     [
                         'label'=>'Address',
                         'format'=>'raw',
-                        'value'=>$model->customer->address,
+                        'value'=>$model->customer ? $model->customer->address : '',
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
@@ -99,7 +101,7 @@ $bal=($model->total_amount) -($model->collection->sub_total);
                         'label'=>'Collection',
                         'format'=>'raw',
                          'format' => ['decimal', 2],
-                        'value' => $model->collection->sub_total,
+                        'value' => $subTotal,
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],

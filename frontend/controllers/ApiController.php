@@ -31,4 +31,8 @@ class ApiController extends ActiveController
 
         return $actions;
     }
+
+    public function actionSync_customer(){
+        echo "you have reached me!";
+    }
 }

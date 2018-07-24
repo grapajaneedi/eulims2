@@ -116,7 +116,7 @@ $Header.="Collection";
                 'attribute' => 'customer_id',
                 'label' => 'Customer Name',
                 'value' => function($model) {
-                    return $model->customer->customer_name;
+                    return $model->customer ? $model->customer->customer_name : '';
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Customer::find()->asArray()->all(), 'customer_id', 'customer_name'),

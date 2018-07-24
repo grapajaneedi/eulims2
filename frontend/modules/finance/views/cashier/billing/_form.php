@@ -125,7 +125,7 @@ $this->registerJs($soaJS);
         </div>
         <div class="row">
             <div class="col-sm-12">
-            <?php echo $form->field($model, 'payor')->textInput(['value'=>$SoaModel->customer->customer_name])->label('Payor') ?>
+            <?php echo $form->field($model, 'payor')->textInput(['value'=>$SoaModel->customer ? $SoaModel->customer->customer_name : ''])->label('Payor') ?>
             </div>
         </div>
         <div class="form-group pull-right">
