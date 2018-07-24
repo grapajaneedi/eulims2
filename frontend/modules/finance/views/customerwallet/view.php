@@ -56,5 +56,7 @@ use yii\grid\ActionColumn;
             'source'
         ],
     ]); ?>
-
+    <div class="form-group pull-right">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
 </div>
