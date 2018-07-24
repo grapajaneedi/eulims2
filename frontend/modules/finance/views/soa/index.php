@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\grid\BooleanColumn;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\finance\BillingReceiptSearch */
