@@ -427,6 +427,7 @@ if($Request_Ref){
                 [
                     'attribute'=>'quantity',
                     'header'=>'Quantity',
+                    'hAlign'=>'center',
                     'enableSorting' => false,
                     'pageSummary' => '<span style="float:right";>SUBTOTAL<BR>DISCOUNT<BR><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL</B></span>',
                    
@@ -435,6 +436,10 @@ if($Request_Ref){
                     'attribute'=>'fee',
                     'header'=>'Unit Price',
                     'enableSorting' => false,
+                    'hAlign'=>'right',
+                    'value'=>function($model){
+                        return number_format($model->fee,2);
+                    },
                     'contentOptions' => [
                         'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
         

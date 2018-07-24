@@ -232,11 +232,14 @@ class RequestController extends Controller
             $response=$Func->GenerateSampleCode($request_id);
             if($response){
                 $return="Success";
+                Yii::$app->session->setFlash('success', 'Request Ref #/Sample Code Successfully Generated!');
             }else{
                 $Transaction->rollback();
+                Yii::$app->session->setFlash('danger', 'Request Ref #/Sample Code Failed to Generate!');
                 $return="Failed";
             }
         }else{
+            Yii::$app->session->setFlash('danger', 'Request Ref #/Sample Code Failed to Generate!');
             $Transaction->rollback();
             $return="Failed";
         }
@@ -270,6 +273,9 @@ class RequestController extends Controller
             $model->total=0.00;
             $model->posted=0;
             $model->status_id=1;
+            $model->request_type_id=1;
+            $model->purpose_id=2;
+            $model->lab_id=1;
             if($profile){
                 $model->receivedBy=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
             }else{
