@@ -56,24 +56,20 @@ class InfoController extends Controller
 
     public function actionSync(){
         //fetch the customer pool
-        $customers = Customer::find()->all();
+        // $customers = Customer::find()->all();
 
-        // POST RAW JSON
-        // $curl = new Curl();
+        foreach(Customer::find()->batch() as $customers) {
+            // POST RAW JSON
+            $curl = new Curl();
 
-        // $response = $curl->setRawPostData(
-        //      Json::encode([
-        //         'data' => $customers,
-        //      ]))
-        //      ->post($GLOBALS['api_url']."sync_customer");
+            $response = $curl->setRawPostData(
+                 [
+                    'data' => json::encode($customers),
+                 ])
+             ->post($GLOBALS['api_url']."sync_customer");
 
-        $curl = new Curl();
-
-        //get http://example.com/
-        $response = $curl->get('http://google.com/');
-
-
-        echo $response;
+             echo $response ." number/s of customer is added"; exit();
+        }
     }
 
     /**
