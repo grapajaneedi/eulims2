@@ -26,6 +26,8 @@ $js=<<<SCRIPT
       
       var keys = $('#sample-grid').yiiGridView('getSelectedRows');
       var keylist= keys.join();
+
+      
       $("#sample_ids").val(keylist);
       $("#sample_ids").val(keylist);
       $("#sample-testcategory_id").prop('disabled', false);
@@ -103,7 +105,7 @@ $this->registerJs($js);
 
     <?= $form->field($model, 'is_package')->hiddenInput()->label(false)  ?>
 
-    <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
+    <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>"text"], ['readonly' => true]) ?>
 
         <div class="row">
         <div class="col-sm-6">
