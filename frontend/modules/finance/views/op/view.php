@@ -159,41 +159,15 @@ if($model->created_receipt == 0){
                   ],
                   [
                     //'attribute'=>'request_datetime',
-                    'label'=>' ',
+                    'label'=>'',
                     'format'=>'raw',
-                    'value'=>' ',
+                    'value'=>"",
                     'valueColOptions'=>['style'=>'width:30%'], 
                     'displayOnly'=>true
                   ],
               ],
            ],
-            
-            [
-                'group'=>true,
-                'label'=>'Payment Details',
-                'rowOptions'=>['class'=>'info']
-            ],
-            [
-                'columns' => [
-                    [
-                        'label'=>'Collection',
-                        'format'=>'raw',
-                         'format' => ['decimal', 2],
-                        'value' => $model->collection->sub_total,
-                        'valueColOptions'=>['style'=>'width:30%'], 
-                        'displayOnly'=>true
-                    ],
-                    [
-                        'label'=>'Balance',
-                        'format'=>'raw',
-                        'value' => $bal,
-                        'format' => ['decimal', 2],
-                        'valueColOptions'=>['style'=>'width:30%'], 
-                        'displayOnly'=>true
-                    ],
-                ],
-                    
-            ],
+          
         ],
     ]) ?>
    </div>
@@ -214,6 +188,31 @@ if($model->created_receipt == 0){
                     'pageSummary' => '<span style="float:right;">Total:</span>',
                 ],
                 [
+                    'class' => 'kartik\grid\EditableColumn',
+                    'refreshGrid'=>true,
+                    'attribute' => 'amount', 
+//                    'readonly' => function($model, $key, $index, $widget) {
+//                        return (!$model->status); // do not allow editing of inactive records
+//                     },
+                    'editableOptions' => [
+                        'header' => 'Amount', 
+                        'size'=>'s',
+                       // 'hAlign' => 'center',
+                        'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+                        'options' => [
+                            'pluginOptions' => ['min' => 0, 'max' => 5000]
+                        ],
+                        'formOptions'=>['action' => ['/finance/op/updateamount']],
+                    ],
+                    'hAlign' => 'left', 
+                    'vAlign' => 'middle',
+                    'width' => '25%',
+                    'format' => ['decimal', 2],
+                    'pageSummary' => true
+                ],
+                
+                /*
+                [
                     'attribute'=>'amount',
                     'enableSorting' => false,
                     'contentOptions' => [
@@ -224,7 +223,7 @@ if($model->created_receipt == 0){
                     'width' => '20%',
                     'format' => ['decimal', 2],
                     'pageSummary' => true
-                ],
+                ], 
                 [
                     'attribute'=>'status',
                     'format'=>'raw',
@@ -242,7 +241,7 @@ if($model->created_receipt == 0){
                    //
                      },   
                     'width' => '10%', 
-                ],
+                ],*/
                
               ];
               

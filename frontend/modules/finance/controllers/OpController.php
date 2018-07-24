@@ -413,4 +413,22 @@ class OpController extends Controller
             return $model->error();
         }
     }
+    
+    public function actionUpdateamount(){
+        if(Yii::$app->request->post('hasEditable'))
+        {
+            $id= Yii::$app->request->post('editableKey');
+            $paymentitem= Paymentitem::findOne($id);
+            $out= Json::encode(['output'=> '','message'=> '']);
+            $post=[];
+            $posted=current($_POST['Paymentitem']);
+            $post['Paymentitem']=$posted;
+            if($paymentitem->load($post))
+            {
+                $paymentitem->save();
+            }
+            echo $out;
+            return;
+        }
+    }
 }
