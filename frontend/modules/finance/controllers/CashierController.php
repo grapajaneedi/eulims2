@@ -182,8 +182,11 @@ class CashierController extends \yii\web\Controller
                 $model->total=0;
                 $model->cancelled=0;
                 $model->save(false);
+                $transaction->commit();
                 $this->created_receipt($op_id,$model->receipt_id);
-                 $transaction->commit();
+                
+                $this->Savecollection($model->receipt_id,$model->collection_id);
+                 
               //  $session->set('savepopup',"executed");
                 return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]); 
              } catch (Exception $e) {
@@ -470,7 +473,7 @@ class CashierController extends \yii\web\Controller
             return $this->render('collection/_paymentitem', ['dataProvider'=> $paymentitemDataProvider,'receiptid'=>$receiptid,'collection_id'=>$collection_id]);
         }
     }
-    public function actionSaveCollection($id,$receiptid,$collection_id){
+    /*public function actionSaveCollection($id,$receiptid,$collection_id){
         $collection=$this->findModelCollection($collection_id);
         $op_id=$collection->orderofpayment_id;
         $sub_total=$collection->sub_total;
@@ -511,6 +514,55 @@ class CashierController extends \yii\web\Controller
          }else{
              
          }
+    } */
+     public function Savecollection($receiptid,$collection_id){
+//        echo "receipt".$receiptid;
+//        echo "collection".$collection_id;
+//        exit;
+        $collection=$this->findModelCollection($collection_id);
+        $op_id=$collection->orderofpayment_id;
+        $sub_total=$collection->sub_total;
+        $wallet_amount=$collection->wallet_amount;
+        $op_model=$this->findModel($op_id);
+        $amount=$op_model->total_amount;
+        $receipt_model=$this->findModelReceipt($receiptid);
+        $receipt_total=$receipt_model->total;
+        
+          
+           // $total=0;
+            //for($i=0;$i<$arr_length;$i++){
+                // $paymentitem =$this->findPaymentitem($str_total[$i]);
+                  Yii::$app->financedb->createCommand()
+                    ->update('tbl_paymentitem', ['status' => 2,'receipt_id'=>$receiptid], 'orderofpayment_id= '.$op_id)
+                    ->execute(); 
+                  
+           // } 
+             $total=(new Query)
+            ->select('amount')
+            ->from('eulims_finance.tbl_paymentitem')
+            ->where(['orderofpayment_id' => $op_id])
+            ->andWhere(['status' => 2]) 
+            ->sum('amount'); 
+                  
+             
+            //$receipt_total_amount=$receipt_total+$total;
+             Yii::$app->financedb->createCommand()
+                    ->update('tbl_receipt', ['total' => $total], 'receipt_id= '.$receiptid)
+                    ->execute();
+             
+             
+                Yii::$app->financedb->createCommand()
+                   ->update('tbl_collection', ['amount' => $total,'sub_total'=>$total,'payment_status_id' => 2], 'collection_id= '.$collection_id)
+                   ->execute();
+             
+//             if($sum_total < $amount){
+//                 Yii::$app->financedb->createCommand()
+//                    ->update('tbl_collection', ['amount' => $amount_total,'sub_total'=>$sum_total,'payment_status_id' => 3], 'collection_id= '.$collection_id)
+//                    ->execute();
+//             }
+             
+             return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]); 
+        
     }
      public function actionCalculateTotal($id) {
         $total = 0;

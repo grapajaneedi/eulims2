@@ -211,6 +211,7 @@ if($Cancelledop){
                     'format' => ['decimal', 2],
                     'pageSummary' => true
                 ],
+                /*
                [
                     'attribute'=>'status',
                     'format'=>'raw',
@@ -228,7 +229,7 @@ if($Cancelledop){
                    //
                      },   
                     'width' => '10%', 
-                ],
+                ],*/
               ];
               
              echo GridView::widget([
