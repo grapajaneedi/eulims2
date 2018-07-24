@@ -4,6 +4,7 @@ namespace frontend\modules\lab\controllers;
 
 use Yii;
 use common\models\lab\Request;
+use common\models\lab\Discount;
 use common\models\lab\Analysis;
 use common\models\lab\AnalysisSearch;
 use common\models\lab\RequestSearch;
@@ -139,23 +140,9 @@ class RequestController extends Controller
             $mpdf->AddPage('','','','','',0,0,0,0);
             $samplecode = '<font size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$sample['sample_code']."</b>&nbsp;&nbsp;".$sample['samplename'].
             '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font size="1"><b>Received:&nbsp;&nbsp;</b>'.$limitreceived_date.'&nbsp;&nbsp;<b>Due:&nbsp;&nbsp;</b>'.$requestquery['report_due'];
-            
-            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-            // &nbsp;&nbsp;&nbsp;WI-003-F1<br>
-            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            // Rev 03/03.01.18</font>';
-            //$mpdf->SetHTMLHeader('huhuhu');
-          //  $mpdf->SetHeader('This is header');
-
         
             $mpdf->WriteHTML("<barcode code=".$sample['sample_code']." type='C39' />");
             $mpdf->WriteHTML($samplecode);
-         
-         //   $mpdf->SetFooter('This is footer');
 
             $text = '<font size="5">WI-003-F1';
             $text2 = '<font size="5"><b>Rev 03/03.01.18<b>';
@@ -168,9 +155,7 @@ class RequestController extends Controller
                         if ($i++ == 3)
                         break;
                    }               
-            }  
-
-           
+            }          
             $mpdf->Output();
        }
     }
@@ -219,6 +204,27 @@ class RequestController extends Controller
         $Requestcode->save();
         //Update tbl_request table
         $Request= Request::find()->where(['request_id'=>$request_id])->one($Connection);
+
+        //UPDATE FEE
+
+        $requestquery = Request::find()->where(['request_id' => $request_id])->one();
+        $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
+
+        $rate =  $discountquery->rate;
+        
+        $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=$request_id";
+        $Connection = Yii::$app->labdb;
+        $command = $Connection->createCommand($sql);
+        $row = $command->queryOne();
+        $subtotal = $row['subtotal'];
+        $total = $subtotal - ($subtotal * ($rate/100));
+
+        $Connection= Yii::$app->labdb;
+        $sql="UPDATE `tbl_request` SET `total`='$total' WHERE `request_id`=".$request_id;
+        $Command=$Connection->createCommand($sql);
+        $Command->execute();
+
+
         $Request->request_ref_num=$ReferenceNumber;
         if($Request->save()){
             $Transaction->commit();

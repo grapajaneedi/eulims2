@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
-
 use common\models\lab\Lab;
 use common\models\services\testcategory;
 use common\models\lab\sampletype;
@@ -19,6 +18,7 @@ $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 
 <div class="test-category-form" style="padding-bottom: 10px">
     <?php $form = ActiveForm::begin(); ?>
+
     <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
                 'data' => $LabList,
                 'language' => 'en',
@@ -27,6 +27,7 @@ $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
                     'allowClear' => true
                 ],
     ])->label("Lab"); ?>
+
     <?= $form->field($model, 'category_name')->textInput(['maxlength' => true]) ?>
     
     <div class="form-group pull-right">

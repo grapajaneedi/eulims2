@@ -1,10 +1,10 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
-use common\models\services\Testcategory;
 use yii\helpers\ArrayHelper;
+use common\models\services\Testcategory;
+use common\models\lab\Lab;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
 
@@ -13,47 +13,32 @@ use yii\helpers\Url;
 /* @var $form yii\widgets\ActiveForm */
 
 $LabList= ArrayHelper::map(Testcategory::find()->orderBy('category_name')->all(),'testcategory_id','category_name');
-
+$Lab= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 
 ?>
 
 <div class="sample-type-form" style="padding-bottom: 10px">
 <?php $form = ActiveForm::begin(); ?>
-<?=
-///////
-
-//insert lab in sample type
-
-
-$form->field($model,'testcategory_id')->widget(Select2::classname(),[
-                        'data' => $testcategory,
-                        'theme' => Select2::THEME_KRAJEE,
-                        'options' => ['id'=>'sample-testcategory_id'],
-                        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test category'],
-                ])
-            ?>
-        </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'sample_type_id')->widget(DepDrop::classname(), [
-                'type'=>DepDrop::TYPE_SELECT2,
-                'data'=>$sampletype,
-                'options'=>['id'=>'sample-sample_type_id'],
-                'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                'pluginOptions'=>[
-                    'depends'=>['sample-testcategory_id'],
-                    'placeholder'=>'Select Sample type',
-                    'url'=>Url::to(['/lab/sample/listsampletype']),
-                    'loadingText' => 'Loading Sampletype...',
-                ]
-            ])
-
-            /////////
-            ?>
 
 <div class="sampletype-form" style="padding-bottom: 10px">
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
+                'data' => $Lab,
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select lab'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+    ])->label("Lab"); ?>
+
+   <?php
+        //  echo "<pre>";
+        //  print_r($LabList);
+        //  echo "</pre>";
+        //  exit;
+    ?>
     <?= $form->field($model, 'testcategory_id')->widget(Select2::classname(), [
                 'data' => $LabList,
                 'language' => 'en',
