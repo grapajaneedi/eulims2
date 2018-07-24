@@ -105,7 +105,7 @@ $this->registerJs($js);
 
     <?= $form->field($model, 'is_package')->hiddenInput()->label(false)  ?>
 
-    <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>"text"], ['readonly' => true]) ?>
+    <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
 
         <div class="row">
         <div class="col-sm-6">
