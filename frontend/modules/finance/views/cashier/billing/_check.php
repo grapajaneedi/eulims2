@@ -13,7 +13,7 @@ use kartik\widgets\DatePicker;
 
 /* @var $this yii\web\View */
 $js=<<<SCRIPT
-   var TotalSoa=$("#TotalSoa").val();
+   var TotalSoa=CurrencyFormat($("#TotalSoa").val(),2);
    var table=new tableobject("checkTable");
    table.truncaterow();
    table.insertfooter(['','','Balance:','0.00'],['kv-page-summary warning','kv-page-summary warning','kv-page-summary warning kv-align-right','kv-page-summary warning kv-align-right kv-balance']);     
@@ -90,7 +90,13 @@ $js=<<<SCRIPT
       }
       var totalchk=CurrencyFormat(total,2);
       $(".kv-total-check").html(totalchk);
+      $("#TotalCheck").val(total);
       var Balance=StringToFloat(TotalSoa)-total;
+        
+      $("#total-disp").val(total);
+      $("#total").val(total);
+      $("#total-disp").maskMoney('mask', total);  
+        
       $(".kv-balance").html(CurrencyFormat(Balance,2));
       console.log("Result: "+table.rowsToJSON());
       $("#check_details").val(table.rowsToJSON());
@@ -150,7 +156,6 @@ echo GridView::widget([
     
 ]);
 ?>
-<input type="hidden" id="TotalSoa" value="<?= number_format($SoaModel->total_amount,2) ?>" />
 <div id="BankDetails" class="panel panel-primary col-md-10" style="position: fixed; top: 340px;display: none;z-index: 1">
     <div class="panel-heading">Add Bank Details <button type="button" style="float: right" class="close" onclick="$('#BankDetails').hide()" aria-hidden="true">×</button></div>
     <div class="panel-body">

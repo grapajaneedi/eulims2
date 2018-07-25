@@ -10,6 +10,7 @@ use common\models\finance\Paymentmode;
 use common\models\finance\Collectiontype;
 use common\models\finance\Orseries;
 use common\components\Functions;
+use kartik\money\MaskMoney;
 
 
 /* @var $this yii\web\View */
@@ -34,6 +35,9 @@ $this->registerJs($soaJS);
     <?php $form = ActiveForm::begin(); ?>
     <input type="hidden" name="check_details" id="check_details" value=""> 
     <input type="hidden" name="BillingPayment[or_number]" id="or_number" value="<?= $model->or_number ?>"> 
+    <input type="hidden" name="BillingPayment[TotalSoa]" id="TotalSoa" value="<?= $SoaModel->total_amount ?>" />
+    <input type="hidden" name="BillingPayment[TotalCheck]" id="TotalCheck" value="0.00" />
+     <input type="hidden" name="BillingPayment[soa_id]" id="soa_id" value="<?= $SoaModel->soa_id ?>" />
     <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 1px !important;">
         <a href="#" class="close" data-dismiss="alert" >×</a>
         <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p> 
@@ -124,8 +128,25 @@ $this->registerJs($soaJS);
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-6">
             <?php echo $form->field($model, 'payor')->textInput(['value'=>$SoaModel->customer ? $SoaModel->customer->customer_name : ''])->label('Payor') ?>
+            </div>
+            <div class="col-sm-6">
+            <label class="control-label" for="total">Total</label>
+            <?php
+                   echo MaskMoney::widget([
+                    'name' => 'BillingPayment[total]',
+                    'id'=>'total',
+                    'value' => $SoaModel->total_amount,
+                    'pluginOptions' => [
+                        'prefix' => '₱ ',
+                        'thousands' => ',',
+                        'decimal' => '.',
+                        'precision' => 2
+                    ],
+                ]);
+
+            ?>
             </div>
         </div>
         <div class="form-group pull-right">

@@ -14,14 +14,18 @@ if (isset($_SERVER['SERVER_NAME'])) {
     if (!in_array($_SERVER['SERVER_NAME'], $whitelist)) {
         $Backend_URI = 'http://' . $_SERVER['SERVER_NAME'];
         $BaseURI = $Backend_URI.'/';
-        $Backend_URI = $Backend_URI . "/uploads/user/photo/";
+        $Upload_URI = $Backend_URI . "/uploads/user/photo/";
         $FrontendBaseURI = 'http://' . $_SERVER['SERVER_NAME'] . '/';
     } else {
-        $Backend_URI = 'http://localhost/eulims/backend/web/uploads/user/photo/';
+        $Upload_URI = 'http://localhost/eulims/backend/web/uploads/user/photo/';
         $BaseURI = "http://localhost/eulims/backend/web/";
         $FrontendBaseURI = "http://localhost/eulims/frontend/web/";
     }
-    $GLOBALS['upload_url'] = $Backend_URI;
+    //$Upload_URI="http://192.168.1.88:8081/uploads/user/photo/";
+    //$BaseURI="http://192.168.1.88:8081/";
+    //$FrontendBaseURI="http://192.168.1.88:8080/";
+    
+    $GLOBALS['upload_url'] = $Upload_URI;
     $GLOBALS['base_uri'] = $BaseURI;
     $GLOBALS['frontend_base_uri'] = $FrontendBaseURI;
     /********************** Global Configuration Settings **********************/

@@ -8,6 +8,7 @@ use frontend\modules\finance\components\models\CollectionSearch;
 use common\models\finance\Paymentitem;
 use frontend\modules\finance\components\billing\BillingPayment;
 use frontend\modules\finance\components\models\Ext_Receipt as Receipt;
+use common\models\finance\Receipt as mReceipt;
 use common\models\finance\ReceiptSearch;
 use common\models\finance\Orseries;
 use common\models\finance\Collection;
@@ -23,6 +24,7 @@ use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
 use yii\db\Query;
 use frontend\modules\finance\components\_class\OfficialReceipt;
+use common\models\finance\SoaReceipt;
 
 class CashierController extends \yii\web\Controller
 {
@@ -45,38 +47,55 @@ class CashierController extends \yii\web\Controller
     }
     public function actionCreateBillingReceipt($id){
         $model = new BillingPayment();
-        $post=Yii::$app->request->post();
-        if ($post) {// Saving
-            //echo "<pre>";
-            //var_dump($post);
-            //echo "</pre>";
-            //exit;
-            $Billing=$post['BillingPayment'];
-            $Receipt=new Receipt();
-            $Receipt->rstl_id=$GLOBALS['rstl_id'];
-            $Receipt->terminal_id=$GLOBALS['terminal_id'];
+        $nPost=Yii::$app->request->post();
+        if ($nPost) {// Saving
+            $Billing=(object)$nPost['BillingPayment'];
+            $post=(object)$nPost;
+            $Receipt=new mReceipt();
+            $Receipt->rstl_id=(int)$GLOBALS['rstl_id'];
+            $Receipt->terminal_id=(int)$GLOBALS['terminal_id'];
             $Receipt->collection_id=NULL;
-            $Receipt->deposit_type_id=$Billing['deposit_type_id'];
-            $Receipt->or_series_id=$Billing['or_series_id'];
-            $Receipt->or_number=$Billing['or_number'];
-            $Receipt->receiptDate=$Billing['receiptDate'];
-            $Receipt->payment_mode_id=$Billing['payment_mode_id'];
-            $Receipt->payor=$Billing['payor'];
-            $Receipt->collectiontype_id=$Billing['collectiontype_id'];
-            $Receipt->total=$post['amount'];
+            $Receipt->deposit_type_id=(int)$Billing->deposit_type_id;
+            $Receipt->or_series_id=(int)$Billing->or_series_id;
+            $Receipt->or_number=$Billing->or_number;
+            $Receipt->receiptDate=$Billing->receiptDate;
+            $Receipt->payment_mode_id=(int)$Billing->payment_mode_id;
+            $Receipt->payor=$Billing->payor;
+            $Receipt->collectiontype_id=(int)$Billing->collectiontype_id;
+            $Receipt->total=(float)$Billing->TotalSoa;
             $Receipt->cancelled=0;
             $Receipt->deposit_id=NULL;
             //Save
-            $success=$Receipt->save();
-            if($success){
-                $jsonchecks= json_decode($post['check_details']);
-                foreach ($jsonchecks as $jsoncheck){
-
+            if($Receipt->save()){
+                $jsonchecks= json_decode($nPost['check_details'],true);
+                foreach ($jsonchecks as $key => $value){
+                    if($value['Bank']!=""){
+                        $Check=new Check();
+                        $Check->bank=$value['Bank'];
+                        $Check->receipt_id=$Receipt->receipt_id;
+                        $Check->checknumber=$value['Check #'];
+                        $Check->checkdate=$value['Check Date'];
+                        $chkAmount=str_replace(",","",$value['Amount']);
+                        $Check->amount=$chkAmount;
+                        $Check->save();
+                    }
                 }
+                $SoaReceipt=new SoaReceipt();
+                $SoaReceipt->soa_id=$Billing->soa_id;
+                $SoaReceipt->receipt_id=$Receipt->receipt_id;
+                $SoaReceipt->save();
+                //Update SOA
+                $SoaModel= Soa::find()->where(['soa_id'=>$Billing->soa_id])->one();
+                $SoaModel->payment_amount=$Billing->total;
+                $TotalAmount=$SoaModel->total_amount;
+                $SoaModel->total_amount=$TotalAmount-$Billing->total;
+                $SoaModel->active=0; //Set to Inactive
+                $SoaModel->save();
                 Yii::$app->session->setFlash('success', 'Billing Statement Successfully Paid!');
             }else{
                 Yii::$app->session->setFlash('danger', 'Billing Statement Payment Unsuccessful!'); 
             }
+            $this->redirect("/finance/cashier/billing/");
         }else{
             $model->receiptDate=date('Y-m-d');
             $model->payment_mode_id=1;
