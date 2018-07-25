@@ -3,7 +3,7 @@
 namespace common\models\finance;
 
 use Yii;
-
+use frontend\modules\finance\components\models\Ext_Request;
 /**
  * This is the model class for table "tbl_paymentitem".
  *
@@ -47,7 +47,8 @@ class Paymentitem extends \yii\db\ActiveRecord
         return [
             [['rstl_id', 'request_id', 'orderofpayment_id', 'details', 'amount','request_type_id'], 'required'],
             [['rstl_id', 'request_id','receipt_id', 'request_type_id', 'orderofpayment_id', 'cancelled', 'status'], 'integer'],
-            [['amount'], 'number'],
+            [['amount'], 'number','max' =>$this->maxValue()],
+           // [['amount'], 'maxValueValidation'],
             [['details'], 'string', 'max' => 50],
             [['orderofpayment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Op::className(), 'targetAttribute' => ['orderofpayment_id' => 'orderofpayment_id']],
             [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::className(), 'targetAttribute' => ['receipt_id' => 'receipt_id']],
@@ -88,4 +89,26 @@ class Paymentitem extends \yii\db\ActiveRecord
        return $this->hasOne(Receipt::className(), ['receipt_id' => 'receipt_id']);
    }
    
+   /*public function maxValueValidation()
+    {
+        if($this->amount > $this->maxValue())
+        {
+             $this->addError('amount','Amount is too big. Maximum value allowed is '.$this->maxValue());
+             //$this->addError($attribute, 'The country must be either "USA" or "Indonesia".');
+        }
+    }*/
+
+    public function maxValue()
+    {
+        if($this->request_id){
+            $req_id=$this->request_id;
+            $request= Ext_Request::find()->where(['request_id' => $req_id])->one();
+            $total=$request['total'];
+            $balance=$request->getBalance($req_id,$total);
+            return $balance;
+        }
+        
+    }
+    
+    
 }
