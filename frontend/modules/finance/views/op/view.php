@@ -133,7 +133,7 @@ if($model->created_receipt == 0){
                     [
                         'label'=>'Collection Type',
                         'format'=>'raw',
-                        'value'=>$model->collectiontype->natureofcollection,
+                        'value'=>$model->collectiontype ? $model->collectiontype->natureofcollection : "",
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
@@ -191,9 +191,15 @@ if($model->created_receipt == 0){
                     'class' => 'kartik\grid\EditableColumn',
                     'refreshGrid'=>true,
                     'attribute' => 'amount', 
-//                    'readonly' => function($model, $key, $index, $widget) {
-//                        return (!$model->status); // do not allow editing of inactive records
-//                     },
+                    'readonly' => function($model, $key, $index, $widget) {
+                        if($model->status == 2){
+                            return true;
+                        }
+                        else{
+                            return false;
+                        }
+                         // do not allow editing of inactive records
+                     },
                     'editableOptions' => [
                         'header' => 'Amount', 
                         'size'=>'s',
