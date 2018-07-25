@@ -162,12 +162,11 @@ if($model->created_receipt == 0){
                         'hAlign'=>'left',
                   ],
                   [
-                    //'attribute'=>'request_datetime',
-                    'label'=>'Balance',
+                    
+                    'label'=>'',
                     'format'=>'raw',
-                    'value'=>$bal,
+                    'value'=>"",
                     'valueColOptions'=>['style'=>'width:30%'], 
-                    'format' => ['decimal', 2],
                     'displayOnly'=>true
                   ],
               ],
@@ -195,6 +194,7 @@ if($model->created_receipt == 0){
                 [
                     'class' => 'kartik\grid\EditableColumn',
                     'refreshGrid'=>true,
+                    //'asPopover' => true,
                     'attribute' => 'amount', 
                     'readonly' => function($model, $key, $index, $widget) {
                         if($model->status == 2){
@@ -208,11 +208,11 @@ if($model->created_receipt == 0){
                     'editableOptions' => [
                         'header' => 'Amount', 
                         'size'=>'s',
-                       // 'hAlign' => 'center',
                         'inputType' => \kartik\editable\Editable::INPUT_TEXT,
                         'options' => [
-                            'pluginOptions' => ['min' => 0, 'max' => 5000]
+                            'pluginOptions' => ['min' => 0]
                         ],
+                        'placement'  => 'left',
                         'formOptions'=>['action' => ['/finance/op/updateamount']],
                     ],
                     'hAlign' => 'left', 
@@ -222,37 +222,6 @@ if($model->created_receipt == 0){
                     'pageSummary' => true
                 ],
                 
-                /*
-                [
-                    'attribute'=>'amount',
-                    'enableSorting' => false,
-                    'contentOptions' => [
-                       // 'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
-                    ],
-                    'hAlign' => 'right', 
-                    'vAlign' => 'middle',
-                    'width' => '20%',
-                    'format' => ['decimal', 2],
-                    'pageSummary' => true
-                ], 
-                [
-                    'attribute'=>'status',
-                    'format'=>'raw',
-                    'enableSorting' => false,
-                    'contentOptions' => [
-                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
-                    ],
-                    'value'=>function($model){
-                    $paymentitem= PaymentStatus::find()->where(['payment_status_id'=>$model->status])->one();
-                    if($paymentitem){
-                       return "<button class='btn ".$paymentitem['class']." btn-block'><span class=".$paymentitem['icon']."></span>".$paymentitem['payment_status']."</button>"; 
-                    }else{
-                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
-                    }
-                   //
-                     },   
-                    'width' => '10%', 
-                ],*/
                
               ];
               
