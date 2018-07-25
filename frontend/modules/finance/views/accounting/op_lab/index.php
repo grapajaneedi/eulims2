@@ -34,7 +34,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     
   <div class="table-responsive">
     <?php 
-    $Buttontemplate='{view}{update}'; 
+    $Buttontemplate='{view}'; 
     ?>
       
     <?= GridView::widget([
