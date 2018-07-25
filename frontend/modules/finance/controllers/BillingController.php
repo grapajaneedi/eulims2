@@ -16,7 +16,7 @@ class BillingController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        $curl = new Curl();
+        //$curl = new Curl();
 
         //get http://example.com/
         //$response = $curl->get('https://www.google.com/search?source=hp&ei=UI5WW9PFN4fOvgTYm5LIAQ&q=json+return+&oq=json+return+&gs_l=psy-ab.3..0l10.607.6286.0.6695.14.12.1.1.1.0.380.1657.0j11j0j1.12.0....0...1c.1.64.psy-ab..0.14.1674...0i131k1.0.AOcL5k6pWhw');
