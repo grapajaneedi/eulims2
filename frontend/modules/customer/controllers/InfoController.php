@@ -8,6 +8,8 @@ use common\models\lab\CustomerSearch;
 use common\models\address\Province;
 use common\models\address\MunicipalityCity;
 use common\models\address\Barangay;
+use common\models\finance\CustomertransactionSearch;
+use common\models\lab\RequestSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -80,13 +82,24 @@ class InfoController extends Controller
      */
     public function actionView($id)
     {
+
+        $searchTransacModel = new CustomertransactionSearch();
+        $transactions = $searchTransacModel->searchbycustomerid($id);
+
+        $searchRequestModel = new RequestSearch();
+        $reqtransactions = $searchRequestModel->search(['customer_id'=>$id]);
+
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('view', [
                 'model' => $this->findModel($id),
+                'transactions'=>$transactions,
+                'reqtransactions'=>$reqtransactions
             ]);
         }else{
             return $this->render('view', [
                 'model' => $this->findModel($id),
+                'transactions'=>$transactions,
+                'reqtransactions'=>$reqtransactions
             ]);
         }
     }
