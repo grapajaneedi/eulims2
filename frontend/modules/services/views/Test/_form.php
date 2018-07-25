@@ -49,7 +49,9 @@ $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
                                 'pluginOptions' => [
                                 'allowClear' => true
                                 ],
-                        ])->label("Lab"); ?>
+                        ])->label("Lab"); 
+                        //DO THE ADD TEST IN 
+                        ?>
             </div>
 
             <div class="col-md-6">    
