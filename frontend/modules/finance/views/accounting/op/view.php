@@ -18,6 +18,11 @@ $totalAmount=$model->total_amount ? $model->total_amount : 0.00;
 $subTotal=$model->collection ? $model->collection->sub_total : 0.00;
 $bal=$totalAmount - $subTotal;
 //}
+$footer="<div class='alert alert-info' style='background: #d9edf7 !important;margin-top: 1px !important;width:550px;'>
+                 <a href='#' class='close' data-dismiss='alert'>&times;</a>
+                 <p class='note' style='color:#265e8d'> <strong>For partial payment, please click on each amount and modify accordingly.</strong><br />
+                 <strong>Note!</strong> Only amount with _ _ _ can be modified. </p>
+             </div>";
 ?>
 <div class="orderofpayment-view">
 
@@ -91,33 +96,7 @@ $bal=$totalAmount - $subTotal;
                   ],
               ],
            ],
-            
-            [
-                'group'=>true,
-                'label'=>'Payment Details',
-                'rowOptions'=>['class'=>'info']
-            ],
-            [
-                'columns' => [
-                    [
-                        'label'=>'Collection',
-                        'format'=>'raw',
-                         'format' => ['decimal', 2],
-                        'value' => $subTotal,
-                        'valueColOptions'=>['style'=>'width:30%'], 
-                        'displayOnly'=>true
-                    ],
-                    [
-                        'label'=>'Balance',
-                        'format'=>'raw',
-                        'value' => $bal,
-                        'format' => ['decimal', 2],
-                        'valueColOptions'=>['style'=>'width:30%'], 
-                        'displayOnly'=>true
-                    ],
-                ],
-                    
-            ],
+           
         ],
     ]) ?>
    </div>
@@ -134,7 +113,7 @@ $bal=$totalAmount - $subTotal;
                     //'hAlign' => 'right',
                     'pageSummary' => '<span style="float:right;">Total</span>',
                 ],
-                [
+                /*[
                     'attribute'=>'amount',
                     'enableSorting' => false,
                     'contentOptions' => [
@@ -143,6 +122,35 @@ $bal=$totalAmount - $subTotal;
                     'hAlign' => 'right', 
                     'vAlign' => 'middle',
                     'width' => '7%',
+                    'format' => ['decimal', 2],
+                    'pageSummary' => true
+                ],*/
+                 [
+                    'class' => 'kartik\grid\EditableColumn',
+                    'refreshGrid'=>true,
+                    'attribute' => 'amount', 
+                    'readonly' => function($model, $key, $index, $widget) {
+                        if($model->status == 2){
+                            return true;
+                        }
+                        else{
+                            return false;
+                        }
+                         // do not allow editing of inactive records
+                     },
+                    'editableOptions' => [
+                        'header' => 'Amount', 
+                        'size'=>'s',
+                       // 'hAlign' => 'center',
+                        'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+                        'options' => [
+                            'pluginOptions' => ['min' => 0, 'max' => 5000]
+                        ],
+                        'formOptions'=>['action' => ['/finance/accounting/updateamount']],
+                    ],
+                    'hAlign' => 'left', 
+                    'vAlign' => 'middle',
+                    'width' => '25%',
                     'format' => ['decimal', 2],
                     'pageSummary' => true
                 ],

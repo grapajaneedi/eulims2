@@ -9,7 +9,7 @@ use common\models\finance\Collection;
 
 $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
-$this->params['breadcrumbs'][] = ['label' => 'Accouting', 'url' => ['/finance/accounting']];
+$this->params['breadcrumbs'][] = ['label' => 'Accounting', 'url' => ['/finance/accounting']];
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['/finance/accounting/op-lab']];
 $this->params['breadcrumbs'][] = 'View';
 $totalAmount=$model->total_amount ? $model->total_amount : 0.00;
@@ -96,7 +96,7 @@ $footer="<div class='alert alert-info' style='background: #d9edf7 !important;mar
               ],
            ],
             
-            [
+            /*[
                 'group'=>true,
                 'label'=>'Payment Details',
                 'rowOptions'=>['class'=>'info']
@@ -121,7 +121,7 @@ $footer="<div class='alert alert-info' style='background: #d9edf7 !important;mar
                     ],
                 ],
                     
-            ],
+            ], */
         ],
     ]) ?>
    </div>
