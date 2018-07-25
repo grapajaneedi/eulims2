@@ -217,7 +217,7 @@ class AnalysisController extends Controller
                     $analysis->fee = $post['Analysis']['fee'];
                     $analysis->testname = $modeltest->testname;
                     $analysis->references = $post['Analysis']['references'];
-                    $analysis->quantity = $post['Analysis']['quantity'];
+                    $analysis->quantity = 1;
                     $analysis->sample_code = $post['Analysis']['sample_code'];
                     $analysis->date_analysis = date("Y-m-d h:i:s");
                     $analysis->save(); 
@@ -235,8 +235,8 @@ class AnalysisController extends Controller
                 $model->request_id = $request_id;
                 $model->testname = $GLOBALS['rstl_id'];
                 $model->cancelled = $GLOBALS['rstl_id'];
-                 $model->sample_id = $GLOBALS['rstl_id'];
-              $model->sample_code = $GLOBALS['rstl_id'];
+                $model->sample_id = $GLOBALS['rstl_id'];
+                $model->sample_code = $GLOBALS['rstl_id'];
                 $model->date_analysis = date("Y-m-d h:i:s");;
 
             return $this->renderAjax('_form', [
