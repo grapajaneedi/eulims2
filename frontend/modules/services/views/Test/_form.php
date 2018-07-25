@@ -45,7 +45,7 @@ $LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
                 <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
                                 'data' => $LabList,
                                 'language' => 'en',
-                                'options' => ['placeholder' => 'Select Lab'],
+                                'options' => ['placeholder' => 'Select Lab', 'id'=>'sample-testcategory_id'],
                                 'pluginOptions' => [
                                 'allowClear' => true
                                 ],

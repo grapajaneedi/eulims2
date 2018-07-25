@@ -30,7 +30,7 @@ $js=<<<SCRIPT
       
       $("#sample_ids").val(keylist);
       $("#sample_ids").val(keylist);
-      $("#sample-testcategory_id").prop('disabled', false);
+     // $("#sample-testcategory_id").prop('disabled', false);
       
    });    
    $(".select-on-check-all").change(function(){
@@ -111,7 +111,7 @@ $this->registerJs($js);
         <div class="col-sm-6">
         <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
                         'data' => $testcategory,
-                        'disabled'=>true,
+                       // 'disabled'=>true,
                         'theme' => Select2::THEME_KRAJEE,
                         'options' => ['id'=>'sample-testcategory_id'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test category'],
@@ -162,31 +162,11 @@ $this->registerJs($js);
               <?= $form->field($model, 'references')->textInput(['readonly' => true]) ?>
         </div>
            <div class="col-sm-6">
-           <?= $form->field($model, 'quantity')->textInput(['readonly' => true]) ?>
+           <?= $form->field($model, 'fee')->textInput(['readonly' => true]) ?>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-6">
-              <?= $form->field($model, 'fee')->textInput(['readonly' => true]) ?>
-        </div>
-           <div class="col-sm-6">
-
-           <label class="control-label">Analysis Date</label>
-                <?php echo DateTimePicker::widget([
-                'model' => $model,
-                'attribute' => 'date_analysis',
-                'readonly'=>true,
-                'options' => ['placeholder' => 'Enter Date'],
-                    'value'=>function($model){
-                        return date("m/d/Y h:i:s P",$model->date_analysis);
-                    },
-                'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd h:i:s'
-                ],
-                ]); ?>
-        </div>
-    </div>
+   
 
 
     <div class="row" style="float: right;padding-right: 30px">

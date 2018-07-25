@@ -135,10 +135,10 @@ class FeeController extends Controller
                 $analysis->testcategory_id = 1;
                 $analysis->is_package = 0;
                 $analysis->method = "-";
-                $analysis->fee = $post['xxx'];
+                $analysis->fee = $post['Fee']['unit_cost'];
                 $analysis->references = "-";
                 $analysis->testname = $modelfee->name;
-                $analysis->quantity = $post['qty'];
+                $analysis->quantity = 1;
                 $analysis->sample_code = "-";
                 $analysis->date_analysis = '2018-06-14 7:35:0';   
                 $analysis->save();
