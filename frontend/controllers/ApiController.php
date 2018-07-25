@@ -34,19 +34,14 @@ class ApiController extends ActiveController
         return $actions;
     }
 
-    public function actionSync_customer(){
-
-
+    public function actionSync_customer(){ 
         $myvar = Json::decode($_POST['data']);
-        $ctr = 0; 
-        // var_dump($myvar); exit();
+        $ctr = 0;
             foreach ($myvar as $var) {
-                  // var_dump($var); exit();
 
                 $newCustomer = new Customer();
                 $newCustomer->rstl_id=$var['rstl_id'];
-                $newCustomer->customer_code=$var['customer_code'];
-                $newCustomer->customer_name=$var['customer_name'];
+                $newCustomer->customer_name=$var['customerName'];
                 $newCustomer->classification_id=$var['classification_id'];
                 $newCustomer->latitude=$var['latitude'];
                 $newCustomer->longitude=$var['longitude'];
@@ -56,11 +51,13 @@ class ApiController extends ActiveController
                 $newCustomer->tel=$var['tel'];
                 $newCustomer->fax=$var['fax'];
                 $newCustomer->email=$var['email'];
-                $newCustomer->customer_type_id=$var['customer_type_id'];
-                $newCustomer->business_nature_id=$var['business_nature_id'];
-                $newCustomer->industrytype_id=$var['industrytype_id'];
-                $newCustomer->created_at=$var['created_at'];
-                $newCustomer->customer_old_id=$var['customer_old_id'];
+                $newCustomer->customer_type_id=$var['typeId'];
+                $newCustomer->business_nature_id=$var['natureId'];
+                $newCustomer->industrytype_id=$var['industryId'];
+                $newCustomer->created_at=strtotime($var['created']);
+                $newCustomer->customer_old_id=$var['id'];
+                $newCustomer->Oldcolumn_municipalitycity_id=$var['municipalitycity_id'];
+                $newCustomer->Oldcolumn_district=$var['district'];
                 if($newCustomer->save()){
                     $ctr++;
                 }
