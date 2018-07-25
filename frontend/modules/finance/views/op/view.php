@@ -17,7 +17,11 @@ $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['inde
 $bal=($model->total_amount) -($model->collection->sub_total);
 //}
 $sweetalert = new Functions();
-
+$footer="<div class='alert alert-info' style='background: #d9edf7 !important;margin-top: 1px !important;width:550px;'>
+                 <a href='#' class='close' data-dismiss='alert'>&times;</a>
+                 <p class='note' style='color:#265e8d'> <strong>For partial payment, please click on each amount and modify accordingly.</strong><br />
+                 <strong>Note!</strong> Only amount with _ _ _ can be modified. </p>
+             </div>";
 if($model->collection->payment_status_id==0){
     $CancelButton='';
     $CancelClass='request-cancelled';
@@ -159,10 +163,11 @@ if($model->created_receipt == 0){
                   ],
                   [
                     //'attribute'=>'request_datetime',
-                    'label'=>'',
+                    'label'=>'Balance',
                     'format'=>'raw',
-                    'value'=>"",
+                    'value'=>$bal,
                     'valueColOptions'=>['style'=>'width:30%'], 
+                    'format' => ['decimal', 2],
                     'displayOnly'=>true
                   ],
               ],
@@ -268,11 +273,15 @@ if($model->created_receipt == 0){
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
                     'type'=>'primary',
+                    'before'=>$footer,
                 ],
                 'columns' => $gridColumns,
                
             ]);
              ?>
+            
+             
         </div>
+       
     </div>
 </div>

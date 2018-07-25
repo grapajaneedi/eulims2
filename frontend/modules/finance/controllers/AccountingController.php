@@ -498,4 +498,27 @@ class AccountingController extends Controller
         }
         echo Json::encode(['output' => '', 'selected'=>'']);
     }
+    
+    public function actionUpdateamount(){
+        if(Yii::$app->request->post('hasEditable'))
+        {
+            $id= Yii::$app->request->post('editableKey');
+            $paymentitem= Paymentitem::findOne($id);
+            $op_id=$paymentitem->orderofpayment_id;
+            $out= Json::encode(['output'=> '','message'=> '']);
+            $post=[];
+            $posted=current($_POST['Paymentitem']);
+            $post['Paymentitem']=$posted;
+            if($paymentitem->load($post))
+            {
+                $paymentitem->save();
+            }
+            $sum = Paymentitem::find()->where(['orderofpayment_id' => $op_id])
+                 ->andWhere(['status' => 1])
+                 ->sum('amount');
+            $this->updateTotalOP($op_id, $sum);
+            echo $out;
+            return;
+        }
+    }
 }

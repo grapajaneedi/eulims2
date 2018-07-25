@@ -32,7 +32,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     </p>
   <div class="table-responsive">
     <?php 
-    $Buttontemplate='{view}'; 
+    $Buttontemplate='{view}{update}'; 
     ?>
       
     <?= GridView::widget([
@@ -146,6 +146,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                     'view'=>function ($url, $model) {
                           return Html::a('View', ['/finance/cashier/view-op?id='.$model->orderofpayment_id], ['target'=>'_blank']);
                     },
+                     'update'=>"",       
                   ],
             ],
 
