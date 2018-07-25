@@ -68,7 +68,7 @@ class InfoController extends Controller
                  ])
              ->post($GLOBALS['api_url']."sync_customer");
 
-             echo $response ." number/s of customer is added"; exit();
+             echo $response ." number/s of customer is added <br/>";
         }
     }
 
@@ -101,8 +101,8 @@ class InfoController extends Controller
         $model = new Customer();
         $model->rstl_id=$GLOBALS['rstl_id'];
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->customer_code=$model->rstl_id."-".$model->customer_id;
-            $model->save();
+            // $model->customer_code=$model->rstl_id."-".$model->customer_id;
+            // $model->save();
             $session = Yii::$app->session;
             $session->set('savepopup',"executed");
             // return $this->redirect(['view', 'id' => $model->customer_id]);

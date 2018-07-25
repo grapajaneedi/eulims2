@@ -23,6 +23,9 @@ use Yii;
  * @property int $industrytype_id
  * @property int $classification_id 
  * @property int $created_at
+ * @property int $customer_old_id 
+ * @property int $Oldcolumn_municipalitycity_id 
+ * @property int $Oldcolumn_district
  *
  * @property Customertype $customerType
  * @property Businessnature $businessNature
@@ -109,6 +112,9 @@ class Customer extends \yii\db\ActiveRecord
             'industrytype_id' => 'Industrytype',
             'classification_id' => 'Classification',
             'created_at' => 'Created At',
+            'customer_old_id' => 'Customer Old ID', 
+            'Oldcolumn_municipalitycity_id' => 'Oldcolumn Municipalitycity ID', 
+            'Oldcolumn_district' => 'Oldcolumn District', 
         ];
     }
     /**
@@ -157,5 +163,13 @@ class Customer extends \yii\db\ActiveRecord
          return $address->municipalityCity->province->region->reg_desc.', '.$address->municipalityCity->province->prov_desc.', '.$address->municipalityCity->citymun_desc.', '.$address->brgy_desc;
 
 
+    }
+
+    public function afterSave($insert, $changedAttributes){
+         if ($insert) {
+             $this->customer_code= $this->rstl_id."-".$this->customer_id;
+             $this->save();
+         }
+         parent::afterSave($insert, $changedAttributes);
     }
 }
