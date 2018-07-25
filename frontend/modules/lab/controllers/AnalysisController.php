@@ -61,6 +61,16 @@ class AnalysisController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
+
+     protected function findRequest($requestId)
+     {
+         if (($model = Request::findOne($requestId)) !== null) {
+             return $model;
+         } else {
+             throw new NotFoundHttpException('The requested page does not exist.');
+         }
+     }
+
     public function actionView($id)
     {
         return $this->render('view', [
@@ -157,23 +167,27 @@ class AnalysisController extends Controller
      */
     public function actionCreate($id)
     {
-        $model = new Analysis;
+        //  Yii::$app->session->setFlash('success', 'Janeedi Maganda'); 
+        //  exit;
 
-        $request_id = $_GET['id'];
+        $model = new Analysis; 
         $session = Yii::$app->session;
-
         $searchModel = new AnalysisSearch();
         $samplesearchmodel = new SampleSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $sampleDataProvider = new ActiveDataProvider([
-                'query' => $samplesQuery,
-                // 'pagination' => [
-                //     'pageSize' => 10,
-                // ],        
+                'query' => $samplesQuery,   
         ]);
 
+        $sample_count = $sampleDataProvider->getTotalCount();
+        
+       
+       
+        
+        
+        $request_id = $_GET['id'];
         $request = $this->findRequest($request_id);
         $labId = $request->lab_id;
 
@@ -181,15 +195,21 @@ class AnalysisController extends Controller
 
         $sampletype = [];
         $test = [];
-
-       if ($model->load(Yii::$app->request->post())) {
+        
+        // if ($sample_count==0){  
+        // //    Yii::$app->session->setFlash('success', 'Please add atleast 1 sample'); 
+        // //    return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
+        //     echo "Please add atleast one sample";
+        //     exit;
+      //  } else 
+        
+        if ($model->load(Yii::$app->request->post())) {
            $requestId = (int) Yii::$app->request->get('request_id');
             
-                $sample_ids= $_POST['sample_ids'];
-                $ids = explode(',', $sample_ids);  
-                $post= Yii::$app->request->post();
+                 $sample_ids= $_POST['selection'];
+                 $post= Yii::$app->request->post();
 
-                foreach ($ids as $sample_id){
+                foreach ($sample_ids as $sample_id){
 
                     $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
                     $analysis = new Analysis();
@@ -208,15 +228,14 @@ class AnalysisController extends Controller
                     $analysis->fee = $post['Analysis']['fee'];
                     $analysis->testname = $modeltest->testname;
                     $analysis->references = $post['Analysis']['references'];
-                    $analysis->quantity = $post['Analysis']['quantity'];
+                    $analysis->quantity = 1;
                     $analysis->sample_code = $post['Analysis']['sample_code'];
-                    $analysis->date_analysis = date("Y-m-d h:i:s");;   
-                    $analysis->save(); 
+                    $analysis->date_analysis = date("Y-m-d h:i:s");
+                    $analysis->save();             
                 }     
                 Yii::$app->session->setFlash('success', 'Analysis Successfully Created'); 
                 return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
-       } 
-        if (Yii::$app->request->isAjax) {
+       } else if (Yii::$app->request->isAjax) {
 
             //please check on this
                 $model->rstl_id = $GLOBALS['rstl_id'];
@@ -224,8 +243,8 @@ class AnalysisController extends Controller
                 $model->request_id = $request_id;
                 $model->testname = $GLOBALS['rstl_id'];
                 $model->cancelled = $GLOBALS['rstl_id'];
-                 $model->sample_id = $GLOBALS['rstl_id'];
-              $model->sample_code = $GLOBALS['rstl_id'];
+                $model->sample_id = $GLOBALS['rstl_id'];
+                $model->sample_code = $GLOBALS['rstl_id'];
                 $model->date_analysis = date("Y-m-d h:i:s");;
 
             return $this->renderAjax('_form', [
@@ -237,17 +256,6 @@ class AnalysisController extends Controller
                 'testcategory' => $testcategory,
                 'test' => $test,
                 'sampletype'=>$sampletype
-            ]);
-        }else{
-            return $this->render('_form', [
-                'model' => $model,
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-                'samplesearchmodel'=>$samplesearchmodel,
-                'sampleDataProvider' => $sampleDataProvider,
-                'testcategory' => $testcategory,
-                'sampletype' => $sampletype,
-                'test' => $test,
             ]);
         }
      
@@ -261,14 +269,7 @@ class AnalysisController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
 
-     protected function findRequest($requestId)
-     {
-         if (($model = Request::findOne($requestId)) !== null) {
-             return $model;
-         } else {
-             throw new NotFoundHttpException('The requested page does not exist.');
-         }
-     }
+    
 
      protected function listTestcategory($labId)
      {
@@ -289,7 +290,7 @@ class AnalysisController extends Controller
 
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $analysisquery = Analysis::find()->where(['analysis_id' => $id])->one();
-        $requestquery = Analysis::find()->where([ 'request_id'=> $analysisquery->request_id])->one();
+        $requestquery = Request::find()->where([ 'request_id'=> $analysisquery->request_id])->one();
 
             $sampleDataProvider = new ActiveDataProvider([
                 'query' => $samplesQuery,
@@ -298,15 +299,46 @@ class AnalysisController extends Controller
                         ],        
                 ]);
         
-                 $testcategory = $this->listTestcategory(1);
-        
+                $url = \Yii::$app->request->url;
+                $rid = substr($url, 24);
+                $labId =  $requestquery->lab_id;
+
+                $testcategory = $this->listTestcategory($labId);
+
                 $sampletype = [];
                 $test = [];
 
-
-            if ($model->load(Yii::$app->request->post())) {
-                  
+            if ($model->load(Yii::$app->request->post())) {            
                     if($model->save(false)){
+                        $post= Yii::$app->request->post();
+                        $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
+                        $sample_id = $post['Analysis']['sample_id'];
+                        $test_id = $post['Analysis']['test_id'];
+                        $sample_type_id = (int) $post['Analysis']['sample_type_id'];
+                        $test_category = (int) $post['Analysis']['testcategory_id'];
+                        $method = $post['Analysis']['method'];
+                        $fee = $post['Analysis']['fee'];;
+                        $test = $modeltest->testname;
+                        $references = $post['Analysis']['references'];
+                        $sample_code = $post['Analysis']['sample_code'];
+
+                        $Connection= Yii::$app->labdb;
+                        $sql="UPDATE `tbl_analysis` SET 
+                        -- `sample_id`='$sample_id'
+                        -- `request_id`='$analysisquery->request_id'
+                        -- `test_id`='$test_id'
+                        -- `sample_type_id`='$sample_type_id'
+                        -- `testcategory_id`='$test_category'
+                        -- `method`='$method'
+                        -- `fee`='$fee'
+                         `testname`='$modeltest->testname'
+                        -- `references`='$references'
+                        -- `sample_code`='$sample_code'
+                         WHERE `analysis_id`=".$analysisquery->analysis_id;
+                        $Command=$Connection->createCommand($sql);
+                        $Command->execute();
+                
+
                         Yii::$app->session->setFlash('success', 'Analysis Successfully Updated'); 
                         return $this->redirect(['/lab/request/view', 'id' =>$requestquery->request_id]);
         

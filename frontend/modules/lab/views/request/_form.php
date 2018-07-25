@@ -59,24 +59,14 @@ SCRIPT;
     <?= $form->field($model, 'total')->hiddenInput(['maxlength' => true])->label(false) ?>
 <div class="row">
     <div class="col-md-6">
-    <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
+    <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(RequestType::find()->all(),'request_type_id','request_type'),
         'language' => 'en',
-        'options' => ['placeholder' => 'Select Lab','disabled'=>$disabled],
+        'options' => ['placeholder' => 'Select Purpose','disabled'=>$disabled],
         'pluginOptions' => [
             'allowClear' => true
         ],
-        'pluginEvents'=>[
-            "change" => "function() { 
-                if(this.value==3){//Metrology
-                   $('#div_met').show();
-                }else{
-                   $('#div_met').hide();
-                }
-
-            }",
-        ]
-    ])->label('Laboratory'); ?>
+    ])->label('Request Type'); ?>
     </div>
     <div class="col-md-6">
     <label class="control-label">Request Date</label>
@@ -320,19 +310,29 @@ SCRIPT;
     ])->label('Purpose'); ?>
     </div>
     <div class="col-md-6">
-    <?= $form->field($model, 'discount')->textInput(['maxlength' => true,'readonly'=>true,'style'=>'background-color: '.$Color]) ?>
+    <?= $form->field($model, 'discount')->textInput(['maxlength' => true,'readonly'=>true,'style'=>'background-color: '.$Color])->label('Discount(%)') ?>
     </div>
 </div>
 <div class="row">
     <div class="col-md-6">
-        <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(RequestType::find()->all(),'request_type_id','request_type'),
+    <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
         'language' => 'en',
-        'options' => ['placeholder' => 'Select Purpose','disabled'=>$disabled],
+        'options' => ['placeholder' => 'Select Lab','disabled'=>$disabled],
         'pluginOptions' => [
             'allowClear' => true
         ],
-    ])->label('Request Type'); ?>
+        'pluginEvents'=>[
+            "change" => "function() { 
+                if(this.value==3){//Metrology
+                   $('#div_met').show();
+                }else{
+                   $('#div_met').hide();
+                }
+
+            }",
+        ]
+    ])->label('Laboratory'); ?>
     </div>
     <div class="col-md-6">
     <label class="control-label">Report Due</label>
@@ -364,8 +364,7 @@ SCRIPT;
     <?= $form->field($model, 'receivedBy')->textInput(['readonly' => true]) ?>
     </div>
 </div>
-<div class="row">
-    <div class="row" style="float: right;padding-right: 30px">
+    <div class="row" style="float: right;padding-right: 15px">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['disabled'=>$disabled,'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         <?php if($model->isNewRecord){ ?>
         <?= Html::resetButton('Reset', ['disabled'=>$disabled,'class' => 'btn btn-danger']) ?>
@@ -373,5 +372,4 @@ SCRIPT;
         <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
     </div>
     <?php ActiveForm::end(); ?>
-</div>
 </div>

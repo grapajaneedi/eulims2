@@ -24,6 +24,9 @@ use common\components\Functions;
 $func= new Functions();
 $this->title = 'Customer Wallet';
 $this->params['breadcrumbs'][] = $this->title;
+
+$Header="Department of Science and Technology<br>";
+$Header.="Customer Wallet";
 ?>
 
 <div class="customerwallet-index">
@@ -39,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'before'=> Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Wallet', ['value'=>'/finance/customerwallet/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Wallet"),'name'=>'Create New Wallet']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
+        'exportConfig'=>$func->exportConfig("Customer Wallet", "customer_wallet", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
              // 'customerwallet_id',
@@ -98,7 +102,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 // 'filter'=>Html::field($searchModel,'balance')->textInput(['type' => 'number'])->label(false)
             ],
              // ['class' => 'yii\grid\ActionColumn'],
-            ['class' => 'yii\grid\ActionColumn',
+            [ 
+                'class' => kartik\grid\ActionColumn::className(),
                 'contentOptions' => ['style' => 'width: 8.7%'],
                 'visible'=> Yii::$app->user->isGuest ? false : true,
                 'template' => '{view}',

@@ -48,6 +48,30 @@ $js=<<<SCRIPT
             krajeeDialog.alert(msg);
         }
     });  
+
+    // $("#btn_add_analysis").click(function(){
+    //     var AnalysisRows=$analysisdataprovider->count;
+    //     var msg='';
+    //     if(AnalysisRows>0){
+    //         $.post('/lab/request/saverequestransaction', {
+    //             request_id: $model->request_id,
+    //             lab_id: $model->lab_id,
+    //             rstl_id: $rstlID,
+    //             year: $Year
+    //         }, function(result){
+    //            if(result){
+    //                location.reload();
+    //            }
+    //         });
+    //     }else{
+    //         if(AnalysisRows<=0){
+    //            msg='Please Add Sample!';
+    //         }else if(SampleRows>0 && AnalysisRows<=0){
+    //            msg='Please Add Sample!';
+    //         }
+    //         krajeeDialog.alert(msg);
+    //     }
+    // });  
        
 SCRIPT;
 $this->registerJs($js);
@@ -427,6 +451,7 @@ if($Request_Ref){
                 [
                     'attribute'=>'quantity',
                     'header'=>'Quantity',
+                    'hAlign'=>'center',
                     'enableSorting' => false,
                     'pageSummary' => '<span style="float:right";>SUBTOTAL<BR>DISCOUNT<BR><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL</B></span>',
                    
@@ -435,6 +460,10 @@ if($Request_Ref){
                     'attribute'=>'fee',
                     'header'=>'Unit Price',
                     'enableSorting' => false,
+                    'hAlign'=>'right',
+                    'value'=>function($model){
+                        return number_format($model->fee,2);
+                    },
                     'contentOptions' => [
                         'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
         
@@ -459,7 +488,6 @@ if($Request_Ref){
                             $subtotal = $row['subtotal'];
                             $discounted = ($subtotal * ($rate/100));
                             $total = $subtotal - $discounted;
-
 
                             //$request_total =  '<input type="hidden" name="request_total" value="'.$total.'">'; //Html::hiddenInput('request_total', $total);
                            
@@ -516,9 +544,9 @@ if($Request_Ref){
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Analysis</h3>',
                     'type'=>'primary',
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => Url::to(['analysis/create','id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'modalBtn'])."   ".
-                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'modalBtn'])." ".
-                    Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => Url::to(['analysis/create','id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_analysis'])."   ".
+                  //  Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_package'])." ".
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'btn_add_fees']),
                    'after'=>false,
                    'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
                 ],

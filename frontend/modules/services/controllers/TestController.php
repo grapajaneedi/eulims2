@@ -93,10 +93,7 @@ class TestController extends Controller
                      }else{
                         Yii::$app->session->setFlash('danger', 'Test not saved'); 
                         return $this->redirect('index');  
-                     }
-
-                      
-                            
+                     }          
                   }   
             
         $testcategory = $this->listTestcategory(1);

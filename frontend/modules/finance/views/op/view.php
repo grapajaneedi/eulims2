@@ -17,7 +17,11 @@ $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['inde
 $bal=($model->total_amount) -($model->collection->sub_total);
 //}
 $sweetalert = new Functions();
-
+$footer="<div class='alert alert-info' style='background: #d9edf7 !important;margin-top: 1px !important;width:550px;'>
+                 <a href='#' class='close' data-dismiss='alert'>&times;</a>
+                 <p class='note' style='color:#265e8d'> <strong>For partial payment, please click on each amount and modify accordingly.</strong><br />
+                 <strong>Note!</strong> Only amount with _ _ _ can be modified. </p>
+             </div>";
 if($model->collection->payment_status_id==0){
     $CancelButton='';
     $CancelClass='request-cancelled';
@@ -133,7 +137,7 @@ if($model->created_receipt == 0){
                     [
                         'label'=>'Collection Type',
                         'format'=>'raw',
-                        'value'=>$model->collectiontype->natureofcollection,
+                        'value'=>$model->collectiontype ? $model->collectiontype->natureofcollection : "",
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
@@ -159,41 +163,16 @@ if($model->created_receipt == 0){
                   ],
                   [
                     //'attribute'=>'request_datetime',
-                    'label'=>' ',
+                    'label'=>'Balance',
                     'format'=>'raw',
-                    'value'=>' ',
+                    'value'=>$bal,
                     'valueColOptions'=>['style'=>'width:30%'], 
+                    'format' => ['decimal', 2],
                     'displayOnly'=>true
                   ],
               ],
            ],
-            
-            [
-                'group'=>true,
-                'label'=>'Payment Details',
-                'rowOptions'=>['class'=>'info']
-            ],
-            [
-                'columns' => [
-                    [
-                        'label'=>'Collection',
-                        'format'=>'raw',
-                         'format' => ['decimal', 2],
-                        'value' => $model->collection->sub_total,
-                        'valueColOptions'=>['style'=>'width:30%'], 
-                        'displayOnly'=>true
-                    ],
-                    [
-                        'label'=>'Balance',
-                        'format'=>'raw',
-                        'value' => $bal,
-                        'format' => ['decimal', 2],
-                        'valueColOptions'=>['style'=>'width:30%'], 
-                        'displayOnly'=>true
-                    ],
-                ],
-                    
-            ],
+          
         ],
     ]) ?>
    </div>
@@ -214,6 +193,37 @@ if($model->created_receipt == 0){
                     'pageSummary' => '<span style="float:right;">Total:</span>',
                 ],
                 [
+                    'class' => 'kartik\grid\EditableColumn',
+                    'refreshGrid'=>true,
+                    'attribute' => 'amount', 
+                    'readonly' => function($model, $key, $index, $widget) {
+                        if($model->status == 2){
+                            return true;
+                        }
+                        else{
+                            return false;
+                        }
+                         // do not allow editing of inactive records
+                     },
+                    'editableOptions' => [
+                        'header' => 'Amount', 
+                        'size'=>'s',
+                       // 'hAlign' => 'center',
+                        'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+                        'options' => [
+                            'pluginOptions' => ['min' => 0, 'max' => 5000]
+                        ],
+                        'formOptions'=>['action' => ['/finance/op/updateamount']],
+                    ],
+                    'hAlign' => 'left', 
+                    'vAlign' => 'middle',
+                    'width' => '25%',
+                    'format' => ['decimal', 2],
+                    'pageSummary' => true
+                ],
+                
+                /*
+                [
                     'attribute'=>'amount',
                     'enableSorting' => false,
                     'contentOptions' => [
@@ -224,7 +234,7 @@ if($model->created_receipt == 0){
                     'width' => '20%',
                     'format' => ['decimal', 2],
                     'pageSummary' => true
-                ],
+                ], 
                 [
                     'attribute'=>'status',
                     'format'=>'raw',
@@ -242,7 +252,7 @@ if($model->created_receipt == 0){
                    //
                      },   
                     'width' => '10%', 
-                ],
+                ],*/
                
               ];
               
@@ -263,11 +273,15 @@ if($model->created_receipt == 0){
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
                     'type'=>'primary',
+                    'before'=>$footer,
                 ],
                 'columns' => $gridColumns,
                
             ]);
              ?>
+            
+             
         </div>
+       
     </div>
 </div>
