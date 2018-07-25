@@ -145,6 +145,7 @@ class OpController extends Controller
                 //-------------------------------------------------------------//
         } 
         $model->order_date=date('Y-m-d');
+        $model->collectiontype_id=1;
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                 'model' => $model,
@@ -419,6 +420,7 @@ class OpController extends Controller
         {
             $id= Yii::$app->request->post('editableKey');
             $paymentitem= Paymentitem::findOne($id);
+            $op_id=$paymentitem->orderofpayment_id;
             $out= Json::encode(['output'=> '','message'=> '']);
             $post=[];
             $posted=current($_POST['Paymentitem']);
@@ -427,6 +429,10 @@ class OpController extends Controller
             {
                 $paymentitem->save();
             }
+            $sum = Paymentitem::find()->where(['orderofpayment_id' => $op_id])
+                 ->andWhere(['status' => 1])
+                 ->sum('amount');
+            $this->updateTotalOP($op_id, $sum);
             echo $out;
             return;
         }
