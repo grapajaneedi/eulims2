@@ -43,6 +43,7 @@ class AccountingController extends Controller
         $Op_Query = Op::find()->where(['>', 'collectiontype_id',2]);
         $dataProvider = new ActiveDataProvider([
                 'query' => $Op_Query,
+                'sort'=> ['defaultOrder' => ['transactionnum'=>SORT_DESC]],
                 'pagination' => [
                     'pageSize' => 10,
                 ],
@@ -58,7 +59,7 @@ class AccountingController extends Controller
         $model =new Op();
         $searchModel = new OpSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $dataProvider->pagination->pageSize=10;
         return $this->render('op_lab/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -106,6 +107,7 @@ class AccountingController extends Controller
                              $paymentitem->details =$request->request_ref_num;
                              $paymentitem->amount = $request->total;
                              $paymentitem->request_type_id =$request->request_type_id;
+                             $paymentitem->status=1;//Unpaid
                              $total_amount+=$request->total;
                              $paymentitem->save(); 
                         }
@@ -117,7 +119,8 @@ class AccountingController extends Controller
                         $collection->rstl_id=$GLOBALS['rstl_id'];
                         $collection->orderofpayment_id=$model->orderofpayment_id;
                         $collection->referral_id=0;
-                        $collection->save(false);
+                        $collection->payment_status_id=1;//Unpaid
+                        $collection->save();
                         //
                         $transaction->commit();
                         $this->postRequest($request_ids);
@@ -176,21 +179,7 @@ class AccountingController extends Controller
                             $model->on_account=0;
                         }
                         $model->save();
-                       //Saving for Paymentitem
-                        
-                        /*for($i=0;$i<$arr_length;$i++){
-                             $request =$this->findRequest($str_request[$i]);
-                             $paymentitem = new Paymentitem();
-                             $paymentitem->rstl_id =$GLOBALS['rstl_id'];
-                             $paymentitem->request_id = $str_request[$i];
-                             $paymentitem->orderofpayment_id = $model->orderofpayment_id;
-                             $paymentitem->details =$request->request_ref_num;
-                             $paymentitem->amount = $request->total;
-                             $paymentitem->request_type_id =$request->request_type_id;
-                             $total_amount+=$request->total;
-                             $paymentitem->save(); 
-                        }*/
-                        //----------------------//
+                       
                         //---Saving for Collection-------
 
                         $collection_name= $this->getCollectionname($model->collectiontype_id);
@@ -198,6 +187,7 @@ class AccountingController extends Controller
                         $collection->rstl_id=$GLOBALS['rstl_id'];
                         $collection->orderofpayment_id=$model->orderofpayment_id;
                         $collection->referral_id=0;
+                        $collection->payment_status_id=1; //Unpaid
                         $collection->save(false);
                         //
                         $transaction->commit();
@@ -264,6 +254,7 @@ class AccountingController extends Controller
                             $paymentitems->orderofpayment_id = $opid;
                             $paymentitems->details=$post['details'];
                             $paymentitems->amount=$post['amount'];
+                            $paymentitems->status=1; //Unpaid
                             $paymentitems->save(false);
                             $total+=$post['amount'];
                         }

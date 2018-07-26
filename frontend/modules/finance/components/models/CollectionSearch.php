@@ -59,6 +59,7 @@ class CollectionSearch extends Op
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['transactionnum'=>SORT_DESC]],
         ]);
 
         $this->load($params);

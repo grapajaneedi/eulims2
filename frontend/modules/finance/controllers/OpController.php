@@ -48,7 +48,7 @@ class OpController extends Controller
         $model = new Op();
         $searchModel = new OpSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
+        $dataProvider->pagination->pageSize=10;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -121,7 +121,7 @@ class OpController extends Controller
                     $total_amount+=$amount;
                     $paymentitem->amount = $amount;
                     $paymentitem->request_type_id =$request->request_type_id;
-                    
+                    $paymentitem->status=1;//Unpaid
                     $paymentitem->save(false); 
                 }
                 //----------------------//
@@ -132,6 +132,7 @@ class OpController extends Controller
                 $collection->rstl_id=$GLOBALS['rstl_id'];
                 $collection->orderofpayment_id=$model->orderofpayment_id;
                 $collection->referral_id=0;
+                $collection->payment_status_id=1;//Unpaid
                 $collection->save(false);
                 //
                 $transaction->commit();
@@ -148,7 +149,6 @@ class OpController extends Controller
                 //-------------------------------------------------------------//
         } 
         $model->order_date=date('Y-m-d');
-        $model->collectiontype_id=1;
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                 'model' => $model,

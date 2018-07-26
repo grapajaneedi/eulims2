@@ -49,10 +49,11 @@ $func= new Functions();
              'autocomplete'=>'off'],
              'type' => DatePicker::TYPE_COMPONENT_APPEND,
                  'pluginOptions' => [
-                     
                      'format' => 'yyyy-mm-dd',
                      'todayHighlight' => true,
                      'autoclose'=>true,   
+                     'startDate' => date('Y-m-d'),
+                     'endDate' => date('Y-m-d')
                  ]
              ]);
              ?>

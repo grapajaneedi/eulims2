@@ -133,22 +133,27 @@ $Header.="Collection";
                'value'=>function($model){
                     $Obj=$model->getCollectionStatus($model->orderofpayment_id);
                     if($Obj){
-                       return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
-                      // return "<button class='badge ".$Obj[0]['class']." legend-font'><span class=".$Obj[0]['icon']."></span> $Obj[0]['status']</span>";
+                       //return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
+                       return "<span class='badge ".$Obj[0]['class']." legend-font' style='width:80px!important;height:20px!important;'>".$Obj[0]['payment_status']."</span>";
                     }else{
-                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
+                       //return "<button class='btn btn-primary btn-block'>Unpaid</button>";
+                        return "<span class='badge btn-primary legend-font' style='width:80px!important;height:20px!important;'>Unpaid</span>";
                     }
                    //
-                }
+                },   
+                'hAlign'=>'center',
                
             ],
             [
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Buttontemplate,
                  'buttons'=>[
-                    'view'=>function ($url, $model) {
+                    /*'view'=>function ($url, $model) {
                           return Html::a('View', ['/finance/cashier/view-op?id='.$model->orderofpayment_id], ['target'=>'_blank']);
-                    },
+                    },*/
+                    'view' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/cashier/view-op?id='.$model->orderofpayment_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Collection")]);
+                    },        
                   ],
             ],
 
