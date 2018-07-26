@@ -80,4 +80,82 @@ $Header.="List of Sample Types";
         ],
         ],
     ]); ?>
+
+
+    
 </div>
+
+<?php 
+    $gridColumn = [
+        [
+            'class' => 'kartik\grid\ExpandRowColumn',
+            'width' => '50px',
+            'value' => function ($model, $key, $index, $column) {
+                return GridView::ROW_COLLAPSED;
+            },
+            'detail' => function ($model, $key, $index, $column) {
+         
+                 return $this->render('view', [
+                     'model'=>$model,
+                 ]);
+            },
+            'headerOptions' => ['class' => 'kartik-sheet-style'],
+            'expandOneOnly' => true
+        ],
+        'sample_type',
+        [
+            'attribute' => 'testcategory_id',
+            'label' => 'Test Category',
+            'value' => function($model) {
+                return $model->testcategory->category_name;
+            },
+            'filterType' => GridView::FILTER_SELECT2,
+            'filter' => $testcategorylist,
+            'filterWidgetOptions' => [
+                'pluginOptions' => ['allowClear' => true],
+            ],
+            'filterInputOptions' => ['placeholder' => 'Test Category', 'testcategory_id' => 'grid-products-search-category_type_id']
+        ],
+          ['class' => 'kartik\grid\ActionColumn',
+          'contentOptions' => ['style' => 'width: 8.7%'],
+        //  'template' => $button,
+        //   'buttons'=>[
+        //       'view'=>function ($url, $model) {
+        //           return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::to(['/services/testcategory/view','id'=>$model->testcategory_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Test Category <font color='Blue'></font>")]);
+        //       },
+        //       'update'=>function ($url, $model) {
+        //           return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/services/testcategory/update','id'=>$model->testcategory_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Test Category<font color='Blue'></font>")]);
+        //       },
+        //   ],
+      ],
+    ]; 
+    ?>
+    <?= 
+    GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+          'columns' => $gridColumn,
+        'pjax' => true,
+        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
+        'panel' => [
+                'type' => GridView::TYPE_PRIMARY,
+                'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+            ],
+       'toolbar' => [
+            '{export}',
+            ExportMenu::widget([
+                'dataProvider' => $dataProvider,
+                'columns' => $gridColumn,
+                'target' => ExportMenu::TARGET_BLANK,
+                'fontAwesome' => true,
+                'dropdownOptions' => [
+                    'label' => 'Full',
+                    'class' => 'btn btn-default',
+                    'itemsBefore' => [
+                        '<li class="dropdown-header">Export All Data</li>',
+                    ],
+                ],
+            ]) ,
+        ],
+    ]);
+    ?>
