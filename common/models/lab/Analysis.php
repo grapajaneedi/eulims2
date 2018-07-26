@@ -33,6 +33,7 @@ use Yii;
  */
 class Analysis extends \yii\db\ActiveRecord
 {
+  
     /**
      * {@inheritdoc}
      */

@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use kartik\widgets\DatePicker;
 use common\models\lab\Tagging;
@@ -13,6 +12,7 @@ use common\models\services\Testcategory;
 use common\components\Functions;
 use yii\data\ActiveDataProvider;
 
+$this->registerJsFile("/js/services/services.js");
 ?>
 
 <div id="divSpinner" style="text-align:center;display:none;font-size:30px">
@@ -89,6 +89,7 @@ setTimeout(function(){
             ],
                     [
                         'header'=>'Test Name',
+                        'hAlign'=>'center',
                         'format' => 'raw',
                         'enableSorting' => false,
                         'value' => function($model) {
@@ -99,6 +100,7 @@ setTimeout(function(){
                     ],
                     [
                         'header'=>'Method',
+                        'hAlign'=>'center',
                         'format' => 'raw',
                         'enableSorting' => false,
                         'value' => function($model) {
@@ -109,6 +111,15 @@ setTimeout(function(){
                     ],
                     [
                         'header'=>'Analyst',
+                        'hAlign'=>'center',
+                        'format' => 'raw',
+                        'enableSorting' => false,
+                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
+                       
+                    ],
+                    [
+                        'header'=>'ISO accredited',
+                        'hAlign'=>'center',
                         'format' => 'raw',
                         'enableSorting' => false,
                         'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
@@ -126,7 +137,11 @@ setTimeout(function(){
                       ],
                     [
                         'header'=>'Remarks',
+                       // 'hAlign'=>'center',
                         'format' => 'raw',
+                        'value' => function($model) {
+                            return "<b>Start Date:<br>End Date:</b>";
+                    },
                         'enableSorting' => false,
                         'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
                 ],

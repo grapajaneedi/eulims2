@@ -88,24 +88,36 @@ $func=new Functions();
         'columns' => [
             [
                 'header'=>'Test Name',
+                'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],              
             ],
             [
                 'header'=>'Method',
+                'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],       
             ],
             [
                 'header'=>'Analyst',
+                'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],   
             ],
             [
+                'header'=>'ISO accredited',
+                'hAlign'=>'center',
+                'format' => 'raw',
+                'enableSorting' => false,
+                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
+               
+            ],
+            [
                 'header'=>'Status',
+                'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
@@ -113,6 +125,7 @@ $func=new Functions();
             ],
             [
                 'header'=>'Remarks',
+                'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],      
