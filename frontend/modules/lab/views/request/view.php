@@ -466,14 +466,12 @@ if($Request_Ref){
                     },
                     'contentOptions' => [
                         'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
-        
                     ],
                     'hAlign' => 'right', 
                     'vAlign' => 'left',
                     'width' => '7%',
                     'format' => 'raw',
                       'pageSummary'=> function (){
-
                             $url = \Yii::$app->request->url;
                             $id = substr($url, 21);
                             $requestquery = Request::find()->where(['request_id' => $id])->one();
@@ -488,8 +486,6 @@ if($Request_Ref){
                             $subtotal = $row['subtotal'];
                             $discounted = ($subtotal * ($rate/100));
                             $total = $subtotal - $discounted;
-
-                            //$request_total =  '<input type="hidden" name="request_total" value="'.$total.'">'; //Html::hiddenInput('request_total', $total);
                            
                             if ($total <= 0){
                                 return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';

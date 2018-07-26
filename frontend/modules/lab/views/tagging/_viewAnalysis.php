@@ -72,7 +72,6 @@ setTimeout(function(){
 
  <?php
             $gridColumns = [
-              //  ['class' => 'yii\grid\SerialColumn'],
               [
                 'class' => 'kartik\grid\ExpandRowColumn',
                 'width' => '50px',
@@ -116,12 +115,15 @@ setTimeout(function(){
                        
                     ],
                     [
-                        'header'=>'Status',
-                        'format' => 'raw',
-                        'enableSorting' => false,
-                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-                       
-                    ],
+                          'header'=>'Status',
+                          'hAlign'=>'center',
+                          'format'=>'raw',
+                          'value' => function($model) {
+                                  return "<button class='btn btn-default btn-block'>Pending</button>";
+                          },
+                          'enableSorting' => false,
+                          'contentOptions' => ['style' => 'width:10px; white-space: normal;'],
+                      ],
                     [
                         'header'=>'Remarks',
                         'format' => 'raw',
@@ -142,19 +144,13 @@ setTimeout(function(){
                         'enablePushState' => false,
                     ]
                 ],
-               // 'responsive'=>true,
                 'striped'=>true,
-               // 'hover'=>true,
                 'panel' => [
                     'heading'=>'<h3 class="panel-title"> <i class="glyphicon glyphicon-file"></i>Analysis</h3>',
                     'type'=>'primary',
                 ],
                 'columns' => $gridColumns,       
             ]);
-
-
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////////
 ?>
 
 
