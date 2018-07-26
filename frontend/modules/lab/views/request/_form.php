@@ -59,34 +59,46 @@ SCRIPT;
     <?= $form->field($model, 'total')->hiddenInput(['maxlength' => true])->label(false) ?>
 <div class="row">
     <div class="col-md-6">
-    <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(RequestType::find()->all(),'request_type_id','request_type'),
+     <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
         'language' => 'en',
-        'options' => ['placeholder' => 'Select Purpose','disabled'=>$disabled],
+        'options' => ['placeholder' => 'Select Laboratory','disabled'=>$disabled],
         'pluginOptions' => [
             'allowClear' => true
         ],
-    ])->label('Request Type'); ?>
+        'pluginEvents'=>[
+            "change" => "function() { 
+                if(this.value==3){//Metrology
+                   $('#div_met').show();
+                }else{
+                   $('#div_met').hide();
+                }
+
+            }",
+        ]
+    ])->label('Laboratory'); ?>
     </div>
     <div class="col-md-6">
-    <label class="control-label">Request Date</label>
-    <?php 
-    echo DateTimePicker::widget([
-	'model' => $model,
-	'attribute' => 'request_datetime',
+    <?= $form->field($model, 'request_datetime')->widget(DateTimePicker::classname(), [
         'readonly'=>true,
-       'disabled'=>$disabled,
+        'disabled' => $disabled,
 	'options' => ['placeholder' => 'Enter Date'],
         'value'=>function($model){
-             return date("m/d/Y h:i:s P",$model->request_datetime);
+             return date("m/d/Y h:i:s P", strtotime($model->request_datetime));
         },
+        'convertFormat' => true,
 	'pluginOptions' => [
             'autoclose' => true,
             'removeButton' => false,
-            'format' => 'yyyy-mm-dd h:i:s'
-	]
-    ]); 
-    ?>
+            'todayHighlight' => true,
+            'todayBtn' => true,
+            'format' => 'php:Y-m-d h:i:s',
+            'showMeridian' => true,
+	],
+        'pluginEvents'=>[
+            "change" => "",
+        ]
+    ])->label('Request Date'); ?>
     </div>
 </div>
 <div class="panel panel-success" id="div_met" style="<?= $PanelStyle ?>">
@@ -254,14 +266,10 @@ SCRIPT;
 </div>
 <div class="row">
     <div class="col-md-6">
-    <?php  
-    echo '<label class="control-label">Mode of Release</label>';
-    echo Select2::widget([
-        'name' => 'modeofreleaseids',
-        'id' => 'modeofreleaseids',
+     <?= $form->field($model, 'modeofreleaseids')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Modeofrelease::find()->all(),'modeofrelease_id','mode'),
-        'value'=>explode(',',$model->modeofrelease_ids),
-        'options' => [
+        'language' => 'en',
+         'options' => [
             'placeholder' => 'Select Mode of Release...',
             'multiple' => true,
             'disabled'=>$disabled
@@ -272,8 +280,7 @@ SCRIPT;
             }
             ",
         ]
-    ]);
-    ?>
+    ])->label('Mode of Release'); ?> 
     </div>
     <div class="col-md-6">
     <?= $form->field($model, 'discount_id')->widget(Select2::classname(), [
@@ -315,30 +322,17 @@ SCRIPT;
 </div>
 <div class="row">
     <div class="col-md-6">
-    <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
+    <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(RequestType::find()->all(),'request_type_id','request_type'),
         'language' => 'en',
-        'options' => ['placeholder' => 'Select Lab','disabled'=>$disabled],
+        'options' => ['placeholder' => 'Select Purpose','disabled'=>$disabled],
         'pluginOptions' => [
             'allowClear' => true
         ],
-        'pluginEvents'=>[
-            "change" => "function() { 
-                if(this.value==3){//Metrology
-                   $('#div_met').show();
-                }else{
-                   $('#div_met').hide();
-                }
-
-            }",
-        ]
-    ])->label('Laboratory'); ?>
+    ])->label('Request Type'); ?>
     </div>
     <div class="col-md-6">
-    <label class="control-label">Report Due</label>
-    <?php echo DatePicker::widget([
-	'model' => $model,
-	'attribute' => 'report_due',
+    <?= $form->field($model, 'report_due')->widget(DatePicker::classname(), [
         'readonly'=>true,
         'disabled' => $disabled,
 	'options' => ['placeholder' => 'Report Due'],
@@ -351,9 +345,9 @@ SCRIPT;
             'format' => 'yyyy-mm-dd'
 	],
         'pluginEvents'=>[
-            "change" => "function() { alert('change'); }",
+            "change" => "",
         ]
-    ]); ?>
+    ])->label('Report Due'); ?>
     </div>
 </div>
 <div class="row">

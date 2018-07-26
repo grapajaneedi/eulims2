@@ -253,7 +253,12 @@ class RequestController extends Controller
     public function actionCreate()
     {
         $model = new Request();
-
+        /*echo "<pre>";
+        print_r(Yii::$app->request->post());
+        echo "</pre>";
+        exit;
+         * 
+         */
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Request Successfully Created!');
             return $this->redirect(['view', 'id' => $model->request_id]); ///lab/request/view?id=1
@@ -274,8 +279,7 @@ class RequestController extends Controller
             $model->posted=0;
             $model->status_id=1;
             $model->request_type_id=1;
-            $model->purpose_id=2;
-            $model->lab_id=1;
+            $model->modeofreleaseids='1';
             if($profile){
                 $model->receivedBy=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
             }else{
