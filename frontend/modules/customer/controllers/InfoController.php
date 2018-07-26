@@ -10,6 +10,7 @@ use common\models\address\MunicipalityCity;
 use common\models\address\Barangay;
 use common\models\finance\CustomertransactionSearch;
 use common\models\lab\RequestSearch;
+use common\models\lab\Request;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -17,7 +18,7 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use linslin\yii2\curl\Curl;
-
+use yii\data\ActiveDataProvider;
 /**
  * InfoController implements the CRUD actions for Customer model.
  */
@@ -86,20 +87,22 @@ class InfoController extends Controller
         $searchTransacModel = new CustomertransactionSearch();
         $transactions = $searchTransacModel->searchbycustomerid($id);
 
-        $searchRequestModel = new RequestSearch();
-        $reqtransactions = $searchRequestModel->search(['customer_id'=>$id]);
+        $myreq = Request::find()->where(['customer_id'=>$id]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $myreq,
+        ]);
 
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('view', [
                 'model' => $this->findModel($id),
                 'transactions'=>$transactions,
-                'reqtransactions'=>$reqtransactions
+                'reqtransactions'=>$dataProvider
             ]);
         }else{
             return $this->render('view', [
                 'model' => $this->findModel($id),
                 'transactions'=>$transactions,
-                'reqtransactions'=>$reqtransactions
+                'reqtransactions'=>$dataProvider
             ]);
         }
     }
