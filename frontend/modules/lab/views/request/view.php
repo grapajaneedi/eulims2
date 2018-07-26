@@ -321,21 +321,14 @@ if($Request_Ref){
                     },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
-                        // 'view' => function ($url, $model) {
-                        //     return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-                        //                 'title' => Yii::t('app', 'lead-view'),
-                        //     ]);
-                        // },
                         'update' => function ($url, $model) {
                             if($model->active == 1){
                                 return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', ['class'=>'btn btn-primary','title'=>'Update Sample','onclick' => 'updateSample('.$model->sample_id.')']);
                             } else {
-                                //return '<span class="glyphicon glyphicon-ban-circle"></span> Cancelled.';
                                 return null;
                             }
                         },
                         'delete' => function ($url, $model) {
-                            //return $model->sample_code != "" ? '' : Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['class'=>'btn btn-primary','title'=>'Update Sample',]);
                             if($model->sample_code == "" && $model->active == 1){
                                 return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'data-method'=>'post','class'=>'btn btn-danger','title'=>'Delete Sample','data-pjax'=>'0']);
                             } else {
@@ -343,14 +336,10 @@ if($Request_Ref){
                             }
                         },
                         'cancel' => function ($url, $model){
-                            //return $model->sample_code == "" ? '' : Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel ".$model->sample_code."?",'class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
                             if($model->sample_code != "" && $model->active == 1){
-                                //return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel <b>".$model->sample_code."</b>?\nAll analyses that this sample contains will also be cancelled.",'data-method'=>'post','class'=>'btn btn-warning','title'=>'Cancel Sample','data-pjax'=>'0']);
                                 return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', '#', ['class'=>'btn btn-warning','title'=>'Cancel Sample','onclick' => 'cancelSample('.$model->sample_id.')']);
                             } else {
-                                //return '<span class="glyphicon glyphicon-ban-circle"></span> Cancelled.';
                                 return $model->active == 0 ? Html::a('<span style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>','#',['class'=>'btn btn-danger','title'=>'View Cancel Remarks','onclick' => 'viewRemarkSample('.$model->sample_id.')']) : '';
-                                //return null;
                             }
                         },
                     ],
@@ -422,17 +411,11 @@ if($Request_Ref){
                 [
                     'attribute'=>'testname',
                     'header'=>'Test/ Calibration Requested',
-                    // 'value' => function($model) {
-                    //     return $model->samples->sample_code;
-                    // },
                     'enableSorting' => false,
                 ],
                 [
                     'attribute'=>'method',
                     'header'=>'Test Method',
-                    // 'value' => function($model) {
-                    //     return $model->samples->sample_code;
-                    // },
                     'enableSorting' => false,                
                 ],
                 [
@@ -484,12 +467,10 @@ if($Request_Ref){
                 ],
                 
                 [
-                  //  'attribute'=>'status',
                     'header'=>'Status',
                     'hAlign'=>'center',
                     'format'=>'raw',
                     'value' => function($model) {
-                    //     return $model->samples->sample_code;
                             return "<button class='btn btn-default btn-block'>Pending</button>";
                     },
                     'enableSorting' => false,
@@ -502,7 +483,9 @@ if($Request_Ref){
                         return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/analysis/update','id'=>$model->analysis_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "Update Analysis <font color='Blue'></font>")]);
                     },
                     'delete'=>function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/lab/analysis/delete','id'=>$model->analysis_id]), 'class' => 'btn btn-danger']);
+                        $urls = '/lab/analysis/delete?id='.$model->analysis_id;
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>?", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Analysis','data-pjax'=>'0']);
+                       // return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/lab/analysis/delete','id'=>$model->analysis_id]), 'class' => 'btn btn-danger']);
                     },
                 ],
             ],

@@ -293,9 +293,11 @@ class AnalysisController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $analysisquery = Analysis::find()->where(['analysis_id' => $id])->one();
+        $samplesQuery = Sample::find()->where(['sample_id' => $analysisquery->sample_id]);
+
+        //dapat isang value lang ang sample dito
+      ;
         $requestquery = Request::find()->where([ 'request_id'=> $analysisquery->request_id])->one();
 
             $sampleDataProvider = new ActiveDataProvider([
@@ -316,35 +318,6 @@ class AnalysisController extends Controller
 
             if ($model->load(Yii::$app->request->post())) {            
                     if($model->save(false)){
-                        $post= Yii::$app->request->post();
-                        $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
-                        $sample_id = $post['Analysis']['sample_id'];
-                        $test_id = $post['Analysis']['test_id'];
-                        $sample_type_id = (int) $post['Analysis']['sample_type_id'];
-                        $test_category = (int) $post['Analysis']['testcategory_id'];
-                        $method = $post['Analysis']['method'];
-                        $fee = $post['Analysis']['fee'];;
-                        $test = $modeltest->testname;
-                        $references = $post['Analysis']['references'];
-                        $sample_code = $post['Analysis']['sample_code'];
-
-                        $Connection= Yii::$app->labdb;
-                        $sql="UPDATE `tbl_analysis` SET 
-                        -- `sample_id`='$sample_id'
-                        -- `request_id`='$analysisquery->request_id'
-                        -- `test_id`='$test_id'
-                        -- `sample_type_id`='$sample_type_id'
-                        -- `testcategory_id`='$test_category'
-                        -- `method`='$method'
-                        -- `fee`='$fee'
-                         `testname`='$modeltest->testname'
-                        -- `references`='$references'
-                        -- `sample_code`='$sample_code'
-                         WHERE `analysis_id`=".$analysisquery->analysis_id;
-                        $Command=$Connection->createCommand($sql);
-                        $Command->execute();
-                
-
                         Yii::$app->session->setFlash('success', 'Analysis Successfully Updated'); 
                         return $this->redirect(['/lab/request/view', 'id' =>$requestquery->request_id]);
         

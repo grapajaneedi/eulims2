@@ -48,6 +48,18 @@ $this->registerJs($js);
 
     <?php $form = ActiveForm::begin(); ?>
  
+    <?php
+    if(!$model->isNewRecord){
+    ?>
+    <script type="text/javascript">
+       $(document).ready(function(){
+           $(".select-on-check-all").click();
+        });
+    </script>
+    <?php
+    
+    }
+?>
 
     <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
