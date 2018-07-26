@@ -1,7 +1,7 @@
 <?php
 use kartik\grid\GridView;
 use yii\helpers\Html;
-
+use frontend\modules\finance\components\models\Ext_Request;
 $js=<<<SCRIPT
    $(".kv-row-checkbox").click(function(){
         settotal();
@@ -44,6 +44,11 @@ $this->registerJs($js);
             'contentOptions' => [
                 'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
             ],
+            'value' => function($model) {
+                 $request= Ext_Request::find()->where(['request_id' => $model->request_id])->one();
+                 $total=$request['total'];
+                 return $model->getBalance($model->request_id,$total);
+            },
             'hAlign' => 'right', 
             'vAlign' => 'middle',
             'width' => '7%',

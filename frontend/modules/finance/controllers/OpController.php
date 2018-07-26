@@ -7,7 +7,7 @@ use common\models\finance\Op;
 use common\models\finance\Paymentitem;
 use common\models\finance\Collection;
 use common\models\finance\OpSearch;
-use common\models\lab\Request;
+use frontend\modules\finance\components\models\Ext_Request as Request;
 use common\models\finance\Collectiontype;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -116,10 +116,13 @@ class OpController extends Controller
                     $paymentitem->request_id = $str_request[$i];
                     $paymentitem->orderofpayment_id = $model->orderofpayment_id;
                     $paymentitem->details =$request->request_ref_num;
-                    $paymentitem->amount = $request->total;
+                    $total=$request->total;
+                    $amount=$request->getBalance($str_request[$i],$total);
+                    $total_amount+=$amount;
+                    $paymentitem->amount = $amount;
                     $paymentitem->request_type_id =$request->request_type_id;
-                    $total_amount+=$request->total;
-                    $paymentitem->save(); 
+                    
+                    $paymentitem->save(false); 
                 }
                 //----------------------//
                 //---Saving for Collection-------
@@ -132,7 +135,7 @@ class OpController extends Controller
                 $collection->save(false);
                 //
                 $transaction->commit();
-                $this->postRequest($request_ids);
+                //$this->postRequest($request_ids);
                 $this->updateTotalOP($model->orderofpayment_id, $total_amount);
                 $session->set('savepopup',"executed");
                  return $this->redirect(['/finance/op']); 
