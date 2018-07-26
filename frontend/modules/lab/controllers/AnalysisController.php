@@ -206,7 +206,13 @@ class AnalysisController extends Controller
         if ($model->load(Yii::$app->request->post())) {
            $requestId = (int) Yii::$app->request->get('request_id');
             
+           
                  $sample_ids= $_POST['selection'];
+
+                 if ($sample_ids==null){
+                     echo "boom";
+                     exit;
+                 }
                  $post= Yii::$app->request->post();
 
                 foreach ($sample_ids as $sample_id){

@@ -78,9 +78,7 @@ class RequestController extends Controller
         $analysisQuery = Analysis::find()->where(['request_id' => $id]);
         $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
-                'pagination' => [
-                    'pageSize' => 10,
-                ],
+                'pagination' =>false,
              
         ]);
         

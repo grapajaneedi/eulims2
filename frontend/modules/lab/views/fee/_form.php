@@ -32,7 +32,9 @@ $(".kv-row-checkbox").click(function(){
    var keys = $('#sample-grid').yiiGridView('getSelectedRows');
    var keylist= keys.join();
    $("#sample_ids").val(keylist);
-  // $("#fee_list").prop('disabled', false);
+ 
+  $("#fee_btn").prop('disabled', keys=='');  
+  
    
 });    
 $(".select-on-check-all").change(function(){
@@ -40,7 +42,9 @@ $(".select-on-check-all").change(function(){
  var keys = $('#sample-grid').yiiGridView('getSelectedRows');
  var keylist= keys.join();
   $("#sample_ids").val(keylist);
-  $("#fee_list").prop('disabled', false);
+ 
+  $("#fee_btn").prop('disabled', keys=='');  
+  
  
 });
 
@@ -129,7 +133,7 @@ $this->registerJs($js);
     
                         
     <div class="row" style="float: right;padding-right: 30px">
-    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'id'=>'fee_btn']) ?>
         <?php if($model->isNewRecord){ ?>
         <?php } ?>
     <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>

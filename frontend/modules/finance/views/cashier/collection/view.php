@@ -25,7 +25,7 @@ $bal=($model->total_amount) -($CollectionAmount);
 //echo $model->total_amount;
 //exit;
 if($bal <> 0){
-    $footer="<div class='row' style='margin-left: 2px;'><button value='/finance/cashier/create-receipt?op_id=$model->orderofpayment_id' id='btnCreateReceipt' class='btn btn-success' title='Receipt from OP'><i class='fa fa-save'></i> Create Receipt</button></div>";                    
+    $footer="<div class='row' style='margin-left: 2px;'><button value='/finance/cashier/create-receipt?op_id=$model->orderofpayment_id' id='btnCreateReceipt' class='btn btn-success' title='Receipt from OP' onclick='addReceipt(this.value,this.title)'><i class='fa fa-save'></i> Create Receipt</button></div>";                    
 }
 else{
     $footer=Html::a('View Receipt', ['/finance/cashier/view-receipt?receiptid='.$model->created_receipt], ['target'=>'_blank','class'=>'btn btn-primary']);
@@ -268,5 +268,12 @@ if($Cancelledop){
             .find('#modalContent')
             .load($(this).attr('value'));
     });
-  
+    function addReceipt(url,title){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       //var url = '/lab/sample/update?id='+id;
+        $(".modal-title").html(title);
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
 </script>
