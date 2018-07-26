@@ -49,30 +49,7 @@ $js=<<<SCRIPT
         }
     });  
 
-    // $("#btn_add_analysis").click(function(){
-    //     var AnalysisRows=$analysisdataprovider->count;
-    //     var msg='';
-    //     if(AnalysisRows>0){
-    //         $.post('/lab/request/saverequestransaction', {
-    //             request_id: $model->request_id,
-    //             lab_id: $model->lab_id,
-    //             rstl_id: $rstlID,
-    //             year: $Year
-    //         }, function(result){
-    //            if(result){
-    //                location.reload();
-    //            }
-    //         });
-    //     }else{
-    //         if(AnalysisRows<=0){
-    //            msg='Please Add Sample!';
-    //         }else if(SampleRows>0 && AnalysisRows<=0){
-    //            msg='Please Add Sample!';
-    //         }
-    //         krajeeDialog.alert(msg);
-    //     }
-    // });  
-       
+   
 SCRIPT;
 $this->registerJs($js);
 if($model->request_ref_num==null || $model->status_id==2){
@@ -412,6 +389,16 @@ if($Request_Ref){
     </div>
     <div class="container">
     <?php
+
+
+   $samplecount = $sampleDataProvider->getTotalCount();
+   if ($samplecount==0){
+        $enableRequest = true;
+   }else{
+    $enableRequest = false;
+   }
+
+
             $analysisgridColumns = [
                 [
                     'attribute'=>'sample_name',
@@ -488,7 +475,7 @@ if($Request_Ref){
                             $total = $subtotal - $discounted;
                            
                             if ($total <= 0){
-                                return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                                return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0.00</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
                             }else{
                                 return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($discounted, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
                             }
@@ -541,8 +528,8 @@ if($Request_Ref){
                     'heading'=>'<h3 class="panel-title">Analysis</h3>',
                     'type'=>'primary',
                     'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => Url::to(['analysis/create','id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_analysis'])."   ".
-                  //  Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_package'])." ".
-                    Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'btn_add_fees']),
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_package'])." ".
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_fees']),
                    'after'=>false,
                    'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
                 ],
