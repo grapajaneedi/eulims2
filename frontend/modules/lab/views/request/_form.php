@@ -61,6 +61,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
     <?php if($model->request_ref_num!=NULL){ ?>
     <?= $form->field($model, 'request_ref_num')->hiddenInput(['maxlength' => true])->label(false) ?>
     <?php } ?>
+    <?= $form->field($model, 'request_date')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'posted')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'status_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'modeofrelease_ids')->hiddenInput(['id'=>'modeofrelease_ids'])->label(false) ?>
@@ -101,12 +102,15 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
             'removeButton' => false,
             'todayHighlight' => true,
             'todayBtn' => true,
-            'format' => 'php:Y-m-d h:i:s',
-            'showMeridian' => true,
+            'format' => 'php:Y-m-d H:i:s',
             'startDate'=>$RequestStartDate,
 	],
         'pluginEvents'=>[
-            "change" => "",
+            "changeDate" => "function(e) { 
+                var dv=$('#request-request_datetime').val();
+                var d=dv.split(' ');
+                $('#request-request_date').val(d[0]);
+            }",
         ]
     ])->label('Request Date'); ?>
     </div>

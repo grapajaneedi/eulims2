@@ -6,7 +6,7 @@ use Yii;
 use common\models\lab\Request;
 use common\models\lab\Discount;
 use common\models\lab\Analysis;
-use common\models\lab\AnalysisSearch;
+//use common\models\lab\AnalysisSearch;
 use common\models\lab\RequestSearch;
 use common\models\lab\Requestcode;
 use yii\web\Controller;
@@ -19,9 +19,9 @@ use common\models\lab\Customer;
 use DateTime;
 use common\models\system\Profile;
 use common\components\Functions;
-use linslin\yii2\curl\Curl;
+//use linslin\yii2\curl\Curl;
 use kartik\mpdf\Pdf;
-use yii\helpers\Url;
+//use yii\helpers\Url;
 /**
  * RequestController implements the CRUD actions for Request model.
  */
@@ -213,17 +213,16 @@ class RequestController extends Controller
         $row = $command->queryOne();
         $subtotal = $row['subtotal'];
         $total = $subtotal - ($subtotal * ($rate/100));
-
-        $sql="UPDATE `tbl_request` SET `total`='$total' WHERE `request_id`=".$request_id;
-        $Command=$Connection->createCommand($sql);
-        $Command->execute();
+        
+        $Request->total=$total;
         /*
         echo "<pre>";
         var_dump($Request);
         echo "</pre>";
         exit;
         */
-        if($Request->save()){
+        
+        if($Request->save(false)){
             $Transaction->commit();
             $Func=new Functions();
             $response=$Func->GenerateSampleCode($request_id);
@@ -277,6 +276,8 @@ class RequestController extends Controller
             $model->status_id=1;
             $model->request_type_id=1;
             $model->modeofreleaseids='1';
+            $model->payment_status_id=1;
+            $model->request_date=date("Y-m-d");
             if($profile){
                 $model->receivedBy=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
             }else{
@@ -303,7 +304,7 @@ class RequestController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Request Successfully Updated!');
             return $this->redirect(['view', 'id' => $model->request_id]);
