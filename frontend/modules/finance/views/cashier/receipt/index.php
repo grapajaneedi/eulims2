@@ -130,9 +130,12 @@ $Header.="Receipt";
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Buttontemplate,
                  'buttons'=>[
-                    'view'=>function ($url, $model) {
-                          return Html::a('View', ['/finance/cashier/view-receipt?receiptid='.$model->receipt_id], ['target'=>'_blank','class'=>'btn btn-primary']);
-                    },
+//                    'view'=>function ($url, $model) {
+//                          return Html::a('View', ['/finance/cashier/view-receipt?receiptid='.$model->receipt_id], ['target'=>'_blank','class'=>'btn btn-primary']);
+//                    },
+                    'view' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/cashier/view-receipt?receiptid='.$model->receipt_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Receipt")]);
+                    },        
                   ],
             ],
 
