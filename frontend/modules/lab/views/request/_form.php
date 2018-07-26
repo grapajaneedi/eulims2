@@ -17,6 +17,7 @@ use kartik\widgets\SwitchInput;
 use common\components\Functions;
 use yii\bootstrap\Modal;
 use common\models\lab\RequestType;
+use common\models\lab\Request;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
@@ -44,6 +45,13 @@ $js=<<<SCRIPT
     }
     $("#payment_type_id").val(this.value);   
 SCRIPT;
+// Check Whether previous date will be disabled
+$TRequest=Request::find()->where(["DATE_FORMAT(`request_datetime`,'%Y-%m-%d')"=>date("Y-m-d")])->count();
+if($TRequest>0){
+    $RequestStartDate=date("Y-m-d");
+}else{
+    $RequestStartDate="";
+}
 ?>
 
 <div class="request-form">
@@ -94,6 +102,7 @@ SCRIPT;
             'todayBtn' => true,
             'format' => 'php:Y-m-d h:i:s',
             'showMeridian' => true,
+            'startDate'=>$RequestStartDate,
 	],
         'pluginEvents'=>[
             "change" => "",
