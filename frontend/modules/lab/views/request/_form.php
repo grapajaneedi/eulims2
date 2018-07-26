@@ -52,6 +52,7 @@ if($TRequest>0){
 }else{
     $RequestStartDate="";
 }
+$model->modeofreleaseids=$model->modeofrelease_ids;
 ?>
 
 <div class="request-form">
@@ -277,6 +278,7 @@ if($TRequest>0){
     <div class="col-md-6">
      <?= $form->field($model, 'modeofreleaseids')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Modeofrelease::find()->all(),'modeofrelease_id','mode'),
+        //'initValueText'=>$model->modeofrelease_ids,
         'language' => 'en',
          'options' => [
             'placeholder' => 'Select Mode of Release...',

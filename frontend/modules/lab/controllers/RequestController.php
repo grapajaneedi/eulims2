@@ -174,7 +174,7 @@ class RequestController extends Controller
         $year=(int) $post['year'];
         // Generate Reference Number
         $func=new Functions();
-        $Proc="spGetNextGeneratedRequestSampleCode(:RSTLID,:LabID)";
+        $Proc="spGetNextGeneratedRequestCode(:RSTLID,:LabID)";
         $Params=[
             ':RSTLID'=>$rstl_id,
             ':LabID'=>$lab_id
@@ -202,28 +202,27 @@ class RequestController extends Controller
         $Requestcode->save();
         //Update tbl_request table
         $Request= Request::find()->where(['request_id'=>$request_id])->one($Connection);
-
-        //UPDATE FEE
-
-        $requestquery = Request::find()->where(['request_id' => $request_id])->one();
-        $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
+        $Request->request_ref_num=$ReferenceNumber;
+       
+        $discountquery = Discount::find()->where(['discount_id' => $Request->discount_id])->one();
 
         $rate =  $discountquery->rate;
         
         $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=$request_id";
-        $Connection = Yii::$app->labdb;
         $command = $Connection->createCommand($sql);
         $row = $command->queryOne();
         $subtotal = $row['subtotal'];
         $total = $subtotal - ($subtotal * ($rate/100));
 
-        $Connection= Yii::$app->labdb;
         $sql="UPDATE `tbl_request` SET `total`='$total' WHERE `request_id`=".$request_id;
         $Command=$Connection->createCommand($sql);
         $Command->execute();
-
-
-        $Request->request_ref_num=$ReferenceNumber;
+        /*
+        echo "<pre>";
+        var_dump($Request);
+        echo "</pre>";
+        exit;
+        */
         if($Request->save()){
             $Transaction->commit();
             $Func=new Functions();

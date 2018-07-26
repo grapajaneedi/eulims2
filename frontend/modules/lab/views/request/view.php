@@ -34,7 +34,8 @@ $js=<<<SCRIPT
                 year: $Year
             }, function(result){
                if(result){
-                   location.reload();
+                    document.write(result);
+                   //location.reload();
                }
             });
         }else{
