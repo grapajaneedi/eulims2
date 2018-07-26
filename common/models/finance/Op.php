@@ -81,7 +81,7 @@ class Op extends \yii\db\ActiveRecord
             'invoice_number' => 'Invoice Number',
             'payment_mode_id' => 'Payment Mode',
             'on_account' => 'On Account',
-            'order_date' => 'Order Date',
+            'order_date' => 'OP Date',
             'total_amount' => 'Total Amount',
             'customer_id' => 'Customer Name',
             'purpose' => 'Purpose',

@@ -27,9 +27,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
     <?php
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
-    <p>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/accounting/create-op', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']); ?>
-    </p>
+        
   <div class="table-responsive">
     <?php 
     $Buttontemplate='{view}'; 
@@ -46,6 +44,7 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
         ],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
+                'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/accounting/create-op', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP','onclick'=>'addOp(this.value,this.title)']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
                 
             ],
@@ -126,20 +125,22 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
                'value'=>function($model){
                     $Obj=$model->getCollectionStatus($model->orderofpayment_id);
                     if($Obj){
-                       return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
-                     }else{
-                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
+                       return "<span class='badge ".$Obj[0]['class']." legend-font' style='width:80px!important;height:20px!important;'>".$Obj[0]['payment_status']."</span>";
+                    }else{
+                        return "<span class='badge btn-primary legend-font' style='width:80px!important;height:20px!important;'>Unpaid</span>";
                     }
-                }
+                   //
+                },   
+                'hAlign'=>'center',
             ],
             [
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Buttontemplate,
-                 'buttons'=>[
-                    'view'=>function ($url, $model) {
-                          return Html::a('View', ['/finance/accounting/view-op?id='.$model->orderofpayment_id], ['target'=>'_blank']);
-                    },
-                  ],
+                'buttons'=>[
+                    'view' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/accounting/view-op?id='.$model->orderofpayment_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Order of Payment")]);
+                    },        
+                 ],
             ], 
 
         ],
@@ -186,5 +187,12 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
             .find('#modalContent')
             .load($(this).attr('value'));
     });
-  
+   function addOp(url,title){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       //var url = '/lab/sample/update?id='+id;
+        $(".modal-title").html(title);
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
 </script>
