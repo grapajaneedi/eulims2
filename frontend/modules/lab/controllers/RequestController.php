@@ -3,10 +3,11 @@
 namespace frontend\modules\lab\controllers;
 
 use Yii;
+use frontend\modules\lab\components\eRequest;
 use common\models\lab\Request;
 use common\models\lab\Discount;
 use common\models\lab\Analysis;
-use common\models\lab\AnalysisSearch;
+//use common\models\lab\AnalysisSearch;
 use common\models\lab\RequestSearch;
 use common\models\lab\Requestcode;
 use yii\web\Controller;
@@ -19,9 +20,9 @@ use common\models\lab\Customer;
 use DateTime;
 use common\models\system\Profile;
 use common\components\Functions;
-use linslin\yii2\curl\Curl;
+//use linslin\yii2\curl\Curl;
 use kartik\mpdf\Pdf;
-use yii\helpers\Url;
+//use yii\helpers\Url;
 /**
  * RequestController implements the CRUD actions for Request model.
  */
@@ -78,9 +79,7 @@ class RequestController extends Controller
         $analysisQuery = Analysis::find()->where(['request_id' => $id]);
         $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
-                'pagination' => [
-                    'pageSize' => 10,
-                ],
+                'pagination' =>false,
              
         ]);
         
@@ -176,7 +175,7 @@ class RequestController extends Controller
         $year=(int) $post['year'];
         // Generate Reference Number
         $func=new Functions();
-        $Proc="spGetNextGeneratedRequestSampleCode(:RSTLID,:LabID)";
+        $Proc="spGetNextGeneratedRequestCode(:RSTLID,:LabID)";
         $Params=[
             ':RSTLID'=>$rstl_id,
             ':LabID'=>$lab_id
@@ -204,42 +203,39 @@ class RequestController extends Controller
         $Requestcode->save();
         //Update tbl_request table
         $Request= Request::find()->where(['request_id'=>$request_id])->one($Connection);
-
-        //UPDATE FEE
-
-        $requestquery = Request::find()->where(['request_id' => $request_id])->one();
-        $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
+        $Request->request_ref_num=$ReferenceNumber;
+       
+        $discountquery = Discount::find()->where(['discount_id' => $Request->discount_id])->one();
 
         $rate =  $discountquery->rate;
         
         $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=$request_id";
-        $Connection = Yii::$app->labdb;
         $command = $Connection->createCommand($sql);
         $row = $command->queryOne();
         $subtotal = $row['subtotal'];
         $total = $subtotal - ($subtotal * ($rate/100));
-
-        $Connection= Yii::$app->labdb;
-        $sql="UPDATE `tbl_request` SET `total`='$total' WHERE `request_id`=".$request_id;
-        $Command=$Connection->createCommand($sql);
-        $Command->execute();
-
-
-        $Request->request_ref_num=$ReferenceNumber;
+        
+        $Request->total=$total;
+        /*
+        echo "<pre>";
+        var_dump($Request);
+        echo "</pre>";
+        exit;
+        */
         if($Request->save()){
             $Transaction->commit();
             $Func=new Functions();
             $response=$Func->GenerateSampleCode($request_id);
             if($response){
                 $return="Success";
-                Yii::$app->session->setFlash('success', 'Request Ref #/Sample Code Successfully Generated!');
+                Yii::$app->session->setFlash('success', 'Request Reference # and Sample Code Successfully Generated!');
             }else{
                 $Transaction->rollback();
-                Yii::$app->session->setFlash('danger', 'Request Ref #/Sample Code Failed to Generate!');
+                Yii::$app->session->setFlash('danger', 'Request Reference # and Sample Code Failed to Generate!');
                 $return="Failed";
             }
         }else{
-            Yii::$app->session->setFlash('danger', 'Request Ref #/Sample Code Failed to Generate!');
+            Yii::$app->session->setFlash('danger', 'Request Reference # and Sample Code Failed to Generate!');
             $Transaction->rollback();
             $return="Failed";
         }
@@ -252,8 +248,13 @@ class RequestController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Request();
-
+        $model = new eRequest();
+        /*echo "<pre>";
+        print_r(Yii::$app->request->post());
+        echo "</pre>";
+        exit;
+         * 
+         */
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Request Successfully Created!');
             return $this->redirect(['view', 'id' => $model->request_id]); ///lab/request/view?id=1
@@ -274,8 +275,9 @@ class RequestController extends Controller
             $model->posted=0;
             $model->status_id=1;
             $model->request_type_id=1;
-            $model->purpose_id=2;
-            $model->lab_id=1;
+            $model->modeofreleaseids='1';
+            $model->payment_status_id=1;
+            $model->request_date=date("Y-m-d");
             if($profile){
                 $model->receivedBy=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
             }else{
@@ -302,7 +304,7 @@ class RequestController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Request Successfully Updated!');
             return $this->redirect(['view', 'id' => $model->request_id]);

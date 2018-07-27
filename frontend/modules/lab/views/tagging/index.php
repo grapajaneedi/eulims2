@@ -27,83 +27,9 @@ $this->params['breadcrumbs'][] = 'Sample Tagging';
 
 $this->registerJsFile("/js/services/services.js");
 $func=new Functions();
-
 ?>
 
-<style type="text/css">
-    .imgHover:hover{
-        border-radius: 25px;
-        box-shadow: 0 0 0 5pt #3c8dbc;
-        transition: box-shadow 0.5s ease-in-out;
-    }
-        
-    .animationload {
-    background-color: transparent;
-    height: 100%;
-    left: 0;
-    position: relative;
-    top: 0;
-    width: 100%;
-    z-index: 10000;
-    }
-    .osahanloading {
-    animation: 1.5s linear 0s normal none infinite running osahanloading;
-    background: #3c8dbc none repeat scroll 0 0;
-    border-radius: 50px;
-    height: 50px;
-    left: 50%;
-    margin-left: -25px;
-    margin-top: -25px;
-    position: absolute;
-    top: 50%;
-    width: 50px;
-    }
-    .osahanloading::after {
-    animation: 1.5s linear 0s normal none infinite running osahanloading_after;
-    border-color: #3c8dbc transparent;
-    border-radius: 80px;
-    border-style: solid;
-    border-width: 10px;
-    content: "";
-    height: 80px;
-    left: -15px;
-    position: absolute;
-    top: -15px;
-    width: 80px;
-    }
-    @keyframes osahanloading 
-    {
-        0% {
-        transform: rotate(0deg);
-        }
-        50% {
-        background: #85d6de none repeat scroll 0 0;
-        transform: rotate(180deg);
-        }
-        100% {
-        transform: rotate(360deg);
-        }
-    }
-
-    .glyphicon-refresh-animate {
-    -animation: spin .7s infinite linear;
-    -webkit-animation: spin2 .7s infinite linear;
-    }
-
-    @-webkit-keyframes spin2 {
-    from { -webkit-transform: rotate(0deg);}
-    to { -webkit-transform: rotate(360deg);}
-    }
-
-    .alert{
-    display: none;
-    }
-</style>
-
 <div class="tagging-index">
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <?php
         echo $func->GenerateStatusTagging("Legend/Status",true);
     ?>
@@ -117,13 +43,12 @@ $func=new Functions();
              <div class="col-md-4">
                 <?php $form = ActiveForm::begin(); ?>
                 <?php
-                        $disabled=false;
-                       
+                        $disabled=false; 
                         echo $func->GetSampleCode($form,$model,$disabled,"");
                 ?>    
                 <?php ActiveForm::end(); ?>
-                </div>
                     </div>
+                       </div>
 
  <div class="row-fluid" id ="xyz">
     <?= GridView::widget([
@@ -146,8 +71,7 @@ $func=new Functions();
                 'header'=>'Description',
                 'format' => 'raw',
                 'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-               
+                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],         
             ],
             
         ],
@@ -164,20 +88,28 @@ $func=new Functions();
         'columns' => [
             [
                 'header'=>'Test Name',
+                'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-               
+                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],              
             ],
             [
                 'header'=>'Method',
+                'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-               
+                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],       
             ],
             [
                 'header'=>'Analyst',
+                'hAlign'=>'center',
+                'format' => 'raw',
+                'enableSorting' => false,
+                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],   
+            ],
+            [
+                'header'=>'ISO accredited',
+                'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
@@ -185,6 +117,7 @@ $func=new Functions();
             ],
             [
                 'header'=>'Status',
+                'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
@@ -192,13 +125,11 @@ $func=new Functions();
             ],
             [
                 'header'=>'Remarks',
+                'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-               
-        
-        ],
-        
+                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],      
+        ],     
         ],
     ]); ?>
     </div>
@@ -223,13 +154,8 @@ ShowProgressSpinner(true);
             url: '/lab/tagging/getanalysis?id='+$(this).val(),
             dataType: 'html',
             success: function ( response ) {
-             // $("#divSpinner").toggle();
-             ShowProgressSpinner(true);
-             
+             ShowProgressSpinner(true);            
               $("#xyz").html(response);
-            //  $("#divSpinner").hide();
-             
-
             },
             error: function ( xhr, ajaxOptions, thrownError ) {
                 alert( thrownError );

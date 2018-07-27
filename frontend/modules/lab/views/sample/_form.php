@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
 use kartik\widgets\DatePicker;
+use kartik\widgets\DateTimePicker;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use kartik\widgets\TypeaheadBasic;
@@ -86,12 +87,22 @@ if(count($sampletype) > 0){
             $endDiv = "</div>";
             echo $startDiv;
             //echo $form->field($model, 'sampling_date')->textInput();
-            echo $form->field($model, 'sampling_date')->widget(DatePicker::classname(), [
-                'options' => ['placeholder' => 'Enter sampling date ...','autocomplete'=>'off'],
-                'value' => $model->sampling_date ? date('m/d/Y', strtotime($model->sampling_date)) : date('m/d/Y'),
+            //echo $form->field($model, 'sampling_date')->widget(DatePicker::classname(), [
+            echo $form->field($model, 'sampling_date')->widget(DateTimePicker::classname(), [
+                'options' => [
+					'placeholder' => 'Enter sampling date ...',
+					'autocomplete'=>'off'
+				],
+                //'value' => $model->sampling_date ? date('m/d/Y h:i A', strtotime($model->sampling_date)) : date("m/d/Y h:i A"),
+				'value'=>function($model){
+					return date("m/d/Y h:i:s A", strtotime($model->sampling_date));
+				},
+				'readonly' => true,
                 'pluginOptions' => [
                     'autoclose'=>true,
-                    'format' => 'mm/dd/yyyy'
+                    'format' => 'mm/dd/yyyy HH:ii:ss P',
+					'todayHighlight' => true,
+					'startDate' => date('m/d/Y h:i:s A'),
                 ]
             ]);
             /*echo DatePicker::widget([
@@ -154,7 +165,7 @@ if(count($sampletype) > 0){
     <div class="form-group" style="padding-bottom: 3px;">
         <div style="float:right;">
             <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-            <?= Html::button('Cancel', ['class' => 'btn', 'onclick'=>'closeDialog()']) ?>
+            <?= Html::button('Close', ['class' => 'btn', 'onclick'=>'closeDialog()']) ?>
             <br>
         </div>
     </div>

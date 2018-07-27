@@ -33,9 +33,6 @@ if(Yii::$app->user->can('allow-cancel-request')){
     <?php
         echo $func->GenerateStatusLegend("Legend/Status",false);
     ?>
-    <p>
-        <button type="button" onclick="LoadModal('Create Request','/lab/request/create')" class="btn btn-success"><i class="fa fa-book-o    "></i> Create Request</button>
-    </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'id'=>'RequestGrid',
@@ -51,6 +48,7 @@ if(Yii::$app->user->can('allow-cancel-request')){
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
             'heading' => '<i class="glyphicon glyphicon-book"></i>  Request',
+            'before'=>"<button type='button' onclick='LoadModal(\"Create Request\",\"/lab/request/create\")' class=\"btn btn-success\"><i class=\"fa fa-book-o\"></i> Create Request</button>",
         ],
         'pjax' => true, // pjax is set to always true for this demo
         'pjaxSettings' => [
@@ -112,7 +110,7 @@ if(Yii::$app->user->can('allow-cancel-request')){
                 'hAlign'=>'center',
                 'format'=>'raw',
                 'value'=>function($model){
-                    return "<button class='btn ".$model->status->class." btn-block'>".$model->status->status."</button>";
+                    return "<span class='badge ".$model->status->class." btn-block' style='width:80px!important;height:20px!important;'>".$model->status->status."</span>";
                 }
             ],
             [
@@ -121,9 +119,9 @@ if(Yii::$app->user->can('allow-cancel-request')){
                 'format'=>'raw',
                 'value'=>function($model){
                     if($model->testreports){
-                        return "<button class='btn btn-success btn-block'>View</button>";
+                        return "<span class='badge badge-success' style='width:80px!important;height:20px!important;'>View</span>";
                     }else{
-                        return "<button class='btn btn-default btn-block'>None</button>";
+                        return "<span class='badge badge-default' style='width:80px!important;height:20px!important;'>View</span>";
                     }
                     
                 }
@@ -135,9 +133,9 @@ if(Yii::$app->user->can('allow-cancel-request')){
                 'value'=>function($model){
                     $Obj=$model->getPaymentStatusDetails($model->request_id);
                     if($Obj){
-                       return "<button class='btn ".$Obj[0]['class']." btn-block'>".$Obj[0]['payment_status']."</button>"; 
+                       return "<span class='badge ".$Obj[0]['class']."' style='width:80px!important;height:20px!important;'>".$Obj[0]['payment_status']."</span>"; 
                     }else{
-                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
+                       return "<span class='badge badge-primary' style='width:80px!important;height:20px!important;'>Unpaid</span>";
                     }
                    //
                 }

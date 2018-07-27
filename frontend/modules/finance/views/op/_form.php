@@ -64,12 +64,14 @@ $disable='';
              <?php
              echo $form->field($model, 'order_date')->widget(DatePicker::classname(), [
              'options' => ['placeholder' => 'Select Date ...',
-                 'autocomplete'=>'off'],
+             'autocomplete'=>'off'],
              'type' => DatePicker::TYPE_COMPONENT_APPEND,
                  'pluginOptions' => [
                      'format' => 'yyyy-mm-dd',
                      'todayHighlight' => true,
                      'autoclose'=>true,
+                     'startDate' => date('Y-m-d'),
+                     'endDate' => date('Y-m-d')
                      
                  ]
              ]);

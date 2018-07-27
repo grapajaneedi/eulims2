@@ -17,7 +17,21 @@ $this->params['breadcrumbs'][] = 'View';
 $totalAmount=$model->total_amount ? $model->total_amount : 0.00;
 $subTotal=$model->collection ? $model->collection->sub_total : 0.00;
 $bal=$totalAmount - $subTotal;
-//}
+$disable_button="";
+//echo $totalAmount;
+//exit;
+if($totalAmount == 0.00){
+    $disable_button=false;
+}else{
+    if ($bal == 0){
+        $disable_button=true;
+    }
+    else{
+        $disable_button=false;
+    }
+}
+
+
 $footer="<div class='alert alert-info' style='background: #d9edf7 !important;margin-top: 1px !important;width:550px;'>
                  <a href='#' class='close' data-dismiss='alert'>&times;</a>
                  <p class='note' style='color:#265e8d'> <strong>For partial payment, please click on each amount and modify accordingly.</strong><br />
@@ -174,7 +188,7 @@ $footer="<div class='alert alert-info' style='background: #d9edf7 !important;mar
                 'showPageSummary' => true,
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
-                    'type'=>'primary', 'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add', ['value' => Url::to(['add-collection','opid'=>$model->orderofpayment_id]),'title'=>'Add Payment Item', 'onclick'=>'addPaymentitem(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                    'type'=>'primary', 'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add', ['value' => Url::to(['add-collection','opid'=>$model->orderofpayment_id]),'title'=>'Add Payment Item', 'onclick'=>'addPaymentitem(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn','disabled'=>$disable_button]),
                     'after'=>false,
                 ],
                 'columns' => $gridColumns,

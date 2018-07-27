@@ -8,9 +8,10 @@ use common\components\Functions;
 use common\models\lab\Cancelledrequest;
 use common\models\lab\Discount;
 use common\models\lab\Request;
+use common\models\finance\Paymentitem;
 
-
-$sweetalert = new Functions();
+$Connection = Yii::$app->financedb;
+$func = new Functions();
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
@@ -34,6 +35,7 @@ $js=<<<SCRIPT
                 year: $Year
             }, function(result){
                if(result){
+                    //document.write(result);
                    location.reload();
                }
             });
@@ -48,31 +50,6 @@ $js=<<<SCRIPT
             krajeeDialog.alert(msg);
         }
     });  
-
-    // $("#btn_add_analysis").click(function(){
-    //     var AnalysisRows=$analysisdataprovider->count;
-    //     var msg='';
-    //     if(AnalysisRows>0){
-    //         $.post('/lab/request/saverequestransaction', {
-    //             request_id: $model->request_id,
-    //             lab_id: $model->lab_id,
-    //             rstl_id: $rstlID,
-    //             year: $Year
-    //         }, function(result){
-    //            if(result){
-    //                location.reload();
-    //            }
-    //         });
-    //     }else{
-    //         if(AnalysisRows<=0){
-    //            msg='Please Add Sample!';
-    //         }else if(SampleRows>0 && AnalysisRows<=0){
-    //            msg='Please Add Sample!';
-    //         }
-    //         krajeeDialog.alert(msg);
-    //     }
-    // });  
-       
 SCRIPT;
 $this->registerJs($js);
 if($model->request_ref_num==null || $model->status_id==2){
@@ -94,7 +71,7 @@ $Cancelledrequest= Cancelledrequest::find()->where(['request_id'=>$model->reques
 if($Cancelledrequest){
     $Reasons=$Cancelledrequest->reason;
     $DateCancelled=date('m/d/Y h:i A', strtotime($Cancelledrequest->cancel_date));
-    $CancelledBy=$sweetalert->GetProfileName($Cancelledrequest->cancelledby);
+    $CancelledBy=$func->GetProfileName($Cancelledrequest->cancelledby);
 }else{
     $Reasons='&nbsp;';
     $DateCancelled='';
@@ -111,9 +88,15 @@ if($Request_Ref){
     $disableButton="";
     $btnID="id='btnSaveRequest'";
 }
-
-
-
+$Params=[
+    'mRequestID'=>$model->request_id
+];
+$row=$func->ExecuteStoredProcedureOne("spGetPaymentDetails(:mRequestID)", $Params, $Connection);
+$payment_total=number_format($row['TotalAmount'],2);
+$orNumbers=$row['ORNumber'];
+$orDate=$row['ORDate'];
+$UnpaidBalance=$model->total-$row['TotalAmount'];
+$UnpaidBalance=number_format($UnpaidBalance,2);
 ?>
 <div class="section-request"> 
 <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
@@ -244,14 +227,14 @@ if($Request_Ref){
                     'columns' => [
                         [
                             'label'=>'OR No.',
-                            'value'=>'',
+                            'value'=>$orNumbers,
                             'displayOnly'=>true,
                             'valueColOptions'=>['style'=>'width:30%']
                         ],
                         [
                             'label'=>'Collection',
                             'format'=>'raw',
-                            'value'=>'0',
+                            'value'=>"₱".$payment_total,
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -261,14 +244,14 @@ if($Request_Ref){
                     'columns' => [
                         [
                             'label'=>'OR Date',
-                            'value'=>'',
+                            'value'=>$orDate,
                             'displayOnly'=>true,
                             'valueColOptions'=>['style'=>'width:30%']
                         ],
                         [
                             'label'=>'Unpaid Balance',
                             'format'=>'raw',
-                            'value'=>'0',
+                            'value'=>"₱".$UnpaidBalance,
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -320,8 +303,8 @@ if($Request_Ref){
                     'attribute'=>'description',
                     'format' => 'raw',
                     'enableSorting' => false,
-                    'value' => function($data){
-                        return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".$data->sampling_date."</b></span>,&nbsp;".$data->description : $data->description;
+					'value' => function($data){
+                        return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".date("Y-m-d h:i A",strtotime($data->sampling_date))."</b></span>,&nbsp;".$data->description : $data->description;
                     },
                    'contentOptions' => [
                         'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
@@ -344,21 +327,14 @@ if($Request_Ref){
                     },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
-                        // 'view' => function ($url, $model) {
-                        //     return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-                        //                 'title' => Yii::t('app', 'lead-view'),
-                        //     ]);
-                        // },
                         'update' => function ($url, $model) {
                             if($model->active == 1){
                                 return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', ['class'=>'btn btn-primary','title'=>'Update Sample','onclick' => 'updateSample('.$model->sample_id.')']);
                             } else {
-                                //return '<span class="glyphicon glyphicon-ban-circle"></span> Cancelled.';
                                 return null;
                             }
                         },
                         'delete' => function ($url, $model) {
-                            //return $model->sample_code != "" ? '' : Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['class'=>'btn btn-primary','title'=>'Update Sample',]);
                             if($model->sample_code == "" && $model->active == 1){
                                 return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'data-method'=>'post','class'=>'btn btn-danger','title'=>'Delete Sample','data-pjax'=>'0']);
                             } else {
@@ -366,14 +342,10 @@ if($Request_Ref){
                             }
                         },
                         'cancel' => function ($url, $model){
-                            //return $model->sample_code == "" ? '' : Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel ".$model->sample_code."?",'class'=>'btn btn-primary','title'=>'Cancel Sample','data-pjax'=>'0']);
                             if($model->sample_code != "" && $model->active == 1){
-                                //return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, ['data-confirm'=>"Are you sure you want to cancel <b>".$model->sample_code."</b>?\nAll analyses that this sample contains will also be cancelled.",'data-method'=>'post','class'=>'btn btn-warning','title'=>'Cancel Sample','data-pjax'=>'0']);
                                 return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', '#', ['class'=>'btn btn-warning','title'=>'Cancel Sample','onclick' => 'cancelSample('.$model->sample_id.')']);
                             } else {
-                                //return '<span class="glyphicon glyphicon-ban-circle"></span> Cancelled.';
                                 return $model->active == 0 ? Html::a('<span style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>','#',['class'=>'btn btn-danger','title'=>'View Cancel Remarks','onclick' => 'viewRemarkSample('.$model->sample_id.')']) : '';
-                                //return null;
                             }
                         },
                     ],
@@ -412,6 +384,16 @@ if($Request_Ref){
     </div>
     <div class="container">
     <?php
+
+
+   $samplecount = $sampleDataProvider->getTotalCount();
+   if ($samplecount==0){
+        $enableRequest = true;
+   }else{
+    $enableRequest = false;
+   }
+
+
             $analysisgridColumns = [
                 [
                     'attribute'=>'sample_name',
@@ -435,17 +417,11 @@ if($Request_Ref){
                 [
                     'attribute'=>'testname',
                     'header'=>'Test/ Calibration Requested',
-                    // 'value' => function($model) {
-                    //     return $model->samples->sample_code;
-                    // },
                     'enableSorting' => false,
                 ],
                 [
                     'attribute'=>'method',
                     'header'=>'Test Method',
-                    // 'value' => function($model) {
-                    //     return $model->samples->sample_code;
-                    // },
                     'enableSorting' => false,                
                 ],
                 [
@@ -466,14 +442,12 @@ if($Request_Ref){
                     },
                     'contentOptions' => [
                         'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
-        
                     ],
                     'hAlign' => 'right', 
                     'vAlign' => 'left',
                     'width' => '7%',
                     'format' => 'raw',
                       'pageSummary'=> function (){
-
                             $url = \Yii::$app->request->url;
                             $id = substr($url, 21);
                             $requestquery = Request::find()->where(['request_id' => $id])->one();
@@ -488,11 +462,9 @@ if($Request_Ref){
                             $subtotal = $row['subtotal'];
                             $discounted = ($subtotal * ($rate/100));
                             $total = $subtotal - $discounted;
-
-                            //$request_total =  '<input type="hidden" name="request_total" value="'.$total.'">'; //Html::hiddenInput('request_total', $total);
                            
                             if ($total <= 0){
-                                return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                                return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0.00</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
                             }else{
                                 return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($discounted, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
                             }
@@ -501,12 +473,10 @@ if($Request_Ref){
                 ],
                 
                 [
-                  //  'attribute'=>'status',
                     'header'=>'Status',
                     'hAlign'=>'center',
                     'format'=>'raw',
                     'value' => function($model) {
-                    //     return $model->samples->sample_code;
                             return "<button class='btn btn-default btn-block'>Pending</button>";
                     },
                     'enableSorting' => false,
@@ -519,7 +489,9 @@ if($Request_Ref){
                         return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/analysis/update','id'=>$model->analysis_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "Update Analysis <font color='Blue'></font>")]);
                     },
                     'delete'=>function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/lab/analysis/delete','id'=>$model->analysis_id]), 'class' => 'btn btn-danger']);
+                        $urls = '/lab/analysis/delete?id='.$model->analysis_id;
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>?", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Analysis','data-pjax'=>'0']);
+                       // return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/lab/analysis/delete','id'=>$model->analysis_id]), 'class' => 'btn btn-danger']);
                     },
                 ],
             ],
@@ -545,8 +517,8 @@ if($Request_Ref){
                     'heading'=>'<h3 class="panel-title">Analysis</h3>',
                     'type'=>'primary',
                     'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => Url::to(['analysis/create','id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_analysis'])."   ".
-                  //  Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_package'])." ".
-                    Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'btn_add_fees']),
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_package'])." ".
+                    Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_fees']),
                    'after'=>false,
                    'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
                 ],

@@ -30,6 +30,7 @@ $(".kv-row-checkbox").click(function(){
    var keylist= keys.join();
    $("#sample_ids").val(keylist);
   // $("#sample-testcategory_id").prop('disabled', false);
+  $("#package_btn").prop('disabled', keys=='');  
    
 });    
 $(".select-on-check-all").change(function(){
@@ -38,6 +39,7 @@ $(".select-on-check-all").change(function(){
  var keylist= keys.join();
   $("#sample_ids").val(keylist);
  // $("#sample-testcategory_id").prop('disabled', false);
+ $("#package_btn").prop('disabled', keys=='');  
  
 });
 
@@ -153,7 +155,7 @@ $this->registerJs($js);
 
          <?= $form->field($model, 'tests')->textarea(['rows' => 4, 'readonly' => true]) ?>
             <div class="row" style="float: right;padding-right: 30px">
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'id'=>'package_btn', 'disabled'=>true]) ?>
                 <?php if($model->isNewRecord){ ?>
                 <?php } ?>
             <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>

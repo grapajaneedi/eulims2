@@ -7,7 +7,7 @@ use common\models\finance\Op;
 use common\models\finance\Paymentitem;
 use common\models\finance\Collection;
 use common\models\finance\OpSearch;
-use common\models\lab\Request;
+use frontend\modules\finance\components\models\Ext_Request as Request;
 use common\models\finance\Collectiontype;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -48,7 +48,7 @@ class OpController extends Controller
         $model = new Op();
         $searchModel = new OpSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
+        $dataProvider->pagination->pageSize=10;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -99,6 +99,7 @@ class OpController extends Controller
                 $request_ids=$model->RequestIds;
                 $str_request = explode(',', $request_ids);
                 $arr_length = count($str_request); 
+                $model->total_amount=0;
                 $total_amount=0;
                 $model->rstl_id=$GLOBALS['rstl_id'];
                 $model->transactionnum= $this->Gettransactionnum();
@@ -107,6 +108,10 @@ class OpController extends Controller
                 }else{
                     $model->on_account=0;
                 }
+//                echo "<pre>";
+//                var_dump($model);
+//                echo "</pre>";
+//                exit;
                 $model->save();
                 //Saving for Paymentitem
                 for($i=0;$i<$arr_length;$i++){
@@ -116,10 +121,14 @@ class OpController extends Controller
                     $paymentitem->request_id = $str_request[$i];
                     $paymentitem->orderofpayment_id = $model->orderofpayment_id;
                     $paymentitem->details =$request->request_ref_num;
-                    $paymentitem->amount = $request->total;
+                    $total=$request->total;
+                    $amount=$request->getBalance($str_request[$i],$total);
+                    $total_amount+=$amount;
+                    $paymentitem->amount = $amount;
                     $paymentitem->request_type_id =$request->request_type_id;
-                    $total_amount+=$request->total;
-                    $paymentitem->save(); 
+                    $paymentitem->status=1;//Unpaid
+                    $paymentitem->save(false); 
+                    
                 }
                 //----------------------//
                 //---Saving for Collection-------
@@ -129,10 +138,11 @@ class OpController extends Controller
                 $collection->rstl_id=$GLOBALS['rstl_id'];
                 $collection->orderofpayment_id=$model->orderofpayment_id;
                 $collection->referral_id=0;
+                $collection->payment_status_id=1;//Unpaid
                 $collection->save(false);
                 //
                 $transaction->commit();
-                $this->postRequest($request_ids);
+                //$this->postRequest($request_ids);
                 $this->updateTotalOP($model->orderofpayment_id, $total_amount);
                 $session->set('savepopup',"executed");
                  return $this->redirect(['/finance/op']); 
@@ -145,7 +155,6 @@ class OpController extends Controller
                 //-------------------------------------------------------------//
         } 
         $model->order_date=date('Y-m-d');
-        $model->collectiontype_id=1;
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                 'model' => $model,
@@ -230,7 +239,7 @@ class OpController extends Controller
      public function actionGetlistrequest($id)
     {
         $model= new Request();
-        $query = Request::find()->where(['customer_id' => $id,'posted' => 0])->andWhere(['not', ['request_ref_num' => null]]);
+        $query = Request::find()->where(['customer_id' => $id])->andWhere(['not', ['request_ref_num' => null]])->andWhere(['not', ['payment_status_id' => 2]]);
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

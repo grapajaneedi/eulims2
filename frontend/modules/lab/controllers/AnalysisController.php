@@ -7,6 +7,7 @@ use common\models\lab\Analysis;
 use common\models\lab\Sample;
 use common\models\lab\Request;
 use common\models\lab\RequestSearch;
+use common\models\lab\Discount;
 use common\models\lab\AnalysisSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -18,6 +19,7 @@ use common\models\lab\Testcategory;
 use common\models\lab\Test;
 use common\models\lab\SampleSearch;
 use yii\helpers\Json;
+use common\models\finance\Paymentitem;
 use DateTime;
 
 /**
@@ -97,7 +99,7 @@ class AnalysisController extends Controller
             $fee = "Error getting fee";
         }
         return Json::encode([
-            'method'=>$references,
+            'method'=>$method,
             'references'=>$references,
             'fee'=>$fee,
         ]);
@@ -206,17 +208,22 @@ class AnalysisController extends Controller
         if ($model->load(Yii::$app->request->post())) {
            $requestId = (int) Yii::$app->request->get('request_id');
             
+           
                  $sample_ids= $_POST['selection'];
+
+                
                  $post= Yii::$app->request->post();
 
                 foreach ($sample_ids as $sample_id){
+
+                   
 
                     $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
                     $analysis = new Analysis();
                     $date = new DateTime();
                     date_add($date,date_interval_create_from_date_string("1 day"));
                     $analysis->sample_id = $sample_id;
-                    $analysis->cancelled = (int) $post['Analysis']['cancelled'];
+                    $analysis->cancelled = 0;
                     $analysis->pstcanalysis_id = (int) $post['Analysis']['pstcanalysis_id'];
                     $analysis->request_id = $request_id;
                     $analysis->rstl_id = $GLOBALS['rstl_id'];
@@ -231,9 +238,24 @@ class AnalysisController extends Controller
                     $analysis->quantity = 1;
                     $analysis->sample_code = $post['Analysis']['sample_code'];
                     $analysis->date_analysis = date("Y-m-d h:i:s");
-                    $analysis->save();             
+                    $analysis->save(); 
+                    
+                    $requestquery = Request::find()->where(['request_id' => $request_id])->one();
+                    $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
+                    $rate =  $discountquery->rate;       
+                    $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=$request_id";
+                    $Connection = Yii::$app->labdb;
+                    $command = $Connection->createCommand($sql);
+                    $row = $command->queryOne();
+                    $subtotal = $row['subtotal'];
+                    $total = $subtotal - ($subtotal * ($rate/100));
+
+                    $Connection= Yii::$app->labdb;
+                    $sql="UPDATE `tbl_request` SET `total`='$total' WHERE `request_id`=".$request_id;
+                    $Command=$Connection->createCommand($sql);
+                    $Command->execute();
                 }     
-                Yii::$app->session->setFlash('success', 'Analysis Successfully Created'); 
+                Yii::$app->session->setFlash('success', 'Analysis Successfully Added'); 
                 return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
        } else if (Yii::$app->request->isAjax) {
 
@@ -242,7 +264,7 @@ class AnalysisController extends Controller
                 $model->pstcanalysis_id = $GLOBALS['rstl_id'];
                 $model->request_id = $request_id;
                 $model->testname = $GLOBALS['rstl_id'];
-                $model->cancelled = $GLOBALS['rstl_id'];
+                $model->cancelled = 0;
                 $model->sample_id = $GLOBALS['rstl_id'];
                 $model->sample_code = $GLOBALS['rstl_id'];
                 $model->date_analysis = date("Y-m-d h:i:s");;
@@ -287,11 +309,13 @@ class AnalysisController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $analysisquery = Analysis::find()->where(['analysis_id' => $id])->one();
+        $samplesQuery = Sample::find()->where(['sample_id' => $analysisquery->sample_id]);
         $requestquery = Request::find()->where([ 'request_id'=> $analysisquery->request_id])->one();
 
+        $paymentitem = Paymentitem::find()->where([ 'request_id'=> $analysisquery->request_id])->one();
+
+      
             $sampleDataProvider = new ActiveDataProvider([
                 'query' => $samplesQuery,
                 'pagination' => [
@@ -310,41 +334,25 @@ class AnalysisController extends Controller
 
             if ($model->load(Yii::$app->request->post())) {            
                     if($model->save(false)){
-                        $post= Yii::$app->request->post();
-                        $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
-                        $sample_id = $post['Analysis']['sample_id'];
-                        $test_id = $post['Analysis']['test_id'];
-                        $sample_type_id = (int) $post['Analysis']['sample_type_id'];
-                        $test_category = (int) $post['Analysis']['testcategory_id'];
-                        $method = $post['Analysis']['method'];
-                        $fee = $post['Analysis']['fee'];;
-                        $test = $modeltest->testname;
-                        $references = $post['Analysis']['references'];
-                        $sample_code = $post['Analysis']['sample_code'];
+                        $requestquery = Request::find()->where(['request_id' =>$analysisquery->request_id])->one();
+                        $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
+                        $rate =  $discountquery->rate;       
+                        $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=$analysisquery->request_id";
+                        $Connection = Yii::$app->labdb;
+                        $command = $Connection->createCommand($sql);
+                        $row = $command->queryOne();
+                        $subtotal = $row['subtotal'];
+                        $total = $subtotal - ($subtotal * ($rate/100));
 
                         $Connection= Yii::$app->labdb;
-                        $sql="UPDATE `tbl_analysis` SET 
-                        -- `sample_id`='$sample_id'
-                        -- `request_id`='$analysisquery->request_id'
-                        -- `test_id`='$test_id'
-                        -- `sample_type_id`='$sample_type_id'
-                        -- `testcategory_id`='$test_category'
-                        -- `method`='$method'
-                        -- `fee`='$fee'
-                         `testname`='$modeltest->testname'
-                        -- `references`='$references'
-                        -- `sample_code`='$sample_code'
-                         WHERE `analysis_id`=".$analysisquery->analysis_id;
+                        $sql="UPDATE `tbl_request` SET `total`='$total' WHERE `request_id`=".$analysisquery->request_id;
                         $Command=$Connection->createCommand($sql);
                         $Command->execute();
-                
 
-                        Yii::$app->session->setFlash('success', 'Analysis Successfully Updated'); 
+                        Yii::$app->session->setFlash('success', 'Analysis Successfully Update'); 
                         return $this->redirect(['/lab/request/view', 'id' =>$requestquery->request_id]);
-        
                     }
                 } elseif (Yii::$app->request->isAjax) {
-
         return $this->renderAjax('_form', [
             'model' => $model,
              'sampleDataProvider' => $sampleDataProvider,
@@ -422,11 +430,26 @@ class AnalysisController extends Controller
         // return $this->redirect(['index']);
 
         $model = $this->findModel($id);
-    
+
         $session = Yii::$app->session;
        
           
             if($model->delete()) {
+                $analysisquery = Analysis::find()->where(['analysis_id' => $id])->one();
+                $requestquery = Request::find()->where(['request_id' =>$model->request_id])->one();
+                $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
+                $rate =  $discountquery->rate;       
+                $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=$model->request_id";
+                $Connection = Yii::$app->labdb;
+                $command = $Connection->createCommand($sql);
+                $row = $command->queryOne();
+                $subtotal = $row['subtotal'];
+                $total = $subtotal - ($subtotal * ($rate/100));
+        
+                $Connection= Yii::$app->labdb;
+                $sql="UPDATE `tbl_request` SET `total`='$total' WHERE `request_id`=".$model->request_id;
+                $Command=$Connection->createCommand($sql);
+                $Command->execute();
                 Yii::$app->session->setFlash('success', 'Analysis Successfully Deleted'); 
                 return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
             } else {

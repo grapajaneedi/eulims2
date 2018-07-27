@@ -142,12 +142,11 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
             [
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Buttontemplate,
-                 'buttons'=>[
-                    'view'=>function ($url, $model) {
-                          return Html::a('View', ['/finance/cashier/view-op?id='.$model->orderofpayment_id], ['target'=>'_blank']);
-                    },
-                     'update'=>"",       
-                  ],
+                'buttons'=>[
+                    'view' => function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/cashier/view-op?id='.$model->orderofpayment_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Order of Payment")]);
+                    },      
+                ],
             ],
 
         ],

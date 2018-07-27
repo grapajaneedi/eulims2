@@ -15,6 +15,7 @@ use yii\helpers\ArrayHelper;
 use common\models\services\Testcategory;
 use common\models\services\Test;
 use common\models\services\Sampletype;
+use common\models\finance\Paymentitem;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Analysis */
@@ -23,22 +24,17 @@ use common\models\services\Sampletype;
 
 $js=<<<SCRIPT
    $(".kv-row-checkbox").click(function(){
-      
       var keys = $('#sample-grid').yiiGridView('getSelectedRows');
       var keylist= keys.join();
-
-      
       $("#sample_ids").val(keylist);
       $("#sample_ids").val(keylist);
-     // $("#sample-testcategory_id").prop('disabled', false);
-      
+      $("#analysis_create").prop('disabled', keys=='');  
    });    
    $(".select-on-check-all").change(function(){
-
     var keys = $('#sample-grid').yiiGridView('getSelectedRows');
     var keylist= keys.join();
-    $("#sample-testcategory_id").prop('disabled', false);
-    
+ 
+    $("#analysis_create").prop('disabled', keys=='');  
    });
   
 SCRIPT;
@@ -50,6 +46,18 @@ $this->registerJs($js);
 
     <?php $form = ActiveForm::begin(); ?>
  
+    <?php
+    if(!$model->isNewRecord){
+    ?>
+    <script type="text/javascript">
+       $(document).ready(function(){
+           $(".select-on-check-all").click();
+        });
+    </script>
+    <?php
+    
+    }
+?>
 
     <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
@@ -170,7 +178,7 @@ $this->registerJs($js);
 
 
     <div class="row" style="float: right;padding-right: 30px">
-    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'id'=>'analysis_create', 'disabled'=> true]) ?>
         <?php if($model->isNewRecord){ ?>
         <?php } ?>
     <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
@@ -186,13 +194,12 @@ $this->registerJs($js);
 $this->registerJs("$('#sample-test_id').on('change',function(){
     var id = $('#sample-test_id').val();
         $.ajax({
-            //url: '".Url::toRoute("sample/getlisttemplate")."',
             url: '".Url::toRoute("analysis/gettest")."',
             dataType: 'json',
             method: 'GET',
-            //data: {id: $(this).val()},
             data: {test_id: id},
             success: function (data, textStatus, jqXHR) {
+              
                 $('#analysis-method').val(data.method);
                 $('#analysis-references').val(data.references);
                 $('#analysis-fee').val(data.fee);
@@ -211,39 +218,63 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
 });");
 ?>
 
-<script type="text/javascript">
-    function settotal(){
-        var keys = $('#sample-grid').yiiGridView('getSelectedRows');
-        var keylist= keys.join();
-      //  $("#op-requestids").val(keys.join());
-        $.post({
-            url: '/finance/op/calculate-total?id='+keylist, // your controller action
-            success: function(data) {
-                // var tot=parseFloat(data);
-                // var total=CurrencyFormat(tot,2);
-                // $('#total').html(total);
-                //  var payment_mode=$('#op-payment_mode_id').val()
-                // if(payment_mode===4){
-                //     wallet=parseInt($('#wallet').val());
-                //     totalVal = parseFloat($('#total').html().replace(/[^0-9-.]/g, ''));
-                   
-                //     if( totalVal > wallet) {
-                       
-                //        swal("Insufficient customer wallet");
-                //       $('#op-purpose').prop('disabled', true);
-                //       $('#createOP').prop('disabled', true);
-                    
-                //     }
-                //     else{
-                //         if(total !== 0){
-                //             $('#op-purpose').prop('disabled', false);
-                //             $('#createOP').prop('disabled', false);
-                //         }
-                       
-                //     }
-                // }
+
+<?php
+$this->registerJs("$('#sample-testcategory_id').on('change',function(){
+    var id = $('#sample-test_id').val();
+        $.ajax({
+            url: '".Url::toRoute("analysis/gettest")."',
+            dataType: 'json',
+            method: 'GET',
+            data: {test_id: id},
+            success: function (data, textStatus, jqXHR) {
+              
+                $('#analysis-method').val(data.method);
+                $('#analysis-references').val(data.references);
+                $('#analysis-fee').val(data.fee);
+                $('#analysis-quantity').val('1');
+                $('.image-loader').removeClass( \"img-loader\" );
+
+                //alert($('#sample-test_id').val());
+            },
+            beforeSend: function (xhr) {
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('An error occured!');
+                alert('Error in ajax request');
             }
         });
-    }
-    
-</script>
+});");
+?>
+
+<?php
+$this->registerJs("$('#sample-sample_type_id').on('change',function(){
+    var id = $('#sample-test_id').val();
+        $.ajax({
+            url: '".Url::toRoute("analysis/gettest")."',
+            dataType: 'json',
+            method: 'GET',
+            data: {test_id: id},
+            success: function (data, textStatus, jqXHR) {
+                
+                $('#analysis-method').val(data.method);
+                $('#analysis-references').val(data.references);
+                $('#analysis-fee').val(data.fee);
+                $('#analysis-quantity').val('1');
+                $('.image-loader').removeClass( \"img-loader\" );
+
+                //alert($('#sample-test_id').val());
+            },
+            beforeSend: function (xhr) {
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('An error occured!');
+                alert('Error in ajax request');
+            }
+        });
+});");
+?>

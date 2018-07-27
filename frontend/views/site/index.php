@@ -663,7 +663,7 @@ function updateRecord(obj) {
 <?php } else { ?>
          <?php
             $model = new LoginForm();
-            echo $this->render('..\admin-lte\site\userdashboard', [
+            echo $this->render('..\admin-lte\site\userdashboard.php', [
                 'model' => $model,
             ]);
             

@@ -53,10 +53,11 @@ if(Yii::$app->user->can('allow-cancel-op')){
         ],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
-                'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP']),
+                'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP','onclick'=>'addOp(this.value,this.title)']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
         'exportConfig'=>$func->exportConfig("Order of Payment", "op", $Header),
+        
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -141,12 +142,15 @@ if(Yii::$app->user->can('allow-cancel-op')){
                'value'=>function($model){
                     $Obj=$model->getCollectionStatus($model->orderofpayment_id);
                     if($Obj){
-                       return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
+                       //return "<button class='btn ".$Obj[0]['class']." btn-block'><span class=".$Obj[0]['icon']."></span>".$Obj[0]['payment_status']."</button>"; 
+                       return "<span class='badge ".$Obj[0]['class']." legend-font' style='width:80px!important;height:20px!important;'>".$Obj[0]['payment_status']."</span>";
                     }else{
-                       return "<button class='btn btn-primary btn-block'>Unpaid</button>"; 
+                       //return "<button class='btn btn-primary btn-block'>Unpaid</button>";
+                        return "<span class='badge btn-primary legend-font' style='width:80px!important;height:20px!important;'>Unpaid</span>";
                     }
                    //
                 },   
+                'hAlign'=>'center',
             ],
             [
               //'class' => 'yii\grid\ActionColumn'
@@ -167,14 +171,16 @@ if(Yii::$app->user->can('allow-cancel-op')){
                         if($Obj){
                             return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/finance/cancelop/create?op=' . $model->orderofpayment_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$Obj[0]['payment_status'] <> 'Unpaid', 'title' => Yii::t('app', "Cancel Order of Payment")]);
                         }
+//                        if($Obj){
+//                            return $Obj[0]['payment_status_id'] ? ($Obj[0]['payment_status_id'] == 1 ? Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/finance/cancelop/create?op=' . $model->orderofpayment_id, 'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger', 'title' => Yii::t('app', "Cancel Order of Payment]")]) : '') : "";
+//                        }
                     }        
-                    /*'delete' => function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/lab/cancelrequest/create?req=' . $model->request_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$model->status_id==2, 'title' => Yii::t('app', "Cancel Request")]);
-                    }*/
+                   
                 ],
             ],
 
         ],
+                       
     ]); ?>
       
      <?php
@@ -218,5 +224,13 @@ if(Yii::$app->user->can('allow-cancel-op')){
             .find('#modalContent')
             .load($(this).attr('value'));
     });
+    function addOp(url,title){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       //var url = '/lab/sample/update?id='+id;
+        $(".modal-title").html(title);
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
   
 </script>
