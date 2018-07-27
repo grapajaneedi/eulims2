@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
 use kartik\widgets\DatePicker;
+use kartik\widgets\DateTimePicker;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use kartik\widgets\TypeaheadBasic;
@@ -86,12 +87,22 @@ if(count($sampletype) > 0){
             $endDiv = "</div>";
             echo $startDiv;
             //echo $form->field($model, 'sampling_date')->textInput();
-            echo $form->field($model, 'sampling_date')->widget(DatePicker::classname(), [
-                'options' => ['placeholder' => 'Enter sampling date ...','autocomplete'=>'off'],
-                'value' => $model->sampling_date ? date('m/d/Y', strtotime($model->sampling_date)) : date('m/d/Y'),
+            //echo $form->field($model, 'sampling_date')->widget(DatePicker::classname(), [
+            echo $form->field($model, 'sampling_date')->widget(DateTimePicker::classname(), [
+                'options' => [
+					'placeholder' => 'Enter sampling date ...',
+					'autocomplete'=>'off'
+				],
+                //'value' => $model->sampling_date ? date('m/d/Y h:i A', strtotime($model->sampling_date)) : date("m/d/Y h:i A"),
+				'value'=>function($model){
+					return date("m/d/Y h:i:s A", strtotime($model->sampling_date));
+				},
+				'readonly' => true,
                 'pluginOptions' => [
                     'autoclose'=>true,
-                    'format' => 'mm/dd/yyyy'
+                    'format' => 'mm/dd/yyyy HH:ii:ss P',
+					'todayHighlight' => true,
+					'startDate' => date('m/d/Y h:i:s A'),
                 ]
             ]);
             /*echo DatePicker::widget([

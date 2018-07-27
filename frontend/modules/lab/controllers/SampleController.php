@@ -118,9 +118,9 @@ class SampleController extends Controller
         //if ($model->load(Yii::$app->request->post()) && $model->save()) {
         if ($model->load(Yii::$app->request->post())) {
             if(isset($_POST['Sample']['sampling_date'])){
-                $model->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
+                $model->sampling_date = date('Y-m-d H:i:s', strtotime($_POST['Sample']['sampling_date']));
             } else {
-                $model->sampling_date = date('Y-m-d');
+                $model->sampling_date = date('Y-m-d H:i:s');
             }
 
             $model->rstl_id = $GLOBALS['rstl_id'];
@@ -148,9 +148,9 @@ class SampleController extends Controller
                     $sample = new Sample();
 
                     if(isset($_POST['Sample']['sampling_date'])){
-                        $sample->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
+                        $sample->sampling_date = date('Y-m-d H:i:s', strtotime($_POST['Sample']['sampling_date']));
                     } else {
-                        $sample->sampling_date = date('Y-m-d');
+                        $sample->sampling_date = date('Y-m-d H:i:s');
                     }
                     $sample->rstl_id = $GLOBALS['rstl_id'];
                     //$sample->sample_code = 0;
@@ -178,14 +178,16 @@ class SampleController extends Controller
             }
 
         } elseif (Yii::$app->request->isAjax) {
-                return $this->renderAjax('_form', [
-                    'model' => $model,
-                    'testcategory' => $testcategory,
-                    'sampletype' => $sampletype,
-                    'labId' => $labId,
-                    'sampletemplate' => $this->listSampletemplate(),
-                ]);
+			$model->sampling_date = date('m/d/Y h:i:s A');
+			return $this->renderAjax('_form', [
+				'model' => $model,
+				'testcategory' => $testcategory,
+				'sampletype' => $sampletype,
+				'labId' => $labId,
+				'sampletemplate' => $this->listSampletemplate(),
+			]);
         } else {
+			$model->sampling_date = date('Y-m-d H:i:s');
             return $this->render('create', [
                 'model' => $model,
                 'testcategory' => $testcategory,
@@ -234,9 +236,9 @@ class SampleController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             if(isset($_POST['Sample']['sampling_date'])){
-                $model->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
+                $model->sampling_date = date('Y-m-d H:i:s', strtotime($_POST['Sample']['sampling_date']));
             } else {
-                $model->sampling_date = date('Y-m-d');
+                $model->sampling_date = date('Y-m-d H:i:s');
             }
 
             if($model->save(false)){
