@@ -3,6 +3,7 @@
 namespace frontend\modules\lab\controllers;
 
 use Yii;
+use frontend\modules\lab\components\eRequest;
 use common\models\lab\Request;
 use common\models\lab\Discount;
 use common\models\lab\Analysis;
@@ -221,8 +222,7 @@ class RequestController extends Controller
         echo "</pre>";
         exit;
         */
-        
-        if($Request->save(false)){
+        if($Request->save()){
             $Transaction->commit();
             $Func=new Functions();
             $response=$Func->GenerateSampleCode($request_id);
@@ -248,7 +248,7 @@ class RequestController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Request();
+        $model = new eRequest();
         /*echo "<pre>";
         print_r(Yii::$app->request->post());
         echo "</pre>";
