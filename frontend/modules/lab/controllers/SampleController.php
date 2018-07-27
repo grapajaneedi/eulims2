@@ -324,7 +324,7 @@ class SampleController extends Controller
 		
         //if ($model->load(Yii::$app->request->post())) {
 		if(count($checkForPayment) > 0){
-			Yii::$app->session->setFlash('error', "Cancel not allowed.\nOrder of Payment for ".$model->request->request_ref_num." already created.");
+			Yii::$app->session->setFlash('error', "Cancel not allowed.\nOrder of Payment already created for\n".$model->request->request_ref_num.".");
 			return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
 		} else {
 			if (Yii::$app->request->post()){
