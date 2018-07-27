@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "tbl_sampletype_testname".
  *
- * @property int $id
+ * @property int $sampletype_testname_id
  * @property int $sampletype_id
  * @property int $testname_id
  * @property string $added_by
@@ -41,7 +41,7 @@ class Sampletypetestname extends \yii\db\ActiveRecord
             [['sampletype_id', 'testname_id', 'added_by'], 'required'],
             [['sampletype_id', 'testname_id'], 'integer'],
             [['added_by'], 'string', 'max' => 10],
-            [['sampletype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletype_id' => 'id']],
+            [['sampletype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletype_id' => 'sampletype_id']],
         ];
     }
 
@@ -51,7 +51,7 @@ class Sampletypetestname extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'sampletype_testname_id' => 'Sampletype Testname ID',
             'sampletype_id' => 'Sampletype ID',
             'testname_id' => 'Testname ID',
             'added_by' => 'Added By',
@@ -63,6 +63,6 @@ class Sampletypetestname extends \yii\db\ActiveRecord
      */
     public function getSampletype()
     {
-        return $this->hasOne(Sampletype::className(), ['id' => 'sampletype_id']);
+        return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletype_id']);
     }
 }

@@ -7,16 +7,15 @@ use Yii;
 /**
  * This is the model class for table "tbl_lab_sampletype".
  *
- * @property int $id
+ * @property int $lab_sampletype_id
  * @property int $lab_id
  * @property int $sampletypeId
  * @property string $effective_date
  * @property string $added_by
  *
- * @property Lab $lab
  * @property Sampletype $sampletype
  */
-class Labsampletype extends \yii\db\ActiveRecord
+class LabSampletype extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -40,11 +39,11 @@ class Labsampletype extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['lab_id', 'sampletypeId', 'effective_date', 'added_by'], 'required'],
+            [['lab_id', 'sampletypeId', 'added_by'], 'required'],
             [['lab_id', 'sampletypeId'], 'integer'],
             [['effective_date'], 'safe'],
             [['added_by'], 'string', 'max' => 10],
-            [['sampletypeId'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletypeId' => 'id']],
+            [['sampletypeId'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletypeId' => 'sampletype_id']],
         ];
     }
 
@@ -54,7 +53,7 @@ class Labsampletype extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'lab_sampletype_id' => 'Lab Sampletype ID',
             'lab_id' => 'Lab ID',
             'sampletypeId' => 'Sampletype ID',
             'effective_date' => 'Effective Date',
@@ -65,16 +64,8 @@ class Labsampletype extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLab()
-    {
-        return $this->hasOne(Lab::className(), ['lab_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getSampletype()
     {
-        return $this->hasOne(Sampletype::className(), ['id' => 'sampletypeId']);
+        return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletypeId']);
     }
 }
