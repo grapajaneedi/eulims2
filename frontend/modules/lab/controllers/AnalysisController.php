@@ -14,12 +14,19 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
-use common\models\lab\Sampletype;
-use common\models\lab\Testcategory;
-use common\models\lab\Test;
 use common\models\lab\SampleSearch;
 use yii\helpers\Json;
 use common\models\finance\Paymentitem;
+
+
+use common\models\lab\Lab;
+use common\models\lab\Labsampletype;
+use common\models\lab\Sampletype;
+use common\models\lab\Sampletypetestname;
+use common\models\lab\Testnamemethod;
+use common\models\lab\Methodreference;
+use common\models\lab\Testname;
+
 use DateTime;
 
 /**
@@ -185,18 +192,14 @@ class AnalysisController extends Controller
 
         $sample_count = $sampleDataProvider->getTotalCount();
         
-       
-       
-        
-        
         $request_id = $_GET['id'];
         $request = $this->findRequest($request_id);
         $labId = $request->lab_id;
 
         $testcategory = $this->listTestcategory($labId);
 
-        $sampletype = [];
-        $test = [];
+    //    $sampletype = [];
+    //    $test = [];
         
         // if ($sample_count==0){  
         // //    Yii::$app->session->setFlash('success', 'Please add atleast 1 sample'); 
@@ -276,8 +279,8 @@ class AnalysisController extends Controller
                 'dataProvider' => $dataProvider,
                 'sampleDataProvider' => $sampleDataProvider,
                 'testcategory' => $testcategory,
-                'test' => $test,
-                'sampletype'=>$sampletype
+                // 'test' => $test,
+                // 'sampletype'=>$sampletype
             ]);
         }
      
@@ -295,15 +298,11 @@ class AnalysisController extends Controller
 
      protected function listTestcategory($labId)
      {
-         $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 
+         $testcategory = ArrayHelper::map(Labsampletype::find()->andWhere(['lab_id'=>$labId])->all(), 'id', 
             function($testcategory, $defaultValue) {
-                return $testcategory->category_name;
+                return $testcategory->sampletypeId;
          });
- 
-         /*$testcategory = ArrayHelper::map(Testcategory::find()
-             ->where(['lab_id' => $labId])
-             ->all(), 'testcategory_id', 'category_name');*/
- 
+
          return $testcategory;
      }
     public function actionUpdate($id)
