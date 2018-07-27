@@ -100,37 +100,54 @@ $this->registerJs($js);
     ]); ?>
 <script type="text/javascript">
     function settotal(){
-         var keys = $('#grid').yiiGridView('getSelectedRows');
-        var keylist= keys.join();
-        $("#op-requestids").val(keys.join());
-       // $("#ext_op-requestid_update").val(keys.join());
-        $.post({
-            url: '/finance/op/calculate-total?id='+keylist, // your controller action
-            success: function(data) {
-                var tot=parseFloat(data);
-                var total=CurrencyFormat(tot,2);
-                $('#total').html(total);
-                 var payment_mode=$('#op-payment_mode_id').val()
-                if(payment_mode==4){
-                    
-                    wallet=parseInt($('#wallet').val());
-                    totalVal = parseFloat($('#total').html().replace(/[^0-9-.]/g, ''));
-                    if( totalVal > wallet) {
-                      alert("Insufficient customer wallet");
-                      $('#op-purpose').prop('disabled', true);
-                      $('#createOP').prop('disabled', true);
-                    
-                    }
-                    else{
-                        if(total !== 0){
-                            $('#op-purpose').prop('disabled', false);
-                            $('#createOP').prop('disabled', false);
-                        }
-                       
-                    }
+        
+        //
+        var dkeys=$("#grid").yiiGridView("getSelectedRows");
+        $("#ext_billing-opids").val(dkeys);
+        var SearchFieldsTable = $(".kv-grid-table>tbody");
+        var trows = SearchFieldsTable[0].rows;
+        var Total=0.00;
+        var amt=0.00;
+        $.each(trows, function (index, row) {
+            var data_key=$(row).attr("data-key");
+            for (i = 0; i < dkeys.length; i++) { 
+                if(data_key==dkeys[i]){
+                    amt=StringToFloat(trows[index].cells[4].innerHTML);
+                    Total=Total+parseFloat(amt);
                 }
             }
-        });
+        }); 
+        //$("#ext_billing-amount-disp").val(Total);
+        //
+      //  var keys = $('#grid').yiiGridView('getSelectedRows');
+        var keylist= dkeys.join();
+        
+        $("#op-requestids").val(keylist);
+       // $("#ext_op-requestid_update").val(keys.join());
+        
+        var tot=parseFloat(Total);
+        var total=CurrencyFormat(tot,2);
+        $('#total').html(total);
+         var payment_mode=$('#op-payment_mode_id').val()
+        if(payment_mode==4){
+
+            wallet=parseInt($('#wallet').val());
+            totalVal = parseFloat($('#total').html().replace(/[^0-9-.]/g, ''));
+            if( totalVal > wallet) {
+              alert("Insufficient customer wallet");
+              $('#op-purpose').prop('disabled', true);
+              $('#createOP').prop('disabled', true);
+
+            }
+            else{
+                if(total !== 0){
+                    $('#op-purpose').prop('disabled', false);
+                    $('#createOP').prop('disabled', false);
+                }
+
+            }
+        }
+         
     }
     
 </script>
