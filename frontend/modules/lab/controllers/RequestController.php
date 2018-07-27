@@ -228,14 +228,14 @@ class RequestController extends Controller
             $response=$Func->GenerateSampleCode($request_id);
             if($response){
                 $return="Success";
-                Yii::$app->session->setFlash('success', 'Request Ref #/Sample Code Successfully Generated!');
+                Yii::$app->session->setFlash('success', 'Request Reference # and Sample Code Successfully Generated!');
             }else{
                 $Transaction->rollback();
-                Yii::$app->session->setFlash('danger', 'Request Ref #/Sample Code Failed to Generate!');
+                Yii::$app->session->setFlash('danger', 'Request Reference # and Sample Code Failed to Generate!');
                 $return="Failed";
             }
         }else{
-            Yii::$app->session->setFlash('danger', 'Request Ref #/Sample Code Failed to Generate!');
+            Yii::$app->session->setFlash('danger', 'Request Reference # and Sample Code Failed to Generate!');
             $Transaction->rollback();
             $return="Failed";
         }

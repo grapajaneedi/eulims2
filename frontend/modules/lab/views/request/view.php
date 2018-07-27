@@ -10,8 +10,8 @@ use common\models\lab\Discount;
 use common\models\lab\Request;
 use common\models\finance\Paymentitem;
 
-
-$sweetalert = new Functions();
+$Connection = Yii::$app->financedb;
+$func = new Functions();
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
@@ -71,7 +71,7 @@ $Cancelledrequest= Cancelledrequest::find()->where(['request_id'=>$model->reques
 if($Cancelledrequest){
     $Reasons=$Cancelledrequest->reason;
     $DateCancelled=date('m/d/Y h:i A', strtotime($Cancelledrequest->cancel_date));
-    $CancelledBy=$sweetalert->GetProfileName($Cancelledrequest->cancelledby);
+    $CancelledBy=$func->GetProfileName($Cancelledrequest->cancelledby);
 }else{
     $Reasons='&nbsp;';
     $DateCancelled='';
@@ -88,9 +88,15 @@ if($Request_Ref){
     $disableButton="";
     $btnID="id='btnSaveRequest'";
 }
-
-
-
+$Params=[
+    'mRequestID'=>$model->request_id
+];
+$row=$func->ExecuteStoredProcedureOne("spGetPaymentDetails(:mRequestID)", $Params, $Connection);
+$payment_total=number_format($row['TotalAmount'],2);
+$orNumbers=$row['ORNumber'];
+$orDate=$row['ORDate'];
+$UnpaidBalance=$model->total-$row['TotalAmount'];
+$UnpaidBalance=number_format($UnpaidBalance,2);
 ?>
 <div class="section-request"> 
 <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
@@ -221,14 +227,14 @@ if($Request_Ref){
                     'columns' => [
                         [
                             'label'=>'OR No.',
-                            'value'=>'',
+                            'value'=>$orNumbers,
                             'displayOnly'=>true,
                             'valueColOptions'=>['style'=>'width:30%']
                         ],
                         [
                             'label'=>'Collection',
                             'format'=>'raw',
-                            'value'=>'0',
+                            'value'=>"₱".$payment_total,
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -238,14 +244,14 @@ if($Request_Ref){
                     'columns' => [
                         [
                             'label'=>'OR Date',
-                            'value'=>'',
+                            'value'=>$orDate,
                             'displayOnly'=>true,
                             'valueColOptions'=>['style'=>'width:30%']
                         ],
                         [
                             'label'=>'Unpaid Balance',
                             'format'=>'raw',
-                            'value'=>'0',
+                            'value'=>"₱".$UnpaidBalance,
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
