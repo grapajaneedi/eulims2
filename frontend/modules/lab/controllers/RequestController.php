@@ -304,7 +304,8 @@ class RequestController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        //$model = $this->findModel($id);
+        $model= eRequest::findOne($id);
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Request Successfully Updated!');
