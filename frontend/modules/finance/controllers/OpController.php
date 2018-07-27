@@ -123,6 +123,7 @@ class OpController extends Controller
                     $paymentitem->request_type_id =$request->request_type_id;
                     $paymentitem->status=1;//Unpaid
                     $paymentitem->save(false); 
+                    
                 }
                 //----------------------//
                 //---Saving for Collection-------
@@ -233,7 +234,7 @@ class OpController extends Controller
      public function actionGetlistrequest($id)
     {
         $model= new Request();
-        $query = Request::find()->where(['customer_id' => $id,'posted' => 0])->andWhere(['not', ['request_ref_num' => null]]);
+        $query = Request::find()->where(['customer_id' => $id])->andWhere(['not', ['request_ref_num' => null]])->andWhere(['not', ['payment_status_id' => 2]]);
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

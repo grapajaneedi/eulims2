@@ -133,7 +133,7 @@ $this->registerJs($js);
     
                         
     <div class="row" style="float: right;padding-right: 30px">
-    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'id'=>'fee_btn']) ?>
+    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'id'=>'fee_btn', 'disabled'=>true]) ?>
         <?php if($model->isNewRecord){ ?>
         <?php } ?>
     <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>

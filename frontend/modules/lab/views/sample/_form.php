@@ -154,7 +154,7 @@ if(count($sampletype) > 0){
     <div class="form-group" style="padding-bottom: 3px;">
         <div style="float:right;">
             <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-            <?= Html::button('Cancel', ['class' => 'btn', 'onclick'=>'closeDialog()']) ?>
+            <?= Html::button('Close', ['class' => 'btn', 'onclick'=>'closeDialog()']) ?>
             <br>
         </div>
     </div>

@@ -196,12 +196,12 @@ class Functions extends Component{
                     $sample->sample_code = $samplecodeGenerated;
                     $sample->save();
                     //$transaction->commit();
-                    $return=true;
+                    $return="true";
                 } else {
                     //error
                     //$transaction->rollBack();
                     $samplecode->getErrors();
-                    $return=false;
+                    $return="false";
                 }
                 
                 //$transaction->commit();
@@ -209,10 +209,10 @@ class Functions extends Component{
             } catch (\Exception $e) {
                //$transaction->rollBack();
                 echo $e->getMessage();
-               $return=false;
+               $return="false";
             } catch (\Throwable $e) {
                //$transaction->rollBack();
-               $return=false;
+               $return="false";
                echo $e->getMessage();
             }
             

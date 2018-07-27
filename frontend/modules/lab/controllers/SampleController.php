@@ -12,6 +12,7 @@ use common\models\lab\Lab;
 use common\models\lab\Samplecode;
 use common\models\lab\SampleName;
 use common\models\lab\Analysis;
+use common\models\finance\Paymentitem;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -97,7 +98,7 @@ class SampleController extends Controller
     {
         $model = new Sample();
 
-        $session = Yii::$app->session;
+        //$session = Yii::$app->session;
         //$req = Yii::$app->request;
 
         if(Yii::$app->request->get('request_id'))
@@ -163,13 +164,15 @@ class SampleController extends Controller
                     $sample->save(false);
                 }
                 //return $this->redirect('index');
-                $session->set('savemessage',"executed");
+                //$session->set('savemessage',"executed");
+				Yii::$app->session->setFlash('success', "Sample Successfully Created.");
                 return $this->redirect(['/lab/request/view', 'id' => $requestId]);
             } else {
                 if($model->save(false)){
                     //return $this->redirect(['view', 'id' => $model->sample_id]);
                     //echo Json::encode('Successfully saved.');
-                    $session->set('savemessage',"executed");
+                    //$session->set('savemessage',"executed");
+					Yii::$app->session->setFlash('success', "Sample Successfully Created.");
                     return $this->redirect(['/lab/request/view', 'id' => $requestId]);
                 }
             }
@@ -209,7 +212,7 @@ class SampleController extends Controller
             $requestId = (int) $_GET['request_id'];
         }*/
 
-        $session = Yii::$app->session;
+        //$session = Yii::$app->session;
 
         $request = $this->findRequest($model->request_id);
         $labId = $request->lab_id;
@@ -237,7 +240,8 @@ class SampleController extends Controller
             }
 
             if($model->save(false)){
-                $session->set('updatemessage',"executed");
+                //$session->set('updatemessage',"executed");
+				Yii::$app->session->setFlash('success', $model->samplename." Successfully Updated.");
                 return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
 
             }
@@ -273,18 +277,21 @@ class SampleController extends Controller
 
         $model = $this->findModel($id);
         //$sampleId = (int) $id;
-        $session = Yii::$app->session;
+        //$session = Yii::$app->session;
         $analyses = Analysis::find()->where(['sample_id' => $id])->all();
 
         if(count($analyses) > 0){
-            return $model->samplename." has analysis. Remove first the analysis then delete this sample.";
+            //return $model->samplename." has analysis. Remove first the analysis then delete this sample.";
+			Yii::$app->session->setFlash('error', $model->samplename." has analysis.\nRemove first the analysis then delete this sample.");
+			return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
         } else {
             //$delete = $this->findModel($id);
 
             if($model->delete()) {
                 //$session->set('deletemessage',"executed");
                 //return;
-                $session->set('deletemessage',"executed");
+                //$session->set('deletemessage',"executed");
+				Yii::$app->session->setFlash('warning', 'Sample Successfully Deleted.');
                 return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
             } else {
                 return $model->error();
@@ -302,60 +309,71 @@ class SampleController extends Controller
         //$this->findModel($id)->delete();
         //return;
         $model = $this->findModel($id);
-        $session = Yii::$app->session;
+        //$session = Yii::$app->session;
         $sampleId = (int) $id;
         $analyses = Analysis::find()->where('sample_id =:sampleId', [':sampleId'=>$sampleId])->all();
-
+		
+		
+		$checkForPayment = Paymentitem::find()->where('request_id =:requestId',[':requestId'=>$model->request_id])->one();
+		// echo '<pre>';
+		// print_r($checkForPayment);
+		// echo '<pre>';
+		// exit;
+		
         //if ($model->load(Yii::$app->request->post())) {
-        if (Yii::$app->request->post()){
+		if(count($checkForPayment) > 0){
+			Yii::$app->session->setFlash('error', "Cancel not allowed.\nOrder of Payment for ".$model->request->request_ref_num." already created.");
+			return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+		} else {
+			if (Yii::$app->request->post()){
+				if(trim($_POST['Sample']['remarks']) == ""){
+					Yii::$app->session->setFlash('error', "Remarks should not be empty.");
+					return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+				} else {
+					if(count($analyses) > 0)
+					{
+						foreach ($analyses as $analysis) {
+							//$analysis->delete(); //to delete
+							$analyses->cancelled = 1;
+							$analyses->update(false); // skipping validation as no user input is involved
+						}
 
-            if(trim($_POST['Sample']['remarks']) == ""){
-                Yii::$app->session->setFlash('error', "Remarks should not be empty.");
-                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-            } else {
-                if(count($analyses) > 0)
-                {
-                    foreach ($analyses as $analysis) {
-                        //$analysis->delete(); //to delete
-                        $analyses->cancelled = 1;
-                        $analyses->update(false); // skipping validation as no user input is involved
-                    }
+						$model->remarks = $_POST['Sample']['remarks'];
+						$model->active = 0;
+						if ($model->update() !== false) {
+							Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
+							return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+						} else {
+							$model->error();
+							return false;
+						}
+					} else {
 
-                    $model->remarks = $_POST['Sample']['remarks'];
-                    $model->active = 0;
-                    if ($model->update() !== false) {
-                        $session->set('cancelmessage',"executed");
-                        
-                        return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-                    } else {
-                        $model->error();
-                        return false;
-                    }
-                } else {
+						$model->remarks = $_POST['Sample']['remarks'];
+						$model->active = 0;
+						//$model->update();
 
-                    $model->remarks = $_POST['Sample']['remarks'];
-                    $model->active = 0;
-                    //$model->update();
+						if ($model->update() !== false) {
+							//$session->set('cancelmessage',"executed");
+							Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
+							return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+						} else {
+							$model->error();
+							return false;
+						}
+					}
+				}
 
-                    if ($model->update() !== false) {
-                        $session->set('cancelmessage',"executed");
-                        return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-                    } else {
-                        $model->error();
-                        return false;
-                    }
-                }
-            }
-
-        } elseif (Yii::$app->request->isAjax) {
-                return $this->renderAjax('_cancel', [
-                    'model' => $model,
-                ]);
-        } else {
-            return $this->render('_cancel', [
-                'model' => $model,
-            ]);
-        }
+			} elseif (Yii::$app->request->isAjax) {
+				return $this->renderAjax('_cancel', [
+					'model' => $model,
+				]);
+			} else {
+				return $this->render('_cancel', [
+					'model' => $model,
+				]);
+			}
+		}
     }
 
     /**
@@ -445,7 +463,7 @@ class SampleController extends Controller
     {
         $requestId = (int) Yii::$app->request->get('request_id');
         $request = $this->findRequest($requestId);
-        $lab = Lab::findOne($request->lab_id);
+        //$lab = Lab::findOne($request->lab_id);
         $year = date('Y', strtotime($request->request_datetime));
         $connection= Yii::$app->labdb;
         
@@ -456,7 +474,7 @@ class SampleController extends Controller
 
                 $function = new Functions();
                 $proc = 'spGetNextGenerateSampleCode(:rstlId,:labId,:requestId)';
-                $params = [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$lab->lab_id,':requestId'=>$requestId];
+                $params = [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$request->lab_id,':requestId'=>$requestId];
                 $row = $function->ExecuteStoredProcedureOne($proc, $params, $connection);
                 $samplecodeGenerated = $row['GeneratedSampleCode'];
                 $samplecodeIncrement = $row['SampleIncrement'];
@@ -469,7 +487,7 @@ class SampleController extends Controller
                 $samplecode->rstl_id = $GLOBALS['rstl_id'];
                 $samplecode->reference_num = $request->request_ref_num;
                 $samplecode->sample_id = $sampleId;
-                $samplecode->lab_id = $lab->lab_id;
+                $samplecode->lab_id = $request->lab_id;
                 $samplecode->number = $samplecodeIncrement;
                 $samplecode->year = $year;
                
@@ -479,26 +497,26 @@ class SampleController extends Controller
                     $sample->sample_code = $samplecodeGenerated;
                     $sample->save();
                     $transaction->commit();
-                    $return=true;
+                    $return="true";
                 } else {
                     //error
                     $transaction->rollBack();
                     $samplecode->getErrors();
-                    $return=false;
+                    $return="false";
                 }
                 
                 //$transaction->commit();
 
             } catch (\Exception $e) {
                $transaction->rollBack();
-               $return=false;
+               $return="false";
             } catch (\Throwable $e) {
                $transaction->rollBack();
-               $return=false;
+               $return="false";
             }
             
         }
-        echo $return;
+        return $return;
     }
 
     protected function listSampletemplate()
