@@ -99,6 +99,7 @@ class OpController extends Controller
                 $request_ids=$model->RequestIds;
                 $str_request = explode(',', $request_ids);
                 $arr_length = count($str_request); 
+                $model->total_amount=0;
                 $total_amount=0;
                 $model->rstl_id=$GLOBALS['rstl_id'];
                 $model->transactionnum= $this->Gettransactionnum();
@@ -107,6 +108,10 @@ class OpController extends Controller
                 }else{
                     $model->on_account=0;
                 }
+//                echo "<pre>";
+//                var_dump($model);
+//                echo "</pre>";
+//                exit;
                 $model->save();
                 //Saving for Paymentitem
                 for($i=0;$i<$arr_length;$i++){
