@@ -5,6 +5,7 @@ namespace frontend\modules\lab\controllers;
 use Yii;
 use common\models\lab\Tagging;
 use common\models\lab\Analysis;
+use common\models\lab\Request;
 use common\models\lab\Sample;
 use common\models\TaggingSearch;
 use yii\web\Controller;
@@ -164,6 +165,7 @@ class TaggingController extends Controller
               
          ]);
          $analysisQuery = Analysis::find()->where(['sample_id' => $id]);
+         $request = Request::find()->where(['request_id' =>42]);
          $analysisdataprovider = new ActiveDataProvider([
                  'query' => $analysisQuery,
                  'pagination' => [
@@ -176,7 +178,8 @@ class TaggingController extends Controller
           //  'model' => $this->findModel(1),
            //  'searchModel' => $searchModel,
            //  'dataProvider' => $dataProvider,
-            'model'=>$model,
+                'request'=>$request,
+               'model'=>$model,
              'sampleDataProvider' => $sampleDataProvider,
              'analysisdataprovider'=> $analysisdataprovider,
            //  'trsamples'=>$sampledataProvider,

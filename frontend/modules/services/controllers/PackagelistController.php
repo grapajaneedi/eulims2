@@ -101,7 +101,7 @@ class PackagelistController extends Controller
                         $packagelist->rate = $post['Packagelist']['rate'];  
                         $packagelist->tests = $post['Packagelist']['tests']; 
                         $packagelist->save();
-                        Yii::$app->session->setFlash('success', 'Package Successfully Created');
+                        Yii::$app->session->setFlash('success', 'Package Successfully Added');
                         return $this->runAction('index');
                
                     }      
@@ -201,7 +201,8 @@ class PackagelistController extends Controller
             $analysismodel->pstcanalysis_id = $GLOBALS['rstl_id'];
             $analysismodel->request_id = $GLOBALS['rstl_id'];
             $analysismodel->testname = $GLOBALS['rstl_id'];
-            $analysismodel->cancelled = $GLOBALS['rstl_id'];
+            $analysismodel->cancelled = 0;
+            $analysismodel->is_package = 1;
             $analysismodel->sample_id = $GLOBALS['rstl_id'];
             $analysismodel->sample_code = $GLOBALS['rstl_id'];
             $analysismodel->date_analysis = '2018-06-14 7:35:0';
