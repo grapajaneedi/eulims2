@@ -5,13 +5,16 @@ use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use kartik\grid\GridView;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\SampleSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Samples';
+$this->params['breadcrumbs'][] = ['label' => 'Lab', 'url' => ['/lab']];
 $this->params['breadcrumbs'][] = $this->title;
+$func=new Functions();
 ?>
 <?php
 /*Modal::begin([
@@ -38,8 +41,16 @@ Modal::end();*/
         
         <?php //echo Html::button('Create Sample', ['value' => Url::to(['sample/create','request_id'=>1]),'title'=>'Create Sample', 'class' => 'btn btn-success','id' => 'modalBtn']); ?>
     </p>
+        <fieldset>
+        <legend>Legend/Status</legend>
+        <div style='padding: 0 10px'>
+			<span class='badge btn-success legend-font'><span class='glyphicon glyphicon-ok'></span> ACTIVE</span>
+            <span class='badge btn-danger legend-font'><span class='glyphicon glyphicon-ban-circle'></span> CANCELLED</span>
+        </div>
+		</fieldset>
 
     <?= GridView::widget([
+		'id' => 'sample-grid',
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'pjax'=>true,
@@ -48,6 +59,13 @@ Modal::end();*/
                 'enablePushState' => false,
             ]
         ],
+		'panel' => [
+			'heading'=>'<h3 class="panel-title">Samples</h3>',
+			'type'=>'primary',
+			//'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>!$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/reports/preview?url=/lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
+			'after'=>false,
+		],
+		//'headerOptions' => ['class' => 'kartik-sheet-style'],
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
 
@@ -62,6 +80,7 @@ Modal::end();*/
                 'format' => 'raw',
                 'value' => function($data){ return $data->request->request_ref_num;},
                 'group'=>true,  // enable grouping
+				'headerOptions' => ['class' => 'text-center'],
             ],
             [
                 'attribute' => 'sample_type_id',
@@ -74,11 +93,17 @@ Modal::end();*/
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'Sample Type', 'id' => 'grid-op-search-sample_type_id']
+                'filterInputOptions' => ['placeholder' => 'Sample Type', 'id' => 'grid-op-search-sample_type_id'],
+				'headerOptions' => ['class' => 'text-center'],
             ],
-            'sample_code',
-            'samplename',
-            //'description:ntext',
+            [
+				'attribute'=>'sample_code',
+				'headerOptions' => ['class' => 'text-center'],
+			],
+			[
+				'attribute'=>'samplename',
+				'headerOptions' => ['class' => 'text-center'],
+			],
             [
                 'attribute'=>'description',
                 'format' => 'raw',
@@ -86,6 +111,22 @@ Modal::end();*/
                 'contentOptions' => [
                     'style'=>'max-width:40%; overflow: auto; white-space: normal; word-wrap: break-word;'
                 ],
+				'headerOptions' => ['class' => 'text-center'],
+            ],
+			[
+                'attribute'=>'active',
+				'header' => 'Status',
+                'format' => 'raw',
+				'value' => function($data){ return ($data->active == 1) ? "<span class='badge btn-success legend-font'>ACTIVE</span>" : "<span class='badge btn-danger legend-font'>CANCELLED</span>";},
+                //'enableSorting' => false,
+				'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ['1' => 'Active', '0' => 'Cancelled'],
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Select Status', 'id' => 'grid-op-search-active'],
+				'contentOptions' => ['class' => 'text-center'],
+				'headerOptions' => ['class' => 'text-center'],
             ],
             // 'sampling_date',
             // 'remarks',
@@ -113,6 +154,14 @@ Modal::end();*/
                 ],
             ],*/
         ],
+		'toolbar' => [
+			'content'=> Html::a('<i class="glyphicon glyphicon-repeat"></i> Reset Grid', [Url::to([''])], [
+						'class' => 'btn btn-default', 
+						'title' => 'Reset Grid'
+					]),
+			//'{toggleData}',
+		],
+		
     ]); ?>
         </div>
 </div>
