@@ -4,6 +4,7 @@ namespace frontend\modules\lab\controllers;
 
 use Yii;
 use frontend\modules\lab\components\eRequest;
+use common\models\lab\exRequest;
 use common\models\lab\Request;
 use common\models\lab\Discount;
 use common\models\lab\Analysis;
@@ -82,9 +83,9 @@ class RequestController extends Controller
                 'pagination' =>false,
              
         ]);
-        
+       
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => exRequest::findOne($id),
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'sampleDataProvider' => $sampleDataProvider,

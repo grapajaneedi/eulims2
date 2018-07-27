@@ -16,9 +16,21 @@ $model->cancelledby= Yii::$app->user->id;
 // Query Profile Name
 $Profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
 $UserCancell=$Profile->fullname;
+if($HasOP){// Request is with order of payment already
+  $disabled=true;
+}else{
+  $disabled=false;
+}
 ?>
-
 <div class="cancelledrequest-form">
+    <?php if($HasOP){ ?>
+    <div id="cannotcancel" style="width: 470px;position: absolute;height: 330px;left: 15px;top:0px;">
+        <span class="badge badge-important" style="background-color: red;margin-top: 25%;margin-left: 45px;padding-top: 40px;padding-bottom: 30px;padding-top: 30px">
+            <i class="fa fa-warning" style='font-size: 14px'></i><br>
+            Warning: This Request with Reference # '<?= $model->request_ref_num ?>'<br> 
+            already contained an Order of Payment,<br>hence cancellation is prohibited!</span>
+    </div>
+    <?php } ?>
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'request_id')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'cancelledby')->hiddenInput()->label(false) ?>
@@ -35,7 +47,7 @@ $UserCancell=$Profile->fullname;
         <?php if($model->isNewRecord){ ?>
         <?= Html::resetButton('Reset', ['disabled'=>$disabled,'class' => 'btn btn-danger']) ?>
         <?php } ?>
-        <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
+        <?= Html::Button('Close', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
     </div>
     <br>
     <?php ActiveForm::end(); ?>

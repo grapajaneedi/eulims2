@@ -55,7 +55,7 @@ $this->registerJs($js);
 if($model->request_ref_num==null || $model->status_id==2){
     $CancelButton='';
 }else{
-    $Func="LoadModal('Cancel Request','/lab/cancelrequest/create?req=".$model->request_id."',true,500)";
+    $Func="LoadModal('Cancellation of Request','/lab/cancelrequest/create?req=".$model->request_id."',true,500)";
     $CancelButton='<button id="btnCancel" onclick="'.$Func.'" type="button" style="float: right" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel Request</button>';
 }
 if($model->status_id==2){
