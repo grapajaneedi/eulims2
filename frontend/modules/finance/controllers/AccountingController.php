@@ -12,7 +12,8 @@ use common\models\finance\OpSearch;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\db\Query;
-use common\models\lab\Request;
+//use common\models\lab\Request;//
+use frontend\modules\finance\components\models\Ext_Request as Request;
 use yii\helpers\Json;
 use common\components\Functions;
 use frontend\modules\finance\components\models\Model;
@@ -75,73 +76,63 @@ class AccountingController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
         
-        //echo "<pre>";
-        //print_r($this->Gettransactionnum());
-        //echo "</pre>";
-        
          if ($model->load(Yii::$app->request->post())) {
              $transaction = Yii::$app->financedb->beginTransaction();
              $session = Yii::$app->session;
              try  {
-                     $request_ids=$model->RequestIds;
-                     $str_request = explode(',', $request_ids);
-                     // $wallet=$this->checkCustomerWallet($model->customer_id); 
-                     $arr_length = count($str_request); 
-                     $total_amount=0;
-                        $model->rstl_id=$GLOBALS['rstl_id'];
-                        $model->transactionnum= $this->Gettransactionnum();
-                        if ($model->payment_mode_id == 6){
-                            $model->on_account=1;
-                        }else{
-                            $model->on_account=0;
-                        }
-                        $model->save();
-                       //Saving for Paymentitem
-                        
-                        for($i=0;$i<$arr_length;$i++){
-                             $request =$this->findRequest($str_request[$i]);
-                             $paymentitem = new Paymentitem();
-                             $paymentitem->rstl_id =$GLOBALS['rstl_id'];
-                             $paymentitem->request_id = $str_request[$i];
-                             $paymentitem->orderofpayment_id = $model->orderofpayment_id;
-                             $paymentitem->details =$request->request_ref_num;
-                             $paymentitem->amount = $request->total;
-                             $paymentitem->request_type_id =$request->request_type_id;
-                             $paymentitem->status=1;//Unpaid
-                             $total_amount+=$request->total;
-                             $paymentitem->save(); 
-                        }
-                        //----------------------//
-                        //---Saving for Collection-------
+                $request_ids=$model->RequestIds;
+                $str_request = explode(',', $request_ids);
+                $arr_length = count($str_request); 
+                $total_amount=0;
+                $model->rstl_id=$GLOBALS['rstl_id'];
+                $model->transactionnum= $this->Gettransactionnum();
+                if ($model->payment_mode_id == 6){
+                    $model->on_account=1;
+                }else{
+                    $model->on_account=0;
+                }
+                $model->save();
+                //Saving for Paymentitem
+                for($i=0;$i<$arr_length;$i++){
+                    $request =$this->findRequest($str_request[$i]);
+                    $paymentitem = new Paymentitem();
+                    $paymentitem->rstl_id =$GLOBALS['rstl_id'];
+                    $paymentitem->request_id = $str_request[$i];
+                    $paymentitem->orderofpayment_id = $model->orderofpayment_id;
+                    $paymentitem->details =$request->request_ref_num;
+                    $total=$request->total;
+                    $amount=$request->getBalance($str_request[$i],$total);
+                    $total_amount+=$amount;
+                    $paymentitem->amount = $amount;
+                    $paymentitem->request_type_id =$request->request_type_id;
+                    $paymentitem->status=1;//Unpaid
+                    $paymentitem->save(false); 
+                    
+                }
+                //----------------------//
+                //---Saving for Collection-------
 
-                        $collection_name= $this->getCollectionname($model->collectiontype_id);
-                        $collection->nature=$collection_name['natureofcollection'];
-                        $collection->rstl_id=$GLOBALS['rstl_id'];
-                        $collection->orderofpayment_id=$model->orderofpayment_id;
-                        $collection->referral_id=0;
-                        $collection->payment_status_id=1;//Unpaid
-                        $collection->save();
-                        //
-                        $transaction->commit();
-                        $this->postRequest($request_ids);
-                        $this->updateTotalOP($model->orderofpayment_id, $total_amount);
-                        $session->set('savepopup',"executed");
-                         return $this->redirect(['/finance/accounting/op-lab']); 
-                    
-                        
-                    
+                $collection_name= $this->getCollectionname($model->collectiontype_id);
+                $collection->nature=$collection_name['natureofcollection'];
+                $collection->rstl_id=$GLOBALS['rstl_id'];
+                $collection->orderofpayment_id=$model->orderofpayment_id;
+                $collection->referral_id=0;
+                $collection->payment_status_id=1;//Unpaid
+                $collection->save(false);
+                //
+                $transaction->commit();
+                //$this->postRequest($request_ids);
+                $this->updateTotalOP($model->orderofpayment_id, $total_amount);
+                $session->set('savepopup',"executed");
+                 return $this->redirect(['/finance/op']); 
+                   
                 } catch (Exception $e) {
                     $transaction->rollBack();
                    $session->set('errorpopup',"executed");
                    return $this->redirect(['/finance/accounting/op-lab']);
                 }
-                
-              //  var_dump($total_amount);
-              //  exit;
                 //-------------------------------------------------------------//
-               
-          
-        } 
+        }
         $model->order_date=date('Y-m-d');
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('op_lab/create', [
