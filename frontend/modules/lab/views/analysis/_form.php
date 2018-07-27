@@ -12,10 +12,14 @@ use yii\web\JsExpression;
 use kartik\widgets\TypeaheadBasic;
 use kartik\widgets\Typeahead;
 use yii\helpers\ArrayHelper;
-use common\models\services\Testcategory;
-use common\models\services\Test;
-use common\models\services\Sampletype;
-use common\models\finance\Paymentitem;
+
+use common\models\lab\Lab;
+use common\models\lab\Labsampletype;
+use common\models\lab\Sampletype;
+use common\models\lab\Sampletypetestname;
+use common\models\lab\Testnamemethod;
+use common\models\lab\Methodreference;
+use common\models\lab\Testname;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Analysis */
@@ -117,65 +121,16 @@ $this->registerJs($js);
 
         <div class="row">
         <div class="col-sm-6">
+
         <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
                         'data' => $testcategory,
                        // 'disabled'=>true,
                         'theme' => Select2::THEME_KRAJEE,
                         'options' => ['id'=>'sample-testcategory_id'],
-                        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test category'],
+                        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
                 ])
             ?>
-        </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'sample_type_id')->widget(DepDrop::classname(), [
-                'type'=>DepDrop::TYPE_SELECT2,
-                'data'=>$sampletype,
-                'options'=>['id'=>'sample-sample_type_id'],
-                'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                'pluginOptions'=>[
-                    'depends'=>['sample-testcategory_id'],
-                    'placeholder'=>'Select Sample type',
-                    'url'=>Url::to(['/lab/sample/listsampletype']),
-                    'loadingText' => 'Loading Sampletype...',
-                ]
-            ])
-            ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-6">
-
-        <?= $form->field($model, 'test_id')->widget(DepDrop::classname(), [
-                'type'=>DepDrop::TYPE_SELECT2,
-                'data'=>$test,
-                'options'=>['id'=>'sample-test_id'],
-                'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                'pluginOptions'=>[
-                    'depends'=>['sample-sample_type_id'],
-                    'placeholder'=>'Select Test',
-                    'url'=>Url::to(['/lab/analysis/listtest']),
-                    'loadingText' => 'Loading Test...',
-                ]
-            ])
-            ?>
-        </div>
-           <div class="col-sm-6">
-        <?= $form->field($model, 'method')->textInput(['readonly' => true]) ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-6">
-              <?= $form->field($model, 'references')->textInput(['readonly' => true]) ?>
-        </div>
-           <div class="col-sm-6">
-           <?= $form->field($model, 'fee')->textInput(['readonly' => true]) ?>
-        </div>
-    </div>
-
-   
-
+      
 
     <div class="row" style="float: right;padding-right: 30px">
     <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'id'=>'analysis_create', 'disabled'=> true]) ?>
@@ -190,91 +145,3 @@ $this->registerJs($js);
     <?php ActiveForm::end(); ?>
 </div>
 
-<?php
-$this->registerJs("$('#sample-test_id').on('change',function(){
-    var id = $('#sample-test_id').val();
-        $.ajax({
-            url: '".Url::toRoute("analysis/gettest")."',
-            dataType: 'json',
-            method: 'GET',
-            data: {test_id: id},
-            success: function (data, textStatus, jqXHR) {
-              
-                $('#analysis-method').val(data.method);
-                $('#analysis-references').val(data.references);
-                $('#analysis-fee').val(data.fee);
-                $('#analysis-quantity').val('1');
-                $('.image-loader').removeClass( \"img-loader\" );
-            },
-            beforeSend: function (xhr) {
-                //alert('Please wait...');
-                $('.image-loader').addClass( \"img-loader\" );
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log('An error occured!');
-                alert('Error in ajax request');
-            }
-        });
-});");
-?>
-
-
-<?php
-$this->registerJs("$('#sample-testcategory_id').on('change',function(){
-    var id = $('#sample-test_id').val();
-        $.ajax({
-            url: '".Url::toRoute("analysis/gettest")."',
-            dataType: 'json',
-            method: 'GET',
-            data: {test_id: id},
-            success: function (data, textStatus, jqXHR) {
-              
-                $('#analysis-method').val(data.method);
-                $('#analysis-references').val(data.references);
-                $('#analysis-fee').val(data.fee);
-                $('#analysis-quantity').val('1');
-                $('.image-loader').removeClass( \"img-loader\" );
-
-                //alert($('#sample-test_id').val());
-            },
-            beforeSend: function (xhr) {
-                //alert('Please wait...');
-                $('.image-loader').addClass( \"img-loader\" );
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log('An error occured!');
-                alert('Error in ajax request');
-            }
-        });
-});");
-?>
-
-<?php
-$this->registerJs("$('#sample-sample_type_id').on('change',function(){
-    var id = $('#sample-test_id').val();
-        $.ajax({
-            url: '".Url::toRoute("analysis/gettest")."',
-            dataType: 'json',
-            method: 'GET',
-            data: {test_id: id},
-            success: function (data, textStatus, jqXHR) {
-                
-                $('#analysis-method').val(data.method);
-                $('#analysis-references').val(data.references);
-                $('#analysis-fee').val(data.fee);
-                $('#analysis-quantity').val('1');
-                $('.image-loader').removeClass( \"img-loader\" );
-
-                //alert($('#sample-test_id').val());
-            },
-            beforeSend: function (xhr) {
-                //alert('Please wait...');
-                $('.image-loader').addClass( \"img-loader\" );
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log('An error occured!');
-                alert('Error in ajax request');
-            }
-        });
-});");
-?>

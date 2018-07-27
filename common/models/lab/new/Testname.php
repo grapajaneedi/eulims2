@@ -5,23 +5,24 @@ namespace common\models\lab;
 use Yii;
 
 /**
- * This is the model class for table "tbl_sampletype".
+ * This is the model class for table "tbl_testname".
  *
  * @property int $id
- * @property string $type
+ * @property string $testName
  * @property int $status_id
+ * @property string $create_time
+ * @property string $update_time
  *
- * @property LabSampletype[] $labSampletypes
- * @property SampletypeTestname[] $sampletypeTestnames
+ * @property TestnameMethod[] $testnameMethods
  */
-class Sampletype extends \yii\db\ActiveRecord
+class Testname extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'tbl_sampletype';
+        return 'tbl_testname';
     }
 
     /**
@@ -38,9 +39,10 @@ class Sampletype extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'status_id'], 'required'],
+            [['testName', 'status_id', 'create_time'], 'required'],
             [['status_id'], 'integer'],
-            [['type'], 'string', 'max' => 75],
+            [['create_time', 'update_time'], 'safe'],
+            [['testName'], 'string', 'max' => 200],
         ];
     }
 
@@ -51,24 +53,18 @@ class Sampletype extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'type' => 'Type',
+            'testName' => 'Test Name',
             'status_id' => 'Status ID',
+            'create_time' => 'Create Time',
+            'update_time' => 'Update Time',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLabSampletypes()
+    public function getTestnameMethods()
     {
-        return $this->hasMany(LabSampletype::className(), ['sampletypeId' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSampletypeTestnames()
-    {
-        return $this->hasMany(SampletypeTestname::className(), ['sampletype_id' => 'id']);
+        return $this->hasMany(TestnameMethod::className(), ['testname_id' => 'id']);
     }
 }

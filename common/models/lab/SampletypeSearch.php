@@ -5,26 +5,26 @@ namespace common\models\lab;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\lab\Lab;
+use common\models\lab\Sampletype;
 
 /**
- * LabSearch represents the model behind the search form about `common\models\lab\Lab`.
+ * SampletypeSearch represents the model behind the search form of `common\models\lab\Sampletype`.
  */
-class LabSearch extends Lab
+class SampletypeSearch extends Sampletype
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['lab_id', 'labcount', 'active'], 'integer'],
-            [['labname', 'labcode', 'nextrequestcode'], 'safe'],
+            [['id', 'status_id'], 'integer'],
+            [['type'], 'safe'],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function scenarios()
     {
@@ -41,7 +41,7 @@ class LabSearch extends Lab
      */
     public function search($params)
     {
-        $query = Lab::find();
+        $query = Sampletype::find();
 
         // add conditions that should always apply here
 
@@ -59,14 +59,11 @@ class LabSearch extends Lab
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'lab_id' => $this->lab_id,
-            'labcount' => $this->labcount,
-            'active' => $this->active,
+            'id' => $this->id,
+            'status_id' => $this->status_id,
         ]);
 
-        $query->andFilterWhere(['like', 'labname', $this->labname])
-            ->andFilterWhere(['like', 'labcode', $this->labcode])
-            ->andFilterWhere(['like', 'nextrequestcode', $this->nextrequestcode]);
+        $query->andFilterWhere(['like', 'type', $this->type]);
 
         return $dataProvider;
     }
