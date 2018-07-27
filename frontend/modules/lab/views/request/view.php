@@ -50,8 +50,6 @@ $js=<<<SCRIPT
             krajeeDialog.alert(msg);
         }
     });  
-
-   
 SCRIPT;
 $this->registerJs($js);
 if($model->request_ref_num==null || $model->status_id==2){
