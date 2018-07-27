@@ -125,7 +125,7 @@ class FeeController extends Controller
                 // exit;
 
                 $analysis->sample_id = $sample_id;
-                $analysis->cancelled = 1;
+                $analysis->cancelled = 0;
                 $analysis->pstcanalysis_id = 1;
                 $analysis->request_id = $request_id;
                 $analysis->rstl_id = $GLOBALS['rstl_id'];
@@ -148,7 +148,7 @@ class FeeController extends Controller
                 // echo "</pre>";
             }        
             
-            Yii::$app->session->setFlash('success', 'Additional Fee Successfully Created');
+            Yii::$app->session->setFlash('success', 'Additional Fee Successfully Added');
             return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
     } 
          if (Yii::$app->request->isAjax) {
@@ -157,7 +157,7 @@ class FeeController extends Controller
                  $analysismodel->pstcanalysis_id = $GLOBALS['rstl_id'];
                  $analysismodel->request_id = $GLOBALS['rstl_id'];
                  $analysismodel->testname = $GLOBALS['rstl_id'];
-                 $analysismodel->cancelled = $GLOBALS['rstl_id'];
+                 $analysismodel->cancelled = 0;
                  $analysismodel->sample_id = $GLOBALS['rstl_id'];
                  $analysismodel->sample_code = $GLOBALS['rstl_id'];
                  $analysismodel->date_analysis = '2018-06-14 7:35:0';

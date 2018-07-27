@@ -8,6 +8,7 @@ use common\components\Functions;
 use common\models\lab\Cancelledrequest;
 use common\models\lab\Discount;
 use common\models\lab\Request;
+use common\models\finance\Paymentitem;
 
 
 $sweetalert = new Functions();

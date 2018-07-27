@@ -11,6 +11,7 @@ use yii\helpers\ArrayHelper;
 use common\models\services\Testcategory;
 use common\components\Functions;
 use yii\data\ActiveDataProvider;
+use kartik\detail\DetailView;
 
 $this->registerJsFile("/js/services/services.js");
 ?>
@@ -24,7 +25,7 @@ $this->registerJsFile("/js/services/services.js");
 <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
         'pjax' => true,
-        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
+        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-analysis']],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  Sample' ,
@@ -69,6 +70,64 @@ setTimeout(function(){
 // $test->setAttribute('style','display:none');
 ?>
 
+<?php
+
+
+////////////////////////////
+
+// echo "<pre>";
+// print_r($sampleDataProvider);
+// echo "</pre>";
+// exit;
+
+//             echo DetailView::widget([
+//             'model'=>$sampleDataProvider,
+//             'responsive'=>true,
+//             'hover'=>true,
+//             'mode'=>DetailView::MODE_VIEW,
+//             'panel'=>[
+//                 'heading'=>'<i class="glyphicon glyphicon-book"></i> Request # ',
+//                 'type'=>DetailView::TYPE_PRIMARY,
+//             ],
+//             'buttons1' => '',
+//             'attributes'=>[
+//                 [
+//                     'group'=>true,
+//                     'label'=>'Request Details ',
+//                     'rowOptions'=>['class'=>'info']
+//                 ],
+//                 [
+//                     'columns' => [
+//                         [
+//                             'label'=>'Customer / Agency',
+//                             'format'=>'raw',
+//                             'displayOnly'=>true,
+//                             'valueColOptions'=>['style'=>'width:30%']
+//                         ],
+//                         [
+//                             'label'=>'Customer / Agency',
+//                             'format'=>'raw',
+//                            // 'value'=>$model->customer->customer_name,
+//                             'valueColOptions'=>['style'=>'width:30%'], 
+//                             'displayOnly'=>true
+//                         ],
+                    
+//                     ],
+//                 ],
+             
+                
+//                 [
+//                     'group'=>true,
+//                     'label'=>'Transaction Details',
+//                     'rowOptions'=>['class'=>'info']
+//                 ],
+              
+//             ],
+
+//         ]);
+// // 
+        //////////////////////////
+        ?>
 
  <?php
             $gridColumns = [
@@ -79,7 +138,6 @@ setTimeout(function(){
                     return GridView::ROW_COLLAPSED;
                 },
                 'detail' => function ($model, $key, $index, $column) {
-             
                      return $this->render('_workflow', [
                          'model'=>$model,
                      ]);
@@ -95,8 +153,7 @@ setTimeout(function(){
                         'value' => function($model) {
                             return $model->testname;
                         },
-                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-                       
+                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                 
                     ],
                     [
                         'header'=>'Method',
@@ -106,24 +163,21 @@ setTimeout(function(){
                         'value' => function($model) {
                             return $model->method;
                         },
-                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-                       
+                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                      
                     ],
                     [
                         'header'=>'Analyst',
                         'hAlign'=>'center',
                         'format' => 'raw',
                         'enableSorting' => false,
-                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-                       
+                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
                     ],
                     [
                         'header'=>'ISO accredited',
                         'hAlign'=>'center',
                         'format' => 'raw',
                         'enableSorting' => false,
-                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-                       
+                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                 
                     ],
                     [
                           'header'=>'Status',
@@ -164,7 +218,11 @@ setTimeout(function(){
                     'heading'=>'<h3 class="panel-title"> <i class="glyphicon glyphicon-file"></i>Analysis</h3>',
                     'type'=>'primary',
                 ],
-                'columns' => $gridColumns,       
+                'columns' => $gridColumns,
+                'toolbar' => [
+                    
+                   // '{toggleData}',
+                ],    
             ]);
 ?>
 
