@@ -1,72 +1,84 @@
-    var map;
-    
-    //-----------------------GOOGLE AUTOCOMPLETE PLACE SEARCH------------------------//
-    
-    function initialize() {    
-        var input = document.getElementById('searchTextField');        
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-              var place = autocomplete.getPlace();
-              var lat = place.geometry.location.lat();
-              var lng = place.geometry.location.lng();
-              var formatted_address = place.formatted_address;
-              document.getElementById("customer-address").value =  formatted_address;
-              document.getElementById("customer-latitude").value = lat;
-              document.getElementById("customer-longitude").value = lng;
+// In the following example, markers appear when the user clicks on the map.
+// Each marker is labeled with a single alphabetical character.
+var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+var labelIndex = 0;
 
-              generateGEO(lat, lng, formatted_address);
-           }
-        );
-    }
-    google.maps.event.addDomListener(window, 'load', initialize);
+function initialize() {
+
+  var input = document.getElementById('searchTextField');        
+  var autocomplete = new google.maps.places.Autocomplete(input);
+  var lat;
+  var lng;
+      google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            var place = autocomplete.getPlace();
+            lat = place.geometry.location.lat();
+            lng = place.geometry.location.lng();
+            var formatted_address = place.formatted_address;
+            document.getElementById("customer-address").value =  formatted_address;
+            document.getElementById("customer-latitude").value = lat;
+            document.getElementById("customer-longitude").value = lng;
+
+            loadMap(lat, lng, formatted_address);
+         }
+      );
+
+
+  //add default map on the UI
+  var latLng = { lat: 14.6091, lng:  121.0223};
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: latLng,
+      });
+  addMarker(latLng, map);
+  
+
+  // This event listener calls addMarker() when the map is clicked.
+  // google.maps.event.addListener(map, 'click', function(event) {
+  //   addMarker(event.latLng, map);
+  // });
+
+}
+
+//---------------------LOAD MAP IN MAP_CANVAS CONTAINER---------------------------//
     
-    //---------------------LOAD MAP IN MAP_CANVAS CONTAINER---------------------------//
-    
-    function loadMap(lat, lng) {  
-        
-        var deffaultCenter = new google.maps.LatLng(lat, lng)
-        var mapOptions = {
-           zoom: 18, 
-           center: deffaultCenter ,
-           panControl:false,
-           zoomControl:true,
-           mapTypeControl:true,
-           scaleControl:false,
-           streetViewControl:true,
-           overviewMapControl:true,
-           rotateControl:false,  
-           scrollwheel: false,
-           draggable: true,	
-       }
-       map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    function loadMap(lat,lng,formatted_address) {  
+      var latLng = { lat: lat, lng: lng };
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 18,
+        center: latLng,
+      });
+
+      // Add a marker at the center of the map.
+      addMarker(latLng, map);
    }
-   google.maps.event.addDomListener(window, 'load', loadMap(51.5072, 0.1275));
-    
-   //-------------------ADD LOCATION POINTER DYNAMICALLY IN MAP--------------------------//
-       
-   function generateGEO(lat, lng, address) {
-    
-        loadMap(lat, lng)
-        
-        var latlng = new google.maps.LatLng(lat, lng);
-        var iconImg = "/images/map-marker.png";
-        var marker_size = new google.maps.Size(30,40);
-        var anchor_point = new google.maps.Point(20, 40);
 
-        var iconImg = new SVGMarker({
-                     map: map,
-                     position: latlng,
-                     icon: {
-                       anchor: anchor_point,
-                       size: marker_size,
-                       url: iconImg
-                     }
-                  })
+// Adds a marker to the map.
+function addMarker(location, map) {
+  // Add the marker at the clicked location, and add the next-available label
+  // from the array of alphabetical characters.
+  
 
-      var marker = new google.maps.Marker({ map: map, title: address, icon: iconImg });
-            
-      //markers.push(marker);
-   }
-   
-   //---------------------------------------------------------------------------------------//
+  var marker = new google.maps.Marker({
+    position: location,
+    // label: labels[labelIndex++ % labels.length],
+    map: map,
+    draggable: true
+  });
+  google.maps.event.addListener(marker, 'dragend', function (event) {
+    // console.log(this.getPosition());
+      $("#customer-latitude").val(this.getPosition().lat().toFixed(6));
+      $("#customer-longitude").val(this.getPosition().lng().toFixed(6));
+    });
+
+  toggleBounce(marker);
+}
+
+function toggleBounce(marker) {
+  if (marker.getAnimation() !== null) {
+    marker.setAnimation(null);
+  } else {
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+  }
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);

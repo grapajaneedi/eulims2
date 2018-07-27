@@ -33,6 +33,6 @@
         }
         
         val = val.slice(0, -2);
-        console.log(val);
+        // console.log(val);
         document.getElementById('customer-address').value = val;
     }

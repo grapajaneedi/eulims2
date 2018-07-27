@@ -13,7 +13,8 @@ function SVGMarker(options) {
     position: '',
     title: '',
     visible: true,
-    zindex: ''
+    zindex: '',
+    draggable:true
   }
 
   // Merge options with default
