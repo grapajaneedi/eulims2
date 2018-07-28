@@ -65,12 +65,13 @@ class MethodreferenceController extends Controller
     public function actionCreate()
     {
         $model = new Methodreference();
-
+        $model->testname_id = 0;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Lab Sample Type Test Name Successfully Created'); 
             return $this->runAction('index');
         }
 
+       $model->testname_id = 0;
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_form', [
                 'model' => $model,

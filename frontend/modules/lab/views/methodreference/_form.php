@@ -1,8 +1,18 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\widgets\Select2;
+use kartik\widgets\DepDrop;
+use kartik\widgets\DatePicker;
+use kartik\datetime\DateTimePicker;
+use yii\helpers\ArrayHelper;
+use common\models\lab\Lab;
+use common\models\lab\Sampletype;
+use common\models\lab\TestName;
+use common\models\lab\Methodreference;
+use yii\helpers\Url;
 
+$methodlist= ArrayHelper::map(Methodreference::find()->all(),'method_reference_id','method');
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Methodreference */
 /* @var $form yii\widgets\ActiveForm */
@@ -12,7 +22,6 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'testname_id')->textInput() ?>
 
     <?= $form->field($model, 'method')->textInput(['maxlength' => true]) ?>
 
@@ -20,9 +29,14 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'fee')->textInput() ?>
 
+    <div class="row">
+    <div class="col-md-6">
     <?= $form->field($model, 'create_time')->textInput() ?>
-
+    </div>
+    <div class="col-md-6">
     <?= $form->field($model, 'update_time')->textInput() ?>
+    </div>
+</div>
 
     <div class="form-group pull-right">
     <?php if(Yii::$app->request->isAjax){ ?>

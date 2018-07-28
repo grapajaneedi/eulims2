@@ -74,7 +74,9 @@ class LabsampletypeController extends Controller
         }
 
         $sampletype = [];
+
         if(Yii::$app->request->isAjax){
+            // $model->effectivity_date = date('Y/m/d');
             return $this->renderAjax('_form', [
                 'model' => $model,
                 'sampletype'=>$sampletype,
