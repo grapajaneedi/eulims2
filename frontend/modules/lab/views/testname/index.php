@@ -7,12 +7,11 @@ use kartik\grid\GridView;
 /* @var $searchModel common\models\lab\TestnameSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Testnames';
+$this->title = 'Test Names';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="testname-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -31,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            'testname_id',
             'testName',
             'status_id',
             'create_time',

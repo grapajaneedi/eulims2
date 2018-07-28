@@ -7,16 +7,13 @@ use kartik\grid\GridView;
 /* @var $searchModel common\models\lab\TestnamemethodSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Testnamemethods';
+$this->title = 'Test Name Methods';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="testnamemethod-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
-        <?= Html::a('Create Testnamemethod', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Test Name Method', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -31,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            'testname_method_id',
             'testname_id',
             'method_id',
             'create_time',

@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "tbl_testname_method".
  *
- * @property int $id
+ * @property int $testname_method_id
  * @property int $testname_id
  * @property int $method_id
  * @property string $create_time
@@ -52,7 +52,7 @@ class Testnamemethod extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'testname_method_id' => 'ID',
             'testname_id' => 'Testname ID',
             'method_id' => 'Method ID',
             'create_time' => 'Create Time',
@@ -65,6 +65,6 @@ class Testnamemethod extends \yii\db\ActiveRecord
      */
     public function getTestname()
     {
-        return $this->hasOne(Testname::className(), ['id' => 'testname_id']);
+        return $this->hasOne(Testname::className(), ['testname_method_id' => 'testname_id']);
     }
 }

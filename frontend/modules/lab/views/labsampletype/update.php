@@ -5,9 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Labsampletype */
 
-$this->title = 'Update Labsampletype: ' . $model->id;
+$this->title = 'Update Labsampletype: ' . $model->lab_sampletype_id;
 $this->params['breadcrumbs'][] = ['label' => 'Labsampletypes', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->lab_sampletype_id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="labsampletype-update">

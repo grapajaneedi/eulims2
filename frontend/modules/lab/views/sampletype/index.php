@@ -7,16 +7,15 @@ use kartik\grid\GridView;
 /* @var $searchModel common\models\lab\SampletypeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Sampletypes';
+$this->title = 'Sample Types';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="sampletype-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Sampletype', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Sample Type', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -31,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            'sampletype_id',
             'type',
             'status_id',
 

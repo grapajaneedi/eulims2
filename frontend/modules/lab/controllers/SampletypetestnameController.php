@@ -67,7 +67,7 @@ class SampletypetestnameController extends Controller
         $model = new Sampletypetestname();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'sampletype_testname_id' => $model->sampletype_testname_id]);
         }
 
         return $this->render('create', [
@@ -87,7 +87,7 @@ class SampletypetestnameController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'sampletype_testname_id' => $model->sampletype_testname_id]);
         }
 
         return $this->render('update', [

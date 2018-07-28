@@ -67,7 +67,7 @@ class TestnamemethodController extends Controller
         $model = new Testnamemethod();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'testname_method_id' => $model->testname_method_id]);
         }
 
         return $this->render('create', [
@@ -87,7 +87,7 @@ class TestnamemethodController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'testname_method_id' => $model->testname_method_id]);
         }
 
         return $this->render('update', [

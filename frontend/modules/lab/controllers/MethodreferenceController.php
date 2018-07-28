@@ -67,7 +67,7 @@ class MethodreferenceController extends Controller
         $model = new Methodreference();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'method_reference_id' => $model->method_reference_id]);
         }
 
         return $this->render('create', [
@@ -87,7 +87,7 @@ class MethodreferenceController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'method_reference_id' => $model->method_reference_id]);
         }
 
         return $this->render('update', [

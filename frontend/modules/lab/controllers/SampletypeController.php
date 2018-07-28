@@ -67,7 +67,7 @@ class SampletypeController extends Controller
         $model = new Sampletype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->sampletype_id]);
         }
 
         return $this->render('create', [
@@ -87,7 +87,7 @@ class SampletypeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->sampletype_id]);
         }
 
         return $this->render('update', [

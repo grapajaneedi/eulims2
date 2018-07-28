@@ -18,7 +18,7 @@ class MethodreferenceSearch extends Methodreference
     public function rules()
     {
         return [
-            [['id', 'testname_id'], 'integer'],
+            [['method_reference_id', 'testname_id'], 'integer'],
             [['method', 'reference', 'create_time', 'update_time'], 'safe'],
             [['fee'], 'number'],
         ];
@@ -60,7 +60,7 @@ class MethodreferenceSearch extends Methodreference
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'method_reference_id' => $this->method_reference_id,
             'testname_id' => $this->testname_id,
             'fee' => $this->fee,
             'create_time' => $this->create_time,

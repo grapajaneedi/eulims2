@@ -67,7 +67,7 @@ class LabsampletypeController extends Controller
         $model = new Labsampletype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->lab_sampletype_id]);
         }
 
         return $this->render('create', [
@@ -87,7 +87,7 @@ class LabsampletypeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->lab_sampletype_id]);
         }
 
         return $this->render('update', [
