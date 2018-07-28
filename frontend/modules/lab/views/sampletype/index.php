@@ -16,10 +16,10 @@ $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 ?>
 <div class="sampletype-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<?php $this->registerJsFile("/js/services/services.js"); ?>
 
     <p>
-        <?= Html::a('Create Sample Type', ['create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Sample Type', ['value'=>'/services/testcategory/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Sample Type")]); ?>
     </p>
 
     <?= GridView::widget([

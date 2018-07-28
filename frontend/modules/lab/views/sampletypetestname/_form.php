@@ -17,9 +17,11 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'testname_id')->textInput() ?>
 
     <?= $form->field($model, 'added_by')->textInput(['maxlength' => true]) ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    <div class="form-group pull-right">
+    <?php if(Yii::$app->request->isAjax){ ?>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    <?php } ?>
+    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

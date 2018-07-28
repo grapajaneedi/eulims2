@@ -13,15 +13,15 @@ use yii\helpers\ArrayHelper;
 $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
 $testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName');
 
-$this->title = 'Sample Type Testnames';
+$this->title = 'Sample Type Test name';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="sampletypetestname-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<?php $this->registerJsFile("/js/services/services.js"); ?>
 
     <p>
-        <?= Html::a('Create Sample Type Testname', ['create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Sample Type Test Name', ['value'=>'/services/testcategory/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Sample Type Test Name")]); ?>
     </p>
 
     <?= GridView::widget([

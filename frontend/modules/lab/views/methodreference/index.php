@@ -12,10 +12,10 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="methodreference-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<?php $this->registerJsFile("/js/services/services.js"); ?>
 
     <p>
-        <?= Html::a('Create Method Reference', ['create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Method Reference', ['value'=>'/services/testcategory/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Method Reference")]); ?>
     </p>
 
     <?= GridView::widget([

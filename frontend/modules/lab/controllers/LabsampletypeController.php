@@ -67,12 +67,21 @@ class LabsampletypeController extends Controller
         $model = new Labsampletype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->lab_sampletype_id]);
+            Yii::$app->session->setFlash('success', 'Lab Sample Type Successfully Created'); 
+            return $this->runAction('index');
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_form', [
+                'model' => $model,
+            ]);
+       }
+       else{
+            return $this->renderAjax('_form', [
+                'model' => $model,
+            ]);
+       } 
+  
     }
 
     /**
