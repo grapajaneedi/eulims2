@@ -8,10 +8,12 @@ use kartik\widgets\DatePicker;
 use kartik\datetime\DateTimePicker;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Lab;
+use common\models\lab\Sampletype;
 use yii\helpers\Url;
 
 
 $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
+$sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Labsampletype */
@@ -30,20 +32,13 @@ $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
             ])
     ?>
 
-    <?= $form->field($model, 'sampletypeId')->widget(DepDrop::classname(), [
-            'type'=>DepDrop::TYPE_SELECT2,
-            'data'=>$sampletype,
-            'options'=>['id'=>'sample-sample_type_id'],
-            'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-            'pluginOptions'=>[
-                'depends'=>['sample-testcategory_id'],
-                'placeholder'=>'Select Sample Type',
-                'url'=>Url::to(['/lab/labsampletype/listsampletype']),
-                'loadingText' => 'Loading Sample Types...',
-            ]
-        ])
-        ?>
-   
+ <?= $form->field($model,'sampletypeId')->widget(Select2::classname(),[
+                    'data' => $sampletypelist,
+                    'theme' => Select2::THEME_KRAJEE,
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Lab'],
+            ])
+    ?>
+
 
     <?= $form->field($model, 'effective_date')->widget(DatePicker::classname(), [
         'readonly'=>true,

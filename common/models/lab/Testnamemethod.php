@@ -53,8 +53,8 @@ class Testnamemethod extends \yii\db\ActiveRecord
     {
         return [
             'testname_method_id' => 'ID',
-            'testname_id' => 'Testname ID',
-            'method_id' => 'Method ID',
+            'testname_id' => 'Test Name',
+            'method_id' => 'Method',
             'create_time' => 'Create Time',
             'update_time' => 'Update Time',
         ];
