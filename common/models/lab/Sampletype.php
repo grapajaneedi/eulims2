@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "tbl_sampletype".
  *
- * @property int $id
+ * @property int $sampletype_id
  * @property string $type
  * @property int $status_id
  *
@@ -50,9 +50,9 @@ class Sampletype extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'type' => 'Type',
-            'status_id' => 'Status ID',
+            'sampletype_id' => 'Sampletype ID',
+            'type' => 'Sample Type',
+            'status_id' => 'Status',
         ];
     }
 
@@ -61,7 +61,7 @@ class Sampletype extends \yii\db\ActiveRecord
      */
     public function getLabSampletypes()
     {
-        return $this->hasMany(LabSampletype::className(), ['sampletypeId' => 'id']);
+        return $this->hasMany(LabSampletype::className(), ['sampletypeId' => 'sampletype_id']);
     }
 
     /**
@@ -69,6 +69,6 @@ class Sampletype extends \yii\db\ActiveRecord
      */
     public function getSampletypeTestnames()
     {
-        return $this->hasMany(SampletypeTestname::className(), ['sampletype_id' => 'id']);
+        return $this->hasMany(SampletypeTestname::className(), ['sampletype_id' => 'sampletype_id']);
     }
 }

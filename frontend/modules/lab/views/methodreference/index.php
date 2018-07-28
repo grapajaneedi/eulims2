@@ -7,16 +7,15 @@ use kartik\grid\GridView;
 /* @var $searchModel common\models\lab\MethodreferenceSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Methodreferences';
+$this->title = 'Method References';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="methodreference-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<?php $this->registerJsFile("/js/services/services.js"); ?>
 
     <p>
-        <?= Html::a('Create Methodreference', ['create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Method Reference', ['value'=>'/lab/methodreference/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Method Reference")]); ?>
     </p>
 
     <?= GridView::widget([
@@ -30,9 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'testname_id',
             'method',
             'reference',
             'fee',

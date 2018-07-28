@@ -2,21 +2,26 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use common\models\lab\Sampletype;
+use common\models\lab\Testname;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\SampletypetestnameSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Sampletypetestnames';
+$sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
+$testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName');
+
+$this->title = 'Sample Type Test name';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="sampletypetestname-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<?php $this->registerJsFile("/js/services/services.js"); ?>
 
     <p>
-        <?= Html::a('Create Sampletypetestname', ['create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Sample Type Test Name', ['value'=>'/lab/sampletypetestname/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Sample Type Test Name")]); ?>
     </p>
 
     <?= GridView::widget([
@@ -30,10 +35,32 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'sampletype_id',
-            'testname_id',
+            [
+                'attribute' => 'sampletypeId',
+                'label' => 'Sample Type',
+                'value' => function($model) {
+                    return $model->sampletype->type;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => $sampletypelist,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+               ],
+               'filterInputOptions' => ['placeholder' => 'Sample Type', 'testcategory_id' => 'grid-products-search-category_type_id']
+            ],
+            [
+                'attribute' => 'testname_id',
+                'label' => 'Test Name',
+                'value' => function($model) {
+                    return $model->testname->testName;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => $testnamelist,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+               ],
+               'filterInputOptions' => ['placeholder' => 'Test Name', 'testcategory_id' => 'grid-products-search-category_type_id']
+            ],
             'added_by',
 
             ['class' => 'yii\grid\ActionColumn'],

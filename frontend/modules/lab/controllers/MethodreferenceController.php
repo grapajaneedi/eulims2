@@ -67,12 +67,15 @@ class MethodreferenceController extends Controller
         $model = new Methodreference();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', 'Lab Sample Type Test Name Successfully Created'); 
+            return $this->runAction('index');
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_form', [
+                'model' => $model,
+            ]);
+       }
     }
 
     /**
@@ -87,7 +90,7 @@ class MethodreferenceController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'method_reference_id' => $model->method_reference_id]);
         }
 
         return $this->render('update', [

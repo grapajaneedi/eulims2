@@ -18,7 +18,7 @@ class TestnamemethodSearch extends Testnamemethod
     public function rules()
     {
         return [
-            [['id', 'testname_id', 'method_id'], 'integer'],
+            [['testname_method_id', 'testname_id', 'method_id'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
         ];
     }
@@ -59,7 +59,7 @@ class TestnamemethodSearch extends Testnamemethod
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'testname_method_id' => $this->testname_method_id,
             'testname_id' => $this->testname_id,
             'method_id' => $this->method_id,
             'create_time' => $this->create_time,

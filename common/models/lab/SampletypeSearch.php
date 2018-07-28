@@ -18,7 +18,7 @@ class SampletypeSearch extends Sampletype
     public function rules()
     {
         return [
-            [['id', 'status_id'], 'integer'],
+            [['sampletype_id', 'status_id'], 'integer'],
             [['type'], 'safe'],
         ];
     }
@@ -59,7 +59,7 @@ class SampletypeSearch extends Sampletype
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'sampletype_id' => $this->sampletype_id,
             'status_id' => $this->status_id,
         ]);
 

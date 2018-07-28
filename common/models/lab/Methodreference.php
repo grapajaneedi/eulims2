@@ -7,13 +7,15 @@ use Yii;
 /**
  * This is the model class for table "tbl_methodreference".
  *
- * @property int $id
+ * @property int $method_reference_id
  * @property int $testname_id
  * @property string $method
  * @property string $reference
  * @property double $fee
- * @property string $create_time
- * @property string $update_time
+ * @property int $created_time
+ * @property int $updated_time
+ *
+ * @property Test $test
  */
 class Methodreference extends \yii\db\ActiveRecord
 {
@@ -39,11 +41,11 @@ class Methodreference extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['testname_id', 'method', 'reference', 'fee', 'create_time'], 'required'],
-            [['testname_id'], 'integer'],
+            [['testname_id', 'method', 'reference', 'fee'], 'required'],
+            [['testname_id', 'created_time', 'updated_time'], 'integer'],
             [['fee'], 'number'],
-            [['create_time', 'update_time'], 'safe'],
             [['method', 'reference'], 'string', 'max' => 200],
+            [['testname_id'], 'exist', 'skipOnError' => true, 'targetClass' => Test::className(), 'targetAttribute' => ['testname_id' => 'testname_id']],
         ];
     }
 
@@ -53,13 +55,21 @@ class Methodreference extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'testname_id' => 'Testname ID',
+            'method_reference_id' => 'Method Reference ID',
+            'testname_id' => 'Test ID',
             'method' => 'Method',
             'reference' => 'Reference',
             'fee' => 'Fee',
-            'create_time' => 'Create Time',
-            'update_time' => 'Update Time',
+            'created_time' => 'Created Time',
+            'updated_time' => 'Updated Time',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTest()
+    {
+        return $this->hasOne(Test::className(), ['testname_id' => 'testname_id']);
     }
 }

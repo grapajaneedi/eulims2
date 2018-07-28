@@ -18,7 +18,7 @@ class SampletypetestnameSearch extends Sampletypetestname
     public function rules()
     {
         return [
-            [['id', 'sampletype_id', 'testname_id'], 'integer'],
+            [['sampletype_testname_id', 'sampletype_id', 'testname_id'], 'integer'],
             [['added_by'], 'safe'],
         ];
     }
@@ -59,7 +59,7 @@ class SampletypetestnameSearch extends Sampletypetestname
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'sampletype_testname_id' => $this->sampletype_testname_id,
             'sampletype_id' => $this->sampletype_id,
             'testname_id' => $this->testname_id,
         ]);

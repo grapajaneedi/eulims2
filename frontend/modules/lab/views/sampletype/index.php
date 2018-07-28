@@ -2,21 +2,24 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use common\models\lab\Lab;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\SampletypeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Sampletypes';
+$this->title = 'Sample Types';
 $this->params['breadcrumbs'][] = $this->title;
+
+$lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 ?>
 <div class="sampletype-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<?php $this->registerJsFile("/js/services/services.js"); ?>
 
     <p>
-        <?= Html::a('Create Sampletype', ['create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Sample Type', ['value'=>'/lab/sampletype/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Sample Type")]); ?>
     </p>
 
     <?= GridView::widget([
@@ -30,11 +33,22 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
             'type',
-            'status_id',
-
+            [
+                'attribute' => 'status_id',
+                'label' => 'Status',
+                'hAlign'=>'center',
+                'format'=>'raw',
+                'value' => function($model) {
+                    if ($model->status_id==1)
+                    {   
+                        return "<span class='badge badge-success' style='width:80px!important;height:20px!important;'>Active</span>";
+                    }else{
+                        return "<span class='badge badge-default' style='width:80px!important;height:20px!important;'>Inactive</span>";
+                    }
+                    
+                },
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

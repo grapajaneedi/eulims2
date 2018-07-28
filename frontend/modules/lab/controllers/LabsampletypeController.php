@@ -4,10 +4,12 @@ namespace frontend\modules\lab\controllers;
 
 use Yii;
 use common\models\lab\Labsampletype;
+use common\models\lab\Sampletype;
 use common\models\lab\LabsampletypeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
 
 /**
  * LabsampletypeController implements the CRUD actions for Labsampletype model.
@@ -67,12 +69,18 @@ class LabsampletypeController extends Controller
         $model = new Labsampletype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', 'Lab Sample Type Successfully Created'); 
+            return $this->runAction('index');
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        $sampletype = [];
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_form', [
+                'model' => $model,
+                'sampletype'=>$sampletype,
+            ]);
+       }
+  
     }
 
     /**
@@ -87,7 +95,7 @@ class LabsampletypeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->lab_sampletype_id]);
         }
 
         return $this->render('update', [
@@ -124,4 +132,6 @@ class LabsampletypeController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+  
 }

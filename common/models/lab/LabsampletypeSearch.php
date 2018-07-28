@@ -18,7 +18,7 @@ class LabsampletypeSearch extends Labsampletype
     public function rules()
     {
         return [
-            [['id', 'lab_id', 'sampletypeId'], 'integer'],
+            [['lab_sampletype_id', 'lab_id', 'sampletypeId'], 'integer'],
             [['effective_date', 'added_by'], 'safe'],
         ];
     }
@@ -59,7 +59,7 @@ class LabsampletypeSearch extends Labsampletype
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'lab_sampletype_id' => $this->lab_sampletype_id,
             'lab_id' => $this->lab_id,
             'sampletypeId' => $this->sampletypeId,
             'effective_date' => $this->effective_date,
