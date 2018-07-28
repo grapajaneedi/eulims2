@@ -65,6 +65,11 @@ class Testnamemethod extends \yii\db\ActiveRecord
      */
     public function getTestname()
     {
-        return $this->hasOne(Testname::className(), ['testname_method_id' => 'testname_id']);
+        return $this->hasOne(Testname::className(), ['testname_id' => 'testname_id']);
+    }
+
+    public function getMethod()
+    {
+        return $this->hasOne(Methodreference::className(), ['method_reference_id' => 'method_id']);
     }
 }

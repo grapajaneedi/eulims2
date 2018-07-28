@@ -29,10 +29,22 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'testname_id',
             'testName',
-            'status_id',
+            [
+                'attribute' => 'status_id',
+                'label' => 'Status',
+                'hAlign'=>'center',
+                'format'=>'raw',
+                'value' => function($model) {
+                    if ($model->status_id==1)
+                    {   
+                        return "<span class='badge badge-success' style='width:80px!important;height:20px!important;'>Active</span>";
+                    }else{
+                        return "<span class='badge badge-default' style='width:80px!important;height:20px!important;'>Inactive</span>";
+                    }
+                    
+                },
+            ],
             'create_time',
             'update_time',
 

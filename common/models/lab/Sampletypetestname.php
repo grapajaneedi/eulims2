@@ -65,4 +65,9 @@ class Sampletypetestname extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletype_id']);
     }
+
+    public function getTestname()
+    {
+        return $this->hasOne(Testname::className(), ['testname_id' => 'testname_id']);
+    }
 }

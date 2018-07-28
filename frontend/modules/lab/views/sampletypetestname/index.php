@@ -2,10 +2,16 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use common\models\lab\Sampletype;
+use common\models\lab\Testname;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\SampletypetestnameSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+
+$sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
+$testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName');
 
 $this->title = 'Sample Type Testnames';
 $this->params['breadcrumbs'][] = $this->title;
@@ -29,10 +35,32 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'sampletype_testname_id',
-            'sampletype_id',
-            'testname_id',
+            [
+                'attribute' => 'sampletypeId',
+                'label' => 'Sample Type',
+                'value' => function($model) {
+                    return $model->sampletype->type;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => $sampletypelist,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+               ],
+               'filterInputOptions' => ['placeholder' => 'Sample Type', 'testcategory_id' => 'grid-products-search-category_type_id']
+            ],
+            [
+                'attribute' => 'testname_id',
+                'label' => 'Test Name',
+                'value' => function($model) {
+                    return $model->testname->testName;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => $testnamelist,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+               ],
+               'filterInputOptions' => ['placeholder' => 'Test Name', 'testcategory_id' => 'grid-products-search-category_type_id']
+            ],
             'added_by',
 
             ['class' => 'yii\grid\ActionColumn'],

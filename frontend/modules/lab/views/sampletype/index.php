@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use common\models\lab\Lab;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\SampletypeSearch */
@@ -9,6 +11,8 @@ use kartik\grid\GridView;
 
 $this->title = 'Sample Types';
 $this->params['breadcrumbs'][] = $this->title;
+
+$lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 ?>
 <div class="sampletype-index">
 
@@ -29,11 +33,22 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'sampletype_id',
             'type',
-            'status_id',
-
+            [
+                'attribute' => 'status_id',
+                'label' => 'Status',
+                'hAlign'=>'center',
+                'format'=>'raw',
+                'value' => function($model) {
+                    if ($model->status_id==1)
+                    {   
+                        return "<span class='badge badge-success' style='width:80px!important;height:20px!important;'>Active</span>";
+                    }else{
+                        return "<span class='badge badge-default' style='width:80px!important;height:20px!important;'>Inactive</span>";
+                    }
+                    
+                },
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
