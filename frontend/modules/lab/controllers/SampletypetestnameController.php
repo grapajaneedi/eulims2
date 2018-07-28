@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\lab\Testname;
+use common\models\system\Profile;
 use yii\helpers\Json;
 
 /**
@@ -75,6 +76,12 @@ class SampletypetestnameController extends Controller
 
         $testname = [];
         if(Yii::$app->request->isAjax){
+            $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+            if($profile){
+              $model->added_by=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
+              }else{
+                  $model->added_by="";
+              }
             return $this->renderAjax('_form', [
                 'model' => $model,
                 'testname'=>$testname,

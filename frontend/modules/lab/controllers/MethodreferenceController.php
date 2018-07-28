@@ -70,6 +70,8 @@ class MethodreferenceController extends Controller
             Yii::$app->session->setFlash('success', 'Lab Sample Type Test Name Successfully Created'); 
             return $this->runAction('index');
         }
+        $model->create_time=date("Y-m-d h:i:s");
+        $model->update_time=date("Y-m-d h:i:s");
 
        $model->testname_id = 0;
         if(Yii::$app->request->isAjax){

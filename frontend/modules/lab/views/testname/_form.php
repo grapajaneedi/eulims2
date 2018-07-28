@@ -30,10 +30,12 @@ use yii\helpers\Url;
 
     <div class="row">
              <div class="col-md-6">
-             <?= $form->field($model, 'create_time')->textInput() ?>
+             <?= $form->field($model, 'create_time')->textInput(['readonly' => true]) ?>
+
+             
              </div>
              <div class="col-md-6">
-             <?= $form->field($model, 'update_time')->textInput() ?>
+             <?= $form->field($model, 'update_time')->textInput(['readonly' => true]) ?>
              </div>
          </div>
 

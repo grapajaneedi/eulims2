@@ -72,6 +72,8 @@ class TestnameController extends Controller
         }
 
         if(Yii::$app->request->isAjax){
+            $model->create_time=date("Y-m-d h:i:s");
+            $model->update_time=date("Y-m-d h:i:s");
             return $this->renderAjax('_form', [
                 'model' => $model,
             ]);

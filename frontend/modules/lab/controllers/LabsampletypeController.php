@@ -10,6 +10,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
+use common\models\system\Profile;
+use DateTime;
 
 /**
  * LabsampletypeController implements the CRUD actions for Labsampletype model.
@@ -76,7 +78,17 @@ class LabsampletypeController extends Controller
         $sampletype = [];
 
         if(Yii::$app->request->isAjax){
-            // $model->effectivity_date = date('Y/m/d');
+           
+          $date2 = new DateTime();
+          date_add($date2,date_interval_create_from_date_string("1 day"));
+          $model->effective_date=date_format($date2,"Y-m-d");
+          $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+          if($profile){
+            $model->added_by=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
+            }else{
+                $model->added_by="";
+            }
+
             return $this->renderAjax('_form', [
                 'model' => $model,
                 'sampletype'=>$sampletype,

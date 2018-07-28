@@ -31,12 +31,14 @@ $methodlist= ArrayHelper::map(Methodreference::find()->all(),'method_reference_i
 
     <div class="row">
     <div class="col-md-6">
-    <?= $form->field($model, 'create_time')->textInput() ?>
+    <?= $form->field($model, 'create_time')->textInput(['readonly' => true]) ?>
+    
+    
     </div>
     <div class="col-md-6">
-    <?= $form->field($model, 'update_time')->textInput() ?>
+    <?= $form->field($model, 'update_time')->textInput(['readonly' => true]) ?>
     </div>
-</div>
+    </div>
 
     <div class="form-group pull-right">
     <?php if(Yii::$app->request->isAjax){ ?>

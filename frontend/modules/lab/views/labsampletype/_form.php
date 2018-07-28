@@ -41,7 +41,7 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
 
 
     <?= $form->field($model, 'effective_date')->widget(DatePicker::classname(), [
-        'readonly'=>true,
+        //'readonly'=>true,
         'options' => ['placeholder' => 'Select Date'],
             'value'=>function($model){
                 return date("m/d/Y",$model->effective_date);
@@ -54,7 +54,7 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
             
     ])->label('Effectivity Date'); ?>
 
-    <?= $form->field($model, 'added_by')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'added_by')->textInput(['readonly' => true]) ?>
 
 
   

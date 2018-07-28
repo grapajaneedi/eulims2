@@ -42,7 +42,7 @@ $testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName'
 
 
 
-    <?= $form->field($model, 'added_by')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'added_by')->textInput(['readonly' => true]) ?>
     <div class="form-group pull-right">
     <?php if(Yii::$app->request->isAjax){ ?>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
