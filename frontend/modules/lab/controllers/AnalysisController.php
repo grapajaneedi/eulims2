@@ -187,9 +187,6 @@ class AnalysisController extends Controller
      */
     public function actionCreate($id)
     {
-        //  Yii::$app->session->setFlash('success', 'Janeedi Maganda'); 
-        //  exit;
-
         $model = new Analysis; 
         $session = Yii::$app->session;
         $searchModel = new AnalysisSearch();
@@ -216,8 +213,16 @@ class AnalysisController extends Controller
            $requestId = (int) Yii::$app->request->get('request_id');
                  $sample_ids= $_POST['selection'];           
                  $post= Yii::$app->request->post();
+
                 foreach ($sample_ids as $sample_id){                
-                    $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
+                    $modeltest=  Testname::findOne(['testname_id'=>$post['Analysis']['test_id']]);
+                    $modelmethod=  Methodreference::findOne(['method_reference_id'=>$post['Analysis']['method']]);
+
+                    // echo "<pre>";
+                    // var_dump($modeltest);
+                    // echo "</pre>";
+                    // exit;
+
                     $analysis = new Analysis();
                     $date = new DateTime();
                     date_add($date,date_interval_create_from_date_string("1 day"));
@@ -226,13 +231,14 @@ class AnalysisController extends Controller
                     $analysis->pstcanalysis_id = (int) $post['Analysis']['pstcanalysis_id'];
                     $analysis->request_id = $request_id;
                     $analysis->rstl_id = $GLOBALS['rstl_id'];
-                    $analysis->test_id = (int) $post['Analysis']['test_id'];
+                   $analysis->test_id = (int) $post['Analysis']['test_id'];
+                   // $analysis->test_id = 1;
                     $analysis->sample_type_id = (int) $post['Analysis']['sample_type_id'];
-                    $analysis->testcategory_id = (int) $post['Analysis']['testcategory_id'];
+                    $analysis->testcategory_id = 1;
                     $analysis->is_package = (int) $post['Analysis']['is_package'];
-                    $analysis->method = $post['Analysis']['method'];
+                    $analysis->method = $modelmethod->method;
                     $analysis->fee = $post['Analysis']['fee'];
-                    $analysis->testname = $modeltest->testname;
+                    $analysis->testname = $modeltest->testName;
                     $analysis->references = $post['Analysis']['references'];
                     $analysis->quantity = 1;
                     $analysis->sample_code = $post['Analysis']['sample_code'];
