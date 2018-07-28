@@ -15,6 +15,7 @@ $this->title = 'Customers';
 $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile("/js/customer/customer.js");
 ?>
+<!-- <div id="map" style="width: auto;height: 400px;"></div>  -->
 <div class="customer-index">
     <div>
         <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Customer', ['value'=>'/customer/info/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Customer"),'name'=>'Create New Customer']); ?>    

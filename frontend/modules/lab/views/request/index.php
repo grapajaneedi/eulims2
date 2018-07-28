@@ -11,6 +11,7 @@ use common\models\lab\Request;
 use common\components\Functions;
 use common\models\lab\Customer;
 use yii\bootstrap\Modal;
+use common\models\finance\Paymentitem;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\RequestSearch */
@@ -27,6 +28,8 @@ if(Yii::$app->user->can('allow-cancel-request')){
 }else{
     $Button="{view}{update}";
 }
+///$Paymentitem= Paymentitem::find()->where(['request_id'=>$model->request_id])
+$gg = 1;
 ?>
 <div class="request-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -144,14 +147,19 @@ if(Yii::$app->user->can('allow-cancel-request')){
                 'class' => kartik\grid\ActionColumn::className(),
                 'template' => $Button,
                 'buttons' => [
-                    'view' => function ($url, $model) {
+                    
+                    'view' => function ($url, $model){
                         return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/lab/request/view?id=' . $model->request_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Request")]);
                     },
                     'update' => function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value' => '/lab/request/update?id=' . $model->request_id, 'onclick' => 'LoadModal(this.title, this.value);', 'class' => 'btn btn-success', 'title' => Yii::t('app', "Update Request")]);
                     },
                     'delete' => function ($url, $model) { //Cancel
-                        return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/lab/cancelrequest/create?req=' . $model->request_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger','disabled'=>$model->status_id==2, 'title' => Yii::t('app', "Cancel Request")]);
+                        if($model->IsRequestHasOP()){
+                            return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['class' => 'btn btn-danger','disabled'=>true, 'title' => Yii::t('app', "Cancel Request")]);
+                        }else{
+                            return Html::button('<span class="glyphicon glyphicon-ban-circle"></span>', ['value' => '/lab/cancelrequest/create?req=' . $model->request_id,'onclick' => 'LoadModal(this.title, this.value,true,"420px");', 'class' => 'btn btn-danger', 'title' => Yii::t('app', "Cancel Request")]);
+                        }
                     }
                 ],
             ],
