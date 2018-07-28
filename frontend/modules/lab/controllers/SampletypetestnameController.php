@@ -8,6 +8,8 @@ use common\models\lab\SampletypetestnameSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\lab\Testname;
+use yii\helpers\Json;
 
 /**
  * SampletypetestnameController implements the CRUD actions for Sampletypetestname model.
@@ -67,12 +69,17 @@ class SampletypetestnameController extends Controller
         $model = new Sampletypetestname();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'sampletype_testname_id' => $model->sampletype_testname_id]);
+            Yii::$app->session->setFlash('success', 'Sample Type Test Name Successfully Created'); 
+            return $this->runAction('index');
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        $testname = [];
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_form', [
+                'model' => $model,
+                'testname'=>$testname,
+            ]);
+       }
     }
 
     /**
@@ -123,5 +130,91 @@ class SampletypetestnameController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function listSampletype()
+    {
+        $sampletype = ArrayHelper::map(
+            Sampletype::find()
+            ->leftJoin('tbl_lab_sampletype', 'tbl_sampletype.sampletype_id=tbl_lab_sampletype.sampletypeId')
+            ->Where(['tbl_lab_sampletype.lab_id'=>$id])
+            ->all(), 'lab_sampletype_id', 
+            function($sampletype, $defaultValue) {
+                return $sampletype->testName;
+        });
+
+        return $sampletype;
+    }
+
+    
+    public function actionListsampletype() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+          
+            $list = Sampletype::find()
+            ->leftJoin('tbl_lab_sampletype', 'tbl_sampletype.sampletype_id=tbl_lab_sampletype.sampletypeId')
+            ->Where(['tbl_lab_sampletype.lab_id'=>$id])
+            ->asArray()
+            ->all();
+
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $sampletype) {
+                    $out[] = ['id' => $sampletype['sampletype_id'], 'name' => $sampletype['type']];
+                    if ($i == 0) {
+                        $selected = $sampletype['sampletype_id'];
+                    }
+                }
+                
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
+
+    public function listTestname()
+    {
+        $sampletype = ArrayHelper::map(
+            Testname::find()
+            ->leftJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
+            ->Where(['tbl_sampletype_testname.sampletype_id'=>$id])
+            ->all(), 'testname_id', 
+            function($sampletype, $defaultValue) {
+                return $sampletype->testName;
+        });
+
+        return $sampletype;
+    }
+
+    
+    public function actionListtestname() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+          
+            $list =  Testname::find()
+            ->leftJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
+            ->Where(['tbl_sampletype_testname.sampletype_id'=>$id])
+            ->asArray()
+            ->all();
+
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $sampletype) {
+                    $out[] = ['id' => $sampletype['testname_id'], 'name' => $sampletype['testName']];
+                    if ($i == 0) {
+                        $selected = $sampletype['testname_id'];
+                    }
+                }
+                
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
     }
 }

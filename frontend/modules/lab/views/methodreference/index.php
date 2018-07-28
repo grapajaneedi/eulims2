@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php $this->registerJsFile("/js/services/services.js"); ?>
 
     <p>
-    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Method Reference', ['value'=>'/services/testcategory/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Method Reference")]); ?>
+    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Method Reference', ['value'=>'/lab/methodreference/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Method Reference")]); ?>
     </p>
 
     <?= GridView::widget([

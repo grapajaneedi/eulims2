@@ -54,8 +54,8 @@ class LabSampletype extends \yii\db\ActiveRecord
     {
         return [
             'lab_sampletype_id' => 'Lab Sampletype ID',
-            'lab_id' => 'Lab ID',
-            'sampletypeId' => 'Sampletype ID',
+            'lab_id' => 'Lab',
+            'sampletypeId' => 'Sample Type',
             'effective_date' => 'Effective Date',
             'added_by' => 'Added By',
         ];

@@ -4,10 +4,12 @@ namespace frontend\modules\lab\controllers;
 
 use Yii;
 use common\models\lab\Labsampletype;
+use common\models\lab\Sampletype;
 use common\models\lab\LabsampletypeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
 
 /**
  * LabsampletypeController implements the CRUD actions for Labsampletype model.
@@ -71,16 +73,13 @@ class LabsampletypeController extends Controller
             return $this->runAction('index');
         }
 
+        $sampletype = [];
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_form', [
                 'model' => $model,
+                'sampletype'=>$sampletype,
             ]);
        }
-       else{
-            return $this->renderAjax('_form', [
-                'model' => $model,
-            ]);
-       } 
   
     }
 
@@ -133,4 +132,6 @@ class LabsampletypeController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+  
 }

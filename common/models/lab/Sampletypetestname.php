@@ -52,8 +52,8 @@ class Sampletypetestname extends \yii\db\ActiveRecord
     {
         return [
             'sampletype_testname_id' => 'Sampletype Testname ID',
-            'sampletype_id' => 'Sampletype ID',
-            'testname_id' => 'Testname ID',
+            'sampletype_id' => 'Sample Type',
+            'testname_id' => 'Test name',
             'added_by' => 'Added By',
         ];
     }

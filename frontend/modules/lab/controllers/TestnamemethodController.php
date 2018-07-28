@@ -67,12 +67,15 @@ class TestnamemethodController extends Controller
         $model = new Testnamemethod();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'testname_method_id' => $model->testname_method_id]);
+            Yii::$app->session->setFlash('success', 'Test Name Method Successfully Created'); 
+            return $this->runAction('index');
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_form', [
+                'model' => $model,
+            ]);
+       }
     }
 
     /**
