@@ -11,6 +11,7 @@ use common\models\finance\Paymentitem;
 use common\models\collection\Collection;
 use common\components\NumbersToWords;
 use common\models\system\Rstl;
+use common\models\system\Profile;
 interface PDFEnum{
     const PDF_Browser="I";
     const PDF_Download="D";
@@ -48,18 +49,21 @@ class OfficialReceipt implements PDFEnum{
         for($x=1;$x<18;$x++){
             $space1.="&nbsp;";
         }
-        
+        $space3="";
+        for($x=1;$x<25;$x++){
+            $space3.="&nbsp;";
+        }
         $ORHeader="<table border='0' width=100% cellpadding='0' cellspacing='0'>";
         $ORHeader.="<thead>";
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='8' style='height:126px'>&nbsp;</td>";
+        $ORHeader.="<td colspan='8' style='height:107px'>&nbsp;</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='1' style='height:29px'></td>";
+        $ORHeader.="<td colspan='3' style='height:29px'></td>";
         $datetime=$Collection->receiptDate;
-        $ORHeader.="<td colspan='7' style='text-align:left;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".date("m/d/Y h:i:s A", strtotime($datetime))."&nbsp;</td>";
+        $ORHeader.="<td colspan='5' style='text-align:left;padding-right: 15px'>".date("m/d/Y ", strtotime($datetime))."&nbsp;</td>";
         $ORHeader.="</tr>";
         $ORHeader.="</thead>";
         $ORHeader.="<tbody>";
@@ -71,7 +75,7 @@ class OfficialReceipt implements PDFEnum{
         
         $ORHeader.="<tr>";
         //$ORHeader.="<td colspan='1' ></td>";
-        $ORHeader.="<td colspan='8' style='height:35px'>".$space1."".$rstl->name."</td>";
+        $ORHeader.="<td colspan='8' style='height:30px'>".$space1."".$rstl->name."</td>";
        
         $ORHeader.="</tr>";
         
@@ -81,7 +85,7 @@ class OfficialReceipt implements PDFEnum{
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='8' style='height:40px'>&nbsp;</td>";
+        $ORHeader.="<td colspan='8' style='height:38px'>&nbsp;</td>";
         $ORHeader.="</tr>";
        // echo $Collection->receipt_id;
       //  exit;
@@ -99,7 +103,7 @@ class OfficialReceipt implements PDFEnum{
         
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='2' style='height:22px;width:166px;'>&nbsp;&nbsp;&nbsp;".$Collection->collectiontype->natureofcollection."</td>";
+        $ORHeader.="<td colspan='2' style='height:22px;width:166px;font-size:11px;'>&nbsp;&nbsp;&nbsp;".$Collection->collectiontype->natureofcollection."</td>";
         $ORHeader.="<td colspan='3' style='text-align:left;'>&nbsp;".$accountcode."</td>";
         $ORHeader.="<td colspan='3'>&nbsp;</td>";
         $ORHeader.="</tr>";
@@ -122,26 +126,29 @@ class OfficialReceipt implements PDFEnum{
         foreach ($paymentitem_Query as $i => $or) {
            // echo $Collection->receipt_id;
             $ORHeader.="<tr>";
-            $ORHeader.="<td colspan='2' style='height:22px;width:166px;font-size:12px;'>&nbsp;&nbsp;".$or['details']."</td>";
+            $ORHeader.="<td colspan='2' style='height:22px;width:166px;font-size:11px;'>&nbsp;&nbsp;".$or['details']."</td>";
             $ORHeader.="<td colspan='3'>&nbsp;</td>";
-            $ORHeader.="<td colspan='3' style='text-align:right;padding-right: 10px'>&nbsp;".number_format($or['amount'],2)."</td>";
+            $ORHeader.="<td colspan='3' style='text-align:right;padding-right: 10px;font-size:11px;'>&nbsp;".number_format($or['amount'],2)."</td>";
             $ORHeader.="</tr>";
             $count++;
         }
         $num= 7-$count;
         
        // exit;
-        for($i=0;$i<$num;$i++){
+        for($i=1;$i<$num;$i++){
             $ORHeader.="<tr>";
             $ORHeader.="<td colspan='2' style='height:22px;width:166px;'>&nbsp;</td>";
             $ORHeader.="<td colspan='3'>&nbsp;</td>";
             $ORHeader.="<td colspan='3'>&nbsp;</td>";
             $ORHeader.="</tr>";
         }
+        $ORHeader.="<tr>";
+        $ORHeader.="<td colspan='8' style='height:5px'>&nbsp;</td>";
+        $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='6' style='height:27px'>&nbsp;</td>";
-        $ORHeader.="<td colspan='2' style='text-align:right;padding-right: 10px'>&nbsp;".number_format($Collection->total,2)."</td>";
+        $ORHeader.="<td colspan='6' style='height:24px'>&nbsp;</td>";
+        $ORHeader.="<td colspan='2' style='text-align:right;padding-right: 10px;font-size:12px;'>&nbsp;".number_format($Collection->total,2)."</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
@@ -157,7 +164,7 @@ class OfficialReceipt implements PDFEnum{
         
         $ORHeader.="<tr>";
         //$ORHeader.="<td colspan='8' style='height:22px'>&nbsp;</td>";
-        $ORHeader.="<td colspan='8' style='word-wrap:break-word;height:52px;padding-left: 10px'>".$space." ".$amountinwords."</td>";
+        $ORHeader.="<td colspan='8' style='vertical-align:top;word-wrap:break-word;height:52px;padding-left: 10px;font-size:11px;'>&nbsp;&nbsp;&nbsp;".$space." ".$amountinwords."</td>";
         $ORHeader.="</tr>";
         
         
@@ -165,12 +172,32 @@ class OfficialReceipt implements PDFEnum{
         $ORHeader.="<td colspan='8' style='word-wrap:break-word;height:24px;'>&nbsp;&nbsp;&nbsp;&nbsp;".$cash."</td>";
         $ORHeader.="</tr>";
         
-        $ORHeader.="<tr>";//Check
-        $ORHeader.="<td colspan='8' style='word-wrap:break-word;height:24px;'>&nbsp;&nbsp;&nbsp;&nbsp;".$check."</td>";
-        $ORHeader.="</tr>";
+        if ($check <> ''){
+            $ORHeader.="<tr>";//Check
+            $ORHeader.="<td colspan='2' style='height:24px;font-size:12px;'>&nbsp;&nbsp;&nbsp;&nbsp;".$check."".$space3."Metrobank</td>";
+            $ORHeader.="<td colspan='4' style='height:24px;text-align:right;padding-right: 10px;font-size:12px;'>107661</td>";
+            $ORHeader.="<td colspan='2' style='word-wrap:break-word;height:24px;font-size:12px;padding-right: 10px'>&nbsp;&nbsp;".date("m/d/Y", strtotime($datetime))."</td>";
+            $ORHeader.="</tr>";
+        }else{
+           $ORHeader.="<tr>";//Check
+           $ORHeader.="<td colspan='8' style='word-wrap:break-word;height:24px;'>&nbsp;&nbsp;&nbsp;&nbsp;".$check."</td>";
+           $ORHeader.="</tr>";
+        }
+        
+//        $ORHeader.="<tr>";//Check
+//        $ORHeader.="<td colspan='8' style='word-wrap:break-word;height:24px;'>&nbsp;&nbsp;&nbsp;&nbsp;".$check."</td>";
+//        $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";//Money Order
         $ORHeader.="<td colspan='8' style='word-wrap:break-word;height:24px;'>&nbsp;&nbsp;&nbsp;&nbsp;".$mo."</td>";
+        $ORHeader.="</tr>";
+        
+        $Profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+        $user_name=$Profile->fullname;
+        
+        $ORHeader.="<tr>";
+        //$ORHeader.="<td colspan='1' style='height:107px;'>&nbsp;</td>";
+        $ORHeader.="<td colspan='8' style='height:94px;text-align:left;padding-left: 10px'>&nbsp;&nbsp;&nbsp;&nbsp;".$space." ".$user_name."</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="</tbody>";

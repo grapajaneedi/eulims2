@@ -13,7 +13,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="cancelledrequest-create">
     <?= $this->render('_form', [
         'model' => $model,
-        'Req_id'=> $Req_id
+        'Req_id'=> $Req_id,
+        'HasOP'=>$HasOP
     ]) ?>
 
 </div>

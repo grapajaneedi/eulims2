@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'rstl_id',
             'pstcsample_id',
             'package_id',
-            'test_category_id',
+            //'test_category_id',
             'sample_type_id',
             'sample_code',
             'samplename',

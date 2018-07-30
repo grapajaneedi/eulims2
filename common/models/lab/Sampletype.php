@@ -7,18 +7,17 @@ use Yii;
 /**
  * This is the model class for table "tbl_sampletype".
  *
- * @property integer $sample_type_id
- * @property string $sample_type
- * @property integer $testcategory_id
+ * @property int $sampletype_id
+ * @property string $type
+ * @property int $status_id
  *
- * @property Sample[] $samples
- * @property Testcategory $testCategory
- * @property Test[] $tests
+ * @property LabSampletype[] $labSampletypes
+ * @property SampletypeTestname[] $sampletypeTestnames
  */
 class Sampletype extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -34,51 +33,42 @@ class Sampletype extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['sample_type', 'testcategory_id'], 'required'],
-            [['testcategory_id'], 'integer'],
-            [['sample_type'], 'string', 'max' => 75],
-            [['testcategory_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
+            [['type', 'status_id'], 'required'],
+            [['status_id'], 'integer'],
+            [['type'], 'string', 'max' => 75],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
-            'sample_type_id' => 'Sample Type ID',
-            'sample_type' => 'Sample Type',
-            'testcategory_id' => 'Test Category ID',
+            'sampletype_id' => 'Sampletype ID',
+            'type' => 'Sample Type',
+            'status_id' => 'Status',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSamples()
+    public function getLabSampletypes()
     {
-        return $this->hasMany(Sample::className(), ['sample_type_id' => 'sample_type_id']);
+        return $this->hasMany(LabSampletype::className(), ['sampletypeId' => 'sampletype_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTestCategory()
+    public function getSampletypeTestnames()
     {
-        return $this->hasOne(Testcategory::className(), ['testcategory_id' => 'testcategory_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTests()
-    {
-        return $this->hasMany(Test::className(), ['sample_type_id' => 'sample_type_id']);
+        return $this->hasMany(SampletypeTestname::className(), ['sampletype_id' => 'sampletype_id']);
     }
 }

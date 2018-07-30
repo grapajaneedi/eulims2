@@ -75,32 +75,16 @@ use kartik\widgets\Typeahead;
 function closeDialog(){
     $(".modal").modal('hide');
 }
-//$("#sample-remarks").focus(function(){
+
 $('#sample-remarks').on('keyup keypress blur', function() {
-   //if ($('#sample-remarks').val() == '') {
     if ($.trim($('#sample-remarks').val()).length < 1) {
         $('.sample_remarks').html("Remarks cannot be blank.");
-        //$('.field-sample-remarks').css('color', '#FF0000');
-        //$('#sample-remarks').css('border', '1px solid #FF0000');
         $(".field-sample-remarks").removeClass('has-success');
         $(".field-sample-remarks").addClass('has-error');
     }
     else {
-        //$('#sample-remarks').css('border', '1px solid #00FF00');
-        //$('.field-sample-remarks').css('color', '#00FF00');
         $('.sample_remarks').html("");
         $(".field-sample-remarks").removeClass('has-error');
-        //$(".field-sample-remarks").addClass('has-success');
     }
-    //if ($('#sample-remarks').val() == '') {
-    /*if ($.trim($('#sample-remarks').val()).length < 1) {
-        $('.help-block remarks').html("Remarks cannot be blank.");
-        $(".form-group field-sample-remarks").removeClass('has-success');
-        $(".form-group field-sample-remarks").addClass('has-error');
-    } else {
-        $(".form-group field-sample-remarks").removeClass('has-error');
-        $(".form-group field-sample-remarks").addClass('has-success');
-        $('.help-block remarks').html("Remarks cannot be blank.");
-    }*/
 });
 </script>

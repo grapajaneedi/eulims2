@@ -14,12 +14,19 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
-use common\models\lab\Sampletype;
-use common\models\lab\Testcategory;
-use common\models\lab\Test;
 use common\models\lab\SampleSearch;
 use yii\helpers\Json;
 use common\models\finance\Paymentitem;
+
+
+use common\models\lab\Lab;
+use common\models\lab\Labsampletype;
+use common\models\lab\Sampletype;
+use common\models\lab\Sampletypetestname;
+use common\models\lab\Testnamemethod;
+use common\models\lab\Methodreference;
+use common\models\lab\Testname;
+
 use DateTime;
 
 /**
@@ -81,15 +88,13 @@ class AnalysisController extends Controller
     }
 
     public function actionGettest() {
-        if(isset($_GET['test_id'])){
-            $id = (int) $_GET['test_id'];
-            $modeltest=  Test::findOne(['test_id'=>$id]);
-            if(count($modeltest)>0){
-                $method = $modeltest->method;
-                $references = $modeltest->payment_references;
-                $fee = $modeltest->fee;
+        if(isset($_GET['method_reference_id'])){
+            $id = (int) $_GET['method_reference_id'];
+            $modelmethodreference=  Methodreference::findOne(['method_reference_id'=>$id]);
+            if(count($modelmethodreference)>0){
+                $references = $modelmethodreference->reference;
+                $fee = $modelmethodreference->fee;
             } else {
-                $method = "";
                 $references = "";
                 $fee = "";
             }
@@ -99,7 +104,6 @@ class AnalysisController extends Controller
             $fee = "Error getting fee";
         }
         return Json::encode([
-            'method'=>$method,
             'references'=>$references,
             'fee'=>$fee,
         ]);
@@ -111,14 +115,18 @@ class AnalysisController extends Controller
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
-            $list = Test::find()->andWhere(['sample_type_id'=>$id])->asArray()->all();
+            $list = Methodreference::find()
+            ->leftJoin('tbl_testname_method', 'tbl_testname_method.method_id=tbl_methodreference.method_reference_id')
+             ->asArray()
+            ->Where(['tbl_testname_method.testname_id'=>$id])
+            ->all();
             $selected  = null;
             if ($id != null && count($list) > 0) {
                 $selected = '';
                 foreach ($list as $i => $test) {
-                    $out[] = ['id' => $test['test_id'], 'name' => $test['testname']];
+                    $out[] = ['id' => $test['method_reference_id'], 'name' => $test['method']];
                     if ($i == 0) {
-                        $selected = $test['test_id'];
+                        $selected = $test['method_reference_id'];
                     }
                 }
                 
@@ -129,11 +137,15 @@ class AnalysisController extends Controller
         echo Json::encode(['output' => '', 'selected'=>'']);
     }
 
-    protected function listSampletype()
+    public function listSampletype()
     {
-        $sampletype = ArrayHelper::map(Sampletype::find()->all(), 'sample_type_id', 
+        $sampletype = ArrayHelper::map(
+            Testname::find()
+            ->leftJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
+            ->Where(['tbl_sampletype_testname.sampletype_id'=>$id])
+            ->all(), 'testname_id', 
             function($sampletype, $defaultValue) {
-                return $sampletype->sample_type;
+                return $sampletype->testName;
         });
 
         return $sampletype;
@@ -144,14 +156,20 @@ class AnalysisController extends Controller
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
-            $list = Sampletype::find()->andWhere(['testcategory_id'=>$id])->asArray()->all();
+          
+            //$list = Testname::find()->andWhere(['id'=>$id])->asArray()->all();
+            $list =  Testname::find()
+            ->leftJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
+            ->Where(['tbl_sampletype_testname.sampletype_id'=>$id])
+            ->asArray()
+            ->all();
             $selected  = null;
             if ($id != null && count($list) > 0) {
                 $selected = '';
                 foreach ($list as $i => $sampletype) {
-                    $out[] = ['id' => $sampletype['sample_type_id'], 'name' => $sampletype['sample_type']];
+                    $out[] = ['id' => $sampletype['testname_id'], 'name' => $sampletype['testName']];
                     if ($i == 0) {
-                        $selected = $sampletype['sample_type_id'];
+                        $selected = $sampletype['testname_id'];
                     }
                 }
                 
@@ -169,9 +187,6 @@ class AnalysisController extends Controller
      */
     public function actionCreate($id)
     {
-        //  Yii::$app->session->setFlash('success', 'Janeedi Maganda'); 
-        //  exit;
-
         $model = new Analysis; 
         $session = Yii::$app->session;
         $searchModel = new AnalysisSearch();
@@ -185,10 +200,6 @@ class AnalysisController extends Controller
 
         $sample_count = $sampleDataProvider->getTotalCount();
         
-       
-       
-        
-        
         $request_id = $_GET['id'];
         $request = $this->findRequest($request_id);
         $labId = $request->lab_id;
@@ -198,27 +209,20 @@ class AnalysisController extends Controller
         $sampletype = [];
         $test = [];
         
-        // if ($sample_count==0){  
-        // //    Yii::$app->session->setFlash('success', 'Please add atleast 1 sample'); 
-        // //    return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
-        //     echo "Please add atleast one sample";
-        //     exit;
-      //  } else 
-        
         if ($model->load(Yii::$app->request->post())) {
            $requestId = (int) Yii::$app->request->get('request_id');
-            
-           
-                 $sample_ids= $_POST['selection'];
-
-                
+                 $sample_ids= $_POST['selection'];           
                  $post= Yii::$app->request->post();
 
-                foreach ($sample_ids as $sample_id){
+                foreach ($sample_ids as $sample_id){                
+                    $modeltest=  Testname::findOne(['testname_id'=>$post['Analysis']['test_id']]);
+                    $modelmethod=  Methodreference::findOne(['method_reference_id'=>$post['Analysis']['method']]);
 
-                   
+                    // echo "<pre>";
+                    // var_dump($modeltest);
+                    // echo "</pre>";
+                    // exit;
 
-                    $modeltest=  Test::findOne(['test_id'=>$post['Analysis']['test_id']]);
                     $analysis = new Analysis();
                     $date = new DateTime();
                     date_add($date,date_interval_create_from_date_string("1 day"));
@@ -227,13 +231,14 @@ class AnalysisController extends Controller
                     $analysis->pstcanalysis_id = (int) $post['Analysis']['pstcanalysis_id'];
                     $analysis->request_id = $request_id;
                     $analysis->rstl_id = $GLOBALS['rstl_id'];
-                    $analysis->test_id = (int) $post['Analysis']['test_id'];
+                   $analysis->test_id = (int) $post['Analysis']['test_id'];
+                   // $analysis->test_id = 1;
                     $analysis->sample_type_id = (int) $post['Analysis']['sample_type_id'];
-                    $analysis->testcategory_id = (int) $post['Analysis']['testcategory_id'];
+                    $analysis->testcategory_id = 1;
                     $analysis->is_package = (int) $post['Analysis']['is_package'];
-                    $analysis->method = $post['Analysis']['method'];
+                    $analysis->method = $modelmethod->method;
                     $analysis->fee = $post['Analysis']['fee'];
-                    $analysis->testname = $modeltest->testname;
+                    $analysis->testname = $modeltest->testName;
                     $analysis->references = $post['Analysis']['references'];
                     $analysis->quantity = 1;
                     $analysis->sample_code = $post['Analysis']['sample_code'];
@@ -295,15 +300,15 @@ class AnalysisController extends Controller
 
      protected function listTestcategory($labId)
      {
-         $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 
+         $testcategory = ArrayHelper::map(
+            Sampletype::find()
+            ->leftJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletypeId=tbl_sampletype.sampletype_id')
+            ->andWhere(['lab_id'=>$labId])
+            ->all(), 'sampletype_id', 
             function($testcategory, $defaultValue) {
-                return $testcategory->category_name;
+                return $testcategory->type;
          });
- 
-         /*$testcategory = ArrayHelper::map(Testcategory::find()
-             ->where(['lab_id' => $labId])
-             ->all(), 'testcategory_id', 'category_name');*/
- 
+
          return $testcategory;
      }
     public function actionUpdate($id)
@@ -371,49 +376,6 @@ class AnalysisController extends Controller
     }
 
       
-
-                // $model = $this->findModel($id);
-        
-                // $session = Yii::$app->session;
-        
-                // $request = $this->findRequest($model->request_id);
-                // $labId = $request->lab_id;
-        
-                // $testcategory = $this->listTestcategory($labId);
-        
-                // $sampletype = ArrayHelper::map(Sampletype::find()
-                //         ->where(['testcategory_id' => $model->testcategory_id])
-                //         ->all(), 'sample_type_id', 'sample_type');
-        
-                // if ($model->load(Yii::$app->request->post())) {
-                //     if(isset($_POST['Sample']['sampling_date'])){
-                //         $model->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
-                //     } else {
-                //         $model->sampling_date = date('Y-m-d');
-                //     }
-        
-                //     if($model->save(false)){
-                //         $session->set('updatemessage',"executed");
-                //         return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-        
-                //     }
-                // } elseif (Yii::$app->request->isAjax) {
-                //         return $this->renderAjax('_form', [
-                //             'model' => $model,
-                //             'testcategory' => $testcategory,
-                //             'sampletype' => $sampletype,
-                //             'labId' => $labId,
-                //             'sampletemplate' => $this->listSampletemplate(),
-                //         ]);
-                // } else {
-                //     return $this->render('update', [
-                //         'model' => $model,
-                //         'testcategory' => $testcategory,
-                //         'sampletype' => $sampletype,
-                //         'labId' => $labId,
-                //         'sampletemplate' => $this->listSampletemplate(),
-                //     ]);
-                // }
     }
 
     /**

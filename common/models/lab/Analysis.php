@@ -89,11 +89,11 @@ class Analysis extends \yii\db\ActiveRecord
             'references' => 'References',
             'quantity' => 'Quantity',
             'fee' => 'Fee',
-            'test_id' => 'Test',
+            'test_id' => 'Test Name',
             'cancelled' => 'Cancelled',
             'user_id' => 'User ID',
             'is_package' => 'Is Package',
-            'testcategory_id' => 'Test Category',
+            'testcategory_id' => 'Sample Type',
             'sample_type_id' => 'Sample Type',
         ];
     }

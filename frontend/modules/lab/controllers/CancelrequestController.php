@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\lab\Request;
+use common\models\finance\Paymentitem;
+use common\models\lab\Sample;
 /**
  * CancelrequestController implements the CRUD actions for Cancelledrequest model.
  */
@@ -65,25 +67,38 @@ class CancelrequestController extends Controller
     {
         $get= \Yii::$app->request->get();
         $model = new Cancelledrequest();
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //Update Request
             $Request= Request::find()->where(['request_id'=>$model->request_id])->one();
-            $Request->status_id=2;
-            $Request->save();
-            return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+            $Request->status_id=0;//Cancelled
+            $Request->payment_status_id=0;
+            if($Request->save()){//Check if there is sample
+                $SampleCount= Sample::find()->where(['request_id'=>$model->request_id])->count();
+                if($SampleCount>0){
+                    return $this->redirect(['/lab/sample/cancel', 'id' => $model->request_id]);
+                }else{
+                    Yii::$app->session->setFlash('success', 'Request Successfully Cancelled!');
+                    return $this->redirect(['/lab/request/view', 'id' => $model->request_id]); 
+                }
+            }else{
+                Yii::$app->session->setFlash('danger', 'Request Failed to Cancelled!');
+                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]); 
+            }
         } else {
             $Request_id=$get['req'];
             $model->cancel_date=date('Y-m-d H:i:s');
+            $HasOP= Paymentitem::find()->where(['request_id'=>$Request_id])->count();
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('create', [
                     'model' => $model,
-                    'Req_id'=> $Request_id
+                    'Req_id'=> $Request_id,
+                    'HasOP'=>$HasOP
                 ]);
             }else{
                 return $this->render('create', [
                     'model' => $model,
-                    'Req_id'=> $Request_id
+                    'Req_id'=> $Request_id,
+                    'HasOP'=>$HasOP
                 ]);
             }
         }
