@@ -477,7 +477,7 @@ $UnpaidBalance=number_format($UnpaidBalance,2);
                     'hAlign'=>'center',
                     'format'=>'raw',
                     'value' => function($model) {
-                            return "<button class='btn btn-default btn-block'>Pending</button>";
+                            return "<span class='badge badge-default' style='width:80px!important;height:20px!important;'>Pending</span>";
                     },
                     'enableSorting' => false,
                 ],

@@ -34,7 +34,7 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
 
 
         <div class="input-group">
- <?= $form->field($model,'sampletypeId')->widget(Select2::classname(),[
+ <?= $form->field($model,'sampletype_id')->widget(Select2::classname(),[
                     'data' => $sampletypelist,
                     'theme' => Select2::THEME_KRAJEE,
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
