@@ -10,7 +10,7 @@ use Yii;
  * @property int $receipt_id
  * @property int $rstl_id
  * @property int $terminal_id
- * @property int $collection_id
+ * @property int $orderofpayment_id
  * @property int $deposit_type_id
  * @property int $or_series_id
  * @property string $or_number
@@ -57,7 +57,7 @@ class Receipt extends \yii\db\ActiveRecord
     {
         return [
             [['rstl_id', 'terminal_id', 'deposit_type_id', 'or_series_id', 'or_number', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled'], 'required'],
-            [['rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'or_series_id', 'payment_mode_id', 'collectiontype_id', 'cancelled', 'deposit_id'], 'integer'],
+            [['rstl_id', 'terminal_id', 'orderofpayment_id', 'deposit_type_id', 'or_series_id', 'payment_mode_id', 'collectiontype_id', 'cancelled', 'deposit_id'], 'integer'],
             [['receiptDate'], 'safe'],
             [['total'], 'number'],
             [['or_number'], 'string', 'max' => 50],
@@ -66,7 +66,6 @@ class Receipt extends \yii\db\ActiveRecord
             [['deposit_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => DepositType::className(), 'targetAttribute' => ['deposit_type_id' => 'deposit_type_id']],
             [['payment_mode_id'], 'exist', 'skipOnError' => true, 'targetClass' => Paymentmode::className(), 'targetAttribute' => ['payment_mode_id' => 'payment_mode_id']],
             [['collectiontype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collectiontype::className(), 'targetAttribute' => ['collectiontype_id' => 'collectiontype_id']],
-            [['collection_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collection::className(), 'targetAttribute' => ['collection_id' => 'collection_id']],
             [['deposit_id'], 'exist', 'skipOnError' => true, 'targetClass' => Deposit::className(), 'targetAttribute' => ['deposit_id' => 'deposit_id']],
         ];
     }
@@ -80,7 +79,7 @@ class Receipt extends \yii\db\ActiveRecord
             'receipt_id' => 'Receipt ID',
             'rstl_id' => 'Rstl ID',
             'terminal_id' => 'Terminal ID',
-            'collection_id' => 'Collection ID',
+            'orderofpayment_id' => 'OrderofPayment ID',
             'deposit_type_id' => 'Deposit Type ID',
             'or_series_id' => 'Or Series ID',
             'or_number' => 'Or Number',
@@ -137,9 +136,9 @@ class Receipt extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCollection()
+    public function getOp()
     {
-        return $this->hasOne(Collection::className(), ['collection_id' => 'collection_id']);
+        return $this->hasOne(Op::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
 
     /**

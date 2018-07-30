@@ -16,10 +16,10 @@ use yii\helpers\Url;
 use common\components\Functions;
 
 $func= new Functions();
-$this->title = 'Collection';
+$this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cashier']];
-$this->params['breadcrumbs'][] = 'Collection';
+$this->params['breadcrumbs'][] = 'Order of Payment';
 $this->registerJsFile("/js/finance/finance.js");
 $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_name' );
 

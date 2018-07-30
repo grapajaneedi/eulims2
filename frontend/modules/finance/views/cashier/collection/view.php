@@ -13,18 +13,13 @@ use common\models\finance\PaymentStatus;
 $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cashier']];
-$this->params['breadcrumbs'][] = ['label' => 'Collection', 'url' => ['/finance/cashier/collection']];
+$this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['/finance/cashier/collection']];
 $this->params['breadcrumbs'][] = 'View';
 //Check if exist collection to avoid Error: Edit by Nolan 7/10/2018
-if($model->collection){
-    $CollectionAmount=$model->collection->amount;
-}else{
-    $CollectionAmount=0.00;
-}
-$bal=($model->total_amount) -($CollectionAmount);
+
 //echo $model->total_amount;
 //exit;
-if($bal <> 0){
+if($model->receipt_id == null){
     $footer="<div class='row' style='margin-left: 2px;'><button value='/finance/cashier/create-receipt?op_id=$model->orderofpayment_id' id='btnCreateReceipt' class='btn btn-success' title='Receipt from OP' onclick='addReceipt(this.value,this.title)'><i class='fa fa-save'></i> Create Receipt</button></div>";                    
 }
 else{
@@ -32,7 +27,7 @@ else{
 }
 
 $sweetalert = new Functions();
-$PstatusId=$model->collection ? $model->collection->payment_status_id : 1;
+$PstatusId=$model->payment_status_id;
 if($PstatusId==0){
     $CancelButton='';
     $CancelClass='request-cancelled';
@@ -152,34 +147,7 @@ if($Cancelledop){
                   ],
               ],
            ],
-            
-            [
-                'group'=>true,
-                'label'=>'Payment Details',
-                'rowOptions'=>['class'=>'info']
-            ],
-            [
-                'columns' => [
-                    [
-                        'label'=>'Collection',
-                        'format'=>'raw',
-                         'format' => ['decimal', 2],
-                        // Check if Collection Exist (edited: 7/9/2018)
-                        'value' => $model->collection ? $model->collection->sub_total : 0.00,
-                        'valueColOptions'=>['style'=>'width:30%'], 
-                        'displayOnly'=>true
-                    ],
-                    [
-                        'label'=>'Balance',
-                        'format'=>'raw',
-                        'value' => $bal,
-                        'format' => ['decimal', 2],
-                        'valueColOptions'=>['style'=>'width:30%'], 
-                        'displayOnly'=>true
-                    ],
-                ],
-                    
-            ],
+           
         ],
     ]) ?>
    </div>

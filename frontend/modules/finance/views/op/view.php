@@ -14,7 +14,7 @@ $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['index']];
 
-$bal=($model->total_amount) -($model->collection->sub_total);
+$receipt_id=$model->receipt_id;
 //}
 $sweetalert = new Functions();
 $footer="<div class='alert alert-info' style='background: #d9edf7 !important;margin-top: 1px !important;width:550px;'>
@@ -22,12 +22,12 @@ $footer="<div class='alert alert-info' style='background: #d9edf7 !important;mar
                  <p class='note' style='color:#265e8d'> <strong>For partial payment, please click on each amount and modify accordingly.</strong><br />
                  <strong>Note!</strong> Only amount with _ _ _ can be modified. </p>
              </div>";
-if($model->collection->payment_status_id==0){
+if($model->payment_status_id==0){
     $CancelButton='';
     $CancelClass='request-cancelled';
     $BackClass='background-cancel';
 }else{
-    if($model->created_receipt == 0){
+    if($model->receipt_id == null){
         $CancelClass='cancelled-hide';
         $BackClass='';
         $Func="LoadModal('Cancel Order of Payment','/finance/cancelop/create?op=".$model->orderofpayment_id."',true,500)";

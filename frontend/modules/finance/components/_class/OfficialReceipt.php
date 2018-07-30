@@ -128,7 +128,7 @@ class OfficialReceipt implements PDFEnum{
             $ORHeader.="<tr>";
             $ORHeader.="<td colspan='2' style='height:22px;width:166px;font-size:11px;'>&nbsp;&nbsp;".$or['details']."</td>";
             $ORHeader.="<td colspan='3'>&nbsp;</td>";
-            $ORHeader.="<td colspan='3' style='text-align:right;padding-right: 10px;font-size:11px;'>&nbsp;".number_format($or['amount'],2)."</td>";
+            $ORHeader.="<td colspan='3' style='text-align:right;padding-right: 20px;font-size:11px;'>&nbsp;".number_format($or['amount'],2)."</td>";
             $ORHeader.="</tr>";
             $count++;
         }
@@ -143,12 +143,12 @@ class OfficialReceipt implements PDFEnum{
             $ORHeader.="</tr>";
         }
         $ORHeader.="<tr>";
-        $ORHeader.="<td colspan='8' style='height:5px'>&nbsp;</td>";
+        $ORHeader.="<td colspan='8' style='height:2px'>&nbsp;</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
         $ORHeader.="<td colspan='6' style='height:24px'>&nbsp;</td>";
-        $ORHeader.="<td colspan='2' style='text-align:right;padding-right: 10px;font-size:12px;'>&nbsp;".number_format($Collection->total,2)."</td>";
+        $ORHeader.="<td colspan='2' style='text-align:right;padding-right: 20px;font-size:12px;'>&nbsp;".number_format($Collection->total,2)."</td>";
         $ORHeader.="</tr>";
         
         $ORHeader.="<tr>";
