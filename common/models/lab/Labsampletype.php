@@ -14,6 +14,7 @@ use Yii;
  * @property string $added_by
  *
  * @property Sampletype $sampletype
+* @property Lab $lab
  */
 class LabSampletype extends \yii\db\ActiveRecord
 {
