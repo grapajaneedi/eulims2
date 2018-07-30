@@ -376,49 +376,6 @@ class AnalysisController extends Controller
     }
 
       
-
-                // $model = $this->findModel($id);
-        
-                // $session = Yii::$app->session;
-        
-                // $request = $this->findRequest($model->request_id);
-                // $labId = $request->lab_id;
-        
-                // $testcategory = $this->listTestcategory($labId);
-        
-                // $sampletype = ArrayHelper::map(Sampletype::find()
-                //         ->where(['testcategory_id' => $model->testcategory_id])
-                //         ->all(), 'sample_type_id', 'sample_type');
-        
-                // if ($model->load(Yii::$app->request->post())) {
-                //     if(isset($_POST['Sample']['sampling_date'])){
-                //         $model->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
-                //     } else {
-                //         $model->sampling_date = date('Y-m-d');
-                //     }
-        
-                //     if($model->save(false)){
-                //         $session->set('updatemessage',"executed");
-                //         return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-        
-                //     }
-                // } elseif (Yii::$app->request->isAjax) {
-                //         return $this->renderAjax('_form', [
-                //             'model' => $model,
-                //             'testcategory' => $testcategory,
-                //             'sampletype' => $sampletype,
-                //             'labId' => $labId,
-                //             'sampletemplate' => $this->listSampletemplate(),
-                //         ]);
-                // } else {
-                //     return $this->render('update', [
-                //         'model' => $model,
-                //         'testcategory' => $testcategory,
-                //         'sampletype' => $sampletype,
-                //         'labId' => $labId,
-                //         'sampletemplate' => $this->listSampletemplate(),
-                //     ]);
-                // }
     }
 
     /**
