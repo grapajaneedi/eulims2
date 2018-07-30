@@ -54,11 +54,9 @@ $func=new Functions();
 				'headerOptions' => ['class' => 'text-center'],
             ],
             [
-                //'attribute' => 'sample_type_id',
-                //'attribute' => 'sampletype_id',
-                'header' => 'Sample Type',
+                'attribute' => 'sampletype_id',
                 'format' => 'raw',
-                'value' => function($data){ return $data->sampleType->sample_type;},
+                'value' => function($data){ return $data->sampletype->type;},
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => $sampletypes,
                 'filterWidgetOptions' => [

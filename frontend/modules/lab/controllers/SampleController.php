@@ -138,7 +138,7 @@ class SampleController extends Controller
                     //$sample->sample_code = 0;
                     //$sample->testcategory_id = (int) $_POST['Sample']['testcategory_id'];
                     //$sample->testcategory_id = 0;
-                    $sample->sample_type_id = (int) $_POST['Sample']['sample_type_id'];
+                    $sample->sampletype_id = (int) $_POST['Sample']['sampletype_id'];
                     $sample->samplename = $_POST['Sample']['samplename'];
                     $sample->description = $_POST['Sample']['description'];
                     $sample->request_id = $request->request_id;
@@ -334,7 +334,7 @@ class SampleController extends Controller
     {
         $sampletype = ArrayHelper::map(Sampletype::find()->joinWith('labSampletypes')->andWhere(['lab_id'=>$labId])->all(), 'sampletype_id', 
             function($sampletype, $defaultValue) {
-                return $sampletype->sample_type;
+                return $sampletype->type;
         });
 
         return $sampletype;
@@ -342,12 +342,12 @@ class SampleController extends Controller
 
     protected function filterSampletype()
     {
-        $sampletype = ArrayHelper::map(Sampletype::find()->all(), 'sampletype_id', 
-            function($sampletype, $defaultValue) {
-                return $sampletype->sample_type;
+        $sampletypes = ArrayHelper::map(Sampletype::find()->all(), 'sampletype_id', 
+            function($sampletypes, $defaultValue) {
+                return $sampletypes->type;
         });
 
-        return $sampletype;
+        return $sampletypes;
     }
 
   

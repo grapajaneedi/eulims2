@@ -66,11 +66,11 @@ if(count($sampletype) > 0){
     <div class="row">
         <?php
             echo $startDiv;
-            echo $form->field($model,'sample_type_id')->widget(Select2::classname(),[
+            echo $form->field($model,'sampletype_id')->widget(Select2::classname(),[
                     'data' => $sampletype,
                     'theme' => Select2::THEME_KRAJEE,
                     //'theme' => Select2::THEME_BOOTSTRAP,
-                    'options' => ['id'=>'sample-sample_type_id'],
+                    'options' => ['id'=>'sample-sampletype_id'],
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
                 ]);
             echo $endDiv;
