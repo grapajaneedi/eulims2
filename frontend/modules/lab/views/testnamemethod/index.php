@@ -53,20 +53,13 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'method_id',
                 'label' => 'Method',
-                // 'value' => function($model) {
-                //     // $method = Methodreference::find()->where(['method_reference_id' =>$model->method_id])->one();
-                //     // if($method->method_reference_id){
-                //       //  $method = Methodreference::find()->where(['method_reference_id' =>$model->method_id])->one();
-                //         return $model->method->method;
-                //     // }else{
-                //     //     return "";
-                //     // }
-                  
-                // },
-                // 'value' => function($model) {
-                //     return $model->method->method;
-                // },
-               
+                'value' => function($model) {
+                     if($model->method){
+                      return $model->method->method;
+                    }else{
+                        return "";
+                 }    
+                },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => $methodlist,
                 'filterWidgetOptions' => [

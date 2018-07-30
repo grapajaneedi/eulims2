@@ -14,6 +14,7 @@ use Yii;
  * @property string $update_time
  *
  * @property Testname $testname
+ *  @property Method $method
  */
 class Testnamemethod extends \yii\db\ActiveRecord
 {
