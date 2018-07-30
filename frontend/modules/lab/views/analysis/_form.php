@@ -149,10 +149,6 @@ $this->registerJs($js);
     </div>
 </div>
 
-
-<div class="row">
-        <div class="col-sm-6">
-
         <?= $form->field($model, 'method')->widget(DepDrop::classname(), [
                 'type'=>DepDrop::TYPE_SELECT2,
                 'data'=>$test,
@@ -166,18 +162,13 @@ $this->registerJs($js);
                 ]
             ])
             ?>
-        </div>
-           <div class="col-sm-6">
-        <?= $form->field($model, 'references')->textInput(['readonly' => true]) ?>
-        </div>
-    </div>
-      
+   
     <div class="row">
         <div class="col-sm-6">
               <?= $form->field($model, 'fee')->textInput(['readonly' => true]) ?>
         </div>
            <div class="col-sm-6">
-        
+           <?= $form->field($model, 'references')->textInput(['readonly' => true]) ?>    
         </div>
     </div>
 

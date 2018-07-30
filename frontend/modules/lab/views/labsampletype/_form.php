@@ -31,7 +31,7 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Lab'],
             ])
     ?>
-    
+
 
         <div class="input-group">
  <?= $form->field($model,'sampletypeId')->widget(Select2::classname(),[
