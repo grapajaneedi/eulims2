@@ -72,7 +72,15 @@ class CancelrequestController extends Controller
             $Request= Request::find()->where(['request_id'=>$model->request_id])->one();
             $Request->status_id=0;//Cancelled
             $Request->payment_status_id=0;
+            $PaymentItem= Paymentitem::find()->where(['request_id'=>$model->request_id])->one();
+            $receipt_id=$PaymentItem->receipt_id ? $PaymentItem->receipt_id : -1;
+            //$query = (new \yii\db\Query())->from('tbl_paymentitem')->where(['request_id'=>$model->request_id]);
+            //$sum = $query->sum('amount');
             if($Request->save()){//Check if there is sample
+                if($receipt_id!=-1){
+                    // With Receipt
+                    
+                }
                 $SampleCount= Sample::find()->where(['request_id'=>$model->request_id])->count();
                 if($SampleCount>0){
                     return $this->redirect(['/lab/sample/cancel', 'id' => $model->request_id]);
