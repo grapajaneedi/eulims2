@@ -133,6 +133,7 @@ $this->registerJs($js);
         <?= $form->field($model, 'test_id')->widget(DepDrop::classname(), [
             'type'=>DepDrop::TYPE_SELECT2,
             'data'=>$sampletype,
+           // 'initValueText' => null,
             'options'=>['id'=>'sample-sample_type_id'],
             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
             'pluginOptions'=>[
@@ -193,7 +194,7 @@ $this->registerJs($js);
 </div>
 
 <?php
-$this->registerJs("$('#sample-test_id').on('change',function(){
+$this->registerJs("$('#sample-test_id').on('depdrop:afterChange',function(){
     var id = $('#sample-test_id').val();
         $.ajax({
             url: '".Url::toRoute("analysis/gettest")."',
@@ -216,5 +217,33 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
         });
 });");
 ?>
+
+
+<?php
+$this->registerJs("$('#sample-test_id').on('change',function(){
+    var id = $('#sample-test_id').val();
+        $.ajax({
+            url: '".Url::toRoute("analysis/gettest")."',
+            dataType: 'json',
+            method: 'GET',
+            data: {method_reference_id: id},
+            success: function (data, textStatus, jqXHR) {
+                $('#analysis-references').val(data.references);
+                $('#analysis-fee').val(data.fee);
+                $('.image-loader').removeClass( \"img-loader\" );
+                $('.image-loader').removeClass( \"img-loader\" );
+            },
+            beforeSend: function (xhr) {
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('An error occured!');
+                alert('Error in ajax request');
+            }
+        });
+});");
+?>
+
 
 
