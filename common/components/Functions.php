@@ -169,7 +169,7 @@ class Functions extends Component{
         $connection= Yii::$app->labdb;
         
         foreach ($request->samples as $samp){
-            //$transaction = $connection->beginTransaction();
+            $transaction = $connection->beginTransaction();
             $return="false";
             try {
                 $proc = 'spGetNextGenerateSampleCode(:rstlId,:labId,:requestId)';
@@ -194,12 +194,12 @@ class Functions extends Component{
                 {
                     //update samplecode to tbl_sample
                     $sample->sample_code = $samplecodeGenerated;
-                    $sample->save();
-                    //$transaction->commit();
+                    $sample->save(false); //skip validation since only update of sample code is performed
+                    $transaction->commit();
                     $return="true";
                 } else {
                     //error
-                    //$transaction->rollBack();
+                    $transaction->rollBack();
                     $samplecode->getErrors();
                     $return="false";
                 }
@@ -207,11 +207,11 @@ class Functions extends Component{
                 //$transaction->commit();
 
             } catch (\Exception $e) {
-               //$transaction->rollBack();
-                echo $e->getMessage();
+               $transaction->rollBack();
+               echo $e->getMessage();
                $return="false";
             } catch (\Throwable $e) {
-               //$transaction->rollBack();
+               $transaction->rollBack();
                $return="false";
                echo $e->getMessage();
             }
