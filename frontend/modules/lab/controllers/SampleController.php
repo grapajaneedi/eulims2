@@ -9,6 +9,7 @@ use common\models\lab\Sampletype;
 use common\models\lab\Testcategory;
 use common\models\lab\Request;
 use common\models\lab\Lab;
+use common\models\lab\Labsampletype;
 use common\models\lab\Samplecode;
 use common\models\lab\SampleName;
 use common\models\lab\Analysis;
@@ -56,18 +57,10 @@ class SampleController extends Controller
 		$dataProvider->sort = false;
         $dataProvider->pagination->pageSize=10;
 
-        /*$dataProvider = new ActiveDataProvider([
-            //'query' => $searchModel->search(Yii::$app->request->queryParams),
-            'query' =>$searchModel,
-            'pagination' => [
-                'pagesize' => 10,
-            ],
-        ]);*/
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'sampletypes' => $this->listSampletype(),
+            'sampletypes' => $this->filterSampletype(),
         ]);
     }
 
@@ -80,11 +73,9 @@ class SampleController extends Controller
     {
         $searchModel = new SampleSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        //$dataProvider->sort->sortParam = false;
 
         return $this->render('view', [
             'model' => $this->findModel($id),
-            //'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
 
         ]);
@@ -99,24 +90,14 @@ class SampleController extends Controller
     {
         $model = new Sample();
 
-        //$session = Yii::$app->session;
-        //$req = Yii::$app->request;
-
         if(Yii::$app->request->get('request_id'))
         {
             $requestId = (int) Yii::$app->request->get('request_id');
         }
         $request = $this->findRequest($requestId);
         $labId = $request->lab_id;
+        $sampletype = $this->listSampletype($labId);
 
-        $testcategory = $this->listTestcategory($labId);
-        //$sampletype = $this->listSampletype();
-        /*$testcategory = ArrayHelper::map(Testcategory::find()
-            ->where(['lab_id' => $labId])
-            ->all(), 'testcategory_id', 'category_name');*/
-        $sampletype = [];
-
-        //if ($model->load(Yii::$app->request->post()) && $model->save()) {
         if ($model->load(Yii::$app->request->post())) {
             if(isset($_POST['Sample']['sampling_date'])){
                 $model->sampling_date = date('Y-m-d H:i:s', strtotime($_POST['Sample']['sampling_date']));
@@ -155,7 +136,8 @@ class SampleController extends Controller
                     }
                     $sample->rstl_id = $GLOBALS['rstl_id'];
                     //$sample->sample_code = 0;
-                    $sample->testcategory_id = (int) $_POST['Sample']['testcategory_id'];
+                    //$sample->testcategory_id = (int) $_POST['Sample']['testcategory_id'];
+                    //$sample->testcategory_id = 0;
                     $sample->sample_type_id = (int) $_POST['Sample']['sample_type_id'];
                     $sample->samplename = $_POST['Sample']['samplename'];
                     $sample->description = $_POST['Sample']['description'];
@@ -164,15 +146,10 @@ class SampleController extends Controller
                     $sample->sample_year = date('Y', strtotime($request->request_datetime));
                     $sample->save(false);
                 }
-                //return $this->redirect('index');
-                //$session->set('savemessage',"executed");
 				Yii::$app->session->setFlash('success', "Sample Successfully Created.");
                 return $this->redirect(['/lab/request/view', 'id' => $requestId]);
             } else {
                 if($model->save(false)){
-                    //return $this->redirect(['view', 'id' => $model->sample_id]);
-                    //echo Json::encode('Successfully saved.');
-                    //$session->set('savemessage',"executed");
 					Yii::$app->session->setFlash('success', "Sample Successfully Created.");
                     return $this->redirect(['/lab/request/view', 'id' => $requestId]);
                 }
@@ -182,7 +159,7 @@ class SampleController extends Controller
 			$model->sampling_date = date('m/d/Y h:i:s A');
 			return $this->renderAjax('_form', [
 				'model' => $model,
-				'testcategory' => $testcategory,
+				//'testcategory' => $testcategory,
 				'sampletype' => $sampletype,
 				'labId' => $labId,
 				'sampletemplate' => $this->listSampletemplate(),
@@ -191,7 +168,7 @@ class SampleController extends Controller
 			$model->sampling_date = date('Y-m-d H:i:s');
             return $this->render('create', [
                 'model' => $model,
-                'testcategory' => $testcategory,
+                //'testcategory' => $testcategory,
                 'sampletype' => $sampletype,
                 'labId' => $labId,
                 'sampletemplate' => $this->listSampletemplate(),
@@ -207,33 +184,11 @@ class SampleController extends Controller
      */
     public function actionUpdate($id)
     {
-        //\Yii::$app->response->format = Response:: FORMAT_JSON;
         $model = $this->findModel($id);
-
-        /*if(isset($_GET['request_id']))
-        {
-            $requestId = (int) $_GET['request_id'];
-        }*/
-
-        //$session = Yii::$app->session;
 
         $request = $this->findRequest($model->request_id);
         $labId = $request->lab_id;
-
-        $testcategory = $this->listTestcategory($labId);
-        //$sampletype = $this->listSampletype();
-
-        $sampletype = ArrayHelper::map(Sampletype::find()
-                ->where(['testcategory_id' => $model->testcategory_id])
-                ->all(), 'sample_type_id', 'sample_type');
-
-        /*if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->sample_id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }*/
+        $sampletype = $this->listSampletype($labId);
 
         if ($model->load(Yii::$app->request->post())) {
             if(isset($_POST['Sample']['sampling_date'])){
@@ -243,7 +198,6 @@ class SampleController extends Controller
             }
 
             if($model->save(false)){
-                //$session->set('updatemessage',"executed");
 				Yii::$app->session->setFlash('success', $model->samplename." Successfully Updated.");
                 return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
 
@@ -251,7 +205,7 @@ class SampleController extends Controller
         } elseif (Yii::$app->request->isAjax) {
                 return $this->renderAjax('_form', [
                     'model' => $model,
-                    'testcategory' => $testcategory,
+                    //'testcategory' => $testcategory,
                     'sampletype' => $sampletype,
                     'labId' => $labId,
                     'sampletemplate' => $this->listSampletemplate(),
@@ -259,7 +213,7 @@ class SampleController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'testcategory' => $testcategory,
+                //'testcategory' => $testcategory,
                 'sampletype' => $sampletype,
                 'labId' => $labId,
                 'sampletemplate' => $this->listSampletemplate(),
@@ -279,21 +233,13 @@ class SampleController extends Controller
         //return;
 
         $model = $this->findModel($id);
-        //$sampleId = (int) $id;
-        //$session = Yii::$app->session;
         $analyses = Analysis::find()->where(['sample_id' => $id])->all();
 
         if(count($analyses) > 0){
-            //return $model->samplename." has analysis. Remove first the analysis then delete this sample.";
 			Yii::$app->session->setFlash('error', $model->samplename." has analysis.\nRemove first the analysis then delete this sample.");
 			return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
         } else {
-            //$delete = $this->findModel($id);
-
             if($model->delete()) {
-                //$session->set('deletemessage',"executed");
-                //return;
-                //$session->set('deletemessage',"executed");
 				Yii::$app->session->setFlash('warning', 'Sample Successfully Deleted.');
                 return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
             } else {
@@ -309,21 +255,13 @@ class SampleController extends Controller
      */
     public function actionCancel($id)
     {
-        //$this->findModel($id)->delete();
-        //return;
         $model = $this->findModel($id);
-        //$session = Yii::$app->session;
         $sampleId = (int) $id;
         $analyses = Analysis::find()->where('sample_id =:sampleId', [':sampleId'=>$sampleId])->all();
 		
 		
 		$checkForPayment = Paymentitem::find()->where('request_id =:requestId',[':requestId'=>$model->request_id])->one();
-		// echo '<pre>';
-		// print_r($checkForPayment);
-		// echo '<pre>';
-		// exit;
 		
-        //if ($model->load(Yii::$app->request->post())) {
 		if(count($checkForPayment) > 0){
 			Yii::$app->session->setFlash('error', "Cancel not allowed.\nOrder of Payment already created for\n".$model->request->request_ref_num.".");
 			return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
@@ -336,9 +274,8 @@ class SampleController extends Controller
 					if(count($analyses) > 0)
 					{
 						foreach ($analyses as $analysis) {
-							//$analysis->delete(); //to delete
 							$analyses->cancelled = 1;
-							$analyses->update(false); // skipping validation as no user input is involved
+							$analyses->update(false); // skip validation no user input is involved
 						}
 
 						$model->remarks = $_POST['Sample']['remarks'];
@@ -354,10 +291,8 @@ class SampleController extends Controller
 
 						$model->remarks = $_POST['Sample']['remarks'];
 						$model->active = 0;
-						//$model->update();
 
 						if ($model->update() !== false) {
-							//$session->set('cancelmessage',"executed");
 							Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
 							return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
 						} else {
@@ -395,9 +330,19 @@ class SampleController extends Controller
         }
     }
 
-    protected function listSampletype()
+    protected function listSampletype($labId)
     {
-        $sampletype = ArrayHelper::map(Sampletype::find()->all(), 'sample_type_id', 
+        $sampletype = ArrayHelper::map(Sampletype::find()->joinWith('labSampletypes')->andWhere(['lab_id'=>$labId])->all(), 'sampletype_id', 
+            function($sampletype, $defaultValue) {
+                return $sampletype->sample_type;
+        });
+
+        return $sampletype;
+    }
+
+    protected function filterSampletype()
+    {
+        $sampletype = ArrayHelper::map(Sampletype::find()->all(), 'sampletype_id', 
             function($sampletype, $defaultValue) {
                 return $sampletype->sample_type;
         });
@@ -421,7 +366,7 @@ class SampleController extends Controller
         return $testcategory;
     }
 
-    public function actionListsampletype() {
+    /*public function actionListsampletype() {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
@@ -441,7 +386,7 @@ class SampleController extends Controller
             }
         }
         echo Json::encode(['output' => '', 'selected'=>'']);
-    }
+    }*/
 
     /*protected function find()
     {

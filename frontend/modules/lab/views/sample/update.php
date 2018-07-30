@@ -16,7 +16,6 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
-        'testcategory' => $testcategory,
         'sampletype' => $sampletype,
         'labId' => $labId,
         'sampletemplate' => $sampletemplate,
