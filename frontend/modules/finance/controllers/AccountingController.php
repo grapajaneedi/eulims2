@@ -71,26 +71,32 @@ class AccountingController extends Controller
     {
         $model = new Op();
         $paymentitem = new Paymentitem();
-        $collection= new Collection();
+       // $collection= new Collection();
         $searchModel = new OpSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
         
-         if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
              $transaction = Yii::$app->financedb->beginTransaction();
              $session = Yii::$app->session;
              try  {
                 $request_ids=$model->RequestIds;
                 $str_request = explode(',', $request_ids);
                 $arr_length = count($str_request); 
+                $model->total_amount=0;
                 $total_amount=0;
                 $model->rstl_id=$GLOBALS['rstl_id'];
                 $model->transactionnum= $this->Gettransactionnum();
+                $model->payment_status_id=1; //unpaid
                 if ($model->payment_mode_id == 6){
                     $model->on_account=1;
                 }else{
                     $model->on_account=0;
                 }
+//                echo "<pre>";
+//                var_dump($model);
+//                echo "</pre>";
+//                exit;
                 $model->save();
                 //Saving for Paymentitem
                 for($i=0;$i<$arr_length;$i++){
@@ -112,13 +118,13 @@ class AccountingController extends Controller
                 //----------------------//
                 //---Saving for Collection-------
 
-                $collection_name= $this->getCollectionname($model->collectiontype_id);
-                $collection->nature=$collection_name['natureofcollection'];
-                $collection->rstl_id=$GLOBALS['rstl_id'];
-                $collection->orderofpayment_id=$model->orderofpayment_id;
-                $collection->referral_id=0;
-                $collection->payment_status_id=1;//Unpaid
-                $collection->save(false);
+//                $collection_name= $this->getCollectionname($model->collectiontype_id);
+//                $collection->nature=$collection_name['natureofcollection'];
+//                $collection->rstl_id=$GLOBALS['rstl_id'];
+//                $collection->orderofpayment_id=$model->orderofpayment_id;
+//                $collection->referral_id=0;
+//                $collection->payment_status_id=1;//Unpaid
+//                $collection->save(false);
                 //
                 $transaction->commit();
                 //$this->postRequest($request_ids);
@@ -129,10 +135,10 @@ class AccountingController extends Controller
                 } catch (Exception $e) {
                     $transaction->rollBack();
                    $session->set('errorpopup',"executed");
-                   return $this->redirect(['/finance/accounting/op-lab']);
+                   return $this->redirect(['finance/accounting/op-lab']);
                 }
                 //-------------------------------------------------------------//
-        }
+        } 
         $model->order_date=date('Y-m-d');
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('op_lab/create', [
@@ -156,7 +162,7 @@ class AccountingController extends Controller
         $searchModel = new OpSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
-        $collection= new Collection();
+       // $collection= new Collection();
          if ($model->load(Yii::$app->request->post())) {
              $transaction = Yii::$app->financedb->beginTransaction();
              $session = Yii::$app->session;
@@ -164,6 +170,7 @@ class AccountingController extends Controller
                         $model->RequestIds='0';
                         $model->rstl_id=$GLOBALS['rstl_id'];
                         $model->transactionnum= $this->Gettransactionnum();
+                        $model->payment_status_id=1; //unpaid
                         if ($model->payment_mode_id == 6){
                             $model->on_account=1;
                         }else{
@@ -173,13 +180,6 @@ class AccountingController extends Controller
                        
                         //---Saving for Collection-------
 
-                        $collection_name= $this->getCollectionname($model->collectiontype_id);
-                        $collection->nature=$collection_name['natureofcollection'];
-                        $collection->rstl_id=$GLOBALS['rstl_id'];
-                        $collection->orderofpayment_id=$model->orderofpayment_id;
-                        $collection->referral_id=0;
-                        $collection->payment_status_id=1; //Unpaid
-                        $collection->save(false);
                         //
                         $transaction->commit();
                         //$this->postRequest($request_ids);

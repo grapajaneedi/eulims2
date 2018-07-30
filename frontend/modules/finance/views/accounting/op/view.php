@@ -15,15 +15,15 @@ $this->params['breadcrumbs'][] = ['label' => 'Accounting', 'url' => ['/finance/a
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['/finance/accounting/op']];
 $this->params['breadcrumbs'][] = 'View';
 $totalAmount=$model->total_amount ? $model->total_amount : 0.00;
-$subTotal=$model->collection ? $model->collection->sub_total : 0.00;
-$bal=$totalAmount - $subTotal;
+//$subTotal=$model->collection ? $model->collection->sub_total : 0.00;
+//$bal=$totalAmount - $subTotal;
 $disable_button="";
 //echo $totalAmount;
 //exit;
 if($totalAmount == 0.00){
     $disable_button=false;
 }else{
-    if ($bal == 0){
+    if ($model->receipt_id <> null){
         $disable_button=true;
     }
     else{

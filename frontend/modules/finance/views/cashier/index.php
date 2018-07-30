@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="box-body">
    
     <div class="row">
-        <div class="col-md-2 col-sm-6 col-xs-12 col-md-offset-1" style="text-align:center"><a href="/finance/cashier/collection/"><img class="imgHover img-responsive center-block" src="/images/collectionsquare.png" style="height:150px"/></a></div>
+        <div class="col-md-2 col-sm-6 col-xs-12 col-md-offset-1" style="text-align:center"><a href="/finance/cashier/collection/"><img class="imgHover img-responsive center-block" src="/images/ordersquare.png" style="height:150px"/></a></div>
         <div class="col-md-2 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/cashier/billing/"><img class="imgHover img-responsive center-block" src="/images/billingpaymentsquare.png" style="height:150px"/></div>
         <div class="col-md-2 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/cashier/receipt/"><img class="imgHover img-responsive center-block" src="/images/receiptsquare.png" style="height:150px"/></div>
         <div class="col-md-2 col-sm-6 col-xs-12" style="text-align:center"><a href="/finance/cashier/deposit/"><img class="imgHover img-responsive center-block" src="/images/depositsquare.png" style="height:150px"/></div>

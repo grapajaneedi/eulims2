@@ -18,8 +18,8 @@ class Ext_Receipt extends Receipt
     public function rules()
     {
         return [ 
-            [['rstl_id', 'terminal_id', 'collection_id', 'or_number','deposit_type_id', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled','or_series_id'], 'required'],
-            [['rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'payment_mode_id', 'collectiontype_id', 'cancelled', 'deposit_id','or_series_id'], 'integer'],
+            [['rstl_id', 'terminal_id', 'orderofpayment_id', 'or_number','deposit_type_id', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled','or_series_id'], 'required'],
+            [['rstl_id', 'terminal_id', 'orderofpayment_id', 'deposit_type_id', 'payment_mode_id', 'collectiontype_id', 'cancelled', 'deposit_id','or_series_id'], 'integer'],
             [['receiptDate'], 'safe'],
             [['total'], 'number'],
             [['or_number'], 'string', 'max' => 50],

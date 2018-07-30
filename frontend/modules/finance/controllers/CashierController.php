@@ -194,7 +194,7 @@ class CashierController extends \yii\web\Controller
                // $model->getDb()=$connection;
                 $model->rstl_id=$GLOBALS['rstl_id'];
                 $model->terminal_id=$GLOBALS['terminal_id'];
-                $model->collection_id=$op_model->collection->collection_id;
+                $model->orderofpayment_id=$op_id;
                 $this->update_nextor($model->or_series_id,$connection);
                // $model->or_series_id=$model->or_series_id;
                 $model->or_number=$model->or;
@@ -204,8 +204,7 @@ class CashierController extends \yii\web\Controller
                 $model->save(false);
                 $transaction->commit();
                 $this->created_receipt($op_id,$model->receipt_id);
-                
-                $this->Savecollection($model->receipt_id,$model->collection_id);
+                $this->Savecollection($model->receipt_id,$model->orderofpayment_id);
                  
               //  $session->set('savepopup',"executed");
                 return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]); 
@@ -234,9 +233,9 @@ class CashierController extends \yii\web\Controller
     public function actionViewReceipt($receiptid)
     { 
         $receipt=$this->findModelReceipt($receiptid);
-        $collection_id=$receipt->collection_id;
-        $collection=$this->findModelCollection($collection_id);
-        $op_id=$collection->orderofpayment_id;
+      //  $collection_id=$receipt->collection_id;
+        //$collection=$this->findModelCollection($collection_id);
+        $op_id=$receipt->orderofpayment_id;
         
         $paymentitem_Query = Paymentitem::find()->where(['receipt_id' => $receiptid])->andWhere(['status' => 2]);
         $paymentitemDataProvider = new ActiveDataProvider([
@@ -298,7 +297,7 @@ class CashierController extends \yii\web\Controller
         if(!empty($opID))
         {
             Yii::$app->financedb->createCommand()
-            ->update('tbl_orderofpayment', ['created_receipt' => $receiptid], 'orderofpayment_id= '.$opID)
+            ->update('tbl_orderofpayment', ['receipt_id' => $receiptid], 'orderofpayment_id= '.$opID)
             ->execute(); 
             
         }
@@ -535,18 +534,18 @@ class CashierController extends \yii\web\Controller
              
          }
     } */
-     public function Savecollection($receiptid,$collection_id){
+     public function Savecollection($receiptid,$orderofpayment_id){
 //        echo "receipt".$receiptid;
 //        echo "collection".$collection_id;
 //        exit;
-        $collection=$this->findModelCollection($collection_id);
-        $op_id=$collection->orderofpayment_id;
-        $sub_total=$collection->sub_total;
-        $wallet_amount=$collection->wallet_amount;
+       // $collection=$this->findModelCollection($collection_id);
+        $op_id=$orderofpayment_id;
+        //$sub_total=$collection->sub_total;
+       // $wallet_amount=$collection->wallet_amount;
         $op_model=$this->findModel($op_id);
         $amount=$op_model->total_amount;
         $receipt_model=$this->findModelReceipt($receiptid);
-        $receipt_total=$receipt_model->total;
+        //$total=$receipt_model->total;
         
           
            // $total=0;
@@ -556,23 +555,15 @@ class CashierController extends \yii\web\Controller
               ->update('tbl_paymentitem', ['status' => 2,'receipt_id'=>$receiptid], 'orderofpayment_id= '.$op_id)
               ->execute(); 
                   
-           // } 
-             $total=(new Query)
-            ->select('amount')
-            ->from('eulims_finance.tbl_paymentitem')
-            ->where(['orderofpayment_id' => $op_id])
-            ->andWhere(['status' => 2]) 
-            ->sum('amount'); 
-                  
-             
+          
             //$receipt_total_amount=$receipt_total+$total;
              Yii::$app->financedb->createCommand()
-                    ->update('tbl_receipt', ['total' => $total], 'receipt_id= '.$receiptid)
+                    ->update('tbl_receipt', ['total' => $amount], 'receipt_id= '.$receiptid)
                     ->execute();
              
              
             Yii::$app->financedb->createCommand()
-               ->update('tbl_collection', ['amount' => $total,'sub_total'=>$total,'payment_status_id' => 2], 'collection_id= '.$collection_id)
+               ->update('tbl_orderofpayment', ['payment_status_id' => 2], 'orderofpayment_id= '.$op_id)
                ->execute();
              
             //Update Request
