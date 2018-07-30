@@ -55,7 +55,8 @@ $func=new Functions();
             ],
             [
                 //'attribute' => 'sample_type_id',
-                'attribute' => 'sampletype_id',
+                //'attribute' => 'sampletype_id',
+                'header' => 'Sample Type',
                 'format' => 'raw',
                 'value' => function($data){ return $data->sampleType->sample_type;},
                 'filterType' => GridView::FILTER_SELECT2,
@@ -63,7 +64,7 @@ $func=new Functions();
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'Sample Type', 'id' => 'grid-op-search-sample_type_id'],
+                'filterInputOptions' => ['placeholder' => 'Sample Type', 'id' => 'grid-op-search-sampletype_id'],
 				'headerOptions' => ['class' => 'text-center'],
             ],
             [

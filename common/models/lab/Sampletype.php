@@ -61,7 +61,7 @@ class Sampletype extends \yii\db\ActiveRecord
      */
     public function getLabSampletypes()
     {
-        return $this->hasMany(LabSampletype::className(), ['sampletypeId' => 'sampletype_id']);
+        return $this->hasMany(Labsampletype::className(), ['sampletype_id' => 'sampletype_id']);
     }
 
     /**
