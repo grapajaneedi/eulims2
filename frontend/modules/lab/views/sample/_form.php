@@ -86,12 +86,12 @@ if(count($sampletype) > 0){
 					'value'=>function($model){
 						return date("m/d/Y h:i:s A", strtotime($model->sampling_date));
 					},
-					//'readonly' => true,
+					'readonly' => true,
 					'pluginOptions' => [
 						'autoclose'=>true,
 						'format' => 'mm/dd/yyyy HH:ii:ss P',
 						'todayHighlight' => true,
-						//'startDate' => date('m/d/Y h:i:s A'),
+						'startDate' => date('m/d/Y h:i:s A'),
 					]
 				]);
 				echo $endDiv;

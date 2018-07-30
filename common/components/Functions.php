@@ -164,16 +164,16 @@ class Functions extends Component{
 
     function GenerateSampleCode($request_id){
         $request =Request::find()->where(['request_id'=>$request_id])->one();
-        //$lab = Lab::findOne($request->lab_id);
+        $lab = Lab::findOne($request->lab_id);
         $year = date('Y', strtotime($request->request_datetime));
         $connection= Yii::$app->labdb;
         
         foreach ($request->samples as $samp){
-            $transaction = $connection->beginTransaction();
+            //$transaction = $connection->beginTransaction();
             $return="false";
             try {
                 $proc = 'spGetNextGenerateSampleCode(:rstlId,:labId,:requestId)';
-                $params = [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$request->lab_id,':requestId'=>$request_id];
+                $params = [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$lab->lab_id,':requestId'=>$request_id];
                 $row = $this->ExecuteStoredProcedureOne($proc, $params, $connection);
                 $samplecodeGenerated = $row['GeneratedSampleCode'];
                 $samplecodeIncrement = $row['SampleIncrement'];
@@ -186,7 +186,7 @@ class Functions extends Component{
                 $samplecode->rstl_id = $GLOBALS['rstl_id'];
                 $samplecode->reference_num = $request->request_ref_num;
                 $samplecode->sample_id = $sampleId;
-                $samplecode->lab_id = $request->lab_id;
+                $samplecode->lab_id = $lab->lab_id;
                 $samplecode->number = $samplecodeIncrement;
                 $samplecode->year = $year;
                 
@@ -194,12 +194,12 @@ class Functions extends Component{
                 {
                     //update samplecode to tbl_sample
                     $sample->sample_code = $samplecodeGenerated;
-                    $sample->save(false); //validation not required since only update to sample code is performed
-                    $transaction->commit();
+                    $sample->save();
+                    //$transaction->commit();
                     $return="true";
                 } else {
                     //error
-                    $transaction->rollBack();
+                    //$transaction->rollBack();
                     $samplecode->getErrors();
                     $return="false";
                 }
@@ -207,14 +207,15 @@ class Functions extends Component{
                 //$transaction->commit();
 
             } catch (\Exception $e) {
-               $transaction->rollBack();
+               //$transaction->rollBack();
                 echo $e->getMessage();
                $return="false";
             } catch (\Throwable $e) {
-               $transaction->rollBack();
+               //$transaction->rollBack();
                $return="false";
                echo $e->getMessage();
             }
+            
         }
         return $return;
     }
