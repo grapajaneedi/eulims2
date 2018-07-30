@@ -53,6 +53,7 @@ class RequestController extends Controller
         $searchModel = new RequestSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=6;
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -83,9 +84,13 @@ class RequestController extends Controller
                 'pagination' =>false,
              
         ]);
-       
+        if(\Yii::$app->user->can('view-all-rstl')){
+            $model=exRequest::findOne($id);
+        }else{
+            $model=$this->findRequestModel($id);
+        }
         return $this->render('view', [
-            'model' => exRequest::findOne($id),
+            'model' => $model,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'sampleDataProvider' => $sampleDataProvider,
@@ -359,7 +364,16 @@ class RequestController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
+     protected function findRequestModel($id)
+    {
+        $rstl_id=Yii::$app->user->identity->profile ? Yii::$app->user->identity->profile->rstl_id : -1;
+        $model=exRequest::find()->where(['request_id'=>$id,'rstl_id'=>$rstl_id])->one();
+        if ($model!== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested Request its either does not exist or you have no permission to view it.');
+        }
+    }
     //bergel cutara
     //contacted by function to return result to be displayed in select2
     public function actionRequestlist($q = null, $id = null) {

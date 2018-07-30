@@ -103,10 +103,49 @@ class AnalysisController extends Controller
             $references = "Error getting reference";
             $fee = "Error getting fee";
         }
+
+        // return $this->renderPartial('_viewAnalysis', [
+        //      'request'=>$request,
+        //         'model'=>$model,
+        //        'sampleDataProvider' => $sampleDataProvider,
+        //        'analysisdataprovider'=> $analysisdataprovider,
+        //    ]);
+
         return Json::encode([
             'references'=>$references,
             'fee'=>$fee,
         ]);
+    }
+
+    public function actionGetmethod() {
+        $id = $_GET['id'];
+        // $model = new Tagging();
+        //  $samplesQuery = Sample::find()->where(['sample_id' => $id]);
+        //  $sampleDataProvider = new ActiveDataProvider([
+        //          'query' => $samplesQuery,
+        //          'pagination' => [
+        //              'pageSize' => 10,
+        //          ],
+              
+        //  ]);
+         $analysisQuery = Methodreference::find()->where(['method_reference_id' => $id]);
+        // $request = Request::find()->where(['request_id' =>42]);
+         $testnamemethoddataprovider = new ActiveDataProvider([
+                 'query' => $analysisQuery,
+                 'pagination' => [
+                     'pageSize' => 10,
+                 ],
+              
+         ]);
+
+        return $this->renderPartial('_methodreference', [
+              'testnamemethoddataprovider'=>$testnamemethoddataprovider,
+            //     'model'=>$model,
+            //    'sampleDataProvider' => $sampleDataProvider,
+            //    'analysisdataprovider'=> $analysisdataprovider,
+           ]);
+
+       
     }
 
 
@@ -302,7 +341,7 @@ class AnalysisController extends Controller
      {
          $testcategory = ArrayHelper::map(
             Sampletype::find()
-            ->leftJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletypeId=tbl_sampletype.sampletype_id')
+            ->leftJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletype_id=tbl_sampletype.sampletype_id')
             ->andWhere(['lab_id'=>$labId])
             ->all(), 'sampletype_id', 
             function($testcategory, $defaultValue) {
@@ -376,49 +415,6 @@ class AnalysisController extends Controller
     }
 
       
-
-                // $model = $this->findModel($id);
-        
-                // $session = Yii::$app->session;
-        
-                // $request = $this->findRequest($model->request_id);
-                // $labId = $request->lab_id;
-        
-                // $testcategory = $this->listTestcategory($labId);
-        
-                // $sampletype = ArrayHelper::map(Sampletype::find()
-                //         ->where(['testcategory_id' => $model->testcategory_id])
-                //         ->all(), 'sample_type_id', 'sample_type');
-        
-                // if ($model->load(Yii::$app->request->post())) {
-                //     if(isset($_POST['Sample']['sampling_date'])){
-                //         $model->sampling_date = date('Y-m-d', strtotime($_POST['Sample']['sampling_date']));
-                //     } else {
-                //         $model->sampling_date = date('Y-m-d');
-                //     }
-        
-                //     if($model->save(false)){
-                //         $session->set('updatemessage',"executed");
-                //         return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-        
-                //     }
-                // } elseif (Yii::$app->request->isAjax) {
-                //         return $this->renderAjax('_form', [
-                //             'model' => $model,
-                //             'testcategory' => $testcategory,
-                //             'sampletype' => $sampletype,
-                //             'labId' => $labId,
-                //             'sampletemplate' => $this->listSampletemplate(),
-                //         ]);
-                // } else {
-                //     return $this->render('update', [
-                //         'model' => $model,
-                //         'testcategory' => $testcategory,
-                //         'sampletype' => $sampletype,
-                //         'labId' => $labId,
-                //         'sampletemplate' => $this->listSampletemplate(),
-                //     ]);
-                // }
     }
 
     /**

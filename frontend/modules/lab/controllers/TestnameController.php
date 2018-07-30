@@ -52,9 +52,11 @@ class TestnameController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]);
+        }
     }
 
     /**
@@ -72,6 +74,8 @@ class TestnameController extends Controller
         }
 
         if(Yii::$app->request->isAjax){
+            $model->create_time=date("Y-m-d h:i:s");
+            $model->update_time=date("Y-m-d h:i:s");
             return $this->renderAjax('_form', [
                 'model' => $model,
             ]);
@@ -88,14 +92,16 @@ class TestnameController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    Yii::$app->session->setFlash('success', 'Test Name Successfully Updated'); 
+                    return $this->redirect(['index']);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->testname_id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+                } else if (Yii::$app->request->isAjax) {
+                    return $this->renderAjax('update', [
+                        'model' => $model,
+                    ]);
+                 }
     }
 
     /**
@@ -107,9 +113,13 @@ class TestnameController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = $this->findModel($id); 
+        if($model->delete()) {            
+            Yii::$app->session->setFlash('success', 'Test Name Successfully Deleted'); 
+            return $this->redirect(['index']);
+        } else {
+            return $model->error();
+        }
     }
 
     /**

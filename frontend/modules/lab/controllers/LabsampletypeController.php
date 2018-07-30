@@ -10,6 +10,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
+use common\models\system\Profile;
+use DateTime;
 
 /**
  * LabsampletypeController implements the CRUD actions for Labsampletype model.
@@ -54,9 +56,15 @@ class LabsampletypeController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        // return $this->render('view', [
+        //     'model' => $this->findModel($id),
+        // ]);
+
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]);
+        }
     }
 
     /**
@@ -74,7 +82,19 @@ class LabsampletypeController extends Controller
         }
 
         $sampletype = [];
+
         if(Yii::$app->request->isAjax){
+           
+          $date2 = new DateTime();
+          date_add($date2,date_interval_create_from_date_string("1 day"));
+          $model->effective_date=date_format($date2,"Y-m-d");
+          $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+          if($profile){
+            $model->added_by=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
+            }else{
+                $model->added_by="";
+            }
+
             return $this->renderAjax('_form', [
                 'model' => $model,
                 'sampletype'=>$sampletype,
@@ -93,14 +113,16 @@ class LabsampletypeController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    Yii::$app->session->setFlash('success', 'Lab Sample Type Successfully Updated'); 
+                    return $this->redirect(['index']);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->lab_sampletype_id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+                } else if (Yii::$app->request->isAjax) {
+                    return $this->renderAjax('update', [
+                        'model' => $model,
+                    ]);
+                 }
     }
 
     /**
@@ -112,9 +134,13 @@ class LabsampletypeController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = $this->findModel($id); 
+                    if($model->delete()) {            
+                        Yii::$app->session->setFlash('success', 'Lab Sample Type Successfully Deleted'); 
+                        return $this->redirect(['index']);
+                    } else {
+                        return $model->error();
+                    }
     }
 
     /**

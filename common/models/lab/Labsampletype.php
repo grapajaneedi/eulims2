@@ -9,11 +9,12 @@ use Yii;
  *
  * @property int $lab_sampletype_id
  * @property int $lab_id
- * @property int $sampletypeId
+ * @property int $sampletype_id
  * @property string $effective_date
  * @property string $added_by
  *
  * @property Sampletype $sampletype
+* @property Lab $lab
  */
 class LabSampletype extends \yii\db\ActiveRecord
 {
@@ -39,11 +40,11 @@ class LabSampletype extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['lab_id', 'sampletypeId', 'added_by'], 'required'],
-            [['lab_id', 'sampletypeId'], 'integer'],
+            [['lab_id', 'sampletype_id', 'added_by'], 'required'],
+            [['lab_id', 'sampletype_id'], 'integer'],
             [['effective_date'], 'safe'],
-            [['added_by'], 'string', 'max' => 10],
-            [['sampletypeId'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletypeId' => 'sampletype_id']],
+            [['added_by'], 'string', 'max' => 300],
+            [['sampletype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletype_id' => 'sampletype_id']],
         ];
     }
 
@@ -55,7 +56,7 @@ class LabSampletype extends \yii\db\ActiveRecord
         return [
             'lab_sampletype_id' => 'Lab Sampletype ID',
             'lab_id' => 'Lab',
-            'sampletypeId' => 'Sample Type',
+            'sampletype_id' => 'Sample Type',
             'effective_date' => 'Effective Date',
             'added_by' => 'Added By',
         ];
@@ -66,7 +67,7 @@ class LabSampletype extends \yii\db\ActiveRecord
      */
     public function getSampletype()
     {
-        return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletypeId']);
+        return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletype_id']);
     }
 
     public function getLab()

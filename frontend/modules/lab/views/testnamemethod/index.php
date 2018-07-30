@@ -5,6 +5,7 @@ use kartik\grid\GridView;
 use common\models\lab\Methodreference;
 use common\models\lab\Testname;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\TestnamemethodSearch */
@@ -53,7 +54,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'method_id',
                 'label' => 'Method',
                 'value' => function($model) {
-                    return $model->method->method;
+                     if($model->method){
+                      return $model->method->method;
+                    }else{
+                        return "";
+                 }    
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => $methodlist,
@@ -65,7 +70,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'create_time',
             'update_time',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'kartik\grid\ActionColumn',
+            'contentOptions' => ['style' => 'width: 8.7%'],
+          //  'template' => $button,
+           'template' => '{view}{update}{delete}',
+            'buttons'=>[
+                'view'=>function ($url, $model) {
+                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::to(['/lab/testnamemethod/view','id'=>$model->testname_method_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Test Name Method<font color='Blue'></font>")]);
+                },
+                'update'=>function ($url, $model) {
+                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/testnamemethod/update','id'=>$model->testname_method_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Test Name Method<font color='Blue'></font>")]);
+                },
+                'delete'=>function ($url, $model) {
+                    $urls = '/lab/testnamemethod/delete?id='.$model->testname_method_id;
+                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Test Name Method','data-pjax'=>'0']);
+                },
+                ],
+            ],
         ],
     ]); ?>
 </div>

@@ -12,8 +12,8 @@ use Yii;
  * @property string $method
  * @property string $reference
  * @property double $fee
- * @property int $created_time
- * @property int $updated_time
+ * @property int $create_time
+ * @property int $update_time
  *
  * @property Test $test
  */
@@ -41,11 +41,11 @@ class Methodreference extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['testname_id', 'method', 'reference', 'fee'], 'required'],
-            [['testname_id', 'created_time', 'updated_time'], 'integer'],
+            [[ 'method', 'reference', 'fee'], 'required'],
+          //  [[ 'create_time', 'update_time'], 'integer'],
             [['fee'], 'number'],
             [['method', 'reference'], 'string', 'max' => 200],
-            [['testname_id'], 'exist', 'skipOnError' => true, 'targetClass' => Test::className(), 'targetAttribute' => ['testname_id' => 'testname_id']],
+          //  [['testname_id'], 'exist', 'skipOnError' => true, 'targetClass' => Test::className(), 'targetAttribute' => ['testname_id' => 'testname_id']],
         ];
     }
 
@@ -56,20 +56,20 @@ class Methodreference extends \yii\db\ActiveRecord
     {
         return [
             'method_reference_id' => 'Method Reference ID',
-            'testname_id' => 'Test ID',
+            'testname_id' => 'Test',
             'method' => 'Method',
             'reference' => 'Reference',
             'fee' => 'Fee',
-            'created_time' => 'Created Time',
-            'updated_time' => 'Updated Time',
+            'create_time' => 'Create Time',
+            'update_time' => 'Update Time',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTest()
-    {
-        return $this->hasOne(Test::className(), ['testname_id' => 'testname_id']);
-    }
+    // public function getTest()
+    // {
+    //     return $this->hasOne(Test::className(), ['testname_id' => 'testname_id']);
+    // }
 }

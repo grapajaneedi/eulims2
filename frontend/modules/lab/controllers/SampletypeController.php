@@ -52,9 +52,11 @@ class SampletypeController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]);
+        }
     }
 
     /**
@@ -89,14 +91,16 @@ class SampletypeController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    Yii::$app->session->setFlash('success', 'Sample Type Successfully Updated'); 
+                    return $this->redirect(['index']);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->sampletype_id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+                } else if (Yii::$app->request->isAjax) {
+                    return $this->renderAjax('update', [
+                        'model' => $model,
+                    ]);
+                 }
     }
 
     /**
@@ -108,9 +112,13 @@ class SampletypeController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = $this->findModel($id); 
+        if($model->delete()) {            
+            Yii::$app->session->setFlash('success', 'Sample Type Successfully Deleted'); 
+            return $this->redirect(['index']);
+        } else {
+            return $model->error();
+        }
     }
 
     /**

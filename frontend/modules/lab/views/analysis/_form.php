@@ -20,6 +20,7 @@ use common\models\lab\Sampletypetestname;
 use common\models\lab\Testnamemethod;
 use common\models\lab\Methodreference;
 use common\models\lab\Testname;
+use kartik\money\MaskMoney;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Analysis */
@@ -121,9 +122,10 @@ $this->registerJs($js);
 
     <div class="row">
     <div class="col-sm-6">
+
+   
     <?= $form->field($model,'sample_type_id')->widget(Select2::classname(),[
                     'data' => $testcategory,
-                   // 'disabled'=>true,
                     'theme' => Select2::THEME_KRAJEE,
                     'options' => ['id'=>'sample-testcategory_id'],
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
@@ -134,6 +136,7 @@ $this->registerJs($js);
         <?= $form->field($model, 'test_id')->widget(DepDrop::classname(), [
             'type'=>DepDrop::TYPE_SELECT2,
             'data'=>$sampletype,
+           // 'initValueText' => null,
             'options'=>['id'=>'sample-sample_type_id'],
             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
             'pluginOptions'=>[
@@ -146,10 +149,6 @@ $this->registerJs($js);
         ?>
     </div>
 </div>
-
-
-<div class="row">
-        <div class="col-sm-6">
 
         <?= $form->field($model, 'method')->widget(DepDrop::classname(), [
                 'type'=>DepDrop::TYPE_SELECT2,
@@ -164,20 +163,22 @@ $this->registerJs($js);
                 ]
             ])
             ?>
-        </div>
-           <div class="col-sm-6">
-        <?= $form->field($model, 'references')->textInput(['readonly' => true]) ?>
-        </div>
-    </div>
-      
-    <div class="row">
+            <?= $form->field($model, 'references')->textArea(['readonly' => true]) ?>  
+            <?= $form->field($model, 'fee')->textInput(['readonly' => true, 'style'=>'text-align: right;font-weight:bold']) ?>
+         <div class="row">
         <div class="col-sm-6">
-              <?= $form->field($model, 'fee')->textInput(['readonly' => true]) ?>
+            
         </div>
            <div class="col-sm-6">
-        
+             
         </div>
     </div>
+       
+
+    <div class="row-fluid" id ="xyz">
+        <div>
+   
+   
 
 
     <div class="row" style="float: right;padding-right: 30px">
@@ -194,7 +195,7 @@ $this->registerJs($js);
 </div>
 
 <?php
-$this->registerJs("$('#sample-test_id').on('change',function(){
+$this->registerJs("$('#sample-test_id').on('depdrop:afterChange',function(){
     var id = $('#sample-test_id').val();
         $.ajax({
             url: '".Url::toRoute("analysis/gettest")."',
@@ -219,3 +220,47 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
 ?>
 
 
+<?php
+$this->registerJs("$('#sample-test_id').on('change',function(){
+    var id = $('#sample-test_id').val();
+        $.ajax({
+            url: '".Url::toRoute("analysis/gettest")."',
+            dataType: 'json',
+            method: 'GET',
+            data: {method_reference_id: id},
+            success: function (data, textStatus, jqXHR) {
+                $('#xyz').html(response);
+                $('#analysis-references').val(data.references);
+                $('#analysis-fee').val(data.fee);
+                $('.image-loader').removeClass( \"img-loader\" );
+                $('.image-loader').removeClass( \"img-loader\" );
+            },
+            beforeSend: function (xhr) {
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('An error occured!');
+                alert('Error in ajax request');
+            }
+        });
+});");
+?>
+
+
+<!-- <script type="text/javascript">
+    $('#sample-test_id').on('change',function(e) {
+       e.preventDefault();
+         jQuery.ajax( {
+            type: 'GET',
+            url: '/lab/analysis/getmethod?id='+$(this).val(),
+            dataType: 'html',
+            success: function ( response ) {        
+              $("#xyz").html(response);
+            },
+            error: function ( xhr, ajaxOptions, thrownError ) {
+                alert( thrownError );
+            }
+        });
+    });
+    </script> -->

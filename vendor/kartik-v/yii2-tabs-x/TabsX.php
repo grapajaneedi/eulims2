@@ -200,6 +200,7 @@ class TabsX extends Tabs
      */
     public $printHeaderCrumbs = true;
 
+    public $hashVarLoadPosition;
     /**
      * @var string the crumb separator for the dropdown headers in the print view when `printHeaderCrumbs` is `true`
      */

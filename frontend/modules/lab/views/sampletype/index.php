@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use common\models\lab\Lab;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\SampletypeSearch */
@@ -49,7 +50,23 @@ $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
                     
                 },
             ],
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'kartik\grid\ActionColumn',
+            'contentOptions' => ['style' => 'width: 8.7%'],
+          //  'template' => $button,
+          'template' => '{view}{update}{delete}',
+            'buttons'=>[
+                'view'=>function ($url, $model) {
+                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::to(['/lab/sampletype/view','id'=>$model->sampletype_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Sample Type <font color='Blue'></font>")]);
+                },
+                'update'=>function ($url, $model) {
+                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/sampletype/update','id'=>$model->sampletype_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Sample Type<font color='Blue'></font>")]);
+                },
+                'delete'=>function ($url, $model) {
+                    $urls = '/lab/sampletype/delete?id='.$model->sampletype_id;
+                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Sample Type','data-pjax'=>'0']);
+                },
+            ],
+        ],
         ],
     ]); ?>
 </div>

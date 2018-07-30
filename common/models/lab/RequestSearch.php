@@ -49,7 +49,7 @@ class RequestSearch extends exRequest
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['request_ref_num'=>SORT_ASC]]
+            'sort'=> ['defaultOrder' => ['request_ref_num'=>SORT_ASC,'request_datetime'=>SORT_ASC]]
         ]);
 
         $this->load($params);
@@ -64,7 +64,7 @@ class RequestSearch extends exRequest
         $query->andFilterWhere([
             'request_id' => $this->request_id,
             'request_datetime' => $this->request_datetime,
-            'rstl_id' => $this->rstl_id,
+            'rstl_id' => Yii::$app->user->identity->profile->rstl_id,
             'lab_id' => $this->lab_id,
             'customer_id' => $this->customer_id,
             'payment_type_id' => $this->payment_type_id,

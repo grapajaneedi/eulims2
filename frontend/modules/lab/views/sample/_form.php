@@ -20,7 +20,6 @@ use kartik\widgets\Typeahead;
 if(count($sampletype) > 0){
     $data = $sampletype;
 } else {
-    //$data = array(''=>'No Barangay');
     $data = ['' => 'No Sampletype'] + $sampletype;
 }
 ?>
@@ -53,103 +52,68 @@ if(count($sampletype) > 0){
         <div class="err-message" style="margin-top: 10px;font-size: 12px;color: #FF0000;"></div>
     </div>
     <?php endif; ?>
-    <div class="row">
-        <div class="col-sm-6">
-            <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
-                        'data' => $testcategory,
-                        'theme' => Select2::THEME_KRAJEE,
-                        //'theme' => Select2::THEME_BOOTSTRAP,
-                        'options' => ['id'=>'sample-testcategory_id'],
-                        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Testcategory'],
-                ])
-            ?>
-        </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'sample_type_id')->widget(DepDrop::classname(), [
-                'type'=>DepDrop::TYPE_SELECT2,
-                'data'=>$sampletype,
-                'options'=>['id'=>'sample-sample_type_id'],
-                'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                'pluginOptions'=>[
-                    'depends'=>['sample-testcategory_id'],
-                    'placeholder'=>'Select Sampletype',
-                    'url'=>Url::to(['/lab/sample/listsampletype']),
-                    'loadingText' => 'Loading Sampletype...',
-                ]
-            ])
-            ?>
-        </div>
-    </div>
-    <div class="row">
+
     <?php
         if($labId == 2){
             $startDiv = '<div class="col-sm-6">';
             $endDiv = "</div>";
-            echo $startDiv;
-            //echo $form->field($model, 'sampling_date')->textInput();
-            //echo $form->field($model, 'sampling_date')->widget(DatePicker::classname(), [
-            echo $form->field($model, 'sampling_date')->widget(DateTimePicker::classname(), [
-                'options' => [
-					'placeholder' => 'Enter sampling date ...',
-					'autocomplete'=>'off'
-				],
-                //'value' => $model->sampling_date ? date('m/d/Y h:i A', strtotime($model->sampling_date)) : date("m/d/Y h:i A"),
-				'value'=>function($model){
-					return date("m/d/Y h:i:s A", strtotime($model->sampling_date));
-				},
-				'readonly' => true,
-                'pluginOptions' => [
-                    'autoclose'=>true,
-                    'format' => 'mm/dd/yyyy HH:ii:ss P',
-					'todayHighlight' => true,
-					'startDate' => date('m/d/Y h:i:s A'),
-                ]
-            ]);
-            /*echo DatePicker::widget([
-                'name' => 'Sample[sampling_date]',
-                'type' => DatePicker::TYPE_COMPONENT_PREPEND,
-                'value' => $model->sampling_date ? date('m/d/Y', strtotime($model->sampling_date)) : date('m/d/Y'),
-                'pluginOptions' => [
-                    'autoclose'=>true,
-                    'format' => 'mm/dd/yyyy'
-                ]
-            ]);*/
-            echo "</div>";
         } else {
             $startDiv = '<div class="col-sm-12">';
             $endDiv = "</div>";
-            echo "";
         }
     ?>
-    <?php
-        //echo '<label class="control-label">Sample Template</label>';
-        /*echo TypeaheadBasic::widget([
-            'name' => 'saved_templates',
-            'id' => 'saved_templates',
-            'data' =>  $sampletemplate,
-            'dataset' => ['limit' => 10],
-            'scrollable' => true,
-            'options' => ['placeholder' => 'Search sample template...'],
-            'pluginOptions' => ['highlight'=>true],
-        ]);*/
-    ?>
+
+    <div class="row">
         <?php
             echo $startDiv;
-            //if(empty($model->sample_id)){
-                echo '<label class="control-label">Sample Template</label>';
-                echo Select2::widget([
-                    'name' => 'saved_templates',
-                    //'value' => '',
-                    'data' => $sampletemplate,
-                    //'theme' => Select2::THEME_BOOTSTRAP,
+            echo $form->field($model,'sampletype_id')->widget(Select2::classname(),[
+                    'data' => $sampletype,
                     'theme' => Select2::THEME_KRAJEE,
-                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Search sample template ...'],
-                    'options' => ['id' => 'saved_templates']
+                    //'theme' => Select2::THEME_BOOTSTRAP,
+                    'options' => ['id'=>'sample-sampletype_id'],
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
                 ]);
-                echo "<br>";
-            //}
             echo $endDiv;
+
+			if($labId == 2){
+				echo $startDiv;
+				echo $form->field($model, 'sampling_date')->widget(DateTimePicker::classname(), [
+					'options' => [
+						'placeholder' => 'Enter sampling date ...',
+						'autocomplete'=>'off'
+					],
+					//'value' => $model->sampling_date ? date('m/d/Y h:i A', strtotime($model->sampling_date)) : date("m/d/Y h:i A"),
+					'value'=>function($model){
+						return date("m/d/Y h:i:s A", strtotime($model->sampling_date));
+					},
+					'readonly' => true,
+					'pluginOptions' => [
+						'autoclose'=>true,
+						'format' => 'mm/dd/yyyy HH:ii:ss P',
+						'todayHighlight' => true,
+						'startDate' => date('m/d/Y h:i:s A'),
+					]
+				]);
+				echo $endDiv;
+			} else {
+				echo "";
+			}
+		?>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+        <?php
+            echo '<label class="control-label">Sample Template</label>';
+            echo Select2::widget([
+                'name' => 'saved_templates',
+                'data' => $sampletemplate,
+                'theme' => Select2::THEME_KRAJEE,
+                'pluginOptions' => ['allowClear' => true,'placeholder' => 'Search sample template ...'],
+                'options' => ['id' => 'saved_templates']
+            ]);
+            echo "<br>";
         ?>
+        </div>
     </div>
         
     <?= $form->field($model, 'samplename')->textInput(['maxlength' => true,'placeholder' => 'Enter sample name ...']) ?>

@@ -19,8 +19,9 @@ use Yii;
  * @property string $payor
  * @property int $collectiontype_id
  * @property string $total
- * @property int $cancelled
+ * @property int $receipt_status_id
  * @property int $deposit_id
+ * @property int $customer_id
  *
  * @property Check[] $checks
  * @property Paymentitem[] $paymentitems
@@ -88,8 +89,9 @@ class Receipt extends \yii\db\ActiveRecord
             'payor' => 'Payor',
             'collectiontype_id' => 'Collectiontype ID',
             'total' => 'Total',
-            'cancelled' => 'Cancelled',
+            'receipt_status_id' => 'Receipt Status ID',
             'deposit_id' => 'Deposit ID',
+            'customer_id' => 'Customer ID', 
         ];
     }
 
