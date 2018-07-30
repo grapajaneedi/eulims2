@@ -8,10 +8,12 @@ use kartik\widgets\DatePicker;
 use kartik\datetime\DateTimePicker;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Lab;
+use common\models\lab\Sampletype;
 use yii\helpers\Url;
 
 
 $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
+$sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Labsampletype */
@@ -21,7 +23,7 @@ $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 <div class="labsampletype-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+    <div class="input-group">
     <?= $form->field($model,'lab_id')->widget(Select2::classname(),[
                     'data' => $lablist,
                     'theme' => Select2::THEME_KRAJEE,
@@ -29,24 +31,25 @@ $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Lab'],
             ])
     ?>
+       <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Lab', '/customer/info/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+     </span>
+        </div>
 
-    <?= $form->field($model, 'sampletypeId')->widget(DepDrop::classname(), [
-            'type'=>DepDrop::TYPE_SELECT2,
-            'data'=>$sampletype,
-            'options'=>['id'=>'sample-sample_type_id'],
-            'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-            'pluginOptions'=>[
-                'depends'=>['sample-testcategory_id'],
-                'placeholder'=>'Select Sample Type',
-                'url'=>Url::to(['/lab/labsampletype/listsampletype']),
-                'loadingText' => 'Loading Sample Types...',
-            ]
-        ])
-        ?>
-   
+        <div class="input-group">
+ <?= $form->field($model,'sampletypeId')->widget(Select2::classname(),[
+                    'data' => $sampletypelist,
+                    'theme' => Select2::THEME_KRAJEE,
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
+            ])
+    ?>
+      <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Sample Type', '/customer/info/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+     </span>
+    </div>
 
     <?= $form->field($model, 'effective_date')->widget(DatePicker::classname(), [
-        'readonly'=>true,
+        //'readonly'=>true,
         'options' => ['placeholder' => 'Select Date'],
             'value'=>function($model){
                 return date("m/d/Y",$model->effective_date);
@@ -59,7 +62,7 @@ $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
             
     ])->label('Effectivity Date'); ?>
 
-    <?= $form->field($model, 'added_by')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'added_by')->textInput(['readonly' => true]) ?>
 
 
   

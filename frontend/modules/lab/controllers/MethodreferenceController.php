@@ -52,9 +52,11 @@ class MethodreferenceController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]);
+        }
     }
 
     /**
@@ -65,12 +67,15 @@ class MethodreferenceController extends Controller
     public function actionCreate()
     {
         $model = new Methodreference();
-
+        $model->testname_id = 0;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Lab Sample Type Test Name Successfully Created'); 
+            Yii::$app->session->setFlash('success', 'Method Reference Successfully Created'); 
             return $this->runAction('index');
         }
+        $model->create_time=date("Y-m-d h:i:s");
+        $model->update_time=date("Y-m-d h:i:s");
 
+       $model->testname_id = 0;
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_form', [
                 'model' => $model,
@@ -88,14 +93,16 @@ class MethodreferenceController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    Yii::$app->session->setFlash('success', 'Method Reference Successfully Updated'); 
+                    return $this->redirect(['index']);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'method_reference_id' => $model->method_reference_id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+                } else if (Yii::$app->request->isAjax) {
+                    return $this->renderAjax('update', [
+                        'model' => $model,
+                    ]);
+                 }
     }
 
     /**
@@ -107,9 +114,13 @@ class MethodreferenceController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = $this->findModel($id); 
+        if($model->delete()) {            
+            Yii::$app->session->setFlash('success', 'Method Reference Successfully Deleted'); 
+            return $this->redirect(['index']);
+        } else {
+            return $model->error();
+        }
     }
 
     /**

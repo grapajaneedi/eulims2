@@ -16,6 +16,15 @@ use kartik\widgets\TypeaheadBasic;
 use kartik\widgets\Typeahead;
 use common\models\services\Test;
 
+
+use common\models\lab\Lab;
+use common\models\lab\Labsampletype;
+use common\models\lab\Sampletype;
+use common\models\lab\Sampletypetestname;
+use common\models\lab\Testnamemethod;
+use common\models\lab\Methodreference;
+use common\models\lab\Testname;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Packagelist */
 /* @var $form yii\widgets\ActiveForm */
@@ -94,31 +103,29 @@ $this->registerJs($js);
 
          <div class="row">
          <div class="col-sm-6">
-         <?= $form->field($model,'testcategory_id')->widget(Select2::classname(),[
-                         'data' => $testcategory,
-                         'theme' => Select2::THEME_KRAJEE,
-                      //   'disabled'=>true,
-                         //'theme' => Select2::THEME_BOOTSTRAP,
-                         'options' => ['id'=>'sample-testcategory_id'],
-                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test category'],
-                 ])
-             ?>
-         </div>
-
-         <div class="col-sm-6">
-             <?= $form->field($model, 'sample_type_id')->widget(DepDrop::classname(), [
-                 'type'=>DepDrop::TYPE_SELECT2,
-                 'data'=>$sampletype,
-                 'options'=>['id'=>'sample-sample_type_id'],
-                 'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                 'pluginOptions'=>[
-                     'depends'=>['sample-testcategory_id'],
-                     'placeholder'=>'Select Sample type',
-                     'url'=>Url::to(['/lab/sample/listsampletype']),
-                     'loadingText' => 'Loading Sampletype...',
-                 ]
-             ])
-             ?>
+         <?= $form->field($model,'sample_type_id')->widget(Select2::classname(),[
+                    'data' => $testcategory,
+                    'theme' => Select2::THEME_KRAJEE,
+                    'options' => ['id'=>'sample-testcategory_id'],
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
+            ])
+        ?>
+    </div>
+    <div class="col-sm-6">
+        <?= $form->field($model, 'test_id')->widget(DepDrop::classname(), [
+            'type'=>DepDrop::TYPE_SELECT2,
+            'data'=>$sampletype,
+            'options'=>['id'=>'sample-sample_type_id'],
+            'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+            'pluginOptions'=>[
+                'depends'=>['sample-testcategory_id'],
+                'placeholder'=>'Select Test Name',
+                'url'=>Url::to(['/lab/analysis/listsampletype']),
+                'loadingText' => 'Loading Test Names...',
+            ]
+        ])
+        ?>
+    
 
             </div>
         </div>

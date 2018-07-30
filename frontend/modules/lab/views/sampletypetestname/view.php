@@ -6,31 +6,17 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Sampletypetestname */
 
-$this->title = $model->id;
+$this->title = $model->sampletype_testname_id;
 $this->params['breadcrumbs'][] = ['label' => 'Sampletypetestnames', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="sampletypetestname-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->sampletype_testname_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->sampletype_testname_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'sampletype_testname_id',
-            'sampletype_id',
-            'testname_id',
+            'sampletype.type',
+            'testname.testName',
             'added_by',
         ],
     ]) ?>

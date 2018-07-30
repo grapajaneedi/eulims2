@@ -42,7 +42,7 @@ class LabSampletype extends \yii\db\ActiveRecord
             [['lab_id', 'sampletypeId', 'added_by'], 'required'],
             [['lab_id', 'sampletypeId'], 'integer'],
             [['effective_date'], 'safe'],
-            [['added_by'], 'string', 'max' => 10],
+            [['added_by'], 'string', 'max' => 300],
             [['sampletypeId'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletypeId' => 'sampletype_id']],
         ];
     }

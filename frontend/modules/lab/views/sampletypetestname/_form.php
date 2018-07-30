@@ -9,9 +9,11 @@ use kartik\datetime\DateTimePicker;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Lab;
 use common\models\lab\Sampletype;
+use common\models\lab\TestName;
 use yii\helpers\Url;
 
 $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
+$testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName');
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Sampletypetestname */
@@ -21,7 +23,7 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
 <div class="sampletypetestname-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+    <div class="input-group">
     <?= $form->field($model,'sampletype_id')->widget(Select2::classname(),[
                     'data' => $sampletypelist,
                     'theme' => Select2::THEME_KRAJEE,
@@ -29,23 +31,26 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
             ])
     ?>
+     <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Sample Type', '/customer/info/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+     </span>
+        </div>
 
-   <?= $form->field($model, 'testname_id')->widget(DepDrop::classname(), [
-            'type'=>DepDrop::TYPE_SELECT2,
-            'data'=>$testname,
-            'options'=>['id'=>'sample-sample_type_id'],
-            'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-            'pluginOptions'=>[
-                'depends'=>['sample-testcategory_id'],
-                'placeholder'=>'Select Test Name',
-                'url'=>Url::to(['/lab/sampletypetestname/listtestname']),
-                'loadingText' => 'Loading Test Names...',
-            ]
-        ])
-        ?>
+        <div class="input-group">
+    <?= $form->field($model,'testname_id')->widget(Select2::classname(),[
+                    'data' => $testnamelist,
+                    'theme' => Select2::THEME_KRAJEE,
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test Name'],
+            ])
+    ?>
+     <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Test Name', '/customer/info/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+     </span>
+        </div>
 
 
-    <?= $form->field($model, 'added_by')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'added_by')->textInput(['readonly' => true]) ?>
     <div class="form-group pull-right">
     <?php if(Yii::$app->request->isAjax){ ?>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
