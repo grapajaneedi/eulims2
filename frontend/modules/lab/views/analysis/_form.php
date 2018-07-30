@@ -122,12 +122,7 @@ $this->registerJs($js);
     <div class="row">
     <div class="col-sm-6">
 
-    <?php
-
-    echo "<pre>";
-    var_dump($testcategory);
-    echo "</pre>";
-    ?>
+   
     <?= $form->field($model,'sample_type_id')->widget(Select2::classname(),[
                     'data' => $testcategory,
                     'theme' => Select2::THEME_KRAJEE,

@@ -9,7 +9,7 @@ use kartik\datetime\DateTimePicker;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Lab;
 use common\models\lab\Sampletype;
-use common\models\lab\TestName;
+use common\models\lab\Testname;
 use yii\helpers\Url;
 
 $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
