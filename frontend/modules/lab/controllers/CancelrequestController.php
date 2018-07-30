@@ -72,13 +72,21 @@ class CancelrequestController extends Controller
             $Request= Request::find()->where(['request_id'=>$model->request_id])->one();
             $Request->status_id=0;//Cancelled
             $Request->payment_status_id=0;
-            $PaymentItem= Paymentitem::find()->where(['request_id'=>$model->request_id])->one();
-            $receipt_id=$PaymentItem->receipt_id ? $PaymentItem->receipt_id : -1;
+            $request_id=$model->request_id;
+            // Update Receipt
+            $SQLReceipt="SELECT GROUP_CONCAT(`receipt_id`) FROM `tbl_paymentitem` WHERE `request_id`=:request_id";
+            $Connection=Yii::$app->financedb;
+            $Command=$Connection->createCommand($SQLReceipt);
+            $Command->bindValue(":request_id", $request_id);
+            $recept_ids=$Command->execute();
             //$query = (new \yii\db\Query())->from('tbl_paymentitem')->where(['request_id'=>$model->request_id]);
             //$sum = $query->sum('amount');
             if($Request->save()){//Check if there is sample
                 if($receipt_id!=-1){
-                    // With Receipt
+                    //Get the total amount from receipt
+                    
+                    // update Receipt
+                    $ReceiptUpdate="UPDATE `tbl_receipt` SET `receipt_status_id`=2 WHERE `receipt_id` IN($recept_ids)";
                     
                 }
                 $SampleCount= Sample::find()->where(['request_id'=>$model->request_id])->count();
