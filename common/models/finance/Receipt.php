@@ -19,8 +19,9 @@ use Yii;
  * @property string $payor
  * @property int $collectiontype_id
  * @property string $total
- * @property int $cancelled
+ * @property int $receipt_status_id
  * @property int $deposit_id
+ * @property int $customer_id
  *
  * @property Check[] $checks
  * @property Paymentitem[] $paymentitems
@@ -56,8 +57,8 @@ class Receipt extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'terminal_id', 'deposit_type_id', 'or_series_id', 'or_number', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled'], 'required'],
-            [['rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'or_series_id', 'payment_mode_id', 'collectiontype_id', 'cancelled', 'deposit_id'], 'integer'],
+            [['rstl_id', 'terminal_id', 'deposit_type_id', 'or_series_id', 'or_number', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'customer_id'], 'required'],
+            [['rstl_id', 'terminal_id', 'collection_id', 'deposit_type_id', 'or_series_id', 'payment_mode_id', 'collectiontype_id', 'receipt_status_id', 'deposit_id', 'customer_id'], 'integer'],
             [['receiptDate'], 'safe'],
             [['total'], 'number'],
             [['or_number'], 'string', 'max' => 50],
@@ -89,8 +90,9 @@ class Receipt extends \yii\db\ActiveRecord
             'payor' => 'Payor',
             'collectiontype_id' => 'Collectiontype ID',
             'total' => 'Total',
-            'cancelled' => 'Cancelled',
+            'receipt_status_id' => 'Receipt Status ID',
             'deposit_id' => 'Deposit ID',
+            'customer_id' => 'Customer ID', 
         ];
     }
 
