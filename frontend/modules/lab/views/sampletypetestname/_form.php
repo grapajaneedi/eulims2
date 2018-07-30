@@ -23,7 +23,7 @@ $testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName'
 <div class="sampletypetestname-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+    <div class="input-group">
     <?= $form->field($model,'sampletype_id')->widget(Select2::classname(),[
                     'data' => $sampletypelist,
                     'theme' => Select2::THEME_KRAJEE,
@@ -31,14 +31,22 @@ $testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName'
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
             ])
     ?>
+     <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Sample Type', '/customer/info/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+     </span>
+        </div>
 
+        <div class="input-group">
     <?= $form->field($model,'testname_id')->widget(Select2::classname(),[
                     'data' => $testnamelist,
                     'theme' => Select2::THEME_KRAJEE,
-                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test Name'],
             ])
     ?>
-
+     <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Test Name', '/customer/info/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+     </span>
+        </div>
 
 
 

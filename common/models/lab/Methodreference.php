@@ -42,7 +42,7 @@ class Methodreference extends \yii\db\ActiveRecord
     {
         return [
             [[ 'method', 'reference', 'fee'], 'required'],
-            [[ 'create_time', 'update_time'], 'integer'],
+          //  [[ 'create_time', 'update_time'], 'integer'],
             [['fee'], 'number'],
             [['method', 'reference'], 'string', 'max' => 200],
           //  [['testname_id'], 'exist', 'skipOnError' => true, 'targetClass' => Test::className(), 'targetAttribute' => ['testname_id' => 'testname_id']],

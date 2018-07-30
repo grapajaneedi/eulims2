@@ -40,7 +40,7 @@ class Sampletypetestname extends \yii\db\ActiveRecord
         return [
             [['sampletype_id', 'testname_id', 'added_by'], 'required'],
             [['sampletype_id', 'testname_id'], 'integer'],
-            [['added_by'], 'string', 'max' => 10],
+            [['added_by'], 'string', 'max' => 30],
             [['sampletype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletype_id' => 'sampletype_id']],
         ];
     }
@@ -51,7 +51,7 @@ class Sampletypetestname extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'sampletype_testname_id' => 'Sampletype Testname ID',
+            'sampletype_testname_id' => 'Sample Type Test Name ID',
             'sampletype_id' => 'Sample Type',
             'testname_id' => 'Test name',
             'added_by' => 'Added By',

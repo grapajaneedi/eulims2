@@ -23,7 +23,7 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
 <div class="labsampletype-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+    <div class="input-group">
     <?= $form->field($model,'lab_id')->widget(Select2::classname(),[
                     'data' => $lablist,
                     'theme' => Select2::THEME_KRAJEE,
@@ -31,14 +31,22 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Lab'],
             ])
     ?>
+       <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Lab', '/customer/info/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+     </span>
+        </div>
 
+        <div class="input-group">
  <?= $form->field($model,'sampletypeId')->widget(Select2::classname(),[
                     'data' => $sampletypelist,
                     'theme' => Select2::THEME_KRAJEE,
-                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Lab'],
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
             ])
     ?>
-
+      <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Sample Type', '/customer/info/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+     </span>
+    </div>
 
     <?= $form->field($model, 'effective_date')->widget(DatePicker::classname(), [
         //'readonly'=>true,

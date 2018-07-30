@@ -24,7 +24,7 @@ $methodlist= ArrayHelper::map(Methodreference::find()->all(),'method_reference_i
 <div class="testnamemethod-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+    <div class="input-group">
     <?= $form->field($model,'testname_id')->widget(Select2::classname(),[
                     'data' => $testnamelist,
                     'theme' => Select2::THEME_KRAJEE,
@@ -32,13 +32,22 @@ $methodlist= ArrayHelper::map(Methodreference::find()->all(),'method_reference_i
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test Name'],
             ])
     ?>
+      <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Test Name Method', '/customer/info/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+     </span>
+        </div>
 
+        <div class="input-group">
    <?= $form->field($model,'method_id')->widget(Select2::classname(),[
                     'data' => $methodlist,
                     'theme' => Select2::THEME_KRAJEE,
-                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Test Name'],
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Method'],
             ])
     ?>
+      <span class="input-group-btn" style="padding-top: 25.5px">
+                    <button onclick="LoadModal('Create New Test Name Method', '/customer/info/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+     </span>
+        </div>
 
 
 <div class="row">
