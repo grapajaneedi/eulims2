@@ -103,10 +103,49 @@ class AnalysisController extends Controller
             $references = "Error getting reference";
             $fee = "Error getting fee";
         }
+
+        // return $this->renderPartial('_viewAnalysis', [
+        //      'request'=>$request,
+        //         'model'=>$model,
+        //        'sampleDataProvider' => $sampleDataProvider,
+        //        'analysisdataprovider'=> $analysisdataprovider,
+        //    ]);
+
         return Json::encode([
             'references'=>$references,
             'fee'=>$fee,
         ]);
+    }
+
+    public function actionGetmethod() {
+        $id = $_GET['id'];
+        // $model = new Tagging();
+        //  $samplesQuery = Sample::find()->where(['sample_id' => $id]);
+        //  $sampleDataProvider = new ActiveDataProvider([
+        //          'query' => $samplesQuery,
+        //          'pagination' => [
+        //              'pageSize' => 10,
+        //          ],
+              
+        //  ]);
+         $analysisQuery = Methodreference::find()->where(['method_reference_id' => $id]);
+        // $request = Request::find()->where(['request_id' =>42]);
+         $testnamemethoddataprovider = new ActiveDataProvider([
+                 'query' => $analysisQuery,
+                 'pagination' => [
+                     'pageSize' => 10,
+                 ],
+              
+         ]);
+
+        return $this->renderPartial('_methodreference', [
+              'testnamemethoddataprovider'=>$testnamemethoddataprovider,
+            //     'model'=>$model,
+            //    'sampleDataProvider' => $sampleDataProvider,
+            //    'analysisdataprovider'=> $analysisdataprovider,
+           ]);
+
+       
     }
 
 
@@ -302,7 +341,7 @@ class AnalysisController extends Controller
      {
          $testcategory = ArrayHelper::map(
             Sampletype::find()
-            ->leftJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletypeId=tbl_sampletype.sampletype_id')
+            ->leftJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletype_id=tbl_sampletype.sampletype_id')
             ->andWhere(['lab_id'=>$labId])
             ->all(), 'sampletype_id', 
             function($testcategory, $defaultValue) {

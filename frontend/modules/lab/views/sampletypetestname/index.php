@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
-                'attribute' => 'sampletypeId',
+                'attribute' => 'sampletype_id',
                 'label' => 'Sample Type',
                 'value' => function($model) {
                     return $model->sampletype->type;

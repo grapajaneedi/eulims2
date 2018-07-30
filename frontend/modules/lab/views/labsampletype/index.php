@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                'filterInputOptions' => ['placeholder' => 'Lab', 'testcategory_id' => 'grid-products-search-category_type_id']
             ],
             [
-                'attribute' => 'sampletypeId',
+                'attribute' => 'sampletype_id',
                 'label' => 'Sample Type',
                 'value' => function($model) {
 

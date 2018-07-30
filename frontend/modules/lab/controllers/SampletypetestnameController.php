@@ -151,7 +151,7 @@ class SampletypetestnameController extends Controller
     {
         $sampletype = ArrayHelper::map(
             Sampletype::find()
-            ->leftJoin('tbl_lab_sampletype', 'tbl_sampletype.sampletype_id=tbl_lab_sampletype.sampletypeId')
+            ->leftJoin('tbl_lab_sampletype', 'tbl_sampletype.sampletype_id=tbl_lab_sampletype.sampletype_id')
             ->Where(['tbl_lab_sampletype.lab_id'=>$id])
             ->all(), 'lab_sampletype_id', 
             function($sampletype, $defaultValue) {
@@ -168,7 +168,7 @@ class SampletypetestnameController extends Controller
             $id = end($_POST['depdrop_parents']);
           
             $list = Sampletype::find()
-            ->leftJoin('tbl_lab_sampletype', 'tbl_sampletype.sampletype_id=tbl_lab_sampletype.sampletypeId')
+            ->leftJoin('tbl_lab_sampletype', 'tbl_sampletype.sampletype_id=tbl_lab_sampletype.sampletype_id')
             ->Where(['tbl_lab_sampletype.lab_id'=>$id])
             ->asArray()
             ->all();
