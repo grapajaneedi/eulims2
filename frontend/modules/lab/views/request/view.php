@@ -477,9 +477,29 @@ $UnpaidBalance=number_format($UnpaidBalance,2);
                     'hAlign'=>'center',
                     'format'=>'raw',
                     'value' => function($model) {
-                            return "<span class='badge badge-default' style='width:80px!important;height:20px!important;'>Pending</span>";
+                  
+                      if ($model->tagging){
+
+                       if ($model->tagging->tagging_status_id==1) {
+                              return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
+                          }else if ($model->tagging->tagging_status_id==2) {
+                              return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
+                          }
+                          else if ($model->tagging->tagging_status_id==3) {
+                              return "<span class='badge btn-warning' style='width:90px;height:20px'>ASSIGNED</span>";
+                          }
+                          else if ($model->tagging->tagging_status_id==4) {
+                              return "<span class='badge btn-danger' style='width:90px;height:20px'>CANCELLED</span>";
+                          }
+                           
+                    
+                      }else{
+                          return "<span class='badge btn-default' style='width:80px;height:20px'>PENDING</span>";
+                      }
+                     
                     },
                     'enableSorting' => false,
+                    'contentOptions' => ['style' => 'width:10px; white-space: normal;'],
                 ],
                 ['class' => 'kartik\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width: 8.7%'],
@@ -500,6 +520,7 @@ $UnpaidBalance=number_format($UnpaidBalance,2);
             ];
             echo GridView::widget([
                 'id' => 'analysis-grid',
+                'responsive'=>true,
                 'dataProvider'=> $analysisdataprovider,
                 'pjax'=>true,
                 'pjaxSettings' => [

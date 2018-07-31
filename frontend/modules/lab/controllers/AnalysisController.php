@@ -104,13 +104,6 @@ class AnalysisController extends Controller
             $fee = "Error getting fee";
         }
 
-        // return $this->renderPartial('_viewAnalysis', [
-        //      'request'=>$request,
-        //         'model'=>$model,
-        //        'sampleDataProvider' => $sampleDataProvider,
-        //        'analysisdataprovider'=> $analysisdataprovider,
-        //    ]);
-
         return Json::encode([
             'references'=>$references,
             'fee'=>$fee,
@@ -119,17 +112,7 @@ class AnalysisController extends Controller
 
     public function actionGetmethod() {
         $id = $_GET['id'];
-        // $model = new Tagging();
-        //  $samplesQuery = Sample::find()->where(['sample_id' => $id]);
-        //  $sampleDataProvider = new ActiveDataProvider([
-        //          'query' => $samplesQuery,
-        //          'pagination' => [
-        //              'pageSize' => 10,
-        //          ],
-              
-        //  ]);
          $analysisQuery = Methodreference::find()->where(['method_reference_id' => $id]);
-        // $request = Request::find()->where(['request_id' =>42]);
          $testnamemethoddataprovider = new ActiveDataProvider([
                  'query' => $analysisQuery,
                  'pagination' => [
@@ -140,9 +123,6 @@ class AnalysisController extends Controller
 
         return $this->renderPartial('_methodreference', [
               'testnamemethoddataprovider'=>$testnamemethoddataprovider,
-            //     'model'=>$model,
-            //    'sampleDataProvider' => $sampleDataProvider,
-            //    'analysisdataprovider'=> $analysisdataprovider,
            ]);
 
        
@@ -196,12 +176,19 @@ class AnalysisController extends Controller
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
           
-            //$list = Testname::find()->andWhere(['id'=>$id])->asArray()->all();
+          
+            // $list =  Testname::find()
+            // ->innerJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
+            // ->Where(['tbl_sampletype_testname.sampletype_id'=>118])
+            // ->asArray()
+            // ->all();
+
             $list =  Testname::find()
-            ->leftJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
+            ->innerJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
             ->Where(['tbl_sampletype_testname.sampletype_id'=>$id])
             ->asArray()
             ->all();
+
             $selected  = null;
             if ($id != null && count($list) > 0) {
                 $selected = '';

@@ -120,6 +120,10 @@ $gg = 1;
                 'hAlign'=>'center',
                 'format'=>'raw',
                 'value'=>function($model){
+
+                    $tagging= Tagging::find()->where(['user_id'=> Yii::$app->user->id])->count();
+
+
                     return "<span class='badge ".$model->status->class." btn-block' style='width:80px!important;height:20px!important;'>".$model->status->status."</span>";
                 }
             ],
