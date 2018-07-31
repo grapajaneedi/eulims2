@@ -589,7 +589,7 @@ class CashierController extends \yii\web\Controller
                     }
                     else{
                         Yii::$app->labdb->createCommand()
-                            ->update('tbl_request', ['posted' => 1,'payment_status_id'=>3], 'request_id= '.$str_request[$i])
+                            ->update('tbl_request', ['posted' => 0,'payment_status_id'=>3], 'request_id= '.$str_request[$i])
                             ->execute(); 
                     }
                 }

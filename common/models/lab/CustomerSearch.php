@@ -64,7 +64,7 @@ class CustomerSearch extends Customer
         // grid filtering conditions
         $query->andFilterWhere([
             'customer_id' => $this->customer_id,
-            'rstl_id' => $this->rstl_id,
+            'rstl_id' => Yii::$app->user->identity->profile->rstl_id,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'customer_type_id' => $this->customer_type_id,

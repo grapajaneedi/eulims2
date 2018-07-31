@@ -97,10 +97,8 @@ class OpController extends Controller
              $session = Yii::$app->session;
              try  {
                 $request_ids=$model->RequestIds;
-                $str_request = explode(',', $request_ids);
-                $arr_length = count($str_request); 
+                 
                 $model->total_amount=0;
-                $total_amount=0;
                 $model->rstl_id=$GLOBALS['rstl_id'];
                 $model->transactionnum= $this->Gettransactionnum();
                 $model->payment_status_id=1; //unpaid
@@ -115,22 +113,7 @@ class OpController extends Controller
 //                exit;
                 $model->save();
                 //Saving for Paymentitem
-                for($i=0;$i<$arr_length;$i++){
-                    $request =$this->findRequest($str_request[$i]);
-                    $paymentitem = new Paymentitem();
-                    $paymentitem->rstl_id =$GLOBALS['rstl_id'];
-                    $paymentitem->request_id = $str_request[$i];
-                    $paymentitem->orderofpayment_id = $model->orderofpayment_id;
-                    $paymentitem->details =$request->request_ref_num;
-                    $total=$request->total;
-                    $amount=$request->getBalance($str_request[$i],$total);
-                    $total_amount+=$amount;
-                    $paymentitem->amount = $amount;
-                    $paymentitem->request_type_id =$request->request_type_id;
-                    $paymentitem->status=1;//Unpaid
-                    $paymentitem->save(false); 
-                    
-                }
+                $total_amount=$this->actionSavePaymentitem($request_ids, $model->orderofpayment_id);
                 //----------------------//
                 //---Saving for Collection-------
 
@@ -143,7 +126,7 @@ class OpController extends Controller
 //                $collection->save(false);
                 //
                 $transaction->commit();
-                //$this->postRequest($request_ids);
+               
                 $this->updateTotalOP($model->orderofpayment_id, $total_amount);
                 $session->set('savepopup',"executed");
                  return $this->redirect(['/finance/op']); 
@@ -246,10 +229,10 @@ class OpController extends Controller
             'query' => $query,
         ]);
         if(Yii::$app->request->isAjax){
-            return $this->renderAjax('_request', ['dataProvider'=>$dataProvider,'model'=>$model]);
+            return $this->renderAjax('_request', ['dataProvider'=>$dataProvider,'model'=>$model,'stat'=>0]);
         }
         else{
-            return $this->render('_request', ['dataProvider'=>$dataProvider,'model'=>$model]);
+            return $this->render('_request', ['dataProvider'=>$dataProvider,'model'=>$model,'stat'=>0]);
         }
 
     }
@@ -446,5 +429,45 @@ class OpController extends Controller
             echo $out;
             return;
         }
+    }
+    
+    public function actionAddPaymentitem($opid,$customerid)
+    {
+        $op=$this->findModel($opid);
+        
+        //$paymentitem_Query = Request::find()->where(['customer_id' => $customerid])->andWhere(['not',['payment_status_id' => 2]]);
+        $paymentitem_Query = Request::find()->where(['customer_id' => $customerid])->andWhere(['not',['payment_status_id' => 2]]);
+         $paymentitemDataProvider = new ActiveDataProvider([
+            'query' => $paymentitem_Query,
+        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_request', ['dataProvider'=> $paymentitemDataProvider,'opid'=>$opid,'stat'=>1]);
+        }
+        else{
+            return $this->render('_request', ['dataProvider'=> $paymentitemDataProvider,'opid'=>$opid,'stat'=>1]);
+        }
+    }
+    public function actionSavePaymentitem($request_ids,$opid){
+        $total_amount=0;
+        $str_request = explode(',', $request_ids);
+        $arr_length = count($str_request);
+        for($i=0;$i<$arr_length;$i++){
+            $request =$this->findRequest($str_request[$i]);
+            $paymentitem = new Paymentitem();
+            $paymentitem->rstl_id =Yii::$app->user->identity->profile ? Yii::$app->user->identity->profile->rstl_id : 11;
+            $paymentitem->request_id = $str_request[$i];
+            $paymentitem->orderofpayment_id = $opid;
+            $paymentitem->details =$request->request_ref_num;
+            $total=$request->total;
+            $amount=$request->getBalance($str_request[$i],$total);
+            $total_amount+=$amount;
+            $paymentitem->amount = $amount;
+            $paymentitem->request_type_id =$request->request_type_id;
+            $paymentitem->status=1;//Unpaid
+            $paymentitem->save(false); 
+
+        }
+        $this->postRequest($request_ids);
+        return $total_amount;
     }
 }

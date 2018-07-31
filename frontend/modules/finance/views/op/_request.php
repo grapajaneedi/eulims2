@@ -24,20 +24,41 @@ $this->registerJs($js);
        
          [
              'class' => '\kartik\grid\CheckboxColumn',
+             'checkboxOptions' => function($model) {
+                if($model->posted == 1 && $model->payment_status_id <> 2){
+                   return ['disabled' => true];
+                }else{
+                   return [];
+                }
+             },
          ],
         [
           'attribute'=>'request_ref_num',
           'enableSorting' => false,
         ],
-       
+//        [
+//            'attribute'=>'request_datetime',
+//             'value' => function($model) {
+//                    return date($model->request_datetime);
+//                },
+//            'pageSummary' => '<span style="float:right;">Total</span>',
+//            'enableSorting' => false,
+//        ],
         [
-            'attribute'=>'request_datetime',
+            'attribute'=>'payment_status_id',
+            'format'=>'raw',
              'value' => function($model) {
-                    return date($model->request_datetime);
-                },
-            'pageSummary' => '<span style="float:right;">Total</span>',
+                    //return $model->PaymentStatusDetailspayment_status_id;
+                    $Obj=$model->getPaymentStatusDetails($model->request_id);
+                    if($Obj){
+                       return "<span class='badge ".$Obj[0]['class']." legend-font' style='width:80px!important;height:20px!important;'>".$Obj[0]['payment_status']."</span>";
+                    }else{
+                        return "<span class='badge btn-primary legend-font' style='width:80px!important;height:20px!important;'>Unpaid</span>";
+                    }
+            },
             'enableSorting' => false,
-        ],
+             'hAlign'=>'center',      
+        ],               
         [
             'attribute'=>'total',
             'enableSorting' => false,
@@ -56,6 +77,7 @@ $this->registerJs($js);
             'pageSummary' => '<span id="total">0.00</span>',
              
         ],
+                 
          /*[
             'attribute'=>'selected_request',
             'pageSummary' => '<span style="float:right;">Total</span>',
@@ -98,6 +120,24 @@ $this->registerJs($js);
              
          ],*/
     ]); ?>
+
+ <?php 
+ if ($stat){
+      ?><div class="form-group pull-right">
+    <button  id='btnSaveCollection' class='btn btn-success' ><i class='fa fa-save'></i> Add Payment Item</button>
+    <?php if(Yii::$app->request->isAjax){ ?>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    <?php } ?>
+  </div>
+<?php
+
+ }
+ else{
+     $opid="";
+ }
+?>
+
+
 <script type="text/javascript">
     function settotal(){
         
@@ -146,4 +186,22 @@ $this->registerJs($js);
          
     }
     
+    $('#btnSaveCollection').on('click',function(e) {
+        var keys = $('#grid').yiiGridView('getSelectedRows');
+        var keylist= keys.join();
+        if (keylist == ""){
+            alert("Please Select Payment Item");
+        }
+        else{
+             $.post({
+            url: 'save-paymentitem?request_ids='+keylist+'&opid=<?php echo $opid ?>', // your controller action
+            dataType: 'json',
+            success: function(data) {
+               location.reload();
+            }
+            });
+        }
+       
+        
+     });
 </script>

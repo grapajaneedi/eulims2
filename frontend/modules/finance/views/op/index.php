@@ -24,6 +24,13 @@ $CustomerList= ArrayHelper::map(Customer::find()->all(),'customer_id','customer_
 
 $Header="Department of Science and Technology<br>";
 $Header.="Order of Payment";
+$display=false;
+if(Yii::$app->user->can('allow-create-op')){
+    $display=true;
+}
+//echo $display;
+//xit;
+
 if(Yii::$app->user->can('allow-cancel-op')){
     $Button="{view}{update}{delete}";
 }else{
@@ -53,7 +60,7 @@ if(Yii::$app->user->can('allow-cancel-op')){
         ],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
-                'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP','onclick'=>'addOp(this.value,this.title)']),
+                'before'=>$display ? Html::button('<span class="glyphicon glyphicon-plus"></span> Create Order of Payment', ['value'=>'/finance/op/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Order of Payment"),'id'=>'btnOP','onclick'=>'addOp(this.value,this.title)']) : "",
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
         'exportConfig'=>$func->exportConfig("Order of Payment", "op", $Header),
