@@ -21,7 +21,7 @@ use common\models\lab\Customer;
 use DateTime;
 use common\models\system\Profile;
 use common\components\Functions;
-//use linslin\yii2\curl\Curl;
+use linslin\yii2\curl\Curl;
 use kartik\mpdf\Pdf;
 //use yii\helpers\Url;
 /**
@@ -49,7 +49,7 @@ class RequestController extends Controller
      * @return mixedfmkldcwnkldsnkdnfklnwfkwldnfdkwflnddnfwkdlnfdlwknclkwnxlkwcnwdlkdnkdnklewdnklewdnklewdnlkew
      */
     public function actionIndex()
-    {
+    { 
         $searchModel = new RequestSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=6;

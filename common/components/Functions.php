@@ -23,6 +23,8 @@ use common\models\lab\Lab;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Request;
 use kartik\grid\GridView;
+use common\models\finance\Customertransaction;
+use common\models\finance\Customerwallet;
 
 
 /**
@@ -510,5 +512,80 @@ SCRIPT;
                 ]
             ],
         ];
+    }
+    public function IsRequestHasReceipt($request_id){
+        $Connection=Yii::$app->labdb;
+        $SQL="SELECT COUNT(*)>0 HasReceipt FROM `tbl_request` WHERE `request_id`=:requestID AND `payment_status_id`>1";
+        $Command=$Connection->createCommand($SQL);
+        $Command->bindValue(':requestID', $request_id);
+        $Row=$Command->queryOne();
+        return $Row['HasReceipt'];
+    }
+    public function SetWallet($customer_id,$amount,$source,$transactiontype){
+        //$transactiontype 0 = credit, 1= debit ,2= initial
+        $transac = new Customertransaction();
+        $transac->transactiontype=$transactiontype;
+        $transac->updated_by=Yii::$app->user->id;
+        $transac->amount=$amount;
+        $transac->date=date('Y-m-d');
+        $transac->source=$source;
+        $wallet = Customerwallet::find()->where(['customerwallet_id' => $customer_id])->one();
+        if($wallet){
+             switch($transactiontype){
+                case 0:
+                    //credit transactiontype
+                    $wallet->balance = $wallet->balance + $transac->amount;
+
+                break;
+                case 1:
+                    //debit transaction type
+                    $wallet->balance = $wallet->balance - $transac->amount;
+                break;
+                case 2:
+                    //initial transaction
+                    //compiler cant go  here
+                break;
+                default:
+                    return false;
+             }
+
+             //save the wallet information
+             if($wallet->save()){
+                $transac->balance=$wallet->balance;
+                $transac->customerwallet_id=$wallet->customerwallet_id;
+                if($transac->save()){
+                    return true;
+                }else{
+                    return false;
+                }
+             }else{
+                return false;
+             }
+        }else{
+            //make wallet
+            $newwallet = New Customerwallet();
+            $newwallet->date = date('Y-m-d h:i:s');
+            $newwallet->last_update = date('Y-m-d h:i:s');
+            $newwallet->balance=$amount;
+            $newwallet->customer_id=$customer_id;
+            if($newwallet->save()){
+                $transac = new Customertransaction();
+                $transac->updated_by=Yii::$app->user->id;
+                $transac->date=date('Y-m-d h:i:s');
+                $transac->transactiontype=$transactiontype;
+                $transac->amount=$amount;
+                $transac->balance=$amount;
+                $transac->customerwallet_id=$customer_id;
+                $transac->source=$source;
+                if($transac->save()){
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
+            return false;
+        }
     }
 }

@@ -28,6 +28,14 @@ class exRequest extends Request{
         $Row=$Command->queryOne();
         return $Row['HasOP']>0;
     }
+    public function IsRequestHasReceipt(){
+        $Connection=Yii::$app->labdb;
+        $SQL="SELECT COUNT(*)>0 HasReceipt FROM `tbl_request` WHERE `request_id`=:requestID AND `payment_status_id`>1";
+        $Command=$Connection->createCommand($SQL);
+        $Command->bindValue(':requestID', $this->request_id);
+        $Row=$Command->queryOne();
+        return $Row['HasReceipt'];
+    }
     public function getHasop(){
         $Connection=Yii::$app->financedb;
         $SQL="SELECT COUNT(*)>0 AS HasOP FROM `tbl_paymentitem` WHERE `request_id`=:requestID";

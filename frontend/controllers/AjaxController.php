@@ -35,6 +35,10 @@ class AjaxController extends Controller{
             ],
         ];
     }
+     public function actionSetwallet($customer_id,$amount,$source,$transactiontype){
+        //$myvar = setTransaction($customer_id,$amount,$source,$transactiontype);
+        return 200;
+    }
     public function actionGetdiscount(){
         $post= \Yii::$app->request->post();
         $id=$post['discountid'];
