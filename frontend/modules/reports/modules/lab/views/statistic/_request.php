@@ -74,7 +74,7 @@ use kartik\grid\GridView;
                                 //'class' => 'btn btn-info', 
                                 'class' => 'text-primary', 
                                 'title' => 'View Request',
-                                'target' => '_blank',
+                                'target' => '_self',
                             ]);
                     },
                 ],
@@ -95,6 +95,9 @@ use kartik\grid\GridView;
                     'attribute'=>'total',
                     'label' => 'Total Income (PHP)',
                     'format' => 'raw',
+					'value'=>function ($model, $key, $index, $widget) {
+						return Yii::$app->formatter->format($model->total,['decimal',2]);
+					},
                     'enableSorting' => false,
                     'headerOptions' => ['class' => 'text-center'],
                     'contentOptions' => ['class' => 'text-right'],
@@ -123,7 +126,7 @@ use kartik\grid\GridView;
                 'striped'=>true,
                 'hover'=>true,
                 'panel' => [
-                    'heading'=> $model->customer_name."'s Request",
+                    'heading'=> "<h5>List of Requests: <b>".$model->customer_name."</b></h5>",
                     'type'=>'info',
                     'before'=>'',
                     'after'=>false,
