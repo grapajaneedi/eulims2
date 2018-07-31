@@ -195,11 +195,11 @@ class Functions extends Component{
                     //update samplecode to tbl_sample
                     $sample->sample_code = $samplecodeGenerated;
                     $sample->save(false);
-                    //$transaction->commit();
+                    $transaction->commit();
                     $return="true";
                 } else {
                     //error
-                    //$transaction->rollBack();
+                    $transaction->rollBack();
                     $samplecode->getErrors();
                     $return="false";
                 }
