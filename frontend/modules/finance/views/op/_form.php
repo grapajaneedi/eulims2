@@ -188,7 +188,7 @@ $disable='';
             //data: {
             //    customer_id:customer_id,
            // },
-            url: '/finance/op/getlistrequest?id='+$(this).val(),
+            url: '/finance/op/getlistrequest?id='+$(this).val()+'&opid=" "',
             dataType: 'html',
             success: function ( response ) {
 

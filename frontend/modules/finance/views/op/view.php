@@ -7,13 +7,33 @@ use common\models\finance\Collection;
 use common\models\finance\CancelledOp;
 use common\components\Functions;
 use common\models\finance\PaymentStatus;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
 
 $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['index']];
-
+$allow_cancel=false;
+$button_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paymentitem', ['value' => Url::to(['add-paymentitem','opid'=>$model->orderofpayment_id,'customerid'=>$model->customer_id]),'title'=>'Add Payment Item', 'onclick'=>'addPaymentitem(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']);
+if(Yii::$app->user->can('allow-cancel-op')){
+   $allow_cancel=true; 
+}
+if(Yii::$app->user->can('allow-create-receipt')){
+    if($model->receipt_id == null){
+       $receipt_button="<button type='button' value='/finance/cashier/create-receipt?op_id=$model->orderofpayment_id' id='btnCreateReceipt2' style='float: right;' class='btn btn-success' title='Receipt from OP' onclick='addReceipt(this.value,this.title)'><i class='fa fa-save'></i> Create Receipt</button>";                    
+    
+        //$receipt_button="<button onclick='alert(\"hello world\")'>click</button>";
+    }
+    else{
+        $receipt_button="<button type='button' value='/finance/cashier/view-receipt?receiptid=$model->receipt_id' id='Receipt2' style='float: right;' class='btn btn-success' onclick='location.href=this.value'><i class='fa fa-eye'></i> View Receipt</button>";                    
+    
+        //$receipt_button=Html::a('View Receipt', ['/finance/cashier/view-receipt?receiptid='.$model->receipt_id], ['target'=>'_blank','class'=>'btn btn-primary']);
+    }
+}
+else{
+    $receipt_button="";
+}
 $receipt_id=$model->receipt_id;
 //}
 $sweetalert = new Functions();
@@ -31,7 +51,7 @@ if($model->payment_status_id==0){
         $CancelClass='cancelled-hide';
         $BackClass='';
         $Func="LoadModal('Cancel Order of Payment','/finance/cancelop/create?op=".$model->orderofpayment_id."',true,500)";
-        $CancelButton='<button id="btnCancel" onclick="'.$Func.'" type="button" style="float: right" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel Order of Payment</button>';
+        $CancelButton=$allow_cancel ? '<button id="btnCancel" onclick="'.$Func.'" type="button" style="float: right;padding-right:5px" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel Order of Payment</button>' : "";
     }
     else{
         $CancelClass='cancelled-hide';
@@ -110,7 +130,7 @@ if($model->created_receipt == 0){
         'attributes' => [
             [
                     'group'=>true,
-                    'label'=>'Order of Payment Details '.$CancelButton,
+                    'label'=>'Order of Payment Details '.$receipt_button."      ".$CancelButton,
                     'rowOptions'=>['class'=>'info']
             ],
             [
@@ -144,7 +164,7 @@ if($model->created_receipt == 0){
                     [
                         'label'=>'Address',
                         'format'=>'raw',
-                        'value'=>$model->customer ? $model->customer->address : "",
+                        'value'=>$model->customer ? $model->customer->completeaddress : "",
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
@@ -242,7 +262,7 @@ if($model->created_receipt == 0){
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
                     'type'=>'primary',
-                    'before'=>$footer,
+                    'before'=>$model->receipt_id ? "" : $footer .$button_paymentitem,
                 ],
                 'columns' => $gridColumns,
                
@@ -254,3 +274,22 @@ if($model->created_receipt == 0){
        
     </div>
 </div>
+<script type="text/javascript">
+    function addReceipt(url,title){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       //var url = '/lab/sample/update?id='+id;
+        $(".modal-title").html(title);
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
+    
+    function addPaymentitem(url,title){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       //var url = '/lab/sample/update?id='+id;
+        $(".modal-title").html(title);
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
+</script>
