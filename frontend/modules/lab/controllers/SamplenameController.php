@@ -52,9 +52,18 @@ class SamplenameController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        /* return $this->render('view', [
             'model' => $this->findModel($id),
-        ]);
+        ]); */
+		if (Yii::$app->request->isAjax) {
+			return $this->renderAjax('_view', [
+				'model' => $this->findModel($id),
+			]);
+        } else {
+            return $this->render('view', [
+				'model' => $this->findModel($id),
+			]);
+        }
     }
 
     /**
@@ -66,13 +75,28 @@ class SamplenameController extends Controller
     {
         $model = new SampleName();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        /* if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->sample_name_id]);
         }
 
         return $this->render('create', [
             'model' => $model,
-        ]);
+        ]); */
+		if ($model->load(Yii::$app->request->post())) {
+			if($model->save()){
+				Yii::$app->session->setFlash('success', $model->sample_name." Successfully Created.");
+                return $this->redirect('/lab/samplename');
+
+            }
+		} elseif (Yii::$app->request->isAjax) {
+			return $this->renderAjax('_form', [
+				'model' => $model,
+			]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
@@ -86,13 +110,28 @@ class SamplenameController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        /* if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->sample_name_id]);
         }
 
         return $this->render('update', [
             'model' => $model,
-        ]);
+        ]); */
+		if ($model->load(Yii::$app->request->post())) {
+			if($model->save()){
+				Yii::$app->session->setFlash('success', $model->sample_name." Successfully Updated.");
+                return $this->redirect('/lab/samplename');
+
+            }
+		} elseif (Yii::$app->request->isAjax) {
+			return $this->renderAjax('_form', [
+				'model' => $model,
+			]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
@@ -104,9 +143,14 @@ class SamplenameController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        //$this->findModel($id)->delete();
+		
+		if($this->findModel($id)->delete()){
+			Yii::$app->session->setFlash('warning', 'Successfully Deleted.');
+			return $this->redirect(['index']);
+		} else {
+			Yii::$app->session->setFlash('error', 'Delete not successful.');
+		}
     }
 
     /**

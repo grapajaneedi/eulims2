@@ -23,7 +23,7 @@ class OpSearch extends Op
     public function rules()
     {
         return [
-            [['orderofpayment_id', 'rstl_id', 'collectiontype_id', 'customer_id', 'created_receipt'], 'integer'],
+            [['orderofpayment_id', 'rstl_id', 'collectiontype_id', 'customer_id', 'receipt_id'], 'integer'],
             [['transactionnum', 'order_date', 'purpose','createDateStart','createDateEnd','on_account'], 'safe'],
             [['createTimeRange'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
         ];
@@ -67,10 +67,10 @@ class OpSearch extends Op
         // grid filtering conditions
         $query->andFilterWhere([
             'orderofpayment_id' => $this->orderofpayment_id,
-            'rstl_id' => $this->rstl_id,
+            'rstl_id' => Yii::$app->user->identity->profile->rstl_id,
             'collectiontype_id' => $this->collectiontype_id,
             'customer_id' => $this->customer_id,
-            'created_receipt' => $this->created_receipt,
+            'receipt_id' => $this->receipt_id,
         ]);
 
         $query->andFilterWhere(['like', 'transactionnum', $this->transactionnum])

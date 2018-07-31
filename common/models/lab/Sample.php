@@ -13,7 +13,7 @@ use Yii;
  * @property int $package_id
  * @property string $package_rate
  * @property int $testcategory_id
- * @property int $sampletype_id
+ * @property int $sample_type_id
  * @property string $sample_code
  * @property string $samplename
  * @property string $description
@@ -25,7 +25,7 @@ use Yii;
  * @property int $active
  *
  * @property Analysis[] $analyses
- * @property Sampletype $sampletype
+ * @property Sampletype $sampleType
  * @property Request $request
  * @property Packagelist $package
  * @property Testcategory $testcategory
@@ -55,6 +55,7 @@ class Sample extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            //[['rstl_id', 'testcategory_id', 'sample_type_id', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
             [['rstl_id', 'sampletype_id', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
             [['rstl_id', 'pstcsample_id', 'package_id', 'testcategory_id', 'sampletype_id', 'request_id', 'sample_month', 'sample_year', 'active'], 'integer'],
             [['package_rate'], 'number'],
@@ -108,8 +109,10 @@ class Sample extends \yii\db\ActiveRecord
      */
     public function getSampletype()
     {
+        //return $this->hasOne(Sampletype::className(), ['sample_type_id' => 'sample_type_id']);
         return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletype_id']);
     }
+
 
     /**
      * @return \yii\db\ActiveQuery

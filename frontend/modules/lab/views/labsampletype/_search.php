@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'lab_id') ?>
 
-    <?= $form->field($model, 'sampletypeId') ?>
+    <?= $form->field($model, 'sampletype_id') ?>
 
     <?= $form->field($model, 'effective_date') ?>
 

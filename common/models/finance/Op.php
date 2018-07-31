@@ -17,11 +17,10 @@ use common\components\Functions;
  * @property string $total_amount
  * @property int $customer_id
  * @property string $purpose
- * @property int $created_receipt
- * @property int $allow_erratum
+ * @property int $receipt_id
  * @property string $invoice_number 
  * @property int $on_account 
- * 
+ * @property int $payment_status_id
  * @property Billing[] $billings
  * @property CancelledOp[] $cancelledOps
  * @property Collection $collection
@@ -58,8 +57,8 @@ class Op extends \yii\db\ActiveRecord
         return [
             [['transactionnum', 'collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose'], 'required'],
 	    ['RequestIds', 'required','message' => 'Please select Request.'],
-            [['rstl_id', 'collectiontype_id', 'payment_mode_id', 'customer_id', 'created_receipt', 'allow_erratum','on_account'], 'integer'],
-            [['order_date','RequestIds'], 'safe'],
+            [['rstl_id', 'collectiontype_id', 'payment_mode_id', 'customer_id', 'receipt_id','on_account','payment_status_id'], 'integer'],
+            [['order_date','RequestIds','payment_status_id'], 'safe'],
             [['total_amount'], 'number'],
             [['transactionnum','RequestIds','invoice_number'], 'string', 'max' => 100],
             [['purpose'], 'string', 'max' => 200],
@@ -85,7 +84,7 @@ class Op extends \yii\db\ActiveRecord
             'total_amount' => 'Total Amount',
             'customer_id' => 'Customer Name',
             'purpose' => 'Purpose',
-            'created_receipt' => 'Created Receipt',
+            'receipt_id' => 'Receipt',
             'allow_erratum' => 'Allow Erratum',
         ];
     }
@@ -101,9 +100,9 @@ class Op extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCollection()
+    public function getReceipt()
     {
-        return $this->hasOne(Collection::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+        return $this->hasOne(Receipt::className(), ['receipt_id' => 'receipt_id']);
     }
 
     /**

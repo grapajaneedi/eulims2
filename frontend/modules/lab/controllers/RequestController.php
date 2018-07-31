@@ -84,9 +84,13 @@ class RequestController extends Controller
                 'pagination' =>false,
              
         ]);
-       
+        if(\Yii::$app->user->can('view-all-rstl')){
+            $model=exRequest::findOne($id);
+        }else{
+            $model=$this->findRequestModel($id);
+        }
         return $this->render('view', [
-            'model' => exRequest::findOne($id),
+            'model' => $model,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'sampleDataProvider' => $sampleDataProvider,
@@ -193,6 +197,7 @@ class RequestController extends Controller
             'lab_id'=>$lab_id,
             'year'=>$year
         ])->one($Connection);
+        
         if(!$Requestcode){
             $Requestcode=new Requestcode();
         }
@@ -225,12 +230,12 @@ class RequestController extends Controller
         exit;
         */
         if($Request->save()){
-            $Transaction->commit();
             $Func=new Functions();
             $response=$Func->GenerateSampleCode($request_id);
             if($response){
                 $return="Success";
                 Yii::$app->session->setFlash('success', 'Request Reference # and Sample Code Successfully Generated!');
+                $Transaction->commit();
             }else{
                 $Transaction->rollback();
                 Yii::$app->session->setFlash('danger', 'Request Reference # and Sample Code Failed to Generate!');
@@ -268,7 +273,7 @@ class RequestController extends Controller
             $model->request_datetime=date("Y-m-d h:i:s");
             $model->report_due=date_format($date2,"Y-m-d");
             $model->created_at=date('U');
-            $model->rstl_id= $GLOBALS['rstl_id'];
+            $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
             $model->payment_type_id=1;
             $model->modeofrelease_ids='1';
             $model->discount_id=0;
@@ -360,7 +365,16 @@ class RequestController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
+     protected function findRequestModel($id)
+    {
+        $rstl_id=Yii::$app->user->identity->profile ? Yii::$app->user->identity->profile->rstl_id : -1;
+        $model=exRequest::find()->where(['request_id'=>$id,'rstl_id'=>$rstl_id])->one();
+        if ($model!== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested Request its either does not exist or you have no permission to view it.');
+        }
+    }
     //bergel cutara
     //contacted by function to return result to be displayed in select2
     public function actionRequestlist($q = null, $id = null) {

@@ -143,8 +143,8 @@ class PackagelistController extends Controller
             $sampleDataProvider = new ActiveDataProvider([
                     'query' => $samplesQuery,
                     'pagination' => [
-                        'pageSize' => 10,
-                    ],
+                        'pageSize' => 4,
+                               ],  
                  
             ]);
 
@@ -176,6 +176,7 @@ class PackagelistController extends Controller
                      $analysis->rstl_id = $GLOBALS['rstl_id'];
                      $analysis->test_id = 1;
                      $analysis->user_id = 1;
+                     $analysis->type_fee_id = 2;
                      $analysis->sample_type_id = (int) $post['Packagelist']['sample_type_id'];
                      $analysis->testcategory_id = (int) $post['Packagelist']['testcategory_id'];
                      $analysis->is_package = 1;

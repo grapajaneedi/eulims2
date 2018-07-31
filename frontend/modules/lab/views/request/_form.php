@@ -69,24 +69,14 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
     <?= $form->field($model, 'total')->hiddenInput(['maxlength' => true])->label(false) ?>
 <div class="row">
     <div class="col-md-6">
-     <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
+    <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(RequestType::find()->all(),'request_type_id','request_type'),
         'language' => 'en',
-        'options' => ['placeholder' => 'Select Laboratory','disabled'=>$disabled],
+        'options' => ['placeholder' => 'Select Purpose','disabled'=>$disabled],
         'pluginOptions' => [
             'allowClear' => true
         ],
-        'pluginEvents'=>[
-            "change" => "function() { 
-                if(this.value==3){//Metrology
-                   $('#div_met').show();
-                }else{
-                   $('#div_met').hide();
-                }
-
-            }",
-        ]
-    ])->label('Laboratory'); ?>
+    ])->label('Request Type'); ?>
     </div>
     <div class="col-md-6">
     <?= $form->field($model, 'request_datetime')->widget(DateTimePicker::classname(), [
@@ -115,7 +105,38 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
     ])->label('Request Date'); ?>
     </div>
 </div>
-<div class="panel panel-success" id="div_met" style="<?= $PanelStyle ?>">
+<div class="row">
+    <div class="col-md-6">
+     <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
+        'language' => 'en',
+        'options' => ['placeholder' => 'Select Laboratory','disabled'=>$disabled],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+        'pluginEvents'=>[
+            "change" => "function() { 
+                if(this.value==3){//Metrology
+                   $('#div_met').show();
+                }else{
+                   $('#div_met').hide();
+                }
+
+            }",
+        ]
+    ])->label('Laboratory'); ?>
+    </div>
+    <div class="col-md-6">
+        <label class="control-label">Payment Type</label>
+        <div class="col-md-12">
+        <?php echo $form->field($model, 'payment_type_id')->radioList(
+            ArrayHelper::map(Paymenttype::find()->all(),'payment_type_id','type'),
+            ['itemOptions' => ['disabled' => $disabled,'onchange'=>$js]]
+        )->label(false); ?>
+        </div>
+    </div>
+</div>
+<div class="panel panel-success" id="div_met" style="padding-bottom: 10px;<?= $PanelStyle ?>">
     <div class="panel-heading">Metrology Request Details</div>
     <div class="row" style="padding-left: 5px">
         <div class="col-md-6">
@@ -221,34 +242,6 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
             </div>
         </div>
     </div>
-    <div class="row" style="padding-left: 5px">
-        <div class="col-md-6">
-            <label class="control-label">Position</label>
-            <div class="col-md-12">
-            <?= $form->field($model, 'position')->textInput(['readonly' => $disabled])->label(false) ?>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <label class="control-label">Items Receive By</label>
-            <div class="col-md-12">
-            <?= $form->field($model, 'items_receive_by')->textInput(['readonly' => $disabled])->label(false) ?>
-            </div>
-        </div>
-    </div>
-    <div class="row" style="padding-left: 5px">
-        <div class="col-md-6">
-            <label class="control-label">Released By</label>
-            <div class="col-md-12">
-            <?= $form->field($model, 'released_by')->textInput(['readonly' => $disabled])->label(false) ?>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <label class="control-label">Received By</label>
-            <div class="col-md-12">
-            <?= $form->field($model, 'received_by')->textInput(['readonly' => $disabled])->label(false) ?>
-            </div>
-        </div>
-    </div>
 </div>
 <div class="row">
     <div class="col-md-6">
@@ -267,18 +260,6 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
                 </span>
             </div>
     </div>
-    
-    <div class="col-md-6">
-        <label class="control-label">Payment Type</label>
-        <div class="col-md-12">
-        <?php echo $form->field($model, 'payment_type_id')->radioList(
-            ArrayHelper::map(Paymenttype::find()->all(),'payment_type_id','type'),
-            ['itemOptions' => ['disabled' => $disabled,'onchange'=>$js]]
-        )->label(false); ?>
-        </div>
-    </div>
-</div>
-<div class="row">
     <div class="col-md-6">
      <?= $form->field($model, 'modeofreleaseids')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Modeofrelease::find()->all(),'modeofrelease_id','mode'),
@@ -297,6 +278,8 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
         ]
     ])->label('Mode of Release'); ?> 
     </div>
+</div>
+<div class="row">
     <div class="col-md-6">
     <?= $form->field($model, 'discount_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Discount::find()->all(),'discount_id','type'),
@@ -308,16 +291,20 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
         'pluginEvents'=>[
             "change" => 'function() { 
                 var discountid=this.value;
+                console.log(discountid);
                 $.post("/ajax/getdiscount/", {
                         discountid: discountid
                     }, function(result){
                     if(result){
-                       $("#request-discount").val(result.rate);
+                       $("#erequest-discount").val(result.rate);
                     }
                 });
             }
         ',]
     ])->label('Discount'); ?>   
+    </div>
+     <div class="col-md-6">
+    <?= $form->field($model, 'discount')->textInput(['maxlength' => true,'readonly'=>true,'style'=>'background-color: '.$Color])->label('Discount(%)') ?>
     </div>
 </div>
 <div class="row">
@@ -330,21 +317,6 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
             'allowClear' => true
         ],
     ])->label('Purpose'); ?>
-    </div>
-    <div class="col-md-6">
-    <?= $form->field($model, 'discount')->textInput(['maxlength' => true,'readonly'=>true,'style'=>'background-color: '.$Color])->label('Discount(%)') ?>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-    <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(RequestType::find()->all(),'request_type_id','request_type'),
-        'language' => 'en',
-        'options' => ['placeholder' => 'Select Purpose','disabled'=>$disabled],
-        'pluginOptions' => [
-            'allowClear' => true
-        ],
-    ])->label('Request Type'); ?>
     </div>
     <div class="col-md-6">
     <?= $form->field($model, 'report_due')->widget(DatePicker::classname(), [

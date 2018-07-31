@@ -103,10 +103,49 @@ class AnalysisController extends Controller
             $references = "Error getting reference";
             $fee = "Error getting fee";
         }
+
+        // return $this->renderPartial('_viewAnalysis', [
+        //      'request'=>$request,
+        //         'model'=>$model,
+        //        'sampleDataProvider' => $sampleDataProvider,
+        //        'analysisdataprovider'=> $analysisdataprovider,
+        //    ]);
+
         return Json::encode([
             'references'=>$references,
             'fee'=>$fee,
         ]);
+    }
+
+    public function actionGetmethod() {
+        $id = $_GET['id'];
+        // $model = new Tagging();
+        //  $samplesQuery = Sample::find()->where(['sample_id' => $id]);
+        //  $sampleDataProvider = new ActiveDataProvider([
+        //          'query' => $samplesQuery,
+        //          'pagination' => [
+        //              'pageSize' => 10,
+        //          ],
+              
+        //  ]);
+         $analysisQuery = Methodreference::find()->where(['method_reference_id' => $id]);
+        // $request = Request::find()->where(['request_id' =>42]);
+         $testnamemethoddataprovider = new ActiveDataProvider([
+                 'query' => $analysisQuery,
+                 'pagination' => [
+                     'pageSize' => 10,
+                 ],
+              
+         ]);
+
+        return $this->renderPartial('_methodreference', [
+              'testnamemethoddataprovider'=>$testnamemethoddataprovider,
+            //     'model'=>$model,
+            //    'sampleDataProvider' => $sampleDataProvider,
+            //    'analysisdataprovider'=> $analysisdataprovider,
+           ]);
+
+       
     }
 
 
@@ -195,7 +234,11 @@ class AnalysisController extends Controller
 
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $sampleDataProvider = new ActiveDataProvider([
-                'query' => $samplesQuery,   
+                'query' => $samplesQuery,
+                'pagination' => [
+                    'pageSize' => 4,
+                           ],  
+                   
         ]);
 
         $sample_count = $sampleDataProvider->getTotalCount();
@@ -230,8 +273,9 @@ class AnalysisController extends Controller
                     $analysis->cancelled = 0;
                     $analysis->pstcanalysis_id = (int) $post['Analysis']['pstcanalysis_id'];
                     $analysis->request_id = $request_id;
+                    $analysis->type_fee_id = 1;
                     $analysis->rstl_id = $GLOBALS['rstl_id'];
-                   $analysis->test_id = (int) $post['Analysis']['test_id'];
+                    $analysis->test_id = (int) $post['Analysis']['test_id'];
                    // $analysis->test_id = 1;
                     $analysis->sample_type_id = (int) $post['Analysis']['sample_type_id'];
                     $analysis->testcategory_id = 1;
@@ -302,7 +346,7 @@ class AnalysisController extends Controller
      {
          $testcategory = ArrayHelper::map(
             Sampletype::find()
-            ->leftJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletypeId=tbl_sampletype.sampletype_id')
+            ->leftJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletype_id=tbl_sampletype.sampletype_id')
             ->andWhere(['lab_id'=>$labId])
             ->all(), 'sampletype_id', 
             function($testcategory, $defaultValue) {
@@ -412,7 +456,7 @@ class AnalysisController extends Controller
                 $sql="UPDATE `tbl_request` SET `total`='$total' WHERE `request_id`=".$model->request_id;
                 $Command=$Connection->createCommand($sql);
                 $Command->execute();
-                Yii::$app->session->setFlash('success', 'Analysis Successfully Deleted'); 
+                Yii::$app->session->setFlash('warning', 'Analysis Successfully Deleted'); 
                 return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
             } else {
                 return $model->error();

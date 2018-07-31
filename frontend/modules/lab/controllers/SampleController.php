@@ -443,7 +443,7 @@ class SampleController extends Controller
                 {
                     //update samplecode to tbl_sample
                     $sample->sample_code = $samplecodeGenerated;
-                    $sample->save();
+                    $sample->save(false); //skip validation since only update of sample code is performed
                     $transaction->commit();
                     $return="true";
                 } else {

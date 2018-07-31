@@ -20,6 +20,7 @@ use common\models\lab\Sampletypetestname;
 use common\models\lab\Testnamemethod;
 use common\models\lab\Methodreference;
 use common\models\lab\Testname;
+use kartik\money\MaskMoney;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Analysis */
@@ -149,10 +150,6 @@ $this->registerJs($js);
     </div>
 </div>
 
-
-<div class="row">
-        <div class="col-sm-6">
-
         <?= $form->field($model, 'method')->widget(DepDrop::classname(), [
                 'type'=>DepDrop::TYPE_SELECT2,
                 'data'=>$test,
@@ -166,20 +163,22 @@ $this->registerJs($js);
                 ]
             ])
             ?>
-        </div>
-           <div class="col-sm-6">
-        <?= $form->field($model, 'references')->textInput(['readonly' => true]) ?>
-        </div>
-    </div>
-      
-    <div class="row">
+            <?= $form->field($model, 'references')->textArea(['readonly' => true]) ?>  
+            <?= $form->field($model, 'fee')->textInput(['readonly' => true, 'style'=>'text-align: right;font-weight:bold']) ?>
+         <div class="row">
         <div class="col-sm-6">
-              <?= $form->field($model, 'fee')->textInput(['readonly' => true]) ?>
+            
         </div>
            <div class="col-sm-6">
-        
+             
         </div>
     </div>
+       
+
+    <div class="row-fluid" id ="xyz">
+        <div>
+   
+   
 
 
     <div class="row" style="float: right;padding-right: 30px">
@@ -230,6 +229,7 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
             method: 'GET',
             data: {method_reference_id: id},
             success: function (data, textStatus, jqXHR) {
+                $('#xyz').html(response);
                 $('#analysis-references').val(data.references);
                 $('#analysis-fee').val(data.fee);
                 $('.image-loader').removeClass( \"img-loader\" );
@@ -248,4 +248,19 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
 ?>
 
 
-
+<!-- <script type="text/javascript">
+    $('#sample-test_id').on('change',function(e) {
+       e.preventDefault();
+         jQuery.ajax( {
+            type: 'GET',
+            url: '/lab/analysis/getmethod?id='+$(this).val(),
+            dataType: 'html',
+            success: function ( response ) {        
+              $("#xyz").html(response);
+            },
+            error: function ( xhr, ajaxOptions, thrownError ) {
+                alert( thrownError );
+            }
+        });
+    });
+    </script> -->
