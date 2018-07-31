@@ -9,13 +9,13 @@ use common\models\lab\Lab;
  /**
 * Bergel Cutara SRS-II
 */
-class Testreportspreadsheet extends Spreadsheet
+class Opspreadsheet extends Spreadsheet
 {
 
 	/**
      * @var location the data provider for the view. This property is required.
      */
-	public $location="";
+    public $location="";
     public $model; // model used for targeting specific cell for data placements
     public $template; //templates to be used
      //public $LOCATION =\Yii::$app->basePath.'\\modules\\reports\\modules\\lab\\templates\\';
@@ -27,7 +27,9 @@ class Testreportspreadsheet extends Spreadsheet
 
 	public function init(){
 		$this->location = \Yii::$app->basePath.'\\modules\\reports\\modules\\lab\\templates\\';
-	}
+                $this->loaddoc();
+                
+        }
 
     public function loaddoc()
     {
