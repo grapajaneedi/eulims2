@@ -57,14 +57,14 @@ class Sample extends \yii\db\ActiveRecord
         return [
             //[['rstl_id', 'testcategory_id', 'sample_type_id', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
             [['rstl_id', 'sampletype_id', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
-            [['rstl_id', 'pstcsample_id', 'package_id', 'testcategory_id', 'sample_type_id', 'request_id', 'sample_month', 'sample_year', 'active'], 'integer'],
+            [['rstl_id', 'pstcsample_id', 'package_id', 'testcategory_id', 'sampletype_id', 'request_id', 'sample_month', 'sample_year', 'active'], 'integer'],
             [['package_rate'], 'number'],
             [['description'], 'string'],
             [['sampling_date'], 'safe'],
             [['sample_code'], 'string', 'max' => 20],
             [['samplename'], 'string', 'max' => 50],
             [['remarks'], 'string', 'max' => 150],
-            [['sample_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sample_type_id' => 'sample_type_id']],
+            [['sampletype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletype_id' => 'sampletype_id']],
             [['request_id'], 'exist', 'skipOnError' => true, 'targetClass' => Request::className(), 'targetAttribute' => ['request_id' => 'request_id']],
             [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Packagelist::className(), 'targetAttribute' => ['package_id' => 'package_id']],
             [['testcategory_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testcategory::className(), 'targetAttribute' => ['testcategory_id' => 'testcategory_id']],
@@ -107,10 +107,10 @@ class Sample extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSampleType()
+    public function getSampletype()
     {
         //return $this->hasOne(Sampletype::className(), ['sample_type_id' => 'sample_type_id']);
-        return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sample_type_id']);
+        return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletype_id']);
     }
 
 
