@@ -94,8 +94,8 @@ class FeeController extends Controller
         $sampleDataProvider = new ActiveDataProvider([
                 'query' => $samplesQuery,
                 'pagination' => [
-                    'pageSize' => false,
-                ],
+                    'pageSize' => 4,
+                           ],  
              
         ]);
 
@@ -130,6 +130,7 @@ class FeeController extends Controller
                 $analysis->request_id = $request_id;
                 $analysis->rstl_id = $GLOBALS['rstl_id'];
                 $analysis->test_id = 1;
+                $analysis->type_fee_id = 3;
                 $analysis->user_id = 1;
                 $analysis->sample_type_id = 1;
                 $analysis->testcategory_id = 1;
