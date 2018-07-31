@@ -166,10 +166,12 @@ $this->params['breadcrumbs'][] = $this->title;
 			        	'label' => 'Address',
 			        	'format' => 'raw',
 			        	'value' => function($model, $key, $index, $widget) {
-			            	return $model->completeaddress;
-			            	//var_dump($model->completeaddress);
-			            	//return $model->address;
-			            	//return $model->
+			            	return $model->address;
+							/* if($model->barangay_id > 0){
+								return $model->completeaddress;
+							} else {
+								return $model->address;
+							} */
 			            },
 			            'headerOptions' => ['class' => 'text-center'],
 			            'contentOptions' => ['class' => 'text-center'],
@@ -243,6 +245,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	                    'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-book"></i> Customer Served</h3>',
 	                    'type'=>'primary',
 	                    'after'=>false,
+	                    'before'=>'<span class="text-danger"><h5>Note: Click to view request(s) per customer.</h5></span>',
 	                    //'before'=>$exportMenu,
 	                    //'headerOptions' => ['class' => 'text-center'],
 	                ],
