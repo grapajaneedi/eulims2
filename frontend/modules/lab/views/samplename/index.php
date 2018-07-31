@@ -8,7 +8,8 @@ use kartik\grid\GridView;
 /* @var $searchModel common\models\lab\SampleNameSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Sample Name';
+$this->title = 'Sample Template';
+$this->params['breadcrumbs'][] = ['label' => 'Lab', 'url' => ['/lab']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="sample-name-index">
@@ -19,12 +20,19 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
             <p>
-                <?= Html::a('Create Sample Name', ['create'], ['class' => 'btn btn-success']) ?>
+                <?php //echo Html::a('Create Sample Name', ['create'], ['class' => 'btn btn-success']) ?>
             </p>
 
             <?= GridView::widget([
+				'id' => 'samplename-grid',
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
+				'pjax'=>true,
+				'pjaxSettings' => [
+					'options' => [
+						'enablePushState' => false,
+					]
+				],
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
@@ -40,9 +48,58 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                     ],
 
-                    ['class' => 'yii\grid\ActionColumn'],
+                    //['class' => 'yii\grid\ActionColumn'],
+					[
+						'class' => 'kartik\grid\ActionColumn',
+						'template' => '{view} {update} {delete}',
+						//'dropdown' => false,
+						//'dropdownOptions' => ['class' => 'pull-right'],
+						/* 'urlCreator' => function ($action, $model, $key, $index) {
+							if ($action === 'delete') {
+								$url ='/lab/samplename/delete?id='.$model->sample_name_id;
+								return $url;
+							}
+							if ($action === 'view') {
+								$url ='/lab/samplename/view?id='.$model->sample_name_id;
+								return $url;
+							}
+							if ($action === 'update') {
+								$url ='/lab/samplename/update?id='.$model->sample_name_id;
+								return $url;
+							}
+						}, */
+						'headerOptions' => ['class' => 'kartik-sheet-style'],
+						'buttons' => [
+							'update' => function ($url, $model) {
+								return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', ['class'=>'btn btn-primary','title'=>'Update Sample Template','onclick' => 'updateSamplename('.$model->sample_name_id.')']);
+							},
+							'delete' => function ($url, $model) {
+								return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->sample_name."</b>?",'data-method'=>'post','class'=>'btn btn-danger','title'=>'Delete Sample Template','data-pjax'=>'0']);
+							},
+							'view' => function ($url, $model) {
+								return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '#', ['class'=>'btn btn-primary','title'=>'View Sample Template','onclick' => 'viewSamplename('.$model->sample_name_id.')']);
+							},
+						],
+					],
                 ],
             ]); ?>
             </div>
     </div>
 </div>
+<script type="text/javascript">
+    $('#samplename-grid tbody td').css('cursor', 'pointer');
+    function updateSamplename(id){
+		var url = '/lab/samplename/update?id='+id;
+		$('.modal-title').html('Update Sample Template');
+		$('#modal').modal('show')
+			.find('#modalContent')
+			.load(url);
+    }
+	function viewSamplename(id){
+		var url = '/lab/samplename/view?id='+id;
+		$('.modal-title').html('View Sample Template');
+		$('#modal').modal('show')
+			.find('#modalContent')
+			.load(url);
+    }
+</script>

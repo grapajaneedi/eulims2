@@ -58,3 +58,4 @@ frontend/modules/reports/modules/lab/views/statistic/samplestat_20180702.php
 frontend/modules/reports/modules/models/Requestextend_20180702.php
 frontend/modules/reports/views/default/index - Copy.php
 frontend/modules/reports/modules/lab/views/statistic/customer_20180710.php
+frontend/views/accomplishment/index.php
