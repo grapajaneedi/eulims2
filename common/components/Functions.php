@@ -189,12 +189,12 @@ class Functions extends Component{
                 $samplecode->lab_id = $lab->lab_id;
                 $samplecode->number = $samplecodeIncrement;
                 $samplecode->year = $year;
-                
+               
                 if($samplecode->save())
                 {
                     //update samplecode to tbl_sample
                     $sample->sample_code = $samplecodeGenerated;
-                    $sample->save();
+                    $sample->save(false);
                     //$transaction->commit();
                     $return="true";
                 } else {

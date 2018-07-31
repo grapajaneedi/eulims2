@@ -197,6 +197,7 @@ class RequestController extends Controller
             'lab_id'=>$lab_id,
             'year'=>$year
         ])->one($Connection);
+        
         if(!$Requestcode){
             $Requestcode=new Requestcode();
         }
@@ -229,12 +230,12 @@ class RequestController extends Controller
         exit;
         */
         if($Request->save()){
-            $Transaction->commit();
             $Func=new Functions();
             $response=$Func->GenerateSampleCode($request_id);
             if($response){
                 $return="Success";
                 Yii::$app->session->setFlash('success', 'Request Reference # and Sample Code Successfully Generated!');
+                $Transaction->commit();
             }else{
                 $Transaction->rollback();
                 Yii::$app->session->setFlash('danger', 'Request Reference # and Sample Code Failed to Generate!');
