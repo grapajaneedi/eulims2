@@ -234,7 +234,11 @@ class AnalysisController extends Controller
 
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $sampleDataProvider = new ActiveDataProvider([
-                'query' => $samplesQuery,   
+                'query' => $samplesQuery,
+                'pagination' => [
+                    'pageSize' => 4,
+                           ],  
+                   
         ]);
 
         $sample_count = $sampleDataProvider->getTotalCount();
@@ -269,8 +273,9 @@ class AnalysisController extends Controller
                     $analysis->cancelled = 0;
                     $analysis->pstcanalysis_id = (int) $post['Analysis']['pstcanalysis_id'];
                     $analysis->request_id = $request_id;
+                    $analysis->type_fee_id = 1;
                     $analysis->rstl_id = $GLOBALS['rstl_id'];
-                   $analysis->test_id = (int) $post['Analysis']['test_id'];
+                    $analysis->test_id = (int) $post['Analysis']['test_id'];
                    // $analysis->test_id = 1;
                     $analysis->sample_type_id = (int) $post['Analysis']['sample_type_id'];
                     $analysis->testcategory_id = 1;
@@ -451,7 +456,7 @@ class AnalysisController extends Controller
                 $sql="UPDATE `tbl_request` SET `total`='$total' WHERE `request_id`=".$model->request_id;
                 $Command=$Connection->createCommand($sql);
                 $Command->execute();
-                Yii::$app->session->setFlash('success', 'Analysis Successfully Deleted'); 
+                Yii::$app->session->setFlash('warning', 'Analysis Successfully Deleted'); 
                 return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
             } else {
                 return $model->error();
