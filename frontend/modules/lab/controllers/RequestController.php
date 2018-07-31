@@ -273,7 +273,7 @@ class RequestController extends Controller
             $model->request_datetime=date("Y-m-d h:i:s");
             $model->report_due=date_format($date2,"Y-m-d");
             $model->created_at=date('U');
-            $model->rstl_id= $GLOBALS['rstl_id'];
+            $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
             $model->payment_type_id=1;
             $model->modeofrelease_ids='1';
             $model->discount_id=0;

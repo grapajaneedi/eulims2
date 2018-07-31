@@ -56,7 +56,7 @@ class Sample extends \yii\db\ActiveRecord
     {
         return [
             //[['rstl_id', 'testcategory_id', 'sample_type_id', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
-            [['rstl_id', 'sample_type_id', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
+            [['rstl_id', 'sampletype_id', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
             [['rstl_id', 'pstcsample_id', 'package_id', 'testcategory_id', 'sample_type_id', 'request_id', 'sample_month', 'sample_year', 'active'], 'integer'],
             [['package_rate'], 'number'],
             [['description'], 'string'],
@@ -83,7 +83,7 @@ class Sample extends \yii\db\ActiveRecord
             'package_id' => 'Package ID',
             'package_rate' => 'Package Rate',
             'testcategory_id' => 'Test Category',
-            'sample_type_id' => 'Sample Type',
+            'sampletype_id' => 'Sample Type',
             'sample_code' => 'Sample Code',
             'samplename' => 'Sample Name',
             'description' => 'Description',
