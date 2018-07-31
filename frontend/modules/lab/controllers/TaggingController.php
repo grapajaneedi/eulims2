@@ -13,6 +13,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 use yii\data\ActiveDataProvider;
+use common\models\system\Profile;
 
 /**
  * TaggingController implements the CRUD actions for Tagging model.
@@ -41,9 +42,18 @@ class TaggingController extends Controller
     public function actionIndex()
     {
         $searchModel = new TaggingSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+       // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $model = new Sample();
         
+        $samplesQuery = Sample::find()->where(['sample_id' =>0]);
+        $dataProvider = new ActiveDataProvider([
+                'query' => $samplesQuery,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+             
+        ]);
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -151,10 +161,140 @@ class TaggingController extends Controller
         return $out;
     }
 
+    public function actionStartanalysis()
+    {
+        
+        if(isset($_POST['id'])){
+			$ids = $_POST['id'];
+            $analysisID = explode(",", $ids);
+            
+
+           
+			if ($ids){
+				foreach ($analysisID as $aid){
+                    
+                    $taggingmodel = Tagging::find()->where(['analysis_id'=>$aid])->one();
+
+                    if ($taggingmodel){
+
+                    }else{
+                        $tagging = new Tagging();
+                        $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+                        $tagging->user_id = $profile->user_id;
+                        $tagging->analysis_id = $aid;
+                        $tagging->start_date = date("Y-m-d");
+                        $tagging->end_date = "0000-00-00";
+                        $tagging->tagging_status_id = 1;
+                        $tagging->cancel_date = "0000-00-00";
+                        $tagging->reason = 1;
+                        $tagging->cancelled_by = 1;
+                        $tagging->disposed_date = "0000-00-00";
+                        $tagging->iso_accredited = 1;
+                        $tagging->save(false); 
+
+
+                       	
+                    }
+                 
+            }
+
+        }
+       
+
+            $analysis_id = $_POST['analysis_id'];
+            $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
+            $sampleDataProvider = new ActiveDataProvider([
+                    'query' => $samplesQuery,
+                    'pagination' => [
+                        'pageSize' => 10,
+                    ],
+                 
+            ]);
+            $analysisQuery = Analysis::find()->where(['sample_id' => $analysis_id]);      
+            $analysisdataprovider = new ActiveDataProvider([
+                    'query' => $analysisQuery,
+                    'pagination' => [
+                        'pageSize' => 10,
+                    ],
+                 
+            ]);
+            return $this->renderAjax('_viewAnalysis', [
+                'sampleDataProvider' => $sampleDataProvider,
+                'analysisdataprovider'=> $analysisdataprovider,
+             ]);
+         
+            
+        }
+            
+     }
+
+     public function actionCompletedanalysis()
+     {
+         
+         if(isset($_POST['id'])){
+             $ids = $_POST['id'];
+             $analysisID = explode(",", $ids);
+             $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+             if ($ids){
+                 foreach ($analysisID as $aid){
+                    $tagging= Tagging::find()->where(['analysis_id'=> $aid])->one();
+
+                    if ($tagging){
+                        $now = date('Y-m-d');
+                        $Connection= Yii::$app->labdb;
+                        $sql="UPDATE `tbl_tagging` SET `end_date`='$now', `tagging_status_id`='2' WHERE `tagging_id`=".$tagging->tagging_id;
+                        $Command=$Connection->createCommand($sql);
+                        $Command->execute();	
+                    }else{
+
+                    }
+
+                   	
+                         
+             }
+ 
+         }
+             //return here
+             // $sample_code = $_POST["samplecode"];
+             // echo CJSON::encode( array ('message'=>$message, 'sample_code'=>$sample_code));
+ 
+             $analysis_id = $_POST['analysis_id'];
+ 
+             $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
+             $sampleDataProvider = new ActiveDataProvider([
+                     'query' => $samplesQuery,
+                     'pagination' => [
+                         'pageSize' => 10,
+                     ],
+                  
+             ]);
+             $analysisQuery = Analysis::find()->where(['sample_id' => $analysis_id]);
+           
+             $analysisdataprovider = new ActiveDataProvider([
+                     'query' => $analysisQuery,
+                     'pagination' => [
+                         'pageSize' => 10,
+                     ],
+                  
+             ]);
+ 
+             return $this->renderAjax('_viewAnalysis', [
+                 // 'request'=>$request,
+                 // 'model'=>$model,
+                 'sampleDataProvider' => $sampleDataProvider,
+                 'analysisdataprovider'=> $analysisdataprovider,
+              ]);
+          
+             
+         }
+             
+      }
+
     public function actionGetanalysis()
 	{
 
         $id = $_GET['id'];
+        $analysis_id = $id;
         $model = new Tagging();
          $samplesQuery = Sample::find()->where(['sample_id' => $id]);
          $sampleDataProvider = new ActiveDataProvider([
@@ -174,56 +314,13 @@ class TaggingController extends Controller
               
          ]);
          
-         return $this->renderPartial('_viewAnalysis', [
-          //  'model' => $this->findModel(1),
-           //  'searchModel' => $searchModel,
-           //  'dataProvider' => $dataProvider,
-                'request'=>$request,
-               'model'=>$model,
-             'sampleDataProvider' => $sampleDataProvider,
-             'analysisdataprovider'=> $analysisdataprovider,
-           //  'trsamples'=>$sampledataProvider,
+         return $this->renderAjax('_viewAnalysis', [
+            'request'=>$request,
+            'model'=>$model,
+            'sampleDataProvider' => $sampleDataProvider,
+            'analysisdataprovider'=> $analysisdataprovider,
+            'analysis_id'=>$analysis_id
          ]);
-	// 	$barcode_data = explode(" ", $sample_code);
-	// 	$sample_id = $barcode_data[0];
-	// 	$analysiscount = Analysis::model()->findByAttributes(
-	// 					array('sampleCode'=>$barcode_data[2], 'sample_id'=>$barcode_data[0], 'analysisYear'=>$barcode_data[1])
-	// 					);
-	// 	$profile = Profiles::model()->findByAttributes(
-	// 				array('user_id'=>Yii::app()->user->id)
-	// 				);
-	// 	$lab= Lab::model()->findByPk($profile->labId);
-	// 	$s= Sample::model()->findByPk($barcode_data[0]);
-	// 	$request_id = $s->request_id;
-	// 			$sample=new CActiveDataProvider('Sample', 
-	// 					array(
-	// 						'criteria'=>array(
-	// 						'condition'=>"sampleCode='" .$barcode_data[2]."' 
-	// 						AND id='" .$barcode_data[0]."' AND sampleCode LIKE '".$lab->labCode."-%' ",	
-	// 					),
-	// 						)
-	// 					);		
-	// 			$analysis=new CActiveDataProvider('Analysis', 
-	// 				array(
-	// 					'criteria'=>array(
-	// 					'condition'=>"sampleCode='" .$barcode_data[2]."' AND sample_id='" .$barcode_data[0]."' AND package IN (1,0) AND sampleCode LIKE '".$lab->labCode."-%'",
-	// 						),
-    //                                              'pagination'=>false,
-	// 					)
-	// 				);
-	// 			$taggingcount = Tagging::model()->findAllByAttributes(
-	// 					array('status'=>2)
-	// 					);
-
-	// 			if ($analysis){
-	// 						$completed = count($taggingcount);
-
-	// 						echo    $this->renderPartial('_viewAnalysis', 
-	// 						array('analysis'=>$analysis, 'sample'=>$sample, 'sample_code'=>$sample_code, 'completed'=>$completed, 'sample_code'=>$sample_code, 'sample_id'=>$sample_id, 'request_id'=>$request_id)  ,true , true);
-					
-	// 			}else {
-	// 					echo "<div style='text-align:center;' class='alert alert-error'><i class='icon icon-warning-sign'>
-	// 					</i><font style='font-size:14px;'> Sample code not found. </font><br \>";
-	// 				  }
+	
 	 }
 }

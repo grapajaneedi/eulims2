@@ -119,11 +119,23 @@ $this->registerJs($js);
     <?= $form->field($model, 'is_package')->hiddenInput()->label(false)  ?>
 
     <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
-
+   
+    <?php 
+     $list =  Testname::find()
+     ->innerJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
+     ->Where(['tbl_sampletype_testname.sampletype_id'=>118])
+     ->asArray()
+     ->all();
+        
+        // echo "<pre>";
+        // var_dump( $list);
+        // echo "</pre>";
+        // exit;
+?>
     <div class="row">
     <div class="col-sm-6">
 
-   
+  
     <?= $form->field($model,'sample_type_id')->widget(Select2::classname(),[
                     'data' => $testcategory,
                     'theme' => Select2::THEME_KRAJEE,
@@ -133,6 +145,8 @@ $this->registerJs($js);
         ?>
     </div>
     <div class="col-sm-6">
+
+   
         <?= $form->field($model, 'test_id')->widget(DepDrop::classname(), [
             'type'=>DepDrop::TYPE_SELECT2,
             'data'=>$sampletype,
@@ -164,10 +178,10 @@ $this->registerJs($js);
             ])
             ?>
             <?= $form->field($model, 'references')->textArea(['readonly' => true]) ?>  
-            <?= $form->field($model, 'fee')->textInput(['readonly' => true, 'style'=>'text-align: right;font-weight:bold']) ?>
+          
          <div class="row">
         <div class="col-sm-6">
-            
+        <?= $form->field($model, 'fee')->textInput(['readonly' => true, 'style'=>'font-weight:bold']) ?>
         </div>
            <div class="col-sm-6">
              

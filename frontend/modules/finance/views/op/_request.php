@@ -117,14 +117,10 @@ $this->registerJs($js);
                 }
             }
         }); 
-        //$("#ext_billing-amount-disp").val(Total);
-        //
-      //  var keys = $('#grid').yiiGridView('getSelectedRows');
+       
         var keylist= dkeys.join();
-        
         $("#op-requestids").val(keylist);
-       // $("#ext_op-requestid_update").val(keys.join());
-        
+     
         var tot=parseFloat(Total);
         var total=CurrencyFormat(tot,2);
         $('#total').html(total);

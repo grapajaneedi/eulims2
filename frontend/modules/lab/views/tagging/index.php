@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = 'Sample Tagging';
 
 $this->registerJsFile("/js/services/services.js");
 $func=new Functions();
+
 ?>
 
 <div class="tagging-index">
@@ -107,14 +108,14 @@ $func=new Functions();
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],   
             ],
-            [
-                'header'=>'ISO accredited',
-                'hAlign'=>'center',
-                'format' => 'raw',
-                'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
+            // [
+            //     'header'=>'ISO accredited',
+            //     'hAlign'=>'center',
+            //     'format' => 'raw',
+            //     'enableSorting' => false,
+            //     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
                
-            ],
+            // ],
             [
                 'header'=>'Status',
                 'hAlign'=>'center',

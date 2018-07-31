@@ -22,6 +22,9 @@ use common\models\services\Testcategory;
 use common\models\services\TestcategorySearch;
 use yii\helpers\Json;
 
+use common\models\lab\Testname;
+use common\models\lab\Sampletype;
+
 /**
  * PackagelistController implements the CRUD actions for Packagelist model.
  */
@@ -138,7 +141,8 @@ class PackagelistController extends Controller
 
            
    }
-        
+
+
             $samplesQuery = Sample::find()->where(['request_id' => $id]);
             $sampleDataProvider = new ActiveDataProvider([
                     'query' => $samplesQuery,
@@ -269,16 +273,14 @@ class PackagelistController extends Controller
             $modelpackagelist =  Packagelist::findOne(['package_id'=>$id]);
             if(count($modelpackagelist)>0){
                 $rate = $modelpackagelist->rate;
-
                 $tet = $modelpackagelist->tests;
 
                 $t = explode(',', $tet);
                
-
                 foreach ($t as $test_id){
-                    $test_id =  Test::findOne(['test_id'=>$id]);
+                    $test_id =  Testname::findOne(['testname_id'=>$id]);
 
-                    $testname = $test_id->testname;
+                    $testname = $test_id->testName;
                     $newline = "\n";
                     $tests = $testname.$newline.$testname;
                 } 
@@ -299,14 +301,14 @@ class PackagelistController extends Controller
 
     protected function listTestcategory($labId)
     {
-        $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 
+        $testcategory = ArrayHelper::map(
+           Sampletype::find()
+           ->leftJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletype_id=tbl_sampletype.sampletype_id')
+           ->andWhere(['lab_id'=>$labId])
+           ->all(), 'sampletype_id', 
            function($testcategory, $defaultValue) {
-               return $testcategory->category_name;
+               return $testcategory->type;
         });
-
-        /*$testcategory = ArrayHelper::map(Testcategory::find()
-            ->where(['lab_id' => $labId])
-            ->all(), 'testcategory_id', 'category_name');*/
 
         return $testcategory;
     }
@@ -364,4 +366,47 @@ class PackagelistController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function listSampletype()
+    {
+        $sampletype = ArrayHelper::map(
+            Packagelist::find()
+            ->leftJoin('tbl_sampletype', 'tbl_sampletype.sampletype_id=tbl_packagelist.sample_type_id')
+            ->Where(['tbl_packagelist.sample_type_id'=>$id])
+            ->all(), 'package_id', 
+            function($sampletype, $defaultValue) {
+                return $sampletype->testName;
+        });
+
+        return $sampletype;
+    }
+
+    
+    public function actionListsampletype() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+          
+            $list =   Packagelist::find()
+            ->leftJoin('tbl_sampletype', 'tbl_sampletype.sampletype_id=tbl_packagelist.sample_type_id')
+            ->Where(['tbl_packagelist.sample_type_id'=>$id])
+            ->asArray()
+            ->all();
+            $selected  = null;
+            if ($id != null && count($list) > 0) {
+                $selected = '';
+                foreach ($list as $i => $sampletype) {
+                    $out[] = ['id' => $sampletype['package_id'], 'name' => $sampletype['name']];
+                    if ($i == 0) {
+                        $selected = $sampletype['package_id'];
+                    }
+                }
+                
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
+
 }

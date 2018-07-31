@@ -63,12 +63,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                     
                 },
-              //  'filterType' => GridView::FILTER_SELECT2,
-              //  'filter' => $sampetypelist,
-            //     'filterWidgetOptions' => [
-            //         'pluginOptions' => ['allowClear' => true],
-            //    ],
-            //    'filterInputOptions' => ['placeholder' => 'Sample Type', 'testcategory_id' => 'grid-products-search-category_type_id']
+               'filterType' => GridView::FILTER_SELECT2,
+               'filter' => $sampetypelist,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+               ],
+               'filterInputOptions' => ['placeholder' => 'Sample Type', 'testcategory_id' => 'grid-products-search-category_type_id']
             ],
             'effective_date',
             'added_by',
