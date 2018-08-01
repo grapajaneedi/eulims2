@@ -192,7 +192,7 @@ class CashierController extends \yii\web\Controller
             $session = Yii::$app->session;
              try {
                // $model->getDb()=$connection;
-                $model->rstl_id=$GLOBALS['rstl_id'];
+                $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
                 $model->terminal_id=$GLOBALS['terminal_id'];
                 $model->orderofpayment_id=$op_id;
                 $this->update_nextor($model->or_series_id,$connection);
