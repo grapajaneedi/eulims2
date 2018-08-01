@@ -88,7 +88,7 @@ if($model->created_receipt == 0){
 }
 */
 
-$print_button=Html::button('<span class="glyphicon glyphicon-download"></span> Print', ['value'=>'/finance/op/printview?id='.$model->orderofpayment_id, 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Print Report"),'onclick'=>"location.href=this.value"]);
+$print_button=Html::button('<span class="glyphicon glyphicon-download"></span> Print OP', ['value'=>'/finance/op/printview?id='.$model->orderofpayment_id, 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Print Report"),'onclick'=>"location.href=this.value"]);
 
 ?>
 <div class="orderofpayment-view" style="position:relative;">
@@ -133,7 +133,7 @@ $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> P
         'attributes' => [
             [
                     'group'=>true,
-                    'label'=>'Order of Payment Details '.$receipt_button."      ".$CancelButton,
+                    'label'=>'Order of Payment Details '.$CancelButton.$receipt_button,
                     'rowOptions'=>['class'=>'info']
             ],
             [
@@ -265,7 +265,7 @@ $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> P
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
                     'type'=>'primary',
-                    'before'=>$model->receipt_id ? $print_button : $footer .$button_paymentitem,
+                    'before'=>$model->receipt_id ? "" : $footer .$button_paymentitem ."&nbsp;&nbsp;&nbsp;".$print_button,
                 ],
                 'columns' => $gridColumns,
                

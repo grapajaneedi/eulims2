@@ -491,17 +491,10 @@ class OpController extends Controller
     {
       //find the record the testreport
       $op =$this->findModel($id);
-      $receipt_id=$op->receipt_id;
-      $receipt=$this->findModelReceipt($receipt_id);
       //echo $id;
       //exit;
       $exporter = new Opspreadsheet([
         'model'=>$op,
-        'model_receipt'=>$receipt,
         ]);
-      $exporter->loaddoc();
-      $exporter->send($op->transactionnum.'.xls');
-
-
     }
 }
