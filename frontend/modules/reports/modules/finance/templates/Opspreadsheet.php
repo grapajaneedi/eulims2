@@ -7,7 +7,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use common\models\lab\Lab;
 use common\components\NumbersToWords;
  /**
-* Bergel Cutara SRS-II
+* 
 */
 class Opspreadsheet extends Spreadsheet
 {
@@ -17,7 +17,6 @@ class Opspreadsheet extends Spreadsheet
      */
     public $location="";
     public $model; // model used for targeting specific cell for data placements
-    public $model_receipt; //templates to be used
      //public $LOCATION =\Yii::$app->basePath.'\\modules\\reports\\modules\\lab\\templates\\';
     /**
 
@@ -28,7 +27,8 @@ class Opspreadsheet extends Spreadsheet
 	public function init(){
 		$this->location = \Yii::$app->basePath.'\\modules\\reports\\modules\\finance\\templates\\';
                 $this->loaddoc();
-                
+              //  $exporter->loaddoc()
+                $this->send($this->model->transactionnum.'.xls');
         }
 
     public function loaddoc()
@@ -53,14 +53,24 @@ class Opspreadsheet extends Spreadsheet
         $this->getDocument()->getActiveSheet()->setCellValue('B18', $this->model->customer ? $this->model->customer->completeaddress : "");
         $this->getDocument()->getActiveSheet()->setCellValue('H20', $amountinwords);
         $this->getDocument()->getActiveSheet()->setCellValue('Q23', $this->model->total_amount);
+        $this->getDocument()->getActiveSheet()->setCellValue('H25', $this->model->purpose);
         
+        $cashier=$this->model->getPersonnel("CASHIER");
+        $this->getDocument()->getActiveSheet()->setCellValue('J11', $cashier ? $cashier['name'] : "");
+        $this->getDocument()->getActiveSheet()->setCellValue('J12', $cashier ? $cashier['designation'] : "");
         
+        $bank_account=$this->model->getBankAccount();
+        $this->getDocument()->getActiveSheet()->setCellValue('B32', $bank_account ? $bank_account['account_number'] : "");
+        $this->getDocument()->getActiveSheet()->setCellValue('H32', $bank_account ? $bank_account['bank_name'] : "");
         
+        $accountant=$this->model->getPersonnel("ACCOUNTANT");
+        $this->getDocument()->getActiveSheet()->setCellValue('M42', $accountant ? $accountant['name'] : "");
         
+        $reference=$this->model->getReferences($this->model);
+        $this->getDocument()->getActiveSheet()->setCellValue('H27', $reference ? $reference : "");
         
-        
-        
-        
+        $samples=$this->model->getSamples($this->model);
+        $this->getDocument()->getActiveSheet()->setCellValue('B26', $samples ? $samples : "");
         
         
         

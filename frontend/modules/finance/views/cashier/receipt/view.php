@@ -14,6 +14,9 @@ $this->params['breadcrumbs'][] = ['label' => 'Receipt', 'url' => ['/finance/cash
 $this->params['breadcrumbs'][] = 'View';
 $enable=false;
 $receiptid=$receipt->receipt_id;
+
+$print_button=Html::button('<span class="glyphicon glyphicon-download"></span> Print Receipt Excel', ['value'=>'/finance/cashier/printview?id='.$model->receipt_id, 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Print Report"),'onclick'=>"location.href=this.value"]);
+
 ?>
 <div class="receipt-view">
 
@@ -113,7 +116,7 @@ $receiptid=$receipt->receipt_id;
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Collection</h3>',
                     //remove add collection Html::button('<i class="glyphicon glyphicon-plus"></i> Add Collection', ['disabled'=>$enable, 'value' => Url::to(['add-collection','opid'=>$op_model->orderofpayment_id,'receiptid'=>$model->receipt_id]),'title'=>'Add Collection', 'onclick'=>'addCollection(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." 
-                    'type'=>'primary', 'before'=>Html::button('<i class="glyphicon glyphicon-print"></i> Print Receipt', ['disabled'=>$enable, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/reports/preview?url=/finance/cashier/print-or','or_number'=>$model->or_number]) . "';" ,'title'=>'Print Receipt',  'class' => 'btn btn-success']),
+                    'type'=>'primary', 'before'=>Html::button('<i class="glyphicon glyphicon-print"></i> Print Receipt', ['disabled'=>$enable, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/reports/preview?url=/finance/cashier/print-or','or_number'=>$model->or_number]) . "';" ,'title'=>'Print Receipt',  'class' => 'btn btn-success'])."&nbsp;&nbsp;&nbsp;".$print_button,
                     'after'=>false,
                 ],
                 'columns' => $gridColumns,

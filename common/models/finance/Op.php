@@ -5,6 +5,9 @@ namespace common\models\finance;
 use Yii;
 use common\models\lab\Customer;
 use common\components\Functions;
+use common\models\system\Profile;
+use common\models\finance\Bankaccount;
+use common\models\lab\Request;
 /**
  * This is the model class for table "tbl_orderofpayment".
  *
@@ -147,5 +150,55 @@ class Op extends \yii\db\ActiveRecord
     public function getCancelledOps()
     {
        return $this->hasMany(CancelledOp::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+    }
+    
+    public function getPersonnel($designation){
+        $personnel= Profile::find()->where(['rstl_id'=> Yii::$app->user->identity->profile->rstl_id,'designation'=>$designation])->one();
+     
+        return ([
+            'name'=>$personnel->fullname,
+            'designation'=>$personnel->designation_unit ? $personnel->designation_unit : $personnel->designation 
+        ]);
+    }
+    
+    public function getBankAccount(){
+        $bank_account= BankAccount::find()->where(['rstl_id'=> Yii::$app->user->identity->profile->rstl_id])->one();
+     
+        return ([
+            'bank_name'=>$bank_account->bank_name,
+            'account_number'=>$bank_account->account_number
+        ]);
+    }
+    
+    function getReferences($op){
+		
+        $references = '';
+        $count = count($op->paymentitems);
+        foreach($op->paymentitems as $item){
+                $references .= $item->details;
+                $references .= ($count > 1) ? ', ' : '';
+        }
+        return $references;
+    }
+    
+    function getSamples($op){
+        $samples = "";
+        $countSamples = count($op->paymentitems);
+        foreach ($op->paymentitems as $item){
+            $request = Request::findOne($item->request_id);
+            foreach($request->samples as $sample){
+                $samples .= $sample->samplename;
+                $samples .= '(';
+                $countAnalyses = count($sample->analyses);
+
+                foreach($sample->analyses as $analysis){
+                        $samples .= $analysis->testname;
+                        $samples .= ($countAnalyses > 1) ? ', ' : '';
+                }
+                $samples .= ')';
+                $samples .= ($countSamples > 1) ? ', ' : '';
+            }
+        }
+        return $samples;
     }
 }

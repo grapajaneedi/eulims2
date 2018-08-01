@@ -26,6 +26,13 @@ use yii\db\Query;
 use frontend\modules\finance\components\_class\OfficialReceipt;
 use common\models\finance\SoaReceipt;
 use frontend\modules\finance\components\models\Ext_Request as Request;
+use yii2tech\spreadsheet\Spreadsheet;
+use yii\data\ArrayDataProvider;
+
+use yii2tech\spreadsheet\Myspreadsheet;
+use frontend\modules\reports\modules\finance\templates\Orspreadsheet;
+
+
 class CashierController extends \yii\web\Controller
 {
     public function actionIndex()
@@ -688,5 +695,13 @@ class CashierController extends \yii\web\Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    public function actionPrintview($id)
+    {
+      $receipt =$this->findModelReceipt($id);
+      $exporter = new Orspreadsheet([
+        'model'=>$receipt,
+        ]);
     }
 }
