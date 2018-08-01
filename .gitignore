@@ -65,3 +65,4 @@ frontend/modules/lab/views/statistic/index.php
 frontend/modules/lab/views/sampleregister/index_bk.php
 frontend/modules/lab/models/Customerextend.php
 frontend/modules/reports/modules/models/Accomplishment.php
+frontend/modules/reports/modules/lab/views/accomplishment/samplestat.php

@@ -266,7 +266,14 @@ class SampleController extends Controller
 			Yii::$app->session->setFlash('error', "Cancel not allowed.\nOrder of Payment already created for\n".$model->request->request_ref_num.".");
 			return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
 		} elseif($checkForPayment > 1 && $model->active > 0) {
-            return $this->actionCancelwithOP($model->request_id);
+            $cancelSample = $this->actionCancelwithOP($model->request_id);
+            if($cancelSample){
+                Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
+                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+            } else {
+                Yii::$app->session->setFlash('error',"Cancel not successful.");
+                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+            }
         } else {
             $transaction = $connection->beginTransaction();
             if (Yii::$app->request->post()){
@@ -348,7 +355,7 @@ class SampleController extends Controller
                         }
                     } 
                     $transaction->commit();
-                    Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
+                    //Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
                     //return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
                     return true;
                 } else {
