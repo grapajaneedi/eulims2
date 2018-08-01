@@ -94,7 +94,7 @@ class FeeController extends Controller
         $sampleDataProvider = new ActiveDataProvider([
                 'query' => $samplesQuery,
                 'pagination' => [
-                    'pageSize' => 4,
+                    'pageSize' => false,
                            ],  
              
         ]);
