@@ -259,79 +259,56 @@ class SampleController extends Controller
         $model = $this->findModel($id);
         $sampleId = (int) $id;
         $analyses = Analysis::find()->where('sample_id =:sampleId', [':sampleId'=>$sampleId])->all();
-		
-        $checkForPayment = $model->payment_status_id;
-		
+		$connection= Yii::$app->labdb;
+        $checkForPayment = $model->request->payment_status_id;
+
 		if($checkForPayment < 2){
 			Yii::$app->session->setFlash('error', "Cancel not allowed.\nOrder of Payment already created for\n".$model->request->request_ref_num.".");
 			return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-		} else {
-            if($checkForPayment > 1){
-                if(count($analyses) > 0)
-                {
-                    foreach ($analyses as $analysis) {
-                        $analyses->cancelled = 1;
-                        $analyses->update(false); // skip validation no user input is involved
-                    }
-
-                    $model->remarks = 'Request has been cancelled.';
-                    $model->active = 0;
-                    if ($model->update() !== false) {
-                        Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
-                        return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-                    } else {
-                        $model->error();
-                        return false;
-                    }
+		} elseif($checkForPayment > 1 && $model->active > 0) {
+            return $this->actionCancelwithOP($model->request_id);
+        } else {
+            $transaction = $connection->beginTransaction();
+            if (Yii::$app->request->post()){
+                if(trim($_POST['Sample']['remarks']) == ""){
+                    Yii::$app->session->setFlash('error', "Remarks should not be empty.");
+                    return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
                 } else {
-                    $model->remarks = $_POST['Sample']['remarks'];
-                    $model->active = 0;
-
-                    if ($model->update() !== false) {
-                        Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
-                        return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+                    if(count($analyses) > 0)
+                    {
+                        $model->remarks = $_POST['Sample']['remarks'];
+                        $model->active = 0;
+                        if ($model->update(false) !== false) {
+                            foreach ($analyses as $analysis) {
+                                $analysis->cancelled = 1;
+                                $analysis->update(false); // skip validation no user input is involved
+                            }
+                            $transaction->commit();
+                            Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
+                            return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+                        } else {
+                            $transaction->rollBack();
+                            $model->getErrors();
+                            return false;
+                        }
                     } else {
-                        $model->error();
-                        return false;
+
+                        $model->remarks = $_POST['Sample']['remarks'];
+                        $model->active = 0;
+
+                        if ($model->update(false) !== false) {
+                            $transaction->commit();
+                            Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
+                            return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+                        } else {
+                            $transaction->rollBack();
+                            $model->getErrors();
+                            return false;
+                        }
                     }
                 }
-            } elseif (Yii::$app->request->post()){
-				if(trim($_POST['Sample']['remarks']) == ""){
-					Yii::$app->session->setFlash('error', "Remarks should not be empty.");
-					return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-				} else {
-					if(count($analyses) > 0)
-					{
-						foreach ($analyses as $analysis) {
-							$analyses->cancelled = 1;
-							$analyses->update(false); // skip validation no user input is involved
-						}
 
-						$model->remarks = $_POST['Sample']['remarks'];
-						$model->active = 0;
-						if ($model->update() !== false) {
-							Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
-							return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-						} else {
-							$model->error();
-							return false;
-						}
-					} else {
-
-						$model->remarks = $_POST['Sample']['remarks'];
-						$model->active = 0;
-
-						if ($model->update() !== false) {
-							Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
-							return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-						} else {
-							$model->error();
-							return false;
-						}
-					}
-				}
-
-			} elseif (Yii::$app->request->isAjax) {
+            } elseif (Yii::$app->request->isAjax) {
 				return $this->renderAjax('_cancel', [
 					'model' => $model,
 				]);
@@ -341,6 +318,48 @@ class SampleController extends Controller
 				]);
 			}
 		}
+    }
+
+    /**
+     * Cancel an existing Sample model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionCancelwithOP($requestId)
+    {
+        $samples = Sample::find()->where('request_id =:requestId', [':requestId'=>$requestId])->all();
+        $connection= Yii::$app->labdb;
+        $request = Request::findOne($requestId);
+        $checkForPayment = $request->payment_status_id;
+
+        if($checkForPayment > 1 && $request->status_id > 0){
+            $transaction = $connection->beginTransaction();
+            foreach ($samples as $sample) {
+                $sample->remarks = 'Request has been cancelled.';
+                $sample->active = 0;
+
+                if ($sample->update(false) !== false) {
+                    $analyses = Analysis::find()->where('sample_id =:sampleId', [':sampleId'=>$sample->sample_id])->all();
+                    if(count($analyses) > 0)
+                    {
+                        foreach ($analyses as $analysis) {
+                            $analysis->cancelled = 1;
+                            $analysis->update(false); // skip validation no user input is involved
+                        }
+                    } 
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
+                    //return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+                    return true;
+                } else {
+                    $transaction->rollBack();
+                    $sample->getErrors();
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
     }
 
     /**

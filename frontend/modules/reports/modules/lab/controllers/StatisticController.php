@@ -29,10 +29,10 @@ class StatisticController extends Controller
     public function actionSamples()
     {
     	$model = new Requestextend;
+        $rstlId = Yii::$app->user->identity->profile->rstl_id;
 		if (Yii::$app->request->get())
 		{
 			$labId = (int) Yii::$app->request->get('lab_id');
-            $rstlId = Yii::$app->user->identity->profile->rstl_id;
 			
 			if($this->checkValidDate(Yii::$app->request->get('from_date')) == true)
 			{
