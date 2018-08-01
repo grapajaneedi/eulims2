@@ -49,11 +49,12 @@ $(".kv-row-checkbox").click(function(){
    var keys = $('#analysis-grid').yiiGridView('getSelectedRows');
    var keylist= keys.join();
    $("#sample_ids").val(keylist);
-   $("#sample_ids").val(keylist);
+   
 });    
 $(".select-on-check-all").change(function(){
  var keys = $('#analysis-grid').yiiGridView('getSelectedRows');
  var keylist= keys.join();
+ $("#sample_ids").val(keylist);
 
 });
 
@@ -230,10 +231,13 @@ setTimeout(function(){
                 ],
             
         ],
-    ]); ?>
+    ]); 
+    
+ 
+    ?>
 
 <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>'hidden'], ['readonly' => true]) ?>
-<?= Html::textInput('aid', 44, ['class' => 'form-control', 'id'=>'aid', 'type'=>'hidden'], ['readonly' => true]) ?>
+<?= Html::textInput('aid', $analysis_id, ['class' => 'form-control', 'id'=>'aid', 'type'=>'hidden'], ['readonly' => true]) ?>
    
 
 <script type="text/javascript">

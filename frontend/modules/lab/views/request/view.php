@@ -21,6 +21,21 @@ $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $rstlID=$GLOBALS['rstl_id'];
 $Year=date('Y', strtotime($model->request_datetime));
+
+
+/////check if may op
+
+$paymentitem= Paymentitem::find()->where(['request_id'=> $model->request_id])->one();
+
+if ($paymentitem){
+    $analysistemplate = "";
+}else{
+    $analysistemplate = "{delete}{update}";
+}
+
+
+
+
 // /lab/request/saverequestransaction
 $js=<<<SCRIPT
     $("#btnSaveRequest").click(function(){
@@ -503,7 +518,7 @@ $UnpaidBalance=number_format($UnpaidBalance,2);
                 ],
                 ['class' => 'kartik\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width: 8.7%'],
-                'template' => '{update}{delete}',
+                'template' => $analysistemplate,
                 'buttons'=>[
                     'update'=>function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/analysis/update','id'=>$model->analysis_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "Update Analysis <font color='Blue'></font>")]);
