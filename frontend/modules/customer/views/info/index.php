@@ -14,14 +14,14 @@ $func= new Functions();
 $this->title = 'Customers';
 $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile("/js/customer/customer.js");
+$display=false;
+if(Yii::$app->user->can('allow-create-op')){
+    $display=true;
+}
 ?>
 <!-- <div id="map" style="width: auto;height: 400px;"></div>  -->
 <div class="customer-index">
-    <div>
-        <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Customer', ['value'=>'/customer/info/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Customer"),'name'=>'Create New Customer']); ?>    
-        <?= Html::button('<span class="glyphicon glyphicon-cloud"></span> Sync Customer', ['value'=>'/customer/info/sync', 'class' => 'btn btn-success btn-modal pull-right','title' => Yii::t('app', "Sync Customer in cloud"),'name'=>'Sync customer']); ?>
-    </div>
-    <br/>
+   
     <div class="table-responsive">
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
@@ -29,6 +29,12 @@ $this->registerJsFile("/js/customer/customer.js");
             'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+            ],
+            'panel' => [
+                'type' => GridView::TYPE_PRIMARY,
+                // 'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Customer', ['value'=>'/customer/info/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Customer"),'name'=>'Create New Customer']),
+                'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+                'before'=>"<button type='button' onclick='LoadModal(\"Create New Customer\",\"/customer/info/create\",true,\"900\")' class=\"btn btn-success\"><i class=\"fa fa-plus-o\"></i> Create Customer</button>",
             ],
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
