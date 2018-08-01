@@ -228,9 +228,9 @@ if($model->created_receipt == 0){
                     'editableOptions' => [
                         'header' => 'Amount', 
                         'size'=>'s',
-                        'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+                        'inputType' => \kartik\editable\Editable::INPUT_MONEY,
                         'options' => [
-                            'pluginOptions' => ['min' => 0]
+                            'pluginOptions' => ['min' => 1]
                         ],
                         'placement'  => 'left',
                         'formOptions'=>['action' => ['/finance/op/updateamount']],
