@@ -63,7 +63,7 @@ class Analysis extends \yii\db\ActiveRecord
             [['sample_code'], 'string', 'max' => 20],
             [['testname'], 'string', 'max' => 200],
             [['method'], 'string', 'max' => 150],
-            [['references'], 'string', 'max' => 100],
+            [['references'], 'string', 'max' => 500],
          //   [['test_id'], 'exist', 'skipOnError' => true, 'targetClass' => Test::className(), 'targetAttribute' => ['test_id' => 'test_id']],
             [['sample_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sample::className(), 'targetAttribute' => ['sample_id' => 'sample_id']],
             [['request_id'], 'exist', 'skipOnError' => true, 'targetClass' => Request::className(), 'targetAttribute' => ['request_id' => 'request_id']],
