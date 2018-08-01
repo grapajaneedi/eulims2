@@ -228,7 +228,7 @@ if($model->created_receipt == 0){
                     'editableOptions' => [
                         'header' => 'Amount', 
                         'size'=>'s',
-                        'inputType' => \kartik\editable\Editable::INPUT_MONEY,
+                        'inputType' => \kartik\editable\Editable::INPUT_TEXT,
                         'options' => [
                             'pluginOptions' => ['min' => 1]
                         ],
