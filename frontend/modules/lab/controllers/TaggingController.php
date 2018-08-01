@@ -180,12 +180,12 @@ class TaggingController extends Controller
                         $tagging->user_id = $profile->user_id;
                         $tagging->analysis_id = $aid;
                         $tagging->start_date = date("Y-m-d");
-                        $tagging->end_date = "0000-00-00";
+                       // $tagging->end_date = "0000-00-00";
                         $tagging->tagging_status_id = 1;
-                        $tagging->cancel_date = "0000-00-00";
+                     //   $tagging->cancel_date = "0000-00-00";
                         $tagging->reason = 1;
                         $tagging->cancelled_by = 1;
-                        $tagging->disposed_date = "0000-00-00";
+                    //    $tagging->disposed_date = "0000-00-00";
                         $tagging->iso_accredited = 1;
                         $tagging->save(false); 
 
@@ -251,13 +251,14 @@ class TaggingController extends Controller
                         $Command=$Connection->createCommand($sql);
                         $Command->execute();
                         
+                        $sample= Sample::find()->where(['sample_id'=> $aid])->one();
 
                        // $count=count($data);
                         
                         // $taggingcount= Tagging::find()
-                        // ->leftJoin('tbl_analysis', 'tbl_analysis.sample_id=tbl_sample.sample_id')
-                        // ->leftJoin('tbl_tagging', 'tbl_sample.analysis_id=tbl_analysis.analysis_id')
-                        // ->where(['tagging_status_id'=>2])
+                        // ->leftJoin('tbl_analysis', 'tbl_tagging.analysis_id=tbl_analysis.analysis_id')
+                        // ->leftJoin('tbl_sample', 'tbl_analysis.sample_id=tbl_sample.sample_id')    
+                        // ->where(['tagging_status_id'=>2, 'tbl_sample.sample_id'=>$analysis->sample_id ])
                         // ->all();
 
                         // $counttag = count($taggingcount);
