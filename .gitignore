@@ -59,3 +59,9 @@ frontend/modules/reports/modules/models/Requestextend_20180702.php
 frontend/modules/reports/views/default/index - Copy.php
 frontend/modules/reports/modules/lab/views/statistic/customer_20180710.php
 frontend/views/accomplishment/index.php
+frontend/modules/lab/controllers/SampleController_20180730.php
+frontend/modules/lab/controllers/SampleregisterController_20180626.php
+frontend/modules/lab/views/statistic/index.php
+frontend/modules/lab/views/sampleregister/index_bk.php
+frontend/modules/lab/models/Customerextend.php
+frontend/modules/reports/modules/models/Accomplishment.php

@@ -21,8 +21,10 @@ class Requestextend extends Request
     {
         $function = new Functions();
         $connection = Yii::$app->labdb;
+        $rstlId = Yii::$app->user->identity->profile->rstl_id;
+
         $query = $function->ExecuteStoredProcedureOne("spSummaryforSamples(:rstlId,:labId,:requestDate,:startDate,:endDate,:summaryType,:requestType)", 
-            [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$labId,':requestDate'=>$requestDate,':startDate'=>$startDate,':endDate'=>$endDate,':summaryType'=>$summaryType,':requestType'=>$requestType], $connection);
+            [':rstlId'=>$rstlId,':labId'=>$labId,':requestDate'=>$requestDate,':startDate'=>$startDate,':endDate'=>$endDate,':summaryType'=>$summaryType,':requestType'=>$requestType], $connection);
         return $query['Counter'];
     }
 
@@ -30,8 +32,10 @@ class Requestextend extends Request
     {
         $function = new Functions();
         $connection = Yii::$app->labdb;
+        $rstlId = Yii::$app->user->identity->profile->rstl_id;
+
         $query = $function->ExecuteStoredProcedureOne("spAccomplishmentReport(:rstlId,:labId,:requestDate,:startDate,:endDate,:generateType,:requestType)", 
-            [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$labId,':requestDate'=>$requestDate,':startDate'=>$startDate,':endDate'=>$endDate,':generateType'=>$generateType,':requestType'=>$requestType], $connection);
+            [':rstlId'=>$rstlId,':labId'=>$labId,':requestDate'=>$requestDate,':startDate'=>$startDate,':endDate'=>$endDate,':generateType'=>$generateType,':requestType'=>$requestType], $connection);
         return $query['Counter'];
     }
 }

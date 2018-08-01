@@ -56,7 +56,7 @@ class SampleregisterController extends Controller
         //echo "</pre>";
 
         $query = Analysis::find();
-        $query->joinWith(['sample','sample.request','taggings']);
+        $query->joinWith(['sample','sample.request','tagging']);
         //$query->joinWith(['sample','sample.request','taggings'], true, 'INNER JOIN');
         //$query->joinType('INNER JOIN');
         $query->orderBy([

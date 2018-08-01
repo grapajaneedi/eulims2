@@ -204,7 +204,7 @@ Modal::end();*/
             'locale'=>['format'=>'Y-m-d'],
         ]            
     ]);
-    $exportmenu =  ExportMenu::FORMAT_EXCEL_X => [
+  /*  echo ExportMenu::FORMAT_EXCEL_X => [
             'label' => 'Excel 2007+',
             //'icon' => $isFa ? 'file-excel-o' : 'floppy-remove',
             'iconOptions' => ['class' => 'text-success'],
@@ -214,7 +214,7 @@ Modal::end();*/
             'mime' => 'application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'extension' => 'xlsx',
             'writer' => ExportMenu::FORMAT_EXCEL_X
-        ];
+        ];*/
 
 echo GridView::widget([
     'dataProvider'=>$dataProvider,
@@ -228,7 +228,7 @@ echo GridView::widget([
         'type'=>'primary', 
         'heading'=>'Sample Register',
         //'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-plus"></i> Generate Samplecode', ['value' => Url::to(['sample/generatesamplecode','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
-        'before'=>$daterange1." ".$filterbutton." ".$exportmenu,
+        'before'=>$daterange1." ".$filterbutton,
     ],
     'exportConfig' => [
         //GridView::CSV => ['label' => 'Save as CSV'],
@@ -259,7 +259,7 @@ echo GridView::widget([
             'showPageSummary' => true,
             'showFooter' => true,
             'showCaption' => true,
-            'filename' => $this->title,
+            //'filename' => $this->title,
             'alertMsg' => 'The EXCEL export file will be generated for download.',
             'options' => ['title' => 'Microsoft Excel 95+'],
             'mime' => 'application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -272,7 +272,7 @@ echo GridView::widget([
         ],
     ],
     'columns'=>[
-        ['class'=>'kartik\grid\SerialColumn'],
+        //['class'=>'kartik\grid\SerialColumn'],
         [
             'attribute'=>'sample_code', 
             //'width'=>'310px',
@@ -401,7 +401,7 @@ echo GridView::widget([
             //'attribute' => 'request.report_due',
             'label' => 'Date Analysis Started',
             'format' => 'raw',
-            'value' => 'taggings.start_date',
+            'value' => 'tagging.start_date',
             //'value' => function($model, $key, $index, $widget){
             	//return Yii::$app->formatter->asDate($model->taggings->start_date, 'php:Y-m-d');
             	//return $model->taggings->analysis_id;
@@ -421,7 +421,7 @@ echo GridView::widget([
             //'attribute' => 'request.report_due',
             'label' => 'Analysis Due Date',
             'format' => 'raw',
-            'value' => 'taggings.end_date',
+            'value' => 'tagging.end_date',
             //'value' => function($model, $key, $index, $widget){
             	//return Yii::$app->formatter->asDate($model->taggings->end_date, 'php:Y-m-d');
             	//return $model->taggings->analysis_id;
@@ -447,7 +447,7 @@ echo GridView::widget([
             	//echo "</pre>";
             	//return Analysis::findOne($model->analysis_id)->taggings->disposed_date;
             //},
-            'value'=>'taggings.disposed_date',
+            'value'=>'tagging.disposed_date',
             // 'value' => function($data){
             // 	echo "<pre>";
             // 	print_r($data->taggings->start_date);
@@ -458,10 +458,10 @@ echo GridView::widget([
             //'attribute'=>'testname',
             //'pageSummary'=>'Page Summary',
             //'pageSummaryOptions'=>['class'=>'text-right text-warning'],
-            //'attribute' => 'request.report_due',
-            'label' => 'Manner of Disposal',
+            'attribute' => 'tagging.manner_disposal',
+            //'label' => 'Manner of Disposal',
             'format' => 'raw',
-            'value' => 'taggings.reason',
+            'value' => 'tagging.manner_disposal',
             //'value' => function($model, $key, $index, $widget){
             	//return Yii::$app->formatter->asDate($model->taggings->end_date, 'php:Y-m-d');
             	//return $model->taggings->analysis_id;
@@ -503,7 +503,7 @@ echo GridView::widget([
             // 	print_r($data->taggings->start_date);
             // 	echo "</pre>";
                 //return $model->taggings->user_id;
-                $tagging = $model->taggings;
+                $tagging = $model->tagging;
                 return SampleregisterUser::getUser($tagging['user_id']);
                 //return $tagging['user_id'];
                 

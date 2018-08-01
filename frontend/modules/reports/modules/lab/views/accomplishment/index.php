@@ -87,8 +87,9 @@ $pdfFooter="{PAGENO}";
 		    	</div>
 		    </div>
 		    <?php ActiveForm::end(); ?>
-		    <br>
+       </div>
 		    <div class="row">
+		  
 		    <?php //\yii\widgets\Pjax::begin(); ?>
         	<?php
         		$startDate = Yii::$app->request->get('from_date', date('Y-01-01'));
@@ -296,10 +297,6 @@ $pdfFooter="{PAGENO}";
 		                    //'headerOptions' => ['class' => 'text-center'],
 		                ],
 				        'exportConfig' => [
-					    	//GridView::CSV => [],
-					    	//GridView::HTML => [],
-					   		//GridView::PDF => [],
-					    	//GridView::EXCEL => [],
 					    	GridView::PDF => [
 				                'filename' => $labCode.'-Accomplishment_Report('.$startDate.'_'.$endDate.')',
 				                'alertMsg'        => 'The PDF export file will be generated for download.',
@@ -351,14 +348,17 @@ $pdfFooter="{PAGENO}";
 				        'showConfirmAlert'=>false,
 				        'target'=>GridView::TARGET_SELF,
 				    ],
+				    'tableOptions'=>['id'=>'myTable'],
 				    ]);
         	?>
         	<?php //\yii\widgets\Pjax::end(); ?>
         	</div>
+        
+
         </div>
 </div>
-</div>
 <script type="text/javascript">
+
     function reloadGrid(){
     	var lab_id = 1;
 		var fromdate = <?= "'".date('Y-01-01')."'" ?>;

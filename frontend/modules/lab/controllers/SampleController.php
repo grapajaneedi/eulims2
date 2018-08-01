@@ -97,6 +97,7 @@ class SampleController extends Controller
         $request = $this->findRequest($requestId);
         $labId = $request->lab_id;
         $sampletype = $this->listSampletype($labId);
+        $rstlId = Yii::$app->user->identity->profile->rstl_id;
 
         if ($model->load(Yii::$app->request->post())) {
             if(isset($_POST['Sample']['sampling_date'])){
@@ -105,7 +106,7 @@ class SampleController extends Controller
                 $model->sampling_date = date('Y-m-d H:i:s');
             }
 
-            $model->rstl_id = $GLOBALS['rstl_id'];
+            $model->rstl_id = $rstlId;
             //$model->sample_code = 0;
             $model->request_id = $request->request_id;
             $model->sample_month = date_format(date_create($request->request_datetime),'m');
@@ -134,7 +135,7 @@ class SampleController extends Controller
                     } else {
                         $sample->sampling_date = date('Y-m-d H:i:s');
                     }
-                    $sample->rstl_id = $GLOBALS['rstl_id'];
+                    $sample->rstl_id = $rstlId;
                     //$sample->sample_code = 0;
                     //$sample->testcategory_id = (int) $_POST['Sample']['testcategory_id'];
                     //$sample->testcategory_id = 0;
@@ -259,14 +260,42 @@ class SampleController extends Controller
         $sampleId = (int) $id;
         $analyses = Analysis::find()->where('sample_id =:sampleId', [':sampleId'=>$sampleId])->all();
 		
+        $checkForPayment = $model->payment_status_id;
 		
-		$checkForPayment = Paymentitem::find()->where('request_id =:requestId',[':requestId'=>$model->request_id])->one();
-		
-		if(count($checkForPayment) > 0){
+		if($checkForPayment < 2){
 			Yii::$app->session->setFlash('error', "Cancel not allowed.\nOrder of Payment already created for\n".$model->request->request_ref_num.".");
 			return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
 		} else {
-			if (Yii::$app->request->post()){
+            if($checkForPayment > 1){
+                if(count($analyses) > 0)
+                {
+                    foreach ($analyses as $analysis) {
+                        $analyses->cancelled = 1;
+                        $analyses->update(false); // skip validation no user input is involved
+                    }
+
+                    $model->remarks = 'Request has been cancelled.';
+                    $model->active = 0;
+                    if ($model->update() !== false) {
+                        Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
+                        return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+                    } else {
+                        $model->error();
+                        return false;
+                    }
+                } else {
+                    $model->remarks = $_POST['Sample']['remarks'];
+                    $model->active = 0;
+
+                    if ($model->update() !== false) {
+                        Yii::$app->session->setFlash('warning',"Successfully Cancelled.");
+                        return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+                    } else {
+                        $model->error();
+                        return false;
+                    }
+                }
+            } elseif (Yii::$app->request->post()){
 				if(trim($_POST['Sample']['remarks']) == ""){
 					Yii::$app->session->setFlash('error', "Remarks should not be empty.");
 					return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
@@ -414,6 +443,7 @@ class SampleController extends Controller
         //$lab = Lab::findOne($request->lab_id);
         $year = date('Y', strtotime($request->request_datetime));
         $connection= Yii::$app->labdb;
+        $rstlId = Yii::$app->user->identity->profile->rstl_id;
         
         foreach ($request->samples as $samp){
             $transaction = $connection->beginTransaction();
@@ -422,7 +452,7 @@ class SampleController extends Controller
 
                 $function = new Functions();
                 $proc = 'spGetNextGenerateSampleCode(:rstlId,:labId,:requestId)';
-                $params = [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$request->lab_id,':requestId'=>$requestId];
+                $params = [':rstlId'=>$rstlId,':labId'=>$request->lab_id,':requestId'=>$requestId];
                 $row = $function->ExecuteStoredProcedureOne($proc, $params, $connection);
                 $samplecodeGenerated = $row['GeneratedSampleCode'];
                 $samplecodeIncrement = $row['SampleIncrement'];
@@ -432,7 +462,7 @@ class SampleController extends Controller
                 
                 //insert to tbl_samplecode
                 $samplecode = new Samplecode();
-                $samplecode->rstl_id = $GLOBALS['rstl_id'];
+                $samplecode->rstl_id = $rstlId;
                 $samplecode->reference_num = $request->request_ref_num;
                 $samplecode->sample_id = $sampleId;
                 $samplecode->lab_id = $request->lab_id;

@@ -22,8 +22,10 @@ class Customerextend extends Customer
     {
         $function = new Functions();
         $connection = Yii::$app->labdb;
+        $rstlId = Yii::$app->user->identity->profile->rstl_id;
+
         $query = $function->ExecuteStoredProcedureOne("spCustomerServed(:rstlId,:labId,:customerId,:startDate,:endDate,:generateType,:filterType,:filterId,:requestType)", 
-            [':rstlId'=>$GLOBALS['rstl_id'],':labId'=>$labId,':customerId'=>$customerId,':startDate'=>$startDate,':endDate'=>$endDate,':generateType'=>$generateType,':filterType'=>$filterType,':filterId'=>$filterId,':requestType'=>$requestType], $connection);
+            [':rstlId'=>$rstlId,':labId'=>$labId,':customerId'=>$customerId,':startDate'=>$startDate,':endDate'=>$endDate,':generateType'=>$generateType,':filterType'=>$filterType,':filterId'=>$filterId,':requestType'=>$requestType], $connection);
         return $query['Counter'];
 
         //echo $GLOBALS['rstl_id'].' '.$labId.' '.$customerId.' '.$startDate.' '.$endDate.' '.$generateType.' '.$filterType.' '.$filterId.' '.$requestType;
