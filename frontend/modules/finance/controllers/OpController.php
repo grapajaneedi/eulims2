@@ -19,6 +19,12 @@ use common\components\Functions;
 use kartik\editable\Editable;
 use yii\helpers\Json;
 use yii2mod\alert\Alert;
+use frontend\modules\finance\components\models\Ext_Receipt as Receipt;
+use yii2tech\spreadsheet\Spreadsheet;
+use yii\data\ArrayDataProvider;
+
+use yii2tech\spreadsheet\Myspreadsheet;
+use frontend\modules\reports\modules\finance\templates\Opspreadsheet;
 /**
  * OrderofpaymentController implements the CRUD actions for Op model.
  */
@@ -470,5 +476,32 @@ class OpController extends Controller
         }
         $this->postRequest($request_ids);
         return $total_amount;
+    }
+    
+    protected function findModelReceipt($id)
+    {
+        if (($model = Receipt::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+    
+    public function actionPrintview($id)
+    {
+      //find the record the testreport
+      $op =$this->findModel($id);
+      $receipt_id=$op->receipt_id;
+      $receipt=$this->findModelReceipt($receipt_id);
+      //echo $id;
+      //exit;
+      $exporter = new Opspreadsheet([
+        'model'=>$op,
+        'model_receipt'=>$receipt,
+        ]);
+      $exporter->loaddoc();
+      $exporter->send($op->transactionnum.'.xls');
+
+
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace frontend\modules\reports\modules\lab\templates;
+namespace frontend\modules\reports\modules\finance\templates;
 
 use yii2tech\spreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use common\models\lab\Lab;
-
+use common\components\NumbersToWords;
  /**
 * Bergel Cutara SRS-II
 */
@@ -17,7 +17,7 @@ class Opspreadsheet extends Spreadsheet
      */
     public $location="";
     public $model; // model used for targeting specific cell for data placements
-    public $template; //templates to be used
+    public $model_receipt; //templates to be used
      //public $LOCATION =\Yii::$app->basePath.'\\modules\\reports\\modules\\lab\\templates\\';
     /**
 
@@ -26,65 +26,59 @@ class Opspreadsheet extends Spreadsheet
      */
 
 	public function init(){
-		$this->location = \Yii::$app->basePath.'\\modules\\reports\\modules\\lab\\templates\\';
+		$this->location = \Yii::$app->basePath.'\\modules\\reports\\modules\\finance\\templates\\';
                 $this->loaddoc();
                 
         }
 
     public function loaddoc()
     {
-        $labprefix = ""; //used to store string variable for lab use
-
-    	 // $location = \Yii::$app->basePath.'\\modules\\reports\\modules\\lab\\templates\\';
-    	// echo $this->location; exit;
-        //$this->_document = $document;
-        // $this->_document = \PhpOffice\PhpSpreadsheet\IOFactory::load($inputFileName);
-        //cehck on what lab the testreport will be generated
-        $lab = Lab::findOne($this->model->lab_id);
-        if($lab->labcode=="CHE"){
-            $labprefix="CHEM";
-        }elseif($lab->labcode=="MIC"){
-            $labprefix="MICRO";
-        }
-        //choose what template to use
-        switch($this->template){
-            case "ISO":
-                $this->setDocument(IOFactory::load($this->location.$labprefix."_ISO.xlsx"));
-            case "NON-ISO":
-                $this->setDocument(IOFactory::load($this->location.$labprefix."_NONISO.xlsx"));
-            case "EMB":
-                $this->setDocument(IOFactory::load($this->location.$labprefix."_DENR.xlsx"));
-            default :
-                $this->setDocument(IOFactory::load($this->location.$labprefix."_ISO.xlsx"));
-        }       
+        $this->setDocument(IOFactory::load($this->location."OP.xlsx"));
+            
+               
 
 
         // Set cell A2 with a numeric value
         // $this->getDocument()->getActiveSheet()->setCellValue('A2', $this->template);
-
-        $this->getDocument()->getActiveSheet()->setCellValue('C8', $this->model->request->request_ref_num);
-        $this->getDocument()->getActiveSheet()->setCellValue('C9', $this->model->request->samples[0]->sampling_date);//date submitted //shud get the first sample record only if not many
-   //     $this->getDocument()->getActiveSheet()->setCellValue('C10', $this->model->request->samples[0]->analyses[0]->date_analysis); //date analyzed //shud get the earliest sample record only if not many
-        $this->getDocument()->getActiveSheet()->setCellValue('C11', $this->listsamples($this->model->request->samples)); //sample submitted //just concat every sample there is in a request
-        $this->getDocument()->getActiveSheet()->setCellValue('C12', $this->model->request->samples[0]->description); //sample description
-
-        $this->getDocument()->getActiveSheet()->setCellValue('C15', $this->model->request->customer->customer_name); //customer name
-        $row = 21;
-        //loop each of each sample
-        foreach ($this->model->request->samples as $sample) {
-             # loop each of the anlyses
-            foreach ($sample->analyses as $analysis) {
-                
-                #displaying the analysis on a row in a table
-                
-                $this->getDocument()->getActiveSheet()->setCellValue('B'.$row, $analysis->testname); //testname or parameter
-                $this->getDocument()->getActiveSheet()->setCellValue('C'.$row, $analysis->method); //method
-
-                $this->getDocument()->getActiveSheet()->insertNewRowBefore($row+1, 1);
-                $row++; 
-            }
-         } 
-         $this->getDocument()->getActiveSheet()->removeRow($row);
+        $numbertowords=new NumbersToWords();
+        $amountinwords=$numbertowords->convert($this->model->total_amount);
+        $whole_number=(int)$this->model->total_amount;
+        $remainder=$this->model->total_amount - $whole_number;
+        if (!$remainder){
+            $amountinwords.=" And 00/100";
+        }
+        $this->getDocument()->getActiveSheet()->setCellValue('S6', $this->model->transactionnum);
+        $this->getDocument()->getActiveSheet()->setCellValue('S7', date('F d, Y',strtotime($this->model->order_date)));
+        $this->getDocument()->getActiveSheet()->setCellValue('B16', $this->model->customer ? $this->model->customer->customer_name : "");
+        $this->getDocument()->getActiveSheet()->setCellValue('B18', $this->model->customer ? $this->model->customer->completeaddress : "");
+        $this->getDocument()->getActiveSheet()->setCellValue('H20', $amountinwords);
+        $this->getDocument()->getActiveSheet()->setCellValue('Q23', $this->model->total_amount);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+//        //loop each of each sample
+//        foreach ($this->model->request->samples as $sample) {
+//             # loop each of the anlyses
+//            foreach ($sample->analyses as $analysis) {
+//                
+//                #displaying the analysis on a row in a table
+//                
+//                $this->getDocument()->getActiveSheet()->setCellValue('B'.$row, $analysis->testname); //testname or parameter
+//                $this->getDocument()->getActiveSheet()->setCellValue('C'.$row, $analysis->method); //method
+//
+//                $this->getDocument()->getActiveSheet()->insertNewRowBefore($row+1, 1);
+//                $row++; 
+//            }
+//         } 
+//         $this->getDocument()->getActiveSheet()->removeRow($row);
 
          #set password
          $this->getDocument()->getActiveSheet()->getProtection()->setSheet(true);
@@ -101,15 +95,7 @@ class Opspreadsheet extends Spreadsheet
         return $this;
     }
 
-    public function listsamples($mdata){
-        $myvar = "";
-        foreach ($mdata as $datum) {
-            $myvar= $myvar.$datum->samplename.",";
-
-        }
-        return $myvar=substr($myvar, 0,-1);
-    }
-
+   
 }
 
 ?>

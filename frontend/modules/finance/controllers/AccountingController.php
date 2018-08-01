@@ -168,7 +168,7 @@ class AccountingController extends Controller
              $session = Yii::$app->session;
              try  {
                         $model->RequestIds='0';
-                        $model->rstl_id=$GLOBALS['rstl_id'];
+                        $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
                         $model->transactionnum= $this->Gettransactionnum();
                         $model->payment_status_id=1; //unpaid
                         if ($model->payment_mode_id == 6){
