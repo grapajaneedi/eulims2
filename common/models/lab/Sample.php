@@ -23,6 +23,7 @@ use Yii;
  * @property int $sample_month
  * @property int $sample_year
  * @property int $active
+ * @property int $completed
  *
  * @property Analysis[] $analyses
  * @property Sampletype $sampleType
@@ -57,7 +58,7 @@ class Sample extends \yii\db\ActiveRecord
         return [
             //[['rstl_id', 'testcategory_id', 'sample_type_id', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
             [['rstl_id', 'sampletype_id', 'samplename', 'description', 'sampling_date', 'request_id', 'sample_month', 'sample_year'], 'required'],
-            [['rstl_id', 'pstcsample_id', 'package_id', 'testcategory_id', 'sampletype_id', 'request_id', 'sample_month', 'sample_year', 'active'], 'integer'],
+            [['rstl_id', 'pstcsample_id', 'package_id', 'testcategory_id', 'sampletype_id', 'request_id', 'sample_month', 'sample_year', 'active', 'completed'], 'integer'],
             [['package_rate'], 'number'],
             [['description'], 'string'],
             [['sampling_date'], 'safe'],
@@ -93,6 +94,7 @@ class Sample extends \yii\db\ActiveRecord
             'sample_month' => 'Sample Month',
             'sample_year' => 'Sample Year',
             'active' => 'Active',
+            'completed' => 'Completed',
         ];
     }
 

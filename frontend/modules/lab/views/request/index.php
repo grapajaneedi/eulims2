@@ -10,6 +10,7 @@ use common\models\lab\Lab;
 use common\models\lab\Request;
 use common\components\Functions;
 use common\models\lab\Customer;
+use common\models\lab\Sample;
 use yii\bootstrap\Modal;
 use common\models\finance\Paymentitem;
 
@@ -121,11 +122,34 @@ $gg = 1;
                 'format'=>'raw',
                 'value'=>function($model){
 
-                  //  $tagging= Tagging::find()->where(['user_id'=> Yii::$app->user->id])->count();
+                    $samples_count= Sample::find()
+                    ->leftJoin('tbl_analysis', 'tbl_sample.sample_id=tbl_analysis.sample_id')
+                    ->leftJoin('tbl_tagging', 'tbl_analysis.analysis_id=tbl_tagging.analysis_id') 
+                    ->leftJoin('tbl_request', 'tbl_request.request_id=tbl_analysis.request_id')    
+                    ->where(['tbl_request.request_id'=>$model->request_id ])
+                    ->all();  
 
+                    $samples_tagged= Sample::find()
+                    ->leftJoin('tbl_analysis', 'tbl_sample.sample_id=tbl_analysis.sample_id')
+                    ->leftJoin('tbl_tagging', 'tbl_analysis.analysis_id=tbl_tagging.analysis_id') 
+                    ->leftJoin('tbl_request', 'tbl_request.request_id=tbl_analysis.request_id')    
+                    ->where(['tbl_tagging.tagging_status_id'=>2, 'tbl_request.request_id'=>$model->request_id ])
+                    ->all();  
 
-                    return "<span class='badge ".$model->status->class." btn-block' style='width:80px!important;height:20px!important;'>".$model->status->status."</span>";
-                }
+                    $c = count ($samples_count);
+                    $t = count ($samples_tagged);
+
+                  // return $c."<br>".$t;
+
+                    if ($t==0 ){
+                        return "<span class='badge badge-success' style='width:80px!important;height:20px!important;'>PENDING</span>";
+                    }else if ($t<$c){
+                           return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
+                    }else if ($c==$t){
+                        return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
+                      
+                    }
+              }
             ],
             [
                 'label'=>'Report Status',

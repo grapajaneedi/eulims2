@@ -234,59 +234,55 @@ class TaggingController extends Controller
          
          if(isset($_POST['id'])){
              $ids = $_POST['id'];
+             $analysis_id = $_POST['analysis_id'];
              $analysisID = explode(",", $ids);
              $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
              if ($ids){
                  foreach ($analysisID as $aid){
                     $tagging= Tagging::find()->where(['analysis_id'=> $aid])->one();
-
                     $analysis= Analysis::find()->where(['analysis_id'=> $aid])->one();
-
-                    //$analysis->sample_id;
-
+                
                     if ($tagging){
                         $now = date('Y-m-d');
                         $Connection= Yii::$app->labdb;
                         $sql="UPDATE `tbl_tagging` SET `end_date`='$now', `tagging_status_id`='2' WHERE `tagging_id`=".$tagging->tagging_id;
                         $Command=$Connection->createCommand($sql);
-                        $Command->execute();
-                        
+                        $Command->execute();                      
                         $sample= Sample::find()->where(['sample_id'=> $aid])->one();
-
-                       // $count=count($data);
-                        
-                        // $taggingcount= Tagging::find()
-                        // ->leftJoin('tbl_analysis', 'tbl_tagging.analysis_id=tbl_analysis.analysis_id')
-                        // ->leftJoin('tbl_sample', 'tbl_analysis.sample_id=tbl_sample.sample_id')    
-                        // ->where(['tagging_status_id'=>2, 'tbl_sample.sample_id'=>$analysis->sample_id ])
-                        // ->all();
-
-                        // $counttag = count($taggingcount);
-                      
-                        // echo $counttag;
-                      
-                        // exit;
-
-                        // $sql="UPDATE `tbl_sample` SET `end_date`='$now', `tagging_status_id`='2' WHERE `tagging_id`=".$tagging->tagging_id;
-                        // $Command=$Connection->createCommand($sql);
-                        // $Command->execute();
-
-
+                                      
+                        $taggingcount= Tagging::find()
+                        ->leftJoin('tbl_analysis', 'tbl_tagging.analysis_id=tbl_analysis.analysis_id')
+                        ->leftJoin('tbl_sample', 'tbl_analysis.sample_id=tbl_sample.sample_id')    
+                        ->where(['tbl_tagging.tagging_status_id'=>2, 'tbl_sample.sample_id'=>$analysis->sample_id ])
+                        ->all();                                        
                     }else{
 
-                    }
+                    }                     
+             } 
+              $counttag = count($taggingcount);          
+              $sql="UPDATE `tbl_sample` SET `completed`='$counttag' WHERE `sample_id`=".$analysis_id;
+              $Command=$Connection->createCommand($sql);
+              $Command->execute();                 
+              $samplesq = Sample::find()->where(['sample_id' =>$analysis_id])->one();             
+              $samcount = $samplesq->completed;
 
-                   	
-                         
-             }
- 
+              $sampletagged= Sample::find()
+              ->leftJoin('tbl_analysis', 'tbl_sample.sample_id=tbl_analysis.sample_id')
+              ->leftJoin('tbl_tagging', 'tbl_analysis.analysis_id=tbl_tagging.analysis_id') 
+              ->leftJoin('tbl_request', 'tbl_request.request_id=tbl_analysis.request_id')    
+              ->where(['tbl_tagging.tagging_status_id'=>2, 'tbl_request.request_id'=>$samplesq->request_id ])
+              ->all();  
+
+              $st = count($sampletagged);
+
+              if ($samcount==$counttag){
+                $sql="UPDATE `tbl_request` SET `completed`='$st' WHERE `request_id`=".$samplesq->request_id;
+                $Command=$Connection->createCommand($sql);
+                $Command->execute(); 
+              }
+            
          }
-             //return here
-             // $sample_code = $_POST["samplecode"];
-             // echo CJSON::encode( array ('message'=>$message, 'sample_code'=>$sample_code));
- 
-             $analysis_id = $_POST['analysis_id'];
- 
+            
              $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
              $sampleDataProvider = new ActiveDataProvider([
                      'query' => $samplesQuery,
@@ -295,8 +291,7 @@ class TaggingController extends Controller
                      ],
                   
              ]);
-             $analysisQuery = Analysis::find()->where(['sample_id' => $analysis_id]);
-           
+             $analysisQuery = Analysis::find()->where(['sample_id' => $analysis_id]);   
              $analysisdataprovider = new ActiveDataProvider([
                      'query' => $analysisQuery,
                      'pagination' => [
@@ -306,11 +301,8 @@ class TaggingController extends Controller
              ]);
  
              return $this->renderAjax('_viewAnalysis', [
-                 // 'request'=>$request,
-                 // 'model'=>$model,
                  'sampleDataProvider' => $sampleDataProvider,
                  'analysisdataprovider'=> $analysisdataprovider,
-               //  'taggingcount'=>$taggingcount,
                  'analysis_id'=>$analysis_id,
               ]);
           
