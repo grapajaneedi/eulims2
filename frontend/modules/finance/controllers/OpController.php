@@ -99,7 +99,7 @@ class OpController extends Controller
                 $request_ids=$model->RequestIds;
                  
                 $model->total_amount=0;
-                $model->rstl_id=$GLOBALS['rstl_id'];
+                $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
                 $model->transactionnum= $this->Gettransactionnum();
                 $model->payment_status_id=1; //unpaid
                 if ($model->payment_mode_id == 6){
@@ -128,8 +128,9 @@ class OpController extends Controller
                 $transaction->commit();
                
                 $this->updateTotalOP($model->orderofpayment_id, $total_amount);
-                $session->set('savepopup',"executed");
-                 return $this->redirect(['/finance/op']); 
+                
+                 return $this->redirect(['/finance/op/view?id='.$model->orderofpayment_id]); 
+                 //$session->set('savepopup',"executed");
                    
                 } catch (Exception $e) {
                     $transaction->rollBack();

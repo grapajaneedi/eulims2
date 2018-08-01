@@ -10,7 +10,6 @@ use yii\helpers\Url;
 
 $this->title = 'Receipt';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
-$this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cashier']];
 $this->params['breadcrumbs'][] = ['label' => 'Receipt', 'url' => ['/finance/cashier/receipt']];
 $this->params['breadcrumbs'][] = 'View';
 $enable=false;

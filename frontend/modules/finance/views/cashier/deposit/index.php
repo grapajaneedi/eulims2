@@ -17,7 +17,6 @@ use common\components\Functions;
 $func= new Functions();
 $this->title = 'Deposit';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
-$this->params['breadcrumbs'][] = ['label' => 'Cashier', 'url' => ['/finance/cashier']];
 $this->params['breadcrumbs'][] = 'Deposit';
 $Header="Department of Science and Technology<br>";
 $Header.="Deposit";
