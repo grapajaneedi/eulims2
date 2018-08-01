@@ -30,7 +30,7 @@ $paymentitem= Paymentitem::find()->where(['request_id'=> $model->request_id])->o
 if ($paymentitem){
     $analysistemplate = "";
 }else{
-    $analysistemplate = "{delete}{update}";
+    $analysistemplate = "{update} {delete}";
 }
 
 
@@ -413,6 +413,7 @@ $UnpaidBalance=number_format($UnpaidBalance,2);
                 [
                     'attribute'=>'sample_name',
                     'header'=>'Sample',
+                  
                     'format' => 'raw',
                     'enableSorting' => false,
                     'value' => function($model) {
@@ -509,7 +510,7 @@ $UnpaidBalance=number_format($UnpaidBalance,2);
                            
                     
                       }else{
-                          return "<span class='badge btn-default' style='width:80px;height:20px'>PENDING</span>";
+                          return "<span class='badge badge-success' style='width:80px!important;height:20px!important;'>PENDING</span>";
                       }
                      
                     },
