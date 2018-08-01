@@ -167,14 +167,11 @@ class TaggingController extends Controller
         if(isset($_POST['id'])){
 			$ids = $_POST['id'];
             $analysisID = explode(",", $ids);
-            
-
-           
+                
 			if ($ids){
 				foreach ($analysisID as $aid){
                     
                     $taggingmodel = Tagging::find()->where(['analysis_id'=>$aid])->one();
-
                     if ($taggingmodel){
 
                     }else{
@@ -202,6 +199,9 @@ class TaggingController extends Controller
        
 
             $analysis_id = $_POST['analysis_id'];
+
+            
+            
             $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
             $sampleDataProvider = new ActiveDataProvider([
                     'query' => $samplesQuery,
@@ -221,6 +221,7 @@ class TaggingController extends Controller
             return $this->renderAjax('_viewAnalysis', [
                 'sampleDataProvider' => $sampleDataProvider,
                 'analysisdataprovider'=> $analysisdataprovider,
+                'analysis_id'=>$analysis_id,
              ]);
          
             
@@ -239,12 +240,37 @@ class TaggingController extends Controller
                  foreach ($analysisID as $aid){
                     $tagging= Tagging::find()->where(['analysis_id'=> $aid])->one();
 
+                    $analysis= Analysis::find()->where(['analysis_id'=> $aid])->one();
+
+                    //$analysis->sample_id;
+
                     if ($tagging){
                         $now = date('Y-m-d');
                         $Connection= Yii::$app->labdb;
                         $sql="UPDATE `tbl_tagging` SET `end_date`='$now', `tagging_status_id`='2' WHERE `tagging_id`=".$tagging->tagging_id;
                         $Command=$Connection->createCommand($sql);
-                        $Command->execute();	
+                        $Command->execute();
+                        
+
+                       // $count=count($data);
+                        
+                        // $taggingcount= Tagging::find()
+                        // ->leftJoin('tbl_analysis', 'tbl_analysis.sample_id=tbl_sample.sample_id')
+                        // ->leftJoin('tbl_tagging', 'tbl_sample.analysis_id=tbl_analysis.analysis_id')
+                        // ->where(['tagging_status_id'=>2])
+                        // ->all();
+
+                        // $counttag = count($taggingcount);
+                      
+                        // echo $counttag;
+                      
+                        // exit;
+
+                        // $sql="UPDATE `tbl_sample` SET `end_date`='$now', `tagging_status_id`='2' WHERE `tagging_id`=".$tagging->tagging_id;
+                        // $Command=$Connection->createCommand($sql);
+                        // $Command->execute();
+
+
                     }else{
 
                     }
@@ -283,6 +309,8 @@ class TaggingController extends Controller
                  // 'model'=>$model,
                  'sampleDataProvider' => $sampleDataProvider,
                  'analysisdataprovider'=> $analysisdataprovider,
+               //  'taggingcount'=>$taggingcount,
+                 'analysis_id'=>$analysis_id,
               ]);
           
              
