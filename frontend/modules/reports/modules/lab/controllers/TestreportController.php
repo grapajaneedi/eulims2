@@ -322,7 +322,7 @@ class TestreportController extends Controller
         'model'=>$testreport
         ]);
       $exporter->loaddoc();
-      $exporter->send($testreport->report_num.'.xlsx');
+      $exporter->send($testreport->report_num.'.xls');
 
 
     }
