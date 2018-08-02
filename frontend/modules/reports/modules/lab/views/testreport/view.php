@@ -152,9 +152,9 @@ $this->params['breadcrumbs'][] = $this->title;
     //echo "<div id='modalContent' style='margin-left: 5px; padding-bottom:10px;'><img src='/images/ajax-loader.gif' alt=''/></div>";
    ?>
     <div class="container table-responsive">
-         <?= Html::a('<span class="glyphicon glyphicon-download"></span> ISO', ['/reports/lab/testreport/printview?id='.$model->testreport_id.'&template="ISO"'], ['class'=>'btn btn-primary']) ?>
-         <?= Html::a('<span class="glyphicon glyphicon-download"></span> NON-ISO', ['/reports/lab/testreport/printview?id='.$model->testreport_id.'&template="NON-ISO"'], ['class'=>'btn btn-primary']) ?>
-         <?= Html::a('<span class="glyphicon glyphicon-download"></span> EMB', ['/reports/lab/testreport/printview?id='.$model->testreport_id.'&template="EMB"'], ['class'=>'btn btn-primary']) ?>
+         <?= Html::a('<span class="glyphicon glyphicon-download"></span> ISO', ['/reports/lab/testreport/printview?id='.$model->testreport_id.'&template=1'], ['class'=>'btn btn-primary']) ?>
+         <?= Html::a('<span class="glyphicon glyphicon-download"></span> NON-ISO', ['/reports/lab/testreport/printview?id='.$model->testreport_id.'&template=2'], ['class'=>'btn btn-primary']) ?>
+         <?= Html::a('<span class="glyphicon glyphicon-download"></span> EMB', ['/reports/lab/testreport/printview?id='.$model->testreport_id.'&template=3'], ['class'=>'btn btn-primary']) ?>
     </div>
    <?php
     echo "<div>&nbsp;</div>";

@@ -46,14 +46,14 @@ class Testreportspreadsheet extends Spreadsheet
         }
         //choose what template to use
         switch($this->template){
-            case "ISO":
+            case 1:
                 $this->setDocument(IOFactory::load($this->location.$labprefix."_ISO.xlsx"));
-            case "NON-ISO":
+            case 2:
                 $this->setDocument(IOFactory::load($this->location.$labprefix."_NONISO.xlsx"));
-            case "EMB":
+            case 3:
                 $this->setDocument(IOFactory::load($this->location.$labprefix."_DENR.xlsx"));
-            default :
-                $this->setDocument(IOFactory::load($this->location.$labprefix."_ISO.xlsx"));
+            // default :
+                //$this->setDocument(IOFactory::load($this->location.$labprefix."_ISO.xlsx"));
         }       
 
 
