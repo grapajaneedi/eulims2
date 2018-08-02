@@ -108,9 +108,15 @@ return [
          ],
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the frontend
-            'name' => 'advanced-frontend',
+            'class' => 'yii\web\CacheSession',
+            'cache' => 'sessionCache',
+            'timeout' => 600000
+         ],
+        'sessionCache' => [
+            'class' => 'yii\caching\FileCache',
+            'cachePath' => '@runtime/cache/session'
         ],
+        
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
