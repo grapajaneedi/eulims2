@@ -25,7 +25,7 @@ class Opspreadsheet extends Spreadsheet
      */
 
 	public function init(){
-		$this->location = \Yii::$app->basePath.'\\modules\\reports\\modules\\finance\\templates\\';
+		$this->location = \Yii::$app->basePath.'/modules/reports/modules/finance/templates/';
                 $this->loaddoc();
               //  $exporter->loaddoc()
                 $this->send($this->model->transactionnum.'.xls');

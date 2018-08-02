@@ -26,7 +26,7 @@ class Testreportspreadsheet extends Spreadsheet
      */
 
 	public function init(){
-		$this->location = \Yii::$app->basePath.'\\modules\\reports\\modules\\lab\\templates\\';
+		$this->location = \Yii::$app->basePath.'/modules/reports/modules/lab/templates/';
 	}
 
     public function loaddoc()
