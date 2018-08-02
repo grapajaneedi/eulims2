@@ -19,8 +19,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'On Account #'
             ],
             'customer.customer_name',
+            [
+                'attribute'=>'company_name',
+                'label'=>'Head'
+            ],
             'customer.email',
-            'company_name',
             [
                 'attribute'=>'signature_date',
                 'label'=>'Signature Date',

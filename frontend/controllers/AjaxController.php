@@ -14,6 +14,7 @@ use Yii;
 use yii\web\Controller;
 use common\models\lab\Discount;
 use common\models\finance\Client;
+use common\models\lab\Customer;
 
 /**
  * Description of AjaxController
@@ -45,6 +46,11 @@ class AjaxController extends Controller{
         $discount= Discount::find()->where(['discount_id'=>$id])->one();
         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
         return $discount;
+    }
+    public function actionGetcustomerhead($id){
+        \Yii::$app->response->format =\yii\web\Response::FORMAT_JSON;
+        $Customers=Customer::find()->where(['customer_id'=>$id])->one();
+        return $Customers;
     }
     public function actionTogglemenu(){
         $session = Yii::$app->session;

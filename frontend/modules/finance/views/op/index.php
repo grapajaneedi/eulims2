@@ -41,12 +41,6 @@ if(Yii::$app->user->can('allow-cancel-op')){
     <?php
         echo $func->GenerateStatusLegend("Legend/Status",true);
     ?>
-    <p>
-       
-    </p>
-    
-    
-    
   <div class="table-responsive">
   
     <?= GridView::widget([

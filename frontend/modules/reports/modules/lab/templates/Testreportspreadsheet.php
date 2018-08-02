@@ -52,8 +52,6 @@ class Testreportspreadsheet extends Spreadsheet
                 $this->setDocument(IOFactory::load($this->location.$labprefix."_NONISO.xlsx"));
             case 3:
                 $this->setDocument(IOFactory::load($this->location.$labprefix."_DENR.xlsx"));
-            // default :
-                //$this->setDocument(IOFactory::load($this->location.$labprefix."_ISO.xlsx"));
         }       
 
 

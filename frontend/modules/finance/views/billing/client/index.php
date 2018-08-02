@@ -77,8 +77,11 @@ $rstlID=$GLOBALS['rstl_id'];
                 'filterInputOptions' => ['placeholder' => 'Select Customer'],
                 'format' => 'raw'
             ],
-            'company_name',
-             [
+            [
+                'attribute'=>'company_name',
+                'label'=>'Head'
+            ],            
+            [
                'attribute'=>'signature_date',
                'filterType'=> GridView::FILTER_DATE_RANGE,
                'value' => function($model) {

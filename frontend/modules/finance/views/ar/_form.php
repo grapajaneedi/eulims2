@@ -22,18 +22,7 @@ $func=new Functions();
     <?php if($model->isNewRecord){ ?>
     <?= $form->field($model, 'OpIds')->hiddenInput()->label(false) ?>
     <?php } ?>
-    <div class="row" style="padding-top: 0px;margin-top: 0px">
-        <div class="col-md-6">
-         <?= $form->field($model, 'invoice_number')->textInput(['readonly'=>true]) ?>
-        </div>
-        <div class="col-md-6">
-        <label class="control-label" for="billing-invoice_number">Customer</label>
-        <?php 
-        echo $func->GetCustomerList($form, $model);
-        ?>
-        </div>
-    </div>
-    <div class="row">
+     <div class="row">
         <div class="col-md-6">
            <label class="control-label" for="billing-invoice_number">Invoice Date</label>
         <?php 
@@ -75,6 +64,18 @@ $func=new Functions();
         ?>
         </div>
     </div>
+    <div class="row" style="padding-top: 0px;margin-top: 0px">
+        <div class="col-md-6">
+         <?= $form->field($model, 'invoice_number')->textInput(['readonly'=>true]) ?>
+        </div>
+        <div class="col-md-6">
+        <label class="control-label" for="billing-invoice_number">Customer</label>
+        <?php 
+        echo $func->GetCustomerList($form, $model);
+        ?>
+        </div>
+    </div>
+   
     <hr style="margin-bottom: 10px;margin-top: 10px">
     <div class="row">
         <div id="OPGridContainer" class="col-md-12">

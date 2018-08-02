@@ -71,6 +71,7 @@ class OpSearch extends Op
             'collectiontype_id' => $this->collectiontype_id,
             'customer_id' => $this->customer_id,
             'receipt_id' => $this->receipt_id,
+            'on_account'=>0
         ]);
 
         $query->andFilterWhere(['like', 'transactionnum', $this->transactionnum])
