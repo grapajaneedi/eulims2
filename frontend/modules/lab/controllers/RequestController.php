@@ -50,10 +50,12 @@ class RequestController extends Controller
      */
     public function actionIndex()
     { 
+        $Func=new Functions();
+        $Func->CheckRSTLProfile();
+        
         $searchModel = new RequestSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=6;
-        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

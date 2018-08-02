@@ -52,6 +52,9 @@ class OpController extends Controller
     public function actionIndex()
     {
         $model = new Op();
+        $Func=new Functions();
+        $Func->CheckRSTLProfile();
+        
         $searchModel = new OpSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=10;

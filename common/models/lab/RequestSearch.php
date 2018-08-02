@@ -7,6 +7,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 //use common\models\lab\Request;
 use common\models\lab\exRequest as Request;
+use yii\web\NotFoundHttpException;
 
 /**
  * RequestSearch represents the model behind the search form about `common\models\lab\Request`.
@@ -59,7 +60,9 @@ class RequestSearch extends exRequest
             // $query->where('0=1');
             return $dataProvider;
         }
-
+        if(!Yii::$app->user->identity->profile){
+            throw new NotFoundHttpException('Warning: The requested profile does not exist, Please add Profile.');
+        }
         // grid filtering conditions
         $query->andFilterWhere([
             'request_id' => $this->request_id,

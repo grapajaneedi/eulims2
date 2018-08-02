@@ -18,7 +18,7 @@ class SampletypeSearch extends Sampletype
     public function rules()
     {
         return [
-            [['sample_type_id', 'testcategory_id'], 'integer'],
+            [['sampletype_id', 'testcategory_id'], 'integer'],
             [['sample_type'], 'safe'],
         ];
     }

@@ -7,7 +7,6 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\finance\Op;
 use kartik\daterange\DateRangeBehavior;
-
 /**
  * OrderofpaymentSearch represents the model behind the search form about `common\models\finance\Orderofpayment`.
  */
@@ -63,7 +62,7 @@ class OpSearch extends Op
             // $query->where('0=1');
             return $dataProvider;
         }
-
+        
         // grid filtering conditions
         $query->andFilterWhere([
             'orderofpayment_id' => $this->orderofpayment_id,

@@ -11,6 +11,7 @@ use common\models\finance\Soa;
 use common\models\finance\Billing;
 use yii\data\ActiveDataProvider;
 use linslin\yii2\curl\Curl;
+use common\components\Functions;
 
 class BillingController extends \yii\web\Controller
 {
@@ -130,6 +131,9 @@ class BillingController extends \yii\web\Controller
     }
     public function actionInvoices(){
         $model = new Op();
+        $Func=new Functions();
+        $Func->CheckRSTLProfile();
+        
         $searchModel = new BillingSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

@@ -25,6 +25,7 @@ use common\models\lab\Request;
 use kartik\grid\GridView;
 use common\models\finance\Customertransaction;
 use common\models\finance\Customerwallet;
+use yii\web\NotFoundHttpException;
 
 
 /**
@@ -66,6 +67,11 @@ class Functions extends Component{
                 array_push($list, $listval);
         }
         return ArrayHelper::map($list, 'icon', 'icon');
+    }
+    public function CheckRSTLProfile(){
+        if(!Yii::$app->user->identity->profile){
+            throw new NotFoundHttpException("Warning: The requested profile does not exist, Please add Profile.");
+        }
     }
     /**
      * 
