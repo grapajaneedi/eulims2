@@ -11,7 +11,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\finance\CancelledOp;
 use common\models\finance\CancelledopSearch;
-use common\models\finance\Collection;
+//use common\models\finance\Collection;
+use common\models\finance\Op;
 use yii\db\Query;
 /**
  * CancelrequestController implements the CRUD actions for Cancelledrequest model.
@@ -73,8 +74,9 @@ class CancelopController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //Update Request
             $op_id=$model->orderofpayment_id;
-            $collection= Collection::find()->where(['orderofpayment_id'=>$op_id])->one();
-            $collection->payment_status_id=0;
+            
+            $op= Op::find()->where(['orderofpayment_id'=>$op_id])->one();
+            $op->payment_status_id=0;
             $connection= Yii::$app->financedb;
             $sql_query = $connection->createCommand('UPDATE tbl_paymentitem set status=0 WHERE orderofpayment_id=:op_id');
             $sql_query->bindParam(':op_id',$op_id);
@@ -88,11 +90,11 @@ class CancelopController extends Controller
 
             if($lists['ids']){
                 $connection1= Yii::$app->labdb;
-                $sql_query1 = $connection1->createCommand('UPDATE tbl_request set posted=0 WHERE request_id IN('.$lists['ids'].')');
+                $sql_query1 = $connection1->createCommand('UPDATE tbl_request set posted=0,payment_status_id=1 WHERE request_id IN('.$lists['ids'].')');
                 $sql_query1->execute();
             }
                 
-            $collection->save(false);
+            $op->save(false);
             return $this->redirect(['/finance/op/view', 'id' => $model->orderofpayment_id]);
         } else {
             $orderofpayment_id=$get['op'];
