@@ -370,6 +370,19 @@ class AnalysisController extends Controller
 
             if ($model->load(Yii::$app->request->post())) {            
                     if($model->save(false)){
+                        
+                        $post= Yii::$app->request->post();
+                        
+                        
+                     $modelmethod=  Methodreference::findOne(['method_reference_id'=>$post['Analysis']['method']]);
+                       $method = $modelmethod->method;
+
+                        $Connection= Yii::$app->labdb;
+                        $sql="UPDATE `tbl_analysis` SET `method`='$method' WHERE `analysis_id`=".$id;
+                        $Command=$Connection->createCommand($sql);
+                        $Command->execute();
+
+
                         $requestquery = Request::find()->where(['request_id' =>$analysisquery->request_id])->one();
                         $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
                         $rate =  $discountquery->rate;       
