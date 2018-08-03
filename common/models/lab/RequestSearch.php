@@ -50,7 +50,7 @@ class RequestSearch extends exRequest
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['request_ref_num'=>SORT_ASC,'request_datetime'=>SORT_ASC]]
+            'sort'=> ['defaultOrder' => ['request_ref_num'=>NULL,'request_ref_num'=>SORT_DESC]]
         ]);
 
         $this->load($params);
