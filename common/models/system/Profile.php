@@ -20,6 +20,7 @@ use common\models\lab\Lab;
  * @property string $contact_numbers
  * @property string $image_url
  * @property string $avatar
+ * @property string $fullname
  *
  * @property User $user
  * @property Lab $lab
@@ -54,7 +55,7 @@ class Profile extends \yii\db\ActiveRecord
             [['user_id'],'required','message'=>'Please select Username!'],
             [['user_id', 'rstl_id', 'lab_id'], 'integer'],
             [['lastname', 'firstname', 'middleinitial','designation'], 'string', 'max' => 50],
-            [['image_url','avatar','Fullname','contact_numbers'], 'string', 'max' => 100],
+            [['image_url','avatar','fullname','contact_numbers'], 'string', 'max' => 100],
             [['image'], 'safe'],
             [['image'], 'file', 'extensions'=>'jpg, gif, png'],
             ['user_id', 'unique', 'targetAttribute' => ['user_id'], 'message' => 'The Email has already been taken.'],

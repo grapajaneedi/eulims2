@@ -34,56 +34,40 @@ $this->registerCssFile("/css/profile.css");
 ?>
 
 <div class="profile-form">
-    <div class="row justify-content-around" style="margin-left: 30px">
-            <?php $form = ActiveForm::begin([
-                'options'=>['enctype'=>'multipart/form-data'] // important
-            ]); ?>
-            <div class="row ">
-                
-                <span style="float:left; width: 250px;margin-right: 5px">
-                <?php echo $form->field($model, 'image_url')->hiddenInput(['value' => $model->image_url])->label(false) ?>
-                <?php echo $form->field($model, 'avatar')->hiddenInput(['value' => $model->avatar])->label(false) ?>
-                <?php
-                    // your fileinput widget for single file upload
-                   echo $form->field($model, 'image')->widget(FileInput::classname(), [
-                        'options'=>[
-                            'id'=>'profileImage_upload',
-                            'accept'=>'image/*'
-                        ],
-                        'pluginOptions'=>[
-                            'allowedFileExtensions'=>['jpg','gif','png'],
-                            'overwriteInitial'=>true,
-                            'resizeImages'=>true,
-                            'initialPreviewConfig'=>[
-                                'width'=>'120px',
-                            ],
-                            'initialPreview' => [
-                                '<img src="'.Yii::$app->urlManagerBackend->baseUrl.'\uploads\user\photo\\'.$model->getImageUrl().'" width="200" class="file-preview-image">',
-                            ],
-                            'showUpload'=>false,
-                            'showRemove'=>false,
-                            'showBrowse'=>true,
-                            'showText'=>false
-                        ],
-                        //'value'=>Yii::$app->basePath.'\web\uploads\user\photo\\'.$model->avatar
-                        ])->label(false);
-                   
-                     
-                /*echo $form->field($model, 'image')->widget(\noam148\imagemanager\components\ImageManagerInputWidget::className(), [
-                    'aspectRatio' => (16/9), //set the aspect ratio
-                    'showPreview' => true, //false to hide the preview
-                    'showDeletePickedImageConfirm' => false, //on true show warning before detach image
-                ]);
-                */
-                ?>
-                   
-                </span>
-                
-                
-            </div><!-- end of Row -->
-            <div class="row">
-            <span style="float:left; width: 250px;margin-right: 5px">
-            <label class="control-label" for="profile-user_id">Username/Email</label>
+<?php $form = ActiveForm::begin([
+    'options'=>['enctype'=>'multipart/form-data']
+]); ?>
+<?php echo $form->field($model, 'image_url')->hiddenInput(['value' => $model->image_url])->label(false) ?>
+<?php echo $form->field($model, 'avatar')->hiddenInput(['value' => $model->avatar])->label(false) ?>
+    <div class="row ">
+        <div class="col-md-12"> 
+            <?php // your fileinput widget for single file upload
+            echo $form->field($model, 'image')->widget(FileInput::classname(), [
+                'options'=>[
+                    'id'=>'profileImage_upload',
+                    'accept'=>'image/*'
+                ],
+                'pluginOptions'=>[
+                    'allowedFileExtensions'=>['jpg','gif','png'],
+                    'overwriteInitial'=>true,
+                    'resizeImages'=>true,
+                    'initialPreviewConfig'=>[
+                        'width'=>'120px',
+                    ],
+                    'initialPreview' => [
+                        '<img src="'.Yii::$app->urlManagerBackend->baseUrl.'\uploads\user\photo\\'.$model->getImageUrl().'" width="200" class="file-preview-image">',
+                    ],
+                    'showUpload'=>false,
+                    'showRemove'=>false,
+                    'showBrowse'=>true,
+                    'showText'=>false
+                ],
+            ])->label(false);
+            ?>   
+        </div>
+    </div>        
+    <div class="row">
+        <div class="col-md-6">
             <?= $form->field($model, 'user_id')->widget(Select2::classname(), [
                 'data' => $UserList,
                 'language' => 'en',
@@ -91,30 +75,31 @@ $this->registerCssFile("/css/profile.css");
                 'pluginOptions' => [
                     'allowClear' => true
                 ],
-            ])->label(false); ?>
-            </span>
-            <span style="float:left; width: 250px;margin-right: 5px">
+            ])->label("Username/Email"); ?>
+        </div>
+        <div class="col-md-6">
             <?= $form->field($model, 'lastname')->textInput(['maxlength' => true]) ?>
             </span>
-            </div>
-            <div class="row">
-            <span style="float:left; width: 250px;margin-right: 5px">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
             <?= $form->field($model, 'firstname')->textInput(['maxlength' => true]) ?>
-            </span>
-            <span style="float:left; width: 250px;margin-right: 5px">
+        </div>
+        <div class="col-md-6">
             <?= $form->field($model, 'middleinitial')->textInput(['maxlength' => true]) ?>
-            </span>
-            </div>
-            <div class="row">
-            <span style="float:left; width: 250px;margin-right: 5px">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
             <?= $form->field($model, 'designation')->textInput() ?>
-            </span>
-            <span style="float:left; width: 250px;margin-right: 5px">
+        </div>
+        <div class="col-md-6">
             <?= $form->field($model, 'contact_numbers')->textInput() ?>
-            </span>
-            </div>
-            <div class="row">
-            <span style="float:left; width: 250px;margin-right: 5px">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
             <?= $form->field($model, 'rstl_id')->widget(Select2::classname(), [
                 'data' => $RstlList,
                 'language' => 'en',
@@ -123,8 +108,8 @@ $this->registerCssFile("/css/profile.css");
                     'allowClear' => true
                 ],
             ]); ?>
-            </span>
-            <span style="float:left; width: 250px;margin-right: 5px">
+        </div>
+        <div class="col-md-6">
             <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
                 'data' => $LabList,
                 'language' => 'en',
@@ -133,14 +118,12 @@ $this->registerCssFile("/css/profile.css");
                     'allowClear' => true
                 ],
             ]); ?>
-            </span>
-            </div>
-            <div class="row" style="float: right;padding-right: 76px">
-                <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-                <?= Html::resetButton('Reset', ['class' => 'btn btn-danger']) ?>
-                <?= Html::Button('Cancel', ['class' => 'btn btn-default','id'=>'modalCancel','data-dismiss'=>'modal']) ?>
-            </div>
-
-            <?php ActiveForm::end(); ?>
+        </div>
     </div>
+    <div class="row" style="float: right;padding-right: 15px">
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::resetButton('Reset', ['class' => 'btn btn-danger']) ?>
+        <?= Html::Button('Cancel', ['class' => 'btn btn-default','id'=>'modalCancel','data-dismiss'=>'modal']) ?>
+    </div>
+<?php ActiveForm::end(); ?>
 </div>

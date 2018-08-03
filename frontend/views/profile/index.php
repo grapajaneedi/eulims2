@@ -1,20 +1,19 @@
 <?php
 
 use yii\helpers\Html;
-//use yii\grid\GridView;
-use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use common\models\system\Rstl;
 use common\models\system\User;
 use common\models\lab\Lab;
-use yii\grid\ActionColumn;
+use common\components\Functions;
+use kartik\grid\ActionColumn;
 use yii\helpers\Url;
-//use kartik\grid\GridView;
+
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ProfileSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-$this->title = 'View';
+$this->title = 'User Profile List';
 $this->params['breadcrumbs'][] = $this->title;
 $RstlList= ArrayHelper::map(Rstl::find()->all(),'rstl_id','name');
 $LabList= ArrayHelper::map(lab::find()->all(),'lab_id','labname'); //Yii::$app->user->identity->user_id
@@ -27,12 +26,10 @@ if(!Yii::$app->user->can('can-delete-profile')){
    $Buttontemplate='{view}{update}';
 }else{
    $Buttontemplate='{view}{update}{delete}'; 
-   /*$Buttontemplate='<button class="btn btn-primary">{view}</button>';
-   $Buttontemplate.='<button class="btn btn-primary">{update}</button>';
-   $Buttontemplate.='<button class="btn btn-primary">{delete}</button>';
-    * 
-    */
 }
+$func=new Functions();
+$Header="Department of Science and Technology<br>";
+$Header.="User Profile List";
 $gridColumn = [
     ['class' => 'yii\grid\SerialColumn'],
     [
@@ -89,44 +86,48 @@ $gridColumn = [
               },
               'update'=>function ($url, $model) {
                   return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/profile/update/'.$model->profile_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update <font color='Blue'>Profile</font>")]);
+              },
+              'delete'=>function($url, $model){
+                   return Html::a("<span class='glyphicon glyphicon-trash'></span>", "/profile/delete/".$model->profile_id, [
+                      "title"=>"Delete", 
+                      "aria-label"=>"Delete",
+                      "data-pjax"=>"0", 
+                      "data-method"=>"post", 
+                      "data-confirm"=>"Are you sure you want to deactivate '".$model->fullname."' Profile?",
+                      "class"=>"btn btn-danger"
+                  ]);
               }
           ],
     ],
 ];
 ?>
 <div class="profile-index">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <p>
-        <button type="button" onclick="LoadModal('Create Profile','/profile/create')" class="btn btn-success"><i class="fa fa-save"></i> Create Profile</button>
-    </p>
     <div class="table-responsive">
         <?=
         GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
-            'columns' => $gridColumn,
-            'pjax' => true,
-            'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
+            'bordered' => true,
+            'striped' => true,
+            'condensed' => true,
+            'responsive' => false,
+            'hover' => true,
+            'pjax' => true, // pjax is set to always true for this demo
+            'pjaxSettings' => [
+                'options' => [
+                        'enablePushState' => false,
+                  ],
+            ],
             'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-            ],
-            'toolbar' => [
-                '{export}',
-                ExportMenu::widget([
-                    'dataProvider' => $dataProvider,
-                    'columns' => $gridColumn,
-                    'target' => ExportMenu::TARGET_BLANK,
-                    'fontAwesome' => true,
-                    'dropdownOptions' => [
-                        'label' => 'Full',
-                        'class' => 'btn btn-default',
-                        'itemsBefore' => [
-                            '<li class="dropdown-header">Export All Data</li>',
-                        ],
-                    ],
+                'before'=>Html::button("<i class='fa fa-newspaper-o'></i> Create New User Profile",[
+                    'class'=>'btn btn-success',
+                    'onclick'=>"LoadModal('Create Profile','/profile/create')"
                 ]),
             ],
+            'exportConfig'=>$func->exportConfig("Laboratory Request", "laboratory request", $Header),
+            'columns' => $gridColumn,
         ]);
         ?>
     </div>
