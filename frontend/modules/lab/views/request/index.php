@@ -161,9 +161,10 @@ $gg = 1;
                 'format'=>'raw',
                 'value'=>function($model){
                     if($model->testreports){
-                        return "<span class='badge badge-success' style='width:80px!important;height:20px!important;'>View</span>";
+                        $req = Request::findOne($model->request_id);
+                        return "<a class='badge badge-success' href='/reports/lab/testreport/view?id=".$req->testreports[0]->testreport_id."' style='width:80px!important;height:20px!important;'>View</a>";
                     }else{
-                        return "<span class='badge badge-default' style='width:80px!important;height:20px!important;'>View</span>";
+                        return "<span class='badge badge-default' style='width:80px!important;height:20px!important;'>None</span>";
                     }
                     
                 }
