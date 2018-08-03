@@ -45,8 +45,9 @@ $js=<<<SCRIPT
     }
     $("#payment_type_id").val(this.value);   
 SCRIPT;
+$rstl_id= Yii::$app->user->identity->profile->rstl_id;
 // Check Whether previous date will be disabled
-$TRequest=Request::find()->where(["DATE_FORMAT(`request_datetime`,'%Y-%m-%d')"=>date("Y-m-d")])->count();
+$TRequest=Request::find()->where(["DATE_FORMAT(`request_datetime`,'%Y-%m-%d')"=>date("Y-m-d"),'rstl_id'=>$rstl_id])->count();
 if($TRequest>0){
     $RequestStartDate=date("Y-m-d");
 }else{

@@ -56,6 +56,7 @@ class RequestController extends Controller
         $searchModel = new RequestSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=6;
+        $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -80,6 +81,7 @@ class RequestController extends Controller
                 ],
              
         ]);
+        $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
         $analysisQuery = Analysis::find()->where(['request_id' => $id]);
         $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,

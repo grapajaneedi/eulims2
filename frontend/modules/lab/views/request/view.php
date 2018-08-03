@@ -19,12 +19,8 @@ $func = new Functions();
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$rstlID=$GLOBALS['rstl_id'];
+$rstlID=Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
 $Year=date('Y', strtotime($model->request_datetime));
-
-
-/////check if may op
-
 $paymentitem= Paymentitem::find()->where(['request_id'=> $model->request_id])->one();
 
 if ($paymentitem){
@@ -32,10 +28,6 @@ if ($paymentitem){
 }else{
     $analysistemplate = "{update} {delete}";
 }
-
-
-
-
 // /lab/request/saverequestransaction
 $js=<<<SCRIPT
     $("#btnSaveRequest").click(function(){
