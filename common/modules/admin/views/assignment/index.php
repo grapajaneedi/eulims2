@@ -1,8 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
+use kartik\grid\GridView;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -14,7 +14,7 @@ $this->title = Yii::t('rbac-admin', 'Assignment');
 $this->params['breadcrumbs'][] = $this->title;
 
 $columns = [
-    ['class' => 'yii\grid\SerialColumn'],
+    ['class' => 'kartik\grid\SerialColumn'],
     $usernameField,
 ];
 if (!empty($extraColumns)) {
@@ -24,25 +24,37 @@ $columns[] = [
     'class' => 'yii\grid\ActionColumn',
     'template' => '{view}'
 ];
+$func=new Functions();
+$Header="Department of Science and Technology<br>";
+$Header.="User Assignment List";
 ?>
 <div class="assignment-index">
-   <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => 'route']); ?>
-    <div class="panel panel-default col-xs-12">
-        <div class="panel-heading"><i class="fa fa-user-circle fa-adn"></i> Assignment</div>
-        <div class="panel-body">
-    <?php Pjax::begin(); ?>
+    <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => 'assignment']); ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'bordered' => true,
+        'striped' => true,
+        'condensed' => true,
+        'responsive' => false,
+        'hover' => true,
+        'pjax' => true, // pjax is set to always true for this demo
+        'pjaxSettings' => [
+            'options' => [
+                    'enablePushState' => false,
+              ],
+        ],
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'heading' => '<span class="fa fa-users"></span>  ' . Html::encode($this->title),
+            'before'=>Html::a(Yii::t('rbac-admin', 'Signup New User'), ['signup'], ['class' => 'btn btn-success',])
+        ],
+        'exportConfig'=>$func->exportConfig("User Assignment List", "user assignment", $Header),
         'columns' => $columns,
     ]);
     ?>
-    <?php Pjax::end(); ?>
-        </div>
-        <p>
-                <?= Html::a(Yii::t('rbac-admin', 'Back to Dashboard'), ['../site/login'], ['class' => 'btn btn-success',]) ?>
-            </p>
-    </div>
-    
+    <p>
+        <?= Html::a(Yii::t('rbac-admin', 'Back to Dashboard'), ['../site/login'], ['class' => 'btn btn-success',]) ?>
+    </p>
 </div>

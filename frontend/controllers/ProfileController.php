@@ -112,6 +112,10 @@ class ProfileController extends Controller
                 $path = Yii::$app->params['uploadPath'] . $model->avatar;
                 $HasImage=true;
             }
+            if($model->image_url=="" || $model->avatar==""){
+                $model->image_url=NULL;
+                $model->avatar=null;
+            }
             if($model->validate() && $model->save()){
                 if($HasImage){
                     $image->saveAs($path);
@@ -186,7 +190,7 @@ class ProfileController extends Controller
                     //unlink(Yii::$app->params['uploadPath'].$OldAvatar);
                     $this->actionDeleteimage( Yii::$app->params['uploadPath'] . $OldAvatar);
                 }
-                Yii::$app->session->setFlash('success', 'Profile Successfully Created!');
+                Yii::$app->session->setFlash('success', 'Profile Successfully Updated!');
                 return $this->redirect('/profile');
             } else {
                 throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');

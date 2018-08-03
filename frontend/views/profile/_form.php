@@ -30,7 +30,7 @@ $js =<<< SCRIPT
 SCRIPT;
 $this->registerJs($js, View::POS_READY);
 $this->registerCssFile("/css/profile.css");
-
+Yii::$app->params['uploadUrl']="/uploads/user/photo/";
 ?>
 
 <div class="profile-form">
@@ -55,7 +55,7 @@ $this->registerCssFile("/css/profile.css");
                         'width'=>'120px',
                     ],
                     'initialPreview' => [
-                        '<img src="'.Yii::$app->urlManagerBackend->baseUrl.'\uploads\user\photo\\'.$model->getImageUrl().'" width="200" class="file-preview-image">',
+                        '<img src="'.Yii::$app->params['uploadUrl'].$model->getImageUrl().'" width="200" class="file-preview-image">',
                     ],
                     'showUpload'=>false,
                     'showRemove'=>false,

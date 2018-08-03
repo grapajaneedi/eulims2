@@ -23,7 +23,11 @@ if(Yii::$app->user->isGuest){
 }else{
     $CurrentUser= User::findOne(['user_id'=> Yii::$app->user->identity->user_id]);
     $CurrentUserName=$CurrentUser->profile ? $CurrentUser->profile->fullname : $CurrentUser->username;
-    $CurrentUserAvatar=$CurrentUser->profile ? Yii::$app->params['uploadUrl'].$CurrentUser->profile->getImageUrl() : Yii::$app->params['uploadUrl'] . 'no-image.png';
+    if($CurrentUser->profile){
+        $CurrentUserAvatar=!$CurrentUser->profile->getImageUrl()=="" ? Yii::$app->params['uploadUrl'].$CurrentUser->profile->getImageUrl() : Yii::$app->params['uploadUrl'] . 'no-image.png';
+    }else{
+        $CurrentUserAvatar=Yii::$app->params['uploadUrl'] . 'no-image.png';
+    }
     $CurrentUserDesignation=$CurrentUser->profile ? $CurrentUser->profile->designation : '';
     if($CurrentUserDesignation==''){
        $UsernameDesignation=$CurrentUserName;

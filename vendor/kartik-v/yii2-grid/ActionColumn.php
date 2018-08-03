@@ -109,7 +109,7 @@ class ActionColumn extends YiiActionColumn
      * encoded. If null or not set, the default icon with CSS `glyphicon glyphicon-eye-open` will be displayed
      * as the icon for the default button.
      */
-    public $viewOptions = [];
+    public $viewOptions = ['class'=>'btn btn-primary'];
 
     /**
      * @var array HTML attributes for the update action button. The following additional options are recognized:
@@ -119,7 +119,7 @@ class ActionColumn extends YiiActionColumn
      * encoded. If null or not set, the default icon with CSS `glyphicon glyphicon-pencil` will be displayed
      * as the icon for the default button.
      */
-    public $updateOptions = [];
+    public $updateOptions = ['class'=>'btn btn-success'];
 
     /**
      * @var array HTML attributes for the delete action button. The following additional options are recognized:
@@ -133,7 +133,7 @@ class ActionColumn extends YiiActionColumn
      *   Defaults to `Are you sure to delete this {item}?`, where the `{item}` token will be replaced with the
      *   `GridView::itemLabelSingle` property.
      */
-    public $deleteOptions = [];
+    public $deleteOptions = ['class'=>'btn btn-danger'];
 
     /**
      * @var boolean|string|Closure the page summary that is displayed above the footer. You can set it to one of the

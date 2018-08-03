@@ -24,7 +24,7 @@ Pjax::begin();
 ?>
 <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => 'route']); ?>
 
-<div class="panel panel-default col-xs-12">
+<div class="panel panel-primary col-xs-12">
     <div class="panel-heading"><i class="fa fa-fa-road fa-adn"></i> Route</div>
     <div class="panel-body">
         <div class="row">

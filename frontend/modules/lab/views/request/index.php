@@ -50,6 +50,7 @@ $gg = 1;
         'condensed' => true,
         'responsive' => false,
         'hover' => true,
+        
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
             'heading' => '<i class="glyphicon glyphicon-book"></i>  Request',
@@ -102,7 +103,10 @@ $gg = 1;
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Select Customer'],
-                'format' => 'raw'
+                'format' => 'raw',
+                'noWrap' => false,
+                'mergeHeader'=>true,
+                'contentOptions' => ['style' => 'width: 60%;word-wrap: break-word;white-space:pre-line;'],
             ],      
             [
                 'label'=>'Total',

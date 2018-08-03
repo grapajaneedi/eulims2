@@ -97,9 +97,9 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
 	],
         'pluginEvents'=>[
             "changeDate" => "function(e) { 
-                var dv=$('#request-request_datetime').val();
+                var dv=$('#erequest-request_datetime').val();
                 var d=dv.split(' ');
-                $('#request-request_date').val(d[0]);
+                $('#erequest-request_date').val(d[0]);
             }",
         ]
     ])->label('Request Date'); ?>

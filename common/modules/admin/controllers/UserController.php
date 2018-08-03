@@ -132,15 +132,24 @@ class UserController extends Controller
         if ($user->status == User::STATUS_ACTIVE) {
             $user->status = User::STATUS_INACTIVE;
             if ($user->save()) {
-                return $this->runAction('view', ['id'=>$id]);
-                //return Url::toRoute(['admin/user/view','id'=>$id]);
+                Yii::$app->session->setFlash('success', 'User Account Successfully Deactivated!');
+                return $this->redirect(["/admin/user/view",'id'=>$id]);
             } else {
                 $errors = $user->firstErrors;
-                throw new UserException(reset($errors));
+                Yii::$app->session->setFlash('warning', 'Error: '.$errors.'!');
+                return $this->redirect("/admin/user");
+            }
+        }else{
+            $user->status = User::STATUS_ACTIVE;
+            if ($user->save()) {
+                Yii::$app->session->setFlash('success', 'User Account Successfully Activated!');
+                return $this->redirect(["/admin/user/view",'id'=>$id]);
+            } else {
+                $errors = $user->firstErrors;
+                Yii::$app->session->setFlash('warning', 'Error: '.$errors.'!');
+                return $this->redirect("/admin/user");
             }
         }
-        return $this->goHome();
-        //return $this->run("/admin/user/view?id=".$id);
     }
     /**
      * Deletes an existing User model.

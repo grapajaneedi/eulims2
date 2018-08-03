@@ -10,7 +10,6 @@ use yii\helpers\ArrayHelper;
 /* @var $content string */
 $Request_URI=$_SERVER['REQUEST_URI'];
 
-//$_SERVER['SERVER_NAME']
 if($Request_URI=='/'){//alias ex: http://admin.eulims.local
     $Backend_URI=Url::base();//Yii::$app->urlManager->createUrl('/');
     $Backend_URI=$Backend_URI."/uploads/user/photo/";
@@ -18,10 +17,7 @@ if($Request_URI=='/'){//alias ex: http://admin.eulims.local
     $Backend_URI=Url::base().'/uploads/user/photo/';
 }
 Yii::$app->params['uploadUrl']=$Backend_URI;
-//echo Yii::$app->params['uploadUrl'];
-//exit;
-//echo $Backend_URI."/uploads/user/photo/";
-//exit;
+
 if(Yii::$app->user->isGuest){
     $CurrentUserName="Visitor";
     $CurrentUserAvatar=Yii::$app->params['uploadUrl'] . 'no-image.png';
@@ -30,7 +26,11 @@ if(Yii::$app->user->isGuest){
 }else{
     $CurrentUser= User::findOne(['user_id'=> Yii::$app->user->identity->user_id]);
     $CurrentUserName=$CurrentUser->profile ? $CurrentUser->profile->fullname : $CurrentUser->username;
-    $CurrentUserAvatar=$CurrentUser->profile ? Yii::$app->params['uploadUrl'].$CurrentUser->profile->getImageUrl() : Yii::$app->params['uploadUrl'] . 'no-image.png';
+    if($CurrentUser->profile){
+        $CurrentUserAvatar=!$CurrentUser->profile->getImageUrl()=="" ? Yii::$app->params['uploadUrl'].$CurrentUser->profile->getImageUrl() : Yii::$app->params['uploadUrl'] . 'no-image.png';
+    }else{
+        $CurrentUserAvatar=Yii::$app->params['uploadUrl'] . 'no-image.png';
+    }
     $CurrentUserDesignation=$CurrentUser->profile ? $CurrentUser->profile->designation : '';
     if($CurrentUserDesignation==''){
        $UsernameDesignation=$CurrentUserName;
@@ -38,8 +38,7 @@ if(Yii::$app->user->isGuest){
        $UsernameDesignation=$CurrentUserName.'-'.$CurrentUserDesignation;
     }
 }
-//$moduleDir= Yii::$app->basePath.'\modules';
-//$Directories = scandir($moduleDir);
+
 $Packages= Package::find()->all();
 $conditions = ['to' => Yii::$app->user->id, 'status' => 0];
 $messages=Message::find()->where($conditions)->all();

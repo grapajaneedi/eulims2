@@ -7,8 +7,6 @@ use common\models\system\Rstl;
 use common\models\system\User;
 use common\models\lab\Lab;
 use common\components\Functions;
-use kartik\grid\ActionColumn;
-use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ProfileSearch */
@@ -26,6 +24,14 @@ if(!Yii::$app->user->can('can-delete-profile')){
    $Buttontemplate='{view}{update}';
 }else{
    $Buttontemplate='{view}{update}{delete}'; 
+}
+if(Yii::$app->user->can("profile-full-access")){
+    $NewProfileButton=Html::button("<i class='fa fa-newspaper-o'></i> Create New User Profile",[
+        'class'=>'btn btn-success',
+        'onclick'=>"LoadModal('Create Profile','/profile/create')"
+    ]);
+}else{
+    $NewProfileButton='';
 }
 $func=new Functions();
 $Header="Department of Science and Technology<br>";
@@ -81,23 +87,23 @@ $gridColumn = [
         'class' => kartik\grid\ActionColumn::className(),
         'template' => $Buttontemplate,
         'buttons'=>[
-              'view'=>function ($url, $model) {
-                  return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/profile/'.$model->profile_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View <font color='Blue'>Profile</font>")]);
-              },
-              'update'=>function ($url, $model) {
-                  return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/profile/update/'.$model->profile_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update <font color='Blue'>Profile</font>")]);
-              },
-              'delete'=>function($url, $model){
-                   return Html::a("<span class='glyphicon glyphicon-trash'></span>", "/profile/delete/".$model->profile_id, [
-                      "title"=>"Delete", 
-                      "aria-label"=>"Delete",
-                      "data-pjax"=>"0", 
-                      "data-method"=>"post", 
-                      "data-confirm"=>"Are you sure you want to deactivate '".$model->fullname."' Profile?",
-                      "class"=>"btn btn-danger"
-                  ]);
-              }
-          ],
+            'view'=>function ($url, $model) {
+                return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/profile/'.$model->profile_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Profile")]);
+            },
+            'update'=>function ($url, $model) {
+                return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/profile/update/'.$model->profile_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Profile")]);
+            },
+            'delete'=>function($url, $model){
+                 return Html::a("<span class='glyphicon glyphicon-trash'></span>", "/profile/delete/".$model->profile_id, [
+                    "title"=>"Delete", 
+                    "aria-label"=>"Delete",
+                    "data-pjax"=>"0", 
+                    "data-method"=>"post", 
+                    "data-confirm"=>"Are you sure you want to deactivate '".$model->fullname."' Profile?",
+                    "class"=>"btn btn-danger"
+                ]);
+            }
+        ],
     ],
 ];
 ?>
@@ -121,10 +127,7 @@ $gridColumn = [
             'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-                'before'=>Html::button("<i class='fa fa-newspaper-o'></i> Create New User Profile",[
-                    'class'=>'btn btn-success',
-                    'onclick'=>"LoadModal('Create Profile','/profile/create')"
-                ]),
+                'before'=>$NewProfileButton
             ],
             'exportConfig'=>$func->exportConfig("Laboratory Request", "laboratory request", $Header),
             'columns' => $gridColumn,
