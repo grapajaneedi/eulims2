@@ -197,23 +197,25 @@ class CashierController extends \yii\web\Controller
             $connection=Yii::$app->financedb;
             $transaction =$connection->beginTransaction();
             $session = Yii::$app->session;
+           
              try {
+                 
                // $model->getDb()=$connection;
                 $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
                 $model->terminal_id=$GLOBALS['terminal_id'];
                 $model->orderofpayment_id=$op_id;
                 $this->update_nextor($model->or_series_id,$connection);
+                
                // $model->or_series_id=$model->or_series_id;
                 $model->or_number=$model->or;
                 $model->total=0;
                 $model->customer_id=$customer_id;
                 $model->cancelled=0;
                 $model->save(false);
-                $transaction->commit();
+                 $transaction->commit();
                 $this->created_receipt($op_id,$model->receipt_id);
-                $this->Savecollection($model->receipt_id,$model->orderofpayment_id);
-                 
-              //  $session->set('savepopup',"executed");
+                $this->Savecollection($model->receipt_id,$op_id);
+              
                 return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]); 
              } catch (Exception $e) {
                  $transaction->rollBack();
@@ -499,80 +501,33 @@ class CashierController extends \yii\web\Controller
             return $this->render('collection/_paymentitem', ['dataProvider'=> $paymentitemDataProvider,'receiptid'=>$receiptid,'collection_id'=>$collection_id]);
         }
     }
-    /*public function actionSaveCollection($id,$receiptid,$collection_id){
-        $collection=$this->findModelCollection($collection_id);
-        $op_id=$collection->orderofpayment_id;
-        $sub_total=$collection->sub_total;
-        $wallet_amount=$collection->wallet_amount;
-        $op_model=$this->findModel($op_id);
-        $amount=$op_model->total_amount;
-        $receipt_model=$this->findModelReceipt($receiptid);
-        $receipt_total=$receipt_model->total;
-        if($id <> '' ){
-            $str_total = explode(',', $id);
-            $arr_length = count($str_total); 
-            $total=0;
-            for($i=0;$i<$arr_length;$i++){
-                 $paymentitem =$this->findPaymentitem($str_total[$i]);
-                  Yii::$app->financedb->createCommand()
-                    ->update('tbl_paymentitem', ['status' => 2,'receipt_id'=>$receiptid], 'paymentitem_id= '.$str_total[$i])
-                    ->execute(); 
-                  $total+=$paymentitem->amount;
-            } 
-            $amount_total=$sub_total+$total;   
-            $sum_total=$sub_total+$total+$wallet_amount; 
-            $receipt_total_amount=$receipt_total+$total;
-             Yii::$app->financedb->createCommand()
-                    ->update('tbl_receipt', ['total' => $receipt_total_amount], 'receipt_id= '.$receiptid)
-                    ->execute();
-             
-             if($sum_total == $amount){
-                 Yii::$app->financedb->createCommand()
-                    ->update('tbl_collection', ['amount' => $amount_total,'sub_total'=>$sum_total,'payment_status_id' => 2], 'collection_id= '.$collection_id)
-                    ->execute();
-             }
-             if($sum_total < $amount){
-                 Yii::$app->financedb->createCommand()
-                    ->update('tbl_collection', ['amount' => $amount_total,'sub_total'=>$sum_total,'payment_status_id' => 3], 'collection_id= '.$collection_id)
-                    ->execute();
-             }
-             return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]); 
-         }else{
-             
-         }
-    } */
+  
      public function Savecollection($receiptid,$orderofpayment_id){
-//        echo "receipt".$receiptid;
-//        echo "collection".$collection_id;
-//        exit;
-       // $collection=$this->findModelCollection($collection_id);
+
         $op_id=$orderofpayment_id;
-        //$sub_total=$collection->sub_total;
-       // $wallet_amount=$collection->wallet_amount;
         $op_model=$this->findModel($op_id);
         $amount=$op_model->total_amount;
         $receipt_model=$this->findModelReceipt($receiptid);
-        //$total=$receipt_model->total;
-        
-          
-           // $total=0;
-            //for($i=0;$i<$arr_length;$i++){
-                // $paymentitem =$this->findPaymentitem($str_total[$i]);
+//        var_dump($receipt_model);
+//        exit;
+//        
             Yii::$app->financedb->createCommand()
               ->update('tbl_paymentitem', ['status' => 2,'receipt_id'=>$receiptid], 'orderofpayment_id= '.$op_id)
               ->execute(); 
-                  
+               
+            
           
             //$receipt_total_amount=$receipt_total+$total;
              Yii::$app->financedb->createCommand()
                     ->update('tbl_receipt', ['total' => $amount], 'receipt_id= '.$receiptid)
                     ->execute();
              
-             
+           
             Yii::$app->financedb->createCommand()
                ->update('tbl_orderofpayment', ['payment_status_id' => 2], 'orderofpayment_id= '.$op_id)
                ->execute();
-             
+           
+            
             //Update Request
             $lists=(new Query)
                 ->select(['GROUP_CONCAT(`tbl_paymentitem`.`request_id`) as `ids`'])
@@ -580,29 +535,37 @@ class CashierController extends \yii\web\Controller
                  ->where(['orderofpayment_id' => $op_id])
                 ->andWhere(['status' => 2])
                 ->one();
-             if($lists['ids']){
+           // var_dump($lists);
+           // exit;
+             if($lists){
                 $str_request = explode(',', $lists['ids']);
                 $arr_length = count($str_request); 
                 for($i=0;$i<$arr_length;$i++){
-                    $request =$this->findRequest($str_request[$i]);
-                    $total=$request->total;
-                    $amount=$request->getBalance($str_request[$i],$total);
-                   // echo $amount;
-                    //exit;
-                    if($amount == 0){
-                         Yii::$app->labdb->createCommand()
-                            ->update('tbl_request', ['posted' => 1,'payment_status_id'=>2], 'request_id= '.$str_request[$i])
-                            ->execute(); 
+                    
+                    $request =$this->findRequestNonLab($str_request[$i]);
+                    if($request){
+                        $total=$request->total;
+                        $amount=$request->getBalance($str_request[$i],$total);
+                       // echo $amount;
+                        //exit;
+                        if($amount == 0){
+                             Yii::$app->labdb->createCommand()
+                                ->update('tbl_request', ['posted' => 1,'payment_status_id'=>2], 'request_id= '.$str_request[$i])
+                                ->execute(); 
+                        }
+                        else{
+                            Yii::$app->labdb->createCommand()
+                                ->update('tbl_request', ['posted' => 0,'payment_status_id'=>3], 'request_id= '.$str_request[$i])
+                                ->execute(); 
+                        }   
                     }
-                    else{
-                        Yii::$app->labdb->createCommand()
-                            ->update('tbl_request', ['posted' => 0,'payment_status_id'=>3], 'request_id= '.$str_request[$i])
-                            ->execute(); 
-                    }
+                    
                 }
              } 
+           
              //End Update Request
-             return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]); 
+             //finance/cashier/view-receipt
+            return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]); 
         
     }
      public function actionCalculateTotal($id) {
@@ -695,6 +658,11 @@ class CashierController extends \yii\web\Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    protected function findRequestNonLab($requestId)
+    {
+      return $model = Request::findOne($requestId);
     }
     
     public function actionPrintview($id)
