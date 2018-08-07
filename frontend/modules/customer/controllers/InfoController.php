@@ -115,7 +115,7 @@ class InfoController extends Controller
     public function actionCreate()
     {
         $model = new Customer();
-        $model->rstl_id=$GLOBALS['rstl_id'];
+        $model->rstl_id=Yii::$app->user->identity->profile->rstl_id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             // $model->customer_code=$model->rstl_id."-".$model->customer_id;
             // $model->save();

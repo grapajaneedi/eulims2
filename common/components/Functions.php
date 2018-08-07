@@ -570,6 +570,7 @@ SCRIPT;
         }else{
             //make wallet
             $newwallet = New Customerwallet();
+            $newwallet->rstl_id=Yii::$app->user->identity->profile->rstl_id;
             $newwallet->date = date('Y-m-d h:i:s');
             $newwallet->last_update = date('Y-m-d h:i:s');
             $newwallet->balance=$amount;

@@ -12,6 +12,7 @@ use yii\db\Expression;
  * This is the model class for table "tbl_customerwallet".
  *
  * @property int $customerwallet_id
+ * @property int $rstl_id
  * @property string $date
  * @property string $last_update
  * @property string $balance
@@ -58,7 +59,7 @@ class Customerwallet extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['balance', 'customer_id'], 'required'],
+            [['balance', 'customer_id', 'rstl_id'], 'required'],
             [['date', 'last_update'], 'safe'],
             [['balance'], 'number'],
             [['customer_id'], 'integer'],
@@ -73,6 +74,7 @@ class Customerwallet extends \yii\db\ActiveRecord
     {
         return [
             'customerwallet_id' => 'Customerwallet ID',
+            'rstl_id' => 'Rstl',
             'date' => 'Date',
             'last_update' => 'Last Update',
             'balance' => 'Balance',
