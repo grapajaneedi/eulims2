@@ -1,5 +1,5 @@
 <?php
-
+use common\models\help\Topics;
 /* @var $this yii\web\View */
 
 $this->title = 'FAQs';
@@ -23,12 +23,21 @@ $this->params['breadcrumbs'][] = $this->title;
           <h3 class="box-title" data-widget="collapse"><i class="fa fa-tag"></i>FAQs</h3>
           <div class="box-tools pull-right" >
                 <button type="button" style="color:#000" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-              </div>
+                0p</button>              </div>
         </div>      
         <div class="box-body">
           <div class="row" style="padding:20px">
-            <a href="/help/faqs/request" title="Customer Wallet">1. How to create Request?</a>
+              <?php 
+              $list = Topics::find()->all();
+              foreach ($list as $i => $lists) {
+                  ?>
+                  
+                  <?php echo $lists->topic_id ?>. <a href="/help/faqs/topics?id=<?php echo $lists->topic_id ?>"><?php echo $lists->details ?></a>
+                  <br>
+                  <?php
+              }
+              ?>
+            
           </div>
         </div>
         <!-- /.box-body -->

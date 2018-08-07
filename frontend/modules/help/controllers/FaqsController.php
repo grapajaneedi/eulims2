@@ -1,6 +1,8 @@
 <?php
 
 namespace frontend\modules\help\controllers;
+use yii\db\Query;
+
 
 class FaqsController extends \yii\web\Controller
 {
@@ -8,9 +10,11 @@ class FaqsController extends \yii\web\Controller
     {
         return $this->render('index');
     }
-    public function actionTopics()
+    public function actionTopics($id)
     {
-        return $this->render('topics');
+       return $this->render('topics', [
+            'id' => $id,
+        ]);
     }
 
 }
