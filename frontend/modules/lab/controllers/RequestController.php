@@ -23,6 +23,7 @@ use common\models\system\Profile;
 use common\components\Functions;
 use linslin\yii2\curl\Curl;
 use kartik\mpdf\Pdf;
+use frontend\modules\finance\components\epayment\ePayment;
 //use yii\helpers\Url;
 /**
  * RequestController implements the CRUD actions for Request model.
@@ -168,11 +169,16 @@ class RequestController extends Controller
             $mpdf->Output();
        }
     }
-
+    public function actionTestpayment(){
+        $post= Yii::$app->request->post();
+        //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        return var_dump($_POST);
+    }
     public function actionTest($id){
-        $Func=new Functions();
-        $response=$Func->GenerateSampleCode($id);
-        echo $response;
+        $ePayment=new ePayment();
+        $result=$ePayment->PostOnlinePayment($id);
+        Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        return $result;
     }
     public function actionSaverequestransaction(){
         $post= Yii::$app->request->post();

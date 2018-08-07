@@ -136,7 +136,7 @@ if(Yii::$app->user->can('allow-cancel-op')){
                 ],
                 'filterInputOptions' => ['placeholder' => 'Customer Name', 'id' => 'grid-op-search-customer_id']
             ],
-           
+            'paymentMode.payment_mode',
             [
                'label'=>'Status', 
                'format'=>'raw',
@@ -159,7 +159,9 @@ if(Yii::$app->user->can('allow-cancel-op')){
                 'template' => $Button,
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/op/view?id=' . $model->orderofpayment_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Order of Payment")]);
+                        if($model->payment_mode_id!=5){
+                            return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/op/view?id=' . $model->orderofpayment_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Order of Payment")]);
+                        }
                     },
                     'update' => function ($url, $model) {
                         $Obj=$model->getCollectionStatus($model->orderofpayment_id);

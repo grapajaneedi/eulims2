@@ -411,8 +411,9 @@ class Response extends \yii\base\Response
     protected function sendContent()
     {
         if ($this->stream === null) {
-            echo $this->content;
-
+            if(!headers_sent()){
+                echo $this->content;
+            }
             return;
         }
 

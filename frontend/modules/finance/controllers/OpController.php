@@ -22,7 +22,7 @@ use yii2mod\alert\Alert;
 use frontend\modules\finance\components\models\Ext_Receipt as Receipt;
 use yii2tech\spreadsheet\Spreadsheet;
 use yii\data\ArrayDataProvider;
-
+use frontend\modules\finance\components\epayment\ePayment;
 use yii2tech\spreadsheet\Myspreadsheet;
 use frontend\modules\reports\modules\finance\templates\Opspreadsheet;
 /**
@@ -116,29 +116,20 @@ class OpController extends Controller
                 }else{
                     $model->on_account=0;
                 }
-//                echo "<pre>";
-//                var_dump($model);
-//                echo "</pre>";
-//                exit;
+                
                 $model->save();
                 //Saving for Paymentitem
                 $total_amount=$this->actionSavePaymentitem($request_ids, $model->orderofpayment_id);
-                //----------------------//
-                //---Saving for Collection-------
-
-//                $collection_name= $this->getCollectionname($model->collectiontype_id);
-//                $collection->nature=$collection_name['natureofcollection'];
-//                $collection->rstl_id=$GLOBALS['rstl_id'];
-//                $collection->orderofpayment_id=$model->orderofpayment_id;
-//                $collection->referral_id=0;
-//                $collection->payment_status_id=1;//Unpaid
-//                $collection->save(false);
-                //
                 $transaction->commit();
-               
+                // Update Total OP
                 $this->updateTotalOP($model->orderofpayment_id, $total_amount);
-                
-                 return $this->redirect(['/finance/op/view?id='.$model->orderofpayment_id]); 
+                //Check if it is an online payment, if so then post to epayment portal
+                if($model->payment_mode_id==5){
+                    $ePayment=new ePayment();
+                    $ePayment->PostOnlinePayment($id);
+                }
+                Yii::$app->session->setFlash('success', 'Order of Payment Successfully Created!');
+                return $this->redirect(['/finance/op/view?id='.$model->orderofpayment_id]); 
                  //$session->set('savepopup',"executed");
                    
                 } catch (Exception $e) {
