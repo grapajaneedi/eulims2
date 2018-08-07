@@ -38,8 +38,10 @@ class ApiController extends ActiveController
     }
 
     public function actionSync_customer(){ 
-        $myvar = Json::decode($_POST['data']);
+        $post = Yii::$app->request->post();
         $ctr = 0;
+        if(isset($post)){
+            $myvar = Json::decode($post['data']);
             foreach ($myvar as $var) {
 
                 $newCustomer = new Customer();
@@ -65,13 +67,18 @@ class ApiController extends ActiveController
                     $ctr++;
                 }
             }
-            echo $ctr;
-
+           
+        }
+         echo $ctr;   
     }
 
     public function actionSync_request(){ 
-        $myvar = Json::decode($_POST['data']);
+
+        $post = Yii::$app->request->post();
         $ctr = 0;
+        if(isset($post)){
+            $myvar = Json::decode($post['data']);
+            var_dump($myvar); exit();
             foreach ($myvar as $var) {
 
                 $newRequest = new Request();
@@ -101,16 +108,19 @@ class ApiController extends ActiveController
                     $ctr++;
                 }
             }
-            echo $ctr;
-
+        }
+        echo $ctr;
     }
 
 
     public function actionSync_sample(){ 
-        $myvar = Json::decode($_POST['data']);
-        $ctr = 0;
-            foreach ($myvar as $var) {
 
+        $post = Yii::$app->request->post();
+        $ctr = 0;
+        if(isset($post)){
+            $myvar = Json::decode($post['data']);
+            var_dump($myvar); exit();
+            foreach ($myvar as $var) {
                 $newSample = new Sample();
                 $newSample->rstl_id=$var['rstl_id'];
                 $newSample->pstcsample_id=$var['pstcsample_id'];
@@ -136,14 +146,18 @@ class ApiController extends ActiveController
                     $ctr++;
                 }
             }
-            echo $ctr;
+        }
+       echo $ctr;
 
     }
 
 
     public function actionSync_analysis(){ 
-        $myvar = Json::decode($_POST['data']);
+        $post = Yii::$app->request->post();
         $ctr = 0;
+        if(isset($post)){
+            $myvar = Json::decode($post['data']);
+            var_dump($myvar); exit();
             foreach ($myvar as $var) {
                 $newanalysis = new Analysis();
                 $newanalysis->rstl_id=$var['rstl_id'];
@@ -173,7 +187,8 @@ class ApiController extends ActiveController
                     $ctr++;
                 }
             }
-            echo $ctr;
+        }
+        echo $ctr;
     }
 
 
