@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
         </p>
     <?= $this->render('_form', [
-        'model' => $model,
+        'model' => $model,'dataPackageList'=>$dataPackageList
     ]) ?>
 
 </div>

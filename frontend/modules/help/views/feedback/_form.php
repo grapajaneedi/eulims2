@@ -7,7 +7,7 @@ use common\models\system\Package;
 use common\models\system\Rstl;
 use kartik\select2\Select2;
 
-$PackageList= ArrayHelper::map(Package::find()->all(),'PackageName','PackageName');
+
 $RstlList= ArrayHelper::map(Rstl::find()->all(),'name','name');
 
 /* @var $this yii\web\View */
@@ -17,6 +17,9 @@ $RstlList= ArrayHelper::map(Rstl::find()->all(),'name','name');
 
 <script type="text/javascript">
     $( document ).ready(function() {
+    
+ 
+
     
     document.getElementById('hiddenFilename').value = stringGen(10);
  //   document.getElementById('txtFilename').value = document.getElementById('hiddenFilename').value;
@@ -132,15 +135,12 @@ $RstlList= ArrayHelper::map(Rstl::find()->all(),'name','name');
 
             <?= $form->field($model, 'reported_by')->textInput(['maxlength' => true,'readonly'=>true,'value'=>Yii::$app->user->identity->username]) ?>
             
-             <?=
-            $form->field($model, 'moduletested')->widget(Select2::classname(), [
-                'data' => $PackageList,
-                'language' => 'en',
-                'options' => ['placeholder' => 'Select Module'],
-                'pluginOptions' => [
-                    'allowClear' => true
-                ],
-            ])->label('Module Tested');
+                        
+             <?php
+            echo $form->field($model, 'moduletested')->dropDownList($dataPackageList, [
+                // 'id' => 'accountnolist',
+                'prompt' => 'Select Module'
+            ]);
             ?>
 
          
