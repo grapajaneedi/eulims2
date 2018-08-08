@@ -9,9 +9,11 @@ use yii\helpers\Url;
 use kartik\form\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = 'Module Manager';
+$this->title = 'Manager';
+$this->params['breadcrumbs'][] = ['label' => 'Module', 'url' => ['/module/']];
 $this->params['breadcrumbs'][] = $this->title;
-$PathFiles= Yii::$app->basePath.'\web\uploads\packages';
+$PathFiles= Yii::$app->basePath.'/web/uploads/packages';
+
 $js="var bUrl='".$GLOBALS['base_uri']."';\n";
 $js.=<<<SCRIPT
     var PackageUrl;
@@ -170,7 +172,6 @@ SCRIPT;
 $this->registerJs($js, View::POS_READY,'script-handler');
 //Get installed Package
 $Packages= Package::find()->all();
-
 ?>
  <div class="panel panel-primary col-xs-12">
      <div class="panel-heading"><i class="fa fa-braille"></i> Module Manager <small>version 1.0</small></div>

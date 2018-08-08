@@ -54,18 +54,31 @@ class ePayment {
             'total_amount'=>$Op->total_amount,
             'payment_details'=>$Payment_details
         ];
-        $json=json_encode($TransactDetails);
+        $content = json_encode($TransactDetails);
+        //echo $json;
+        //exit;
         //return $TransactDetails;
-        $Curl=new Curl();
-        $EpaymentURI="https://yii2customer.onelab.ph/web/api/op";
+        $curl=new Curl();
+        //$EpaymentURI="https://yii2customer.onelab.ph/web/api/op";
+        $EpaymentURI="http://www.eulims.local/capi/op";
+        
+        $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+        $curl->setOption(CURLOPT_POSTFIELDS, $content);
+        $curl->setOption(CURLOPT_HTTPHEADER,[
+            'Content-Type: application/json', 
+            'Content-Length: ' . strlen($content)
+        ]);
+        $response = $curl->post($EpaymentURI);
+        
         //$EpaymentURI="http://www.eulims.local/lab/request/testpayment";
-        //$response = $Curl->setRawPostData($json)->post($EpaymentURI);
-        $response = $Curl->setRequestBody(json_encode($TransactDetails))
-        ->setHeaders([
-           'Content-Type' => 'application/json',
-           'Content-Length' => strlen(json_encode($TransactDetails))
-        ])
-        ->post($EpaymentURI);
+        //$response = $Curl->setRawPostData(['json'=>$json])->post($EpaymentURI);
+        /*$response = $Curl->setRequestBody($json)
+            ->setHeaders([
+               'Content-Type' => 'application/json',
+               'Content-Length' => strlen($json)
+            ])->post($EpaymentURI);
+         * 
+         */
         //$response = $Curl->setRawPostData(
         //    json_encode($TransactDetails))->post($EpaymentURI);
         return $response;

@@ -21,9 +21,13 @@ use common\models\lab\Customer;
 use DateTime;
 use common\models\system\Profile;
 use common\components\Functions;
-use linslin\yii2\curl\Curl;
+//use linslin\yii2\curl\Curl;
 use kartik\mpdf\Pdf;
 use frontend\modules\finance\components\epayment\ePayment;
+
+use common\models\finance\Op;
+use common\models\system\Rstl;
+use skeeks\yii2\curl\Curl;
 //use yii\helpers\Url;
 /**
  * RequestController implements the CRUD actions for Request model.
@@ -170,15 +174,72 @@ class RequestController extends Controller
        }
     }
     public function actionTestpayment(){
-        $post= Yii::$app->request->post();
-        //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
-        return var_dump($_POST);
+        $json=Yii::$app->getRequest()->getBodyParams();
+        return $json;
     }
     public function actionTest($id){
-        $ePayment=new ePayment();
-        $result=$ePayment->PostOnlinePayment($id);
+        //$ePayment=new ePayment();
+        //$result=$ePayment->PostOnlinePayment($id);
+        //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        //return $result;
+        $Func=new Functions();
+        $Proc="spGetPaymentForOnline(:op_id)";
+        $Connection= \Yii::$app->financedb;
+        $param=[
+            'op_id'=>$id
+        ];
+        $requests=$Func->ExecuteStoredProcedureRows($Proc, $param, $Connection);
+        $Payment_details=[];
+        foreach($requests as $request){
+            $payment_detail=[
+                'request_ref_num'=>$request['request_ref_num'],
+                'rrn_date_time'=>$request['request_datetime'],
+                'amount'=>$request['amount']
+            ];
+            array_push($Payment_details, $payment_detail);
+        }
+        //Query order of payment
+        $Op= Op::findOne($id);
+        $Rstl= Rstl::findOne($Op->rstl_id);
+        $Customer= Customer::findOne($Op->customer_id);
+        $TransactDetails=[
+            'transaction_num'=>$Op->transactionnum,
+            'customer_code'=>$Customer->customer_code,
+            'collection_type'=>$Op->collectiontype->natureofcollection,
+            'collection_code'=>'collection-code',
+            'order_date'=>$Op->order_date,
+            'agency_code'=>$Rstl->code,
+            'total_amount'=>$Op->total_amount,
+            'payment_details'=>$Payment_details
+        ];
+        $content = json_encode($TransactDetails);
+        
+        //return $TransactDetails;
+        $curl=new Curl();
+        //$EpaymentURI="https://yii2customer.onelab.ph/web/api/op";
+        $EpaymentURI="http://www.eulims.local/capi/op";
+        $response = $curl->setOption(
+            CURLOPT_POSTFIELDS,
+            $content)->post($EpaymentURI);
+        /*$response = $curl->setRequestBody($content)
+            ->setHeaders([
+               'Content-Type' => 'application/json',
+               'Content-Length' => strlen($content)
+            ])->post($EpaymentURI);
+         * 
+         */
+        /*$curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+        $curl->setOption(CURLOPT_POSTFIELDS, $content);
+        $curl->setOption(CURLOPT_HTTPHEADER,[
+            'Content-Type: application/json', 
+            'Content-Length: ' . strlen($content)
+        ]);
+        
+        $response = $curl->post($EpaymentURI);
+         * 
+         */
         Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
-        return $result;
+        return $response;
     }
     public function actionSaverequestransaction(){
         $post= Yii::$app->request->post();

@@ -21,6 +21,9 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'places' => [
             'class' => '\dosamigos\google\places\Places',

@@ -6,6 +6,7 @@ use kartik\grid\GridView;
 use kartik\grid\ActionColumn;
 use yii\helpers\ArrayHelper;
 use common\models\system\Package;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\system\PackageDetailsSearch */
@@ -15,15 +16,11 @@ $this->title = 'Details';
 $this->params['breadcrumbs'][] = ['label' => 'Modules', 'url' => ['/module']];
 $this->params['breadcrumbs'][] = $this->title;
 $Buttontemplate='{view}{update}';
+$func=new Functions();
+$Header="Department of Science and Technology<br>";
+$Header.="Module Details List";
 ?>
 <div class="package-details-index">
-     <div class="panel panel-primary col-xs-12">
-        <div class="panel-heading"><i class="fa fa-angellist"></i> View <?= $this->title ?></div>
-        <div class="panel-body">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <p>
-        <button onclick="LoadModal('Create Details','/module/details?action=create')" class="btn btn-success">Create Module Details</button>
-    </p>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -31,8 +28,20 @@ $Buttontemplate='{view}{update}';
         'bordered' => true,
         'striped' => true,
         'condensed' => true,
-        'responsive' => true,
+        'responsive' => false,
         'hover' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'heading' => '<i class="glyphicon glyphicon-book"></i>  Module Details',
+            'before'=>"<button onclick=\"LoadModal('Create Details','/module/details?action=create')\" class=\"btn btn-success\">Create Module Details</button>",
+        ],
+        'pjax' => true, // pjax is set to always true for this demo
+        'pjaxSettings' => [
+            'options' => [
+                    'enablePushState' => false,
+              ],
+        ],
+        'exportConfig'=>$func->exportConfig("Module Details", "module details", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
@@ -97,6 +106,4 @@ $Buttontemplate='{view}{update}';
         ],
     ]);
     ?>
-        </div>
-     </div>
 </div>
