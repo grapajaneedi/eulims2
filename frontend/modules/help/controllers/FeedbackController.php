@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-namespace frontend\modules\feedback\controllers;
+namespace frontend\modules\help\controllers;
 
 use Yii;
 use common\models\feedback\UserFeedback;
@@ -9,10 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * Default controller for the `Lab` module
- */
-class DefaultController extends Controller
+
+class FeedbackController extends \yii\web\Controller
 {
     public function behaviors()
     {
@@ -53,30 +51,6 @@ class DefaultController extends Controller
         ]);
     }
     
-     public function actionUpload()
-    {
-        return $this->render('upload');
-    }
-    
-    public function actionUpload2()
-    {
-        return $this->render('upload2');
-    }
-    
-     public function actionUpload3()
-    {
-        return $this->render('upload3');
-    }
-    
-    public function actionUploaddata()
-    {
-        $upload_dir = "upload/";
-      
-        
-        return $this->render('uploaddata');
-    }
-
-
     /**
      * Creates a new UserFeedback model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -143,4 +117,5 @@ class DefaultController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
 }

@@ -55,6 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'steps:ntext',
             'reported_by',
             'region_reported',
+            'moduletested',
             'action_taken',
         ],
     ])

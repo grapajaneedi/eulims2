@@ -35,7 +35,7 @@ class UserFeedback extends \yii\db\ActiveRecord
             [['url', 'urlpath_screen', 'details', 'steps'], 'string'],
             [['reported_by', 'action_taken'], 'string', 'max' => 250],
             [['region_reported'], 'string', 'max' => 100],
-            [['url', 'urlpath_screen','region_reported'], 'required'],
+            [['url', 'urlpath_screen','region_reported','moduletested'], 'required'],
         ];
     }
 
@@ -53,6 +53,7 @@ class UserFeedback extends \yii\db\ActiveRecord
             'reported_by' => 'Reported By',
             'region_reported' => 'Region Reported',
             'action_taken' => 'Action Taken',
+            'moduletested' => 'Module Tested',
         ];
     }
 }

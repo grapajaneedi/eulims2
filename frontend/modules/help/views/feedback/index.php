@@ -8,6 +8,8 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'User Feedbacks';
+
+$this->params['breadcrumbs'][] = ['label' => 'Help', 'url' => ['/help']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-feedback-index">
@@ -30,9 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'urlpath_screen:ntext',
             'details:ntext',
             'steps:ntext',
-            // 'reported_by',
-            // 'region_reported',
-            // 'action_taken',
+             'reported_by',
+             'region_reported',
+             'action_taken',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
