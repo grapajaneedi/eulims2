@@ -8,6 +8,7 @@ use common\models\feedback\UserFeedbackSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 
 class FeedbackController extends \yii\web\Controller
@@ -59,13 +60,21 @@ class FeedbackController extends \yii\web\Controller
     public function actionCreate()
     {
         $model = new UserFeedback();
+        
+        $sql = "select * from eulims.tbl_package
+                union all
+                select '0','Others','others','',''";
+        
+       
+        $dataPackageList = ArrayHelper::map(Yii::$app->db->createCommand($sql)->queryAll(),'PackageName','PackageName');
+
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
              Yii::$app->session->setFlash('success', 'User Feedback Successfully Created!');
             return $this->redirect(['view', 'id' => $model->feedback_id]);
         } else {
             return $this->render('create', [
-                'model' => $model,
+                'model' => $model,'dataPackageList'=>$dataPackageList
             ]);
         }
     }

@@ -21,13 +21,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create User Feedback', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <div style="overflow: auto;overflow-y: hidden;height:400px"> 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'feedback_id',
+         //   'feedback_id',
+            'moduletested',
             'url:ntext',
             'urlpath_screen:ntext',
             'details:ntext',
@@ -39,6 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+    </div>
         </div>
 </div>
 </div>
