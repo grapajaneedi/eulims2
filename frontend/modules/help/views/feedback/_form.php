@@ -2,6 +2,13 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use common\models\system\Package;
+use common\models\system\Rstl;
+use kartik\select2\Select2;
+
+$PackageList= ArrayHelper::map(Package::find()->all(),'PackageName','PackageName');
+$RstlList= ArrayHelper::map(Rstl::find()->all(),'name','name');
 
 /* @var $this yii\web\View */
 /* @var $model common\models\feedback\UserFeedback */
@@ -125,9 +132,28 @@ use yii\widgets\ActiveForm;
 
             <?= $form->field($model, 'reported_by')->textInput(['maxlength' => true,'readonly'=>true,'value'=>Yii::$app->user->identity->username]) ?>
             
-         
+             <?=
+            $form->field($model, 'moduletested')->widget(Select2::classname(), [
+                'data' => $PackageList,
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select Module'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ])->label('Module Tested');
+            ?>
 
-            <?= $form->field($model, 'region_reported')->textInput(['maxlength' => true]) ?>
+         
+             <?=
+            $form->field($model, 'region_reported')->widget(Select2::classname(), [
+                'data' => $RstlList,
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select Region'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ])->label('Region Reported');
+            ?>
 
             <?= $form->field($model, 'action_taken')->textInput(['maxlength' => true]) ?>
 
