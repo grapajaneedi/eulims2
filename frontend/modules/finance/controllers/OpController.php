@@ -124,7 +124,7 @@ class OpController extends Controller
                 // Update Total OP
                 $this->updateTotalOP($model->orderofpayment_id, $total_amount);
                 //Check if it is an online payment, if so then post to epayment portal
-                if($model->payment_mode_id==5){
+                if($model->payment_mode_id==5){//Online Payment
                     $ePayment=new ePayment();
                     $result=$ePayment->PostOnlinePayment($id);
                     

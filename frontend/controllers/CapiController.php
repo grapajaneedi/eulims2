@@ -1,5 +1,9 @@
 <?php
-namespace frontend\controllers;
+
+
+
+namespace app\controllers;
+
 
 use Yii;
 
@@ -9,13 +13,15 @@ use yii\rest\ActiveController;
 
 use yii\data\ActiveDataProvider;
 
-class CapiController extends ActiveController
+
+
+class ApiController extends ActiveController
 
 {
 
-    public $modelClass = 'common\models\api\OrderOfPayment';
+    public $modelClass = 'app\models\OrderOfPayment';
 
-    public $modelClass1 = 'common\models\api\PaymentDetails';
+    public $modelClass1 = 'app\models\PaymentDetails';
 
     public function behaviors()
     {
@@ -40,16 +46,23 @@ class CapiController extends ActiveController
 	];
     }
 
-    public function actionOp(){
+    public function actionOp()
+    {
+
+      $model = new $this->modelClass;
+
       if(isset($_GET['id'])){
       	$data = $model::find()->where(["op_id" => $_GET['id']])->all();
-      }else{//(Yii::$app->request->post()) {
+      }
+      else if ($model->load(Yii::$app->request->post(), '')) {
+	$req_id = 0;
+
 	// req_data retrieves the posted json data
 	$req_data = Yii::$app->request->post();
-        $model = new $this->modelClass;
+
 	// payment_details gets the payment details from posted the json data
 	$payment_details = $req_data['payment_details'];
-        
+
 	// Save in the tbl_order_of_payment
         $model->transaction_num = $req_data['transaction_num'];
         $model->customer_code = $req_data['customer_code'];
@@ -59,40 +72,62 @@ class CapiController extends ActiveController
         $model->agency_code = $req_data['agency_code'];
         $model->total_amount = $req_data['total_amount'];
         $model->op_status = 'Pending';
-        $model->save(false);
-       
+        $success=$model->save();
+
 	// Get the op_id of the stored order of payment data
-	//$request = $model::find()->where(["transaction_num" => $req_data['transaction_num']])->all();
 	$req_id = $model->op_id;
-
+        if($success){
 	// Loop (if there is) and save the payment details 
-	//for($i = 0; $i < count($payment_details); $i++){
-        $paymentItems = json_decode( $payment_details, true );
-        foreach($paymentItems as $paymentItem){
-            $model1 = new $this->modelClass1;
-            // Save in the tbl_payment_details
-            $model1->op_id = $req_id;
-            $model1->request_ref_num = $paymentItem->request_ref_num;
-            $model1->rrn_date_time = $paymentItem->rrn_date_time;
-            $model1->amount = $paymentItem->amount;
+            for($i = 0; $i < count($payment_details); $i++){
 
-            if($model1->validate()){
-                    $model1->save();
-                    unset($model1);
+                    $model1 = new $this->modelClass1;
 
-                    // If the data stored successfully
-                    $data['status'] = 'success';
+                    // Save in the tbl_payment_details
+                    $model1->op_id = $req_id;
+                    $model1->request_ref_num = $payment_details[$i]['request_ref_num'];
+                    $model1->rrn_date_time = $payment_details[$i]['rrn_date_time'];
+                    $model1->amount = $payment_details[$i]['amount'];
+
+                    if($model1->validate()){
+                            $model1->save();
+                            unset($model1);
+
+                            // If the data stored successfully
+                            $data=[
+                               'status'=>'success',
+                               'description'=>''
+                            ];
+                    }
+                    else{
+
+                            // If there is an error saving the data
+                            $errors = $model1->errors;
+                            $data=[
+                               'status'=>'error',
+                               'description'=>$errors
+                            ];
+
+                    }
             }
-            else{
-
-                    // If there is an error saving the data
-                    $errors = $model1->errors;
-                    $data = $errors;
-            }
-	}
+        }else{//Error saving OP
+            $errors = $model->errors;
+            $data=[
+                'status'=>'error',
+                'description'=>$errors
+            ];
+        }
       }
-      Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
-      return $payment_details;
+      else{
+      	$data=[
+            'status'=>'error',
+            'description'=>'Please check your data'
+        ];
+      }
+
+      //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+      Yii::$app->response->format = 'json';
+      return $data;
+
     }
 
 }

@@ -212,29 +212,11 @@ class RequestController extends Controller
         $curl = new curl\Curl();
         $EpaymentURI="https://yii2customer.onelab.ph/web/api/op";
         //$EpaymentURI="http://www.eulims.local/capi/op";
-       
-        
-//        $response = $curl->setOption(
-//            CURLOPT_POSTFIELDS,
-//            [$content]
-//        )->get($EpaymentURI);
         $response = $curl->setRequestBody($content)
             ->setHeaders([
                'Content-Type' => 'application/json',
                'Content-Length' => strlen($content)
             ])->post($EpaymentURI);
-        
-        /*$curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-        $curl->setOption(CURLOPT_POSTFIELDS, $content);
-        $curl->setOption(CURLOPT_HTTPHEADER,[
-            'Content-Type: application/json', 
-            'Content-Length: ' . strlen($content)
-        ]);
-        
-        $response = $curl->post($EpaymentURI);
-         * 
-         */
-        Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
         return $response;
     }
     public function actionSaverequestransaction(){
