@@ -153,6 +153,7 @@ ShowProgressSpinner(true);
          jQuery.ajax( {
             type: 'GET',
             url: '/lab/tagging/getanalysis?id='+$(this).val(),
+            data: { id: $('#sample_ids').val(), analysis_id: $('#aid').val()},
             dataType: 'html',
             success: function ( response ) {
              ShowProgressSpinner(true);            

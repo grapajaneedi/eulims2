@@ -175,13 +175,6 @@ class AnalysisController extends Controller
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
-          
-          
-            // $list =  Testname::find()
-            // ->innerJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
-            // ->Where(['tbl_sampletype_testname.sampletype_id'=>118])
-            // ->asArray()
-            // ->all();
 
             $list =  Testname::find()
             ->innerJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
@@ -294,8 +287,6 @@ class AnalysisController extends Controller
                 Yii::$app->session->setFlash('success', 'Analysis Successfully Added'); 
                 return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
        } else if (Yii::$app->request->isAjax) {
-
-            //please check on this
                 $model->rstl_id = $GLOBALS['rstl_id'];
                 $model->pstcanalysis_id = $GLOBALS['rstl_id'];
                 $model->request_id = $request_id;
