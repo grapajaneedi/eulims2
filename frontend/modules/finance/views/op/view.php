@@ -279,20 +279,10 @@ $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> P
 </div>
 <script type="text/javascript">
     function addReceipt(url,title){
-       //var url = 'Url::to(['sample/update']) . "?id=' + id;
-       //var url = '/lab/sample/update?id='+id;
-        $(".modal-title").html(title);
-        $('#modal').modal('show')
-            .find('#modalContent')
-            .load(url);
+       LoadModal(title,url,'true','600px');
     }
     
     function addPaymentitem(url,title){
-       //var url = 'Url::to(['sample/update']) . "?id=' + id;
-       //var url = '/lab/sample/update?id='+id;
-        $(".modal-title").html(title);
-        $('#modal').modal('show')
-            .find('#modalContent')
-            .load(url);
+        LoadModal(title,url,'true','800px');
     }
 </script>
