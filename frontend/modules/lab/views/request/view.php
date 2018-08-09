@@ -425,6 +425,7 @@ $UnpaidBalance=number_format($UnpaidBalance,2);
                 [
                     'attribute'=>'testname',
                     'header'=>'Test/ Calibration Requested',
+                    'contentOptions' => ['style' => 'width: 40%;word-wrap: break-word;white-space:pre-line;'],
                     'enableSorting' => false,
                 ],
                 [
