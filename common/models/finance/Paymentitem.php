@@ -4,6 +4,7 @@ namespace common\models\finance;
 
 use Yii;
 use frontend\modules\finance\components\models\Ext_Request;
+
 /**
  * This is the model class for table "tbl_paymentitem".
  *
@@ -87,6 +88,11 @@ class Paymentitem extends \yii\db\ActiveRecord
    public function getReceipt()
    {
        return $this->hasOne(Receipt::className(), ['receipt_id' => 'receipt_id']);
+   }
+   
+   public function getRequest()
+   {
+       return $this->hasOne(Ext_Request::className(), ['request_id' => 'request_id']);
    }
    
    /*public function maxValueValidation()

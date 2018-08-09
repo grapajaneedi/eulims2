@@ -2,6 +2,7 @@
 use kartik\grid\GridView;
 use yii\helpers\Html;
 use frontend\modules\finance\components\models\Ext_Request;
+use common\models\lab\Request;
 $js=<<<SCRIPT
    $(".kv-row-checkbox").click(function(){
         settotal();
@@ -18,38 +19,36 @@ $this->registerJs($js);
  <?php 
     $gridColumn = [
         [
-            'class' => '\kartik\grid\SerialColumn',
-            
-         ],
+          'attribute'=>'request_id',
+          'enableSorting' => false,
+          'hidden'=>true
+        ],
        
-         [
+        [
              'class' => '\kartik\grid\CheckboxColumn',
              'checkboxOptions' => function($model) {
-                if($model->posted == 1 && $model->payment_status_id <> 2){
+                if($model['posted'] == 1 && $model['payment_status_id'] <> 2){
                    return ['disabled' => true];
                 }else{
                    return [];
                 }
              },
-         ],
+        ],
+        [
+          'attribute'=>'CustomerName',
+          'enableSorting' => false,
+        ],            
         [
           'attribute'=>'request_ref_num',
           'enableSorting' => false,
         ],
-//        [
-//            'attribute'=>'request_datetime',
-//             'value' => function($model) {
-//                    return date($model->request_datetime);
-//                },
-//            'pageSummary' => '<span style="float:right;">Total</span>',
-//            'enableSorting' => false,
-//        ],
         [
             'attribute'=>'payment_status_id',
+            'label'=>'Payment Status',
             'format'=>'raw',
              'value' => function($model) {
-                    //return $model->PaymentStatusDetailspayment_status_id;
-                    $Obj=$model->getPaymentStatusDetails($model->request_id);
+                    $request= Request::find($model['request_id'])->one(); 
+                    $Obj=$request->getPaymentStatusDetails($model['request_id']);
                     if($Obj){
                        return "<span class='badge ".$Obj[0]['class']." legend-font' style='width:80px!important;height:20px!important;'>".$Obj[0]['payment_status']."</span>";
                     }else{
@@ -66,9 +65,9 @@ $this->registerJs($js);
                 'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
             ],
             'value' => function($model) {
-                 $request= Ext_Request::find()->where(['request_id' => $model->request_id])->one();
+                 $request= Ext_Request::find()->where(['request_id' => $model['request_id']])->one();
                  $total=$request['total'];
-                 return $model->getBalance($model->request_id,$total);
+                 return $request->getBalance($model['request_id'],$total);
             },
             'hAlign' => 'right', 
             'vAlign' => 'middle',
@@ -77,6 +76,7 @@ $this->registerJs($js);
             'pageSummary' => '<span id="total">0.00</span>',
              
         ],
+                   
                  
          /*[
             'attribute'=>'selected_request',
@@ -148,18 +148,21 @@ $this->registerJs($js);
         var trows = SearchFieldsTable[0].rows;
         var Total=0.00;
         var amt=0.00;
+        var rqs='';
+        var ids=[];
         $.each(trows, function (index, row) {
             var data_key=$(row).attr("data-key");
             for (i = 0; i < dkeys.length; i++) { 
                 if(data_key==dkeys[i]){
-                    amt=StringToFloat(trows[index].cells[4].innerHTML);
+                    amt=StringToFloat(trows[index].cells[5].innerHTML);
                     Total=Total+parseFloat(amt);
+                    rqs=trows[index].cells[0].innerHTML;
+                    ids.push(rqs);
                 }
             }
         }); 
-       
-        var keylist= dkeys.join();
-        $("#op-requestids").val(keylist);
+     
+        $("#op-requestids").val(ids);
      
         var tot=parseFloat(Total);
         var total=CurrencyFormat(tot,2);
@@ -187,14 +190,27 @@ $this->registerJs($js);
     }
     
     $('#btnSaveCollection').on('click',function(e) {
-        var keys = $('#grid').yiiGridView('getSelectedRows');
-        var keylist= keys.join();
-        if (keylist == ""){
+        var dkeys=$("#grid").yiiGridView("getSelectedRows");
+        var SearchFieldsTable = $(".kv-grid-table>tbody");
+        var trows = SearchFieldsTable[0].rows;
+        var rqs='';
+        var ids=[];
+        $.each(trows, function (index, row) {
+            var data_key=$(row).attr("data-key");
+            for (i = 0; i < dkeys.length; i++) { 
+                if(data_key==dkeys[i]){
+                    rqs=trows[index].cells[0].innerHTML;
+                    ids.push(rqs);
+                }
+            }
+        }); 
+        
+        if (ids == ""){
             alert("Please Select Payment Item");
         }
         else{
              $.post({
-            url: 'save-paymentitem?request_ids='+keylist+'&opid=<?php echo $opid ?>', // your controller action
+            url: 'save-paymentitem?request_ids='+ids+'&opid=<?php echo $opid ?>', // your controller action
             dataType: 'json',
             success: function(data) {
                location.reload();

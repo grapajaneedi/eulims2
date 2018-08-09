@@ -25,6 +25,7 @@ use yii\data\ArrayDataProvider;
 use frontend\modules\finance\components\epayment\ePayment;
 use yii2tech\spreadsheet\Myspreadsheet;
 use frontend\modules\reports\modules\finance\templates\Opspreadsheet;
+use yii\data\SqlDataProvider;
 /**
  * OrderofpaymentController implements the CRUD actions for Op model.
  */
@@ -72,6 +73,7 @@ class OpController extends Controller
      */
     public function actionView($id)
     { 
+        $model=$this->findModel($id);
          $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $id]);
          $paymentitemDataProvider = new ActiveDataProvider([
             'query' => $paymentitem_Query,
@@ -79,9 +81,14 @@ class OpController extends Controller
                 'pageSize' => 10,
              ],
          ]);
-         
+//         $paymentitemDataProvider = new SqlDataProvider([
+//            'sql' => 'SELECT *, eulims_lab.fnGetPaymentitemCustomer(request_id) as CustomerName FROM eulims_finance.tbl_paymentitem WHERE orderofpayment_id='.$id,
+//             'pagination' => [
+//                'pageSize' => 10,
+//             ],
+//         ]);
          return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
             'paymentitemDataProvider' => $paymentitemDataProvider,
         ]);
 
@@ -111,6 +118,9 @@ class OpController extends Controller
                 $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
                 $model->transactionnum= $this->Gettransactionnum();
                 $model->payment_status_id=1; //unpaid
+                
+                $ids= implode(',',$model->subsidiary_customer_ids);
+                $model->subsidiary_customer_ids=$ids;
                 if ($model->payment_mode_id == 6){
                     $model->on_account=1;
                 }else{
@@ -118,9 +128,10 @@ class OpController extends Controller
                 }
                 
                 $model->save();
+                
+                $transaction->commit();
                 //Saving for Paymentitem
                 $total_amount=$this->actionSavePaymentitem($request_ids, $model->orderofpayment_id);
-                $transaction->commit();
                 // Update Total OP
                 $this->updateTotalOP($model->orderofpayment_id, $total_amount);
                 //Check if it is an online payment, if so then post to epayment portal
@@ -223,17 +234,14 @@ class OpController extends Controller
     
      public function actionGetlistrequest($id)
     {
-        $model= new Request();
-        $query = Request::find()->where(['customer_id' => $id])->andWhere(['not', ['request_ref_num' => null]])->andWhere(['not', ['payment_status_id' => 2]]);
-        
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+         $dataProvider = new SqlDataProvider([
+            'sql' => 'SELECT *, eulims_lab.fnGetCustomer(customer_id) as CustomerName FROM eulims_lab.tbl_request WHERE customer_id IN('.$id.') and request_ref_num IS NOT NULL and payment_status_id <> 2',
         ]);
         if(Yii::$app->request->isAjax){
-            return $this->renderAjax('_request', ['dataProvider'=>$dataProvider,'model'=>$model,'stat'=>0]);
+            return $this->renderAjax('_request', ['dataProvider'=>$dataProvider,'stat'=>0]);
         }
         else{
-            return $this->render('_request', ['dataProvider'=>$dataProvider,'model'=>$model,'stat'=>0]);
+            return $this->render('_request', ['dataProvider'=>$dataProvider,'stat'=>0]);
         }
 
     }
@@ -435,11 +443,18 @@ class OpController extends Controller
     public function actionAddPaymentitem($opid,$customerid)
     {
         $op=$this->findModel($opid);
+        $customer_id=$op->customer_id;
+        $sdc=$op->subsidiary_customer_ids;
+        $ids='';
+        if ($sdc == ""){
+            $ids=$customer_id;
+        }
+        else{
+            $ids=$sdc.','.$customer_id;
+        } 
         
-        //$paymentitem_Query = Request::find()->where(['customer_id' => $customerid])->andWhere(['not',['payment_status_id' => 2]]);
-        $paymentitem_Query = Request::find()->where(['customer_id' => $customerid])->andWhere(['not',['payment_status_id' => 2]]);
-         $paymentitemDataProvider = new ActiveDataProvider([
-            'query' => $paymentitem_Query,
+        $paymentitemDataProvider = new SqlDataProvider([
+            'sql' => 'SELECT *, eulims_lab.fnGetCustomer(customer_id) as CustomerName FROM eulims_lab.tbl_request WHERE customer_id IN('.$ids.') and request_ref_num IS NOT NULL and payment_status_id <> 2',
         ]);
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_request', ['dataProvider'=> $paymentitemDataProvider,'opid'=>$opid,'stat'=>1]);

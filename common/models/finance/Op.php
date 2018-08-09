@@ -26,7 +26,6 @@ use common\models\lab\Request;
  * @property int $payment_status_id
  * @property Billing[] $billings
  * @property CancelledOp[] $cancelledOps
- * @property Collection $collection
  * @property OpBilling[] $opBillings
  * @property Collectiontype $collectiontype
  * @property Paymentmode $paymentMode
@@ -61,7 +60,7 @@ class Op extends \yii\db\ActiveRecord
             [['transactionnum', 'collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose'], 'required'],
 	    ['RequestIds', 'required','message' => 'Please select Request.'],
             [['rstl_id', 'collectiontype_id', 'payment_mode_id', 'customer_id', 'receipt_id','on_account','payment_status_id'], 'integer'],
-            [['order_date','RequestIds','payment_status_id'], 'safe'],
+            [['order_date','RequestIds','payment_status_id','subsidiary_customer_ids'], 'safe'],
             [['total_amount'], 'number'],
             [['transactionnum','RequestIds','invoice_number'], 'string', 'max' => 100],
             [['purpose'], 'string', 'max' => 200],

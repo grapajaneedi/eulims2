@@ -42,8 +42,7 @@ $disable='';
     <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 1px !important;">
      <a href="#" class="close" data-dismiss="alert" >×</a>
     <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
-     
-    </div>
+     </div>
    
     <div style="padding:0px!important;">
         <div class="row">
@@ -120,6 +119,27 @@ $disable='';
             </div>
         </div>
         <div class="row">
+         <div class="col-md-12">
+            <?= $form->field($model, 'subsidiary_customer_ids')->widget(Select2::classname(), [
+               'data' => ArrayHelper::map(Customer::find()->where(['not',['customer_id'=>$model->customer_id]])->all(),'customer_id','customer_name'),
+               //'initValueText'=>$model->modeofrelease_ids,
+               'language' => 'en',
+                'disabled'=>true,
+                'options' => [
+                   'placeholder' => 'Select Subsidiary Customer(s)...',
+                   'multiple' => true,
+                   //'disabled'=>$disabled
+               ],
+               'pluginEvents' => [
+                   "change" => "function() { 
+                      // $('#modeofrelease_ids').val($(this).val());
+                   }
+                   ",
+               ]
+           ])->label('Subsidiary Customer(s) * (Optional)'); ?> 
+         </div>
+        </div> 
+        <div class="row">
             <div class="col-lg-12">  
                  <div id="prog" style="position:relative;display:none;">
                     <img style="display:block; margin:0 auto;" src="<?php echo  $GLOBALS['frontend_base_uri']; ?>/images/ajax-loader.gif">
@@ -168,13 +188,25 @@ $disable='';
 
 <script type="text/javascript">
     $('#op-customer_id').on('change',function(e) {
+       
        $(this).select2('close');
        e.preventDefault();
+       $('#op-subsidiary_customer_ids').val('').trigger('change');
         $('#prog').show();
         $('#requests').hide();
+        var cid=$(this).val();
+        
+        if (cid == ""){
+            cid=-1;
+            $('#op-subsidiary_customer_ids').prop('disabled', true);
+            $('#op-subsidiary_customer_ids').select2('close');
+        }
+        else{
+             $('#op-subsidiary_customer_ids').prop('disabled', false);
+        }
          jQuery.ajax( {
             type: 'POST',
-            url: '/finance/op/check-customer-wallet?customerid='+$(this).val(),
+            url: '/finance/op/check-customer-wallet?customerid='+cid,
             dataType: 'html',
             success: function ( response ) {
                $('#wallet').val(response);
@@ -188,7 +220,7 @@ $disable='';
             //data: {
             //    customer_id:customer_id,
            // },
-            url: '/finance/op/getlistrequest?id='+$(this).val()+'&opid=" "',
+            url: '/finance/op/getlistrequest?id='+cid,
             dataType: 'html',
             success: function ( response ) {
 
@@ -227,4 +259,43 @@ $disable='';
             $('#createOP').prop('disabled', false);
         }    
     }
+    
+     $('#op-subsidiary_customer_ids').on('change',function(e) {
+         $(this).select2('close');
+        e.preventDefault();
+        var customer_id= $('#op-customer_id').val();
+        var sdc=$(this).val();
+        var ids='';
+        if (customer_id == ""){
+            ids=-1;
+        }else{
+            if (sdc == ""){
+                ids=customer_id;
+            }
+            else{
+                ids=sdc+','+customer_id;
+            }
+        }
+       
+        //alert(ids);
+        jQuery.ajax( {
+            type: 'POST',
+            url: '/finance/op/getlistrequest?id='+ids,
+            dataType: 'html',
+            success: function ( response ) {
+               setTimeout(function(){
+               $('#requests').html(response);
+                   }, 0);
+
+
+            },
+            error: function ( xhr, ajaxOptions, thrownError ) {
+                alert( thrownError );
+            }
+        });     
+        
+        $(this).select2('open');
+      //  $(this).one('select-focus',select2Focus);
+      $(this).attr('tabIndex',1);
+    });
 </script>

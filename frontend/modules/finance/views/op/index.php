@@ -228,12 +228,7 @@ if(Yii::$app->user->can('allow-cancel-op')){
             .load($(this).attr('value'));
     });
     function addOp(url,title){
-       //var url = 'Url::to(['sample/update']) . "?id=' + id;
-       //var url = '/lab/sample/update?id='+id;
-        $(".modal-title").html(title);
-        $('#modal').modal('show')
-            .find('#modalContent')
-            .load(url);
+        LoadModal(title,url,'true','800px');
     }
   
 </script>
