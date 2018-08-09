@@ -62,7 +62,7 @@ class Lab extends \yii\db\ActiveRecord
         return [
             'lab_id' => 'Lab ID',
             'labname' => 'Laboratory',
-            'labcode' => 'Labcode',
+            'labcode' => 'Lab Code',
             'labcount' => 'Labcount',
             'nextrequestcode' => 'Nextrequestcode',
             'active' => 'Active',
