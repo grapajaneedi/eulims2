@@ -126,7 +126,8 @@ class OpController extends Controller
                 //Check if it is an online payment, if so then post to epayment portal
                 if($model->payment_mode_id==5){
                     $ePayment=new ePayment();
-                    $ePayment->PostOnlinePayment($id);
+                    $result=$ePayment->PostOnlinePayment($id);
+                    
                 }
                 Yii::$app->session->setFlash('success', 'Order of Payment Successfully Created!');
                 return $this->redirect(['/finance/op/view?id='.$model->orderofpayment_id]); 
