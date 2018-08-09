@@ -5,7 +5,7 @@ use common\components\Functions;
 use common\models\finance\Op;
 use common\models\system\Rstl;
 use common\models\lab\Customer;
-use linslin\yii2\curl\Curl;
+use linslin\yii2\curl;
 /*
  * Project Name: eulims_ * 
  * Copyright(C)2018 Department of Science & Technology -IX * 
@@ -58,29 +58,16 @@ class ePayment {
         //echo $json;
         //exit;
         //return $TransactDetails;
-        $curl=new Curl();
-        //$EpaymentURI="https://yii2customer.onelab.ph/web/api/op";
-        $EpaymentURI="http://www.eulims.local/capi/op";
+        $curl = new curl\Curl();
+        $EpaymentURI="https://yii2customer.onelab.ph/web/api/op";
+        //$EpaymentURI="http://www.eulims.local/capi/op";
         
-        $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-        $curl->setOption(CURLOPT_POSTFIELDS, $content);
-        $curl->setOption(CURLOPT_HTTPHEADER,[
-            'Content-Type: application/json', 
-            'Content-Length: ' . strlen($content)
-        ]);
-        $response = $curl->post($EpaymentURI);
-        
-        //$EpaymentURI="http://www.eulims.local/lab/request/testpayment";
-        //$response = $Curl->setRawPostData(['json'=>$json])->post($EpaymentURI);
-        /*$response = $Curl->setRequestBody($json)
+        $response = $curl->setRequestBody($content)
             ->setHeaders([
                'Content-Type' => 'application/json',
-               'Content-Length' => strlen($json)
+               'Content-Length' => strlen($content)
             ])->post($EpaymentURI);
-         * 
-         */
-        //$response = $Curl->setRawPostData(
-        //    json_encode($TransactDetails))->post($EpaymentURI);
+        Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
         return $response;
         
     }

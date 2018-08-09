@@ -27,7 +27,8 @@ use frontend\modules\finance\components\epayment\ePayment;
 
 use common\models\finance\Op;
 use common\models\system\Rstl;
-use skeeks\yii2\curl\Curl;
+use linslin\yii2\curl;
+
 //use yii\helpers\Url;
 /**
  * RequestController implements the CRUD actions for Request model.
@@ -129,8 +130,6 @@ class RequestController extends Controller
         $Content="<button>Click me</button>";
 
         $pdf->renderPDF($Content,NULL,NULL,['orientation'=> Pdf::ORIENT_LANDSCAPE]);
-
-        
     }
 
     public function actionPrintlabel(){
@@ -141,14 +140,9 @@ class RequestController extends Controller
             'format' => [35,66], 
             'orientation' => 'L',
         ]);
-    
         $request = Request::find()->where(['request_id' => $id]);
         $samplesquery = Sample::find()->where(['request_id' => $id])->all();
-
-        
-
         $requestquery = Request::find()->where(['request_id' => $id])->one();
-        
         foreach ($samplesquery as $sample) {
             $limitreceived_date = substr($requestquery['request_datetime'], 0,10);
             $mpdf->AddPage('','','','','',0,0,0,0);
@@ -215,19 +209,21 @@ class RequestController extends Controller
         $content = json_encode($TransactDetails);
         
         //return $TransactDetails;
-        $curl=new Curl();
-        //$EpaymentURI="https://yii2customer.onelab.ph/web/api/op";
-        $EpaymentURI="http://www.eulims.local/capi/op";
-        $response = $curl->setOption(
-            CURLOPT_POSTFIELDS,
-            $content)->post($EpaymentURI);
-        /*$response = $curl->setRequestBody($content)
+        $curl = new curl\Curl();
+        $EpaymentURI="https://yii2customer.onelab.ph/web/api/op";
+        //$EpaymentURI="http://www.eulims.local/capi/op";
+       
+        
+//        $response = $curl->setOption(
+//            CURLOPT_POSTFIELDS,
+//            [$content]
+//        )->get($EpaymentURI);
+        $response = $curl->setRequestBody($content)
             ->setHeaders([
                'Content-Type' => 'application/json',
                'Content-Length' => strlen($content)
             ])->post($EpaymentURI);
-         * 
-         */
+        
         /*$curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
         $curl->setOption(CURLOPT_POSTFIELDS, $content);
         $curl->setOption(CURLOPT_HTTPHEADER,[

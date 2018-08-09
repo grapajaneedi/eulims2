@@ -136,11 +136,16 @@ $RstlList= ArrayHelper::map(Rstl::find()->all(),'name','name');
             <?= $form->field($model, 'reported_by')->textInput(['maxlength' => true,'readonly'=>true,'value'=>Yii::$app->user->identity->username]) ?>
             
                         
-             <?php
-            echo $form->field($model, 'moduletested')->dropDownList($dataPackageList, [
-                // 'id' => 'accountnolist',
-                'prompt' => 'Select Module'
-            ]);
+            
+            <?=
+            $form->field($model, 'moduletested')->widget(Select2::classname(), [
+                'data' => $dataPackageList,
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select Module'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ])->label('Module Tested');
             ?>
 
          
