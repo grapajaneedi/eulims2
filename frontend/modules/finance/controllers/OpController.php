@@ -26,6 +26,7 @@ use frontend\modules\finance\components\epayment\ePayment;
 use yii2tech\spreadsheet\Myspreadsheet;
 use frontend\modules\reports\modules\finance\templates\Opspreadsheet;
 use yii\data\SqlDataProvider;
+use common\models\finance\PostedOp;
 /**
  * OrderofpaymentController implements the CRUD actions for Op model.
  */
@@ -81,12 +82,6 @@ class OpController extends Controller
                 'pageSize' => 10,
              ],
          ]);
-//         $paymentitemDataProvider = new SqlDataProvider([
-//            'sql' => 'SELECT *, eulims_lab.fnGetPaymentitemCustomer(request_id) as CustomerName FROM eulims_finance.tbl_paymentitem WHERE orderofpayment_id='.$id,
-//             'pagination' => [
-//                'pageSize' => 10,
-//             ],
-//         ]);
          return $this->render('view', [
             'model' => $model,
             'paymentitemDataProvider' => $paymentitemDataProvider,
@@ -125,8 +120,6 @@ class OpController extends Controller
                 else{
                     $model->subsidiary_customer_ids="";
                 }
-              
-                
                 if ($model->save()){
                     //Saving for Paymentitem
                     $total_amount=$this->actionSavePaymentitem($request_ids, $model->orderofpayment_id);

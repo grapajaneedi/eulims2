@@ -46,7 +46,7 @@ class Tagging extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'analysis_id', 'start_date', 'end_date', 'reason', 'cancelled_by', 'disposed_date', 'iso_accredited'], 'required'],
+            [['user_id', 'analysis_id', 'reason', 'cancelled_by', 'iso_accredited'], 'required'],
             [['user_id', 'analysis_id', 'tagging_status_id', 'cancelled_by', 'iso_accredited'], 'integer'],
             [['start_date', 'end_date', 'cancel_date', 'disposed_date'], 'safe'],
             [['reason'], 'string', 'max' => 100],

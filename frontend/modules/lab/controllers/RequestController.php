@@ -28,6 +28,8 @@ use frontend\modules\finance\components\epayment\ePayment;
 use common\models\finance\Op;
 use common\models\system\Rstl;
 use linslin\yii2\curl;
+use codemix\excelexport\ExcelFile;
+use common\models\system\User;
 
 //use yii\helpers\Url;
 /**
@@ -168,8 +170,9 @@ class RequestController extends Controller
        }
     }
     public function actionTestpayment(){
-        $json=Yii::$app->getRequest()->getBodyParams();
-        return $json;
+        //$json=Yii::$app->getRequest()->getBodyParams();
+        //return $json;
+        
     }
     public function actionTest($id){
         //$ePayment=new ePayment();
@@ -217,7 +220,8 @@ class RequestController extends Controller
                'Content-Type' => 'application/json',
                'Content-Length' => strlen($content)
             ])->post($EpaymentURI);
-        return $response;
+        $result=json_decode($response);
+        return $result->description;
     }
     public function actionSaverequestransaction(){
         $post= Yii::$app->request->post();

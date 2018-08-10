@@ -62,7 +62,9 @@ class ApiController extends ActiveController
 
 	// payment_details gets the payment details from posted the json data
 	$payment_details = $req_data['payment_details'];
-
+        // start transaction
+        $Connection= Yii::$app->epayment_db;
+        $Transaction =$Connection->beginTransaction();
 	// Save in the tbl_order_of_payment
         $model->transaction_num = $req_data['transaction_num'];
         $model->customer_code = $req_data['customer_code'];
@@ -76,44 +78,50 @@ class ApiController extends ActiveController
 
 	// Get the op_id of the stored order of payment data
 	$req_id = $model->op_id;
+        $successItem=false;
         if($success){
 	// Loop (if there is) and save the payment details 
             for($i = 0; $i < count($payment_details); $i++){
 
-                    $model1 = new $this->modelClass1;
+                $model1 = new $this->modelClass1;
 
-                    // Save in the tbl_payment_details
-                    $model1->op_id = $req_id;
-                    $model1->request_ref_num = $payment_details[$i]['request_ref_num'];
-                    $model1->rrn_date_time = $payment_details[$i]['rrn_date_time'];
-                    $model1->amount = $payment_details[$i]['amount'];
+                // Save in the tbl_payment_details
+                $model1->op_id = $req_id;
+                $model1->request_ref_num = $payment_details[$i]['request_ref_num'];
+                $model1->rrn_date_time = $payment_details[$i]['rrn_date_time'];
+                $model1->amount = $payment_details[$i]['amount'];
 
-                    if($model1->validate()){
-                            $model1->save();
-                            unset($model1);
-
-                            // If the data stored successfully
-                            $data=[
-                               'status'=>'success',
-                               'description'=>''
-                            ];
-                    }
-                    else{
-
-                            // If there is an error saving the data
-                            $errors = $model1->errors;
-                            $data=[
-                               'status'=>'error',
-                               'description'=>$errors
-                            ];
-
-                    }
+                if($model1->validate()){
+                    $successItem=$model1->save();
+                    unset($model1);
+                }
+                else{
+                    $successItem=false;
+                }
+            }
+            // Check
+            if($successItem){
+                $Transaction->commit();
+                // If the data stored successfully
+                $data=[
+                   'status'=>'success',
+                   'description'=>'OP Successfuly Posted.'
+                ];
+            }else{
+                $Transaction->rollback();
+                // If there is an error saving the data
+                $errors = $model1->errors;
+                $data=[
+                   'status'=>'error',
+                   'description'=>'Failed to save details, Please check the data.'
+                ];
             }
         }else{//Error saving OP
+            $Transaction->rollback();
             $errors = $model->errors;
             $data=[
                 'status'=>'error',
-                'description'=>$errors
+                'description'=>'Saving OP Failed, OP might already been posted.'
             ];
         }
       }
@@ -124,8 +132,7 @@ class ApiController extends ActiveController
         ];
       }
 
-      //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
-      Yii::$app->response->format = 'json';
+      Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
       return $data;
 
     }

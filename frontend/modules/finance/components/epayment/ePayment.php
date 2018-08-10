@@ -6,6 +6,7 @@ use common\models\finance\Op;
 use common\models\system\Rstl;
 use common\models\lab\Customer;
 use linslin\yii2\curl;
+
 /*
  * Project Name: eulims_ * 
  * Copyright(C)2018 Department of Science & Technology -IX * 
@@ -67,7 +68,6 @@ class ePayment {
                'Content-Type' => 'application/json',
                'Content-Length' => strlen($content)
             ])->post($EpaymentURI);
-        Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
         return $response;
         
     }
