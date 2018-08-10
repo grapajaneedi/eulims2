@@ -26,6 +26,7 @@ use frontend\modules\finance\components\epayment\ePayment;
 use yii2tech\spreadsheet\Myspreadsheet;
 use frontend\modules\reports\modules\finance\templates\Opspreadsheet;
 use yii\data\SqlDataProvider;
+use common\models\finance\PostedOp;
 /**
  * OrderofpaymentController implements the CRUD actions for Op model.
  */
@@ -81,12 +82,6 @@ class OpController extends Controller
                 'pageSize' => 10,
              ],
          ]);
-//         $paymentitemDataProvider = new SqlDataProvider([
-//            'sql' => 'SELECT *, eulims_lab.fnGetPaymentitemCustomer(request_id) as CustomerName FROM eulims_finance.tbl_paymentitem WHERE orderofpayment_id='.$id,
-//             'pagination' => [
-//                'pageSize' => 10,
-//             ],
-//         ]);
          return $this->render('view', [
             'model' => $model,
             'paymentitemDataProvider' => $paymentitemDataProvider,
@@ -128,17 +123,33 @@ class OpController extends Controller
                 }
                 
                 $model->save();
-                
                 $transaction->commit();
                 //Saving for Paymentitem
                 $total_amount=$this->actionSavePaymentitem($request_ids, $model->orderofpayment_id);
+                $op_id=$model->orderofpayment_id;
                 // Update Total OP
-                $this->updateTotalOP($model->orderofpayment_id, $total_amount);
+                $this->updateTotalOP($op_id, $total_amount);
                 //Check if it is an online payment, if so then post to epayment portal
                 if($model->payment_mode_id==5){//Online Payment
+                    $PostedOp=new PostedOp();
                     $ePayment=new ePayment();
-                    $result=$ePayment->PostOnlinePayment($id);
-                    
+                    $result=[
+                        'status'=>'error',
+                        'description'=>'No Internet'
+                    ];
+                    $result=$ePayment->PostOnlinePayment($op_id);
+                    $response=json_decode($result);
+                    if($result->status=='error'){
+                        $posted=0;
+                    }else{
+                        $posted=1;
+                    }
+                    $PostedOp->orderofpayment_id=$op_id;
+                    $PostedOp->posted_datetime=date("Y-m-d H:i:s");
+                    $PostedOp->user_id= Yii::$app->user->id;
+                    $PostedOp->posted=$posted;
+                    $PostedOp->description=$result->description;
+                    $PostedOp->save();
                 }
                 Yii::$app->session->setFlash('success', 'Order of Payment Successfully Created!');
                 return $this->redirect(['/finance/op/view?id='.$model->orderofpayment_id]); 
