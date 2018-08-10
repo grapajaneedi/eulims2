@@ -39,6 +39,7 @@ $disable='';
 <div class="orderofpayment-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
 
     <?php $form = ActiveForm::begin(); ?>
+    <?php echo $form->field($model, 'payment_mode_id')->hiddenInput()->label(false) ?>
     <div class="alert alert-info" style="background: #d9edf7 !important;margin-top: 1px !important;">
      <a href="#" class="close" data-dismiss="alert" >×</a>
     <p class="note" style="color:#265e8d">Fields with <i class="fa fa-asterisk text-danger"></i> are required.</p>
@@ -92,35 +93,7 @@ $disable='';
            
             </div>
              <div class="col-sm-6">
-                <?php
-                if($status == 0){
-                    echo $form->field($model, 'payment_mode_id')->widget(DepDrop::classname(), [
-                        'type'=>DepDrop::TYPE_SELECT2,
-                        'options' => ['placeholder' => 'Select Payment Mode ...'],
-                        'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                        'pluginOptions'=>[
-                            'depends'=>['op-customer_id'],
-                            'url'=>Url::to(['/finance/op/listpaymentmode?customerid='.$model->customer_id]),
-
-                        ]
-                    ]);
-                }
-                else{
-                      echo $form->field($model, 'payment_mode_id')->widget(Select2::classname(), [
-                        'data' => ArrayHelper::map(Paymentmode::find()->all(), 'payment_mode_id', 'payment_mode'),
-                        'theme' => Select2::THEME_BOOTSTRAP,
-                        'options' => ['placeholder' => 'Select Payment mode ...'],
-                        'pluginOptions' => [
-                          'allowClear' => true
-                        ]
-                        ])->label('Payment Mode');
-                }
-                ?>
-            </div>
-        </div>
-        <div class="row">
-         <div class="col-md-12">
-            <?= $form->field($model, 'subsidiary_customer_ids')->widget(Select2::classname(), [
+               <?= $form->field($model, 'subsidiary_customer_ids')->widget(Select2::classname(), [
                'data' => ArrayHelper::map(Customer::find()->where(['not',['customer_id'=>$model->customer_id]])->all(),'customer_id','customer_name'),
                //'initValueText'=>$model->modeofrelease_ids,
                'language' => 'en',
@@ -136,9 +109,10 @@ $disable='';
                    }
                    ",
                ]
-           ])->label('Subsidiary Customer(s) * (Optional)'); ?> 
-         </div>
-        </div> 
+                ])->label('Subsidiary Customer(s) * (Optional)'); ?> 
+            </div>
+        </div>
+        
         <div class="row">
             <div class="col-lg-12">  
                  <div id="prog" style="position:relative;display:none;">

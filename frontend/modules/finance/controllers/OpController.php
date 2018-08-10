@@ -125,37 +125,33 @@ class OpController extends Controller
                 else{
                     $model->subsidiary_customer_ids="";
                 }
-                if ($model->payment_mode_id == 6){
-                    $model->on_account=1;
+              
+                
+                if ($model->save()){
+                    //Saving for Paymentitem
+                    $total_amount=$this->actionSavePaymentitem($request_ids, $model->orderofpayment_id);
+                    // Update Total OP
+                    $this->updateTotalOP($model->orderofpayment_id, $total_amount);
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('success', 'Order of Payment Successfully Created!');
+                    //Check if it is an online payment, if so then post to epayment portal 
                 }else{
-                    $model->on_account=0;
+                    $transaction->rollBack();
+                    Yii::$app->session->setFlash('warning', 'Transaction Error!');
                 }
-                
-                $model->save();
-                
-                $transaction->commit();
-                //Saving for Paymentitem
-                $total_amount=$this->actionSavePaymentitem($request_ids, $model->orderofpayment_id);
-                // Update Total OP
-                $this->updateTotalOP($model->orderofpayment_id, $total_amount);
-                //Check if it is an online payment, if so then post to epayment portal
-                if($model->payment_mode_id==5){//Online Payment
-                    $ePayment=new ePayment();
-                    $result=$ePayment->PostOnlinePayment($id);
-                    
-                }
-                Yii::$app->session->setFlash('success', 'Order of Payment Successfully Created!');
-                return $this->redirect(['/finance/op/view?id='.$model->orderofpayment_id]); 
+                 return $this->redirect(['/finance/op/view?id='.$model->orderofpayment_id]); 
                  //$session->set('savepopup',"executed");
                    
                 } catch (Exception $e) {
-                    $transaction->rollBack();
-                   $session->set('errorpopup',"executed");
+                   $transaction->rollBack();
+                  Yii::$app->session->setFlash('warning', 'Transaction Error!');
                    return $this->redirect(['/finance/op']);
                 }
                 //-------------------------------------------------------------//
         } 
         $model->order_date=date('Y-m-d');
+        $model->payment_mode_id=1;
+        
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                 'model' => $model,
