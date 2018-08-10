@@ -8,11 +8,9 @@ $js=<<<SCRIPT
    });    
    $(".select-on-check-all").change(function(){
         settotal();
-   });
-  
+   }); 
 SCRIPT;
 $this->registerJs($js);
-
 ?>
 
  <?php 
@@ -41,22 +39,13 @@ $this->registerJs($js);
             'pageSummary' => '<span id="total">0.00</span>',
              
         ],
-                      
-         /*[
-            'attribute'=>'selected_request',
-            'pageSummary' => '<span style="float:right;">Total</span>',
-        ],*/
-      
-        
     ];
 ?>    
-
-	   
 	<?= GridView::widget([
         'dataProvider' => $dataProvider,
         'id'=>'grid',
         'pjax'=>true,
-        'containerOptions'=> ["style"  => 'overflow:auto;height:300px'],
+        'containerOptions'=> ["style"  => 'overflow:auto;height:200px'],
         'pjaxSettings' => [
             'options' => [
                 'enablePushState' => false,

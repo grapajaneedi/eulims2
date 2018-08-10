@@ -125,10 +125,8 @@ $disable='';
                    if (!$model->isNewRecord){
                       // $model->RequestIds=1;
                       // echo$form->field($model, 'requestid_update')->textInput()->label(false);
-                       echo $this->renderAjax('_paymentitems', ['dataProvider'=>$dataProvider,'model'=>$request_model]);
-                      
-                   }
-                    
+                      // echo $this->renderAjax('_paymentitems', ['dataProvider'=>$dataProvider,'model'=>$request_model]);
+                   } 
                    ?>
                 </div> 
 

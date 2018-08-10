@@ -15,6 +15,9 @@ use yii\web\Controller;
 use common\models\lab\Discount;
 use common\models\finance\Client;
 use common\models\lab\Customer;
+use common\models\finance\PostedOp;
+use frontend\modules\finance\components\epayment\ePayment;
+use common\models\finance\Op;
 
 /**
  * Description of AjaxController
@@ -39,6 +42,35 @@ class AjaxController extends Controller{
      public function actionSetwallet($customer_id,$amount,$source,$transactiontype){
         //$myvar = setTransaction($customer_id,$amount,$source,$transactiontype);
         return 200;
+    }
+    public function actionPostonlinepayment(){
+        $post= \Yii::$app->request->post();
+        $op_id=$post['op_id'];
+        $PostedOp=new PostedOp();
+        $ePayment=new ePayment();
+        $result=[
+            'status'=>'error',
+            'description'=>'No Internet'
+        ];
+        $result=$ePayment->PostOnlinePayment($op_id);
+        $response=json_decode($result);
+        if($response->status=='error'){
+            $posted=0;
+        }else{
+            $posted=1;
+        }
+        $PostedOp->orderofpayment_id=$op_id;
+        $PostedOp->posted_datetime=date("Y-m-d H:i:s");
+        $PostedOp->user_id= Yii::$app->user->id;
+        $PostedOp->posted=$posted;
+        $PostedOp->description=$response->description;
+        $success=$PostedOp->save();
+        if($success){
+            $Op= Op::findOne($op_id);
+            $Op->payment_mode_id=5;//Online Payment
+            $Op->save(false);
+        }
+        return $success;
     }
     public function actionGetdiscount(){
         $post= \Yii::$app->request->post();

@@ -150,7 +150,6 @@ $this->registerJs($js);
         <?= $form->field($model, 'test_id')->widget(DepDrop::classname(), [
             'type'=>DepDrop::TYPE_SELECT2,
             'data'=>$sampletype,
-            'initValueText' => null,
             'options'=>['id'=>'sample-sample_type_id'],
             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
             'pluginOptions'=>[

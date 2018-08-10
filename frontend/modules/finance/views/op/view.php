@@ -7,6 +7,7 @@ use common\models\finance\Collection;
 use common\models\finance\CancelledOp;
 use common\components\Functions;
 use common\models\finance\PaymentStatus;
+use yii\web\View;
 use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
@@ -15,21 +16,25 @@ $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['index']];
 $allow_cancel=false;
-$button_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paymentitem', ['value' => Url::to(['add-paymentitem','opid'=>$model->orderofpayment_id,'customerid'=>$model->customer_id]),'title'=>'Add Payment Item', 'onclick'=>'addPaymentitem(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']);
+if($model->payment_mode_id!=5){//Not Flagged as Online Payment
+    $button_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paymentitem', ['value' => Url::to(['add-paymentitem','opid'=>$model->orderofpayment_id,'customerid'=>$model->customer_id]),'title'=>'Add Payment Item', 'onclick'=>'addPaymentitem(this.value,this.title)','style'=>'margin-right: 5px', 'class' => 'btn btn-success','id' => 'modalBtn']);
+}else{
+    $button_paymentitem="";
+}
 if(Yii::$app->user->can('allow-cancel-op')){
    $allow_cancel=true; 
 }
 if(Yii::$app->user->can('allow-create-receipt')){
     if($model->receipt_id == null){
-       $receipt_button="<button type='button' value='/finance/cashier/create-receipt?op_id=$model->orderofpayment_id' id='btnCreateReceipt2' style='float: right;' class='btn btn-success' title='Receipt from OP' onclick='addReceipt(this.value,this.title)'><i class='fa fa-save'></i> Create Receipt</button>";                    
-    
-        //$receipt_button="<button onclick='alert(\"hello world\")'>click</button>";
+        if($model->payment_mode_id!=5){//Not Flagged as Online payment
+           $receipt_button="<button type='button' value='/finance/cashier/create-receipt?op_id=$model->orderofpayment_id' id='btnCreateReceipt2' style='float: right;' class='btn btn-success' title='Receipt from OP' onclick='addReceipt(this.value,this.title)'><i class='fa fa-save'></i> Create Receipt</button>";    
+        }else{
+           $receipt_button=""; 
+        }
     }
     else{
-        $receipt_button="<button type='button' value='/finance/cashier/view-receipt?receiptid=$model->receipt_id' id='Receipt2' style='float: right;' class='btn btn-success' onclick='location.href=this.value'><i class='fa fa-eye'></i> View Receipt</button>";                    
-    
-        //$receipt_button=Html::a('View Receipt', ['/finance/cashier/view-receipt?receiptid='.$model->receipt_id], ['target'=>'_blank','class'=>'btn btn-primary']);
-    }
+        $receipt_button="<button type='button' value='/finance/cashier/view-receipt?receiptid=$model->receipt_id' id='Receipt2' style='float: right;margin-right: 5px' class='btn btn-success' onclick='location.href=this.value'><i class='fa fa-eye'></i> View Receipt</button>";                    
+   }
 }
 else{
     $receipt_button="";
@@ -51,7 +56,7 @@ if($model->payment_status_id==0){
         $CancelClass='cancelled-hide';
         $BackClass='';
         $Func="LoadModal('Cancel Order of Payment','/finance/cancelop/create?op=".$model->orderofpayment_id."',true,500)";
-        $CancelButton=$allow_cancel ? '<button id="btnCancel" onclick="'.$Func.'" type="button" style="float: right;padding-right:5px" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel Order of Payment</button>' : "";
+        $CancelButton=$allow_cancel ? '<button id="btnCancel" onclick="'.$Func.'" type="button" style="float: right;padding-right:5px;margin-left: 5px" class="btn btn-danger"><i class="fa fa-remove"></i> Cancel Order of Payment</button>' : "";
     }
     else{
         $CancelClass='cancelled-hide';
@@ -60,7 +65,6 @@ if($model->payment_status_id==0){
     }
     
 }
-
 //$Request_Ref=$model->request_ref_num;
 $Cancelledop= CancelledOp::find()->where(['orderofpayment_id'=>$model->orderofpayment_id])->one();
 if($Cancelledop){
@@ -74,22 +78,43 @@ if($Cancelledop){
     $CancelledBy='';
     $transnum='';
 }
-/*
-if($model->created_receipt == 0){
-    $enableRequest=true;
-    $disableButton="disabled";
-    $ClickButton='';
-    $btnID="";
-}else{ // NO reference number yet
-    $enableRequest=false;
-    $ClickButton='addSample(this.value,this.title)';
-    $disableButton="";
-    $btnID="id='btnSaveRequest'";
+$OnlineJS=<<<SCRIPT
+function PostForOnlinePayment(id){
+    bootbox.confirm({
+    title: "EULIMS",
+    message: "Are you sure you want to post this OP with Transaction # <b>'$model->transactionnum'</b> as Online Payment?",
+    buttons: {
+        cancel: {
+            label: '<i class="fa fa-times"></i> No'
+        },
+        confirm: {
+            label: '<i class="fa fa-check"></i> Yes'
+        }
+    },
+    callback: function (ret) {
+        if(ret){
+            //Show Progress
+            ShowSystemProgress();
+            $.post("/ajax/postonlinepayment", {
+                op_id: id
+            }, function(result){
+            if(result){
+                location.reload();
+            }
+            });
+        }
+    }
+ });
+}       
+SCRIPT;
+$this->registerJs($OnlineJS,View::POS_END);
+$print_button=Html::button('<span class="glyphicon glyphicon-download"></span> Print OP', ['value'=>'/finance/op/printview?id='.$model->orderofpayment_id, 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Print Report"),'style'=>'margin-right: 5px','onclick'=>"location.href=this.value"]);
+if($model->payment_mode_id!=5){//Not Flagged as Online payment
+    $onlinePaymentButton=Html::button('<span class="glyphicon glyphicon-level-up"></span> Online Payment', ['class' => 'btn btn-small btn-warning','title' => Yii::t('app', "Post as Online Payment"),'onclick'=>"PostForOnlinePayment($model->orderofpayment_id)"]);
+}else{
+    $onlinePaymentButton="<span class='btn btn-small btn-warning disabled'><span class='glyphicon glyphicon-level-up'></span> Online Payment</span>";
 }
-*/
-
-$print_button=Html::button('<span class="glyphicon glyphicon-download"></span> Print OP', ['value'=>'/finance/op/printview?id='.$model->orderofpayment_id, 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Print Report"),'onclick'=>"location.href=this.value"]);
-
+$payment_status_id=$model->payment_status_id;
 ?>
 <div class="orderofpayment-view" style="position:relative;">
    <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
@@ -171,6 +196,7 @@ $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> P
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
+                   
                 ],
                     
             ],
@@ -186,15 +212,41 @@ $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> P
                   ],
                   [
                     
-                    'label'=>'',
+                    'label'=>'payment_mode_id',
                     'format'=>'raw',
-                    'value'=>"",
+                    'label'=>'Payment Mode',
+                    'value'=>$model->paymentMode->payment_mode,
                     'valueColOptions'=>['style'=>'width:30%'], 
                     'displayOnly'=>true
                   ],
               ],
            ],
-          
+           [
+                'columns' => [
+                    [
+                        'attribute'=>'payment_status_id',
+                        'label'=>'Payment Status',
+                        'format'=>'raw',
+                        'value'=>function($model) use ($payment_status_id){
+                            $PaymentStatus= PaymentStatus::findOne($payment_status_id);
+                            return $PaymentStatus->payment_status;
+                        },
+                        'valueColOptions'=>['style'=>'width:30%'], 
+                        'displayOnly'=>true
+                    ],
+                    [
+                        //'attribute'=>'',
+                        'label'=>'',
+                        'value'=>''
+                        //'format'=>'raw',
+                       // 'value'=>$model->customer ? $model->customer->completeaddress : "",
+                       // 'valueColOptions'=>['style'=>'width:30%'], 
+                       // 'displayOnly'=>true
+                    ],
+                   
+                ],
+                    
+            ],
         ],
     ]) ?>
    </div>
@@ -220,7 +272,7 @@ $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> P
                     //'asPopover' => true,
                     'attribute' => 'amount', 
                     'readonly' => function($model, $key, $index, $widget) {
-                        if($model->status == 2){
+                        if($model->status == 2 || $model->orderofpayment->payment_mode_id==5){
                             return true;
                         }
                         else{
@@ -262,10 +314,11 @@ $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> P
                 'striped'=>true,
                 'hover'=>true,
                 'showPageSummary' => true,
+                'toolbar'=>[],
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
                     'type'=>'primary',
-                    'before'=>$model->receipt_id ? "" : $footer .$button_paymentitem ."&nbsp;&nbsp;&nbsp;".$print_button,
+                    'before'=>$model->receipt_id ? "" : $footer.$button_paymentitem.$print_button.$onlinePaymentButton,
                 ],
                 'columns' => $gridColumns,
                

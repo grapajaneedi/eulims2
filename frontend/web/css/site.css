@@ -25,6 +25,22 @@ body {
 .table-responsive {
     overflow-x: none!important;
 }
+/******* Processing DIV *************/
+.system-progress{
+    position: absolute;
+    z-index: 20000;
+    width: 100%;
+    height: 100%;
+}
+.progress-stop{
+    display: none
+}
+.progress-start{
+    display: initial;
+    background-color: white;
+    opacity: 0.8
+}
+/******* Processing DIV *************/
 .wrap {
     min-height: 100%;
     height: auto;

@@ -172,7 +172,9 @@ class RequestController extends Controller
     public function actionTestpayment(){
         //$json=Yii::$app->getRequest()->getBodyParams();
         //return $json;
-        
+            $Op= Op::findOne(14);
+            $Op->payment_mode_id=5;//Online Payment
+            $Op->save(false);
     }
     public function actionTest($id){
         //$ePayment=new ePayment();

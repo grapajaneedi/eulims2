@@ -31,8 +31,11 @@ $this->registerJs($js);
              },
         ],
         [
-          'attribute'=>'CustomerName',
-          'enableSorting' => false,
+            'attribute'=>'CustomerName',
+            'enableSorting' => false,
+            'contentOptions' => [
+                'style'=>'overflow: auto; white-space: normal; word-wrap: break-word;'
+            ],
         ],            
         [
           'attribute'=>'request_ref_num',

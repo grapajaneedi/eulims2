@@ -49,6 +49,9 @@ $Host= "//".Yii::$app->getRequest()->serverName;
     ]);
     ?>
     <section class="content">
+        <div id="eulims_progress" class="system-progress progress-stop" style="position: absolute;z-index: 20000;width: 100%;height: 100%;">
+            <img style="margin-top: 150px;margin-left: 45%;position: absolute" src="/images/ajax-loader.gif" alt=""/>
+        </div>
         <?= Alert::widget() ?>
         <?= $content ?>
     </section>

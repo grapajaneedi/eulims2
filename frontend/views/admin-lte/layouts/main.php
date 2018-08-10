@@ -28,6 +28,7 @@ if (Yii::$app->controller->action->id === 'login') {
     dmstr\web\AdminLteAsset::register($this);
 
     $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+    
     ?>
     <?php $this->beginPage() ?>
     <!DOCTYPE html>
@@ -101,6 +102,13 @@ if (Yii::$app->controller->action->id === 'login') {
                     var v=v.toFixed(decimalForm);
                     return v;
             }
+            function ShowSystemProgress(df=true){
+                if(df){
+                    $("#eulims_progress").removeClass("progress-stop").addClass("progress-start");
+                }else{
+                     $("#eulims_progress").removeClass("progress-start").addClass("progress-stop");
+                }
+            }
         </script>
     </head>
     <body class="hold-transition skin-blue <?= $sidebarclass ?>">
@@ -123,21 +131,7 @@ if (Yii::$app->controller->action->id === 'login') {
             ['content' => $content, 'directoryAsset' => $directoryAsset]
         ) ?>
     </div>
-    <div id="ProgressSpinner">
-        <div class="animationload">
-            <div class="osahanloading"></div>
-        </div>
-    </div>
     <?php $this->endBody() ?>
-    <script type="text/javascript">
-        function ShowProgressSpinner(df){
-            if(df){
-                $("#ProgressSpinner").show();
-            }else{
-                $("#ProgressSpinner").hide();
-            }
-        }  
-    </script>
     </body>
     </html>
     <?php $this->endPage() ?>
