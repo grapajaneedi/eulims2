@@ -118,9 +118,13 @@ class OpController extends Controller
                 $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
                 $model->transactionnum= $this->Gettransactionnum();
                 $model->payment_status_id=1; //unpaid
-                
-                $ids= implode(',',$model->subsidiary_customer_ids);
-                $model->subsidiary_customer_ids=$ids;
+                if ($model->subsidiary_customer_ids <> ""){
+                    $ids= implode(',',$model->subsidiary_customer_ids);
+                    $model->subsidiary_customer_ids=$ids;
+                }
+                else{
+                    $model->subsidiary_customer_ids="";
+                }
                 if ($model->payment_mode_id == 6){
                     $model->on_account=1;
                 }else{
@@ -235,8 +239,9 @@ class OpController extends Controller
     
      public function actionGetlistrequest($id)
     {
-         $dataProvider = new SqlDataProvider([
+        $dataProvider = new SqlDataProvider([
             'sql' => 'SELECT *, eulims_lab.fnGetCustomer(customer_id) as CustomerName FROM eulims_lab.tbl_request WHERE customer_id IN('.$id.') and request_ref_num IS NOT NULL and payment_status_id <> 2',
+             'key'=>'request_id',
         ]);
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_request', ['dataProvider'=>$dataProvider,'stat'=>0]);
@@ -456,7 +461,8 @@ class OpController extends Controller
         
         $paymentitemDataProvider = new SqlDataProvider([
             'sql' => 'SELECT *, eulims_lab.fnGetCustomer(customer_id) as CustomerName FROM eulims_lab.tbl_request WHERE customer_id IN('.$ids.') and request_ref_num IS NOT NULL and payment_status_id <> 2',
-        ]);
+            'key'=>'request_id',
+         ]);
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_request', ['dataProvider'=> $paymentitemDataProvider,'opid'=>$opid,'stat'=>1]);
         }

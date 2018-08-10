@@ -18,12 +18,8 @@ $this->registerJs($js);
 
  <?php 
     $gridColumn = [
-        [
-          'attribute'=>'request_id',
-          'enableSorting' => false,
-          'hidden'=>true
+        ['class' => 'kartik\grid\SerialColumn'
         ],
-       
         [
              'class' => '\kartik\grid\CheckboxColumn',
              'checkboxOptions' => function($model) {
@@ -156,13 +152,11 @@ $this->registerJs($js);
                 if(data_key==dkeys[i]){
                     amt=StringToFloat(trows[index].cells[5].innerHTML);
                     Total=Total+parseFloat(amt);
-                    rqs=trows[index].cells[0].innerHTML;
-                    ids.push(rqs);
                 }
             }
         }); 
      
-        $("#op-requestids").val(ids);
+        $("#op-requestids").val(dkeys);
      
         var tot=parseFloat(Total);
         var total=CurrencyFormat(tot,2);
@@ -191,19 +185,7 @@ $this->registerJs($js);
     
     $('#btnSaveCollection').on('click',function(e) {
         var dkeys=$("#grid").yiiGridView("getSelectedRows");
-        var SearchFieldsTable = $(".kv-grid-table>tbody");
-        var trows = SearchFieldsTable[0].rows;
-        var rqs='';
-        var ids=[];
-        $.each(trows, function (index, row) {
-            var data_key=$(row).attr("data-key");
-            for (i = 0; i < dkeys.length; i++) { 
-                if(data_key==dkeys[i]){
-                    rqs=trows[index].cells[0].innerHTML;
-                    ids.push(rqs);
-                }
-            }
-        }); 
+        var ids=dkeys;
         
         if (ids == ""){
             alert("Please Select Payment Item");

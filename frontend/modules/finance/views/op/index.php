@@ -228,7 +228,7 @@ if(Yii::$app->user->can('allow-cancel-op')){
             .load($(this).attr('value'));
     });
     function addOp(url,title){
-        LoadModal(title,url,'true','700px');
+        LoadModal(title,url,'true','800px');
     }
   
 </script>

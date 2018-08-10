@@ -283,6 +283,6 @@ $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> P
     }
     
     function addPaymentitem(url,title){
-        LoadModal(title,url,'true','700px');
+        LoadModal(title,url,'true','800px');
     }
 </script>
