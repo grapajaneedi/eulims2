@@ -4,6 +4,7 @@ namespace common\models\lab;
 
 use Yii;
 
+/**
  * This is the model class for table "tbl_analysis_migration".
  *
  * @property int $analysis_id
