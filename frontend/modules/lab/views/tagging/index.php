@@ -136,16 +136,16 @@ $func=new Functions();
     </div>
 </div>
 
-<div id="divSpinner" style="text-align:center;display:none;font-size:30px">
+<!-- <div id="divSpinner" style="text-align:center;display:none;font-size:30px">
      <div class="animationload">
             <div class="osahanloading"></div>
      </div>
 </div>
-
-<script type='text/javascript'>
+ -->
+<!-- <script type='text/javascript'>
 ShowProgressSpinner(true);
 
-</script>
+</script> -->
 
 <script type="text/javascript">
     $('#sample-sample_code').on('change',function(e) {
@@ -156,7 +156,7 @@ ShowProgressSpinner(true);
             data: { id: $('#sample_ids').val(), analysis_id: $('#aid').val()},
             dataType: 'html',
             success: function ( response ) {
-             ShowProgressSpinner(true);            
+            // ShowProgressSpinner(true);            
               $("#xyz").html(response);
             },
             error: function ( xhr, ajaxOptions, thrownError ) {

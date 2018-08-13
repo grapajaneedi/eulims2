@@ -62,12 +62,12 @@ SCRIPT;
 $this->registerJs($js);
 ?>
 
-<div id="divSpinner" style="text-align:center;display:none;font-size:30px">
+<!-- <div id="divSpinner" style="text-align:center;display:none;font-size:30px">
      <div class="animationload">
             <div class="osahanloading"></div>
      </div>
 </div>
-
+ -->
 <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
         'pjax' => true,
@@ -100,10 +100,10 @@ $this->registerJs($js);
 <script type='text/javascript'>
 
 
-setTimeout(function(){
+/*setTimeout(function(){
     ShowProgressSpinner(false);
 },1000);
-
+*/
  
 </script>
 
