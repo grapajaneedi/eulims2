@@ -7,10 +7,10 @@ use yii\rest\ActiveController;
 use common\models\system\Profile;
 use kartik\mpdf\Pdf;
 use yii\helpers\Json;
-use common\models\lab\Customer;
-use common\models\lab\Request;
-use common\models\lab\Sample;
-use common\models\lab\Analysis;
+use common\models\lab\CustomerMigration;
+use common\models\lab\RequestMigration;
+use common\models\lab\SampleMigration;
+use common\models\lab\AnalysisMigration;
 
 class ApiController extends ActiveController
 {
@@ -44,7 +44,7 @@ class ApiController extends ActiveController
             $myvar = Json::decode($post['data']);
             foreach ($myvar as $var) {
 
-                $newCustomer = new Customer();
+                $newCustomer = new CustomerMigration();
                 $newCustomer->rstl_id=$var['rstl_id'];
                 $newCustomer->customer_name=$var['customerName'];
                 $newCustomer->classification_id=$var['classification_id'];
@@ -78,10 +78,10 @@ class ApiController extends ActiveController
         $ctr = 0;
         if(isset($post)){
             $myvar = Json::decode($post['data']);
-            var_dump($myvar); exit();
+            // var_dump($myvar); exit();
             foreach ($myvar as $var) {
 
-                $newRequest = new Request();
+                $newRequest = new RequestMigration();
                 $newRequest->request_ref_num=$var['request_ref_num'];
                 $newRequest->request_datetime=$var['request_datetime'];
                 $newRequest->rstl_id=$var['rstl_id'];
@@ -119,9 +119,9 @@ class ApiController extends ActiveController
         $ctr = 0;
         if(isset($post)){
             $myvar = Json::decode($post['data']);
-            var_dump($myvar); exit();
+            // var_dump($myvar); exit();
             foreach ($myvar as $var) {
-                $newSample = new Sample();
+                $newSample = new SampleMigration();
                 $newSample->rstl_id=$var['rstl_id'];
                 $newSample->pstcsample_id=$var['pstcsample_id'];
                 $newSample->sample_type_id=$var['sample_type_id'];
@@ -157,9 +157,9 @@ class ApiController extends ActiveController
         $ctr = 0;
         if(isset($post)){
             $myvar = Json::decode($post['data']);
-            var_dump($myvar); exit();
+            // var_dump($myvar); exit();
             foreach ($myvar as $var) {
-                $newanalysis = new Analysis();
+                $newanalysis = new AnalysisMigration();
                 $newanalysis->rstl_id=$var['rstl_id'];
                 $newanalysis->pstcanalysis_id=$var['pstcanalysis_id'];
                 $newanalysis->sample_id=$var['sample_id'];
