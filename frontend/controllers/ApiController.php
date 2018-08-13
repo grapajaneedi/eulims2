@@ -124,7 +124,7 @@ class ApiController extends ActiveController
                 $newSample = new SampleMigration();
                 $newSample->rstl_id=$var['rstl_id'];
                 $newSample->pstcsample_id=$var['pstcsample_id'];
-                $newSample->sample_type_id=$var['sample_type_id'];
+                $newSample->sampletype_id=$var['sample_type_id'];
                 $newSample->sample_code=$var['sample_code'];
                 $newSample->samplename=$var['samplename'];
                 $newSample->description=$var['description'];
