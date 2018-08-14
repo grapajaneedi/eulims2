@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use common\models\lab\Sampletype;
+use common\models\lab\Services;
 use common\models\lab\Lab;
 use common\models\lab\Testname;
 use yii\helpers\ArrayHelper;
@@ -11,6 +12,7 @@ use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
 use kartik\widgets\DatePicker;
 use kartik\datetime\DateTimePicker;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\ServicesSearch */
@@ -22,13 +24,27 @@ $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 $this->title = 'Add/ Remove Services';
 $this->params['breadcrumbs'][] = $this->title;
 
+
+?>
+
+<?php
+ $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+ $servicesquery= Services::find()->Where(['rstl_id'=>$GLOBALS['rstl_id']])->all();
+
+ $servicecount = count($servicesquery);
 ?>
 <div class="services-index">
+   
+<fieldset>
+    <legend>Legend/Status</legend>
+    <div>
+    <span class='badge btn-success legend-font' ><span class= 'glyphicon glyphicon-check'></span> UNOFFER</span>
+    <span class='badge btn-danger legend-font' ><span class= 'glyphicon glyphicon-check'></span> OFFER</span>
 
-
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <span class='btn btn-success legend-font' style='float:right' 'id'='servicescount'><span class= 'glyphicon glyphicon-upload'></span> SYNC <?php echo $servicecount?></span>
+                
+    </div>
+</fieldset>
    
     <div class="row">
     <?php $form = ActiveForm::begin(); ?>

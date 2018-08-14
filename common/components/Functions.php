@@ -170,6 +170,19 @@ class Functions extends Component{
         return $StatusLegend;
     }
 
+    function GenerateStatusServices($Legend, $Ispayment){
+        $StatusLegend="<fieldset>";
+        $StatusLegend.="<legend>$Legend</legend>";
+        $StatusLegend.="<div style='padding: 0 10px'>";
+    
+                $StatusLegend.="<span class='badge btn-success legend-font' ><span class= 'glyphicon glyphicon-check'></span> UNOFFER</span>&nbsp;";
+                $StatusLegend.="<span class='badge btn-danger legend-font' ><span class= 'glyphicon glyphicon-check'></span> OFFER</span>&nbsp;";
+                
+        $StatusLegend.="</div>";
+        $StatusLegend.="</fieldset>";
+        return $StatusLegend;
+    }
+
     function GenerateSampleCode($request_id){
         $request =Request::find()->where(['request_id'=>$request_id])->one();
         //$lab = Lab::findOne($request->lab_id);

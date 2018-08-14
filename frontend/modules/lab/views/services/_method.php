@@ -41,7 +41,9 @@ $js=<<<SCRIPT
                                sampletypeid: $('#sampletypeid').val(),
                                methodreferenceid: $('#methodreferenceid').val(),
                             }, function(result){
+                                alert("boom");
                                 $("#testname-grid").yiiGridView("applyFilter");
+                               
                             
                             });
                     }
@@ -60,7 +62,20 @@ $this->registerJs($js);
         'pjax' => true,
         'id'=>'testname-grid',
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
-      //  'toolbar'=>[],
+        'rowOptions' => function($model){
+
+            $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+            $servicesquery= Services::find()->where(['method_reference_id' => $model->method_reference_id])->andWhere(['rstl_id'=>  $GLOBALS['rstl_id']])->one();
+
+            if ($servicesquery){
+                return ['class'=>'success'];
+            }else{
+               return ['class'=>'danger'];
+            }
+
+
+           
+        },
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
