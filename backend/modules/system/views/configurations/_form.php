@@ -137,12 +137,14 @@ $this->registerJs($js);
                                 $.post('/ajax/gettemplate', {
                                     rstl_id: this.value
                                 }, function(result){
+                                    //alert(result.requestcode_template_id);
                                     //Return values
                                     if(result.requestcode_template_id==0){
                                        //No Template
                                        
                                     }
-                                    $('#RequestLaboratory').val(result.requestcode_template);
+                                    $('#requestcodetemplate').val(result.requestcode_template);
+                                    $('#samplecodetemplate').val(result.sample_code_template);
                                 }); 
                             }
                         "]
@@ -154,7 +156,7 @@ $this->registerJs($js);
                     <input type="text" class="form-control" id="requestcodetemplate" value="<?php echo $request_code_template ?>"/>
                 </div>
                 <div class="col-md-6">
-                    <label class="control-label" for="RequestLaboratory">Sample Template</label>
+                    <label class="control-label" for="samplecodetemplate">Sample Template</label>
                     <input type="text" class="form-control" id="samplecodetemplate" value="<?php echo $sample_code_template ?>"/>
                 </div>
             </div>

@@ -11,7 +11,9 @@ use common\models\lab\CustomerMigration;
 use common\models\lab\RequestMigration;
 use common\models\lab\SampleMigration;
 use common\models\lab\AnalysisMigration;
+use common\models\lab\Customer;
 
+/* @property Customer $customer */
 class ApiController extends ActiveController
 {
     public $modelClass = 'common\models\system\Profile';
@@ -190,6 +192,13 @@ class ApiController extends ActiveController
         }
         echo $ctr;
     }
-
-
+/*******************************************************************************
+  API FOr customer and payment details and others API Transactions
+ * 
+ */
+public function actionGetcustomer($id){
+    $Customers= Customer::findOne($id);
+     \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+     return $Customers;
+}
 }

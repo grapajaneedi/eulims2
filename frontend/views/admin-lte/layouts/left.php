@@ -73,7 +73,7 @@ if(Yii::$app->user->isGuest){
                 'label' => '<img src="/images/icons/dashboard.png" style="width:20px">  <span>' . 'Dashboard' . '</span>', 
               //  'icon'=>'bars',
                  'icon'=>' " style="display:none;width:0px"',
-                'url'=>["/".$Item->PackageName],
+                'url'=>["/".strtolower($Item->PackageName)],
                 'visible'=>true
             ];
           

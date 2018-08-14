@@ -33,7 +33,7 @@ class Rstl extends \yii\db\ActiveRecord
         return [
             [['region_id', 'name', 'code'], 'required'],
             [['region_id'], 'integer'],
-            [['name'], 'string', 'max' => 50],
+            [['name'], 'string', 'max' => 200],
             [['code'], 'string', 'max' => 10],
         ];
     }

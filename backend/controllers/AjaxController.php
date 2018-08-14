@@ -64,15 +64,24 @@ class AjaxController extends \yii\web\Controller{
     public function actionGettemplate(){
         $post=Yii::$app->request->post();
         $rstl_id=$post['rstl_id'];
-        $RequestcodeTemplate= RequestcodeTemplate::find()->where(['rstl_id'=>$rstl_id])->one();
-        \Yii::$app->response->format=\yii\web\Response::FORMAT_JSON;
-        if(!$RequestcodeTemplate){
-           $RequestcodeTemplate=[
+        $RequestCodeTemplate= CodeTemplate::find()->where(['rstl_id'=>$rstl_id])->one();
+       
+        if($RequestCodeTemplate){
+           $CodeTemplate=[
+               'requestcode_template_id'=>$RequestCodeTemplate->code_template_id,
+               'rstl_id'=>$RequestCodeTemplate->rstl_id,
+               'requestcode_template'=>$RequestCodeTemplate->request_code_template,
+               'sample_code_template'=>$RequestCodeTemplate->sample_code_template
+           ]; 
+        }else{
+           $CodeTemplate=[
                'requestcode_template_id'=>0,
                'rstl_id'=>0,
-               'requestcode_template'=>''
-           ]; 
+               'requestcode_template'=>'',
+               'sample_code_template'=>''
+           ];  
         }
-        return $RequestcodeTemplate;
+        \Yii::$app->response->format=\yii\web\Response::FORMAT_JSON;
+        return $CodeTemplate;
     }
 }

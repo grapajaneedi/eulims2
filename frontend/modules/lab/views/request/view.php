@@ -87,12 +87,14 @@ if($Cancelledrequest){
 if($Request_Ref){
     $enableRequest=true;
     $disableButton="disabled";
+    $EnablePrint="<button id='btnPrintRequest' class='btn btn-primary' style='margin-left: 5px'><i class='fa fa-print'></i> Print Request</button>";
     $ClickButton='';
     $btnID="";
 }else{ // NO reference number yet
     $enableRequest=false;
     $ClickButton='addSample(this.value,this.title)';
     $disableButton="";
+    $EnablePrint="<span class='btn btn-primary' disabled style='margin-left: 5px'><i class='fa fa-print'></i> Print Request</span>";
     $btnID="id='btnSaveRequest'";
 }
 $Params=[
@@ -102,8 +104,14 @@ $row=$func->ExecuteStoredProcedureOne("spGetPaymentDetails(:mRequestID)", $Param
 $payment_total=number_format($row['TotalAmount'],2);
 $orNumbers=$row['ORNumber'];
 $orDate=$row['ORDate'];
-$UnpaidBalance=$model->total-$row['TotalAmount'];
-$UnpaidBalance=number_format($UnpaidBalance,2);
+$UnpaidBalance1=$model->total-$row['TotalAmount'];
+$UnpaidBalance=number_format($UnpaidBalance1,2);
+$PrintEvent=<<<SCRIPT
+  $("#btnPrintRequest").click(function(){
+      alert("Printing...");
+  });   
+SCRIPT;
+$this->registerJs($PrintEvent);
 ?>
 <div class="section-request"> 
 <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
@@ -550,7 +558,7 @@ $UnpaidBalance=number_format($UnpaidBalance,2);
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_package'])." ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_fees']),
                    'after'=>false,
-                   'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button></div>",
+                   'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button>$EnablePrint</div>",
                 ],
                 'columns' => $analysisgridColumns,
                 'toolbar' => [

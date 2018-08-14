@@ -30,6 +30,7 @@ use common\models\system\Rstl;
 use linslin\yii2\curl;
 use codemix\excelexport\ExcelFile;
 use common\models\system\User;
+use frontend\modules\lab\components\Printing;
 
 //use yii\helpers\Url;
 /**
@@ -70,7 +71,10 @@ class RequestController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-
+    public function actionPrintRequest($id){
+        $Printing=new Printing();
+        $Printing->PrintRequest($id);
+    }
     /**
      * Displays a single Request model.
      * @param integer $id
