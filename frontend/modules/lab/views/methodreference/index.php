@@ -30,8 +30,21 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'method',
-            'reference',
+            [
+                'attribute'=>'method',
+                'format' => 'raw',
+                'enableSorting' => false,
+                'contentOptions' => ['style' => 'width: 30%;word-wrap: break-word;white-space:pre-line;'],
+               
+            ],
+            [
+                'attribute'=>'reference',
+                'format' => 'raw',
+                'enableSorting' => false,
+                'contentOptions' => ['style' => 'width: 70%;word-wrap: break-word;white-space:pre-line;'],
+               
+            ],
+         //   'contentOptions' => ['style' => 'width: 60%;word-wrap: break-word;white-space:pre-line;'],
             'fee',
             //'create_time',
             //'update_time',

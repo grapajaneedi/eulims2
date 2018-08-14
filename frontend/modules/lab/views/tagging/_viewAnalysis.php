@@ -236,6 +236,9 @@ $this->registerJs($js);
  
     ?>
 
+
+
+
 <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>'hidden'], ['readonly' => true]) ?>
 <?= Html::textInput('aid', $analysis_id, ['class' => 'form-control', 'id'=>'aid', 'type'=>'hidden'], ['readonly' => true]) ?>
    
@@ -255,7 +258,6 @@ $this->registerJs($js);
                 alert( thrownError );
             }
         });
-
     }
 
 
