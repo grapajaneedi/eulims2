@@ -63,7 +63,7 @@ class ApiController extends ActiveController
                 $newCustomer->customer_old_id=$var['id'];
                 $newCustomer->Oldcolumn_municipalitycity_id=$var['municipalitycity_id'];
                 $newCustomer->Oldcolumn_district=$var['district'];
-                if($newCustomer->save()){
+                if($newCustomer->save(false)){
                     $ctr++;
                 }
             }
@@ -104,7 +104,7 @@ class ApiController extends ActiveController
                 $newRequest->request_old_id=$var['request_old_id'];
                 $newRequest->created_at=0;
                 $newRequest->discount_id=0;
-                if($newRequest->save()){
+                if($newRequest->save(false)){
                     $ctr++;
                 }
             }
@@ -142,7 +142,7 @@ class ApiController extends ActiveController
                 $newSample->oldColumn_batch_num=$var['oldColumn_batch_num'];
                 $newSample->oldColumn_package_count=$var['oldColumn_package_count'];
                 $newSample->testcategory_id=0;
-                if($newSample->save()){
+                if($newSample->save(false)){
                     $ctr++;
                 }
             }
@@ -183,7 +183,7 @@ class ApiController extends ActiveController
                 $newanalysis->request_id=0;
                 $newanalysis->testcategory_id=0;
                 $newanalysis->sample_type_id=0;
-                if($newanalysis->save()){
+                if($newanalysis->save(false)){
                     $ctr++;
                 }
             }
