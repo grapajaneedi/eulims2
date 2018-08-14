@@ -43,6 +43,8 @@ class ServicesController extends Controller
     public function actionIndex()
     {
         $model = new Services();
+
+        $modelmethod = new Methodreference();
         $searchModel = new ServicesSearch();
 
         
@@ -63,6 +65,7 @@ class ServicesController extends Controller
             'sampletype'=>$sampletype,
             'model'=>$model,
             'test'=>$test,
+            'modelmethod'=>$modelmethod,
         ]);
     }
 

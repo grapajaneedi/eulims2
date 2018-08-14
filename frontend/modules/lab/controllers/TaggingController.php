@@ -259,7 +259,10 @@ class TaggingController extends Controller
 
                     }                     
              } 
-              $counttag = count($taggingcount);          
+
+             if ($taggingcount){
+                $counttag = count($taggingcount); 
+             } 
               $sql="UPDATE `tbl_sample` SET `completed`='$counttag' WHERE `sample_id`=".$analysis_id;
               $Command=$Connection->createCommand($sql);
               $Command->execute();                 
@@ -313,8 +316,7 @@ class TaggingController extends Controller
 
     public function actionGetanalysis()
 	{
-
-        $id = $_GET['id'];
+        $id = $_GET['analysis_id'];
         $analysis_id = $id;
         $model = new Tagging();
          $samplesQuery = Sample::find()->where(['sample_id' => $id]);
@@ -322,9 +324,9 @@ class TaggingController extends Controller
                  'query' => $samplesQuery,
                  'pagination' => [
                      'pageSize' => 10,
-                 ],
-              
+                 ],       
          ]);
+
          $analysisQuery = Analysis::find()->where(['sample_id' => $id]);
          $request = Request::find()->where(['request_id' =>42]);
          $analysisdataprovider = new ActiveDataProvider([
@@ -340,7 +342,8 @@ class TaggingController extends Controller
             'model'=>$model,
             'sampleDataProvider' => $sampleDataProvider,
             'analysisdataprovider'=> $analysisdataprovider,
-            'analysis_id'=>$analysis_id
+            'analysis_id'=>$analysis_id,
+            'id'=>$id,
          ]);
 	
 	 }

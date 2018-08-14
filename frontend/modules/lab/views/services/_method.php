@@ -41,7 +41,9 @@ $js=<<<SCRIPT
                                sampletypeid: $('#sampletypeid').val(),
                                methodreferenceid: $('#methodreferenceid').val(),
                             }, function(result){
+                                alert("boom");
                                 $("#testname-grid").yiiGridView("applyFilter");
+                               
                             
                             });
                     }
@@ -60,7 +62,20 @@ $this->registerJs($js);
         'pjax' => true,
         'id'=>'testname-grid',
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
-      //  'toolbar'=>[],
+        'rowOptions' => function($model){
+
+            $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+            $servicesquery= Services::find()->where(['method_reference_id' => $model->method_reference_id])->andWhere(['rstl_id'=>  $GLOBALS['rstl_id']])->one();
+
+            if ($servicesquery){
+                return ['class'=>'success'];
+            }else{
+               return ['class'=>'danger'];
+            }
+
+
+           
+        },
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
@@ -117,30 +132,33 @@ $this->registerJs($js);
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width: 5%;word-wrap: break-word;white-space:pre-line;'],     
             ],
-            [
-                  'header'=>'Offered by',
-                  // 'attribute' => 'fee',
-                   'hAlign'=>'center',
-                   'value'=> function($model){
-                    $servicesquery= Services::find()->where(['method_reference_id' => $model->method_reference_id])->all();
-                    if ($servicesquery){
-                        //return ("meron");
+            // [
+            //       'header'=>'Offered by',
+            //       // 'attribute' => 'fee',
+            //        'hAlign'=>'center',
+            //        'value'=> function($model){
+            //         $servicesquery= Services::find()->where(['method_reference_id' => $model->method_reference_id])->all();
+            //         if ($servicesquery){
+            //             //return ("meron");
 
-                        foreach($servicesquery as $q){
-                            $x = $q['rstl_id'];
-                            return $x;
-                        }
+            //             foreach($servicesquery as $q){
+            //                 $x = $q['rstl_id'];
+            //                // return $x;
+
+            //                return "";
+            //             }
 
                        
-                    }else{
-                        return ("wala");
-                    }
+            //         }else{
+            //            // return ("wala");
+            //            return "";
+            //         }
 
-                   },
-                   'format' => 'raw',
-                   'enableSorting' => false,
-                   'contentOptions' => ['style' => 'width: 20%;word-wrap: break-word;white-space:pre-line;'],     
-               ],
+            //        },
+            //        'format' => 'raw',
+            //        'enableSorting' => false,
+            //        'contentOptions' => ['style' => 'width: 20%;word-wrap: break-word;white-space:pre-line;'],     
+            //    ],
          //  ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
