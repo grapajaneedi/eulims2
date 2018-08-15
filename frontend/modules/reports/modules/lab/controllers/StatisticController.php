@@ -55,15 +55,16 @@ class StatisticController extends Controller
 		}
 
 		$modelRequest = Requestextend::find()
-					->where('rstl_id =:rstlId AND status_id != :statusId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate', [':rstlId'=>$rstlId,':statusId'=>2,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate])
+					->where('rstl_id =:rstlId AND status_id > :statusId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate', [':rstlId'=>$rstlId,':statusId'=>0,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate])
 					->groupBy(['DATE_FORMAT(request_datetime, "%Y-%m-%d")'])
 					->orderBy('request_datetime DESC');
 
 		$dataProvider = new ActiveDataProvider([
             'query' =>$modelRequest,
-            'pagination' => [
-                'pagesize' => 10,
-            ],
+            'pagination' => false,
+            /*'pagination' => [
+                'pagesize' => 5,
+            ],*/
         ]);
 
         if (Yii::$app->request->isAjax) {
@@ -127,19 +128,19 @@ class StatisticController extends Controller
             $modelCustomer = Customerextend::find()
                 //->leftJoin('tbl_requests', '`tbl_requests`.`customer_id` = `tbl_customer`.`customer_id`')
                 ->innerJoinWith('requests')
-                ->where('tbl_request.rstl_id =:rstlId AND tbl_request.lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND tbl_request.status_id <> :statusId AND business_nature_id =:businessnatureId', [':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2,':businessnatureId'=>$businessnature])
+                ->where('tbl_request.rstl_id =:rstlId AND tbl_request.lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND tbl_request.status_id > :statusId AND business_nature_id =:businessnatureId', [':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>0,':businessnatureId'=>$businessnature])
                 ->groupBy(['tbl_customer.customer_id']);
         } elseif($filtertype == 2) {
             $modelCustomer = Customerextend::find()
                 //->leftJoin('tbl_requests', '`tbl_requests`.`customer_id` = `tbl_customer`.`customer_id`')
                 ->innerJoinWith('requests')
-                ->where('tbl_request.rstl_id =:rstlId AND tbl_request.lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND tbl_request.status_id <> :statusId AND industrytype_id =:industrytypeId', [':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2,':industrytypeId'=>$industrytype])
+                ->where('tbl_request.rstl_id =:rstlId AND tbl_request.lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND tbl_request.status_id > :statusId AND industrytype_id =:industrytypeId', [':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>0,':industrytypeId'=>$industrytype])
                 ->groupBy(['tbl_customer.customer_id']);
         } else {
             $modelCustomer = Customerextend::find()
                 //->leftJoin('tbl_requests', '`tbl_requests`.`customer_id` = `tbl_customer`.`customer_id`')
                 ->innerJoinWith('requests')
-                ->where('tbl_request.rstl_id =:rstlId AND tbl_request.lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND tbl_request.status_id <> :statusId', [':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2])
+                ->where('tbl_request.rstl_id =:rstlId AND tbl_request.lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND tbl_request.status_id > :statusId', [':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>0])
                 ->groupBy(['tbl_customer.customer_id']);
         }
 
@@ -192,14 +193,14 @@ class StatisticController extends Controller
             if($filtertype == 1){
                 $modelRequest = Request::find()
                 ->innerJoinWith('customer')
-                ->where('tbl_request.customer_id =:customerId AND tbl_request.rstl_id =:rstlId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND status_id <> :statusId AND business_nature_id =:businessnatureId', [':customerId'=>$customerId,':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2,':businessnatureId'=>$filterId]);
+                ->where('tbl_request.customer_id =:customerId AND tbl_request.rstl_id =:rstlId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND status_id > :statusId AND business_nature_id =:businessnatureId', [':customerId'=>$customerId,':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>0,':businessnatureId'=>$filterId]);
             } elseif($filtertype == 2){
                 $modelRequest = Request::find()
                 ->innerJoinWith('customer')
-                ->where('tbl_request.customer_id =:customerId AND tbl_request.rstl_id =:rstlId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND status_id <> :statusId AND industrytype_id =:industrytypeId', [':customerId'=>$customerId,':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2,':industrytypeId'=>$filterId]);
+                ->where('tbl_request.customer_id =:customerId AND tbl_request.rstl_id =:rstlId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND status_id > :statusId AND industrytype_id =:industrytypeId', [':customerId'=>$customerId,':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>0,':industrytypeId'=>$filterId]);
             } else {
                 $modelRequest = Request::find()
-                ->where('customer_id =:customerId AND rstl_id =:rstlId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND status_id <> :statusId',[':customerId'=>$customerId,':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>2]);
+                ->where('customer_id =:customerId AND rstl_id =:rstlId AND lab_id = :labId AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate AND status_id > :statusId',[':customerId'=>$customerId,':rstlId'=>$rstlId,':labId'=>$labId,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate,':statusId'=>0]);
             }
 
             $dataProvider = new ActiveDataProvider([
