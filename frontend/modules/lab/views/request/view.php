@@ -84,7 +84,7 @@ if($Cancelledrequest){
     $DateCancelled='';
     $CancelledBy='';
 }
-if($Request_Ref){
+if($Request_Ref){//With Reference
     $enableRequest=true;
     $disableButton="disabled";
     $EnablePrint="<button id='btnPrintRequest' class='btn btn-primary' style='margin-left: 5px'><i class='fa fa-print'></i> Print Request</button>";
