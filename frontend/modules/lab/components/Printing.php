@@ -45,7 +45,7 @@ class Printing {
         $RequestID=$RequestHeader->request_id;
         $RstlDetails=RstlDetails::find()->where(['rstl_id'=>$RequestID])->one();
         if($RstlDetails){
-            $RequestTemplate="<table border='0' style='border-collapse: collapse;font-size: 12px' width=100%>";
+            $RequestTemplate="<table border='1' style='border-collapse: collapse;font-size: 12px' width=100%>";
             $RequestTemplate.="<thead>";
             $RequestTemplate.="<tr>";
             $RequestTemplate.="<td colspan='10' style='text-align: center;font-size: 12px'>$RstlDetails->name</td>";
@@ -97,27 +97,27 @@ class Printing {
             $RequestTemplate.="<th colspan='10' style='border-bottom: 1px solid black;'>1.0 TESTING OR CALIBRATION SERVICE</th>";
             $RequestTemplate.="</tr>";
             $RequestTemplate.="<tr>";
-            $RequestTemplate.="<td colspan='2' style='text-align: center;vertical-align: bottom'>SAMPLE</td>";
-            $RequestTemplate.="<td style='text-align: center;vertical-align: bottom'>SAMPLE CODE</td>";
-            $RequestTemplate.="<td colspan='2' style='text-align: center;vertical-align: bottom;width: 15%'>TEST/CALIBRATION REQUESTED</td>";
-            $RequestTemplate.="<td colspan='2' style='text-align: center;vertical-align: bottom;width: 15%'>TEST METHOD</td>";
-            $RequestTemplate.="<td style='text-align: center;width: 7%;vertical-align: bottom'>No of Samples/UNIT</td>";
-            $RequestTemplate.="<td style='text-align: right;width: 7%;vertical-align: bottom'>UNIT COST</td>";
-            $RequestTemplate.="<td style='text-align: right;width: 7%;vertical-align: bottom'>TOTAL</td>";
+            $RequestTemplate.="<td colspan='2' style='text-align: center;vertical-align: bottom;border-left: 1px solid black;border-bottom: 1px solid black'>SAMPLE</td>";
+            $RequestTemplate.="<td style='text-align: center;vertical-align: bottom;border-bottom: 1px solid black;'>SAMPLE CODE</td>";
+            $RequestTemplate.="<td colspan='2' style='text-align: center;vertical-align: bottom;width: 15%;border-bottom: 1px solid black;'>TEST/CALIBRATION REQUESTED</td>";
+            $RequestTemplate.="<td colspan='2' style='text-align: center;vertical-align: bottom;width: 15%;border-bottom: 1px solid black;'>TEST METHOD</td>";
+            $RequestTemplate.="<td style='text-align: center;width: 7%;vertical-align: bottom;border-bottom: 1px solid black;'>No of Samples/UNIT</td>";
+            $RequestTemplate.="<td style='text-align: right;width: 7%;vertical-align: bottom;border-bottom: 1px solid black;'>UNIT COST</td>";
+            $RequestTemplate.="<td style='text-align: right;width: 7%;vertical-align: bottom;border-bottom: 1px solid black;border-right: 1px solid black;'>TOTAL</td>";
             $RequestTemplate.="</tr>";
             $RequestTemplate.="</thead>";
-            
-            
             $RequestTemplate.="<tbody>";
-            $RequestTemplate.="<tr>";
-            $RequestTemplate.="<td colspan='2'>&nbsp;</td>";
-            $RequestTemplate.="<td>&nbsp;</td>";
-            $RequestTemplate.="<td colspan='2'>&nbsp;</td>";
-            $RequestTemplate.="<td colspan='2'>&nbsp;</td>";
-            $RequestTemplate.="<td>&nbsp;</td>";
-            $RequestTemplate.="<td>&nbsp;</td>";
-            $RequestTemplate.="<td>&nbsp;</td>";
-            $RequestTemplate.="</tr>";
+            foreach($RequestRows as $RequestRow){
+                $RequestTemplate.="<tr>";
+                $RequestTemplate.="<td colspan='2'>&nbsp;</td>";
+                $RequestTemplate.="<td>&nbsp;</td>";
+                $RequestTemplate.="<td colspan='2'>&nbsp;</td>";
+                $RequestTemplate.="<td colspan='2'>&nbsp;</td>";
+                $RequestTemplate.="<td>&nbsp;</td>";
+                $RequestTemplate.="<td>&nbsp;</td>";
+                $RequestTemplate.="<td>&nbsp;</td>";
+                $RequestTemplate.="</tr>";
+            }
             $RequestTemplate.="</tbody>";
             $RequestTemplate.="<tfoot>";
             $RequestTemplate.="<tr>";
