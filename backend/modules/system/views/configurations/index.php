@@ -34,9 +34,7 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
         ],
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
-            [
-                'class'=>'kartik\grid\CheckBoxColumn',
-            ],
+       
             [
                 'attribute' => 'labname',
                 'label' => 'Laboratory Name',

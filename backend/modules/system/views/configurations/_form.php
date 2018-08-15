@@ -10,6 +10,7 @@ use kartik\base\InputWidget;
 use kartik\widgets\SwitchInput;
 use common\models\lab\CodeTemplate;
 
+
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Lab */
 /* @var $form yii\widgets\ActiveForm */

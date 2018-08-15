@@ -45,7 +45,7 @@ class Printing {
         $RequestID=$RequestHeader->request_id;
         $RstlDetails=RstlDetails::find()->where(['rstl_id'=>$RequestID])->one();
         if($RstlDetails){
-            $RequestTemplate="<table border='1' style='border-collapse: collapse;' width=100%>";
+            $RequestTemplate="<table border='0' style='border-collapse: collapse;font-size: 12px' width=100%>";
             $RequestTemplate.="<thead>";
             $RequestTemplate.="<tr>";
             $RequestTemplate.="<td colspan='10' style='text-align: center;font-size: 12px'>$RstlDetails->name</td>";
@@ -83,15 +83,13 @@ class Printing {
             $RequestTemplate.="</tr>";
             $RequestTemplate.="<tr>";
             $RequestTemplate.="<td style='border-top: 1px solid black;border-left: 1px solid black'>Customer:</td>";
-            $RequestTemplate.="<td colspan='2' style='border-top: 1px solid black;'>$RequestHeader->customer_name</td>";
-            $RequestTemplate.="<td colspan='4' style='border-top: 1px solid black;'>&nbsp;</td>";
+            $RequestTemplate.="<td colspan='6' style='border-top: 1px solid black;'>$RequestHeader->customer_name</td>";
             $RequestTemplate.="<td style='border-top: 1px solid black;'>Tel #:</td>";
             $RequestTemplate.="<td colspan='2' style='border-top: 1px solid black;border-right: 1px solid black'>$RequestHeader->tel</td>";
             $RequestTemplate.="</tr>";
             $RequestTemplate.="<tr>";
             $RequestTemplate.="<td style='border-bottom: 1px solid black;border-left: 1px solid black'>Address:</td>";
-            $RequestTemplate.="<td colspan='2' style='border-bottom: 1px solid black;border-bottom: 1px solid black;'>$RequestHeader->address</td>";
-            $RequestTemplate.="<td colspan='4' style='border-bottom: 1px solid black'>&nbsp;</td>";
+            $RequestTemplate.="<td colspan='6' style='border-bottom: 1px solid black;border-bottom: 1px solid black;'>$RequestHeader->address</td>";
             $RequestTemplate.="<td style='border-bottom: 1px solid black;'>Fax #:</td>";
             $RequestTemplate.="<td colspan='2' style='border-bottom: 1px solid black;border-right: 1px solid black'>$RequestHeader->fax</td>";
             $RequestTemplate.="</tr>";
@@ -99,13 +97,13 @@ class Printing {
             $RequestTemplate.="<th colspan='10' style='border-bottom: 1px solid black;'>1.0 TESTING OR CALIBRATION SERVICE</th>";
             $RequestTemplate.="</tr>";
             $RequestTemplate.="<tr>";
-            $RequestTemplate.="<td colspan='2'>SAMPLE</td>";
-            $RequestTemplate.="<td>SAMPLE CODE</td>";
-            $RequestTemplate.="<td colspan='2'>TEST/CALIBRATION REQUESTED</td>";
-            $RequestTemplate.="<td colspan='2'>TEST METHOD</td>";
-            $RequestTemplate.="<td>No of Samples/UNIT</td>";
-            $RequestTemplate.="<td>UNIT COST</td>";
-            $RequestTemplate.="<td>TOTAL</td>";
+            $RequestTemplate.="<td colspan='2' style='text-align: center;vertical-align: bottom'>SAMPLE</td>";
+            $RequestTemplate.="<td style='text-align: center;vertical-align: bottom'>SAMPLE CODE</td>";
+            $RequestTemplate.="<td colspan='2' style='text-align: center;vertical-align: bottom;width: 15%'>TEST/CALIBRATION REQUESTED</td>";
+            $RequestTemplate.="<td colspan='2' style='text-align: center;vertical-align: bottom;width: 15%'>TEST METHOD</td>";
+            $RequestTemplate.="<td style='text-align: center;width: 7%;vertical-align: bottom'>No of Samples/UNIT</td>";
+            $RequestTemplate.="<td style='text-align: right;width: 7%;vertical-align: bottom'>UNIT COST</td>";
+            $RequestTemplate.="<td style='text-align: right;width: 7%;vertical-align: bottom'>TOTAL</td>";
             $RequestTemplate.="</tr>";
             $RequestTemplate.="</thead>";
             

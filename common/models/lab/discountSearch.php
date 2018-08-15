@@ -5,12 +5,12 @@ namespace common\models\lab;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\lab\discount;
+use common\models\lab\Discount;
 
 /**
  * discountSearch represents the model behind the search form about `common\models\lab\discount`.
  */
-class discountSearch extends discount
+class discountSearch extends Discount
 {
     /**
      * @inheritdoc
