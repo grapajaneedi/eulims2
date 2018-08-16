@@ -41,7 +41,7 @@ $LabmanagerList=$Command->queryAll();
             'options' => ['placeholder' => 'Select Lab Manager'],
             'pluginOptions' => [
                 'allowClear' => true,
-                'disabled' => true,
+                'disabled' => false,
             ],
         ])->label('Lab Manager');
         ?>

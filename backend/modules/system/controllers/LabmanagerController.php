@@ -78,6 +78,7 @@ class LabmanagerController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->lab_manager_id]);
         }
+        $model->updated_at=date("U");
         if(\Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                 'model' => $model,
@@ -103,11 +104,15 @@ class LabmanagerController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->lab_manager_id]);
         }
-        //if(\Yii::$app->request->isAjax){
+        if(\Yii::$app->request->isAjax){
             return $this->renderAjax('update', [
                 'model' => $model,
             ]);
-       // }
+        }else{
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**

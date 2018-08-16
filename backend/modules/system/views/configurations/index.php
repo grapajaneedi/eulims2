@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $Session= Yii::$app->session;
 
-$Buttontemplate='{view}{update}'; 
+$Buttontemplate='{view}{update}{create}'; 
 
 $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget([
         'dataProvider' => $dataProvider,
@@ -84,13 +84,13 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
             //'class' => 'yii\grid\ActionColumn'
             'class' => kartik\grid\ActionColumn::className(),
             'template' => $Buttontemplate,
-            'buttons'=>[
-              'view'=>function ($url, $model) {
-                  return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['configurations/view','id'=>$model->lab_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Laboratory")]);
-              },
-              'update'=>function ($url, $model) {
-                  return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['configurations/update','id'=>$model->lab_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Laboratory")]);
-              }
+                'buttons'=>[
+                    'view'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['configurations/view','id'=>$model->lab_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Laboratory")]);
+                    },
+                    'update'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['configurations/update','id'=>$model->lab_id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Laboratory")]);
+                    },
                 ],
             ],
         ],
@@ -153,7 +153,7 @@ $TechnicalManagerContent=GridView::widget([
                 'template' => $Buttontemplate,
                 'buttons'=>[
                     'view'=>function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['labmanager/view','id'=>$model['user_id']]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Lab Manager")]);
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['labmanager/view','id'=>$model['user_id']]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Lab Managerssssss")]);
                     },
                     'update'=>function ($url, $model) {
                         return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['labmanager/update','id'=>$model['lab_id']]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Lab Manager")]);
