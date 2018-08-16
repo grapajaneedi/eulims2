@@ -64,7 +64,6 @@ class CheckController extends Controller
     public function actionCreate()
     {
         $model = new Check();
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Check Successfully Created!');
             return $this->redirect(['view', 'id' => $model->check_id]);

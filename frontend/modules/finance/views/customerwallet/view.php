@@ -51,8 +51,17 @@ use yii\grid\ActionColumn;
                         return "<font class='pull-right' color='red'><i class='fa fa-minus'title='debit'></i> debit</font>";
                 },
             ],
-            'amount',
-            'balance',
+            [
+                'attribute'=>'amount',
+                'format'=>['decimal',2],
+                'hAlign'=>'right',
+                
+            ],
+            [
+                'attribute'=>'balance',
+                'format'=>['decimal',2],
+                'hAlign'=>'right',
+            ],
             'source'
         ],
     ]); ?>

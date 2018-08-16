@@ -222,6 +222,7 @@ $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> P
     function addCheck(url,title){
        //var url = 'Url::to(['sample/update']) . "?id=' + id;
        //var url = '/lab/sample/update?id='+id;
+       
         $(".modal-title").html(title);
         $('#modal').modal('show')
             .find('#modalContent')

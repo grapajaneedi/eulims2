@@ -10,7 +10,8 @@ use common\components\Functions;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Check */
 /* @var $form yii\widgets\ActiveForm */
-
+$url ='/finance/cashier/add-check';
+                     
 ?>
 
 <div class="receipt-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
@@ -34,7 +35,7 @@ use common\components\Functions;
         <div class="row">
           
             <div class="col-sm-6">
-           <?php
+            <?php
              echo $form->field($model, 'checkdate')->widget(DatePicker::classname(), [
              'options' => ['placeholder' => 'Select Date ...',
              'autocomplete'=>'off'],
@@ -54,7 +55,9 @@ use common\components\Functions;
       
         <div class="form-group pull-right">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
-                'id'=>'createCheck']) ?>
+                'id'=>'createCheck',
+                
+                ]) ?>
             <?php if(Yii::$app->request->isAjax){ ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             <?php } ?>
@@ -99,3 +102,29 @@ use common\components\Functions;
         padding-top: 0px!important;
     }
 </style>
+<!--<script type="text/javascript">
+    $('#createcheck').on('click',function(e) {
+        amount=$('#check-amount').val();
+        collection=<?php //echo $total_collection ?>;
+    
+        total= amount;
+        if(total > collection)(
+            var hi= confirm("Do you really want me to say hi?");
+            if (hi== true){
+                alert("hi");
+            }else{
+                alert("Meany!!!");
+            }
+        }
+//        if(total > collection)(
+//            var x =confirm('Excess amount will be credited to Customer Wallet.Proceed?');
+//            if (x== true){
+//                alert("hi");
+//            }else{
+//                alert("Meany!!!");
+//            }
+//        }
+       
+        
+    });
+</script>-->
