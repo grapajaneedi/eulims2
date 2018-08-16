@@ -41,10 +41,7 @@ $js=<<<SCRIPT
                                sampletypeid: $('#sampletypeid').val(),
                                methodreferenceid: $('#methodreferenceid').val(),
                             }, function(result){
-                                alert("boom");
-                                $("#testname-grid").yiiGridView("applyFilter");
-                               
-                            
+                                $("#testname-grid").yiiGridView("applyFilter");    
                             });
                     }
 SCRIPT;
@@ -57,9 +54,18 @@ $this->registerJs($js);
 <?= Html::textInput('labid', $labid, ['class' => 'form-control', 'type'=>'hidden', 'id'=>'labid'], ['readonly' => true]) ?>
 <?= Html::textInput('sampletypeid', $sampletypeid, ['class' => 'form-control', 'type'=>'hidden', 'id'=>'sampletypeid'], ['readonly' => true]) ?>
   
+<?php
+ $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+ $servicesquery= Services::find()->Where(['rstl_id'=>$GLOBALS['rstl_id']])->all();
+
+ $servicecount = count($servicesquery);
+?>
+
+
+
     <?= GridView::widget([
         'dataProvider' => $testnameDataProvider,
-        'pjax' => true,
+        'pjax' => true,    
         'id'=>'testname-grid',
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
         'rowOptions' => function($model){
@@ -79,6 +85,7 @@ $this->registerJs($js);
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+                'before'=>'<span class="btn btn-warning legend-font" style="float:left" "id"="servicescount"><span class= "glyphicon glyphicon-upload"></span>SYNC '.$servicecount.'</span>',
                'after'=>false,
             ],
         'columns' => [
@@ -88,7 +95,6 @@ $this->registerJs($js);
                 'format' => 'raw',
                 'contentOptions' => ['style' => 'width: 5%;word-wrap: break-word;white-space:pre-line;'],
                 'value'=>function($model){
-
 
                     $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
                     $servicesquery= Services::find()->where(['method_reference_id' => $model->method_reference_id])->andWhere(['rstl_id'=>  $GLOBALS['rstl_id']])->one();
