@@ -88,12 +88,16 @@ class FeedbackController extends \yii\web\Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+         $sql = "select * from eulims.tbl_package
+                union all
+                select '0','Others','others','',''";
+         $dataPackageList = ArrayHelper::map(Yii::$app->db->createCommand($sql)->queryAll(),'PackageName','PackageName');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->feedback_id]);
         } else {
             return $this->render('update', [
-                'model' => $model,
+                'model' => $model,'dataPackageList'=>$dataPackageList
             ]);
         }
     }
