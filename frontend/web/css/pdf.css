@@ -26,6 +26,9 @@ body {
 .valign-bottom{
     vertical-align: bottom
 }
+.text-bold{
+    font-weight: bold
+}
 .text-right{
     text-align: right
 }
