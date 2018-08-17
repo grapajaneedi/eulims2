@@ -86,8 +86,8 @@ if($Cancelledrequest){
 }
 if($Request_Ref){//With Reference
     $enableRequest=true;
-    $disableButton="disabled";
-    $EnablePrint="<button id='btnPrintRequest' class='btn btn-primary' style='margin-left: 5px'><i class='fa fa-print'></i> Print Request</button>";
+    $disableButton="disabled";///reports/preview?url=/lab/request/print-request?id=10
+    $EnablePrint="<a href='/reports/preview?url=/lab/request/print-request?id=".$model->request_id."' class='btn btn-primary' style='margin-left: 5px'><i class='fa fa-print'></i> Print Request</a>";
     $ClickButton='';
     $btnID="";
 }else{ // NO reference number yet

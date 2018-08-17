@@ -219,15 +219,15 @@ class Printing {
             //Footer
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td class='text-left border-left-line border-top-line padding-left-5'>OR Nos:</td>";
-            $RequestTemplate .= "<td class='text-left border-top-line padding-left-5' colspan='4'>234123,56783</td>";
+            $RequestTemplate .= "<td class='text-left border-top-line padding-left-5' colspan='4'>$RequestHeader->OR_Numbers</td>";
             $RequestTemplate .= "<td class='text-right border-top-line padding-left-5' colspan='3'>Amount Received:</td>";
-            $RequestTemplate .= "<td colspan='2' class='text-right border-top-line padding-left-5 border-right-line padding-right-5'>1,234.00</td>";
+            $RequestTemplate .= "<td colspan='2' class='text-right border-top-line padding-left-5 border-right-line padding-right-5'>".number_format($RequestHeader->TotalAmount,2)."</td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td class='text-left border-bottom-line border-left-line padding-left-5'>Date:</td>";
-            $RequestTemplate .= "<td class='text-left border-bottom-line padding-left-5' colspan='4'>8/15/2018 11:23 AM</td>";
+            $RequestTemplate .= "<td class='text-left border-bottom-line padding-left-5' colspan='4'>$RequestHeader->ORDate</td>";
             $RequestTemplate .= "<td class='text-right border-bottom-line padding-left-5' colspan='3'>Unpaid Balance:</td>";
-            $RequestTemplate .= "<td colspan='2' class='text-right border-bottom-line padding-left-5 border-right-line padding-right-5'>0.00</td>";
+            $RequestTemplate .= "<td colspan='2' class='text-right border-bottom-line padding-left-5 border-right-line padding-right-5'>₱ ".number_format($RequestHeader->GrandTotal-$RequestHeader->TotalAmount,2)."</td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td class='text-left' colspan='10'>&nbsp;</td>";
