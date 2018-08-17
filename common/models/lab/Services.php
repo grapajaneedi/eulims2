@@ -16,6 +16,7 @@ use Yii;
  */
 class Services extends \yii\db\ActiveRecord
 {
+    public $lab_id;
     /**
      * {@inheritdoc}
      */
@@ -38,8 +39,8 @@ class Services extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'lab_id', 'method_reference_id', 'sampletype_id', 'testname_method_id'], 'required'],
-            [['rstl_id', 'lab_id', 'method_reference_id', 'sampletype_id', 'testname_method_id'], 'integer'],
+            [['rstl_id', 'method_reference_id', 'sampletype_id', 'testname_method_id'], 'required'],
+            [['rstl_id', 'method_reference_id', 'sampletype_id', 'testname_method_id'], 'integer'],
         ];
     }
 

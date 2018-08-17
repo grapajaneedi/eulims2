@@ -27,12 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
-<?php
- $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
- $servicesquery= Services::find()->Where(['rstl_id'=>$GLOBALS['rstl_id']])->all();
 
- $servicecount = count($servicesquery);
-?>
 <div class="services-index">
    
 <fieldset>
@@ -41,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <span class='badge btn-success legend-font' ><span class= 'glyphicon glyphicon-check'></span> UNOFFER</span>
     <span class='badge btn-danger legend-font' ><span class= 'glyphicon glyphicon-check'></span> OFFER</span>
 
-    <span class='btn btn-success legend-font' style='float:right' 'id'='servicescount'><span class= 'glyphicon glyphicon-upload'></span> SYNC <?php echo $servicecount?></span>
+ 
                 
     </div>
 </fieldset>

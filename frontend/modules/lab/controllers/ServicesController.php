@@ -257,7 +257,7 @@ class ServicesController extends Controller
 
           $services = new Services();
           $services->rstl_id =   $GLOBALS['rstl_id'];
-          $services->lab_id = $labid;
+        //  $services->lab_id = $labid;
           $services->method_reference_id = $id;
           $services->sampletype_id = $sampletypeid;
           $services->testname_method_id = $testnamemethod->testname_method_id;
