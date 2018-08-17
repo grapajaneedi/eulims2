@@ -84,9 +84,9 @@ if(Yii::$app->user->isGuest){
                             ],
                             ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii'],'visible'=> Yii::$app->user->can('access-gii')],
                             ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],'visible'=> Yii::$app->user->can('access-debug')],
-                            ['label' => 'Package List', 'icon' => 'cog', 'url' => ['/package'],'visible'=> Yii::$app->user->can('access-package-list')],
-                            ['label' => 'Package Details', 'icon' => 'cog', 'url' => ['/package/details'],'visible'=> Yii::$app->user->can('access-package-list')],
-                            ['label' => 'Package Manager', 'icon' => 'cog', 'url' => ['/package/manager'],'visible'=> Yii::$app->user->can('access-package')],
+                            ['label' => 'Module List', 'icon' => 'cog', 'url' => ['/module'],'visible'=> Yii::$app->user->can('access-package-list')],
+                            ['label' => 'Module Details', 'icon' => 'cog', 'url' => ['/module/details'],'visible'=> Yii::$app->user->can('access-package-list')],
+                            ['label' => 'Module Manager', 'icon' => 'cog', 'url' => ['/module/manager'],'visible'=> Yii::$app->user->can('access-package')],
                             [
                                 'label' => 'RBAC',
                                 'icon' => 'fa fa-user-circle-o',

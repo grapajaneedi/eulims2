@@ -50,17 +50,15 @@ class Printing {
         $mPDF = new Pdf(['cssFile' => 'css/pdf.css']);
         $mPDF->content = $mTemplate;
         $mPDF->orientation = Pdf::ORIENT_PORTRAIT;
-        $mPDF->marginLeft = 2.0;
-        $mPDF->marginRight = 2.0;
-        $mPDF->marginTop = 1.0;
-        $mPDF->marginBottom = 0.5;
+//        $mPDF->marginLeft = 2.0;
+//        $mPDF->marginRight = 2.0;
+//        $mPDF->marginTop = 1.0;
+//        $mPDF->marginBottom = 5.5;
         $mPDF->defaultFontSize = 9;
         $mPDF->defaultFont = 'Verdana';
         $mPDF->format = Pdf::FORMAT_A4;
         $mPDF->destination = Pdf::DEST_BROWSER;
-        $mPDF->methods=[ 
-            'SetFooter'=>[$pdfFooter]
-        ];
+        $mPDF->methods =['SetFooter'=>['|{PAGENO}|']];
         $mPDF->render();
         exit;
     }
@@ -84,10 +82,14 @@ class Printing {
             $RequestTemplate .= "<td colspan='10' style='text-align: center;font-size: 12px;font-weight: bold'>REGIONAL STANDARDS AND TESTING LABORATORIES</td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
-            $RequestTemplate .= "<td colspan='10' style='text-align: center;font-size: 12px'>$RstlDetails->address</td>";
+            $RequestTemplate .= "<td colspan='3'  style='width: 30%'></td>";
+            $RequestTemplate .= "<td colspan='4' style='text-align: center;font-size: 12px;width: 40%'>$RstlDetails->address</td>";
+            $RequestTemplate .= "<td colspan='3'></td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
-            $RequestTemplate .= "<td colspan='10' style='text-align: center;font-size: 12px'>$RstlDetails->contacts</td>";
+            $RequestTemplate .= "<td colspan='3'  style='width: 30%'></td>";
+            $RequestTemplate .= "<td colspan='4' style='width: 40%;text-align: center;font-size: 12px'>$RstlDetails->contacts</td>";
+            $RequestTemplate .= "<td colspan='3'></td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td colspan='10' style='text-align: center;font-size: 12px'>&nbsp;</td>";
@@ -233,9 +235,9 @@ class Printing {
              //Report Due
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td class='text-left border-bottom-line border-left-line border-top-line padding-left-5'>Report Due On:</td>";
-            $RequestTemplate .= "<td class='text-left border-bottom-line border-top-line padding-left-5' colspan='4'>8/21/2018</td>";
-            $RequestTemplate .= "<td class='text-right border-bottom-line border-top-line padding-left-5' colspan='4'>Mode Of Release:</td>";
-            $RequestTemplate .= "<td class='text-right border-bottom-line border-top-line padding-left-5 border-right-line padding-right-5'>Pick up</td>";
+            $RequestTemplate .= "<td class='text-left border-bottom-line border-top-line padding-left-5' colspan='4'>".date('m/d/Y', strtotime($RequestHeader->report_due))."</td>";
+            $RequestTemplate .= "<td class='text-right border-bottom-line border-top-line padding-left-5' colspan='3'>Mode Of Release:</td>";
+            $RequestTemplate .= "<td colspan='2' class='text-right border-bottom-line border-top-line padding-left-5 border-right-line padding-right-5'>$RequestHeader->ModeOfRelease</td>";
             $RequestTemplate .= "</tr>";
              //Divider
             $RequestTemplate .= "<tr>";
@@ -251,9 +253,9 @@ class Printing {
             $RequestTemplate .= "<td class='text-left border-left-line border-top-line padding-left-5 border-right-line padding-right-5' colspan='3'></td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
-            $RequestTemplate .= "<td class='text-center valign-bottom text-bold border-left-line border-bottom-line padding-left-5 border-right-line padding-right-5' colspan='4' style='height: 35px'>$RequestHeader->conforme</td>";
-            $RequestTemplate .= "<td class='text-center valign-bottom text-bold border-left-line border-bottom-line padding-left-5 border-right-line padding-right-5' colspan='3'>$RequestHeader->receivedBy</td>";
-            $RequestTemplate .= "<td class='text-center valign-bottom text-bold border-left-line border-bottom-line padding-left-5 border-right-line padding-right-5' colspan='3'>$RequestHeader->LabManager</td>";
+            $RequestTemplate .= "<td class='text-center valign-bottom text-bold border-left-line border-bottom-line padding-left-5 border-right-line padding-right-5' colspan='4' style='height: 35px'>".ucwords($RequestHeader->conforme)."</td>";
+            $RequestTemplate .= "<td class='text-center valign-bottom text-bold border-left-line border-bottom-line padding-left-5 border-right-line padding-right-5' colspan='3'>".ucwords($RequestHeader->receivedBy)."</td>";
+            $RequestTemplate .= "<td class='text-center valign-bottom text-bold border-left-line border-bottom-line padding-left-5 border-right-line padding-right-5' colspan='3'>".ucwords($RequestHeader->LabManager)."</td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td class='text-center border-bottom-line border-left-line border-top-line padding-left-5 border-right-line padding-right-5' colspan='4'>Customer/Authorized Representative</td>";

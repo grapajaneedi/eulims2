@@ -7,8 +7,8 @@ body {
 	margin-bottom: 1.0cm;
 	margin-left: 0.5cm;
 	margin-right: 0.5cm;
-	margin-header: 0mm;
-	margin-footer: 0mm;
+	/*margin-header: 0mm;
+	margin-footer: 0mm;*/
 	background-color:#ffffff;
 }
 .border-bottom-line{
