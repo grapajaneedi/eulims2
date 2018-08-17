@@ -541,6 +541,14 @@ SCRIPT;
         return $Row['HasReceipt'];
     }
     public function SetWallet($customer_id,$amount,$source,$transactiontype){
+//        echo $customer_id;
+//        echo "<br>";
+//        echo $amount;
+//        echo "<br>";
+//        echo $source;
+//        echo "<br>";
+//        echo $transactiontype;
+//        exit;
         //$transactiontype 0 = credit, 1= debit ,2= initial
         $transac = new Customertransaction();
         $transac->transactiontype=$transactiontype;
@@ -548,8 +556,9 @@ SCRIPT;
         $transac->amount=$amount;
         $transac->date=date('Y-m-d');
         $transac->source=$source;
-        $wallet = Customerwallet::find()->where(['customerwallet_id' => $customer_id])->one();
+        $wallet = Customerwallet::find()->where(['customer_id' => $customer_id])->one();
         if($wallet){
+           
              switch($transactiontype){
                 case 0:
                     //credit transactiontype
@@ -569,15 +578,16 @@ SCRIPT;
              }
 
              //save the wallet information
-             if($wallet->save()){
+             if($wallet->save(false)){
                 $transac->balance=$wallet->balance;
                 $transac->customerwallet_id=$wallet->customerwallet_id;
-                if($transac->save()){
+                if($transac->save(false)){
                     return true;
                 }else{
                     return false;
                 }
              }else{
+                
                 return false;
              }
         }else{
@@ -595,9 +605,9 @@ SCRIPT;
                 $transac->transactiontype=$transactiontype;
                 $transac->amount=$amount;
                 $transac->balance=$amount;
-                $transac->customerwallet_id=$customer_id;
+                $transac->customerwallet_id=$newwallet->customerwallet_id;
                 $transac->source=$source;
-                if($transac->save()){
+                if($transac->save(false)){
                     return true;
                 }else{
                     return false;

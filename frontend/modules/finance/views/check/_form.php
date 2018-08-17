@@ -43,13 +43,14 @@ use kartik\widgets\DatePicker;
     </div>
     <div class="form-group pull-right">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
-            'id'=>'updateCheck','disabled'=>false]) ?>
-            <button type="reset" class="btn btn-danger">Reset</button>
+            'id'=>'updateCheck',
+            'disabled'=>false]) ?>
+       <button type="reset" class="btn btn-danger">Reset</button>
         <?php if(Yii::$app->request->isAjax){ ?>
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <?php } ?>
-    </div>
 
-    <?php ActiveForm::end(); ?>
+
+    </div    <?php ActiveForm::end(); ?>
 
 </div>

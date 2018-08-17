@@ -28,7 +28,7 @@ use common\models\finance\SoaReceipt;
 use frontend\modules\finance\components\models\Ext_Request as Request;
 use yii2tech\spreadsheet\Spreadsheet;
 use yii\data\ArrayDataProvider;
-
+use common\components\Functions;
 use yii2tech\spreadsheet\Myspreadsheet;
 use frontend\modules\reports\modules\finance\templates\Orspreadsheet;
 
@@ -589,14 +589,25 @@ class CashierController extends \yii\web\Controller
     {
          $model = new Check();
          $receipt=$this->findModelReceipt($receiptid);
+         $customer_id=$receipt->customer_id;
          $total_collection=$receipt->total;
          $sum = Check::find()->where(['receipt_id'=>$receiptid])->sum('amount');
+         $func= new Functions();
          
          if ($model->load(Yii::$app->request->post())) {
             $session = Yii::$app->session;
-             try  {
+            
+            try  {
                 $model->receipt_id=$receiptid;
-                $model->save(false);
+                if($model->save()){
+                   if ($model->amount > $total_collection){
+                       Yii::$app->session->setFlash('info','Excess amount will be credited to customer wallet!');
+                       $total= $model->amount - $total_collection;
+                       $source= "From Receipt #:".$receipt->or_number.", Check #:".$model->checknumber;
+                       $func->SetWallet($customer_id, $total, $source,0);
+                   } 
+                }
+                // Yii::$app->session->setFlash('success','Successfully Saved!');
                 return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]);
              } catch (Exception $e) {
                  return $e;
@@ -641,7 +652,7 @@ class CashierController extends \yii\web\Controller
         if($model->delete()) {
             Yii::$app->session->setFlash('success','Successfully Removed!');
             return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]);
-        } else {
+        }else {
             return $model->error();
         }
     }
