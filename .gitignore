@@ -71,3 +71,10 @@ frontend/modules/lab/views/analysis/_form_20180810.php
 frontend/modules/reports/modules/lab/controllers/AccomplishmentController_20180801.php
 frontend/modules/lab/controllers/SampleregisterController_20180814_bk.php
 frontend/modules/lab/views/sampleregister/index_20180814.php
+common/models/lab/SampleregisterSearch_20180820_bk.php
+frontend/modules/lab/controllers/SampleregisterController_20180814.php
+frontend/modules/lab/controllers/SampleregisterController_20180820_bk.php
+frontend/modules/lab/models/Sampleextend_20180814.php
+frontend/modules/lab/views/sampleregister/index_20180814-bk.php
+frontend/modules/lab/views/sampleregister/index_20180815.php
+frontend/modules/lab/views/sampleregister/index_20180820_bk.php

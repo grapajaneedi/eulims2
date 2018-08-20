@@ -3,7 +3,6 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use kartik\grid\GridView;
-use common\models\lab\Analysis;
 use common\models\lab\SampleregisterUser;
 use frontend\modules\lab\models\Sampleextend;
 use kartik\grid\DataColumn;
@@ -12,7 +11,6 @@ use kartik\export\ExportMenu;
 use common\models\lab\Lab;
 use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
-
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\SampleSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -92,12 +90,11 @@ echo GridView::widget([
     'id' => 'sample-register',
     'dataProvider'=>$dataProvider,
     //'filterModel'=>$searchModel,
-    //'showPageSummary'=>true,
-    'showPageSummary'=>false,
     'pjax'=>true,
 	'pjaxSettings' => [
 		'options' => [
-			'enablePushState' => false,
+            'enablePushState' => false,
+            //'enableReplaceState'=>true,
 		]
 	],
     'striped'=>true,
@@ -105,12 +102,8 @@ echo GridView::widget([
     'panel'=>[
         'type'=>'primary', 
         'heading'=>'Sample Register',
-        //'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-plus"></i> Generate Samplecode', ['value' => Url::to(['sample/generatesamplecode','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
-        //'before'=>$daterange1." ".$filterbutton,
     ],
     'exportConfig' => [
-        //GridView::CSV => ['label' => 'Save as CSV'],
-        //GridView::HTML => [],
         GridView::PDF => [],
         GridView::EXCEL => [
             'label' => 'Excel',
@@ -120,29 +113,10 @@ echo GridView::widget([
             'showPageSummary' => true,
             'showFooter' => true,
             'showCaption' => true,
-            'filename' => $this->title,
+            'filename' => 'Sample_Register',
             'alertMsg' => 'The EXCEL export file will be generated for download.',
             'options' => ['title' => 'Microsoft Excel 95+'],
             'mime' => 'application/vnd.ms-excel',
-            'config' => [
-                'worksheet' => $this->title,
-                'cssFile' => ''
-            ]
-        ],
-        GridView::EXCEL => [
-            'label' => 'Excel',
-            //'icon' => 'file-excel-o',
-            'iconOptions' => ['class' => 'text-success'],
-            'showHeader' => true,
-            'showPageSummary' => true,
-            'showFooter' => true,
-            'showCaption' => true,
-            //'filename' => $this->title,
-            'alertMsg' => 'The EXCEL export file will be generated for download.',
-            'options' => ['title' => 'Microsoft Excel 95+'],
-            'mime' => 'application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'extension' => 'xlsx',
-            //'writer' => ExportMenu::FORMAT_EXCEL_X,
             'config' => [
                 'worksheet' => $this->title,
                 'cssFile' => ''
@@ -152,158 +126,88 @@ echo GridView::widget([
     'columns'=>[
         //['class'=>'kartik\grid\SerialColumn'],
         [
-            //'attribute'=>'sample.sample_code', 
             'label' => 'Request Reference #',
             'format' => 'raw',
             'value' => function($model, $key, $index, $widget){
-                //return Yii::$app->formatter->asDate($model->request->request_datetime, 'php:F j, Y');
                 return $model->request->request_ref_num;
-                //return $data['sample']['sample_code'];
             },
             'group'=>true,  // enable grouping
         ],
         [
-            //'attribute'=>'sample.sample_code', 
             'label' => 'Sample Code',
             'format' => 'raw',
             'value' => function($model, $key, $index, $widget){
-            	//return Yii::$app->formatter->asDate($model->request->request_datetime, 'php:F j, Y');
                 return $model->sample_code;
-                //return $data['sample']['sample_code'];
             },
-            //'group'=>true,  // enable grouping
         ],
         [
-        	//'attribute' => 'request.request_datetime',
             'label' => 'Date Received',
-            //'filterType'=> GridView::FILTER_DATE_RANGE,
             'format' => 'raw',
             'value' => function($model, $key, $index, $widget){
-            	//return Yii::$app->formatter->asDate($model->request->request_datetime, 'php:F j, Y');
             	return Yii::$app->formatter->asDate($model->request->request_datetime, 'php:Y-m-d');
             },
-            //'attribute'=>'category_id', 
             'width'=>'250px',
-            //'group'=>true,  // enable grouping
-            //'subGroupOf'=>1 // supplier column index is the parent group
         ],
         [
-        	//'attribute' => 'request.report_due',
             'label' => 'Report Due Date',
             'format' => 'raw',
             'value' => function($model, $key, $index, $widget){
             	return Yii::$app->formatter->asDate($model->request->report_due, 'php:Y-m-d');
-            },
-            //'group'=>true,  // enable grouping
+            }
         ],
         [
-            //'attribute'=>'samplename',
             'label' => 'Sample Name',
             'format' => 'raw',
-            //'value'=>'sample.samplename',
-            //'group'=>true,  // enable grouping
             'value' => function($model, $key, $index, $widget){
                 return $model->samplename;
             },
         ],
         [
-            //'attribute'=>'testname',
             'label' => 'Parameters',
             'format' => 'raw',
             'value' => function($model, $key, $index, $widget){
-            //'value' => function($model){
-                //$tests =  Sampleextend::showParameter($model->sample_id);
                 $parameter =  $model->showParameter($model->sample_id);
-                //return (count($test) > 0) ? $model->returnList($test,'testname') : "";
-                // echo "<pre>";
-                //         print_r($tests);
-                //         echo "</pre>";
-                //return count($tests);
-                //print_r($tests['testname']." ".$tests['start_date']." ".$tests['end_date']." ".$tests['user_id']."<br />");
-                /*foreach ($tests as $test) {
-                    # code...
-                    echo $test['testname'];
-                }*/
-                /*$html = "";
-                if (is_array($tests) || is_object($tests)){
-                    foreach ($tests as $key => $value) {
-                        //echo "<pre>";
-                        //print_r($tests);
-                        //echo "</pre>";
-                        $html .=  $value['testname'];
-                    }
-                } else {
-                    //return "kk";
-                    $html .= "";
-                }
-                return $html;*/
                 return $parameter;
-                //$nummer_art = "verwendungszweck";
-                //$items = LKontaktVerwendungszweck::getVerwendungszweck_all($model);
-                /*$html = '<ul>';
-                foreach ($tests as $test) {            
-                    $html .= "<li>" . implode(",",$test['testname']) . "</li>";                    
-                }
-                $html .= "</ul>";
-                return $html;*/
-                //echo "<pre>";
-                //        print_r($tests);
-                //        echo "</pre>";
             },
         ],
         [
-            //'attribute'=>'start_date',
             'label' => 'Date Analysis Started',
             'format' => 'raw',
-            //'value' => 'tagging.start_date',
             'value' => function($model, $key, $index, $widget){
-                //return $model->tagging->start_date;
                 $start_date = $model->showStartDate($model->sample_id);
                 return $start_date;
             },
         ],
         [
-            //'attribute'=>'testname',
-            //'attribute'=>'end_date',
             'label' => 'Analysis Due Date',
             'format' => 'raw',
-            //'value' => 'tagging.end_date',
             'value' => function($model, $key, $index, $widget){
-                //return $model->tagging->end_date;
                 $end_date = $model->showEndDate($model->sample_id);
                 return $end_date;
             },
         ],
         [
-            //'attribute'=>'testname',
             'label' => 'Date Sample Disposed',
             'format' => 'raw',
-            //'value'=>'tagging.disposed_date',
             'value' => function($model, $key, $index, $widget){
-                //return $model->tagging->disposed_date;
                 $disposed_date = $model->showDisposedDate($model->sample_id);
                 return $disposed_date;
             },
         ],
         [
-            //'attribute'=>'testname',
-            //'attribute' => 'tagging.manner_disposal',
             'label' => 'Manner of Disposal',
             'format' => 'raw',
-            //'value' => 'tagging.manner_disposal',
             'value' => function($model, $key, $index, $widget){
-                //return $model->tagging->manner_disposal;
                 $manner_disposal = $model->showMannerDisposal($model->sample_id);
                 return $manner_disposal;
             },
         ],
         [
-            //'attribute'=>'testname',
             'label' => 'Analyst',
             'format' => 'raw',
+            //'filterType' => GridView::FILTER_SELECT2,
+            //'filter' => $analysts,
             'value' => function($model, $key, $index, $widget){
-                //$tagging = $model->tagging;
-                //return SampleregisterUser::getUser($tagging['user_id']);
                 $analyst = $model->showAnalyst($model->sample_id);
                 return $analyst;
             },
