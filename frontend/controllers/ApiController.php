@@ -104,9 +104,9 @@ class ApiController extends ActiveController
                 $newRequest->oldColumn_cancelled=$var['oldColumn_cancelled'];
                 $newRequest->oldColumn_create_time=$var['oldColumn_create_time'];
                 $newRequest->request_old_id=$var['request_old_id'];
-                $newRequest->created_at=0;
-                $newRequest->discount_id=0;
-                if($newRequest->save()){
+                $newRequest->created_at=$var['created_at'];
+                $newRequest->discount_id=$var['discount_id'];
+                if($newRequest->save(true)){
                     $ctr++;
                 }
             }
@@ -143,8 +143,8 @@ class ApiController extends ActiveController
                 $newSample->oldColumn_mannerofdisposal=$var['oldColumn_mannerofdisposal'];
                 $newSample->oldColumn_batch_num=$var['oldColumn_batch_num'];
                 $newSample->oldColumn_package_count=$var['oldColumn_package_count'];
-                $newSample->testcategory_id=0;
-                if($newSample->save()){
+                $newSample->testcategory_id=$var['testcategory_id'];
+                if($newSample->save(true)){
                     $ctr++;
                 }
             }
@@ -182,10 +182,10 @@ class ApiController extends ActiveController
                 $newanalysis->oldColumn_result=$var['oldColumn_result'];
                 $newanalysis->oldColumn_package_count=$var['oldColumn_package_count'];
                 $newanalysis->oldColumn_requestId=$var['oldColumn_requestId'];
-                $newanalysis->request_id=0;
-                $newanalysis->testcategory_id=0;
-                $newanalysis->sample_type_id=0;
-                if($newanalysis->save()){
+                $newanalysis->request_id=$var['request_id'];
+                $newanalysis->testcategory_id=$var['testcategory_id'];
+                $newanalysis->sample_type_id=$var['sample_type_id'];
+                if($newanalysis->save(true)){
                     $ctr++;
                 }
             }
