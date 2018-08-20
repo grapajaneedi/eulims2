@@ -65,7 +65,7 @@ class ApiController extends ActiveController
                 $newCustomer->customer_old_id=$var['id'];
                 $newCustomer->Oldcolumn_municipalitycity_id=$var['municipalitycity_id'];
                 $newCustomer->Oldcolumn_district=$var['district'];
-                if($newCustomer->save()){
+                if($newCustomer->save(true)){
                     $ctr++;
                 }
             }

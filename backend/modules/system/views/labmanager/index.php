@@ -57,7 +57,7 @@ $Header.="Laboratory Manager List";
                 'attribute' => 'rstl_id',
                 'label' => 'RSTL',
                 'value' => function($model) {
-                    return $model->rstl->name;
+                    return $model->rstl ? $model->rstl->name : '';
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map($RSTLRows, 'rstl_id', '`name`'),
@@ -84,7 +84,7 @@ $Header.="Laboratory Manager List";
                 'label'=>'Lab Manager',
                 'value' => function ($model, $key, $index, $widget) { 
                     $Manager=Labrbac::find()->where(['user_id'=>$model->user_id])->one();
-                    return $Manager->labmanager;
+                    return $Manager ? $Manager->labmanager : '';
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map($Rows, 'user_id', 'labmanager'), 
