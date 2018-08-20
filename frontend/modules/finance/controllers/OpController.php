@@ -502,4 +502,14 @@ class OpController extends Controller
         'model'=>$op,
         ]);
     }
+    
+     public function actionUpdatePaymentmode($id){
+         Yii::$app->financedb->createCommand()
+        ->update('tbl_orderofpayment', ['on_account' => 1,'payment_mode_id'=>6], 'orderofpayment_id= '.$id)
+        ->execute(); 
+         
+         Yii::$app->session->setFlash('success','Successfully Posted!');
+            return $this->redirect(['/finance/op/view?id='.$id]);
+       //  return;
+     }
 }

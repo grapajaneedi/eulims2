@@ -26,7 +26,7 @@ if(Yii::$app->user->can('allow-cancel-op')){
 }
 if(Yii::$app->user->can('allow-create-receipt')){
     if($model->receipt_id == null){
-        if($model->payment_mode_id!=5){//Not Flagged as Online payment
+        if($model->payment_mode_id!=5 || $model->payment_mode_id <> 6){//Not Flagged as Online payment
            $receipt_button="<button type='button' value='/finance/cashier/create-receipt?op_id=$model->orderofpayment_id' id='btnCreateReceipt2' style='float: right;' class='btn btn-success' title='Receipt from OP' onclick='addReceipt(this.value,this.title)'><i class='fa fa-save'></i> Create Receipt</button>";    
         }else{
            $receipt_button=""; 
@@ -110,9 +110,15 @@ SCRIPT;
 $this->registerJs($OnlineJS,View::POS_END);
 $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> Print OP', ['value'=>'/finance/op/printview?id='.$model->orderofpayment_id, 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Print Report"),'style'=>'margin-right: 5px','onclick'=>"location.href=this.value"]);
 if($model->payment_mode_id!=5){//Not Flagged as Online payment
-    $onlinePaymentButton=Html::button('<span class="glyphicon glyphicon-level-up"></span> Online Payment', ['class' => 'btn btn-small btn-warning','title' => Yii::t('app', "Post as Online Payment"),'onclick'=>"PostForOnlinePayment($model->orderofpayment_id)"]);
+    $onlinePaymentButton=Html::button('<span class="glyphicon glyphicon-level-up"></span> Online Payment', ['class' => 'btn btn-small btn-warning','title' => Yii::t('app', "Post as Online Payment"),'style'=>'margin-right: 5px','onclick'=>"PostForOnlinePayment($model->orderofpayment_id)"]);
 }else{
     $onlinePaymentButton="<span class='btn btn-small btn-warning disabled'><span class='glyphicon glyphicon-level-up'></span> Online Payment</span>";
+}
+
+if($model->payment_mode_id!=6){//Not Flagged as On Account
+    $onAccountButton=Html::button('<span class="glyphicon glyphicon-level-up"></span> On Account', ['class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Post as On Account"),'onclick'=>"PostForOnAccount($model->orderofpayment_id)"]);
+}else{
+    $onAccountButton="<span class='btn btn-small btn-primary disabled'><span class='glyphicon glyphicon-level-up'></span> On Account</span>";
 }
 $payment_status_id=$model->payment_status_id;
 ?>
@@ -318,7 +324,7 @@ $payment_status_id=$model->payment_status_id;
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Item(s)</h3>',
                     'type'=>'primary',
-                    'before'=>$model->receipt_id ? "" : $footer.$button_paymentitem.$print_button.$onlinePaymentButton,
+                    'before'=>$model->receipt_id ? "" : $footer.$button_paymentitem.$print_button.$onlinePaymentButton.$onAccountButton,
                 ],
                 'columns' => $gridColumns,
                
@@ -337,5 +343,21 @@ $payment_status_id=$model->payment_status_id;
     
     function addPaymentitem(url,title){
         LoadModal(title,url,'true','800px');
+    }
+    
+    function PostForOnAccount(id){
+        jQuery.ajax( {
+            type: 'POST',
+            url: '/finance/op/update-paymentmode?id='+id,
+            dataType: 'html',
+            success: function ( response ) {
+              // $('#wallet').val(response);
+//              alert('Successfully Posted!');
+//              location.reload();
+            },
+            error: function ( xhr, ajaxOptions, thrownError ) {
+                alert( thrownError );
+            }
+        });
     }
 </script>
