@@ -83,151 +83,169 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
             <?php ActiveForm::end(); ?>
-       </div>
-       <div class="row">
-<?php
-echo GridView::widget([
-    'id' => 'sample-register',
-    'dataProvider'=>$dataProvider,
-    //'filterModel'=>$searchModel,
-    'pjax'=>true,
-	'pjaxSettings' => [
-		'options' => [
-            'enablePushState' => false,
-            //'enableReplaceState'=>true,
-		]
-	],
-    'striped'=>true,
-    'hover'=>true,
-    'panel'=>[
-        'type'=>'primary', 
-        'heading'=>'Sample Register',
-    ],
-    'exportConfig' => [
-        GridView::PDF => [],
-        GridView::EXCEL => [
-            'label' => 'Excel',
-            //'icon' => 'file-excel-o',
-            'iconOptions' => ['class' => 'text-success'],
-            'showHeader' => true,
-            'showPageSummary' => true,
-            'showFooter' => true,
-            'showCaption' => true,
-            'filename' => 'Sample_Register',
-            'alertMsg' => 'The EXCEL export file will be generated for download.',
-            'options' => ['title' => 'Microsoft Excel 95+'],
-            'mime' => 'application/vnd.ms-excel',
-            'config' => [
-                'worksheet' => $this->title,
-                'cssFile' => ''
+        </div>
+        <div class="row">
+        <?php
+            $gridColumns = [
+                //['class'=>'kartik\grid\SerialColumn'],
+                [
+                    'label' => 'Request Reference #',
+                    'format' => 'raw',
+                    'value' => function($model, $key, $index, $widget){
+                        return $model->request->request_ref_num;
+                    },
+                    'group'=>true,  // enable grouping
+                ],
+                [
+                    'label' => 'Sample Code',
+                    'format' => 'raw',
+                    'value' => function($model, $key, $index, $widget){
+                        return $model->sample_code;
+                    },
+                ],
+                [
+                    'label' => 'Date Received',
+                    'format' => 'raw',
+                    'value' => function($model, $key, $index, $widget){
+                        return Yii::$app->formatter->asDate($model->request->request_datetime, 'php:Y-m-d');
+                    },
+                    'width'=>'250px',
+                ],
+                [
+                    'label' => 'Report Due Date',
+                    'format' => 'raw',
+                    'value' => function($model, $key, $index, $widget){
+                        return Yii::$app->formatter->asDate($model->request->report_due, 'php:Y-m-d');
+                    }
+                ],
+                [
+                    'label' => 'Sample Name',
+                    'format' => 'raw',
+                    'value' => function($model, $key, $index, $widget){
+                        return $model->samplename;
+                    },
+                ],
+                [
+                    'label' => 'Parameters',
+                    'format' => 'raw',
+                    'value' => function($model, $key, $index, $widget){
+                        $parameter =  $model->showParameter($model->sample_id);
+                        return $parameter;
+                    },
+                ],
+                [
+                    'label' => 'Date Analysis Started',
+                    'format' => 'raw',
+                    'value' => function($model, $key, $index, $widget){
+                        $start_date = $model->showStartDate($model->sample_id);
+                        return $start_date;
+                    },
+                ],
+                [
+                    'label' => 'Analysis Due Date',
+                    'format' => 'raw',
+                    'value' => function($model, $key, $index, $widget){
+                        $end_date = $model->showEndDate($model->sample_id);
+                        return $end_date;
+                    },
+                ],
+                [
+                    'label' => 'Date Sample Disposed',
+                    'format' => 'raw',
+                    'value' => function($model, $key, $index, $widget){
+                        $disposed_date = $model->showDisposedDate($model->sample_id);
+                        return $disposed_date;
+                    },
+                ],
+                [
+                    'label' => 'Manner of Disposal',
+                    'format' => 'raw',
+                    'value' => function($model, $key, $index, $widget){
+                        $manner_disposal = $model->showMannerDisposal($model->sample_id);
+                        return $manner_disposal;
+                    },
+                ],
+                [
+                    'label' => 'Analyst',
+                    'format' => 'raw',
+                    //'filterType' => GridView::FILTER_SELECT2,
+                    //'filter' => $analysts,
+                    'value' => function($model, $key, $index, $widget){
+                        $analyst = $model->showAnalyst($model->sample_id);
+                        return $analyst;
+                    },
+                ],
             ]
-        ],
-    ],
-    'columns'=>[
-        //['class'=>'kartik\grid\SerialColumn'],
-        [
-            'label' => 'Request Reference #',
-            'format' => 'raw',
-            'value' => function($model, $key, $index, $widget){
-                return $model->request->request_ref_num;
-            },
-            'group'=>true,  // enable grouping
-        ],
-        [
-            'label' => 'Sample Code',
-            'format' => 'raw',
-            'value' => function($model, $key, $index, $widget){
-                return $model->sample_code;
-            },
-        ],
-        [
-            'label' => 'Date Received',
-            'format' => 'raw',
-            'value' => function($model, $key, $index, $widget){
-            	return Yii::$app->formatter->asDate($model->request->request_datetime, 'php:Y-m-d');
-            },
-            'width'=>'250px',
-        ],
-        [
-            'label' => 'Report Due Date',
-            'format' => 'raw',
-            'value' => function($model, $key, $index, $widget){
-            	return Yii::$app->formatter->asDate($model->request->report_due, 'php:Y-m-d');
-            }
-        ],
-        [
-            'label' => 'Sample Name',
-            'format' => 'raw',
-            'value' => function($model, $key, $index, $widget){
-                return $model->samplename;
-            },
-        ],
-        [
-            'label' => 'Parameters',
-            'format' => 'raw',
-            'value' => function($model, $key, $index, $widget){
-                $parameter =  $model->showParameter($model->sample_id);
-                return $parameter;
-            },
-        ],
-        [
-            'label' => 'Date Analysis Started',
-            'format' => 'raw',
-            'value' => function($model, $key, $index, $widget){
-                $start_date = $model->showStartDate($model->sample_id);
-                return $start_date;
-            },
-        ],
-        [
-            'label' => 'Analysis Due Date',
-            'format' => 'raw',
-            'value' => function($model, $key, $index, $widget){
-                $end_date = $model->showEndDate($model->sample_id);
-                return $end_date;
-            },
-        ],
-        [
-            'label' => 'Date Sample Disposed',
-            'format' => 'raw',
-            'value' => function($model, $key, $index, $widget){
-                $disposed_date = $model->showDisposedDate($model->sample_id);
-                return $disposed_date;
-            },
-        ],
-        [
-            'label' => 'Manner of Disposal',
-            'format' => 'raw',
-            'value' => function($model, $key, $index, $widget){
-                $manner_disposal = $model->showMannerDisposal($model->sample_id);
-                return $manner_disposal;
-            },
-        ],
-        [
-            'label' => 'Analyst',
-            'format' => 'raw',
-            //'filterType' => GridView::FILTER_SELECT2,
-            //'filter' => $analysts,
-            'value' => function($model, $key, $index, $widget){
-                $analyst = $model->showAnalyst($model->sample_id);
-                return $analyst;
-            },
-        ],
-    ],
-    'toolbar' => [
-        [
-            'content' => Html::button('<i class="glyphicon glyphicon-repeat"></i> Reset Grid', ['title'=>'Reset Grid', 'onclick'=>'reloadGrid()', 'class' => 'btn btn-default'])
-        ],
-        '{export}',
-    ],
-    'autoXlFormat'=>true,
-    'export'=>[
-        'label' => 'Export',
-        'fontAwesome'=>true,
-        'showConfirmAlert'=>false,
-        'target'=>GridView::TARGET_SELF,
-    ],
-]);
-?>
+        ?>
+        <?php
+            echo GridView::widget([
+                'id' => 'sample-register',
+                'dataProvider'=>$dataProvider,
+                //'filterModel'=>$searchModel,
+                'pjax'=>true,
+            	'pjaxSettings' => [
+            		'options' => [
+                        'enablePushState' => false,
+                        //'enableReplaceState'=>true,
+            		]
+            	],
+                'striped'=>true,
+                'hover'=>true,
+                'panel'=>[
+                    'type'=>'primary', 
+                    'heading'=>'Sample Register',
+                ],
+                'exportConfig' => [
+                    GridView::PDF => [],
+                    GridView::EXCEL => [
+                        'label' => 'Excel',
+                        //'icon' => 'file-excel-o',
+                        'iconOptions' => ['class' => 'text-success'],
+                        'showHeader' => true,
+                        'showPageSummary' => true,
+                        'showFooter' => true,
+                        'showCaption' => true,
+                        'filename' => 'Sample_Register',
+                        'alertMsg' => 'The EXCEL export file will be generated for download.',
+                        'options' => ['title' => 'Microsoft Excel 95+'],
+                        'mime' => 'application/vnd.ms-excel',
+                        'config' => [
+                            'worksheet' => $this->title,
+                            'cssFile' => ''
+                        ]
+                    ],
+                ],
+                'columns'=> $gridColumns,
+                'toolbar' => [
+                    [
+                        'content' => Html::button('<i class="glyphicon glyphicon-repeat"></i> Reset Grid', ['title'=>'Reset Grid', 'onclick'=>'reloadGrid()', 'class' => 'btn btn-default']),
+                    ],
+                    '{toggleData}',
+                    '{export}',
+                ],
+                'toggleDataOptions' => [
+                    'all' => [
+                        'icon' => 'resize-full',
+                        'label' => 'Show All',
+                        'class' => 'btn btn-default',
+                        'title' => 'Show all data'
+                    ],
+                    'page' => [
+                        'icon' => 'resize-small',
+                        'label' => 'Paginate',
+                        'class' => 'btn btn-default',
+                        'title' => 'Show first page data'
+                    ],
+                ],
+                'autoXlFormat'=>true,
+                'export'=>[
+                    'label' => 'Export',
+                    'fontAwesome'=>true,
+                    'showConfirmAlert'=>false,
+                    'target'=>GridView::TARGET_SELF,
+                ],
+            ]);
+        ?>
         </div>
 </div>
 </div>
