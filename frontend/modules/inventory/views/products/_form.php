@@ -55,7 +55,7 @@ use common\models\inventory\Suppliers;
         </div>
         <div class="col-sm-6">
             <?=
-            $form->field($model, 'category_type_id')->widget(\kartik\widgets\Select2::classname(), [
+            $form->field($model, 'categorytype_id')->widget(\kartik\widgets\Select2::classname(), [
                 'data' => ArrayHelper::map(Categorytype::find()->orderBy('categorytype')->asArray()->all(), 'categorytype_id', 'categorytype'),
                 'options' => ['placeholder' => 'Choose CategoryType'],
                 'pluginOptions' => [

@@ -200,4 +200,11 @@ class Op extends \yii\db\ActiveRecord
         }
         return $samples;
     }
+    
+    public function getTRN($OpID){
+        $func=new Functions();
+        $Connection= Yii::$app->financedb;
+        $rows=$func->ExecuteStoredProcedureRows("spGetTRN(:opID)", [':opID'=> $OpID], $Connection);
+        return $rows;
+    }
 }
