@@ -107,10 +107,10 @@ function PostForOnlinePayment(id){
  });
 }       
 SCRIPT;
-$this->registerJs($OnlineJS,View::POS_END);
 $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> Print OP', ['value'=>'/finance/op/printview?id='.$model->orderofpayment_id, 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Print Report"),'style'=>'margin-right: 5px','onclick'=>"location.href=this.value"]);
 if($model->payment_mode_id!=5){//Not Flagged as Online payment
     $onlinePaymentButton=Html::button('<span class="glyphicon glyphicon-level-up"></span> Online Payment', ['class' => 'btn btn-small btn-warning','title' => Yii::t('app', "Post as Online Payment"),'style'=>'margin-right: 5px','onclick'=>"PostForOnlinePayment($model->orderofpayment_id)"]);
+    $this->registerJs($OnlineJS,View::POS_END);    
 }else{
     $onlinePaymentButton="<span class='btn btn-small btn-warning disabled'><span class='glyphicon glyphicon-level-up'></span> Online Payment</span>";
 }

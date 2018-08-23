@@ -70,8 +70,8 @@ class Printing {
         $Connection = \Yii::$app->labdb;
         $RequestRows = $Func->ExecuteStoredProcedureRows($Proc, $Params, $Connection);
         $RequestHeader = (object) $RequestRows[0];
-        $RequestID = $RequestHeader->request_id;
-        $RstlDetails = RstlDetails::find()->where(['rstl_id' => $RequestID])->one();
+        $rstl_id = $RequestHeader->rstl_id;
+        $RstlDetails = RstlDetails::find()->where(['rstl_id' => $rstl_id])->one();
         if ($RstlDetails) {
             $RequestTemplate = "<table border='0' style='border-collapse: collapse;font-size: 12px' width=100%>";
             $RequestTemplate .= "<thead>";

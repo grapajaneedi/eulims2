@@ -6,23 +6,22 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\lab\Analysis;
+use common\models\lab\Sample;
+use common\models\lab\Tagging;
+use frontend\modules\lab\models\Sampleextend;
 
 /**
  * SampleregisterSearch extended model of `common\models\lab\Analysis`.
  */
-class SampleregisterSearch extends Analysis
+class SampleregisterSearch extends Sampleextend
 {
     /**
      * {@inheritdoc}
      */
-    public $samplename,$start_date,$end_date;
+    //public $samplename,$start_date,$end_date;
     public function rules()
     {
         return [
-            [['analysis_id', 'rstl_id', 'pstcanalysis_id', 'request_id', 'sample_id', 'quantity', 'test_id', 'cancelled', 'status', 'user_id'], 'integer'],
-            //[['date_analysis', 'sample_code', 'testname', 'method', 'references'], 'safe'],
-            [['date_analysis', 'sample_code', 'testname','samplename', 'method', 'references'], 'safe'],
-            [['fee'], 'number'],
         ];
     }
 
@@ -44,14 +43,43 @@ class SampleregisterSearch extends Analysis
      */
     public function search($params)
     {
-        $query = Analysis::find();
-        // $query = Analysis::find()
-        //     ->with('taggings')
-        //     ->all();
-        //$query->with('taggings');
-        //$query->with('sample');
-        $query->joinWith(['sample','taggings']);
-        //$query = Analysis::find()->with('sample', 'taggings');
+       $rstlId = Yii::$app->user->identity->profile->rstl_id;
+
+       $query = Sampleextend::find();
+       $query->joinWith(['request']);
+
+        if (count($params) == 0)
+        {
+            $labId = 1;
+            $fromDate = date('Y-01-01'); //first day of the year
+            $toDate = date('Y-m-d'); //as of today
+
+            $query->where('status_id < :statusId AND lab_id = :labId AND active =:active AND request_ref_num != "" AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate',[':statusId'=>2,':labId'=>$labId,':active'=>1,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate]);
+            $query->orderBy([
+                'tbl_sample.request_id' => SORT_ASC,
+            ]);
+
+        } else {
+           $labId = (int) Yii::$app->request->get('lab_id');
+            
+            if($this->checkValidDate(Yii::$app->request->get('from_date')) == true)
+            {
+                $fromDate = Yii::$app->request->get('from_date');
+            } else {
+                $fromDate = date('Y-m-d');
+            }
+
+            if($this->checkValidDate(Yii::$app->request->get('to_date')) == true){
+                $toDate = Yii::$app->request->get('to_date');
+            } else {
+                $toDate = date('Y-m-d');
+            }
+
+            $query->where('status_id < :statusId AND lab_id = :labId AND active =:active AND request_ref_num != "" AND DATE_FORMAT(`request_datetime`, "%Y-%m-%d") BETWEEN :fromRequestDate AND :toRequestDate',[':statusId'=>2,':labId'=>$labId,':active'=>1,':fromRequestDate'=>$fromDate,':toRequestDate'=>$toDate]);
+            $query->orderBy([
+                'tbl_sample.request_id' => SORT_ASC,
+            ]);
+        }
 
         // add conditions that should always apply here
 
@@ -67,36 +95,30 @@ class SampleregisterSearch extends Analysis
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
-            'analysis_id' => $this->analysis_id,
-            'date_analysis' => $this->date_analysis,
-            'rstl_id' => $this->rstl_id,
-            'pstcanalysis_id' => $this->pstcanalysis_id,
-            'request_id' => $this->request_id,
-            'sample_id' => $this->sample_id,
-            'quantity' => $this->quantity,
-            'fee' => $this->fee,
-            'test_id' => $this->test_id,
-            'cancelled' => $this->cancelled,
-            'status' => $this->status,
-            'user_id' => $this->user_id,
+            'tbl_request.rstl_id' => $rstlId,
+            'tbl_sample.rstl_id' => $rstlId,
         ]);
 
-        //->andFilterWhere(['like', 'tbl_city.name', $this->city])
-        //->andFilterWhere(['like', 'tbl_country.name', $this->country]);
-
-        $query->andFilterWhere(['like', 'tbl_sample.sample_code', $this->sample_code])
-            ->andFilterWhere(['like', 'testname', $this->testname])
-            ->andFilterWhere(['like', 'tbl_sample.samplename', $this->samplename])
-            ->andFilterWhere(['like', 'tbl_tagging.start_date', $this->start_date])
-            ->andFilterWhere(['like', 'tbl_tagging.end_date', $this->end_date])
-            ->andFilterWhere(['like', 'method', $this->method])
-            ->andFilterWhere(['like', 'references', $this->references]);
-
-            echo "<pre>";
-            print_r($dataProvider);
-            echo "</pre>";
         return $dataProvider;
+    }
+
+    public function checkValidDate($date){
+        $tempdate = explode('-', $date);
+
+        if(count($tempdate) < 3 || count($tempdate) > 3)
+        {
+            return false;
+        } else {
+            $month = (int) $tempdate[1];
+            $year = (int) $tempdate[0];
+            $day = (int) $tempdate[2];
+            // checkdate(month, day, year)
+            if(checkdate($month,$day,$year) == true){
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }
