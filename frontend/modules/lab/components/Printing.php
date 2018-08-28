@@ -182,7 +182,8 @@ class Printing {
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td class='text-right border-left-line border-bottom-line' colspan='8'></td>";
             $RequestTemplate .= "<th class='text-right border-left-line border-bottom-line padding-right-5'>TOTAL</th>";
-            $RequestTemplate .= "<th class='text-right border-left-line border-bottom-line border-right-line padding-right-5'>".number_format($RequestHeader->GrandTotal,2)."</th>";
+            $GTotal=$RequestHeader->SubTotal-$RequestHeader->DiscountPrice;
+            $RequestTemplate .= "<th class='text-right border-left-line border-bottom-line border-right-line padding-right-5'>".number_format($GTotal,2)."</th>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td colspan='10' class='text-left'>&nbsp;</td>";
@@ -214,7 +215,7 @@ class Printing {
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td class='text-right padding-right-5 padding-left-5 text-bold' colspan='8'>TOTAL</td>";
-            $RequestTemplate .= "<td colspan='2' class='text-right padding-right-5 text-bold border-bottom-line'>₱ ".number_format($RequestHeader->GrandTotal,2)."</td>";
+            $RequestTemplate .= "<td colspan='2' class='text-right padding-right-5 text-bold border-bottom-line'>₱ ".number_format($GTotal,2)."</td>";
             $RequestTemplate .= "</tr>";
             //Footer
             $RequestTemplate .= "<tr>";
@@ -227,7 +228,7 @@ class Printing {
             $RequestTemplate .= "<td class='text-left border-bottom-line border-left-line padding-left-5'>Date:</td>";
             $RequestTemplate .= "<td class='text-left border-bottom-line padding-left-5' colspan='4'>$RequestHeader->ORDate</td>";
             $RequestTemplate .= "<td class='text-right border-bottom-line padding-left-5' colspan='3'>Unpaid Balance:</td>";
-            $RequestTemplate .= "<td colspan='2' class='text-right border-bottom-line padding-left-5 border-right-line padding-right-5'>₱ ".number_format($RequestHeader->GrandTotal-$RequestHeader->TotalAmount,2)."</td>";
+            $RequestTemplate .= "<td colspan='2' class='text-right border-bottom-line padding-left-5 border-right-line padding-right-5'>₱ ".number_format($GTotal-$RequestHeader->TotalAmount,2)."</td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td class='text-left' colspan='10'>&nbsp;</td>";
