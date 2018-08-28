@@ -78,7 +78,7 @@ class Customerwallet extends \yii\db\ActiveRecord
             'date' => 'Date',
             'last_update' => 'Last Update',
             'balance' => 'Balance',
-            'customer_id' => 'Customer ID',
+            'customer_id' => 'Customer Name',
         ];
     }
 

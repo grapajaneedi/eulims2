@@ -39,7 +39,6 @@ $Header.="Customer Wallet";
         // 'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
-                'before'=> Html::button('<span class="glyphicon glyphicon-plus"></span> Create New Wallet', ['value'=>'/finance/customerwallet/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Wallet"),'name'=>'Create New Wallet']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
         'exportConfig'=>$func->exportConfig("Customer Wallet", "customer_wallet", $Header),
