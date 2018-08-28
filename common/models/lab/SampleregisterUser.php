@@ -8,7 +8,7 @@ use yii\base\Model;
 use common\models\lab\Tagging;
 
 /**
- * SampleregisterSearch extended model of `common\models\lab\Analysis`.
+ * SampleregisterUser extended model of `common\models\lab\Tagging`.
  */
 class SampleregisterUser extends Tagging
 {
@@ -47,10 +47,6 @@ class SampleregisterUser extends Tagging
 				   ->bindValues([':userId' => $userId])
 				   ->queryOne();
 		
-		//return $user['firstname']." ".substr($user['middleinitial'], 0, 1)." ".$user['lastname'];
-		return $user['firstname']." ".$user['lastname'];
-		//echo "<pre>";
-		//print_r($user);
-		//echo "</pre>";
+		return $user['firstname']." ".((empty($user['middleinitial'])) ? "" : substr($user['middleinitial'], 0, 1).".")." ".$user['lastname'];
 	}
 }

@@ -66,6 +66,23 @@ if(Yii::$app->user->can('allow-cancel-op')){
            // 'rstl_id',
             'transactionnum',
             [
+               'label'=>'TRN', 
+               'format'=>'raw',
+                
+               'value'=>function($model){
+                    $Obj=$model->getTRN($model->orderofpayment_id);
+                    if($Obj){
+                       return "<span style='word-wrap: break-word!important;'>".$Obj[0]['dtls']."</span>";
+                
+                    }else{
+                        return "";
+                    }
+                   //
+                },   
+                'hAlign'=>'left',
+                'width' => '25%',       
+            ],
+            [
                 'attribute' => 'collectiontype_id',
                 'label' => 'Collection Type',
                 'value' => function($model) {

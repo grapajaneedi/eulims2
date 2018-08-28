@@ -345,19 +345,30 @@ $payment_status_id=$model->payment_status_id;
         LoadModal(title,url,'true','800px');
     }
     
-    function PostForOnAccount(id){
-        jQuery.ajax( {
-            type: 'POST',
-            url: '/finance/op/update-paymentmode?id='+id,
-            dataType: 'html',
-            success: function ( response ) {
-              // $('#wallet').val(response);
-//              alert('Successfully Posted!');
-//              location.reload();
+    function PostForOnAccount(id)
+    {   
+         bootbox.confirm({
+            title: "EULIMS",
+            message: "Are you sure you want to post this OP as On Account?",
+            buttons: {
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Yes'
+                },
+                cancel: {
+                    label: '<i class="fa fa-times"></i> No'
+                },
             },
-            error: function ( xhr, ajaxOptions, thrownError ) {
-                alert( thrownError );
+            callback: function (ret) {
+                if(ret){
+                $.post("/finance/op/update-paymentmode", {
+                    id: id
+                }, function(result){
+                if(result){
+                    location.reload();
+                }
+                });
+                }
             }
-        });
+         });
     }
 </script>
