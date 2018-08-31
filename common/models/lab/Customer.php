@@ -3,6 +3,9 @@ namespace common\models\lab;
 use common\models\address\Barangay;
 use yii\db\ActiveRecord;
 use Yii;
+use common\components\Functions;
+
+
 /**
  * This is the model class for table "tbl_customer".
  *
@@ -171,6 +174,8 @@ class Customer extends \yii\db\ActiveRecord
          if ($insert) {
              $this->customer_code= $this->rstl_id."-".$this->customer_id;
              $this->save();
+             $func = new Functions();
+            $func->addlsync("Customer",$this->customer_id);
          }
          parent::afterSave($insert, $changedAttributes);
     }
