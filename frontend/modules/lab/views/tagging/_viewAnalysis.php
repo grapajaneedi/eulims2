@@ -35,13 +35,6 @@ use kartik\money\MaskMoney;
 use common\models\system\Profile;
 /* @var $this yii\web\View */
 
-// $js=<<<SCRIPT
-
-// alert("Janeedi");
-
-
-// SCRIPT;
-// $this->registerJs($js);
 
 $js=<<<SCRIPT
 
@@ -62,12 +55,6 @@ SCRIPT;
 $this->registerJs($js);
 ?>
 
-<!-- <div id="divSpinner" style="text-align:center;display:none;font-size:30px">
-     <div class="animationload">
-            <div class="osahanloading"></div>
-     </div>
-</div>
- -->
 <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
         'pjax' => true,
@@ -98,26 +85,9 @@ $this->registerJs($js);
         ],
     ]); ?>
 <script type='text/javascript'>
-
-
-/*setTimeout(function(){
-    ShowProgressSpinner(false);
-},1000);
-*/
  
 </script>
 
-<?php
-
-//$doc = new DomDocument;
-
-// We need to validate our document before refering to the id
-// $doc->validateOnParse = true;
-// $doc->loadHtml(file_get_contents('index.php'));
-
-// $test= $doc->getElementById('divSpinner');
-// $test->setAttribute('style','display:none');
-?>
 
 <?= GridView::widget([
         'dataProvider' => $analysisdataprovider,
@@ -137,10 +107,10 @@ $this->registerJs($js);
             ],
             'floatHeaderOptions' => ['scrollingTop' => true],
             'columns' => [
-                   [
-                'class' => '\kartik\grid\CheckboxColumn',
-                'width' => '5px',
-             ],
+          //         [
+             //   'class' => '\kartik\grid\CheckboxColumn',
+           //     'width' => '5px',
+         //    ],
                      [
                         'header'=>'Test Name',
                         'format' => 'raw',
@@ -232,17 +202,10 @@ $this->registerJs($js);
             
         ],
     ]); 
-    
- 
     ?>
-
-
-
-
 <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>'hidden'], ['readonly' => true]) ?>
 <?= Html::textInput('aid', $analysis_id, ['class' => 'form-control', 'id'=>'aid', 'type'=>'hidden'], ['readonly' => true]) ?>
    
-
 <script type="text/javascript">
    function startanalysis() {
 

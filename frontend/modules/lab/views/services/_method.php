@@ -49,7 +49,6 @@ $this->registerJs($js);
 
 ?>
 
-
 <?= Html::textInput('methodreferenceid', $methodreferenceid, ['class' => 'form-control', 'type'=>'hidden', 'id'=>'methodreferenceid'], ['readonly' => true]) ?>
 <?= Html::textInput('labid', $labid, ['class' => 'form-control', 'type'=>'hidden', 'id'=>'labid'], ['readonly' => true]) ?>
 <?= Html::textInput('sampletypeid', $sampletypeid, ['class' => 'form-control', 'type'=>'hidden', 'id'=>'sampletypeid'], ['readonly' => true]) ?>
@@ -60,8 +59,6 @@ $this->registerJs($js);
 
  $servicecount = count($servicesquery);
 ?>
-
-
 
     <?= GridView::widget([
         'dataProvider' => $testnameDataProvider,
@@ -77,10 +74,7 @@ $this->registerJs($js);
                 return ['class'=>'success'];
             }else{
                return ['class'=>'danger'];
-            }
-
-
-           
+            }      
         },
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
@@ -95,18 +89,13 @@ $this->registerJs($js);
                 'format' => 'raw',
                 'contentOptions' => ['style' => 'width: 5%;word-wrap: break-word;white-space:pre-line;'],
                 'value'=>function($model){
-
                     $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
                     $servicesquery= Services::find()->where(['method_reference_id' => $model->method_reference_id])->andWhere(['rstl_id'=>  $GLOBALS['rstl_id']])->one();
-
                     if ($servicesquery){
-                       // return $servicesquery->services_id;
                        return "<span class='btn btn-success' id='offer' onclick='unofferservices(".$model->method_reference_id.")'>UNOFFER</span>";
                     }else{
                         return "<span class='btn btn-danger' id='offer' onclick='offerservices(".$model->method_reference_id.")'>OFFER</span>";
                     }
-                  
-
                 },
                 'enableSorting' => false,
             ],
@@ -131,41 +120,12 @@ $this->registerJs($js);
             ],
             'reference',
             [
-             //   'header'=>'Offered by',
                 'attribute' => 'fee',
                 'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width: 5%;word-wrap: break-word;white-space:pre-line;'],     
             ],
-            // [
-            //       'header'=>'Offered by',
-            //       // 'attribute' => 'fee',
-            //        'hAlign'=>'center',
-            //        'value'=> function($model){
-            //         $servicesquery= Services::find()->where(['method_reference_id' => $model->method_reference_id])->all();
-            //         if ($servicesquery){
-            //             //return ("meron");
-
-            //             foreach($servicesquery as $q){
-            //                 $x = $q['rstl_id'];
-            //                // return $x;
-
-            //                return "";
-            //             }
-
-                       
-            //         }else{
-            //            // return ("wala");
-            //            return "";
-            //         }
-
-            //        },
-            //        'format' => 'raw',
-            //        'enableSorting' => false,
-            //        'contentOptions' => ['style' => 'width: 20%;word-wrap: break-word;white-space:pre-line;'],     
-            //    ],
-         //  ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 
