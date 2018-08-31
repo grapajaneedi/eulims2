@@ -19,7 +19,7 @@ return [
             'waterMark'=>[
                 'text'=>' EULIMS',
                 'color'=> 'red',
-                'alpha'=>'0.3'
+                'alpha'=>'0.1'
             ]
         ],
         'reportico' => [
