@@ -72,7 +72,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['class' => 'kartik\grid\ActionColumn',
             'contentOptions' => ['style' => 'width: 8.7%'],
-          //  'template' => $button,
            'template' => '{view}{update}{delete}',
             'buttons'=>[
                 'view'=>function ($url, $model) {
