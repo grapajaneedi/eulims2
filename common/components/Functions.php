@@ -25,6 +25,8 @@ use common\models\lab\Request;
 use kartik\grid\GridView;
 use common\models\finance\Customertransaction;
 use common\models\finance\Customerwallet;
+use common\models\inventory\Products;
+use common\models\inventory\Suppliers;
 use yii\web\NotFoundHttpException;
 
 
@@ -302,6 +304,84 @@ SCRIPT;
         return $form->field($model, 'customer_id')->widget(Select2::classname(), [
             'initValueText' => $cust_name, // set the initial display text
             'options' => ['placeholder' => 'Search for a customer ...','disabled'=>$disabled,'class'=>'.input-group.input-group-sm'],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'minimumInputLength' => 3,
+                'language' => [
+                    'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                ],
+                'ajax' => [
+                    'url' => $url,
+                    'dataType' => 'json',
+                    'data' => new JsExpression($dataExp),
+                    'results' => new JsExpression($dataResults)
+                ]
+            ],
+        ])->label($Label);
+    }
+
+
+//bergel cutara
+function GetSupplierList($form,$model,$disabled=false,$Label=false){
+$dataExp = <<< SCRIPT
+    function (params, page) {
+        return {
+            q: params.term, // search term
+        };
+    }
+SCRIPT;
+$dataResults = <<< SCRIPT
+    function (data, page) {
+        return {
+          results: data.results
+        };
+    }
+SCRIPT;
+        $url = \yii\helpers\Url::to(['/inventory/inventoryentries/supplierlist']);
+        // Get the initial city description
+        $supplier_name = empty($model->suppliers_id) ? '' : Suppliers::findOne($model->suppliers_id)->suppliers;
+        return $form->field($model, 'suppliers_id')->widget(Select2::classname(), [
+            'initValueText' => $supplier_name, // set the initial display text
+            'options' => ['placeholder' => 'Search for a supplier ...','disabled'=>$disabled,'class'=>'.input-group.input-group-sm'],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'minimumInputLength' => 3,
+                'language' => [
+                    'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                ],
+                'ajax' => [
+                    'url' => $url,
+                    'dataType' => 'json',
+                    'data' => new JsExpression($dataExp),
+                    'results' => new JsExpression($dataResults)
+                ]
+            ],
+        ])->label($Label);
+    }
+
+
+//bergel cutara
+function GetProductList($form,$model,$disabled=false,$Label=false){
+$dataExp = <<< SCRIPT
+    function (params, page) {
+        return {
+            q: params.term, // search term
+        };
+    }
+SCRIPT;
+$dataResults = <<< SCRIPT
+    function (data, page) {
+        return {
+          results: data.results
+        };
+    }
+SCRIPT;
+        $url = \yii\helpers\Url::to(['/inventory/inventoryentries/productlist']);
+        // Get the initial city description
+        $prod_name = empty($model->product_id) ? '' : Products::findOne($model->product_id)->product_name;
+        return $form->field($model, 'product_id')->widget(Select2::classname(), [
+            'initValueText' => $prod_name, // set the initial display text
+            'options' => ['placeholder' => 'Search for a product ...','disabled'=>$disabled,'class'=>'.input-group.input-group-sm'],
             'pluginOptions' => [
                 'allowClear' => true,
                 'minimumInputLength' => 3,
