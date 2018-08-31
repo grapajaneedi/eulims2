@@ -5,10 +5,12 @@ use common\models\system\User;
 use common\models\system\Package;
 use common\models\system\Message;
 use yii\helpers\ArrayHelper;
+use common\components\Functions;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 $Request_URI=$_SERVER['REQUEST_URI'];
+$func= new Functions;
 
 if($Request_URI=='/'){//alias ex: http://admin.eulims.local
     $Backend_URI=Url::base();//Yii::$app->urlManager->createUrl('/');
@@ -65,6 +67,12 @@ $GLOBALS['rstl_id']= 16;//Yii::$app->user->identity->profile->rstl_id;
         <div class="navbar-custom-menu">
             
             <ul class="nav navbar-nav">
+                <li class="dropdown messages-menu">
+                    <a href="<?= Url::to($GLOBALS['frontend_base_uri'].'lsync/') ?>" >
+                        <i class="fa fa-bell-o"></i>
+                        <span class="label label-success"><?= $func->getsyncnumber(); ?></span>
+                    </a>
+                </li>
                 <li class="dropdown messages-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-envelope-o"></i>

@@ -28,6 +28,7 @@ use common\models\finance\Customerwallet;
 use common\models\inventory\Products;
 use common\models\inventory\Suppliers;
 use yii\web\NotFoundHttpException;
+use common\models\system\LogSync;
 
 
 /**
@@ -520,6 +521,21 @@ SCRIPT;
     public function left($mString, $length){
         return substr($mString,0,$length);
     }
+
+    public function addlsync($tblname,$recordID){
+        $newsync = new LogSync();
+        $newsync->tblname=$tblname;
+        $newsync->recordID=$recordID;
+        $newsync->rstl_id=Yii::$app->user->identity->profile->rstl_id;
+        $newsync->user_id=Yii::$app->user->identity->profile->user_id;
+        $newsync->save();
+    }
+
+    public function getsyncnumber(){
+        $sync = LogSync::find()->all();
+        return count($sync);
+    }
+
     /**
      * 
      * @return type
