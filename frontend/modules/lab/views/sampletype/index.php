@@ -19,9 +19,6 @@ $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 
 <?php $this->registerJsFile("/js/services/services.js"); ?>
 
-    <p>
-    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Sample Type', ['value'=>'/lab/sampletype/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Sample Type")]); ?>
-    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -31,6 +28,7 @@ $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+                'before'=> Html::button('<span class="glyphicon glyphicon-plus"></span> Create Sample Type', ['value'=>'/lab/sampletype/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Sample Type")]),
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
