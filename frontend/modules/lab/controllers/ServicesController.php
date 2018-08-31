@@ -150,21 +150,6 @@ class ServicesController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    // public function listSampletype()
-    // {
-    //     $sampletype = ArrayHelper::map(
-    //         Testname::find()
-    //         ->leftJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
-    //         ->Where(['tbl_sampletype_testname.sampletype_id'=>$id])
-    //         ->all(), 'testname_id', 
-    //         function($sampletype, $defaultValue) {
-    //             return $sampletype->testName;
-    //     });
-
-    //     return $sampletype;
-    // }
-
-
     public function actionListsampletype() {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
@@ -250,14 +235,10 @@ class ServicesController extends Controller
           $methodreferenceid = $_POST['methodreferenceid'];
 
           $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-
-
           $testnamemethod= Testnamemethod::find()->where(['testname_id' => $methodreferenceid])->one();
-
 
           $services = new Services();
           $services->rstl_id =   $GLOBALS['rstl_id'];
-        //  $services->lab_id = $labid;
           $services->method_reference_id = $id;
           $services->sampletype_id = $sampletypeid;
           $services->testname_method_id = $testnamemethod->testname_method_id;
@@ -275,12 +256,6 @@ class ServicesController extends Controller
           $Connection= Yii::$app->labdb;
           $sql="DELETE FROM `tbl_services`  WHERE `method_reference_id`=".$id." AND `rstl_id`=".$GLOBALS['rstl_id']." ";
           $Command=$Connection->createCommand($sql);
-          $Command->execute();
-
-      
-
-          
+          $Command->execute();   
      }
-   
-     
 }

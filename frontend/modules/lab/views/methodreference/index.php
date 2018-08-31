@@ -15,9 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php $this->registerJsFile("/js/services/services.js"); ?>
 
-    <p>
-    <?= Html::button('<span class="glyphicon glyphicon-plus"></span> Create Method Reference', ['value'=>'/lab/methodreference/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Method Reference")]); ?>
-    </p>
+   
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -27,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+                'before'=> Html::button('<span class="glyphicon glyphicon-plus"></span> Create Method Reference', ['value'=>'/lab/methodreference/create', 'class' => 'btn btn-success modal_services','title' => Yii::t('app', "Create New Method Reference")]),
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
