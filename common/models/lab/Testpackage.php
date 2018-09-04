@@ -8,12 +8,13 @@ use Yii;
  * This is the model class for table "tbl_test_package".
  *
  * @property int $testpackage_id
+ * @property string $package_name
  * @property int $lab_sampletype_id
  * @property int $package_rate
  * @property int $testname_methods
  * @property int $added_by
  */
-class Testpackage extends \yii\db\ActiveRecord
+class TestPackage extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -37,8 +38,9 @@ class Testpackage extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['lab_sampletype_id', 'package_rate', 'testname_methods', 'added_by'], 'required'],
+            [['package_name', 'lab_sampletype_id', 'package_rate', 'testname_methods', 'added_by'], 'required'],
             [['lab_sampletype_id', 'package_rate', 'testname_methods', 'added_by'], 'integer'],
+            [['package_name'], 'string', 'max' => 200],
         ];
     }
 
@@ -49,9 +51,10 @@ class Testpackage extends \yii\db\ActiveRecord
     {
         return [
             'testpackage_id' => 'Testpackage ID',
-            'lab_sampletype_id' => 'Sample Type',
+            'package_name' => 'Package Name',
+            'lab_sampletype_id' => 'Lab Sampletype ID',
             'package_rate' => 'Package Rate',
-            'testname_methods' => 'Test Name Methods',
+            'testname_methods' => 'Testname Methods',
             'added_by' => 'Added By',
         ];
     }
