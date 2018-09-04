@@ -205,9 +205,7 @@ class ServicesController extends Controller
                  ],
               
          ]);
-
-
-    
+         
         $searchModel = new ServicesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $sampletype = [];

@@ -14,6 +14,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'lab_sampletype_id')->textInput() ?>
 
+    <?= $form->field($model, 'package_name')->textInput() ?>
+
     <?= $form->field($model, 'package_rate')->textInput() ?>
 
     <?= $form->field($model, 'testname_methods')->textInput() ?>

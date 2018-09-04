@@ -18,6 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'testpackage_id',
+            'package_name',
             'lab_sampletype_id',
             'package_rate',
             'testname_methods',

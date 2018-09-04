@@ -37,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         'columns' => [
             'lab_sampletype_id',
+            'package_name',
             'package_rate',
             'testname_methods',
             'added_by',
