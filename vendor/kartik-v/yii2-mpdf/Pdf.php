@@ -294,6 +294,8 @@ class Pdf extends Component
         $this->options['margin_header'] = $this->marginHeader;
         $this->options['margin_footer'] = $this->marginFooter;
         $this->options['orientation'] = $this->orientation;
+        $this->options['allow_charset_conversion'] = false;
+        $this->options['charset_in'] = 'iso-8859-4';
         if (isset($this->tempPath) && is_dir($this->tempPath)) {
             $this->options['tempDir'] = $this->tempPath;
         }

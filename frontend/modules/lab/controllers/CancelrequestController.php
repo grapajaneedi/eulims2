@@ -68,6 +68,9 @@ class CancelrequestController extends Controller
     {
         $get= \Yii::$app->request->get();
         $model = new Cancelledrequest();
+        echo "<pre>";
+        var_dump(Yii::$app->request->post());
+        echo "</pre>";
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //Check if this request is already been cancelled
             $FinanceSuccess=false;
@@ -93,13 +96,13 @@ class CancelrequestController extends Controller
                 if($HasReceipt){
                     //Get the total amount from receipt
                     $TotalAmountSQL="SELECT SUM(`total`) AS TotalSum FROM `tbl_receipt` WHERE `receipt_id` IN($recept_ids)";
-                    $Command=$Connection->createCommand($TotalAmountSQL);
-                    $TotalAmountOfReceipt=$Command->execute();
+                    $Command2=$Connection->createCommand($TotalAmountSQL);
+                    $TotalAmountOfReceipt=$Command2->execute();
                     // update Receipt
                     $ReceiptUpdate="UPDATE `tbl_receipt` SET `receipt_status_id`=2 WHERE `receipt_id` IN($recept_ids)";
                     //Execute command
-                    $Command=$Connection->createCommand($ReceiptUpdate);
-                    $Command->execute();
+                    $Command3=$Connection->createCommand($ReceiptUpdate);
+                    $Command3->execute();
                     // Execute action to save to wallet
                     $func=new Functions();
                     $ISCredit=0;

@@ -59,6 +59,9 @@ class RequestController extends Controller
      */
     public function actionIndex()
     { 
+        $method=str_replace("@", "at", "Gravimetric Method (Air Oven Drying @ 100°C)/AOAC 931.04");
+        echo $method;
+        exit;
         $Func=new Functions();
         $Func->CheckRSTLProfile();
         

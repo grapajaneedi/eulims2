@@ -13,7 +13,6 @@ namespace frontend\modules\lab\components;
 use kartik\mpdf\Pdf;
 use common\models\system\RstlDetails;
 use common\components\Functions;
-
 /**
  * Description of RequestPrinting
  *
@@ -48,6 +47,8 @@ class Printing {
             'line' => false,
         ];
         $mPDF = new Pdf(['cssFile' => 'css/pdf.css']);
+        //$html = mb_convert_encoding($mTemplate, 'UTF-8', 'UTF-8');
+        //$mPDF=$PDF->api;
         $mPDF->content = $mTemplate;
         $mPDF->orientation = Pdf::ORIENT_PORTRAIT;
         $mPDF->defaultFontSize = 9;
@@ -151,7 +152,8 @@ class Printing {
                     $RequestTemplate .= "<td class='text-left border-right-line border-top-line border-left-line border-bottom-line'></td>";
                 }
                 $RequestTemplate .= "<td class='text-left border-bottom-line border-top-line border-right-line padding-left-5' colspan='2'>$RequestRow->testcalibration</td>";
-                $RequestTemplate .= "<td class='text-left border-bottom-line border-top-line border-right-line padding-left-5 padding-right-5' colspan='2'>$RequestRow->method</td>";
+                $html=htmlentities("Gravimetric Method (Air Oven Drying 100C) AOAC 931.04");//$RequestRow->method;
+                $RequestTemplate .= "<td class='text-left border-bottom-line border-top-line border-right-line padding-left-5 padding-right-5' colspan='2'>dgfgfgfgfgf fgfgfgfgfgfgf fgfgfgfgfgf gfgfgfgfgfgfg</td>";
                 $RequestTemplate .= "<td class='text-center border-bottom-line border-top-line border-right-line'>$RequestRow->NoSampleUnit</td>";
                 $RequestTemplate .= "<td class='text-right border-bottom-line border-top-line border-right-line padding-right-5'>$RequestRow->UnitCost</td>";
                 $RequestTemplate .= "<td class='text-right border-bottom-line border-top-line border-right-line padding-right-5'>$RequestRow->TotalAnalysis</td>";

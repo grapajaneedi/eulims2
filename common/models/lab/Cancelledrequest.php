@@ -47,7 +47,6 @@ class Cancelledrequest extends \yii\db\ActiveRecord
             [['reason'], 'string'],
             [['cancel_date'], 'safe'],
             [['request_ref_num', 'reason'], 'string', 'max' => 50],
-            [['request_id'], 'exist', 'skipOnError' => true, 'targetClass' => Request::className(), 'targetAttribute' => ['request_id' => 'request_id']],
         ];
     }
 

@@ -18,6 +18,7 @@ use common\models\lab\Customer;
 use common\models\finance\PostedOp;
 use frontend\modules\finance\components\epayment\ePayment;
 use common\models\finance\Op;
+use linslin\yii2\curl;
 
 /**
  * Description of AjaxController
@@ -38,6 +39,12 @@ class AjaxController extends Controller{
                 ],
             ],
         ];
+    }
+    public function actionTestcurl(){
+        $apiUrl="https://api3.onelab.ph/lab/get-lab?id=11";
+        $curl = new curl\Curl();
+        $response = $curl->get($apiUrl);
+        return $response;
     }
      public function actionSetwallet($customer_id,$amount,$source,$transactiontype){
         //$myvar = setTransaction($customer_id,$amount,$source,$transactiontype);

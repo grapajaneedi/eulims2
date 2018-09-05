@@ -76,7 +76,7 @@ $WithCancelRequest=false;
     <label class="control-label" for="Cancelled By">Cancelled By:</label>                     
     <?= Html::tag('text',$UserCancell,['class'=>'form-control','readonly'=>true]) ?>
     <div class="row" style="float: right;padding-right: 15px;padding-top: 10px;margin-bottom: 10px">
-        <?php if($HasReceipt && !$WithCancelRequest){ ?>
+        <?php if(!$HasReceipt && !$WithCancelRequest){ ?>
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         <?php }else{ ?>
         <?= Html::Button($model->isNewRecord ? 'Create' : 'Update', ['disabled'=>$disabled,'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
