@@ -71,7 +71,7 @@ class Printing {
         $rstl_id = $RequestHeader->rstl_id;
         $RstlDetails = RstlDetails::find()->where(['rstl_id' => $rstl_id])->one();
         if ($RstlDetails) {
-            $RequestTemplate = "<table border='0' style='border-collapse: collapse;font-size: 12px' width=100%>";
+            $RequestTemplate = "<table border='1' style='border-collapse: collapse;font-size: 12px' width=100%>";
             $RequestTemplate .= "<thead>";
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td colspan='10' style='text-align: center;font-size: 12px'>$RstlDetails->name</td>";
@@ -81,7 +81,7 @@ class Printing {
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td colspan='2' style='width: 30%'></td>";
-            $RequestTemplate .= "<td colspan='6' style='width: 100px;text-align: center;font-size: 12px;word-wrap: break-word'>$RstlDetails->address</td>";
+            $RequestTemplate .= "<td colspan='6' style='width: 100px;text-align: center;font-size: 12px;word-wrap: break-word'>$RstlDetails->address sererrerererererererererererererererdgfrrrtrttrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtr</td>";
             $RequestTemplate .= "<td colspan='4' style='width: 30%'></td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
@@ -152,8 +152,8 @@ class Printing {
                     $RequestTemplate .= "<td class='text-left border-right-line border-top-line border-left-line border-bottom-line'></td>";
                 }
                 $RequestTemplate .= "<td class='text-left border-bottom-line border-top-line border-right-line padding-left-5' colspan='2'>$RequestRow->testcalibration</td>";
-                $html=htmlentities("Gravimetric Method (Air Oven Drying 100C) AOAC 931.04");//$RequestRow->method;
-                $RequestTemplate .= "<td class='text-left border-bottom-line border-top-line border-right-line padding-left-5 padding-right-5' colspan='2'>dgfgfgfgfgf fgfgfgfgfgfgf fgfgfgfgfgf gfgfgfgfgfgfg</td>";
+                $html=$RequestRow->method;//$RequestRow->method;
+                $RequestTemplate .= "<td style='word-wrap: break-word;' class='text-left border-bottom-line border-top-line border-right-line padding-left-5 padding-right-5' colspan='2'>$html</td>";
                 $RequestTemplate .= "<td class='text-center border-bottom-line border-top-line border-right-line'>$RequestRow->NoSampleUnit</td>";
                 $RequestTemplate .= "<td class='text-right border-bottom-line border-top-line border-right-line padding-right-5'>$RequestRow->UnitCost</td>";
                 $RequestTemplate .= "<td class='text-right border-bottom-line border-top-line border-right-line padding-right-5'>$RequestRow->TotalAnalysis</td>";
@@ -161,7 +161,7 @@ class Printing {
                 $PrevSampleCode = $CurSampleCode;
             }
             $RequestTemplate .= "<tr>";
-            $RequestTemplate .= "<td colspan='8' style='border: 1px solid black' class='border-left-line border-bottom-line'>&nbsp;</td>";
+            $RequestTemplate .= "<td colspan='8' style='border: 1px solid black;height: 30px' class='border-left-line border-bottom-line'>&nbsp;</td>";
             $RequestTemplate .= "<td class='border-left-line border-bottom-line'></td>";
             $RequestTemplate .= "<td class='border-left-line border-bottom-line border-right-line'></td>";
             $RequestTemplate .= "</tr>";
