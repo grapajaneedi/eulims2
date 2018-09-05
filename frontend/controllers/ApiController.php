@@ -106,6 +106,7 @@ class ApiController extends ActiveController
                 $newRequest->request_old_id=$var['request_old_id'];
                 $newRequest->created_at=$var['created_at'];
                 $newRequest->discount_id=$var['discount_id'];
+                $newRequest->customer_old_id=$var['customer_old_id'];
                 if($newRequest->save(true)){
                     $ctr++;
                 }
@@ -144,6 +145,7 @@ class ApiController extends ActiveController
                 $newSample->oldColumn_batch_num=$var['oldColumn_batch_num'];
                 $newSample->oldColumn_package_count=$var['oldColumn_package_count'];
                 $newSample->testcategory_id=$var['testcategory_id'];
+                $newSample->old_request_id=$var['old_request_id'];
                 if($newSample->save(true)){
                     $ctr++;
                 }
@@ -185,6 +187,7 @@ class ApiController extends ActiveController
                 $newanalysis->request_id=$var['request_id'];
                 $newanalysis->testcategory_id=$var['testcategory_id'];
                 $newanalysis->sample_type_id=$var['sample_type_id'];
+                $newanalysis->old_sample_id=$var['old_sample_id'];
                 if($newanalysis->save(true)){
                     $ctr++;
                 }
