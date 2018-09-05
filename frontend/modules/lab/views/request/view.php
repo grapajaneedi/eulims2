@@ -417,7 +417,7 @@ $this->registerJs($PrintEvent);
                     'format' => 'raw',
                     'enableSorting' => false,
                     'value' => function($model) {
-                        return $model->sample->samplename;
+                        return $model->sample ? $model->sample->samplename : '-';
                     },
                     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
                    
@@ -426,7 +426,7 @@ $this->registerJs($PrintEvent);
                     'attribute'=>'sample_code',
                     'header'=>'Sample Code',
                     'value' => function($model) {
-                        return $model->sample->sample_code;
+                        return $model->sample ? $model->sample->sample_code : '-';
                     },
                     'enableSorting' => false,
                 ],

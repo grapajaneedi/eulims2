@@ -71,7 +71,7 @@ class Printing {
         $rstl_id = $RequestHeader->rstl_id;
         $RstlDetails = RstlDetails::find()->where(['rstl_id' => $rstl_id])->one();
         if ($RstlDetails) {
-            $RequestTemplate = "<table border='1' style='border-collapse: collapse;font-size: 12px' width=100%>";
+            $RequestTemplate = "<table border='0' style='border-collapse: collapse;font-size: 12px' width=100%>";
             $RequestTemplate .= "<thead>";
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td colspan='10' style='text-align: center;font-size: 12px'>$RstlDetails->name</td>";
@@ -80,14 +80,14 @@ class Printing {
             $RequestTemplate .= "<td colspan='10' style='text-align: center;font-size: 12px;font-weight: bold'>REGIONAL STANDARDS AND TESTING LABORATORIES</td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
-            $RequestTemplate .= "<td colspan='2' style='width: 30%'></td>";
-            $RequestTemplate .= "<td colspan='6' style='width: 100px;text-align: center;font-size: 12px;word-wrap: break-word'>$RstlDetails->address sererrerererererererererererererererdgfrrrtrttrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtrtr</td>";
-            $RequestTemplate .= "<td colspan='4' style='width: 30%'></td>";
+            //$RequestTemplate .= "<td colspan='3' style='width: 30%'></td>";
+            $RequestTemplate .= "<td colspan='10' style='width: 100%;text-align: center;font-size: 12px;word-wrap: break-word'><div style='width: 100px;'>$RstlDetails->address</div></td>";
+            //$RequestTemplate .= "<td colspan='3' style='width: 30%'></td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
-            $RequestTemplate .= "<td colspan='2'></td>";
-            $RequestTemplate .= "<td colspan='6' style='text-align: center;font-size: 12px'>$RstlDetails->contacts</td>";
-            $RequestTemplate .= "<td colspan='4'></td>";
+            //$RequestTemplate .= "<td colspan='3'></td>";
+            $RequestTemplate .= "<td colspan='10' style='text-align: center;font-size: 12px'><div style='width: 100px;'>$RstlDetails->contacts</div></td>";
+            //$RequestTemplate .= "<td colspan='3'></td>";
             $RequestTemplate .= "</tr>";
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td colspan='10' style='text-align: center;font-size: 12px'>&nbsp;</td>";
@@ -101,6 +101,7 @@ class Printing {
             $RequestTemplate .= "<tr>";
             $RequestTemplate .= "</thead>";
             $RequestTemplate .= "<tbody>";
+            $RequestTemplate .= "<tr>";
             $RequestTemplate .= "<td>Req. Ref. No.:</td>";
             $RequestTemplate .= "<td colspan='4' style='text-align: left'>$RequestHeader->request_ref_num</td>";
             $RequestTemplate .= "<td colspan='5'>&nbsp;</td>";
@@ -161,19 +162,19 @@ class Printing {
                 $PrevSampleCode = $CurSampleCode;
             }
             $RequestTemplate .= "<tr>";
-            $RequestTemplate .= "<td colspan='8' style='border: 1px solid black;height: 30px' class='border-left-line border-bottom-line'>&nbsp;</td>";
+            $RequestTemplate .= "<td colspan='8' style='border: 1px solid black;height: 0px' class='border-left-line border-bottom-line'></td>";
             $RequestTemplate .= "<td class='border-left-line border-bottom-line'></td>";
             $RequestTemplate .= "<td class='border-left-line border-bottom-line border-right-line'></td>";
             $RequestTemplate .= "</tr>";
             // SUB-TOTAL
             $RequestTemplate .= "<tr>";
-            $RequestTemplate .= "<td class='text-right border-left-line border-bottom-line' colspan='8'></td>";
+            $RequestTemplate .= "<td class='text-right border-left-line' colspan='8'></td>";
             $RequestTemplate .= "<td class='text-right border-left-line border-bottom-line padding-right-5'>Sub-Total</td>";
             $RequestTemplate .= "<td class='text-right border-left-line border-bottom-line border-right-line padding-right-5'>".number_format($RequestHeader->SubTotal,2)."</td>";
             $RequestTemplate .= "</tr>";
             // Discount
             $RequestTemplate .= "<tr>";
-            $RequestTemplate .= "<td class='text-right border-left-line border-bottom-line' colspan='8'></td>";
+            $RequestTemplate .= "<td class='text-right border-left-line' colspan='8'></td>";
             $RequestTemplate .= "<td class='text-right border-left-line border-bottom-line padding-right-5'>Discount</td>";
             $RequestTemplate .= "<td class='text-right border-left-line border-bottom-line border-right-line padding-right-5'>".number_format($RequestHeader->DiscountPrice,2)."</td>";
             $RequestTemplate .= "</tr>";
