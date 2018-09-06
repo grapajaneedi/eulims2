@@ -53,7 +53,7 @@ class Printing {
         $mPDF->orientation = Pdf::ORIENT_PORTRAIT;
         $mPDF->defaultFontSize = 9;
         $mPDF->defaultFont = 'Verdana';
-        $mPDF->format = Pdf::FORMAT_A4;
+        $mPDF->format =Pdf::FORMAT_A4;
         $mPDF->destination = Pdf::DEST_BROWSER;
         $mPDF->methods =['SetFooter'=>['|{PAGENO}|']];
         $mPDF->render();

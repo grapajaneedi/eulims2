@@ -50,7 +50,6 @@ $gg = 1;
         'condensed' => true,
         'responsive' => false,
         'hover' => true,
-        
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
             'heading' => '<i class="glyphicon glyphicon-book"></i>  Request',
