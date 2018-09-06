@@ -3,19 +3,19 @@
 namespace frontend\modules\inventory\controllers;
 
 use Yii;
-use common\models\inventory\Categorytype;
-use common\models\inventory\CategorytypeSearch;
+use common\models\inventory\Suppliers;
+use common\models\inventory\SuppliersSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * CategorytypeController implements the CRUD actions for Categorytype model.
+ * SuppliersController implements the CRUD actions for Suppliers model.
  */
-class CategorytypeController extends Controller
+class SuppliersController extends Controller
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
@@ -30,12 +30,12 @@ class CategorytypeController extends Controller
     }
 
     /**
-     * Lists all Categorytype models.
+     * Lists all Suppliers models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new CategorytypeSearch();
+        $searchModel = new SuppliersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,9 +45,10 @@ class CategorytypeController extends Controller
     }
 
     /**
-     * Displays a single Categorytype model.
+     * Displays a single Suppliers model.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
@@ -57,48 +58,49 @@ class CategorytypeController extends Controller
     }
 
     /**
-     * Creates a new Categorytype model.
+     * Creates a new Suppliers model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Categorytype();
+        $model = new Suppliers();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success','Successfully Saved!');
-            return $this->redirect('index');
-        } else {
-            return $this->renderAjax('create', [
-                'model' => $model,
-            ]);
+            return $this->redirect(['view', 'id' => $model->suppliers_id]);
         }
+
+        return $this->renderAjax('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
-     * Updates an existing Categorytype model.
+     * Updates an existing Suppliers model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->categorytype_id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            return $this->redirect(['view', 'id' => $model->suppliers_id]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
-     * Deletes an existing Categorytype model.
+     * Deletes an existing Suppliers model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
@@ -108,18 +110,18 @@ class CategorytypeController extends Controller
     }
 
     /**
-     * Finds the Categorytype model based on its primary key value.
+     * Finds the Suppliers model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Categorytype the loaded model
+     * @return Suppliers the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Categorytype::findOne($id)) !== null) {
+        if (($model = Suppliers::findOne($id)) !== null) {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
