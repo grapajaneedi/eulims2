@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model common\models\inventory\Categorytype */
 
 $this->title = 'Update Categorytype: ' . $model->categorytype_id;
-$this->params['breadcrumbs'][] = ['label' => 'Categorytypes', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Category Type', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->categorytype_id, 'url' => ['view', 'id' => $model->categorytype_id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>

@@ -44,6 +44,7 @@ class Suppliers extends \yii\db\ActiveRecord
         return [
             [['suppliers', 'address', 'contact_person', 'phone_number', 'fax_number', 'email'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 200],
+            [['email'],'email'],
         ];
     }
 

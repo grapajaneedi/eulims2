@@ -50,7 +50,7 @@ class Categorytype extends \yii\db\ActiveRecord
     {
         return [
             'categorytype_id' => 'Categorytype ID',
-            'categorytype' => 'Categorytype',
+            'categorytype' => 'Type',
             'description' => 'Description',
         ];
     }
