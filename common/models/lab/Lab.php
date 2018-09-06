@@ -47,7 +47,7 @@ class Lab extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['labname', 'labcode', 'labcount', 'nextrequestcode', 'active'], 'required'],
+            [['labname', 'labcode', 'active'], 'required'],
             [['labcount', 'active'], 'integer'],
             [['labname', 'nextrequestcode'], 'string', 'max' => 50],
             [['labcode'], 'string', 'max' => 10],

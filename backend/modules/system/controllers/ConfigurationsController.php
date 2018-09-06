@@ -72,7 +72,9 @@ class ConfigurationsController extends Controller
     {
         $model = new Lab();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/system/configurations/index']);
+            Yii::$app->session->setFlash('success', 'Laboratory Successfully Saved!');
+            \Yii::$app->session['config-item']=1;
+            return $this->redirect(['/system/configurations']);
         } else {
             $model->labcount=0;
             $model->active=0;
@@ -101,6 +103,8 @@ class ConfigurationsController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->labcode= strtoupper($model->labcode);
             if ($model->save()){
+                Yii::$app->session->setFlash('success', 'Laboratory Successfully Updated!');
+                \Yii::$app->session['config-item']=1;
                 return $this->redirect(['/system/configurations']);
             }else{
                 return $this->renderAjax('update', [

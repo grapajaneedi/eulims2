@@ -76,7 +76,7 @@ class LabmanagerController extends Controller
         $model = new LabManager();
 
         if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
-            Yii::$app->session->setFlash('success', 'Technical manager Successfully Added!');
+            Yii::$app->session->setFlash('success', 'Technical Manager Successfully Added!');
             \Yii::$app->session['config-item']=2;
             return $this->redirect('/system/configurations');
         }
@@ -106,7 +106,7 @@ class LabmanagerController extends Controller
         $model = LabManager::findOne($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Technical manager Successfully Updated!');
+            Yii::$app->session->setFlash('success', 'Technical Manager Successfully Updated!');
             \Yii::$app->session['config-item']=2;
             return $this->redirect('/system/configurations');
         }

@@ -56,8 +56,8 @@ class LabManager extends \yii\db\ActiveRecord
     {
         return [
             'lab_manager_id' => 'Lab Manager ID',
-            'rstl_id' => 'Rstl ID',
-            'lab_id' => 'Lab ID',
+            'rstl_id' => 'Rstl',
+            'lab_id' => 'Lab',
             'user_id' => 'User ID',
             'updated_at' => 'Updated At',
         ];
