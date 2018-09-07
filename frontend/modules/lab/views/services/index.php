@@ -13,13 +13,38 @@ use kartik\widgets\DepDrop;
 use kartik\widgets\DatePicker;
 use kartik\datetime\DateTimePicker;
 use common\components\Functions;
+use linslin\yii2\curl;
+use yii\helpers\Json;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\ServicesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+$apiUrl="https://api3.onelab.ph/lab/get-lab?id=11";
+$curl = new curl\Curl();
+$response = $curl->get($apiUrl);
+
+
+
+
+$decode=Json::decode($response);
+echo '<pre>';
+print_r($decode);
+echo '</pre>';
+
+
+//echo $response;
+
+
 $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
-$lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
+$lablist= ArrayHelper::map( $decode,'lab_id','labname');
+
+echo '<pre>';
+print_r($lablist);
+echo '</pre>';
+
+
+
 
 $this->title = 'Add/ Remove Services';
 $this->params['breadcrumbs'][] = $this->title;

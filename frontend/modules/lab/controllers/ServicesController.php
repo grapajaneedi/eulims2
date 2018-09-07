@@ -154,18 +154,12 @@ class ServicesController extends Controller
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
-
-            
+        
             $list =  Sampletype::find()
             ->innerJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletype_id=tbl_sampletype.sampletype_id')
             ->Where(['tbl_lab_sampletype.lab_id'=>$id])
             ->asArray()
             ->all();
-
-            // echo "<pre>";
-            // print_r($list);
-            // echo "</pre>";
-            // exit;
 
             $selected  = null;
             if ($id != null && count($list) > 0) {
