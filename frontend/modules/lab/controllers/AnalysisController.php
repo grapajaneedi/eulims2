@@ -156,20 +156,7 @@ class AnalysisController extends Controller
         echo Json::encode(['output' => '', 'selected'=>'']);
     }
 
-    public function listSampletype()
-    {
-        $sampletype = ArrayHelper::map(
-            Testname::find()
-            ->leftJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
-            ->Where(['tbl_sampletype_testname.sampletype_id'=>$id])
-            ->all(), 'testname_id', 
-            function($sampletype, $defaultValue) {
-                return $sampletype->testName;
-        });
-
-        return $sampletype;
-    }
-
+   
     
     public function actionListsampletype() {
         $out = [];

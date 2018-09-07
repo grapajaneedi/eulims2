@@ -44,7 +44,6 @@ class AjaxController extends Controller{
         $apiUrl="https://api3.onelab.ph/lab/get-lab?id=11";
         $curl = new curl\Curl();
         $response = $curl->get($apiUrl);
-        //Yii::$app->response->format= yii\web\Response::FORMAT_JSON;
         return $response;
     }
      public function actionSetwallet($customer_id,$amount,$source,$transactiontype){
