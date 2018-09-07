@@ -101,14 +101,14 @@ if(Yii::$app->user->isGuest){
         }
         // Fixed Sub Menu Item
         $SubItem=[
-            'label' => '<img src="/images/icons/' .$Item->icon. '.png" style="width:20px">  <span>System</span>', 
+            'label' => '<img src="/images/icons/admin.png" style="width:20px">  <span>System</span>', 
             'icon'=>' " style="display:none;width:0px"',
             'url' => ["#"],
             'items'=>[
                 [
-                    'label' => '<img src="/images/icons/' .$Item->icon. '.png" style="width:20px">  <span>API Configuration</span>', 
+                    'label' => '<img src="/images/icons/admin.png" style="width:20px">  <span>API Configuration</span>', 
                     'icon'=>' " style="display:none;width:0px"',
-                    'url' => ["/system/api/config"],
+                    'url' => ["/system/apiconfig"],
                     'visible'=>Yii::$app->user->can('access-api-config')
                 ]
             ],
