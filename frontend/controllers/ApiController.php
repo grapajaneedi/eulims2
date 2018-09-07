@@ -44,6 +44,7 @@ class ApiController extends ActiveController
         $ctr = 0;
         if(isset($post)){
             $myvar = Json::decode($post['data']);
+            $ids="";
             foreach ($myvar as $var) {
 
                 $newCustomer = new CustomerMigration();
@@ -66,12 +67,21 @@ class ApiController extends ActiveController
                 $newCustomer->Oldcolumn_municipalitycity_id=$var['municipalitycity_id'];
                 $newCustomer->Oldcolumn_district=$var['district'];
                 if($newCustomer->save(true)){
-                    $ctr++;
+                    // ctr not anymore here
+                }else{
+                    $ids=$ids.$var['id'].',';
                 }
+                $ctr++;
             }
            
         }
-         echo $ctr;   
+         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+         // echo $ctr;
+         return [
+            'num'=>$ctr,
+            'ids'=>$ids
+         ];   
     }
 
     public function actionSync_request(){ 
@@ -80,7 +90,7 @@ class ApiController extends ActiveController
         $ctr = 0;
         if(isset($post)){
             $myvar = Json::decode($post['data']);
-            // var_dump($myvar); exit();
+            $ids="";
             foreach ($myvar as $var) {
 
                 $newRequest = new RequestMigration();
@@ -108,13 +118,21 @@ class ApiController extends ActiveController
                 $newRequest->discount_id=$var['discount_id'];
                 $newRequest->customer_old_id=$var['customer_old_id'];
                 if($newRequest->save(true)){
-                    $ctr++;
+                    // ctr not anymore here
+                }else{
+                    $ids=$ids.$var['id'].',';
                 }
+                $ctr++;
             }
         }
-        echo $ctr;
-    }
+         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
 
+         // echo $ctr;
+         return [
+            'num'=>$ctr,
+            'ids'=>$ids
+         ];   
+    }
 
     public function actionSync_sample(){ 
 
@@ -122,7 +140,7 @@ class ApiController extends ActiveController
         $ctr = 0;
         if(isset($post)){
             $myvar = Json::decode($post['data']);
-            // var_dump($myvar); exit();
+            $ids="";
             foreach ($myvar as $var) {
                 $newSample = new SampleMigration();
                 $newSample->rstl_id=$var['rstl_id'];
@@ -147,21 +165,29 @@ class ApiController extends ActiveController
                 $newSample->testcategory_id=$var['testcategory_id'];
                 $newSample->old_request_id=$var['old_request_id'];
                 if($newSample->save(true)){
-                    $ctr++;
+                    // ctr not anymore here
+                }else{
+                    $ids=$ids.$var['id'].',';
                 }
+                $ctr++;
             }
         }
-       echo $ctr;
+        \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+         // echo $ctr;
+         return [
+            'num'=>$ctr,
+            'ids'=>$ids
+         ];   
 
     }
-
 
     public function actionSync_analysis(){ 
         $post = Yii::$app->request->post();
         $ctr = 0;
         if(isset($post)){
             $myvar = Json::decode($post['data']);
-            // var_dump($myvar); exit();
+            $ids="";
             foreach ($myvar as $var) {
                 $newanalysis = new AnalysisMigration();
                 $newanalysis->rstl_id=$var['rstl_id'];
@@ -189,11 +215,20 @@ class ApiController extends ActiveController
                 $newanalysis->sample_type_id=$var['sample_type_id'];
                 $newanalysis->old_sample_id=$var['old_sample_id'];
                 if($newanalysis->save(true)){
-                    $ctr++;
+                    // ctr not anymore here
+                }else{
+                    $ids=$ids.$var['id'].',';
                 }
+                $ctr++;
             }
         }
-        echo $ctr;
+         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+         // echo $ctr;
+         return [
+            'num'=>$ctr,
+            'ids'=>$ids
+         ];   
     }
 /*******************************************************************************
   API FOr customer and payment details and others API Transactions
