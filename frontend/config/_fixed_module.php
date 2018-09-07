@@ -32,4 +32,7 @@ return [
            'class' => 'common\modules\message\Module',
            'userModelClass' => '\common\models\system\User', // your User model. Needs to be ActiveRecord.
     ],
+    'system' => [
+        'class' => 'common\modules\system\Module',
+    ],
 ];

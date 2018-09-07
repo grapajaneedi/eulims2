@@ -67,12 +67,10 @@ if(Yii::$app->user->isGuest){
         $init=true;
         foreach ($Menu as $MenuItems => $Item) {
             $modulePermission="access-".strtolower($Item->PackageName);
-            $MenuItems= PackageDetails::find()->where(['PackageID'=>$Item->PackageID])->all();
+            $MenuItems= PackageDetails::find()->orderBy(['Package_Detail'=>SORT_ASC])->where(['PackageID'=>$Item->PackageID])->all();
             $ItemSubMenu[]=[
-              //  'label'=>'Dashboard',
                 'label' => '<img src="/images/icons/dashboard.png" style="width:20px">  <span>' . 'Dashboard' . '</span>', 
-              //  'icon'=>'bars',
-                 'icon'=>' " style="display:none;width:0px"',
+                'icon'=>' " style="display:none;width:0px"',
                 'url'=>["/".strtolower($Item->PackageName)],
                 'visible'=>true
             ];
@@ -84,11 +82,8 @@ if(Yii::$app->user->isGuest){
                 $pkgdetails2=str_replace(" ","-",$pkgdetails1);
                 $SubmodulePermission="access-".$pkgdetails2; //access-Order of Payment
                 $ItemS=[
-                 //  'label'=>$mItem->Package_Detail,
                    'label' =>'<img src="/images/icons/' .$mItem->icon. '.png" style="width:20px">  <span>' . $mItem->Package_Detail . '</span>', 
-               //    'icon'=>$icon,
-                    'icon'=>' " style="display:none;width:0px"',
-                   
+                   'icon'=>' " style="display:none;width:0px"',
                    'url'=>[$mItem->url],
                    'visible'=>Yii::$app->user->can($SubmodulePermission)
                 ];
@@ -96,17 +91,30 @@ if(Yii::$app->user->isGuest){
             }
             $MainIcon=substr($Item->icon,6,strlen($Item->icon)-6);
             $ItemMenu[]=[
-              //  'label' => ucwords($Item->PackageName) ,
-              //  'label' => '<img src="/images/icons/customerpool.png" style="width:20px">  <span>' . ucwords($Item->PackageName) . '</span>', 
-                  'label' => '<img src="/images/icons/' .$Item->icon. '.png" style="width:20px">  <span>' . ucwords($Item->PackageName) . '</span>', 
-             //   'icon'=>$MainIcon, 
-                 'icon'=>' " style="display:none;width:0px"',
+                'label' => '<img src="/images/icons/' .$Item->icon. '.png" style="width:20px">  <span>' . ucwords($Item->PackageName) . '</span>', 
+                'icon'=>' " style="display:none;width:0px"',
                 'url' => ["/".$Item->PackageName."/index"],
                 'items'=>$ItemSubMenu,
                 'visible'=>Yii::$app->user->can($modulePermission)
             ]; 
             unset($ItemSubMenu);
         }
+        // Fixed Sub Menu Item
+        $SubItem=[
+            'label' => '<img src="/images/icons/' .$Item->icon. '.png" style="width:20px">  <span>System</span>', 
+            'icon'=>' " style="display:none;width:0px"',
+            'url' => ["#"],
+            'items'=>[
+                [
+                    'label' => '<img src="/images/icons/' .$Item->icon. '.png" style="width:20px">  <span>API Configuration</span>', 
+                    'icon'=>' " style="display:none;width:0px"',
+                    'url' => ["/system/api/config"],
+                    'visible'=>Yii::$app->user->can('access-api-config')
+                ]
+            ],
+            'visible'=>Yii::$app->user->can('access-system')
+        ];
+        array_push($ItemMenu, $SubItem);
         ?>
          <?php echo dmstr\widgets\Menu::widget(
             [
@@ -115,8 +123,6 @@ if(Yii::$app->user->isGuest){
                 'encodeLabels' => false,
             ]
         );
-         //echo SideNav::widget(['items' => $ItemMenu, 'type' => SideNav::TYPE_INFO]);
-        ?>
         ?>
     </section>
 
