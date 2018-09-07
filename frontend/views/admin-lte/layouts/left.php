@@ -110,6 +110,12 @@ if(Yii::$app->user->isGuest){
                     'icon'=>' " style="display:none;width:0px"',
                     'url' => ["/system/apiconfig"],
                     'visible'=>Yii::$app->user->can('access-api-config')
+                ],
+                [
+                    'label' => '<img src="/images/icons/admin.png" style="width:20px">  <span>Backup and Restore</span>', 
+                    'icon'=>' " style="display:none;width:0px"',
+                    'url' => ["/system/utilities/backup-restore"],
+                    'visible'=>Yii::$app->user->can('access-api-config')
                 ]
             ],
             'visible'=>Yii::$app->user->can('access-system')

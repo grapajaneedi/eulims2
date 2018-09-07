@@ -8,6 +8,7 @@ use common\models\system\ApiSettingsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\widgets\ActiveForm;
 
 /**
  * ApiController implements the CRUD actions for ApiSettings model.
@@ -71,10 +72,12 @@ class ApiconfigController extends Controller
             if($model->save()){
                 Yii::$app->session->setFlash('success', 'API Settings Successfully Saved!');
             }else{
-                Yii::$app->session->setFlash('danger', 'API Settings Failed to Saved!');
+                Yii::$app->session->setFlash('error', 'API Settings Already Configured!');
             }
             return $this->redirect("/system/apiconfig");
         } else {
+            $model->created_at=date("U");
+            $model->updated_at=date("U");
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('create', [
                     'model' => $model,
@@ -97,6 +100,7 @@ class ApiconfigController extends Controller
             Yii::$app->session->setFlash('success', 'API Settings Successfully Updated!');
             return $this->redirect("/system/apiconfig");
         } else {
+            $model->updated_at=date("U");
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('update', [
                     'model' => $model,

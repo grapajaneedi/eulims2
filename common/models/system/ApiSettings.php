@@ -43,11 +43,10 @@ class ApiSettings extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['api_url', 'get_token_url', 'request_token'], 'required'],
-            [['rstl_id'],'required','message'=>'Please select RSTL!'],
+            [['rstl_id', 'api_url', 'get_token_url', 'request_token'], 'required'],
             [['rstl_id', 'created_at', 'updated_at'], 'integer'],
             [['api_url', 'get_token_url', 'request_token'], 'string', 'max' => 100],
-            [['rstl_id'], 'unique'],
+            ['rstl_id', 'unique', 'targetAttribute' => 'rstl_id'],
             [['rstl_id'], 'exist', 'skipOnError' => true, 'targetClass' => Rstl::className(), 'targetAttribute' => ['rstl_id' => 'rstl_id']],
         ];
     }

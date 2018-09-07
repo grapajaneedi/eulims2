@@ -13,7 +13,10 @@ $RstlList= ArrayHelper::map(Rstl::find()->all(),'rstl_id','name');
 ?>
 
 <div class="api-settings-form" style="margin-bottom: 10px">
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'id' => 'api-form',
+        'enableAjaxValidation' => false,
+    ]); ?>
     <div class="row">
         <div class="col-md-6">
            <?= $form->field($model, 'rstl_id')->widget(Select2::classname(), [
@@ -23,7 +26,7 @@ $RstlList= ArrayHelper::map(Rstl::find()->all(),'rstl_id','name');
                 'pluginOptions' => [
                     'allowClear' => true
                 ],
-            ])->label("RSTL"); ?>
+            ]); ?>
         </div>
         <div class="col-md-6">
     <?= $form->field($model, 'api_url')->textInput(['maxlength' => true]) ?>
