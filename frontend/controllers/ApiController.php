@@ -50,6 +50,7 @@ class ApiController extends ActiveController
                 $newCustomer = new CustomerMigration();
                 $newCustomer->rstl_id=$var['rstl_id'];
                 $newCustomer->customer_name=$var['customerName'];
+                $newCustomer->customer_code=$var['rstl_id']."-".$var['id'];
                 $newCustomer->classification_id=$var['classification_id'];
                 $newCustomer->latitude=$var['latitude'];
                 $newCustomer->longitude=$var['longitude'];
@@ -120,7 +121,7 @@ class ApiController extends ActiveController
                 if($newRequest->save(true)){
                     // ctr not anymore here
                 }else{
-                    $ids=$ids.$var['id'].',';
+                    $ids=$ids.$var['request_old_id'].',';
                 }
                 $ctr++;
             }
@@ -167,7 +168,7 @@ class ApiController extends ActiveController
                 if($newSample->save(true)){
                     // ctr not anymore here
                 }else{
-                    $ids=$ids.$var['id'].',';
+                    $ids=$ids.$var['sample_old_id'].',';
                 }
                 $ctr++;
             }
@@ -217,7 +218,7 @@ class ApiController extends ActiveController
                 if($newanalysis->save(true)){
                     // ctr not anymore here
                 }else{
-                    $ids=$ids.$var['id'].',';
+                    $ids=$ids.$var['analysis_old_id'].',';
                 }
                 $ctr++;
             }
