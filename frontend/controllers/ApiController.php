@@ -50,6 +50,7 @@ class ApiController extends ActiveController
                 $newCustomer = new CustomerMigration();
                 $newCustomer->rstl_id=$var['rstl_id'];
                 $newCustomer->customer_name=$var['customerName'];
+                $newCustomer->customer_code=$var['rstl_id']."-".$var['id'];
                 $newCustomer->classification_id=$var['classification_id'];
                 $newCustomer->latitude=$var['latitude'];
                 $newCustomer->longitude=$var['longitude'];
