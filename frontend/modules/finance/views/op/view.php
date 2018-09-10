@@ -16,7 +16,7 @@ $this->title = 'Order of Payment';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Order of Payment', 'url' => ['index']];
 $allow_cancel=false;
-if($model->payment_mode_id!=5){//Not Flagged as Online Payment
+if($model->payment_mode_id!=5 && $model->payment_mode_id!=6){//Not Flagged as Online Payment
     $button_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paymentitem', ['value' => Url::to(['add-paymentitem','opid'=>$model->orderofpayment_id,'customerid'=>$model->customer_id]),'title'=>'Add Payment Item', 'onclick'=>'addPaymentitem(this.value,this.title)','style'=>'margin-right: 5px', 'class' => 'btn btn-success','id' => 'modalBtn']);
 }else{
     $button_paymentitem="";
@@ -278,7 +278,7 @@ $payment_status_id=$model->payment_status_id;
                     //'asPopover' => true,
                     'attribute' => 'amount', 
                     'readonly' => function($model, $key, $index, $widget) {
-                        if($model->status == 2 || $model->orderofpayment->payment_mode_id==5){
+                        if($model->status == 2 || $model->orderofpayment->payment_mode_id==5 || $model->orderofpayment->payment_mode_id==6){
                             return true;
                         }
                         else{
@@ -360,6 +360,7 @@ $payment_status_id=$model->payment_status_id;
             },
             callback: function (ret) {
                 if(ret){
+                ShowSystemProgress();
                 $.post("/finance/op/update-paymentmode", {
                     id: id
                 }, function(result){

@@ -95,7 +95,7 @@ $gg = 1;
                 'vAlign' => 'middle',
                 'width' => '180px',
                 'value' => function ($model, $key, $index, $widget) { 
-                    return $model->customer->customer_name;
+                    return $model->customer ? $model->customer->customer_name : "";
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Customer::find()->orderBy('customer_name')->asArray()->all(), 'customer_id', 'customer_name'), 

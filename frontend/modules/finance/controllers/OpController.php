@@ -506,9 +506,10 @@ class OpController extends Controller
      public function actionUpdatePaymentmode(){
          $post= \Yii::$app->request->post();
         $id=$post['id'];
-         Yii::$app->financedb->createCommand()
+        
+        $success=Yii::$app->financedb->createCommand()
         ->update('tbl_orderofpayment', ['on_account' => 1,'payment_mode_id'=>6], 'orderofpayment_id= '.$id)
         ->execute(); 
-         return;
+         return $success;
      }
 }
