@@ -29,6 +29,8 @@ use common\models\inventory\Products;
 use common\models\inventory\Suppliers;
 use yii\web\NotFoundHttpException;
 use common\models\system\LogSync;
+use common\models\system\ApiSettings;
+use linslin\yii2\curl;
 
 
 /**
@@ -58,6 +60,18 @@ class Functions extends Component{
     }
     function getPesoSign(){
         return "₱";
+    }
+    /**
+     * Get the corresponding access token using rstl_id 
+     * @param int $id The RSTL_ID for each RSTL
+     * @return JSON
+     */
+    public function GetAccessToken($id){
+        $ApiSettings= ApiSettings::find()->where(['rstl_id'=>$id])->one();
+        $apiUrl= $ApiSettings->get_token_url."?tk=".$ApiSettings->request_token."&id=".$id;
+        $curl = new curl\Curl();
+        $response = $curl->get($apiUrl);
+        return $response;
     }
     public function DisplayImageFromFolder(){
         $files = glob("../../frontend/web/images/icons/*.png");
