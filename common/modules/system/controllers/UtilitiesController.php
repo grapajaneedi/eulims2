@@ -22,4 +22,13 @@ class UtilitiesController extends Controller {
     {
         return $this->render('backup_restore');
     }
+    public function actionBackupLab(){
+        return "Lab";
+    }
+    public function actionBackupFinance(){
+        return "Finance";
+    }
+    public function actionBackupInventory(){
+        return "Inventory";
+    }
 }
