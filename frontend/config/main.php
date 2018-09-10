@@ -75,7 +75,7 @@ return [
             ],
             'urls' => [
                 'site/login',
-				'site/logout',
+		'site/logout',
                 'debug/default/toolbar',
                 'debug/default/view',
                 'settings/disable',

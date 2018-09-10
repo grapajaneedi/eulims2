@@ -75,10 +75,13 @@ class LabmanagerController extends Controller
     {
         $model = new LabManager();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->lab_manager_id]);
+        if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
+            Yii::$app->session->setFlash('success', 'Technical Manager Successfully Added!');
+            \Yii::$app->session['config-item']=2;
+            return $this->redirect('/system/configurations');
         }
         $model->updated_at=date("U");
+        $model->rstl_id=Yii::$app->user->identity->profile->rstl_id;
         if(\Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                 'model' => $model,
@@ -99,10 +102,13 @@ class LabmanagerController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = LabManager::find()->where(['user_id'=>$id])->one();
+        //$model = LabManager::find()->where(['user_id'=>$id])->one();
+        $model = LabManager::findOne($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->lab_manager_id]);
+            Yii::$app->session->setFlash('success', 'Technical Manager Successfully Updated!');
+            \Yii::$app->session['config-item']=2;
+            return $this->redirect('/system/configurations');
         }
         if(\Yii::$app->request->isAjax){
             return $this->renderAjax('update', [

@@ -44,7 +44,6 @@ class AjaxController extends Controller{
         $apiUrl="https://api3.onelab.ph/lab/get-lab?id=11";
         $curl = new curl\Curl();
         $response = $curl->get($apiUrl);
-        //Yii::$app->response->format= yii\web\Response::FORMAT_JSON;
         return $response;
     }
      public function actionSetwallet($customer_id,$amount,$source,$transactiontype){
@@ -64,21 +63,23 @@ class AjaxController extends Controller{
         $response=json_decode($result);
         if($response->status=='error'){
             $posted=0;
+            $success=false;
         }else{
             $posted=1;
-        }
-        $PostedOp->orderofpayment_id=$op_id;
-        $PostedOp->posted_datetime=date("Y-m-d H:i:s");
-        $PostedOp->user_id= Yii::$app->user->id;
-        $PostedOp->posted=$posted;
-        $PostedOp->description=$response->description;
-        $success=$PostedOp->save();
-        if($success){
-            $Op= Op::findOne($op_id);
-            $Op->payment_mode_id=5;//Online Payment
-            $Op->save(false);
-        }
-        return $success;
+            $PostedOp->orderofpayment_id=$op_id;
+            $PostedOp->posted_datetime=date("Y-m-d H:i:s");
+            $PostedOp->user_id= Yii::$app->user->id;
+            $PostedOp->posted=$posted;
+            $PostedOp->description=$response->description;
+            $success=$PostedOp->save();
+            if($success){
+                $Op= Op::findOne($op_id);
+                $Op->payment_mode_id=5;//Online Payment
+                $Op->save(false);
+            }
+        } 
+        Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        return $response;
     }
     public function actionGetdiscount(){
         $post= \Yii::$app->request->post();

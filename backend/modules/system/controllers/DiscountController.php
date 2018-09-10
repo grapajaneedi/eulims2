@@ -3,7 +3,7 @@
 namespace backend\modules\system\controllers;
 
 use Yii;
-use common\models\lab\discount;
+use common\models\lab\Discount;
 use common\models\lab\discountSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -63,10 +63,12 @@ class DiscountController extends Controller
      */
     public function actionCreate()
     {
-        $model = new discount();
+        $model = new Discount();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->discount_id]);
+             Yii::$app->session->setFlash('success', 'Discount Successfully Saved!');
+            \Yii::$app->session['config-item']=3;
+            return $this->redirect(['/system/configurations']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -99,7 +101,9 @@ class DiscountController extends Controller
     {
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->discount_id]);
+            Yii::$app->session->setFlash('success', 'Discount Successfully Updated!');
+            \Yii::$app->session['config-item']=3;
+            return $this->redirect(['/system/configurations']);
         } else {
             return $this->renderAjax('update', [
                 'model' => $model,
@@ -129,7 +133,7 @@ class DiscountController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = discount::findOne($id)) !== null) {
+        if (($model = Discount::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

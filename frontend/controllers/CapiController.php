@@ -124,8 +124,7 @@ class ApiController extends ActiveController
                 'description'=>'Saving OP Failed, OP might already been posted.'
             ];
         }
-      }
-      else{
+      }else{
       	$data=[
             'status'=>'error',
             'description'=>'Please check your data'

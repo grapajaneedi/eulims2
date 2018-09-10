@@ -1,19 +1,19 @@
 <?php
 
-namespace backend\modules\system\controllers;
+namespace common\modules\system\controllers;
 
 use Yii;
-use common\models\lab\Lab;
-use common\models\lab\LabSearch;
-use common\models\lab\LabManagerSearch;
+use common\models\system\ApiSettings;
+use common\models\system\ApiSettingsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\widgets\ActiveForm;
 
 /**
- * LabController implements the CRUD actions for Lab model.
+ * ApiController implements the CRUD actions for ApiSettings model.
  */
-class ConfigurationsController extends Controller
+class ApiconfigController extends Controller
 {
     /**
      * @inheritdoc
@@ -31,60 +31,55 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Lists all Lab models.
+     * Lists all ApiSettings models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new LabSearch();
+        $searchModel = new ApiSettingsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
+
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Lab model.
+     * Displays a single ApiSettings model.
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
-        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('view', [
+        if(\Yii::$app->request->isAjax){
+            return $this->renderaJAX('view', [
                 'model' => $this->findModel($id),
             ]);
-        }else{
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]); 
         }
     }
-    
+
     /**
-     * Creates a new Lab model.
+     * Creates a new ApiSettings model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Lab();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Laboratory Successfully Saved!');
-            \Yii::$app->session['config-item']=1;
-            return $this->redirect(['/system/configurations']);
+        $model = new ApiSettings();
+
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->save()){
+                Yii::$app->session->setFlash('success', 'API Settings Successfully Saved!');
+            }else{
+                Yii::$app->session->setFlash('error', 'API Settings Already Configured!');
+            }
+            return $this->redirect("/system/apiconfig");
         } else {
-            $model->labcount=0;
-            $model->active=0;
-            $model->nextrequestcode='';
+            $model->created_at=date("U");
+            $model->updated_at=date("U");
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('create', [
-                    'model' => $model,
-                ]);
-            }else{
-                return $this->render('create', [
                     'model' => $model,
                 ]);
             }
@@ -92,7 +87,7 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Updates an existing Lab model.
+     * Updates an existing ApiSettings model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -100,32 +95,26 @@ class ConfigurationsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post())) {
-            $model->labcode= strtoupper($model->labcode);
-            if ($model->save()){
-                Yii::$app->session->setFlash('success', 'Laboratory Successfully Updated!');
-                \Yii::$app->session['config-item']=1;
-                return $this->redirect(['/system/configurations']);
-            }else{
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'API Settings Successfully Updated!');
+            return $this->redirect("/system/apiconfig");
+        } else {
+            $model->updated_at=date("U");
+            if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('update', [
                     'model' => $model,
                 ]);
+            }else{
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
             }
-            
-        } else {
-            return $this->renderAjax('update', [
-                'model' => $model,
-            ]);
-        }   
-        if(Yii::$app->request->isAjax){
-            return $this->render('update', [
-                'model' => $model,
-            ]);
         }
     }
 
     /**
-     * Deletes an existing Lab model.
+     * Deletes an existing ApiSettings model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -138,15 +127,15 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Finds the Lab model based on its primary key value.
+     * Finds the ApiSettings model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Lab the loaded model
+     * @return ApiSettings the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Lab::findOne($id)) !== null) {
+        if (($model = ApiSettings::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -55,7 +55,7 @@ class RequestController extends Controller
 
     /**
      * Lists all Request models.
-     * @return mixedfmkldcwnkldsnkdnfklnwfkwldnfdkwflnddnfwkdlnfdlwknclkwnxlkwcnwdlkdnkdnklewdnklewdnklewdnlkew
+     * @return mixed
      */
     public function actionIndex()
     { 

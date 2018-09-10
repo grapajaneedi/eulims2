@@ -8,6 +8,8 @@ use common\models\lab\Lab;
 use yii\helpers\ArrayHelper;
 use common\models\lab\LabManagerSearch;
 use common\models\lab\discountSearch;
+use common\models\system\Labrbac;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\LabSearch */
@@ -17,8 +19,31 @@ $this->title = 'Configurations';
 $this->params['breadcrumbs'][] = ['label' => 'System', 'url' => ['/system']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$Session= Yii::$app->session;
+$func=new Functions();
+$Header="Department of Science and Technology<br>";
+$Header.="Technical Managers";
 
+if(!isset(\Yii::$app->session['config-item'])){
+   \Yii::$app->session['config-item']=1; //Laboratories 
+}
+switch(\Yii::$app->session['config-item']){
+    case 1: //Laboratories
+        $LabActive=true;
+        $TechActive=false;
+        $DiscActive=false;
+        break;
+    case 2: // Technical Managers
+        $LabActive=false;
+        $TechActive=true;
+        $DiscActive=false;
+        break;
+    case 3: //Discount
+        $LabActive=false;
+        $TechActive=false;
+        $DiscActive=true;
+        break;
+}
+$Session= Yii::$app->session;
 $Buttontemplate='{view}{update}{create}'; 
 
 $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget([
@@ -32,6 +57,12 @@ $LaboratoryContent="<div class='row'><div class='col-md-12'>". GridView::widget(
                     'enablePushState' => false,
                 ],
         ],
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'heading' => '<i class="fa fa-columns"></i>  Laboratory List',
+            'before'=>'<button type="button" style="margin-bottom: 5px" onclick="LoadModal(\'Create Laboratory\',\'/system/configurations/create\')" class="btn btn-success"><i class="fa fa-address-card-o"> </i> Create Laboratory</button>'
+        ],
+        'exportConfig'=>$func->exportConfig("Laboratory List", "laboratory list", $Header),
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
        
@@ -114,18 +145,30 @@ $TechnicalManagerContent=GridView::widget([
         'filterModel' => $searchModel,
         'id'=>'TechnicalManagerGrid',
         'pjax'=>true,
+        'bordered' => true,
+        'striped' => true,
+        'condensed' => true,
+        'responsive' => false,
+        'hover' => true,
         'pjaxSettings' => [
                 'options' => [
                     'enablePushState' => false,
                 ],
         ],
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'heading' => '<i class="fa fa-users"></i>  Technical Manager List',
+            'before'=>Html::button('Add Technical Manager', ['value'=>Url::toRoute(['labmanager/create']),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Add Technical Manager")]),
+        ],
+        'exportConfig'=>$func->exportConfig("Technical Manager", "technical manager", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
                 'label'=>'Lab Manager',
                 'attribute'=>'user_id',
                 'value' => function($managermodel) {
-                    return $managermodel['labmanager'];
+                    $Labrbac= Labrbac::find()->where(['user_id'=>$managermodel->user_id])->one();
+                    return $Labrbac ? $Labrbac->labmanager : '';
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map($LabmanagerList, 'user_id', 'LabManager'),
@@ -137,8 +180,9 @@ $TechnicalManagerContent=GridView::widget([
             [
                 'attribute' => 'lab_id',
                 'label' => 'Laboratory',
-                'value' => function($data) {
-                    return $data['labname'];
+                'value' => function($model) {
+                    $Labrbac= Labrbac::find()->where(['user_id'=>$model->user_id])->one();
+                    return $Labrbac ? $Labrbac->labname : '';
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Lab::find()->asArray()->all(), 'lab_id', 'labname'),
@@ -156,7 +200,7 @@ $TechnicalManagerContent=GridView::widget([
                         return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::toRoute(['labmanager/view','id'=>$model['user_id']]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Lab Managerssssss")]);
                     },
                     'update'=>function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['labmanager/update','id'=>$model['lab_id']]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Lab Manager")]);
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::toRoute(['labmanager/update','id'=>$model['lab_manager_id']]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Lab Manager")]);
                     }
                 ],
                
@@ -229,8 +273,7 @@ $DiscountContent=GridView::widget([
             <div class="panel-title"></div>
         </div>
         <div class="panel-body">
-            <button type="button" style="margin-bottom: 5px" onclick="LoadModal('Create Laboratory','/system/configurations/create')" class="btn btn-success"><i class="fa fa-address-card-o"> </i> Create Laboratory</button>
-    <?php
+    <?php     
             echo TabsX::widget([
                 'position' => TabsX::POS_ABOVE,
                 'align' => TabsX::ALIGN_LEFT,
@@ -240,21 +283,21 @@ $DiscountContent=GridView::widget([
                     [
                         'label' => '<i class="fa fa-columns"></i> Laboratories',
                         'content' => $LaboratoryContent,
-                        'active' => true,
+                        'active' => $LabActive,
                         'options' => ['id' => 'laboratory_config'],
                        // 'visible' => Yii::$app->user->can('access-terminal-configurations')
                     ],
                     [
                         'label' => '<i class="fa fa-users"></i> Technical Managers',
                         'content' => $TechnicalManagerContent,
-                        'active' => false,
+                        'active' => $TechActive,
                         'options' => ['id' => 'manager_config'],
                        // 'visible' => Yii::$app->user->can('access-terminal-configurations')
                     ],
                     [
                         'label' => '<i class="fa-level-down"></i> Discounts',
                         'content' =>$DiscountContent ,
-                        'active' => false,
+                        'active' => $DiscActive,
                         'options' => ['id' => 'discount_config'],
                        // 'visible' => Yii::$app->user->can('access-terminal-configurations')
                     ],

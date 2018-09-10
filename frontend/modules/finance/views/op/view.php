@@ -98,8 +98,17 @@ function PostForOnlinePayment(id){
             $.post("/ajax/postonlinepayment", {
                 op_id: id
             }, function(result){
-            if(result){
+            if(result.status!=='error'){
                 location.reload();
+            }else{
+                bootbox.confirm({
+                    title: result.status,
+                    message: 'Description: '+result.description,
+                    callback: function () {
+                        location.reload();
+                    }
+                })
+               ShowSystemProgress(false);
             }
             });
         }

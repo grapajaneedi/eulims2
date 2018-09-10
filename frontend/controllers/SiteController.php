@@ -194,7 +194,7 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
-            return $this->render('..\admin-lte\site\userdashboard', [
+            return $this->render('..\admin-lte\site\userdashboard.php', [
                 'model' => $model,
             ]);
         }
