@@ -171,7 +171,7 @@ $this->registerJs($PrintEvent);
                         [
                             'label'=>'Customer / Agency',
                             'format'=>'raw',
-                            'value'=>$model->customer->customer_name,
+                            'value'=> $model->customer ? $model->customer->customer_name : "",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -189,7 +189,7 @@ $this->registerJs($PrintEvent);
                         [
                             'label'=>'Address',
                             'format'=>'raw',
-                            'value'=>$model->customer->address,
+                            'value'=>$model->customer ? $model->customer->address : "",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -208,7 +208,7 @@ $this->registerJs($PrintEvent);
                         [
                             'label'=>'Tel no.',
                             'format'=>'raw',
-                            'value'=>$model->customer->tel,
+                            'value'=>$model->customer ? $model->customer->tel : "",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -227,7 +227,7 @@ $this->registerJs($PrintEvent);
                         [
                             'label'=>'Fax no.',
                             'format'=>'raw',
-                            'value'=>$model->customer->fax,
+                            'value'=>$model->customer ? $model->customer->fax : "",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
