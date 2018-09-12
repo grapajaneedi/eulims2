@@ -50,4 +50,14 @@ return [
         'charset' => 'utf8',
         'tablePrefix' => 'tbl_',
     ],
+    'referraldb'=>[
+        'class' => 'yii\db\Connection',  
+        'dsn' => 'mysql:host=localhost;dbname=eulims_referral_lab',
+        'username' => 'eulims',
+        'password' => 'eulims',
+        //'username'=>'arisro9',
+        //'password'=>'qwerty!@#$%', 
+        'charset' => 'utf8',
+        'tablePrefix' => 'tbl_',
+    ],
 ];
