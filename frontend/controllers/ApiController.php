@@ -68,7 +68,6 @@ class ApiController extends ActiveController
                 $newCustomer->Oldcolumn_municipalitycity_id=$var['municipalitycity_id'];
                 $newCustomer->Oldcolumn_district=$var['district'];
                 if($newCustomer->save(true)){
-                    // ctr not anymore here
                 }else{
                     $ids=$ids.$var['id'].',';
                 }
@@ -119,7 +118,7 @@ class ApiController extends ActiveController
                 $newRequest->discount_id=$var['discount_id'];
                 $newRequest->customer_old_id=$var['customer_old_id'];
                 if($newRequest->save(true)){
-                    // ctr not anymore here
+                   
                 }else{
                     $ids=$ids.$var['request_old_id'].',';
                 }
@@ -136,7 +135,7 @@ class ApiController extends ActiveController
     }
 
     public function actionSync_sample(){ 
-
+        
         $post = Yii::$app->request->post();
         $ctr = 0;
         if(isset($post)){

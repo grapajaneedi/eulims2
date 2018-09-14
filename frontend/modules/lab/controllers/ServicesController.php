@@ -24,6 +24,29 @@ class ServicesController extends Controller
     /**
      * {@inheritdoc}
      */
+
+    //  public function verbs() {
+    //     parent::verbs();
+    //     return [
+    //         'index' => ['GET', 'HEAD'],
+    //         'view' => ['GET', 'HEAD'],
+    //         'create' => ['POST'],
+    //         'update' => ['PUT', 'PATCH'],
+    //         'delete' => ['DELETE'],
+    //     ];
+    // }
+    // public function actions() {
+    //     $actions = parent::actions();
+    //     $actions['index']['prepareDataProvider'] = function($action) {
+    //         return new \yii\data\ActiveDataProvider([
+    //             'query' => Profile::find()->where(['user_id' => Yii::$app->user->id]),
+    //         ]);
+    //     };
+
+    //     return $actions;
+    // }
+
+
     public function behaviors()
     {
         return [
@@ -249,5 +272,43 @@ class ServicesController extends Controller
           $sql="DELETE FROM `tbl_services`  WHERE `method_reference_id`=".$id." AND `rstl_id`=".$GLOBALS['rstl_id']." ";
           $Command=$Connection->createCommand($sql);
           $Command->execute();   
+     }
+
+     public function actionSync()
+     {
+        $servicesquery = Services::find()->Where(['rstl_id'=>$GLOBALS['rstl_id']])->all();  
+        $servicecount = count($servicesquery);
+        $services = Services::find()->all();    
+
+        $post = Yii::$app->request->post();
+      //  $ctr = 0;
+
+        if(isset($post)){
+
+            //data here requires to the services lab list
+            $myvar = Json::decode($post['data']);
+            $ids="";
+            foreach ($myvar as $var) {
+
+            $services = new Services();
+            $service->rstl_id =   $GLOBALS['rstl_id'];
+            $service->method_reference_id = $id;
+            $service->sampletype_id = $sampletypeid;
+            $service->testname_method_id = $testnamemethod->testname_method_id;
+            if($newCustomer->save(true)){
+            }else{
+                $ids=$ids.$var['id'].',';
+            }
+            $ctr++;
+        }
+       
+    }
+     \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+     return [
+        'num'=>$ctr,
+        'ids'=>$ids
+     ];   
+     
      }
 }

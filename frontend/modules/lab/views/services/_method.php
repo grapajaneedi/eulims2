@@ -51,7 +51,9 @@ $this->registerJs($js);
 
 <?= Html::textInput('methodreferenceid', $methodreferenceid, ['class' => 'form-control', 'type'=>'hidden', 'id'=>'methodreferenceid'], ['readonly' => true]) ?>
 <?= Html::textInput('labid', $labid, ['class' => 'form-control', 'type'=>'hidden', 'id'=>'labid'], ['readonly' => true]) ?>
-<?= Html::textInput('sampletypeid', $sampletypeid, ['class' => 'form-control', 'type'=>'hidden', 'id'=>'sampletypeid'], ['readonly' => true]) ?>
+
+
+<?= Html::textInput('sampletypeid', $sampletypeid, ['class' => 'form-control', 'id'=>'sampletypeid', 'type'=>'hidden'], ['readonly' => true]) ?>
   
 <?php
  $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
@@ -79,8 +81,9 @@ $this->registerJs($js);
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-                'before'=>'<span class="btn btn-success legend-font" style="float:left" "id"="servicescount"><span class= "glyphicon glyphicon-upload"></span>SYNC '.$servicecount.'</span>',
-               'after'=>false,
+                //'before'=>'<span class="btn btn-success legend-font" style="float:left" "id"="servicescount"><span class= "glyphicon glyphicon-upload"></span>SYNC '.$servicecount.'</span>',
+                'before'=>Html::button('<i class="glyphicon glyphicon-upload"></i> SYNC '.$servicecount, [ 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/services/sync']) . "';" ,'title'=>'Sync',  'class' => 'btn btn-success']),
+                'after'=>false,
             ],
         'columns' => [
             [

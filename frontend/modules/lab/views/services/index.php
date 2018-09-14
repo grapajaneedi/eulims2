@@ -20,38 +20,31 @@ use yii\helpers\Json;
 /* @var $searchModel common\models\lab\ServicesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$apiUrl="https://api3.onelab.ph/lab/get-lab?id=11";
+$apiUrl="https://api3.onelab.ph/lab/get-lab?tk=2b426f99bb2b17750a19c349466d2c3d075bbf18&id=11&rid=11";
 $curl = new curl\Curl();
 $response = $curl->get($apiUrl);
 
-
-
-
 $decode=Json::decode($response);
-echo '<pre>';
-print_r($decode);
-echo '</pre>';
-
-
-//echo $response;
-
+// echo '<pre>';
+// print_r($response);
+// echo '</pre>';
+// echo $response;
 
 $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
+$lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
+
 $lablist= ArrayHelper::map( $decode,'lab_id','labname');
-
-echo '<pre>';
-print_r($lablist);
-echo '</pre>';
-
-
 
 
 $this->title = 'Add/ Remove Services';
 $this->params['breadcrumbs'][] = $this->title;
 
 
-?>
+$services =  Services::find()->all();      
+//var_dump($services);
+//exit; 
 
+?>
 
 <div class="services-index">
    
