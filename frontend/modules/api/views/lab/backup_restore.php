@@ -20,7 +20,7 @@ use yii\helpers\Html;
 } 
     </script>
 <div class="system-default-index">
-    Backup and Restore
+    
     
     <div class="row">
 
@@ -37,7 +37,7 @@ use yii\helpers\Html;
                     <div class="box-body">
                         
                         <div class="row" style="margin-top:10px">
-                            <?php echo "&nbsp&nbsp&nbsp&nbsp".Html::button('<i class="fa fa-download"></i> Local Sync', [ 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/system/utilities/backup-lab']) . "';" ,'title'=>'Sync',  'class' => 'btn btn-primary']); ?>
+                            <?php echo "&nbsp&nbsp&nbsp&nbsp".Html::button('<i class="fa fa-refresh"></i> Restore', [ 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/api/lab/restore']) . "';" ,'title'=>'Sync',  'class' => 'btn btn-primary']); ?>
                             <!-- <div class="col-md-3"><button class="btn btn-primary"><i class="fa fa-download"></i> Local Sync</button></div>
                             <div class="col-md-9"><button class="btn btn-primary"><i class="fa fa-refresh"></i> Online Sync</button></div> -->
                         </div>
@@ -113,8 +113,8 @@ use yii\helpers\Html;
 
     <div class="row">
         <div class="row">
-            <div class="col-md-6">column 1</div>
-            <div class="col-md-6">columns 2</div>
+            <!-- <div class="col-md-6">column 1</div>
+            <div class="col-md-6">columns 2</div> -->
         </div>
     </div>
 </div>
