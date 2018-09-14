@@ -55,6 +55,7 @@ class ePayment {
             'total_amount'=>$Op->total_amount,
             'payment_details'=>$Payment_details
         ];
+        
         $content = json_encode($TransactDetails);
         //echo $json;
         //exit;
