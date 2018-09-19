@@ -1,6 +1,9 @@
 <?php
 
 use yii\helpers\Html;
+
+use yii\bootstrap\Modal;
+use yii\helpers\Url;
 /*
  * Project Name: eulims_ * 
  * Copyright(C)2018 Department of Science & Technology -IX * 
@@ -8,7 +11,18 @@ use yii\helpers\Html;
  * 09 7, 18 , 4:36:23 PM * 
  * Module: backup_restore * 
  */
+
+
+ 
 ?>
+
+
+<?php $this->registerJsFile("/js/services/services.js"); ?>
+
+
+
+
+
 <script type="text/javascript">
     function myFunction() {
     var x = document.getElementById("myDIV");
@@ -37,7 +51,16 @@ use yii\helpers\Html;
                     <div class="box-body">
                         
                         <div class="row" style="margin-top:10px">
-                            <?php echo "&nbsp&nbsp&nbsp&nbsp".Html::button('<i class="fa fa-refresh"></i> Restore', [ 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/api/lab/restore']) . "';" ,'title'=>'Sync',  'class' => 'btn btn-primary']); ?>
+
+                        <?=
+                        "&nbsp&nbsp&nbsp&nbsp".Html::button(Yii::t('app', ' Restore'), ['value' => Url::to(['/api/progressbar/show']), 'id' => 'progress-btn',
+                            'title' => Yii::t('app', 'Showing progress bar'), 'header' => Yii::t('app', 'Progress Bar'), 'class' => 'fa fa-refresh showModalButton btn btn-primary',
+                            'data' => ['nexturl' => Url::to(['/api/progressbar/one']), 'nextlabel' => Yii::t('app', 'Action one ...')]]);
+                        ?>
+
+                          
+
+                        
                             <!-- <div class="col-md-3"><button class="btn btn-primary"><i class="fa fa-download"></i> Local Sync</button></div>
                             <div class="col-md-9"><button class="btn btn-primary"><i class="fa fa-refresh"></i> Online Sync</button></div> -->
                         </div>
@@ -201,3 +224,19 @@ use yii\helpers\Html;
     </div>
   </div>
 </div>
+
+
+
+<?php
+    Modal::begin([
+        'closeButton' => [
+            'label' => 'x',
+        ],
+        'header' => '<h4 id="headerTitle" style="float: left;">Restore Database</h4>',
+        'headerOptions' => ['id' => 'modalHeader'],
+        'id' => 'modalprogress',
+        'size' => 'modal-md',
+    ]);
+    echo "<div id='modalContent'><div style='text-align:center'><img src='/image/ajax-loader.gif'></div></div>";
+    Modal::end();
+?>
