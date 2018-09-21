@@ -20,7 +20,12 @@ use yii\helpers\Json;
 /* @var $searchModel common\models\lab\ServicesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$apiUrl="https://api3.onelab.ph/lab/get-lab?tk=2b426f99bb2b17750a19c349466d2c3d075bbf18&id=11&rid=11";
+$func=new Functions();
+echo $func->GetAccessToken(11);
+
+
+
+$apiUrl="https://api3.onelab.ph/lab/get-lab?tk=8b5db6ea832b625640122db3e6367b0debca46b4&id=11&rid=11";
 $curl = new curl\Curl();
 $response = $curl->get($apiUrl);
 
@@ -45,6 +50,10 @@ $services =  Services::find()->all();
 //exit; 
 
 ?>
+
+<?php
+       
+    ?>
 
 <div class="services-index">
    
