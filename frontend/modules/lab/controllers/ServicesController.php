@@ -10,6 +10,7 @@ use common\models\lab\Testnamemethod;
 use common\models\lab\Methodreference;
 use common\models\lab\Sampletype;
 use common\models\lab\ServicesSearch;
+use common\models\lab\Labsampletype;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -259,6 +260,51 @@ class ServicesController extends Controller
           $services->testname_method_id = $testnamemethod->testname_method_id;
           $services->save();
 
+
+          $services_model = Services::find()->where(['services_id' => $services->services_id])->one();
+
+        //base sa ids ng services model
+        //kunin yung model galing sa api para iinsert pababa going sa 7 tables 
+
+        //   $labsampletype = new Labsampletype();
+        //   $labsampletype->lab_sampletype_id =   
+        //   $labsampletype->lab_id = 
+        //   $labsampletype->sampletype_id = 
+        //   $labsampletype->effective_date = 
+        //   $labsampletype->added_by =
+        //   $labsampletype->save();
+
+        //   $sampletype = new Sampletype();
+        //   $sampletype->sampletype_id =   
+        //   $sampletype->type = 
+        //   $sampletype->status_id = 
+        //   $sampletype->save();
+
+        //   $testnamemethod = new Testnamemethod();
+        //   $testnamemethod->testname_method_id =  
+        //   $testnamemethod->testname_id = 
+        //   $testnamemethod->method_id = 
+        //   $testnamemethod->create_time = 
+        //   $testnamemethod->update_time = 
+        //   $testnamemethod->save();
+
+        //   $testname = new Testname();
+        //   $testname->testname_id =   
+        //   $testname->testName = 
+        //   $testname->status_id = 
+        //   $testname->create_time = 
+        //   $testname->update_time = 
+        //   $testname->save();
+
+        //   $methodreference = new Methodreference();
+        //   $methodreference->method_reference_id =   
+        //   $methodreference->testname_id = 
+        //   $methodreference->method = 
+        //   $methodreference->reference = 
+        //   $methodreference->fee = 
+        //   $methodreference->create_time =
+        //   $methodreference->update_time = 
+        //   $methodreference->save();
           
      }
 

@@ -126,7 +126,7 @@ class ProgressbarController extends Controller {
             if (true) {
                 $res = [];
 
-                $apiUrl="https://api3.onelab.ph/get/request/view?rstl_id=11&page=1&per-page=20";
+                $apiUrl="https://api3.onelab.ph/get/request/view?rstl_id=11&page=1&per-page=50";
                 $curl = new curl\Curl();
                 $responselab = $curl->get($apiUrl);   
                 $lab = Json::decode($responselab);
@@ -136,10 +136,13 @@ class ProgressbarController extends Controller {
         
                 foreach ($lab as $var)
                 {    
-                        $model_request = Restore_request::find()->where(['request_ref_num'=>$var['request_ref_num']])->all();
-                        if (!$model_request){
-                           $newRequest = new Restore_request();
-                           $newRequest->request_id = $var['request_id'];
+                     //   $model_request = Restore_request::find()->where(['request_ref_num'=>$var['request_ref_num']])->all();
+                    //    if (!$model_request){
+
+                       
+
+                            $newRequest = new Restore_request();
+                            $newRequest->request_id = $var['request_old_id'];
                             $newRequest->request_ref_num = $var['request_ref_num'];
                             $newRequest->request_datetime= $var['request_datetime'];
                             $newRequest->rstl_id= $var['rstl_id'];
@@ -168,7 +171,7 @@ class ProgressbarController extends Controller {
                             $newRequest->completed = $var['completed'];
                             $newRequest->received_by = $var['received_by'];
                             $newRequest->payment_status_id = $var['payment_status_id'];
-                            $newRequest->oldColumn_requestId= $var['request_id'];
+                            $newRequest->oldColumn_requestId= $var['oldColumn_requestId'];
                             $newRequest->oldColumn_sublabId= $var['oldColumn_sublabId'];
                             $newRequest->oldColumn_orId = $var['oldColumn_orId'];
                             $newRequest->oldColumn_completed= $var['oldColumn_completed'];
@@ -187,9 +190,9 @@ class ProgressbarController extends Controller {
                                     $message = "not saved request";
                             }
         
-                        }else{
-                            $duplicate++;
-                        }
+                        // }else{
+                        //     $duplicate++;
+                        // }
         
                         $analyses = $var['analyses'];
                         foreach ($analyses as $anals){
@@ -197,7 +200,7 @@ class ProgressbarController extends Controller {
                             $model_analysis = Restore_analysis::find()->where(['analysis_id'=>$anals['analysis_id']])->all();
                             if (!$model_analysis){
                                 $newanalysis = new Restore_analysis();
-                                $newanalysis->analysis_id=$anals['analysis_id'];
+                                $newanalysis->analysis_id=$anals['analysis_old_id'];
                                 $newanalysis->rstl_id=$anals['rstl_id'];
                                 $newanalysis->pstcanalysis_id=$anals['pstcanalysis_id'];
                                 $newanalysis->sample_id=$anals['sample_id'];
@@ -232,7 +235,7 @@ class ProgressbarController extends Controller {
                                 if (!$model_request){
                                 $newSample = new Restore_sample();
                                 $newSample->rstl_id=$samp['rstl_id'];
-                                $newSample->sample_id=$samp['sample_id'];
+                                $newSample->sample_id=$samp['sample_old_id'];
                                 $newSample->pstcsample_id=$samp['pstcsample_id'];
                                 $newSample->sampletype_id=$samp['sampletype_id'];
                                 $newSample->package_id=$samp['package_id'];

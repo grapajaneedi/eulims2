@@ -51,11 +51,17 @@ class TestPackage extends \yii\db\ActiveRecord
     {
         return [
             'testpackage_id' => 'Testpackage ID',
-            'package_name' => 'Package Name',
-            'lab_sampletype_id' => 'Lab Sampletype ID',
-            'package_rate' => 'Package Rate',
-            'testname_methods' => 'Testname Methods',
+            'package_name' => 'Name',
+            'lab_sampletype_id' => 'Sample Type',
+            'package_rate' => 'Rate',
+            'testname_methods' => 'Tests',
             'added_by' => 'Added By',
         ];
     }
+
+    // public function getSampletype()
+    // {
+    //     return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletype_id']);
+    // }
+
 }
