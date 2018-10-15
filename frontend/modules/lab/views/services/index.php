@@ -21,7 +21,7 @@ use yii\helpers\Json;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $func=new Functions();
-echo $func->GetAccessToken(11);
+//echo $func->GetAccessToken(11);
 
 
 
@@ -29,7 +29,7 @@ $apiUrl="https://api3.onelab.ph/lab/get-lab?tk=8b5db6ea832b625640122db3e6367b0de
 $curl = new curl\Curl();
 $response = $curl->get($apiUrl);
 
-$decode=Json::decode($response);
+//$decode=Json::decode($response);
 // echo '<pre>';
 // print_r($response);
 // echo '</pre>';
@@ -38,7 +38,7 @@ $decode=Json::decode($response);
 $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
 $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 
-$lablist= ArrayHelper::map( $decode,'lab_id','labname');
+//$lablist= ArrayHelper::map( $decode,'lab_id','labname');
 
 
 $this->title = 'Add/ Remove Services';
@@ -102,6 +102,8 @@ $services =  Services::find()->all();
                         ]
                     ])."</div>";
             ?>
+
+            
         </div>
         <?php ActiveForm::end(); ?>
     </div>
@@ -113,11 +115,9 @@ $services =  Services::find()->all();
         'dataProvider' => $dataProvider,
         'pjax' => true,
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
-       // 'toolbar'=>[],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-            //    'before'=>$sampletype,
                'after'=>false,
             ],
         'columns' => [

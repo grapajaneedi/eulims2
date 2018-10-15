@@ -8,6 +8,7 @@ use common\components\Functions;
 use common\models\lab\Cancelledrequest;
 use common\models\lab\Discount;
 use common\models\lab\Request;
+use common\models\lab\Sample;
 use common\models\finance\Paymentitem;
 
 $Connection = Yii::$app->financedb;
@@ -408,6 +409,7 @@ $this->registerJs($PrintEvent);
     $enableRequest = false;
    }
 
+//    echo  $model->samples->samplename;
 
             $analysisgridColumns = [
                 [
@@ -419,7 +421,7 @@ $this->registerJs($PrintEvent);
                     'value' => function($model) {
                         return $model->sample ? $model->sample->samplename : '-';
                     },
-                    'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
+                    'contentOptions' => ['style' => 'width:20%; white-space: normal;'],
                    
                 ],
                 [
@@ -427,13 +429,15 @@ $this->registerJs($PrintEvent);
                     'header'=>'Sample Code',
                     'value' => function($model) {
                         return $model->sample ? $model->sample->sample_code : '-';
+
+                       // return $model->analysis_id;
                     },
                     'enableSorting' => false,
                 ],
                 [
                     'attribute'=>'testname',
                     'header'=>'Test/ Calibration Requested',
-                    'contentOptions' => ['style' => 'width: 40%;word-wrap: break-word;white-space:pre-line;'],
+                    'contentOptions' => ['style' => 'width: 30%;word-wrap: break-word;white-space:pre-line;'],
                     'enableSorting' => false,
                 ],
                 [
@@ -469,10 +473,10 @@ $this->registerJs($PrintEvent);
                             $id = substr($url, 21);
                             $requestquery = Request::find()->where(['request_id' => $id])->one();
                             $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
-
+                            $samplesquery = Sample::find()->where(['request_id' => $id])->one();
                             $rate =  $discountquery->rate;
                            
-                            $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=$id";
+                            $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE sample_id=$samplesquery->sample_old_id";
                             $Connection = Yii::$app->labdb;
                             $command = $Connection->createCommand($sql);
                             $row = $command->queryOne();

@@ -24,6 +24,8 @@ use Yii;
  * @property int $sample_year
  * @property int $active
  * @property int $completed
+ * @property int $sample_old_id
+  * @property int $old_request_id
  *
  * @property Analysis[] $analyses
  * @property Sampletype $sampleType
@@ -95,6 +97,8 @@ class Sample extends \yii\db\ActiveRecord
             'sample_year' => 'Sample Year',
             'active' => 'Active',
             'completed' => 'Completed',
+            'sample_old_id' => 'sample_id',
+            'old_request_id' => 'old_request_id',
         ];
     }
 

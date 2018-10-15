@@ -3,16 +3,16 @@
 namespace frontend\modules\lab\controllers;
 
 use Yii;
-use common\models\lab\testpackage;
-use common\models\lab\TestpackageSearch;
+use common\models\lab\Backuprestore;
+use common\models\lab\BackuprestoreSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * TestpackageController implements the CRUD actions for testpackage model.
+ * BackuprestoreController implements the CRUD actions for Backuprestore model.
  */
-class TestpackageController extends Controller
+class BackuprestoreController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,12 +30,12 @@ class TestpackageController extends Controller
     }
 
     /**
-     * Lists all testpackage models.
+     * Lists all Backuprestore models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new TestpackageSearch();
+        $searchModel = new BackuprestoreSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,49 +45,38 @@ class TestpackageController extends Controller
     }
 
     /**
-     * Displays a single testpackage model.
+     * Displays a single Backuprestore model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('view', [
-                    'model' => $this->findModel($id),
-                ]);
-        }
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     /**
-     * Creates a new testpackage model.
+     * Creates a new Backuprestore model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new testpackage();
-        $sampletype = [];
+        $model = new Backuprestore();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Test Package Successfully Created'); 
-            return $this->runAction('index');
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        if(Yii::$app->request->isAjax){
-          
-            return $this->renderAjax('_form', [
-                'model' => $model,
-                'sampletype' => $sampletype,
-            ]);
-       }
-
-
-       
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
-     * Updates an existing testpackage model.
+     * Updates an existing Backuprestore model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -96,20 +85,18 @@ class TestpackageController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    Yii::$app->session->setFlash('success', 'Test Package Successfully Updated'); 
-                    return $this->redirect(['index']);
 
-                } else if (Yii::$app->request->isAjax) {
-                    return $this->renderAjax('update', [
-                        'model' => $model,
-                    ]);
-                 }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
-     * Deletes an existing testpackage model.
+     * Deletes an existing Backuprestore model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -117,25 +104,21 @@ class TestpackageController extends Controller
      */
     public function actionDelete($id)
     {
-        $model = $this->findModel($id); 
-        if($model->delete()) {            
-            Yii::$app->session->setFlash('success', 'Test Package Successfully Deleted'); 
-            return $this->redirect(['index']);
-        } else {
-            return $model->error();
-        }
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
     }
 
     /**
-     * Finds the testpackage model based on its primary key value.
+     * Finds the Backuprestore model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return testpackage the loaded model
+     * @return Backuprestore the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = testpackage::findOne($id)) !== null) {
+        if (($model = Backuprestore::findOne($id)) !== null) {
             return $model;
         }
 

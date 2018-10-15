@@ -251,6 +251,12 @@ class Request extends \yii\db\ActiveRecord
         return $this->hasMany(Sample::className(), ['request_id' => 'request_id']);
     }
 
+    public function getAnalysis()
+    {
+       // array(self::HAS_MANY, 'Analysis', array('id'=>'sample_id'), 'through'=>'samps', 'order'=>'sample_id ASC, package DESC'),
+        return $this->hasMany(Analysis::className(), ['sample_id' => 'sample_id', 'through'=>'samples']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

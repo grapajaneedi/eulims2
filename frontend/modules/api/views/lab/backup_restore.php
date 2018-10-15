@@ -1,242 +1,157 @@
 <?php
-
 use yii\helpers\Html;
-
-use yii\bootstrap\Modal;
+use kartik\grid\GridView;
+use common\models\lab\Sampletype;
+use common\models\lab\Services;
+use common\models\lab\Lab;
+use common\models\lab\Testname;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
-/*
- * Project Name: eulims_ * 
- * Copyright(C)2018 Department of Science & Technology -IX * 
- * Developer: Eng'r Nolan F. Sunico  * 
- * 09 7, 18 , 4:36:23 PM * 
- * Module: backup_restore * 
- */
+use yii\widgets\ActiveForm;
+use kartik\widgets\Select2;
+use kartik\widgets\DepDrop;
+use kartik\widgets\DatePicker;
+use kartik\datetime\DateTimePicker;
+use common\components\Functions;
+use linslin\yii2\curl;
+use yii\helpers\Json;
+
+/* @var $this yii\web\View */
+/* @var $searchModel common\models\lab\ServicesSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+
+$func=new Functions();
+//echo $func->GetAccessToken(11);
 
 
- 
+
+
+$apiUrl="https://api3.onelab.ph/lab/get-lab?tk=8b5db6ea832b625640122db3e6367b0debca46b4&id=11&rid=11";
+$curl = new curl\Curl();
+$response = $curl->get($apiUrl);
+
+//$decode=Json::decode($response);
+// echo '<pre>';
+// print_r($response);
+// echo '</pre>';
+// echo $response;
+
+// $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
+// $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
+
+$month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+$year = ['2013', '2014', '2015', '2016', '2017'];
+
+//$lablist= ArrayHelper::map( $decode,'lab_id','labname');
+
+$this->title = 'Backup and Restore';
+$this->params['breadcrumbs'][] = $this->title;
+
+
+
 ?>
-
-
-<?php $this->registerJsFile("/js/services/services.js"); ?>
-
-
-
-
-
-<script type="text/javascript">
-    function myFunction() {
-    var x = document.getElementById("myDIV");
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
-} 
-    </script>
-<div class="system-default-index">
-    
-    
-    <div class="row">
-
-        <div class="col-md-6">
-            <div class="col-md-10">
-                <div class="box box-primary" style="padding:0px">
-                    <div class="box-header" style="background-color: #3c8dbc;color:#fff;">
-                        <h4 class="box-title"><img src="/images/icons/laboratory.png" style="width:25px"></i>Laboratory</h4>
-                        <div class="box-tools pull-right">
-                            <button type="button" style="color:#000" class="btn btn-box-tool" title="Sync Results" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-bars"></i>
-                            </button>
-                        </div>
-                    </div>      
-                    <div class="box-body">
-                        
-                        <div class="row" style="margin-top:10px">
-
-                        <?=
-                        "&nbsp&nbsp&nbsp&nbsp".Html::button(Yii::t('app', ' Restore'), ['value' => Url::to(['/api/progressbar/show']), 'id' => 'progress-btn',
-                            'title' => Yii::t('app', 'Showing progress bar'), 'header' => Yii::t('app', 'Progress Bar'), 'class' => 'fa fa-refresh showModalButton btn btn-primary',
-                            'data' => ['nexturl' => Url::to(['/api/progressbar/one']), 'nextlabel' => Yii::t('app', 'Action one ...')]]);
-                        ?>
-
-                          
-
-                        
-                            <!-- <div class="col-md-3"><button class="btn btn-primary"><i class="fa fa-download"></i> Local Sync</button></div>
-                            <div class="col-md-9"><button class="btn btn-primary"><i class="fa fa-refresh"></i> Online Sync</button></div> -->
-                        </div>
-
-                        <div class="box" style="margin-top: 5px">
-                            <div class="box-header">
-                                <h3 class="box-title">Recent Activity</h3>
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body no-padding">
-                                <table class="table table-condensed">
-                                    <tbody><tr>
-                                            <th style="width: 10px">#</th>
-                                            <th>Task</th>
-                                            <th>Date</th>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td>Backup Module</td>
-                                            <td>
-                                                <div class="progress progress-xs">
-                                                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                                                </div>
-                                            </td>
-                                          
-                                        </tr>
-                                        <tr>
-                                            <td>2.</td>
-                                            <td>Restore Module</td>
-                                            <td>
-                                                <div class="progress progress-xs">
-                                                    <div class="progress-bar progress-bar-yellow" style="width: 70%"></div>
-                                                </div>
-                                            </td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td>3.</td>
-                                            <td>Backup Module</td>
-                                            <td>
-                                                <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar progress-bar-primary" style="width: 30%"></div>
-                                                </div>
-                                            </td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td>4.</td>
-                                            <td>Backup Module</td>
-                                            <td>
-                                                <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar progress-bar-success" style="width: 90%"></div>
-                                                </div>
-                                            </td>
-                                           
-                                        </tr>
-                                    </tbody></table>
-                            </div>
-                            <!-- /.box-body -->
-                        </div>
-
-                    </div>
-                    <!-- /.box-body -->
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-6">
-            
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="row">
-            <!-- <div class="col-md-6">column 1</div>
-            <div class="col-md-6">columns 2</div> -->
-        </div>
-    </div>
-</div>
-
-<div id="myDIV" style="display:none; margin: 0 auto;
-    text-align: left;
-    width: 800px;">
-  
-</div>
-    
-    
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-       <h4 class="box-title">Sync Results</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="box" style="margin-top: 5px">
-                            <div class="box-header">
-                                <h3 class="box-title">Module - Type of Sync</h3>
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body no-padding">
-                                <table class="table table-condensed">
-                                    <tbody><tr>
-                                            <th style="width: 10px">#</th>
-                                            <th>Task</th>
-                                            <th>Date</th>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td>Backup Module</td>
-                                            <td>
-                                                <div class="progress progress-xs">
-                                                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                                                </div>
-                                            </td>
-                                          
-                                        </tr>
-                                        <tr>
-                                            <td>2.</td>
-                                            <td>Restore Module</td>
-                                            <td>
-                                                <div class="progress progress-xs">
-                                                    <div class="progress-bar progress-bar-yellow" style="width: 70%"></div>
-                                                </div>
-                                            </td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td>3.</td>
-                                            <td>Backup Module</td>
-                                            <td>
-                                                <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar progress-bar-primary" style="width: 30%"></div>
-                                                </div>
-                                            </td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td>4.</td>
-                                            <td>Backup Module</td>
-                                            <td>
-                                                <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar progress-bar-success" style="width: 90%"></div>
-                                                </div>
-                                            </td>
-                                           
-                                        </tr>
-                                    </tbody></table>
-                            </div>
-                            <!-- /.box-body -->
-                        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-       
-      </div>
-    </div>
-  </div>
-</div>
-
-
 
 <?php
-    Modal::begin([
-        'closeButton' => [
-            'label' => 'x',
+       
+    ?>
+
+<div class="services-index">
+   
+<fieldset>
+    <legend>Legend/Status</legend>
+    <div>
+    <span class='badge btn-success legend-font' ><span class= 'glyphicon glyphicon-check'></span> DONE</span>
+    <span class='badge btn-danger legend-font' ><span class= 'glyphicon glyphicon-check'></span> PENDING</span>
+
+ 
+                
+    </div>
+</fieldset>
+   
+    <div class="row">
+    <?php $form = ActiveForm::begin(); ?>
+   
+        <div>
+            <?php 
+          echo   $sampletype = "<div class='row'><div class='col-md-2'  style='margin-left:15px'>".$form->field($model,'month')->widget(Select2::classname(),[
+                            'data' => $month,
+                            'id'=>'month',
+                            'theme' => Select2::THEME_KRAJEE,
+                            'options' => ['id'=>'month'],
+                            'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Month'],
+                    ])."</div>"."<div class='col-md-2'>".$form->field($model,'year')->widget(Select2::classname(),[
+                        'data' => $year,
+                        'id'=>'year',
+                        'theme' => Select2::THEME_KRAJEE,
+                        'options' => ['id'=>'year'],
+                        'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Year'],
+                ])."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span>"."</div></div>";
+            ?>
+        </div>
+        <?php ActiveForm::end(); ?>
+    </div>
+    
+   
+    <div class = "row" style="padding-left:15px;padding-right:15px" id="methodreference">
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'id'=>'testname-grid',
+        'pjax' => true,
+        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
+        'panel' => [
+                'type' => GridView::TYPE_PRIMARY,
+                'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+               'after'=>false,
+            ],
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+          
+            'activity',
+            'date',
+            'data',
+            'status',
+
+            ['class' => 'yii\grid\ActionColumn'],
         ],
-        'header' => '<h4 id="headerTitle" style="float: left;">Restore Database</h4>',
-        'headerOptions' => ['id' => 'modalHeader'],
-        'id' => 'modalprogress',
-        'size' => 'modal-md',
-    ]);
-    echo "<div id='modalContent'><div style='text-align:center'><img src='/image/ajax-loader.gif'></div></div>";
-    Modal::end();
-?>
+    ]); ?>
+  
+</div>
+
+<script type="text/javascript">
+    $('#sample-test_id').on('change',function(e) {
+       e.preventDefault();
+         jQuery.ajax( {
+            type: 'GET',
+            url: '/lab/services/getmethod?id='+$(this).val(),
+            dataType: 'html',
+            data: { lab_id: $('#lab_id').val(), sample_type_id: $('#sample-sample_type_id').val()},
+            success: function ( response ) {         
+              $("#methodreference").html(response);
+
+         
+            },
+            error: function ( xhr, ajaxOptions, thrownError ) {
+                alert( thrownError );
+            }
+        });
+    });
+
+    function restore(){
+
+        var m = $('#month option:selected').text();
+        var y = $('#year option:selected').text();
+        
+                        $.post('/api/lab/res', {
+                           month: m,
+                           year: y,
+                        }, function(result){
+                            // alert(m);
+                            // alert(y);
+                            $("#methodreference").html(response);
+                            $("#testname-grid").yiiGridView("applyFilter");    
+                        });
+                }
+</script>
+
+

@@ -41,14 +41,7 @@ use yii\helpers\Html;
             <div class="col-sm-12">
                 <div class="well well-sm" ><strong>Info!</strong> <?= Yii::t('app', 'Running this progress may take some time.') ?></div>
             </div>
-            <div class="col-sm-3"> <label class="control-label"> <?= Yii::t('app', 'run third action?') ?> </label>
-                 <?=
-                SwitchInput::widget(['name' => 'backpic', 'options' => ['id' => 'backpic'], 'value' => false, 'pluginOptions' => [
-                        'onText' => Yii::t('app', 'Yes'),
-                        'offText' => Yii::t('app', 'No')
-                ]]);
-                ?>
-            </div>
+          
             <div class="col-sm-3"><br>
 
                     
