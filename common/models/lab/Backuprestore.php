@@ -55,10 +55,10 @@ class Backuprestore extends \yii\db\ActiveRecord
             'id' => 'ID',
             'activity' => 'Activity',
             'date' => 'Date',
-            'data' => 'Data',
+            'data' => 'No. of Request',
             'status' => 'Status',
-            'month' => 'Month',
-            'year' => 'Year',
+            'month' => 'No. of Samples',
+            'year' => 'No. of Analyses',
         ];
     }
 }
