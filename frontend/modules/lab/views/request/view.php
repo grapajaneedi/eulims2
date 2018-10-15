@@ -11,11 +11,24 @@ use common\models\lab\Request;
 use common\models\lab\Sample;
 use common\models\finance\Paymentitem;
 
+use common\models\lab\Package;
+
 $Connection = Yii::$app->financedb;
 $func = new Functions();
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
+
+// $list =   Package::find()
+// ->leftJoin('tbl_sampletype', 'tbl_sampletype.sampletype_id=tbl_package.sampletype_id')
+// ->Where(['tbl_package.sampletype_id'=>2])
+// ->asArray()
+// ->all();
+
+// var_dump($list);
+// exit;
+
+
 
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
@@ -476,7 +489,7 @@ $this->registerJs($PrintEvent);
                             $samplesquery = Sample::find()->where(['request_id' => $id])->one();
                             $rate =  $discountquery->rate;
                            
-                            $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE sample_id=$samplesquery->sample_old_id";
+                            $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE sample_id=$samplesquery->sample_id";
                             $Connection = Yii::$app->labdb;
                             $command = $Connection->createCommand($sql);
                             $row = $command->queryOne();
@@ -489,6 +502,8 @@ $this->registerJs($PrintEvent);
                             }else{
                                 return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($discounted, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
                             }
+
+                            return "test";
                          
                       },
                 ],
