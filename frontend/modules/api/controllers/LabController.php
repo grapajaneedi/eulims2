@@ -134,7 +134,7 @@ class LabController extends Controller
                       $request_count++;
           
 
-                     /* $sample = $var['sample'];
+                      $sample = $var['sample'];
                      
                       foreach ($sample as $samp){
                           $sample_count++;          
@@ -162,8 +162,9 @@ class LabController extends Controller
                           $newSample->oldColumn_batch_num=$samp['oldColumn_batch_num'];
                           $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                           $newSample->testcategory_id=$samp['testcategory_id'];
-                          $newSample->save(); 
-                }   */ 
+                          $newSample->save(true); 
+                          
+              }    
               
               $analyses = $var['analyses'];
              
@@ -195,7 +196,8 @@ class LabController extends Controller
                       $newanalysis->testcategory_id=$anals['testcategory_id'];
                       $newanalysis->sample_type_id=$anals['sample_type_id'];
                       $newanalysis->old_sample_id=$anals['old_sample_id'];
-                      $newanalysis->save();
+                      $newanalysis->save(true);
+                   
                     }
             }
               $sql = "SET FOREIGN_KEY_CHECKS = 1;"; 
