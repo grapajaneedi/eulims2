@@ -129,9 +129,11 @@ $this->registerJs($js);
 
             </div>
         </div>
-
+      
        
              <?= $form->field($model, 'tests')->textarea(['rows' => 4, 'readonly' => true]) ?>
+
+             <?= Html::textInput('package_ids', '', ['class' => 'form-control', 'id'=>'package_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
           
              <?= $form->field($model, 'rstl_id')->hiddenInput(['value'=> 1])->label(false) ?>
 
@@ -160,6 +162,7 @@ $this->registerJs("$('#sample-sample_type_id').on('depdrop:afterChange',function
                
                 $('#packagelist-rate').val(data.rate);
                 $('#packagelist-tests').val(data.tests);
+                $('#package_ids').val(data.ids);
                 $('.image-loader').removeClass( \"img-loader\" );
             },
             beforeSend: function (xhr) {
@@ -185,6 +188,7 @@ $this->registerJs("$('#sample-sample_type_id').on('change',function(){
              
                 $('#packagelist-rate').val(data.rate);
                 $('#packagelist-tests').val(data.tests);
+                $('#package_ids').val(data.ids);
                 $('.image-loader').removeClass( \"img-loader\" );
             },
             beforeSend: function (xhr) {

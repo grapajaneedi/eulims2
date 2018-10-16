@@ -168,7 +168,7 @@ class PackagelistController extends Controller
                     //iloop yung mga tests dito (1,2,3,4,5)
                     //separate loop ang tests
 
-                    $test= $post['Packagelist']['tests'];
+                    $test= $_POST['package_ids'];
                     $test_ids = explode(',', $test);  
 
                  foreach ($ids as $sample_id){
@@ -316,20 +316,18 @@ class PackagelistController extends Controller
                 $rate = $modelpackagelist->rate;
                 $tet = $modelpackagelist->tests;
 
-                $t = explode(',', $tet);
-               
-                foreach ($t as $test_id){
-                    $test_id =  Testname::findOne(['testname_id'=>$id]);
-
-                    $testname = $test_id->testName;
-                    $newline = "\n";
-
-                    $tests = $tet;
-                 } 
+                $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";     
+                
+                $Connection = Yii::$app->labdb;
+                $command = $Connection->createCommand($sql);
+                $row = $command->queryOne();    
+                    $tests = $row['GROUP_CONCAT(testName)'];
+                 
                       
             } else {
                 $rate = "";
                 $tests = "";
+                
             }
         } else {
             $rate = "Error getting rate";
@@ -338,6 +336,7 @@ class PackagelistController extends Controller
         return Json::encode([
             'rate'=>$rate,
             'tests'=>$tests,
+            'ids'=>$tet,
         ]);
     }
 
