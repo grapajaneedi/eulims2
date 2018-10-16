@@ -163,12 +163,9 @@ class LabController extends Controller
                           $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                           $newSample->testcategory_id=$samp['testcategory_id'];
                           $newSample->save(true); 
-                          
-              }    
-              
-              $analyses = $var['analyses'];
-             
-              foreach ($analyses as $anals){
+
+                          $analyses = $var['analyses'];
+                  foreach ($analyses as $anals){
                       $analysis_count++;
                       $newanalysis = new Restore_analysis();
                       $newanalysis->analysis_id=$anals['analysis_old_id'];
@@ -199,6 +196,9 @@ class LabController extends Controller
                       $newanalysis->save(true);
                    
                     }
+                          
+              } 
+             
             }
               $sql = "SET FOREIGN_KEY_CHECKS = 1;"; 
 
