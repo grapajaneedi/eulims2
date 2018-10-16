@@ -162,10 +162,43 @@ class LabController extends Controller
                           $newSample->oldColumn_batch_num=$samp['oldColumn_batch_num'];
                           $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                           $newSample->testcategory_id=$samp['testcategory_id'];
-                          $newSample->save(true);
+                          $newSample->save(true); 
                           
-              } 
+              }    
+              
+              $analyses = $var['analyses'];
              
+              foreach ($analyses as $anals){
+                      $analysis_count++;
+                      $newanalysis = new Restore_analysis();
+                      $newanalysis->analysis_id=$anals['analysis_old_id'];
+                      $newanalysis->rstl_id=$anals['rstl_id'];
+                      $newanalysis->pstcanalysis_id=$anals['pstcanalysis_id'];
+                      $newanalysis->sample_id =$anals['old_sample_id'];
+                      $newanalysis->sample_code=$anals['sample_code'];
+                      $newanalysis->testname=$anals['testname'];
+                      $newanalysis->method=$anals['method'];
+                      $newanalysis->references=$anals['references'];
+                      $newanalysis->quantity=$anals['quantity'];
+                      $newanalysis->fee=$anals['fee'];
+                      $newanalysis->test_id=$anals['test_id'];
+                      $newanalysis->cancelled=$anals['cancelled'];
+                      $newanalysis->date_analysis=$anals['date_analysis'];
+                      $newanalysis->user_id=$anals['user_id'];
+                      $newanalysis->is_package=$anals['is_package'];
+                      $newanalysis->oldColumn_deleted=$anals['oldColumn_deleted'];
+                      $newanalysis->analysis_old_id=$anals['analysis_old_id'];
+                      $newanalysis->oldColumn_taggingId=$anals['oldColumn_taggingId'];
+                      $newanalysis->oldColumn_result=$anals['oldColumn_result'];
+                      $newanalysis->oldColumn_package_count=$anals['oldColumn_package_count'];
+                      $newanalysis->oldColumn_requestId=$anals['oldColumn_requestId'];
+                      $newanalysis->request_id =  43;
+                      $newanalysis->testcategory_id=$anals['testcategory_id'];
+                      $newanalysis->sample_type_id=$anals['sample_type_id'];
+                      $newanalysis->old_sample_id=$anals['old_sample_id'];
+                      $newanalysis->save(true);
+                   
+                    }
             }
               $sql = "SET FOREIGN_KEY_CHECKS = 1;"; 
 
