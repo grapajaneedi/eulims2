@@ -16,6 +16,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
+use linslin\yii2\curl;
 
 /**
  * ServicesController implements the CRUD actions for Services model.
@@ -178,20 +180,56 @@ class ServicesController extends Controller
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
-        
-            $list =  Sampletype::find()
-            ->innerJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletype_id=tbl_sampletype.sampletype_id')
-            ->Where(['tbl_lab_sampletype.lab_id'=>$id])
-            ->asArray()
-            ->all();
+
+            $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/sampletypes/restore?id=".$id;
+            $curl = new curl\Curl();
+            $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+            $response = $curl->get($apiUrl);
+            $decode=Json::decode($response);
+
+          //  $list = $decode->asArray()->all();
+            // $list =  Sampletype::find()
+            // ->innerJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletype_id=tbl_sampletype.sampletype_id')
+            // ->Where(['tbl_lab_sampletype.lab_id'=>$id])
+            // ->asArray()
+            // ->all();
 
             $selected  = null;
-            if ($id != null && count($list) > 0) {
+            if ($id != null && count($decode) > 0) {
                 $selected = '';
-                foreach ($list as $i => $sampletype) {
+                foreach ($decode as $i => $sampletype) {
                     $out[] = ['id' => $sampletype['sampletype_id'], 'name' => $sampletype['type']];
                     if ($i == 0) {
                         $selected = $sampletype['sampletype_id'];
+                    }
+                }
+                
+                echo Json::encode(['output' => $out, 'selected'=>$selected]);
+                return;
+            }
+        }
+        echo Json::encode(['output' => '', 'selected'=>'']);
+    }
+
+    public function actionListtest() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $id = end($_POST['depdrop_parents']);
+
+
+            $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/testnames/restore?id=".$id;
+            $curl = new curl\Curl();
+            $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+            $response = $curl->get($apiUrl);
+            $decode=Json::decode($response);
+
+            $selected  = null;
+            if ($id != null && count($decode) > 0) {
+                $selected = '';
+                foreach ($decode as $i => $sampletype) {
+                    $out[] = ['id' => $sampletype['testname_id'], 'name' => $sampletype['testName']];
+                    if ($i == 0) {
+                        $selected = $sampletype['testname_id'];
                     }
                 }
                 
@@ -215,9 +253,16 @@ class ServicesController extends Controller
 
         $testnameQuery = Methodreference::find()
         ->leftJoin('tbl_testname_method', 'tbl_testname_method.method_id=tbl_methodreference.method_reference_id')
-        ->Where(['tbl_testname_method.testname_id'=>$id]);
-         $testnameDataProvider = new ActiveDataProvider([
-                 'query' => $testnameQuery,
+        ->Where(['tbl_testname_method.testname_id'=>$id])->all();
+
+        $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/methodreferences/restore?id=".$id;
+        $curl = new curl\Curl();
+        $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+        $response = $curl->get($apiUrl);
+        $decode=Json::decode($response,TRUE);
+
+         $testnameDataProvider = new ArrayDataProvider([
+                 'allModels' => $decode,
                  'pagination' => [
                      'pageSize' => 10,
                  ],
@@ -251,13 +296,42 @@ class ServicesController extends Controller
           $methodreferenceid = $_POST['methodreferenceid'];
 
           $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-          $testnamemethod= Testnamemethod::find()->where(['testname_id' => $methodreferenceid])->one();
+
+          //GALING SA API
+      
+
+
+        //   $apiUrl_testnamemethod="https://eulimsapi.onelab.ph/api/web/v1/testnamemethods/search?testname_method_id=".$testname_id;
+        //   $curl = new curl\Curl();
+        //   $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+        //   $response = $curl->get($apiUrl_testnamemethod);
+        //   $decode=Json::decode($response,TRUE);
+
+        //   foreach ($decode as $var)
+        //   { 
+        //       $testname_method_id = $var['testname_method_id'];
+        //   }
+          
+
+        //   $testnamemethod= Testnamemethod::find()->where(['testname_id' => $methodreferenceid])->one();
+
+
+           //   $apiUrl_methodreference="https://eulimsapi.onelab.ph/api/web/v1/methodreferences/search?method_reference_id=".$methodreferenceid;
+        //   $curl = new curl\Curl();
+        //   $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+        //   $response = $curl->get($apiUrl_methodreference);
+        //   $decode=Json::decode($response,TRUE);
+
+        //   foreach ($decode as $var)
+        //   { 
+        //       $testname_id = $var['testname_id'];
+        //   }
 
           $services = new Services();
           $services->rstl_id =   $GLOBALS['rstl_id'];
           $services->method_reference_id = $id;
           $services->sampletype_id = $sampletypeid;
-          $services->testname_method_id = $testnamemethod->testname_method_id;
+          $services->testname_method_id = 1;
           $services->save();
 
 
@@ -266,45 +340,83 @@ class ServicesController extends Controller
         //base sa ids ng services model
         //kunin yung model galing sa api para iinsert pababa going sa 7 tables 
 
-        //   $labsampletype = new Labsampletype();
-        //   $labsampletype->lab_sampletype_id =   
-        //   $labsampletype->lab_id = 
-        //   $labsampletype->sampletype_id = 
-        //   $labsampletype->effective_date = 
-        //   $labsampletype->added_by =
-        //   $labsampletype->save();
+        //GALING SA API query via $sampletype_id
 
-        //   $sampletype = new Sampletype();
-        //   $sampletype->sampletype_id =   
-        //   $sampletype->type = 
-        //   $sampletype->status_id = 
-        //   $sampletype->save();
+          $apiUrl_sampletype="https://eulimsapi.onelab.ph/api/web/v1/sampletypes/search?sampletype_id=".$sampletypeid;
+          $curl = new curl\Curl();
+          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+          $response = $curl->get($apiUrl_sampletype);
+          $decode=Json::decode($response,TRUE);
 
+          foreach ($decode as $var)
+          {      
+                  $sampletype = new Sampletype();
+                  $sampletype->sampletype_id = $var['sampletype_id'];  
+                  $sampletype->type = $var['type'];
+                  $sampletype->status_id = $var['status_id'];
+                  $sampletype->save();
+          }
+
+         //GALING SA API query via $sampletype_id
+
+         $apiUrl_labsampletype="https://eulimsapi.onelab.ph/api/web/v1/labsampletypes/search?sampletype_id=".$sampletypeid;
+         $curl = new curl\Curl();
+         $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+         $response = $curl->get($apiUrl_labsampletype);
+         $decode=Json::decode($response,TRUE);
+
+         foreach ($decode as $var)
+         { 
+            $labsampletype = new Labsampletype();
+            $labsampletype->lab_sampletype_id = $var['lab_sampletype_id'];  
+            $labsampletype->lab_id = $var['lab_id'];
+            $labsampletype->sampletype_id = $var['sampletype_id'];
+            $labsampletype->effective_date = $var['effective_date'];
+            $labsampletype->added_by = $var['added_by'];
+            $labsampletype->save();
+         }
+
+         //GALING SA API query via $sampletype_id
         //   $testnamemethod = new Testnamemethod();
-        //   $testnamemethod->testname_method_id =  
-        //   $testnamemethod->testname_id = 
-        //   $testnamemethod->method_id = 
-        //   $testnamemethod->create_time = 
-        //   $testnamemethod->update_time = 
+        //   $testnamemethod->testname_method_id =  $var['testname_method_id'];
+        //   $testnamemethod->testname_id = $var['testname_id'];
+        //   $testnamemethod->method_id = $var['testname_id'];
+        //   $testnamemethod->create_time = $var['create_time'];
+        //   $testnamemethod->update_time = $var['update_time']
         //   $testnamemethod->save();
 
+        //GALING SA API kunin via testname_id na galing sa testnamemethod
         //   $testname = new Testname();
-        //   $testname->testname_id =   
-        //   $testname->testName = 
-        //   $testname->status_id = 
-        //   $testname->create_time = 
-        //   $testname->update_time = 
+        //   $testname->testname_id = $var['testname_id'];
+        //   $testname->testName = $var['testName'];
+        //   $testname->status_id = $var['status_id'];
+        //   $testname->create_time = $var['create_time'];
+        //   $testname->update_time = $var['update_time'];
         //   $testname->save();
 
-        //   $methodreference = new Methodreference();
-        //   $methodreference->method_reference_id =   
-        //   $methodreference->testname_id = 
-        //   $methodreference->method = 
-        //   $methodreference->reference = 
-        //   $methodreference->fee = 
-        //   $methodreference->create_time =
-        //   $methodreference->update_time = 
-        //   $methodreference->save();
+        //GALING SA API via methodreference
+
+        
+
+
+          $apiUrl_methodreference="https://eulimsapi.onelab.ph/api/web/v1/methodreferences/search?method_reference_id=".$methodreferenceid;
+          $curl = new curl\Curl();
+          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+          $response = $curl->get($apiUrl_methodreference);
+          $decode=Json::decode($response,TRUE);
+
+          foreach ($decode as $var)
+          { 
+                  $methodreference = new Methodreference();
+                  $methodreference->method_reference_id = $var['method_reference_id'];  
+                  $methodreference->testname_id = $var['testname_id'];
+                  $methodreference->method = $var['method'];
+                  $methodreference->reference = $var['reference'];
+                  $methodreference->fee = $var['fee'];
+                  $methodreference->create_time = $var['create_time'];
+                  $methodreference->update_time = $var['update_time'];
+                  $methodreference->save();
+          }
           
      }
 

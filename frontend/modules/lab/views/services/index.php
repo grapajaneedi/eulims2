@@ -5,6 +5,7 @@ use common\models\lab\Sampletype;
 use common\models\lab\Services;
 use common\models\lab\Lab;
 use common\models\lab\Testname;
+use common\models\lab\Methodreference;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
@@ -16,6 +17,23 @@ use common\components\Functions;
 use linslin\yii2\curl;
 use yii\helpers\Json;
 
+
+// $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/methodreferences/restore?id=121";
+// $curl = new curl\Curl();
+// $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+// $response = $curl->get($apiUrl);
+// $decode=json_decode($response, true);
+
+// var_dump($decode);
+// exit;
+
+// $testnameQuery = Methodreference::find()
+// ->leftJoin('tbl_testname_method', 'tbl_testname_method.method_id=tbl_methodreference.method_reference_id')
+// ->Where(['tbl_testname_method.testname_id'=>121]);
+
+// var_dump($testnameQuery);
+// exit;
+
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\ServicesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -24,21 +42,16 @@ $func=new Functions();
 //echo $func->GetAccessToken(11);
 
 
-
-$apiUrl="https://api3.onelab.ph/lab/get-lab?tk=8b5db6ea832b625640122db3e6367b0debca46b4&id=11&rid=11";
+$apiUrl="https://eulimsapi.onelab.ph/api/web/v1/labs/search?labcount=0";
 $curl = new curl\Curl();
+$curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
 $response = $curl->get($apiUrl);
-
-//$decode=Json::decode($response);
-// echo '<pre>';
-// print_r($response);
-// echo '</pre>';
-// echo $response;
+$decode=Json::decode($response);
 
 $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
-$lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
+//$lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 
-//$lablist= ArrayHelper::map( $decode,'lab_id','labname');
+$lablist= ArrayHelper::map($decode,'lab_id','labname');
 
 
 $this->title = 'Add/ Remove Services';
@@ -55,7 +68,7 @@ $services =  Services::find()->all();
        
     ?>
 
-<div class="services-index">
+<div class="services-index" >
    
 <fieldset>
     <legend>Legend/Status</legend>
@@ -97,7 +110,7 @@ $services =  Services::find()->all();
                         'pluginOptions'=>[
                             'depends'=>['sample-sample_type_id'],
                             'placeholder'=>'Select Test',
-                            'url'=>Url::to(['/lab/analysis/listsampletype']),
+                            'url'=>Url::to(['/lab/services/listtest']),
                             'loadingText' => 'Loading Tests...',
                         ]
                     ])."</div>";
@@ -109,7 +122,7 @@ $services =  Services::find()->all();
     </div>
     
     
-    <div class="row" id="methodreference">
+    <div class="row" id="methodreference"  style="padding-left:15px;padding-right:15px">
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
