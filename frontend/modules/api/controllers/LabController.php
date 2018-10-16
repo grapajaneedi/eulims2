@@ -134,7 +134,7 @@ class LabController extends Controller
                       $request_count++;
           
 
-                      $sample = $var['sample'];
+                     /* $sample = $var['sample'];
                      
                       foreach ($sample as $samp){
                           $sample_count++;          
@@ -163,7 +163,7 @@ class LabController extends Controller
                           $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                           $newSample->testcategory_id=$samp['testcategory_id'];
                           $newSample->save(); 
-                }    
+                }   */ 
               
               $analyses = $var['analyses'];
              
