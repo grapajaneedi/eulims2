@@ -53,6 +53,13 @@ if($TRequest>0){
 }else{
     $RequestStartDate="";
 }
+$RequestEvent=<<<SCRIPT
+function(e){
+    var req_type_id=this.value;
+    alert(req_type_id);
+    
+}     
+SCRIPT;
 $model->modeofreleaseids=$model->modeofrelease_ids;
 ?>
 
@@ -77,6 +84,9 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
         'pluginOptions' => [
             'allowClear' => true
         ],
+        'pluginEvents'=>[
+            'change'=>$RequestEvent
+        ]
     ])->label('Request Type'); ?>
     </div>
     <div class="col-md-6">

@@ -37,6 +37,7 @@ class IniObject implements ArrayAccess, IteratorAggregate {
     }
 
     function __invoke($offset) {
+       
         return $this->offsetGet($offset);
     }
 
