@@ -67,8 +67,11 @@ class LabController extends Controller
             $month_value = "12";
         }
 
-        $start = $year."-".$month_value;
-        $end = $year."-".$month_value;
+        //$start = $year."-".$month_value;
+        //$end = $year."-".$month_value;
+		
+		$start = "2018-01-01";
+		$end = "2018-01-03";
 
         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
 
