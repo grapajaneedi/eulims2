@@ -195,7 +195,7 @@ class LabController extends Controller
                           $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                           $newSample->testcategory_id=$samp['testcategory_id'];
                           //$newSample->save(true); 
-						  if($newSample->save(){
+						  if($newSample->save()){
 							  $flag1 = 1;
 						  } else {
 							  $flag1 = 0;
