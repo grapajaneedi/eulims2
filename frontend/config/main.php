@@ -159,15 +159,18 @@ return [
 		'databaseComponent' => 'db' // The used database component by the image manager, this defaults to the Yii::$app->db component
         ],
     ],
-     'as access' => [
+    /*'as access' => [
         //'class' => 'mdm\admin\components\AccessControl',
         'class' => 'common\modules\admin\components\AccessControl',
         'allowActions' => [
+            '/ajax/*',
+            '/ajax/get-lab/*',
             'site/*',
             '/admin/user/signup',
-            '/ajax/*',
             '/lab/analysis/listtest',
         ]
     ],
+     * 
+     */
     'params' => $params,
 ];

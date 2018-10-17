@@ -35,7 +35,6 @@ class LabController extends Controller
              'model'=>$model,
          ]);
      }
-
      public function actionRes(){
         $month = $_POST['month'];
         $year =  $_POST['year'];
