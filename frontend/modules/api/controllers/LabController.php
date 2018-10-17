@@ -159,11 +159,11 @@ class LabController extends Controller
                       //$newRequest->save();
                       //$request_count++;
 					  
-					  if($newRequest->save()){
+					  /* if($newRequest->save()){
 						  $flag = 1;
 					  } else {
 						  $flag = 0;
-					  }
+					  } */
           
 
                       //$sample = $var['sample'];
@@ -195,11 +195,11 @@ class LabController extends Controller
                           $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                           $newSample->testcategory_id=$samp['testcategory_id'];
                           //$newSample->save(true); 
-						  if($newSample->save()){
+						  /* if($newSample->save()){
 							  $flag1 = 1;
 						  } else {
 							  $flag1 = 0;
-						  }
+						  } */
                           
 						//$analyses = $var['analyses'];
              
@@ -233,7 +233,7 @@ class LabController extends Controller
 						$newanalysis->old_sample_id=$anals['old_sample_id'];
 						//$newanalysis->save(true);
 						
-						if($newanalysis->save() && $flag1 == 1 && $flag == 1){
+						if($newanalysis->save() && $newRequest->save() && $newSample->save()){
 							$transaction->commit();
 						} else {
 							$transaction->rollBack();
