@@ -233,7 +233,9 @@ class LabController extends Controller
 						$newanalysis->old_sample_id=$anals['old_sample_id'];
 						//$newanalysis->save(true);
 						
-						if($newanalysis->save() && $newRequest->save() && $newSample->save()){
+						if($newanalysis->save()){
+							$newRequest->save();
+							$newSample->save();
 							$transaction->commit();
 						} else {
 							$transaction->rollBack();
