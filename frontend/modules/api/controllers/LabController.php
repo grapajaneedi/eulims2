@@ -264,7 +264,7 @@ class LabController extends Controller
                     $model = new Backuprestore();
                     $model->activity = "Restored data for the month of ".$month."-".$year;
                     $model->date = date('Y-M-d');
-                    $model->data = $request_count."/".$request_count;
+                    $model->data = count($data)."/".$request_count;
                     $model->status = "COMPLETED";
                     $model->month = $sample_count."/".$sample_count;
                     $model->year = $analysis_count."/".$analysis_count;
