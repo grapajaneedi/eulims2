@@ -1,7 +1,7 @@
 <?php 
 
 namespace frontend\modules\api\controllers;
-
+set_time_limit(600);
 use yii\web\Controller;
 use Yii;
 use linslin\yii2\curl;
@@ -66,10 +66,15 @@ class LabController extends Controller
             $month_value = "12";
         }
 
+        $start = date('Y-m-d',strtotime($year."-".$month_value."-01"));
+        $end = date('Y-m-d',strtotime($year."-".$month_value."-31"));
+
         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
 
-          $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".$GLOBALS['rstl_id']."&reqds=".$year."-".$month_value."-01&reqde=".$year."-".$month_value."-31&pp=5&page=1";
+          //$apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".$GLOBALS['rstl_id']."&reqds=".$year."-".$month_value."-01&reqde=".$year."-".$month_value."-31&pp=5&page=1";
   
+          $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&reqds=".$start."&reqde=".$end;
+
           $curl = new curl\Curl();
 
           $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
