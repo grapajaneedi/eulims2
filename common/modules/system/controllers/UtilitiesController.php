@@ -57,11 +57,6 @@ class UtilitiesController extends Controller {
                      'start_id'=>'1',
                      'last_id'=>10
                    ],
-                   [
-                     'table_name'=>'tbl_sample',
-                     'start_id'=>'1',
-                     'last_id'=>10
-                   ]
                 ]
             ],
             'op'=>$op,
