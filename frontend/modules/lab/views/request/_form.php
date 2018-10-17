@@ -56,7 +56,7 @@ if($TRequest>0){
 $RequestEvent=<<<SCRIPT
 function(e){
     var req_type_id=this.value;
-    alert(req_type_id);
+    //alert(req_type_id);
     
 }     
 SCRIPT;
