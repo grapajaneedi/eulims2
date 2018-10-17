@@ -102,7 +102,7 @@ class LabController extends Controller
 		  exit;*/
        
           $sql = "SET FOREIGN_KEY_CHECKS = 0;";
-          $Connection = Yii::$app->labdb;
+          $connection = Yii::$app->labdb;
         
           $request_count = 0;
           $sample_count = 0;
