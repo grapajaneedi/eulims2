@@ -19,6 +19,7 @@ use common\models\finance\PostedOp;
 use frontend\modules\finance\components\epayment\ePayment;
 use common\models\finance\Op;
 use common\models\system\ApiSettings;
+
 /**
  * Description of AjaxController
  *
@@ -53,11 +54,7 @@ class AjaxController extends Controller{
         //$myvar = setTransaction($customer_id,$amount,$source,$transactiontype);
         return 200;
     }
-    public function actionGetLab(){
-        $get= Yii::$app->request->get();
-        $Request_Type_id=$get['id'];
-        echo $Request_Type_id;
-    }
+    
     public function actionPostonlinepayment(){
         $post= \Yii::$app->request->post();
         $op_id=$post['op_id'];

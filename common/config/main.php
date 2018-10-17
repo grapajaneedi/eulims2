@@ -31,6 +31,16 @@ return [
             ]
         ],
     ],
-    
+    'as access' => [
+        //'class' => 'mdm\admin\components\AccessControl',
+        'class' => 'common\modules\admin\components\AccessControl',
+        'allowActions' => [
+            '/ajax/*',
+            '/ajax/getlab',
+            'site/*',
+            '/admin/user/signup',
+            '/lab/analysis/listtest',
+        ]
+    ],
     'components' => $components
 ];
