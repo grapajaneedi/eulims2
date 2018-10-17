@@ -96,10 +96,10 @@ class LabController extends Controller
 			
 			$data = json_decode($response, true);
 		  
-		  echo "<pre>";
+		  /*echo "<pre>";
 		  print_r($data);
 		  echo "</pre>";
-		  exit;
+		  exit;*/
        
           $sql = "SET FOREIGN_KEY_CHECKS = 0;";
           $Connection = Yii::$app->labdb;
@@ -225,7 +225,8 @@ class LabController extends Controller
 						if($newanalysis->save()){
 							$transaction->commit();
 						} else {
-							$transaction->rollBack();
+							echo $transaction->rollBack();
+							echo $newanalysis->getErrors();
 						}
                    
                     }
