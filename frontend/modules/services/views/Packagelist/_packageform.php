@@ -59,7 +59,6 @@ $this->registerJs($js);
 ?>
 
 
-
 <div class="packagelist-form" style="padding-bottom: 10px">
 
     <?php $form = ActiveForm::begin(); ?>
@@ -130,9 +129,11 @@ $this->registerJs($js);
 
             </div>
         </div>
-
+      
        
              <?= $form->field($model, 'tests')->textarea(['rows' => 4, 'readonly' => true]) ?>
+
+             <?= Html::textInput('package_ids', '', ['class' => 'form-control', 'id'=>'package_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
           
              <?= $form->field($model, 'rstl_id')->hiddenInput(['value'=> 1])->label(false) ?>
 
@@ -156,11 +157,38 @@ $this->registerJs("$('#sample-sample_type_id').on('depdrop:afterChange',function
             url: '".Url::toRoute("packagelist/getpackage")."',
             dataType: 'json',
             method: 'GET',
+            data: {packagelist_id: id},
+            success: function (data, textStatus, jqXHR) {
+               
+                $('#packagelist-rate').val(data.rate);
+                $('#packagelist-tests').val(data.tests);
+                $('#package_ids').val(data.ids);
+                $('.image-loader').removeClass( \"img-loader\" );
+            },
+            beforeSend: function (xhr) {
+                //alert('Please wait...');
+                $('.image-loader').addClass( \"img-loader\" );
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('An error occured!');
+                alert('Error in ajax request');
+            }
+        });
+});");
+
+$this->registerJs("$('#sample-sample_type_id').on('change',function(){
+    var id = $('#sample-sample_type_id').val();
+        $.ajax({
+            url: '".Url::toRoute("packagelist/getpackage")."',
+            dataType: 'json',
+            method: 'GET',
             //data: {id: $(this).val()},
             data: {packagelist_id: id},
             success: function (data, textStatus, jqXHR) {
+             
                 $('#packagelist-rate').val(data.rate);
                 $('#packagelist-tests').val(data.tests);
+                $('#package_ids').val(data.ids);
                 $('.image-loader').removeClass( \"img-loader\" );
             },
             beforeSend: function (xhr) {

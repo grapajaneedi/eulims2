@@ -4,6 +4,7 @@ namespace frontend\modules\services\controllers;
 
 use Yii;
 use common\models\lab\Packagelist;
+use common\models\lab\Package;
 use common\models\lab\PackagelistSearch;
 use common\models\lab\Analysis;
 use common\models\lab\AnalysisSearch;
@@ -167,12 +168,16 @@ class PackagelistController extends Controller
                     //iloop yung mga tests dito (1,2,3,4,5)
                     //separate loop ang tests
 
+                    $test= $_POST['package_ids'];
+                    $test_ids = explode(',', $test);  
+
                  foreach ($ids as $sample_id){
                      $analysis = new Analysis();
 
                      //yung package name mo na ituuu
                      //test
-                     $modelpackage =  Packagelist::findOne(['package_id'=>$post['Packagelist']['name']]);
+                     $modelpackage =  Package::findOne(['id'=>$post['Packagelist']['name']]);
+
                      $analysis->sample_id = $sample_id;
                      $analysis->cancelled = 0;
                      $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
@@ -182,7 +187,7 @@ class PackagelistController extends Controller
                      $analysis->user_id = 1;
                      $analysis->type_fee_id = 2;
                      $analysis->sample_type_id = (int) $post['Packagelist']['sample_type_id'];
-                     $analysis->testcategory_id = (int) $post['Packagelist']['testcategory_id'];
+                     $analysis->testcategory_id = 1;
                      $analysis->is_package = 1;
                      $analysis->method = "-";
                      $analysis->fee = $post['Packagelist']['rate'];
@@ -192,6 +197,35 @@ class PackagelistController extends Controller
                      $analysis->sample_code = "sample";
                      $analysis->date_analysis = '2018-06-14 7:35:0';   
                      $analysis->save();
+
+
+                     foreach ($test_ids as $id){
+                        $analysis = new Analysis();
+   
+                        //yung package name mo na ituuu
+                        //test
+                        $modeltest=  Testname::findOne(['testname_id'=>$id]);
+   
+                        $analysis->sample_id = $sample_id;
+                        $analysis->cancelled = 0;
+                        $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
+                        $analysis->request_id = $request_id;
+                        $analysis->rstl_id = $GLOBALS['rstl_id'];
+                        $analysis->test_id = 1;
+                        $analysis->user_id = 1;
+                        $analysis->type_fee_id = 2;
+                        $analysis->sample_type_id = (int) $post['Packagelist']['sample_type_id'];
+                        $analysis->testcategory_id = 1;
+                        $analysis->is_package = 1;
+                        $analysis->method = "-";
+                        $analysis->fee = 0;
+                        $analysis->testname = "  ".$modeltest->testName;
+                        $analysis->references = "references";
+                        $analysis->quantity = 1;
+                        $analysis->sample_code = "sample";
+                        $analysis->date_analysis = '2018-06-14 7:35:0';   
+                        $analysis->save();
+                    }      
                  }      
                  
               
@@ -240,14 +274,21 @@ class PackagelistController extends Controller
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
-            $list = Packagelist::find()->andWhere(['sample_type_id'=>$id])->asArray()->all();
+            //$list = Package::find()->andWhere(['sampletype_id'=>$id])->asArray()->all();
+
+            $list =  Package::find()
+            ->innerJoin('tbl_sampletype', 'tbl_sampletype.sampletype_id=tbl_package.sampletype_id')
+            ->Where(['tbl_package.sampletype_id'=>2])
+            ->asArray()
+            ->all();
+
             $selected  = null;
             if ($id != null && count($list) > 0) {
                 $selected = '';
                 foreach ($list as $i => $package) {
-                    $out[] = ['id' => $package['package_id'], 'name' => $package['name']];
+                    $out[] = ['id' => $package['id'], 'name' => $package['name']];
                     if ($i == 0) {
-                        $selected = $package['package_id'];
+                        $selected = $package['id'];
                     }
                 }
                 
@@ -270,24 +311,23 @@ class PackagelistController extends Controller
     public function actionGetpackage() {
         if(isset($_GET['packagelist_id'])){
             $id = (int) $_GET['packagelist_id'];
-            $modelpackagelist =  Packagelist::findOne(['package_id'=>$id]);
+            $modelpackagelist =  Package::findOne(['id'=>$id]);
             if(count($modelpackagelist)>0){
                 $rate = $modelpackagelist->rate;
                 $tet = $modelpackagelist->tests;
 
-                $t = explode(',', $tet);
-               
-                foreach ($t as $test_id){
-                    $test_id =  Testname::findOne(['testname_id'=>$id]);
-
-                    $testname = $test_id->testName;
-                    $newline = "\n";
-                    $tests = $testname.$newline.$testname;
-                } 
+                $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";     
+                
+                $Connection = Yii::$app->labdb;
+                $command = $Connection->createCommand($sql);
+                $row = $command->queryOne();    
+                    $tests = $row['GROUP_CONCAT(testName)'];
+                 
                       
             } else {
                 $rate = "";
                 $tests = "";
+                
             }
         } else {
             $rate = "Error getting rate";
@@ -296,6 +336,7 @@ class PackagelistController extends Controller
         return Json::encode([
             'rate'=>$rate,
             'tests'=>$tests,
+            'ids'=>$tet,
         ]);
     }
 
@@ -371,11 +412,11 @@ class PackagelistController extends Controller
     {
         $sampletype = ArrayHelper::map(
             Packagelist::find()
-            ->leftJoin('tbl_sampletype', 'tbl_sampletype.sampletype_id=tbl_packagelist.sample_type_id')
-            ->Where(['tbl_packagelist.sample_type_id'=>$id])
-            ->all(), 'package_id', 
+            ->leftJoin('tbl_sampletype', 'tbl_sampletype.sampletype_id=tbl_package.sampletype_id')
+            ->Where(['tbl_package.sampletype_id'=>2])
+            ->all(), 'id', 
             function($sampletype, $defaultValue) {
-                return $sampletype->testName;
+                return $sampletype->name;
         });
 
         return $sampletype;
@@ -387,18 +428,18 @@ class PackagelistController extends Controller
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
           
-            $list =   Packagelist::find()
-            ->leftJoin('tbl_sampletype', 'tbl_sampletype.sampletype_id=tbl_packagelist.sample_type_id')
-            ->Where(['tbl_packagelist.sample_type_id'=>$id])
+            $list =   Package::find()
+            ->leftJoin('tbl_sampletype', 'tbl_sampletype.sampletype_id=tbl_package.sampletype_id')
+            ->Where(['tbl_package.sampletype_id'=>$id])
             ->asArray()
             ->all();
             $selected  = null;
             if ($id != null && count($list) > 0) {
                 $selected = '';
                 foreach ($list as $i => $sampletype) {
-                    $out[] = ['id' => $sampletype['package_id'], 'name' => $sampletype['name']];
+                    $out[] = ['id' => $sampletype['id'], 'name' => $sampletype['name']];
                     if ($i == 0) {
-                        $selected = $sampletype['package_id'];
+                        $selected = $sampletype['id'];
                     }
                 }
                 

@@ -233,9 +233,14 @@ $DiscountContent=GridView::widget([
             },
             'editableOptions' => [
                 'header' => 'Rate', 
-                'inputType' => \kartik\editable\Editable::INPUT_SPIN,
+                'inputType' => \kartik\editable\Editable::INPUT_MONEY,
                 'options' => [
-                    'pluginOptions' => ['min' => 0, 'max' => 5000]
+                    'pluginOptions' => [
+                        'min' => 0, 
+                        'prefix' => '',
+                        'max' => 5000,
+                        'decimal' => '.',
+                        'precision'=>2],
                 ],
                 'formOptions'=>['action' => ['/system/discount/updatediscount']],
             ],

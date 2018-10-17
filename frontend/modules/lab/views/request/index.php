@@ -93,15 +93,18 @@ $gg = 1;
                 'label'=>'Customer',
                 'vAlign' => 'middle',
                 'width' => '180px',
+               
                 'value' => function ($model, $key, $index, $widget) { 
                     return $model->customer ? $model->customer->customer_name : "";
                 },
+                //'group'=>true,  // enable grouping
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Customer::find()->orderBy('customer_name')->asArray()->all(), 'customer_id', 'customer_name'), 
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Select Customer'],
+               
                 'format' => 'raw',
                 'noWrap' => false,
                 'mergeHeader'=>true,

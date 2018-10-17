@@ -101,6 +101,30 @@ class SiteController extends Controller
      * @return mixed
      */
     public function actionIndex(){
+        /*$Payment_details=[];
+        $Payment_detail=[
+            'request_ref_num'=>"R9-072018-MET-0230",
+            'rrn_date_time'=>"2018-10-09 10:25:12",
+            'amount'=>3200
+        ];
+        array_push($Payment_details, $Payment_detail);
+        
+        $TransactDetails=[
+            'transaction_num'=>"R9-072018-MET-0230",
+            'customer_code'=>"11-011",
+            'email'=>"nolansunico@gmail.com",
+            'collection_type'=>"Testing",
+            'collection_code'=>'03-200',
+            'order_date'=>"2018-10-09",
+            'agency_code'=>"R9",
+            'total_amount'=>3200.00,
+            'payment_details'=>$Payment_details
+        ];
+        Yii::$app->response->format= yii\web\Response::FORMAT_JSON;
+        return $TransactDetails;
+        exit;
+         * 
+         */
         
         $listLab = array("Chemical", "Microbiology", "Metrology", "Rubber", "Test Lab", "Test Lab2", "Test Lab3","New Members","New Referrals");
         $listLabCode = array("Chemical", "Microbiology", "Metrology", "Rubber", "TestLab", "TestLab2", "TestLab3","","");

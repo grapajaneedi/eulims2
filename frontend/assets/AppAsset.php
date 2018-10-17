@@ -25,7 +25,9 @@ class AppAsset extends AssetBundle
         'js/nprogress.js',
         'js/ui/1.11.3/jquery-ui.min.js',
         'js/jquery.tabletojson.js',
-        'js/table.object.js'
+        'js/table.object.js',
+        'js/modal.js',
+        'js/progress_bar.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

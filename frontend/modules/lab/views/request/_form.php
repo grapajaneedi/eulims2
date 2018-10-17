@@ -18,6 +18,9 @@ use common\components\Functions;
 use yii\bootstrap\Modal;
 use common\models\lab\RequestType;
 use common\models\lab\Request;
+use kartik\widgets\DepDrop;
+use yii\helpers\Url;
+use yii\web\View;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
@@ -43,8 +46,10 @@ $js=<<<SCRIPT
         $("#request-discount_id").val(0).trigger('change');
         $("#request-discount_id").prop('disabled',true);
     }
-    $("#payment_type_id").val(this.value);   
+    $("#payment_type_id").val(this.value);  
 SCRIPT;
+
+        
 $rstl_id= Yii::$app->user->identity->profile->rstl_id;
 // Check Whether previous date will be disabled
 $TRequest=Request::find()->where(["DATE_FORMAT(`request_datetime`,'%Y-%m-%d')"=>date("Y-m-d"),'rstl_id'=>$rstl_id])->count();
@@ -53,6 +58,7 @@ if($TRequest>0){
 }else{
     $RequestStartDate="";
 }
+
 $model->modeofreleaseids=$model->modeofrelease_ids;
 ?>
 
@@ -68,6 +74,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
     <?= $form->field($model, 'modeofrelease_ids')->hiddenInput(['id'=>'modeofrelease_ids'])->label(false) ?>
     <?= $form->field($model, 'created_at')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'total')->hiddenInput(['maxlength' => true])->label(false) ?>
+    <input type="hidden" id="rstlid" name="rstlid" value="<?= $GLOBALS["rstl_id"] ?>">
 <div class="row">
     <div class="col-md-6">
     <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
@@ -76,7 +83,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
         'options' => ['placeholder' => 'Select Purpose','disabled'=>$disabled],
         'pluginOptions' => [
             'allowClear' => true
-        ],
+        ]
     ])->label('Request Type'); ?>
     </div>
     <div class="col-md-6">
@@ -108,12 +115,19 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
 </div>
 <div class="row">
     <div class="col-md-6">
-     <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
+     <?= $form->field($model, 'lab_id')->widget(DepDrop::classname(), [
+        //'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
+        'type'=>DepDrop::TYPE_SELECT2,
         'language' => 'en',
         'options' => ['placeholder' => 'Select Laboratory','disabled'=>$disabled],
         'pluginOptions' => [
             'allowClear' => true
+        ],
+        'pluginOptions'=>[
+           'depends'=>['rstlid','erequest-request_type_id'],
+           'placeholder'=>'Select Laboratory',
+           'url'=>Url::to(['/api/ajax/getlab']),
+           'LoadingText'=>'Loading...'
         ],
         'pluginEvents'=>[
             "change" => "function() { 

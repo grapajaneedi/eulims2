@@ -48,6 +48,7 @@ class ePayment {
         $TransactDetails=[
             'transaction_num'=>$Op->transactionnum,
             'customer_code'=>$Customer->customer_code,
+            'email'=>$Customer->email,
             'collection_type'=>$Op->collectiontype->natureofcollection,
             'collection_code'=>'collection-code',
             'order_date'=>$Op->order_date,

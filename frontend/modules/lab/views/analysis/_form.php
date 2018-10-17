@@ -126,11 +126,7 @@ $this->registerJs($js);
      ->Where(['tbl_sampletype_testname.sampletype_id'=>118])
      ->asArray()
      ->all();
-        
-        // echo "<pre>";
-        // var_dump( $list);
-        // echo "</pre>";
-        // exit;
+    
 ?>
     <div class="row">
     <div class="col-sm-6">
@@ -146,7 +142,6 @@ $this->registerJs($js);
     </div>
     <div class="col-sm-6">
 
-   
         <?= $form->field($model, 'test_id')->widget(DepDrop::classname(), [
             'type'=>DepDrop::TYPE_SELECT2,
             'data'=>$sampletype,

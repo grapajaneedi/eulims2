@@ -8,13 +8,27 @@ use common\components\Functions;
 use common\models\lab\Cancelledrequest;
 use common\models\lab\Discount;
 use common\models\lab\Request;
+use common\models\lab\Sample;
 use common\models\finance\Paymentitem;
+
+use common\models\lab\Package;
 
 $Connection = Yii::$app->financedb;
 $func = new Functions();
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
+
+// $list =   Package::find()
+// ->leftJoin('tbl_sampletype', 'tbl_sampletype.sampletype_id=tbl_package.sampletype_id')
+// ->Where(['tbl_package.sampletype_id'=>2])
+// ->asArray()
+// ->all();
+
+// var_dump($list);
+// exit;
+
+
 
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
@@ -408,6 +422,7 @@ $this->registerJs($PrintEvent);
     $enableRequest = false;
    }
 
+//    echo  $model->samples->samplename;
 
             $analysisgridColumns = [
                 [
@@ -419,7 +434,7 @@ $this->registerJs($PrintEvent);
                     'value' => function($model) {
                         return $model->sample ? $model->sample->samplename : '-';
                     },
-                    'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
+                    'contentOptions' => ['style' => 'width:20%; white-space: normal;'],
                    
                 ],
                 [
@@ -427,13 +442,15 @@ $this->registerJs($PrintEvent);
                     'header'=>'Sample Code',
                     'value' => function($model) {
                         return $model->sample ? $model->sample->sample_code : '-';
+
+                       // return $model->analysis_id;
                     },
                     'enableSorting' => false,
                 ],
                 [
                     'attribute'=>'testname',
                     'header'=>'Test/ Calibration Requested',
-                    'contentOptions' => ['style' => 'width: 40%;word-wrap: break-word;white-space:pre-line;'],
+                    'contentOptions' => ['style' => 'width: 30%;word-wrap: break-word;white-space:pre-line;'],
                     'enableSorting' => false,
                 ],
                 [
@@ -469,22 +486,33 @@ $this->registerJs($PrintEvent);
                             $id = substr($url, 21);
                             $requestquery = Request::find()->where(['request_id' => $id])->one();
                             $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
-
+                            $samplesquery = Sample::find()->where(['request_id' => $id])->one();
                             $rate =  $discountquery->rate;
                            
-                            $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=$id";
-                            $Connection = Yii::$app->labdb;
-                            $command = $Connection->createCommand($sql);
-                            $row = $command->queryOne();
-                            $subtotal = $row['subtotal'];
-                            $discounted = ($subtotal * ($rate/100));
-                            $total = $subtotal - $discounted;
-                           
-                            if ($total <= 0){
-                                return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0.00</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                            if ($samplesquery){
+                                $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE sample_id=$samplesquery->sample_id";     
+                                
+                                     $Connection = Yii::$app->labdb;
+                                     $command = $Connection->createCommand($sql);
+                                     $row = $command->queryOne();
+                                     $subtotal = $row['subtotal'];
+                                     $discounted = ($subtotal * ($rate/100));
+                                     $total = $subtotal - $discounted;
+                                    
+                                     if ($total <= 0){
+                                         return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0.00</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                                     }else{
+                                         return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($discounted, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                                     }
                             }else{
-                                return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($discounted, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                                return '';
+                               // return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0.00</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
                             }
+                           
+                           
+                           
+
+                           
                          
                       },
                 ],

@@ -67,6 +67,7 @@ class TestpackageController extends Controller
     public function actionCreate()
     {
         $model = new testpackage();
+        $sampletype = [];
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Test Package Successfully Created'); 
@@ -77,6 +78,7 @@ class TestpackageController extends Controller
           
             return $this->renderAjax('_form', [
                 'model' => $model,
+                'sampletype' => $sampletype,
             ]);
        }
 

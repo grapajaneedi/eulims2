@@ -88,13 +88,29 @@ class RequestController extends Controller
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $sampleDataProvider = new ActiveDataProvider([
                 'query' => $samplesQuery,
-                'pagination' => [
-                    'pageSize' => 10,
-                ],
-             
+                'pagination' => false,
         ]);
         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-        $analysisQuery = Analysis::find()->where(['request_id' => $id]);
+        
+        $samples = Sample::find()->where(['request_id' => $id])->all();
+        
+        $sample_ids = '';
+        foreach ($samples as $sample){
+            $sample_ids .= $sample->sample_id.",";
+        }
+        $sample_ids = substr($sample_ids, 0, strlen($sample_ids)-1);
+        // echo $sample_ids;
+        // exit;
+        $ids = explode(",", $sample_ids);
+
+        $analysisQuery = Analysis::find()
+        ->where(['IN', 'sample_id', $ids]);
+
+        
+
+     
+
+      //  $analysisQuery = Analysis::find()->where(['sample_id' =>$samples->sample_id]);
         $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
                 'pagination' =>false,
@@ -340,7 +356,7 @@ class RequestController extends Controller
             $model->total=0.00;
             $model->posted=0;
             $model->status_id=1;
-            $model->request_type_id=1;
+            $model->request_type_id=0;
             $model->modeofreleaseids='1';
             $model->payment_status_id=1;
             $model->request_date=date("Y-m-d");
