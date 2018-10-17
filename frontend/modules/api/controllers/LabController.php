@@ -38,8 +38,8 @@ class LabController extends Controller
      }
 
      public function actionRes(){
-        $month = "January";
-        $year =  "2018";
+        $month = $_POST['month'];
+        $year =  $_POST['year'];
             
          if ($month=="January"){
             $month_value = "01";
@@ -107,6 +107,7 @@ class LabController extends Controller
           $request_count = 0;
           $sample_count = 0;
           $analysis_count = 0;
+		  $count = 0;
 
          //Yii::$app->labdb->createCommand('set foreign_key_checks=0')->execute();
 			$transaction = $connection->beginTransaction();
@@ -157,7 +158,7 @@ class LabController extends Controller
                       $newRequest->customer_old_id= $request['customer_old_id'];
                       $newRequest->tmpCustomerID= $request['tmpCustomerID'];
                       $newRequest->save();
-                      //$request_count++;
+                      $request_count++;
 					  
 					  /* if($newRequest->save()){
 						  $flag = 1;
@@ -169,7 +170,7 @@ class LabController extends Controller
                       //$sample = $var['sample'];
                      
                       foreach ($request['sample'] as $samp){
-                          //$sample_count++;          
+                          $sample_count++;          
                           $newSample = new Restore_sample();
                           $newSample->rstl_id=$samp['rstl_id'];
                           $newSample->sample_id=$samp['sample_old_id'];
@@ -204,7 +205,7 @@ class LabController extends Controller
 						//$analyses = $var['analyses'];
              
 					foreach ($samp['analyses'] as $anals){
-						//$analysis_count++;
+						$analysis_count++;
 						$newanalysis = new Restore_analysis();
 						$newanalysis->analysis_id=$anals['analysis_old_id'];
 						$newanalysis->rstl_id=$anals['rstl_id'];
@@ -241,11 +242,15 @@ class LabController extends Controller
 							//$transaction->rollBack();
 							//echo $newanalysis->getErrors();
 						//}
-                   
+						$count++;
                     }
 				}
             }
-			$transaction->commit();
+			if(count($data) == $count){
+				$transaction->commit();
+			} else {
+				$transaction->rollBack();
+			}
 		} catch (\Exception $e) {
 		   $transaction->rollBack();
 		} catch (\Throwable $e) {
