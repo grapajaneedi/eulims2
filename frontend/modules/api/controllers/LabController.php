@@ -156,7 +156,7 @@ class LabController extends Controller
                       $newRequest->discount_id= $request['discount_id'];
                       $newRequest->customer_old_id= $request['customer_old_id'];
                       $newRequest->tmpCustomerID= $request['tmpCustomerID'];
-                      //$newRequest->save();
+                      $newRequest->save();
                       //$request_count++;
 					  
 					  /* if($newRequest->save()){
@@ -194,7 +194,7 @@ class LabController extends Controller
                           $newSample->oldColumn_batch_num=$samp['oldColumn_batch_num'];
                           $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                           $newSample->testcategory_id=$samp['testcategory_id'];
-                          //$newSample->save(true); 
+                          $newSample->save(true); 
 						  /* if($newSample->save()){
 							  $flag1 = 1;
 						  } else {
@@ -231,20 +231,21 @@ class LabController extends Controller
 						$newanalysis->testcategory_id=$anals['testcategory_id'];
 						$newanalysis->sample_type_id=$anals['sample_type_id'];
 						$newanalysis->old_sample_id=$anals['old_sample_id'];
-						//$newanalysis->save(true);
+						$newanalysis->save(true);
 						
-						if($newanalysis->save()){
-							$newRequest->save();
-							$newSample->save();
-							$transaction->commit();
-						} else {
-							$transaction->rollBack();
+						//if($newanalysis->save()){
+							//$newRequest->save();
+							//$newSample->save();
+							//$transaction->commit();
+						//} else {
+							//$transaction->rollBack();
 							//echo $newanalysis->getErrors();
-						}
+						//}
                    
                     }
 				}
             }
+			$transaction->commit();
 		} catch (\Exception $e) {
 		   $transaction->rollBack();
 		} catch (\Throwable $e) {
