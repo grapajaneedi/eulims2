@@ -246,11 +246,11 @@ class LabController extends Controller
                     }
 				}
             }
-			if(count($data) == $count){
+			//if(count($data) == $count){
 				$transaction->commit();
-			} else {
-				$transaction->rollBack();
-			}
+			//} else {
+				//$transaction->rollBack();
+			//}
 		} catch (\Exception $e) {
 		   $transaction->rollBack();
 		} catch (\Throwable $e) {
@@ -266,7 +266,7 @@ class LabController extends Controller
                     $model->date = date('Y-M-d');
                     $model->data = count($data)."/".$request_count;
                     $model->status = "COMPLETED";
-                    $model->month = $sample_count."/".$sample_count;
+                    $model->month = count($data)."/".$sample_count;
                     $model->year = $analysis_count."/".$analysis_count;
                      $model->year = $analysis_count."/".$analysis_count;
                     $model->save(false);
