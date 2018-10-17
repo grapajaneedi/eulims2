@@ -96,10 +96,10 @@ class LabController extends Controller
 			
 			$data = json_decode($response, true);
 		  
-		  /* echo "<pre>";
-		  print_r($request);
+		  echo "<pre>";
+		  print_r($data);
 		  echo "</pre>";
-		  exit; */
+		  exit;
        
           $sql = "SET FOREIGN_KEY_CHECKS = 0;";
           $Connection = Yii::$app->labdb;
@@ -108,8 +108,11 @@ class LabController extends Controller
           $sample_count = 0;
           $analysis_count = 0;
 
-         Yii::$app->labdb->createCommand('set foreign_key_checks=0')->execute();
-
+         //Yii::$app->labdb->createCommand('set foreign_key_checks=0')->execute();
+			$transaction = $connection->beginTransaction();
+			$connection->createCommand('set foreign_key_checks=0')->execute();
+			
+		try {
           foreach ($data as $request)
           {    
                       $newRequest = new Restore_request();    
@@ -154,13 +157,13 @@ class LabController extends Controller
                       $newRequest->customer_old_id= $request['customer_old_id'];
                       $newRequest->tmpCustomerID= $request['tmpCustomerID'];
                       $newRequest->save();
-                      $request_count++;
+                      //$request_count++;
           
 
                       //$sample = $var['sample'];
                      
                       foreach ($request['sample'] as $samp){
-                          $sample_count++;          
+                          //$sample_count++;          
                           $newSample = new Restore_sample();
                           $newSample->rstl_id=$samp['rstl_id'];
                           $newSample->sample_id=$samp['sample_old_id'];
@@ -190,7 +193,7 @@ class LabController extends Controller
 						//$analyses = $var['analyses'];
              
 					foreach ($samp['analyses'] as $anals){
-						$analysis_count++;
+						//$analysis_count++;
 						$newanalysis = new Restore_analysis();
 						$newanalysis->analysis_id=$anals['analysis_old_id'];
 						$newanalysis->rstl_id=$anals['rstl_id'];
@@ -217,11 +220,22 @@ class LabController extends Controller
 						$newanalysis->testcategory_id=$anals['testcategory_id'];
 						$newanalysis->sample_type_id=$anals['sample_type_id'];
 						$newanalysis->old_sample_id=$anals['old_sample_id'];
-						$newanalysis->save(true);
+						//$newanalysis->save(true);
+						
+						if($newanalysis->save()){
+							$transaction->commit();
+						} else {
+							$transaction->rollBack();
+						}
                    
                     }
 				}
             }
+		} catch (\Exception $e) {
+		   $transaction->rollBack();
+		} catch (\Throwable $e) {
+		   $transaction->rollBack();
+		}
               $sql = "SET FOREIGN_KEY_CHECKS = 1;"; 
 
                 $searchModel = new BackuprestoreSearch();
