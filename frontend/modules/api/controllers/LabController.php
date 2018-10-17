@@ -94,12 +94,12 @@ class LabController extends Controller
 
 			$response = curl_exec($curl);
 			
-			$request = json_decode($response, true);
+			$data = json_decode($response, true);
 		  
-		  echo "<pre>";
+		  /* echo "<pre>";
 		  print_r($request);
 		  echo "</pre>";
-		  exit;
+		  exit; */
        
           $sql = "SET FOREIGN_KEY_CHECKS = 0;";
           $Connection = Yii::$app->labdb;
@@ -110,56 +110,56 @@ class LabController extends Controller
 
          Yii::$app->labdb->createCommand('set foreign_key_checks=0')->execute();
 
-          foreach ($lab as $var)
+          foreach ($data as $request)
           {    
                       $newRequest = new Restore_request();    
-                      $newRequest->request_id = $var['request_old_id'];
-                      $newRequest->request_ref_num = $var['request_ref_num'];
-                      $newRequest->request_datetime= $var['request_datetime'];
-                      $newRequest->rstl_id= $var['rstl_id'];
-                      $newRequest->lab_id= $var['lab_id'];
-                      $newRequest->customer_id= $var['customer_id'];
-                      $newRequest->payment_type_id= $var['payment_type_id'];
-                      $newRequest->modeofrelease_ids= $var['modeofrelease_ids'];
-                      $newRequest->discount = $var['discount'];
-                      $newRequest->purpose_id= $var['purpose_id'];
-                      $newRequest->conforme= $var['conforme'];
-                      $newRequest->report_due= $var['report_due'];
-                      $newRequest->total = $var['total'];
-                      $newRequest->receivedBy = $var['receivedBy'];
-                      $newRequest->recommended_due_date = $var['recommended_due_date'];
-                      $newRequest->est_date_completion = $var['est_date_completion'];
-                      $newRequest->items_receive_by = $var['items_receive_by'];
-                      $newRequest->equipment_release_date = $var['equipment_release_date'];
-                      $newRequest->certificate_release_date = $var['certificate_release_date'];
-                      $newRequest->released_by = $var['released_by'];
-                      $newRequest->posted = $var['posted'];
-                      $newRequest->status_id = $var['status_id'];
-                      $newRequest->selected = $var['selected'];
-                      $newRequest->other_fees_id = $var['other_fees_id'];
-                      $newRequest->request_type_id = $var['request_type_id'];
-                      $newRequest->position = $var['position'];
-                      $newRequest->completed = $var['completed'];
-                      $newRequest->received_by = $var['received_by'];
-                      $newRequest->payment_status_id = $var['payment_status_id'];
-                      $newRequest->oldColumn_requestId= $var['oldColumn_requestId'];
-                      $newRequest->oldColumn_sublabId= $var['oldColumn_sublabId'];
-                      $newRequest->oldColumn_orId = $var['oldColumn_orId'];
-                      $newRequest->oldColumn_completed= $var['oldColumn_completed'];
-                      $newRequest->oldColumn_cancelled= $var['oldColumn_cancelled'];
-                      $newRequest->oldColumn_create_time= $var['oldColumn_create_time'];
-                      $newRequest->request_old_id= $var['request_old_id'];
-                      $newRequest->created_at= $var['created_at'];
-                      $newRequest->discount_id= $var['discount_id'];
-                      $newRequest->customer_old_id= $var['customer_old_id'];
-                      $newRequest->tmpCustomerID= $var['tmpCustomerID'];
+                      $newRequest->request_id = $request['request_old_id'];
+                      $newRequest->request_ref_num = $request['request_ref_num'];
+                      $newRequest->request_datetime= $request['request_datetime'];
+                      $newRequest->rstl_id= $request['rstl_id'];
+                      $newRequest->lab_id= $request['lab_id'];
+                      $newRequest->customer_id= $request['customer_id'];
+                      $newRequest->payment_type_id= $request['payment_type_id'];
+                      $newRequest->modeofrelease_ids= $request['modeofrelease_ids'];
+                      $newRequest->discount = $request['discount'];
+                      $newRequest->purpose_id= $request['purpose_id'];
+                      $newRequest->conforme= $request['conforme'];
+                      $newRequest->report_due= $request['report_due'];
+                      $newRequest->total = $request['total'];
+                      $newRequest->receivedBy = $request['receivedBy'];
+                      $newRequest->recommended_due_date = $request['recommended_due_date'];
+                      $newRequest->est_date_completion = $request['est_date_completion'];
+                      $newRequest->items_receive_by = $request['items_receive_by'];
+                      $newRequest->equipment_release_date = $request['equipment_release_date'];
+                      $newRequest->certificate_release_date = $request['certificate_release_date'];
+                      $newRequest->released_by = $request['released_by'];
+                      $newRequest->posted = $request['posted'];
+                      $newRequest->status_id = $request['status_id'];
+                      $newRequest->selected = $request['selected'];
+                      $newRequest->other_fees_id = $request['other_fees_id'];
+                      $newRequest->request_type_id = $request['request_type_id'];
+                      $newRequest->position = $request['position'];
+                      $newRequest->completed = $request['completed'];
+                      $newRequest->received_by = $request['received_by'];
+                      $newRequest->payment_status_id = $request['payment_status_id'];
+                      $newRequest->oldColumn_requestId= $request['oldColumn_requestId'];
+                      $newRequest->oldColumn_sublabId= $request['oldColumn_sublabId'];
+                      $newRequest->oldColumn_orId = $request['oldColumn_orId'];
+                      $newRequest->oldColumn_completed= $request['oldColumn_completed'];
+                      $newRequest->oldColumn_cancelled= $request['oldColumn_cancelled'];
+                      $newRequest->oldColumn_create_time= $request['oldColumn_create_time'];
+                      $newRequest->request_old_id= $request['request_old_id'];
+                      $newRequest->created_at= $request['created_at'];
+                      $newRequest->discount_id= $request['discount_id'];
+                      $newRequest->customer_old_id= $request['customer_old_id'];
+                      $newRequest->tmpCustomerID= $request['tmpCustomerID'];
                       $newRequest->save();
                       $request_count++;
           
 
-                      $sample = $var['sample'];
+                      //$sample = $var['sample'];
                      
-                      foreach ($sample as $samp){
+                      foreach ($request['sample'] as $samp){
                           $sample_count++;          
                           $newSample = new Restore_sample();
                           $newSample->rstl_id=$samp['rstl_id'];
@@ -187,9 +187,9 @@ class LabController extends Controller
                           $newSample->testcategory_id=$samp['testcategory_id'];
                           $newSample->save(true); 
                           
-						$analyses = $var['analyses'];
+						//$analyses = $var['analyses'];
              
-					foreach ($analyses as $anals){
+					foreach ($samp['analyses'] as $anals){
 						$analysis_count++;
 						$newanalysis = new Restore_analysis();
 						$newanalysis->analysis_id=$anals['analysis_old_id'];
