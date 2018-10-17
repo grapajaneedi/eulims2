@@ -1,7 +1,6 @@
 <?php 
 
 namespace frontend\modules\api\controllers;
-set_time_limit(600);
 use yii\web\Controller;
 use Yii;
 use linslin\yii2\curl;
@@ -14,6 +13,8 @@ use common\models\lab\Customer;
 use common\models\lab\BackuprestoreSearch;
 use common\models\lab\Backuprestore;
 use yii\helpers\Json;
+
+set_time_limit(600);
 
 /**
  * Default controller for the `Lab` module
@@ -37,8 +38,8 @@ class LabController extends Controller
      }
 
      public function actionRes(){
-        $month = $_POST['month'];
-        $year =  $_POST['year'];
+        $month = "January";
+        $year =  "2018";
             
          if ($month=="January"){
             $month_value = "01";
@@ -66,8 +67,8 @@ class LabController extends Controller
             $month_value = "12";
         }
 
-        $start = date('Y-m-d',strtotime($year."-".$month_value."-01"));
-        $end = date('Y-m-d',strtotime($year."-".$month_value."-31"));
+        $start = $year."-".$month_value;
+        $end = $year."-".$month_value;
 
         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
 
@@ -75,13 +76,30 @@ class LabController extends Controller
   
           $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&reqds=".$start."&reqde=".$end;
 
-          $curl = new curl\Curl();
+          //$curl = new curl\Curl();
 
-          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+          //$curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
      
-          $responselab = $curl->get($apiUrl);
+          //$responselab = $curl->get($apiUrl);
           
-          $lab = Json::decode($responselab);
+          //$lab = Json::decode($responselab,true);
+		  
+			$curl = curl_init();
+				
+			curl_setopt($curl, CURLOPT_URL, $apiUrl);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
+			curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+			$response = curl_exec($curl);
+			
+			$request = json_decode($response, true);
+		  
+		  echo "<pre>";
+		  print_r($request);
+		  echo "</pre>";
+		  exit;
        
           $sql = "SET FOREIGN_KEY_CHECKS = 0;";
           $Connection = Yii::$app->labdb;
@@ -169,41 +187,40 @@ class LabController extends Controller
                           $newSample->testcategory_id=$samp['testcategory_id'];
                           $newSample->save(true); 
                           
-              }    
-              
-              $analyses = $var['analyses'];
+						$analyses = $var['analyses'];
              
-              foreach ($analyses as $anals){
-                      $analysis_count++;
-                      $newanalysis = new Restore_analysis();
-                      $newanalysis->analysis_id=$anals['analysis_old_id'];
-                      $newanalysis->rstl_id=$anals['rstl_id'];
-                      $newanalysis->pstcanalysis_id=$anals['pstcanalysis_id'];
-                      $newanalysis->sample_id =$anals['old_sample_id'];
-                      $newanalysis->sample_code=$anals['sample_code'];
-                      $newanalysis->testname=$anals['testname'];
-                      $newanalysis->method=$anals['method'];
-                      $newanalysis->references=$anals['references'];
-                      $newanalysis->quantity=$anals['quantity'];
-                      $newanalysis->fee=$anals['fee'];
-                      $newanalysis->test_id=$anals['test_id'];
-                      $newanalysis->cancelled=$anals['cancelled'];
-                      $newanalysis->date_analysis=$anals['date_analysis'];
-                      $newanalysis->user_id=$anals['user_id'];
-                      $newanalysis->is_package=$anals['is_package'];
-                      $newanalysis->oldColumn_deleted=$anals['oldColumn_deleted'];
-                      $newanalysis->analysis_old_id=$anals['analysis_old_id'];
-                      $newanalysis->oldColumn_taggingId=$anals['oldColumn_taggingId'];
-                      $newanalysis->oldColumn_result=$anals['oldColumn_result'];
-                      $newanalysis->oldColumn_package_count=$anals['oldColumn_package_count'];
-                      $newanalysis->oldColumn_requestId=$anals['oldColumn_requestId'];
-                      $newanalysis->request_id =  43;
-                      $newanalysis->testcategory_id=$anals['testcategory_id'];
-                      $newanalysis->sample_type_id=$anals['sample_type_id'];
-                      $newanalysis->old_sample_id=$anals['old_sample_id'];
-                      $newanalysis->save(true);
+					foreach ($analyses as $anals){
+						$analysis_count++;
+						$newanalysis = new Restore_analysis();
+						$newanalysis->analysis_id=$anals['analysis_old_id'];
+						$newanalysis->rstl_id=$anals['rstl_id'];
+						$newanalysis->pstcanalysis_id=$anals['pstcanalysis_id'];
+						$newanalysis->sample_id =$anals['old_sample_id'];
+						$newanalysis->sample_code=$anals['sample_code'];
+						$newanalysis->testname=$anals['testname'];
+						$newanalysis->method=$anals['method'];
+						$newanalysis->references=$anals['references'];
+						$newanalysis->quantity=$anals['quantity'];
+						$newanalysis->fee=$anals['fee'];
+						$newanalysis->test_id=$anals['test_id'];
+						$newanalysis->cancelled=$anals['cancelled'];
+						$newanalysis->date_analysis=$anals['date_analysis'];
+						$newanalysis->user_id=$anals['user_id'];
+						$newanalysis->is_package=$anals['is_package'];
+						$newanalysis->oldColumn_deleted=$anals['oldColumn_deleted'];
+						$newanalysis->analysis_old_id=$anals['analysis_old_id'];
+						$newanalysis->oldColumn_taggingId=$anals['oldColumn_taggingId'];
+						$newanalysis->oldColumn_result=$anals['oldColumn_result'];
+						$newanalysis->oldColumn_package_count=$anals['oldColumn_package_count'];
+						$newanalysis->oldColumn_requestId=$anals['oldColumn_requestId'];
+						$newanalysis->request_id =  43;
+						$newanalysis->testcategory_id=$anals['testcategory_id'];
+						$newanalysis->sample_type_id=$anals['sample_type_id'];
+						$newanalysis->old_sample_id=$anals['old_sample_id'];
+						$newanalysis->save(true);
                    
                     }
+				}
             }
               $sql = "SET FOREIGN_KEY_CHECKS = 1;"; 
 
