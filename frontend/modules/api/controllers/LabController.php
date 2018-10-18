@@ -66,11 +66,11 @@ class LabController extends Controller
             $month_value = "12";
         }
 
-        //$start = $year."-".$month_value;
-        //$end = $year."-".$month_value;
+        $start = $year."-".$month_value;
+        $end = $year."-".$month_value;
 		
-		$start = "2018-01-01";
-		$end = "2018-01-03";
+		//$start = "2018-01-04";
+		//$end = "2018-01-06";
 
         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
 
@@ -244,15 +244,17 @@ class LabController extends Controller
 							//$transaction->rollBack();
 							//echo $newanalysis->getErrors();
 						//}
-						$count++;
+						//$count++;
                     }
 				}
+				$samplenum = $request['countSample']++;
+				$analysesnum = $request['countAnalysis']++;
             }
-			//if(count($data) == $count){
+			if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
 				$transaction->commit();
-			//} else {
-				//$transaction->rollBack();
-			//}
+			} else {
+				$transaction->rollBack();
+			}
 		} catch (\Exception $e) {
 		   $transaction->rollBack();
 		} catch (\Throwable $e) {
