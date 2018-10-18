@@ -37,7 +37,9 @@ class LabController extends Controller
          ]);
      }
      public function actionRes(){
-		 
+		
+		$searchModel = new BackuprestoreSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$model = new Backuprestore();
 		 
         $month = $_POST['month'];
@@ -263,10 +265,7 @@ class LabController extends Controller
 			if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
 				$transaction->commit();
 				
-				$sql = "SET FOREIGN_KEY_CHECKS = 1;"; 
-
-                $searchModel = new BackuprestoreSearch();
-                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+				$sql = "SET FOREIGN_KEY_CHECKS = 1;";
                 
 				$model->activity = "Restored data for the month of ".$month."-".$year;
 				$model->date = date('Y-M-d');
