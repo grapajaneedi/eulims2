@@ -37,6 +37,9 @@ class LabController extends Controller
          ]);
      }
      public function actionRes(){
+		 
+		$model = new Backuprestore();
+		 
         $month = $_POST['month'];
         $year =  $_POST['year'];
             
@@ -265,7 +268,6 @@ class LabController extends Controller
                 $searchModel = new BackuprestoreSearch();
                 $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
                 
-				$model = new Backuprestore();
 				$model->activity = "Restored data for the month of ".$month."-".$year;
 				$model->date = date('Y-M-d');
 				$model->data = count($data)."/".$request_count;
