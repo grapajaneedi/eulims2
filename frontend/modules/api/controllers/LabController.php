@@ -262,7 +262,7 @@ class LabController extends Controller
 					$transaction->rollBack();
 				} */
             }
-			if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
+			//if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
 				$transaction->commit();
 				
 				$sql = "SET FOREIGN_KEY_CHECKS = 1;";
@@ -275,9 +275,9 @@ class LabController extends Controller
 				$model->year = $analysis_count."/".$analysis_count;
 				$model->year = $analysis_count."/".$analysesnum;
 				$model->save(false);
-			} else {
-				$transaction->rollBack();
-			}
+			//} else {
+				//$transaction->rollBack();
+			//}
 			//$transaction->commit();
 		} catch (\Exception $e) {
 		   $transaction->rollBack();
