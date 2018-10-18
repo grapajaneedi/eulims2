@@ -1,7 +1,7 @@
 <?php 
 
 namespace frontend\modules\api\controllers;
-
+set_time_limit(600);
 use yii\web\Controller;
 use Yii;
 use linslin\yii2\curl;
@@ -66,10 +66,15 @@ class LabController extends Controller
             $month_value = "12";
         }
 
+        $start = date('Y-m-d',strtotime($year."-".$month_value."-01"));
+        $end = date('Y-m-d',strtotime($year."-".$month_value."-31"));
+
         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
 
-          $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".$GLOBALS['rstl_id']."&reqds=".$year."-".$month_value."-01&reqde=".$year."-".$month_value."-31&pp=5&page=1";
+          //$apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".$GLOBALS['rstl_id']."&reqds=".$year."-".$month_value."-01&reqde=".$year."-".$month_value."-31&pp=5&page=1";
   
+          $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&reqds=".$start."&reqde=".$end;
+
           $curl = new curl\Curl();
 
           $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
@@ -162,8 +167,9 @@ class LabController extends Controller
                           $newSample->oldColumn_batch_num=$samp['oldColumn_batch_num'];
                           $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                           $newSample->testcategory_id=$samp['testcategory_id'];
-                          $newSample->save(); 
-                }    
+                          $newSample->save(true); 
+                          
+              }    
               
               $analyses = $var['analyses'];
              
@@ -195,7 +201,8 @@ class LabController extends Controller
                       $newanalysis->testcategory_id=$anals['testcategory_id'];
                       $newanalysis->sample_type_id=$anals['sample_type_id'];
                       $newanalysis->old_sample_id=$anals['old_sample_id'];
-                      $newanalysis->save();
+                      $newanalysis->save(true);
+                   
                     }
             }
               $sql = "SET FOREIGN_KEY_CHECKS = 1;"; 
