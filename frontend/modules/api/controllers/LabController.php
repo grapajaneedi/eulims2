@@ -272,7 +272,7 @@ class LabController extends Controller
 				$model->data = count($data)."/".$request_count;
 				$model->status = "COMPLETED";
 				$model->month = $sample_count."/".$samplenum;
-				$model->year = $analysis_count."/".$analysis_count;
+				//$model->year = $analysis_count."/".$analysis_count;
 				$model->year = $analysis_count."/".$analysesnum;
 				$model->save(false);
 			//} else {
