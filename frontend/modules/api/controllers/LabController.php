@@ -109,7 +109,8 @@ class LabController extends Controller
           $request_count = 0;
           $sample_count = 0;
           $analysis_count = 0;
-		  $count = 0;
+		  $samplenum = 0;
+		  $analysesnum = 0;
 
          //Yii::$app->labdb->createCommand('set foreign_key_checks=0')->execute();
 			$transaction = $connection->beginTransaction();
@@ -247,34 +248,41 @@ class LabController extends Controller
 						//$count++;
                     }
 				}
-				$samplenum = $request['countSample']++;
-				$analysesnum = $request['countAnalysis']++;
+				$samplenum = $samplenum + $request['countSample'];
+				$analysesnum = $analysesnum + $request['countAnalysis'];
 				
-				if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
+				/* if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
 					$transaction->commit();
 				} else {
 					$transaction->rollBack();
-				}
+				} */
             }
+			if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
+				$transaction->commit();
+				
+				$sql = "SET FOREIGN_KEY_CHECKS = 1;"; 
+
+                $searchModel = new BackuprestoreSearch();
+                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+                
+				$model = new Backuprestore();
+				$model->activity = "Restored data for the month of ".$month."-".$year;
+				$model->date = date('Y-M-d');
+				$model->data = count($data)."/".$request_count;
+				$model->status = "COMPLETED";
+				$model->month = $sample_count."/".$samplenum;
+				$model->year = $analysis_count."/".$analysis_count;
+				$model->year = $analysis_count."/".$analysesnum;
+				$model->save(false);
+			} else {
+				$transaction->rollBack();
+			}
+			//$transaction->commit();
 		} catch (\Exception $e) {
 		   $transaction->rollBack();
 		} catch (\Throwable $e) {
 		   $transaction->rollBack();
 		}
-              $sql = "SET FOREIGN_KEY_CHECKS = 1;"; 
-
-                $searchModel = new BackuprestoreSearch();
-                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-                
-                    $model = new Backuprestore();
-                    $model->activity = "Restored data for the month of ".$month."-".$year;
-                    $model->date = date('Y-M-d');
-                    $model->data = count($data)."/".$request_count;
-                    $model->status = "COMPLETED";
-                    $model->month = $sample_count."/".$samplenum;
-                    $model->year = $analysis_count."/".$analysis_count;
-                     $model->year = $analysis_count."/".$analysesnum;
-                    $model->save(false);
 
 
            //   Yii::$app->session->setFlash('success', ' Records Successfully Restored'.$request_count); 
