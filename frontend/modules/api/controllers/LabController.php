@@ -249,12 +249,13 @@ class LabController extends Controller
 				}
 				$samplenum = $request['countSample']++;
 				$analysesnum = $request['countAnalysis']++;
+				
+				if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
+					$transaction->commit();
+				} else {
+					$transaction->rollBack();
+				}
             }
-			if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
-				$transaction->commit();
-			} else {
-				$transaction->rollBack();
-			}
 		} catch (\Exception $e) {
 		   $transaction->rollBack();
 		} catch (\Throwable $e) {
@@ -270,9 +271,9 @@ class LabController extends Controller
                     $model->date = date('Y-M-d');
                     $model->data = count($data)."/".$request_count;
                     $model->status = "COMPLETED";
-                    $model->month = count($data)."/".$sample_count;
+                    $model->month = $sample_count."/".$samplenum;
                     $model->year = $analysis_count."/".$analysis_count;
-                     $model->year = $analysis_count."/".$analysis_count;
+                     $model->year = $analysis_count."/".$analysesnum;
                     $model->save(false);
 
 
