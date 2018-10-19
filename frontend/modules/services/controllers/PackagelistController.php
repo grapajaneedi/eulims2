@@ -321,9 +321,7 @@ class PackagelistController extends Controller
                 $Connection = Yii::$app->labdb;
                 $command = $Connection->createCommand($sql);
                 $row = $command->queryOne();    
-                    $tests = $row['GROUP_CONCAT(testName)'];
-                 
-                      
+                    $tests = $row['GROUP_CONCAT(testName)'];               
             } else {
                 $rate = "";
                 $tests = "";
