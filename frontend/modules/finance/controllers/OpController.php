@@ -359,6 +359,7 @@ class OpController extends Controller
             ->update('tbl_request', ['posted' => 1], 'request_id= '.$str_total[$i])
             ->execute(); 
          }
+         
      }
      
      public function updateTotalOP($id,$total){
@@ -480,7 +481,11 @@ class OpController extends Controller
 
         }
         $this->postRequest($request_ids);
-        return $total_amount;
+        $sum = Paymentitem::find()->where(['orderofpayment_id' => $opid])
+                 ->andWhere(['status' => 1])
+                 ->sum('amount');
+        $this->updateTotalOP($opid, $sum); 
+         return $total_amount;
     }
     
     protected function findModelReceipt($id)
