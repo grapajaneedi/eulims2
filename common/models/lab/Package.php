@@ -39,11 +39,11 @@ class Package extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'testcategory_id', 'sampletype_id', 'name', 'rate', 'tests'], 'required'],
-            [['rstl_id', 'testcategory_id', 'sampletype_id'], 'integer'],
-            [['rate'], 'number'],
-            [['name'], 'string', 'max' => 40],
-            [['tests'], 'string', 'max' => 100],
+            // [['rstl_id', 'testcategory_id', 'sampletype_id', 'name', 'rate', 'tests'], 'required'],
+            // [['rstl_id', 'testcategory_id', 'sampletype_id'], 'integer'],
+            // [['rate'], 'number'],
+            // [['name'], 'string', 'max' => 40],
+            // [['tests'], 'string', 'max' => 100],
         ];
     }
 
@@ -56,7 +56,7 @@ class Package extends \yii\db\ActiveRecord
             'id' => 'ID',
             'rstl_id' => 'Rstl ID',
             'testcategory_id' => 'Testcategory ID',
-            'sampletype_id' => 'Sampletype ID',
+            'sampletype_id' => 'Sample type',
             'name' => 'Name',
             'rate' => 'Rate',
             'tests' => 'Tests',
@@ -67,5 +67,11 @@ class Package extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletype_id']);
     }
+
+    // public function getSampletype()
+    // {
+    //     return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletype_id']);
+    // }
+
 
 }

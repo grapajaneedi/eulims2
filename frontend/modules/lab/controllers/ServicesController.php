@@ -366,10 +366,10 @@ class ServicesController extends Controller
           $apiUrl_sampletype="https://eulimsapi.onelab.ph/api/web/v1/sampletypes/search?sampletype_id=".$sampletypeid;
           $curl = new curl\Curl();
           $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-          $response = $curl->get($apiUrl_sampletype);
-          $decode=Json::decode($response,TRUE);
+          $response_sampletype = $curl->get($apiUrl_sampletype);
+          $decode_sampletype=Json::decode($response_sampletype,TRUE);
 
-          foreach ($decode as $var)
+          foreach ($decode_sampletype as $var)
           {      
               //if exit dont add the sampletype
               $sampletype = Sampletype::find()->where(['sampletype_id'=>$sampletypeid])->one();
@@ -388,15 +388,15 @@ class ServicesController extends Controller
 
          //GALING SA API query via $sampletype_id
 
-         $apiUrl_labsampletype="https://eulimsapi.onelab.ph/api/web/v1/labsampletypes/search?sampletype_id=".$sampletypeid;
+         $apiUrl_labsampletype="https://eulimsapi.onelab.ph/api/web/v1/labsampletypes/search?lab_sampletype_id=".$labsampletypeid;
          $curl = new curl\Curl();
          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-         $response = $curl->get($apiUrl_labsampletype);
-         $decode=Json::decode($response,TRUE);
+         $response_labsampletype = $curl->get($apiUrl_labsampletype);
+         $decode_labsampletype=Json::decode($response_labsampletype,TRUE);
 
-         foreach ($decode as $var)
+         foreach ($decode_labsampletype as $var)
          { 
-            $labsampletype = Labsampletype::find()->where(['sampletype_id'=>$sampletypeid])->one();
+            $labsampletype = Labsampletype::find()->where(['lab_sampletype_id'=>$labsampletypeid])->one();
             if ($labsampletype){
 
             }else{
@@ -412,13 +412,13 @@ class ServicesController extends Controller
 
         //  GALING SA API query via $sampletype_id
         //  HERE
-         $apiUrl_testnamemethod="https://eulimsapi.onelab.ph/api/web/v1/testnamemethods/search?testname_id=".$testname;
+         $apiUrl_testnamemethod="https://eulimsapi.onelab.ph/api/web/v1/testnamemethods/search?testname_method_id=".$testnamemethod;
          $curl = new curl\Curl();
          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-         $response = $curl->get($apiUrl_testnamemethod);
-         $decode=Json::decode($response,TRUE);
+         $response_testnamemethod = $curl->get($apiUrl_testnamemethod);
+         $decode_testnamemethod =Json::decode($response_testnamemethod,TRUE);
 
-         foreach ($decode as $var)
+         foreach ($decode_testnamemethod as $var)
          { 
             $testnamemethod = Testnamemethod::find()->where(['testname_method_id'=>$testnamemethod])->one();
             if ($testnamemethod){
@@ -438,10 +438,10 @@ class ServicesController extends Controller
          $apiUrl_testnames="https://eulimsapi.onelab.ph/api/web/v1/testnames/search?testname_id=".$testname;
          $curl = new curl\Curl();
          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-         $response = $curl->get($apiUrl_testnames);
-         $decode=Json::decode($response,TRUE);
+         $response_testnames = $curl->get($apiUrl_testnames);
+         $decode_testnames=Json::decode($response_testnames,TRUE);
 
-         foreach ($decode as $var)
+         foreach ($decode_testnames as $var)
          { 
             $testname = Testname::find()->where(['testname_id'=>$testname])->one();
             if ($testname){
@@ -456,13 +456,13 @@ class ServicesController extends Controller
             }
          }
 
-         $apiUrl_sampletypetestnames="https://eulimsapi.onelab.ph/api/web/v1/sampletypetestnames/search?sampletype_id=".$sampletype;
+         $apiUrl_sampletypetestnames="https://eulimsapi.onelab.ph/api/web/v1/sampletypetestnames/search?sampletype_testname_id=".$sampletypetestname;
          $curl = new curl\Curl();
          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-         $response = $curl->get($apiUrl_sampletypetestnames);
-         $decode=Json::decode($response,TRUE);
+         $response_sampletypetestnames = $curl->get($apiUrl_sampletypetestnames);
+         $decode_sampletypetestnames=Json::decode($response_sampletypetestnames,TRUE);
 
-         foreach ($decode as $var)
+         foreach ($decode_sampletypetestnames as $var)
          { 
             $sampletypetestname = Sampletypetestname::find()->where(['sampletype_testname_id'=>$sampletypetestname])->one();
             if ($sampletypetestname){
@@ -485,10 +485,10 @@ class ServicesController extends Controller
           $apiUrl_methodreference="https://eulimsapi.onelab.ph/api/web/v1/methodreferences/search?method_reference_id=".$methodreferenceid;
           $curl = new curl\Curl();
           $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-          $response = $curl->get($apiUrl_methodreference);
-          $decode=Json::decode($response,TRUE);
+          $response_methodreference = $curl->get($apiUrl_methodreference);
+          $decode_methodreference =Json::decode($response_methodreference,TRUE);
 
-          foreach ($decode as $var)
+          foreach ($decode_methodreference as $var)
           { 
                   $methodreference = Methodreference::find()->where(['method_reference_id'=>$methodreferenceid])->one();
                   if ($methodreference){
@@ -517,7 +517,10 @@ class ServicesController extends Controller
           $Connection= Yii::$app->labdb;
           $sql="DELETE FROM `tbl_services`  WHERE `method_reference_id`=".$id." AND `rstl_id`=".$GLOBALS['rstl_id']." ";
           $Command=$Connection->createCommand($sql);
-          $Command->execute();   
+          $Command->execute();
+          
+          
+          //delete lahat
      }
 
      public function actionSync()
