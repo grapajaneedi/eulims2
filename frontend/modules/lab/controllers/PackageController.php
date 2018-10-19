@@ -8,6 +8,7 @@ use common\models\lab\PackageSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
 
 /**
  * PackageController implements the CRUD actions for Package model.
@@ -75,7 +76,7 @@ class PackageController extends Controller
                     $model->sampletype_id= $post['Package']['sampletype_id'];
                     $model->name= $post['Package']['name'];
                     $model->rate= $post['Package']['rate'];
-                    $model->tests= $post['Package']['tests'];
+                    $model->tests= $post['sample_ids'];
                     $model->save(); 
                     Yii::$app->session->setFlash('success', 'Package Successfully Created'); 
                     return $this->runAction('index');
@@ -143,5 +144,33 @@ class PackageController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionGetpackage() {
+        if(isset($_GET['id'])){
+            $id = (int) $_GET['id'];
+
+           
+             $modelpackagelist =  Package::findOne(['id'=>$id]);
+           
+                $tet = $modelpackagelist->tests;
+              
+                $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";     
+                
+                $Connection = Yii::$app->labdb;
+                $command = $Connection->createCommand($sql);
+                $row = $command->queryOne();    
+                    $tests = $row['GROUP_CONCAT(testName)'];
+                 
+                      
+        
+        } else {
+         
+        }
+        return Json::encode([
+           
+            'tests'=>$tests,
+           
+        ]);
     }
 }
