@@ -27,6 +27,7 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
     <?= $form->field($model,'sampletype_id')->widget(Select2::classname(),[
                     'data' => $sampletypelist,
                     'theme' => Select2::THEME_KRAJEE,
+                    'options' => ['id'=>'sample-testcategory_id'],
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
             ])
     ?>
@@ -41,7 +42,7 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
     <?= $form->field($model, 'tests')->widget(DepDrop::classname(), [
             'type'=>DepDrop::TYPE_SELECT2,
             'data'=>$sampletype,
-            'options'=>['id'=>'sample-sample_type_id'],
+            'options'=>['id'=>'sample-sample_type_id',  'multiple' => true,],
             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
             'pluginOptions'=>[
                 'depends'=>['sample-testcategory_id'],
@@ -52,8 +53,9 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
         ])
         ?>
 
-      <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids'], ['readonly' => true]) ?>
+      <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>'hidden'], ['readonly' => true]) ?>
 
+<br>
     <div class="form-group pull-right">
     <?php if(Yii::$app->request->isAjax){ ?>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -62,5 +64,40 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
     </div>
 
     <?php ActiveForm::end(); ?>
+
+    <?php
+  $this->registerJs('var temp = [];');  
+
+$this->registerJs("$('#sample-sample_type_id').on('change',function(){
+    var id = $('#sample-sample_type_id').val();
+  
+    temp.push(id);
+
+    $('#sample_ids').val(id);
+
+
+        // $.ajax({
+        //     url: '".Url::toRoute("package/getpackage")."',
+        //     dataType: 'json',
+        //     method: 'GET',
+        //     data: {id: id},
+        //     success: function (data, textStatus, jqXHR) {
+               
+        //        
+            
+        //         $('.image-loader').removeClass( \"img-loader\" );
+        //         $('.image-loader').removeClass( \"img-loader\" );
+        //     },
+        //     beforeSend: function (xhr) {
+        //         //alert('Please wait...');
+        //         $('.image-loader').addClass( \"img-loader\" );
+        //     },
+        //     error: function (jqXHR, textStatus, errorThrown) {
+        //         console.log('An error occured!');
+        //         alert('Error in ajax request');
+        //     }
+        // });
+});");
+?>
 
 </div>
