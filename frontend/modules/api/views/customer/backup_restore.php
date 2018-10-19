@@ -28,7 +28,7 @@ use yii\helpers\Html;
             <div class="col-md-10">
                 <div class="box box-primary" style="padding:0px">
                     <div class="box-header" style="background-color: #3c8dbc;color:#fff;">
-                        <h4 class="box-title"><img src="/images/icons/laboratory.png" style="width:25px"></i>Customers</h4>
+                        <h4 class="box-title"><img src="/images/icons/customer.png" style="width:25px"></i>Customers</h4>
                         <div class="box-tools pull-right">
                             <button type="button" style="color:#000" class="btn btn-box-tool" title="Sync Results" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-bars"></i>
                             </button>
