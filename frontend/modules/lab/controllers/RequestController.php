@@ -356,7 +356,7 @@ class RequestController extends Controller
             $model->total=0.00;
             $model->posted=0;
             $model->status_id=1;
-            $model->request_type_id=1;
+            $model->request_type_id=0;
             $model->modeofreleaseids='1';
             $model->payment_status_id=1;
             $model->request_date=date("Y-m-d");

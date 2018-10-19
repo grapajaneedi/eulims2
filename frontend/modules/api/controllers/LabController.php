@@ -1,7 +1,6 @@
 <?php 
 
 namespace frontend\modules\api\controllers;
-set_time_limit(600);
 use yii\web\Controller;
 use Yii;
 use linslin\yii2\curl;
@@ -14,6 +13,8 @@ use common\models\lab\Customer;
 use common\models\lab\BackuprestoreSearch;
 use common\models\lab\Backuprestore;
 use yii\helpers\Json;
+
+set_time_limit(600);
 
 /**
  * Default controller for the `Lab` module
@@ -35,8 +36,12 @@ class LabController extends Controller
              'model'=>$model,
          ]);
      }
-
      public function actionRes(){
+		
+		$searchModel = new BackuprestoreSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$model = new Backuprestore();
+		 
         $month = $_POST['month'];
         $year =  $_POST['year'];
             
@@ -66,8 +71,11 @@ class LabController extends Controller
             $month_value = "12";
         }
 
-        $start = date('Y-m-d',strtotime($year."-".$month_value."-01"));
-        $end = date('Y-m-d',strtotime($year."-".$month_value."-31"));
+        $start = $year."-".$month_value;
+        $end = $year."-".$month_value;
+		
+		//$start = "2018-01-04";
+		//$end = "2018-01-06";
 
         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
 
@@ -75,73 +83,101 @@ class LabController extends Controller
   
           $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&reqds=".$start."&reqde=".$end;
 
-          $curl = new curl\Curl();
+          //$curl = new curl\Curl();
 
-          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+          //$curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
      
-          $responselab = $curl->get($apiUrl);
+          //$responselab = $curl->get($apiUrl);
           
-          $lab = Json::decode($responselab);
+          //$lab = Json::decode($responselab,true);
+		  
+			$curl = curl_init();
+				
+			curl_setopt($curl, CURLOPT_URL, $apiUrl);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
+			curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+			$response = curl_exec($curl);
+			
+			$data = json_decode($response, true);
+		  
+		  /*echo "<pre>";
+		  print_r($data);
+		  echo "</pre>";
+		  exit;*/
        
           $sql = "SET FOREIGN_KEY_CHECKS = 0;";
-          $Connection = Yii::$app->labdb;
+          $connection = Yii::$app->labdb;
         
           $request_count = 0;
           $sample_count = 0;
           $analysis_count = 0;
+		  $samplenum = 0;
+		  $analysesnum = 0;
 
-         Yii::$app->labdb->createCommand('set foreign_key_checks=0')->execute();
-
-          foreach ($lab as $var)
+         //Yii::$app->labdb->createCommand('set foreign_key_checks=0')->execute();
+			$transaction = $connection->beginTransaction();
+			$connection->createCommand('set foreign_key_checks=0')->execute();
+			
+		try {
+          foreach ($data as $request)
           {    
                       $newRequest = new Restore_request();    
-                      $newRequest->request_id = $var['request_old_id'];
-                      $newRequest->request_ref_num = $var['request_ref_num'];
-                      $newRequest->request_datetime= $var['request_datetime'];
-                      $newRequest->rstl_id= $var['rstl_id'];
-                      $newRequest->lab_id= $var['lab_id'];
-                      $newRequest->customer_id= $var['customer_id'];
-                      $newRequest->payment_type_id= $var['payment_type_id'];
-                      $newRequest->modeofrelease_ids= $var['modeofrelease_ids'];
-                      $newRequest->discount = $var['discount'];
-                      $newRequest->purpose_id= $var['purpose_id'];
-                      $newRequest->conforme= $var['conforme'];
-                      $newRequest->report_due= $var['report_due'];
-                      $newRequest->total = $var['total'];
-                      $newRequest->receivedBy = $var['receivedBy'];
-                      $newRequest->recommended_due_date = $var['recommended_due_date'];
-                      $newRequest->est_date_completion = $var['est_date_completion'];
-                      $newRequest->items_receive_by = $var['items_receive_by'];
-                      $newRequest->equipment_release_date = $var['equipment_release_date'];
-                      $newRequest->certificate_release_date = $var['certificate_release_date'];
-                      $newRequest->released_by = $var['released_by'];
-                      $newRequest->posted = $var['posted'];
-                      $newRequest->status_id = $var['status_id'];
-                      $newRequest->selected = $var['selected'];
-                      $newRequest->other_fees_id = $var['other_fees_id'];
-                      $newRequest->request_type_id = $var['request_type_id'];
-                      $newRequest->position = $var['position'];
-                      $newRequest->completed = $var['completed'];
-                      $newRequest->received_by = $var['received_by'];
-                      $newRequest->payment_status_id = $var['payment_status_id'];
-                      $newRequest->oldColumn_requestId= $var['oldColumn_requestId'];
-                      $newRequest->oldColumn_sublabId= $var['oldColumn_sublabId'];
-                      $newRequest->oldColumn_orId = $var['oldColumn_orId'];
-                      $newRequest->oldColumn_completed= $var['oldColumn_completed'];
-                      $newRequest->oldColumn_cancelled= $var['oldColumn_cancelled'];
-                      $newRequest->oldColumn_create_time= $var['oldColumn_create_time'];
-                      $newRequest->request_old_id= $var['request_old_id'];
-                      $newRequest->created_at= $var['created_at'];
-                      $newRequest->discount_id= $var['discount_id'];
-                      $newRequest->customer_old_id= $var['customer_old_id'];
-                      $newRequest->tmpCustomerID= $var['tmpCustomerID'];
+                      $newRequest->request_id = $request['request_old_id'];
+                      $newRequest->request_ref_num = $request['request_ref_num'];
+                      $newRequest->request_datetime= $request['request_datetime'];
+                      $newRequest->rstl_id= $request['rstl_id'];
+                      $newRequest->lab_id= $request['lab_id'];
+                      $newRequest->customer_id= $request['customer_id'];
+                      $newRequest->payment_type_id= $request['payment_type_id'];
+                      $newRequest->modeofrelease_ids= $request['modeofrelease_ids'];
+                      $newRequest->discount = $request['discount'];
+                      $newRequest->purpose_id= $request['purpose_id'];
+                      $newRequest->conforme= $request['conforme'];
+                      $newRequest->report_due= $request['report_due'];
+                      $newRequest->total = $request['total'];
+                      $newRequest->receivedBy = $request['receivedBy'];
+                      $newRequest->recommended_due_date = $request['recommended_due_date'];
+                      $newRequest->est_date_completion = $request['est_date_completion'];
+                      $newRequest->items_receive_by = $request['items_receive_by'];
+                      $newRequest->equipment_release_date = $request['equipment_release_date'];
+                      $newRequest->certificate_release_date = $request['certificate_release_date'];
+                      $newRequest->released_by = $request['released_by'];
+                      $newRequest->posted = $request['posted'];
+                      $newRequest->status_id = $request['status_id'];
+                      $newRequest->selected = $request['selected'];
+                      $newRequest->other_fees_id = $request['other_fees_id'];
+                      $newRequest->request_type_id = $request['request_type_id'];
+                      $newRequest->position = $request['position'];
+                      $newRequest->completed = $request['completed'];
+                      $newRequest->received_by = $request['received_by'];
+                      $newRequest->payment_status_id = $request['payment_status_id'];
+                      $newRequest->oldColumn_requestId= $request['oldColumn_requestId'];
+                      $newRequest->oldColumn_sublabId= $request['oldColumn_sublabId'];
+                      $newRequest->oldColumn_orId = $request['oldColumn_orId'];
+                      $newRequest->oldColumn_completed= $request['oldColumn_completed'];
+                      $newRequest->oldColumn_cancelled= $request['oldColumn_cancelled'];
+                      $newRequest->oldColumn_create_time= $request['oldColumn_create_time'];
+                      $newRequest->request_old_id= $request['request_old_id'];
+                      $newRequest->created_at= $request['created_at'];
+                      $newRequest->discount_id= $request['discount_id'];
+                      $newRequest->customer_old_id= $request['customer_old_id'];
+                      $newRequest->tmpCustomerID= $request['tmpCustomerID'];
                       $newRequest->save();
                       $request_count++;
+					  
+					  /* if($newRequest->save()){
+						  $flag = 1;
+					  } else {
+						  $flag = 0;
+					  } */
           
 
-                      $sample = $var['sample'];
+                      //$sample = $var['sample'];
                      
-                      foreach ($sample as $samp){
+                      foreach ($request['sample'] as $samp){
                           $sample_count++;          
                           $newSample = new Restore_sample();
                           $newSample->rstl_id=$samp['rstl_id'];
@@ -168,57 +204,86 @@ class LabController extends Controller
                           $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                           $newSample->testcategory_id=$samp['testcategory_id'];
                           $newSample->save(true); 
+						  /* if($newSample->save()){
+							  $flag1 = 1;
+						  } else {
+							  $flag1 = 0;
+						  } */
                           
-              }    
-              
-              $analyses = $var['analyses'];
+						//$analyses = $var['analyses'];
              
-              foreach ($analyses as $anals){
-                      $analysis_count++;
-                      $newanalysis = new Restore_analysis();
-                      $newanalysis->analysis_id=$anals['analysis_old_id'];
-                      $newanalysis->rstl_id=$anals['rstl_id'];
-                      $newanalysis->pstcanalysis_id=$anals['pstcanalysis_id'];
-                      $newanalysis->sample_id =$anals['old_sample_id'];
-                      $newanalysis->sample_code=$anals['sample_code'];
-                      $newanalysis->testname=$anals['testname'];
-                      $newanalysis->method=$anals['method'];
-                      $newanalysis->references=$anals['references'];
-                      $newanalysis->quantity=$anals['quantity'];
-                      $newanalysis->fee=$anals['fee'];
-                      $newanalysis->test_id=$anals['test_id'];
-                      $newanalysis->cancelled=$anals['cancelled'];
-                      $newanalysis->date_analysis=$anals['date_analysis'];
-                      $newanalysis->user_id=$anals['user_id'];
-                      $newanalysis->is_package=$anals['is_package'];
-                      $newanalysis->oldColumn_deleted=$anals['oldColumn_deleted'];
-                      $newanalysis->analysis_old_id=$anals['analysis_old_id'];
-                      $newanalysis->oldColumn_taggingId=$anals['oldColumn_taggingId'];
-                      $newanalysis->oldColumn_result=$anals['oldColumn_result'];
-                      $newanalysis->oldColumn_package_count=$anals['oldColumn_package_count'];
-                      $newanalysis->oldColumn_requestId=$anals['oldColumn_requestId'];
-                      $newanalysis->request_id =  43;
-                      $newanalysis->testcategory_id=$anals['testcategory_id'];
-                      $newanalysis->sample_type_id=$anals['sample_type_id'];
-                      $newanalysis->old_sample_id=$anals['old_sample_id'];
-                      $newanalysis->save(true);
-                   
+					foreach ($samp['analyses'] as $anals){
+						$analysis_count++;
+						$newanalysis = new Restore_analysis();
+						$newanalysis->analysis_id=$anals['analysis_old_id'];
+						$newanalysis->rstl_id=$anals['rstl_id'];
+						$newanalysis->pstcanalysis_id=$anals['pstcanalysis_id'];
+						$newanalysis->sample_id =$anals['old_sample_id'];
+						$newanalysis->sample_code=$anals['sample_code'];
+						$newanalysis->testname=$anals['testname'];
+						$newanalysis->method=$anals['method'];
+						$newanalysis->references=$anals['references'];
+						$newanalysis->quantity=$anals['quantity'];
+						$newanalysis->fee=$anals['fee'];
+						$newanalysis->test_id=$anals['test_id'];
+						$newanalysis->cancelled=$anals['cancelled'];
+						$newanalysis->date_analysis=$anals['date_analysis'];
+						$newanalysis->user_id=$anals['user_id'];
+						$newanalysis->is_package=$anals['is_package'];
+						$newanalysis->oldColumn_deleted=$anals['oldColumn_deleted'];
+						$newanalysis->analysis_old_id=$anals['analysis_old_id'];
+						$newanalysis->oldColumn_taggingId=$anals['oldColumn_taggingId'];
+						$newanalysis->oldColumn_result=$anals['oldColumn_result'];
+						$newanalysis->oldColumn_package_count=$anals['oldColumn_package_count'];
+						$newanalysis->oldColumn_requestId=$anals['oldColumn_requestId'];
+						$newanalysis->request_id =  43;
+						$newanalysis->testcategory_id=$anals['testcategory_id'];
+						$newanalysis->sample_type_id=$anals['sample_type_id'];
+						$newanalysis->old_sample_id=$anals['old_sample_id'];
+						$newanalysis->save(true);
+						
+						//if($newanalysis->save()){
+							//$newRequest->save();
+							//$newSample->save();
+							//$transaction->commit();
+						//} else {
+							//$transaction->rollBack();
+							//echo $newanalysis->getErrors();
+						//}
+						//$count++;
                     }
+				}
+				$samplenum = $samplenum + $request['countSample'];
+				$analysesnum = $analysesnum + $request['countAnalysis'];
+				
+				/* if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
+					$transaction->commit();
+				} else {
+					$transaction->rollBack();
+				} */
             }
-              $sql = "SET FOREIGN_KEY_CHECKS = 1;"; 
-
-                $searchModel = new BackuprestoreSearch();
-                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+			//if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
+				$transaction->commit();
+				
+				$sql = "SET FOREIGN_KEY_CHECKS = 1;";
                 
-                    $model = new Backuprestore();
-                    $model->activity = "Restored data for the month of ".$month."-".$year;
-                    $model->date = date('Y-M-d');
-                    $model->data = $request_count."/".$request_count;
-                    $model->status = "COMPLETED";
-                    $model->month = $sample_count."/".$sample_count;
-                    $model->year = $analysis_count."/".$analysis_count;
-                     $model->year = $analysis_count."/".$analysis_count;
-                    $model->save(false);
+				$model->activity = "Restored data for the month of ".$month."-".$year;
+				$model->date = date('Y-M-d');
+				$model->data = count($data)."/".$request_count;
+				$model->status = "COMPLETED";
+				$model->month = $sample_count."/".$samplenum;
+				$model->year = $analysis_count."/".$analysis_count;
+				$model->year = $analysis_count."/".$analysesnum;
+				$model->save(false);
+			//} else {
+				//$transaction->rollBack();
+			//}
+			//$transaction->commit();
+		} catch (\Exception $e) {
+		   $transaction->rollBack();
+		} catch (\Throwable $e) {
+		   $transaction->rollBack();
+		}
 
 
            //   Yii::$app->session->setFlash('success', ' Records Successfully Restored'.$request_count); 
