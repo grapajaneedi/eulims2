@@ -52,9 +52,7 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
             ]
         ])
         ?>
-
       <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>'hidden'], ['readonly' => true]) ?>
-
 <br>
     <div class="form-group pull-right">
     <?php if(Yii::$app->request->isAjax){ ?>
