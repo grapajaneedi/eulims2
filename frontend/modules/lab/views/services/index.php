@@ -18,28 +18,10 @@ use linslin\yii2\curl;
 use yii\helpers\Json;
 
 
-// $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/methodreferences/restore?id=121";
-// $curl = new curl\Curl();
-// $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-// $response = $curl->get($apiUrl);
-// $decode=json_decode($response, true);
 
-// var_dump($decode);
-// exit;
-
-// $testnameQuery = Methodreference::find()
-// ->leftJoin('tbl_testname_method', 'tbl_testname_method.method_id=tbl_methodreference.method_reference_id')
-// ->Where(['tbl_testname_method.testname_id'=>121]);
-
-// var_dump($testnameQuery);
-// exit;
-
-/* @var $this yii\web\View */
-/* @var $searchModel common\models\lab\ServicesSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $func=new Functions();
-//echo $func->GetAccessToken(11);
+
 
 
 $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/labs/search?labcount=0";
@@ -48,8 +30,13 @@ $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
 $response = $curl->get($apiUrl);
 $decode=Json::decode($response);
 
+// foreach ($decode as $labsampletype) {
+    
+//     $labsampletypeid = $labsampletype['lab_sampletype_id'];
+// }
+
 $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
-//$lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
+
 
 $lablist= ArrayHelper::map($decode,'lab_id','labname');
 
@@ -59,8 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 $services =  Services::find()->all();      
-//var_dump($services);
-//exit; 
+
 
 ?>
 
@@ -188,7 +174,8 @@ $services =  Services::find()->all();
             type: 'GET',
             url: '/lab/services/getmethod?id='+$(this).val(),
             dataType: 'html',
-            data: { lab_id: $('#lab_id').val(), sample_type_id: $('#sample-sample_type_id').val()},
+            data: { lab_id: $('#lab_id').val(),
+             sample_type_id: $('#sample-sample_type_id').val()},
             success: function ( response ) {         
               $("#methodreference").html(response);
 

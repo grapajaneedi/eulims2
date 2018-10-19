@@ -14,7 +14,6 @@ use Yii;
  * @property string $update_time
  *
  * @property Testname $testname
- *  @property Method $method
  */
 class Testnamemethod extends \yii\db\ActiveRecord
 {
@@ -40,10 +39,10 @@ class Testnamemethod extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['testname_id', 'method_id', 'create_time'], 'required'],
+            [['testname_id', 'method_id'], 'required'],
             [['testname_id', 'method_id'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
-            [['testname_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testname::className(), 'targetAttribute' => ['testname_id' => 'id']],
+            [['testname_id'], 'exist', 'skipOnError' => true, 'targetClass' => Testname::className(), 'targetAttribute' => ['testname_id' => 'testname_id']],
         ];
     }
 
@@ -53,9 +52,9 @@ class Testnamemethod extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'testname_method_id' => 'ID',
-            'testname_id' => 'Test Name',
-            'method_id' => 'Method',
+            'testname_method_id' => 'Testname Method ID',
+            'testname_id' => 'Testname ID',
+            'method_id' => 'Method ID',
             'create_time' => 'Create Time',
             'update_time' => 'Update Time',
         ];
@@ -67,10 +66,5 @@ class Testnamemethod extends \yii\db\ActiveRecord
     public function getTestname()
     {
         return $this->hasOne(Testname::className(), ['testname_id' => 'testname_id']);
-    }
-
-    public function getMethod()
-    {
-        return $this->hasOne(Methodreference::className(), ['method_reference_id' => 'method_id']);
     }
 }

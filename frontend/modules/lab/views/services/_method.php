@@ -28,6 +28,12 @@ $js=<<<SCRIPT
                    labid: $('#labid').val(),
                    sampletypeid: $('#sampletypeid').val(),
                    methodreferenceid: $('#methodreferenceid').val(),
+
+                   labsampletypeid: $('#labsampletypeid').val(),
+                   sampletypetestname: $('#sampletypetestname').val(),
+                   testnamemethod: $('#testnamemethod').val(),
+                   testname: $('#testname').val(),
+
                 }, function(result){
                     $("#testname-grid").yiiGridView("applyFilter");
                 
@@ -49,12 +55,15 @@ $this->registerJs($js);
 
 ?>
 
-<?= Html::textInput('methodreferenceid', $methodreferenceid, ['class' => 'form-control', 'type'=>'hidden', 'id'=>'methodreferenceid'], ['readonly' => true]) ?>
-<?= Html::textInput('labid', $labid, ['class' => 'form-control', 'type'=>'hidden', 'id'=>'labid'], ['readonly' => true]) ?>
+<?= Html::textInput('methodreferenceid', $methodreferenceid, ['class' => 'form-control', 'id'=>'methodreferenceid', 'type'=>'hdden'], ['readonly' => true]) ?>
+<?= Html::textInput('labid', $labid, ['class' => 'form-control', 'id'=>'labid', 'type'=>'hdden'], ['readonly' => true]) ?>
+<?= Html::textInput('sampletypeid', $sampletypeid, ['class' => 'form-control', 'id'=>'sampletypeid', 'type'=>'hdden'], ['readonly' => true]) ?>
 
+<?= Html::textInput('labsampletypeid', $labsampletypeid, ['class' => 'form-control', 'id'=>'labsampletypeid', 'type'=>'hdden'], ['readonly' => true]) ?> 
+<?= Html::textInput('sampletypetestname', $sampletypetestname, ['class' => 'form-control', 'id'=>'sampletypetestname', 'type'=>'hdden'], ['readonly' => true]) ?>
+<?= Html::textInput('testnamemethod', $testnamemethod, ['class' => 'form-control', 'id'=>'testnamemethod', 'type'=>'hdden'], ['readonly' => true]) ?>
+<?= Html::textInput('testname', $testname, ['class' => 'form-control', 'id'=>'testname', 'type'=>'hdden'], ['readonly' => true]) ?>
 
-<?= Html::textInput('sampletypeid', $sampletypeid, ['class' => 'form-control', 'id'=>'sampletypeid', 'type'=>'hidden'], ['readonly' => true]) ?>
-  
 <?php
  $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
  $servicesquery= Services::find()->Where(['rstl_id'=>$GLOBALS['rstl_id']])->all();

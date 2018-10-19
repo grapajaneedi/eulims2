@@ -1,5 +1,6 @@
 
 
+
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\Progress;
@@ -24,14 +25,25 @@ use yii\helpers\Json;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $func=new Functions();
+
+// $year = 2018;
+// $month_value = 01;
+// $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".$GLOBALS['rstl_id']."&reqds=".$year."-".$month_value."-01&reqde=".$year."-".$month_value."-31&pp=5&page=1";
+
+//         $curl = new curl\Curl();
+
+//         $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+   
+//         $responselab = $curl->get($apiUrl);
+        
+//         $lab = Json::decode($responselab);
+//         var_dump($lab);
+//         exit;
+
 //echo $func->GetAccessToken(11);
 
-
-
-
-$apiUrl="https://api3.onelab.ph/lab/get-lab?tk=8b5db6ea832b625640122db3e6367b0debca46b4&id=11&rid=11";
-$curl = new curl\Curl();
-$response = $curl->get($apiUrl);
+// $curl = new curl\Curl();
+// $response = $curl->get($apiUrl);
 
 //$decode=Json::decode($response);
 // echo '<pre>';
