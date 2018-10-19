@@ -5,6 +5,7 @@ use common\models\lab\Sampletype;
 use common\models\lab\Services;
 use common\models\lab\Lab;
 use common\models\lab\Testname;
+use common\models\lab\Methodreference;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
@@ -16,29 +17,28 @@ use common\components\Functions;
 use linslin\yii2\curl;
 use yii\helpers\Json;
 
-/* @var $this yii\web\View */
-/* @var $searchModel common\models\lab\ServicesSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+
+
 
 $func=new Functions();
-//echo $func->GetAccessToken(11);
 
 
 
-$apiUrl="https://api3.onelab.ph/lab/get-lab?tk=8b5db6ea832b625640122db3e6367b0debca46b4&id=11&rid=11";
+$apiUrl="https://eulimsapi.onelab.ph/api/web/v1/labs/search?labcount=0";
 $curl = new curl\Curl();
+$curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
 $response = $curl->get($apiUrl);
+$decode=Json::decode($response);
 
-//$decode=Json::decode($response);
-// echo '<pre>';
-// print_r($response);
-// echo '</pre>';
-// echo $response;
+// foreach ($decode as $labsampletype) {
+    
+//     $labsampletypeid = $labsampletype['lab_sampletype_id'];
+// }
 
 $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
-$lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 
-//$lablist= ArrayHelper::map( $decode,'lab_id','labname');
+
+$lablist= ArrayHelper::map($decode,'lab_id','labname');
 
 
 $this->title = 'Add/ Remove Services';
@@ -46,8 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 $services =  Services::find()->all();      
-//var_dump($services);
-//exit; 
+
 
 ?>
 
@@ -55,7 +54,7 @@ $services =  Services::find()->all();
        
     ?>
 
-<div class="services-index">
+<div class="services-index" >
    
 <fieldset>
     <legend>Legend/Status</legend>
@@ -97,7 +96,7 @@ $services =  Services::find()->all();
                         'pluginOptions'=>[
                             'depends'=>['sample-sample_type_id'],
                             'placeholder'=>'Select Test',
-                            'url'=>Url::to(['/lab/analysis/listsampletype']),
+                            'url'=>Url::to(['/lab/services/listtest']),
                             'loadingText' => 'Loading Tests...',
                         ]
                     ])."</div>";
@@ -109,7 +108,7 @@ $services =  Services::find()->all();
     </div>
     
     
-    <div class="row" id="methodreference">
+    <div class="row" id="methodreference"  style="padding-left:15px;padding-right:15px">
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -175,7 +174,8 @@ $services =  Services::find()->all();
             type: 'GET',
             url: '/lab/services/getmethod?id='+$(this).val(),
             dataType: 'html',
-            data: { lab_id: $('#lab_id').val(), sample_type_id: $('#sample-sample_type_id').val()},
+            data: { lab_id: $('#lab_id').val(),
+             sample_type_id: $('#sample-sample_type_id').val()},
             success: function ( response ) {         
               $("#methodreference").html(response);
 

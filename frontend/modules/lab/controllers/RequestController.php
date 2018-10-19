@@ -331,6 +331,9 @@ class RequestController extends Controller
     public function actionCreate()
     {
         $model = new eRequest();
+        $Func=new Functions();
+        $Func->CheckRSTLProfile();
+        $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
         /*echo "<pre>";
         print_r(Yii::$app->request->post());
         echo "</pre>";

@@ -9,6 +9,7 @@ use common\models\lab\Cancelledrequest;
 use common\models\lab\Discount;
 use common\models\lab\Request;
 use common\models\lab\Sample;
+use common\models\lab\Sampletype;
 use common\models\finance\Paymentitem;
 
 use common\models\lab\Package;
@@ -28,6 +29,21 @@ $func = new Functions();
 // var_dump($list);
 // exit;
 
+// $testcategory = Sampletype::find()
+//     ->leftJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletype_id=tbl_sampletype.sampletype_id')
+//     ->andWhere(['lab_id'=>1])
+//     ->all();
+
+//     echo "<pre>";
+//     print_r($testcategory);
+//     echo "</pre>";
+//     exit;
+
+// $requestquery = Request::find()->where([ 'request_id'=> 1])->one();
+//   $labId =  $requestquery->lab_id;
+
+//   echo $labId;
+//   exit;
 
 
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
