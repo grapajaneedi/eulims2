@@ -39,7 +39,7 @@ class Testname extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['testName', 'status_id', 'create_time'], 'required'],
+            [['testName', 'status_id'], 'required'],
             [['status_id'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
             [['testName'], 'string', 'max' => 200],
