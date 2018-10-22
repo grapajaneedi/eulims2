@@ -313,11 +313,11 @@ class PackagelistController extends Controller
             $id = (int) $_GET['packagelist_id'];
             $modelpackagelist =  Package::findOne(['id'=>$id]);
             if(count($modelpackagelist)>0){
-                $rate = $modelpackagelist->rate;
+                $rate = number_format($modelpackagelist->rate,2);
                 $tet = $modelpackagelist->tests;
 
                 $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";     
-                
+     
                 $Connection = Yii::$app->labdb;
                 $command = $Connection->createCommand($sql);
                 $row = $command->queryOne();    
@@ -334,7 +334,7 @@ class PackagelistController extends Controller
         return Json::encode([
             'rate'=>$rate,
             'tests'=>$tests,
-            'ids'=>$tet,
+            'ids'=>$tests,
         ]);
     }
 

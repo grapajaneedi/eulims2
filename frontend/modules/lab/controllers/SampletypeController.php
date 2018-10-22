@@ -5,6 +5,8 @@ namespace frontend\modules\lab\controllers;
 use Yii;
 use common\models\lab\Sampletype;
 use common\models\lab\SampletypeSearch;
+use common\models\lab\LabsampletypeSearch;
+use common\models\lab\SampletypetestnameSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -44,6 +46,28 @@ class SampletypeController extends Controller
         ]);
     }
 
+    public function actionSampletypetestname()
+    {
+        $searchModel = new SampletypetestnameSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('/sampletypetestname/indexsampletypetestname', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionSampletype()
+    {
+        $searchModel = new LabsampletypeSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('/labsampletype/indexlab', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Displays a single Sampletype model.
      * @param integer $id
@@ -69,12 +93,46 @@ class SampletypeController extends Controller
         $model = new Sampletype();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Sample Type Successfully Created'); 
+          Yii::$app->session->setFlash('success', 'Sample Type Successfully Created'); 
             return $this->runAction('index');
         }
 
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_form', [
+                'model' => $model,
+            ]);
+            }
+
+    }
+
+    public function actionCreatesampletype()
+    {
+        $model = new Sampletype();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+          //  Yii::$app->session->setFlash('success', 'Sample Type Successfully Created'); 
+            return $this->runAction('sampletypetestname');
+        }
+
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_formsampletype', [
+                'model' => $model,
+            ]);
+            }
+
+    }
+
+    public function actionCreatetype()
+    {
+        $model = new Sampletype();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+          //  Yii::$app->session->setFlash('success', 'Sample Type Successfully Created'); 
+            return $this->runAction('sampletype');
+        }
+
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_formsampletype', [
                 'model' => $model,
             ]);
             }

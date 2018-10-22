@@ -44,7 +44,7 @@ class Packagelist extends \yii\db\ActiveRecord
         return [
             [['rstl_id', 'lab_id', 'testcategory_id', 'sample_type_id', 'name', 'tests'], 'required'],
             [['rstl_id', 'lab_id', 'testcategory_id', 'sample_type_id'], 'integer'],
-            [['rate'], 'number'],
+            [['rate'], 'string'],
             [['name'], 'string', 'max' => 50],
             [['tests'], 'string', 'max' => 1000],
         ];

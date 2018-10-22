@@ -19,7 +19,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'method_reference_id',
             'method',
             'reference',
-            'fee',
+            [
+                'label'=>'Fee',
+                'format'=>'raw',
+                'value' => function($model) {
+                    return number_format($model->fee, 2);
+                    },
+                'valueColOptions'=>['style'=>'width:30%'], 
+                'displayOnly'=>true
+            ],
             'create_time',
             'update_time',
         ],

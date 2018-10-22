@@ -33,7 +33,7 @@ $methodlist= ArrayHelper::map(Methodreference::find()->all(),'method_reference_i
             ])
     ?>
       <span class="input-group-btn" style="padding-top: 25.5px">
-                    <button onclick="LoadModal('Create New Test Name Method', '/lab/testname/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+                    <button onclick="LoadModal('Create New Test Name', '/lab/testname/createtestnamemethod');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
      </span>
         </div>
 
@@ -45,7 +45,7 @@ $methodlist= ArrayHelper::map(Methodreference::find()->all(),'method_reference_i
             ])
     ?>
       <span class="input-group-btn" style="padding-top: 25.5px">
-                    <button onclick="LoadModal('Create New Test Name Method', '/lab/methodreference/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+                    <button onclick="LoadModal('Create New Method Reference', '/lab/methodreference/createmethod');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
      </span>
         </div>
 
