@@ -215,7 +215,7 @@ $this->registerJs($PrintEvent);
                         [
                             'label'=>'Referral Date',
                             'format'=>'raw',
-                            'value'=>Yii::$app->formatter->asDate($model->request_datetime, 'php:F j, Y'),
+                            'value'=> ($model->request_datetime != "0000-00-00 00:00:00") ? Yii::$app->formatter->asDate($model->request_datetime, 'php:F j, Y') : "<i style='color:#bb0000;font-size:12px;'>Pending referral request</i>",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -234,7 +234,7 @@ $this->registerJs($PrintEvent);
                         [
                             'label'=>'Referral Time',
                             'format'=>'raw',
-                            'value'=>Yii::$app->formatter->asDate($model->request_datetime, 'php:h:i a'),
+                            'value'=> ($model->request_datetime != "0000-00-00 00:00:00") ? Yii::$app->formatter->asDate($model->request_datetime, 'php:h:i a') : "<i style='color:#bb0000;font-size:12px;'>Pending referral request</i>",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -253,7 +253,7 @@ $this->registerJs($PrintEvent);
                             'attribute'=>'report_due',
                             'label'=>'Estimated Due Date',
                             'format'=>'raw',
-                            'value'=>Yii::$app->formatter->asDate($model->request_datetime, 'php:F j, Y'),
+                            'value'=> ($model->report_due != "0000-00-00 00:00:00") ? Yii::$app->formatter->asDate($model->report_due, 'php:F j, Y') : "<i style='color:#bb0000;font-size:12px;'>Pending referral request</i>",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -409,7 +409,7 @@ $this->registerJs($PrintEvent);
                             'attribute'=>'report_due',
                             'label'=>'Report Due Date',
                             'format'=>'raw',
-                            'value'=>Yii::$app->formatter->asDate($model->request_datetime, 'php:F j, Y'),
+                            'value'=>Yii::$app->formatter->asDate($model->report_due, 'php:F j, Y'),
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
