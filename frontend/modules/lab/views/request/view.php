@@ -855,7 +855,7 @@ $this->registerJs($PrintEvent);
                     'type'=>'primary',
                     /*'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>!$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/reports/preview?url=/lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
                     'after'=>false,*/
-                    'before'=>'<i style="font-weight:bold;font-size:13px;">Note: Select agency to sent referral notification.<i>',
+                    'before'=>'<i style="font-weight:bold;font-size:13px;">Note: Select agency to send referral notification.<i>',
                 ],
                 'columns' => $gridColumns,
                 'toolbar' => [

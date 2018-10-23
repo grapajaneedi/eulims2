@@ -1,7 +1,6 @@
 <?php
 
 namespace common\models\referral;
-use common\models\lab\Customer;
 
 use Yii;
 
@@ -46,7 +45,7 @@ use Yii;
  * @property Statuslogs[] $statuslogs0
  * @property Statuslogs[] $statuslogs1
  */
-class Referral extends \yii\db\ActiveRecord
+class Request extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -94,13 +93,13 @@ class Referral extends \yii\db\ActiveRecord
             'referral_code' => 'Referral Code',
             'referral_date' => 'Referral Date',
             'referral_time' => 'Referral Time',
-            'receiving_agency_id' => 'Receiving Agency',
-            'testing_agency_id' => 'Testing Agency',
-            'lab_id' => 'Lab',
+            'receiving_agency_id' => 'Receiving Agency ID',
+            'testing_agency_id' => 'Testing Agency ID',
+            'lab_id' => 'Lab ID',
             'sample_received_date' => 'Sample Received Date',
             'customer_id' => 'Customer ID',
-            'payment_type_id' => 'Payment Type',
-            'modeofrelease_id' => 'Modeofrelease',
+            'payment_type_id' => 'Payment Type ID',
+            'modeofrelease_id' => 'Modeofrelease ID',
             'purpose_id' => 'Purpose ID',
             'discount_id' => 'Discount ID',
             'discount_amt' => 'Discount Amt',
@@ -225,13 +224,5 @@ class Referral extends \yii\db\ActiveRecord
     public function getStatuslogs1()
     {
         return $this->hasMany(Statuslogs::className(), ['referral_id' => 'referral_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCustomer()
-    {
-        return $this->hasOne(Customer::className(), ['customer_id' => 'customer_id']);
     }
 }

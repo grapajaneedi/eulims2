@@ -473,4 +473,92 @@ class RequestController extends Controller
         }
         return $out;
     }
+
+    /**
+     * Creates a new Request model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreatereferral()
+    {
+        $model = new eRequest();
+        $Func=new Functions();
+        $Func->CheckRSTLProfile();
+        //$GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+        /*echo "<pre>";
+        print_r(Yii::$app->request->post());
+        echo "</pre>";
+        exit;
+         * 
+         */
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Referral Request Successfully Created!');
+            return $this->redirect(['view', 'id' => $model->request_id]); ///lab/request/view?id=1
+        } else {
+            $date = new DateTime();
+            $date2 = new DateTime();
+            $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+            date_add($date2,date_interval_create_from_date_string("1 day"));
+            //$model->request_datetime=date("Y-m-d h:i:s");
+            $model->request_datetime="0000-00-00 00:00:00";
+            $model->report_due=date_format($date2,"Y-m-d");
+            $model->created_at=date('U');
+            $model->rstl_id=Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
+            $model->payment_type_id=1;
+            $model->modeofrelease_ids='1';
+            $model->discount_id=0;
+            $model->discount='0.00';
+            $model->total=0.00;
+            $model->posted=0;
+            $model->status_id=1;
+            $model->request_type_id=2;
+            $model->modeofreleaseids='1';
+            $model->payment_status_id=1;
+            $model->request_date=date("Y-m-d");
+            if($profile){
+                $model->receivedBy=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
+            }else{
+                $model->receivedBy="";
+            }
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('createReferral', [
+                    'model' => $model,
+                ]);
+            }else{
+                return $this->renderAjax('createReferral', [
+                    'model' => $model,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Updates an existing Request model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdatereferral($id)
+    {
+        //$model = $this->findModel($id);
+        $model= eRequest::findOne($id);
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Request Successfully Updated!');
+            return $this->redirect(['view', 'id' => $model->request_id]);
+        } else {
+            if($model->request_ref_num){
+                $model->request_ref_num=NULL;
+            }
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('update', [
+                    'model' => $model,
+                ]);
+            }else{
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+        }
+    }
 }

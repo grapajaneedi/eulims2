@@ -78,45 +78,19 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
 <div class="row">
     <div class="col-md-6">
     <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(RequestType::find()->all(),'request_type_id','request_type'),
+        'data' => ArrayHelper::map(RequestType::find()->where('request_type_id=2')->all(),'request_type_id','request_type'),
         'language' => 'en',
-        'options' => ['placeholder' => 'Select Request Type','disabled'=>$disabled],
+        'options' => ['placeholder' => 'Select Request Type','disabled'=>'disabled'],
         'pluginOptions' => [
-            'allowClear' => true
+            'allowClear' => false
         ]
     ])->label('Request Type'); ?>
-    </div>
-    <div class="col-md-6">
-    <?= $form->field($model, 'request_datetime')->widget(DateTimePicker::classname(), [
-        'readonly'=>true,
-        'disabled' => $disabled,
-	'options' => ['placeholder' => 'Enter Date'],
-        'value'=>function($model){
-             return date("m/d/Y h:i:s P", strtotime($model->request_datetime));
-        },
-        'convertFormat' => true,
-	'pluginOptions' => [
-            'autoclose' => true,
-            'removeButton' => false,
-            'todayHighlight' => true,
-            'todayBtn' => true,
-            'format' => 'php:Y-m-d H:i:s',
-            'startDate'=>$RequestStartDate,
-	],
-        'pluginEvents'=>[
-            "changeDate" => "function(e) { 
-                var dv=$('#erequest-request_datetime').val();
-                var d=dv.split(' ');
-                $('#erequest-request_date').val(d[0]);
-            }",
-        ]
-    ])->label('Request Date'); ?>
     </div>
 </div>
 <div class="row">
     <div class="col-md-6">
      <?= $form->field($model, 'lab_id')->widget(DepDrop::classname(), [
-        //'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
+        'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
         'type'=>DepDrop::TYPE_SELECT2,
         'language' => 'en',
         'options' => ['placeholder' => 'Select Laboratory','disabled'=>$disabled],
@@ -124,10 +98,10 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
             'allowClear' => true
         ],
         'pluginOptions'=>[
-           'depends'=>['rstlid','erequest-request_type_id'],
+           //'depends'=>['rstlid','erequest-request_type_id'],
            'placeholder'=>'Select Laboratory',
-           'url'=>Url::to(['/api/ajax/getlab']),
-           'LoadingText'=>'Loading...'
+           //'url'=>Url::to(['/api/ajax/getlab']),
+           //'LoadingText'=>'Loading...'
         ],
         'pluginEvents'=>[
             "change" => "function() { 
@@ -318,7 +292,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
         ',]
     ])->label('Discount'); ?>   
     </div>
-     <div class="col-md-6">
+    <div class="col-md-6">
     <?= $form->field($model, 'discount')->textInput(['maxlength' => true,'readonly'=>true,'style'=>'background-color: '.$Color])->label('Discount(%)') ?>
     </div>
 </div>
