@@ -80,7 +80,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
     <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(RequestType::find()->all(),'request_type_id','request_type'),
         'language' => 'en',
-        'options' => ['placeholder' => 'Select Purpose','disabled'=>$disabled],
+        'options' => ['placeholder' => 'Select Request Type','disabled'=>$disabled],
         'pluginOptions' => [
             'allowClear' => true
         ]
