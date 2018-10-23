@@ -68,9 +68,9 @@ class CancelrequestController extends Controller
     {
         $get= \Yii::$app->request->get();
         $model = new Cancelledrequest();
-        echo "<pre>";
-        var_dump(Yii::$app->request->post());
-        echo "</pre>";
+        //echo "<pre>";
+        //var_dump(Yii::$app->request->post());
+        //echo "</pre>";
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //Check if this request is already been cancelled
             $FinanceSuccess=false;

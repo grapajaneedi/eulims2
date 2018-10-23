@@ -29,7 +29,8 @@ class eRequest extends \common\models\lab\Request{
     public function rules()
     {
         return [
-            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'report_due', 'conforme', 'receivedBy', 'created_at','request_type_id','modeofreleaseids'], 'required'],
+            [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'report_due', 'conforme', 'receivedBy', 'created_at','modeofreleaseids'], 'required'],
+            [['request_type_id'],'required','message'=>'Request Type is required'],
             [['request_datetime', 'report_due','request_date', 'recommended_due_date', 'est_date_completion', 'equipment_release_date', 'certificate_release_date'], 'safe'],
             [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'created_at', 'posted', 'status_id', 'selected', 'request_type_id','payment_status_id'], 'integer'],
             [['discount', 'total'], 'number'],
