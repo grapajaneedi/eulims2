@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use common\models\lab\Sampletype;
+use common\models\lab\Labsampletype;
 use common\models\lab\Services;
 use common\models\lab\Lab;
 use common\models\lab\Testname;
@@ -18,6 +19,25 @@ use linslin\yii2\curl;
 use yii\helpers\Json;
 
 $func=new Functions();
+
+// $sampletypeid = 259;
+// $apiUrl_labtype="https://eulimsapi.onelab.ph/api/web/v1/labsampletypes/search?lab_sampletype_id=".$sampletypeid;
+// $curl = new curl\Curl();
+// $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+// $response_labtype = $curl->get($apiUrl_labtype);
+// $decode_labtype=Json::decode($response_labtype,TRUE);
+
+// foreach ($decode_labtype as $var)
+// {
+//      $labsampletype = new Labsampletype();
+//                 $labsampletype->lab_sampletype_id = 1;  
+//                 $labsampletype->lab_id = 1;
+//                 $labsampletype->sampletype_id = 1;
+//                 $labsampletype->effective_date = "1970-01-01";
+//                 $labsampletype->added_by = "dhdh";
+//                 $labsampletype->save(false);
+// }
+
 
 $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/labs/search?labcount=0";
 $curl = new curl\Curl();

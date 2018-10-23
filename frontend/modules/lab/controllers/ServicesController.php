@@ -351,18 +351,18 @@ class ServicesController extends Controller
           $testnamemethod = $_POST['testnamemethod'];
           $testname = $_POST['testname'];
 
-          $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+        //   $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
 
-          $services = new Services();
-          $services->rstl_id =   $GLOBALS['rstl_id'];
-          $services->method_reference_id = $id;
-          $services->sampletype_id = $sampletypeid;
-          $services->testname_method_id = 1;
-          $services->save();
+        //   $services = new Services();
+        //   $services->rstl_id =   $GLOBALS['rstl_id'];
+        //   $services->method_reference_id = $id;
+        //   $services->sampletype_id = $sampletypeid;
+        //   $services->testname_method_id = 1;
+        //   $services->save();
 
-          $services_model = Services::find()->where(['services_id' => $services->services_id])->one();
+        //   $services_model = Services::find()->where(['services_id' => $services->services_id])->one();
 
-
+        //done
           $apiUrl_sampletype="https://eulimsapi.onelab.ph/api/web/v1/sampletypes/search?sampletype_id=".$sampletypeid;
           $curl = new curl\Curl();
           $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
@@ -371,7 +371,6 @@ class ServicesController extends Controller
 
           foreach ($decode_sampletype as $var)
           {      
-              //if exit dont add the sampletype
               $sampletype = Sampletype::find()->where(['sampletype_id'=>$sampletypeid])->one();
 
                 if ($sampletype){
@@ -388,123 +387,134 @@ class ServicesController extends Controller
 
          //GALING SA API query via $sampletype_id
 
-         $apiUrl_labsampletype="https://eulimsapi.onelab.ph/api/web/v1/labsampletypes/search?lab_sampletype_id=".$labsampletypeid;
+         //to be fix
+        // $sampletypeid = 259;
+         $apiUrl_labtype="https://eulimsapi.onelab.ph/api/web/v1/labsampletypes/search?lab_sampletype_id=".$sampletypeid;
          $curl = new curl\Curl();
          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-         $response_labsampletype = $curl->get($apiUrl_labsampletype);
-         $decode_labsampletype=Json::decode($response_labsampletype,TRUE);
+         $response_labtype = $curl->get($apiUrl_labtype);
+         $decode_labtype=Json::decode($response_labtype,TRUE);
 
-         foreach ($decode_labsampletype as $var)
+         foreach ($decode_labtype as $var)
          { 
             $labsampletype = Labsampletype::find()->where(['lab_sampletype_id'=>$labsampletypeid])->one();
             if ($labsampletype){
-             
             }else{
+                // $labsampletype = new Labsampletype();
+                // $labsampletype->lab_sampletype_id = $var['lab_sampletype_id'];  
+                // $labsampletype->lab_id = $var['lab_id'];
+                // $labsampletype->sampletype_id = $var['sampletype_id'];
+                // $labsampletype->effective_date = $var['effective_date'];
+                // $labsampletype->added_by = $var['added_by'];
+                // $labsampletype->save(false);
+
                 $labsampletype = new Labsampletype();
                 $labsampletype->lab_sampletype_id = $var['lab_sampletype_id'];  
                 $labsampletype->lab_id = $var['lab_id'];
                 $labsampletype->sampletype_id = $var['sampletype_id'];
                 $labsampletype->effective_date = $var['effective_date'];
                 $labsampletype->added_by = $var['added_by'];
-                $labsampletype->save();
-           }  
-         }
+                $labsampletype->save(false);
 
+            }  
+         }
         //  GALING SA API query via $sampletype_id
-        //  HERE
-         $apiUrl_testnamemethod="https://eulimsapi.onelab.ph/api/web/v1/testnamemethods/search?testname_method_id=".$testnamemethod;
-         $curl = new curl\Curl();
-         $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-         $response_testnamemethod = $curl->get($apiUrl_testnamemethod);
-         $decode_testnamemethod =Json::decode($response_testnamemethod,TRUE);
+        
+        //to be fix
+        //  $apiUrl_testnamemethod="https://eulimsapi.onelab.ph/api/web/v1/testnamemethods/search?testname_method_id=".$testnamemethod;
+        //  $curl = new curl\Curl();
+        //  $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+        //  $response_testnamemethod = $curl->get($apiUrl_testnamemethod);
+        //  $decode_testnamemethod =Json::decode($response_testnamemethod,TRUE);
 
-         foreach ($decode_testnamemethod as $var)
-         { 
-            $testnamemethod = Testnamemethod::find()->where(['testname_method_id'=>$testnamemethod])->one();
-            if ($testnamemethod){
+        //  foreach ($decode_testnamemethod as $var)
+        //  { 
+        //     $testnamemethod = Testnamemethod::find()->where(['testname_method_id'=>$testnamemethod])->one();
+        //     if ($testnamemethod){
 
-            }else{
-                $testnamemethod = new Testnamemethod();
-                $testnamemethod->testname_method_id =  $var['testname_method_id'];
-                $testnamemethod->testname_id = $var['testname_id'];
-                $testnamemethod->method_id = $var['testname_id'];
-                $testnamemethod->create_time = $var['create_time'];
-                $testnamemethod->update_time = $var['update_time'];
-                $testnamemethod->save();
-            }
-         }
+        //     }else{
+        //         $testnamemethod = new Testnamemethod();
+        //         $testnamemethod->testname_method_id =  $var['testname_method_id'];
+        //         $testnamemethod->testname_id = $var['testname_id'];
+        //         $testnamemethod->method_id = $var['testname_id'];
+        //         $testnamemethod->create_time = $var['create_time'];
+        //         $testnamemethod->update_time = $var['update_time'];
+        //         $testnamemethod->save();
+        //     }
+        //  }
 
+         //done
+        //  $apiUrl_testnames="https://eulimsapi.onelab.ph/api/web/v1/testnames/search?testname_id=".$testname;
+        //  $curl = new curl\Curl();
+        //  $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+        //  $response_testnames = $curl->get($apiUrl_testnames);
+        //  $decode_testnames=Json::decode($response_testnames,TRUE);
 
-         $apiUrl_testnames="https://eulimsapi.onelab.ph/api/web/v1/testnames/search?testname_id=".$testname;
-         $curl = new curl\Curl();
-         $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-         $response_testnames = $curl->get($apiUrl_testnames);
-         $decode_testnames=Json::decode($response_testnames,TRUE);
+        //  foreach ($decode_testnames as $var)
+        //  { 
+        //     $testname = Testname::find()->where(['testname_id'=>$testname])->one();
+        //     if ($testname){
+        //     }else{
+        //         $testname = new Testname();
+        //         $testname->testname_id = $var['testname_id'];
+        //         $testname->testName = $var['testName'];
+        //         $testname->status_id = $var['status_id'];
+        //         $testname->create_time = $var['create_time'];
+        //         $testname->update_time = $var['update_time'];
+        //         $testname->save();
+        //     }
+        //  }
 
-         foreach ($decode_testnames as $var)
-         { 
-            $testname = Testname::find()->where(['testname_id'=>$testname])->one();
-            if ($testname){
-            }else{
-                $testname = new Testname();
-                $testname->testname_id = $var['testname_id'];
-                $testname->testName = $var['testName'];
-                $testname->status_id = $var['status_id'];
-                $testname->create_time = $var['create_time'];
-                $testname->update_time = $var['update_time'];
-                $testname->save();
-            }
-         }
+         //done
+        //  $apiUrl_sampletypetestnames="https://eulimsapi.onelab.ph/api/web/v1/sampletypetestnames/search?sampletype_testname_id=".$sampletypetestname;
+        //  $curl = new curl\Curl();
+        //  $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+        //  $response_sampletypetestnames = $curl->get($apiUrl_sampletypetestnames);
+        //  $decode_sampletypetestnames=Json::decode($response_sampletypetestnames,TRUE);
 
-         $apiUrl_sampletypetestnames="https://eulimsapi.onelab.ph/api/web/v1/sampletypetestnames/search?sampletype_testname_id=".$sampletypetestname;
-         $curl = new curl\Curl();
-         $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-         $response_sampletypetestnames = $curl->get($apiUrl_sampletypetestnames);
-         $decode_sampletypetestnames=Json::decode($response_sampletypetestnames,TRUE);
-
-         foreach ($decode_sampletypetestnames as $var)
-         { 
-            $sampletypetestname = Sampletypetestname::find()->where(['sampletype_testname_id'=>$sampletypetestname])->one();
-            if ($sampletypetestname){
-            }else{
-                $sampletypetestname = new Sampletypetestname();
-                $sampletypetestname->sampletype_testname_id = $var['sampletype_testname_id'];
-                $sampletypetestname->sampletype_id = $var['sampletype_id'];
-                $sampletypetestname->testname_id = $var['testname_id'];
-                $sampletypetestname->added_by = $var['added_by'];
-                $sampletypetestname->save();
-            }
-         }
+        //  foreach ($decode_sampletypetestnames as $var)
+        //  { 
+        //     $sampletypetestname = Sampletypetestname::find()->where(['sampletype_testname_id'=>$sampletypetestname])->one();
+        //     if ($sampletypetestname){
+        //     }else{
+        //         $sampletypetestname = new Sampletypetestname();
+        //         $sampletypetestname->sampletype_testname_id = $var['sampletype_testname_id'];
+        //         $sampletypetestname->sampletype_id = $var['sampletype_id'];
+        //         $sampletypetestname->testname_id = $var['testname_id'];
+        //         $sampletypetestname->added_by = $var['added_by'];
+        //         $sampletypetestname->save();
+        //     }
+        //  }
 
         //GALING SA API kunin via testname_id na galing sa testnamemethod
       
 
         //GALING SA API via methodreference
 
-        
-          $apiUrl_methodreference="https://eulimsapi.onelab.ph/api/web/v1/methodreferences/search?method_reference_id=".$methodreferenceid;
-          $curl = new curl\Curl();
-          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-          $response_methodreference = $curl->get($apiUrl_methodreference);
-          $decode_methodreference =Json::decode($response_methodreference,TRUE);
+         //done
+        //   $apiUrl_methodreference="https://eulimsapi.onelab.ph/api/web/v1/methodreferences/search?method_reference_id=".$methodreferenceid;
+        //   $curl = new curl\Curl();
+        //   $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+        //   $response_methodreference = $curl->get($apiUrl_methodreference);
+        //   $decode_methodreference =Json::decode($response_methodreference,TRUE);
 
-          foreach ($decode_methodreference as $var)
-          { 
-                  $methodreference = Methodreference::find()->where(['method_reference_id'=>$methodreferenceid])->one();
-                  if ($methodreference){
+        //   foreach ($decode_methodreference as $var)
+        //   { 
+        //           $methodreference = Methodreference::find()->where(['method_reference_id'=>$methodreferenceid])->one();
+        //           if ($methodreference){
                       
-                  }else{
-                    $methodreference = new Methodreference();
-                    $methodreference->method_reference_id = $var['method_reference_id'];  
-                    $methodreference->testname_id = $var['testname_id'];
-                    $methodreference->method = $var['method'];
-                    $methodreference->reference = $var['reference'];
-                    $methodreference->fee = $var['fee'];
-                    $methodreference->create_time = $var['create_time'];
-                    $methodreference->update_time = $var['update_time'];
-                    $methodreference->save();
-                  }              
-          }
+        //           }else{
+        //             $methodreference = new Methodreference();
+        //             $methodreference->method_reference_id = $var['method_reference_id'];  
+        //             $methodreference->testname_id = $var['testname_id'];
+        //             $methodreference->method = $var['method'];
+        //             $methodreference->reference = $var['reference'];
+        //             $methodreference->fee = $var['fee'];
+        //             $methodreference->create_time = $var['create_time'];
+        //             $methodreference->update_time = $var['update_time'];
+        //             $methodreference->save();
+        //           }              
+        //   }
           
      }
 

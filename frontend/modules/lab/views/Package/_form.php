@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
 use common\models\lab\Lab;
 use common\models\lab\Sampletype;
 use yii\helpers\Url;
+use kartik\money\MaskMoney;
 
 
 /* @var $this yii\web\View */
@@ -36,7 +37,18 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'rate')->textInput() ?>
+    <?php
+            echo $form->field($model, 'rate')->widget(MaskMoney::classname(), [
+            'readonly'=>true,
+            'options'=>[
+                'style'=>'text-align: right'
+            ],
+            'pluginOptions' => [
+               'prefix' => '₱ ',
+               'allowNegative' => false,
+            ]
+           ])->label("Rate");
+        ?>
 
   
     <?= $form->field($model, 'tests')->widget(DepDrop::classname(), [

@@ -22,6 +22,7 @@ use common\models\lab\Sampletypetestname;
 use common\models\lab\Testnamemethod;
 use common\models\lab\Methodreference;
 use common\models\lab\Testname;
+use kartik\money\MaskMoney;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Packagelist */
@@ -138,8 +139,19 @@ $this->registerJs($js);
              <?= $form->field($model, 'rstl_id')->hiddenInput(['value'=> 1])->label(false) ?>
 
              <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids',  'type'=>"hidden"], ['readonly' => true]) ?>
-         
-         <?= $form->field($model, 'rate')->textInput(['readonly' => true]) ?>
+       
+             <?php
+            echo $form->field($model, 'rate')->widget(MaskMoney::classname(), [
+            'readonly'=>true,
+            'options'=>[
+                'style'=>'text-align: right'
+            ],
+            'pluginOptions' => [
+               'prefix' => '₱ ',
+               'allowNegative' => false,
+            ]
+           ])->label("Rate");
+        ?>
             <div class="row" style="float: right;padding-right: 30px">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'id'=>'package_btn', 'disabled'=>true]) ?>
                 <?php if($model->isNewRecord){ ?>
@@ -161,6 +173,7 @@ $this->registerJs("$('#sample-sample_type_id').on('depdrop:afterChange',function
             success: function (data, textStatus, jqXHR) {
                
                 $('#packagelist-rate').val(data.rate);
+                $('#packagelist-rate-disp').val(data.rate);
                 $('#packagelist-tests').val(data.tests);
                 $('#package_ids').val(data.ids);
                 $('.image-loader').removeClass( \"img-loader\" );
@@ -187,6 +200,7 @@ $this->registerJs("$('#sample-sample_type_id').on('change',function(){
             success: function (data, textStatus, jqXHR) {
              
                 $('#packagelist-rate').val(data.rate);
+                $('#packagelist-rate-disp').val(data.rate);
                 $('#packagelist-tests').val(data.tests);
                 $('#package_ids').val(data.ids);
                 $('.image-loader').removeClass( \"img-loader\" );

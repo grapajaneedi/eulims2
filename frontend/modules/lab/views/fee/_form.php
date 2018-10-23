@@ -123,8 +123,18 @@ $this->registerJs($js);
         <div class="col-sm-6">
 
         <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
-        <?= $form->field($model, 'unit_cost')->textInput(['readonly' => true]) ?>
-      
+        <?php
+        echo $form->field($model, 'unit_cost')->widget(MaskMoney::classname(), [
+        'readonly'=>true,
+        'options'=>[
+            'style'=>'text-align: right'
+        ],
+        'pluginOptions' => [
+           'prefix' => '₱ ',
+           'allowNegative' => false,
+        ]
+       ])->label("Unit Cost");
+    ?>
 
         </div>
     </div>
@@ -179,6 +189,7 @@ $this->registerJs("$('#fee_list').on('change',function(){
             success: function (data, textStatus, jqXHR) {
                   //  alert('boom');
                     $('#fee-unit_cost').val(data.unit_cost);
+                    $('#fee-unit_cost-disp').val(data.unit_cost);
                 $('.image-loader').removeClass( \"img-loader\" );
             },
             beforeSend: function (xhr) {

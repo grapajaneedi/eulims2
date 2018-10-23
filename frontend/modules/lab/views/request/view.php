@@ -504,9 +504,18 @@ $this->registerJs($PrintEvent);
                             $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
                             $samplesquery = Sample::find()->where(['request_id' => $id])->one();
                             $rate =  $discountquery->rate;
+
+                            ///
+                          
+                            $sample_ids = '';
+                            $samples = Sample::find()->where(['request_id' => $id])->all();
+                            foreach ($samples as $sample){
+                                $sample_ids .= $sample->sample_id.",";
+                            }
+                            $sample_ids = substr($sample_ids, 0, strlen($sample_ids)-1);
                            
                             if ($samplesquery){
-                                $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE sample_id=$samplesquery->sample_id";     
+                                $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE sample_id IN ($sample_ids)";     
                                 
                                      $Connection = Yii::$app->labdb;
                                      $command = $Connection->createCommand($sql);
@@ -522,14 +531,7 @@ $this->registerJs($PrintEvent);
                                      }
                             }else{
                                 return '';
-                               // return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0.00</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
-                            }
-                           
-                           
-                           
-
-                           
-                         
+                            }     
                       },
                 ],
                 
