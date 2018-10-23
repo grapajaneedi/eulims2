@@ -38,22 +38,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'before'=> Html::button("<span class='glyphicon glyphicon-plus'></span> Create Package", ["value"=>"/lab/package/create", "class" => "btn btn-success modal_services","title" => Yii::t("app", "Create Package")]),
             ],
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-           
-           // 'rstl_id',
-           
+            ['class' => 'yii\grid\SerialColumn'],    
             [
                 'attribute' => 'sampletype_id',
                 'label' => 'Sample Type',
+                'format' => 'raw',
+                'contentOptions' => ['style' => 'max-width:100px; white-space: normal;'],
                 'value' => function($model) {
 
                     if ($model->sampletype){
                         return $model->sampletype->type;
                     }else{
                         return "";
-                    }
-                    
+                    }                 
                 },
                'filterType' => GridView::FILTER_SELECT2,
                'filter' => $sampetypelist,
@@ -62,23 +59,66 @@ $this->params['breadcrumbs'][] = $this->title;
                ],
                'filterInputOptions' => ['placeholder' => 'Sample Type', 'testcategory_id' => 'grid-products-search-category_type_id']
             ],
-            'name',
-            'rate',
-            'tests',
+            [
+                'attribute' => 'name',
+                'label' => 'name',
+                'format' => 'raw',
+                'contentOptions' => ['style' => 'width:5%; white-space: normal;'],
+                'value' => function($model) {    
+                        return $model->name;
+                            },
+           //     'contentOptions' => ['style' => 'width:60px; white-space: normal;'],
+                'filterInputOptions' => ['placeholder' => 'Sample Type', 'testcategory_id' => 'grid-products-search-category_type_id']
+            ],
+            [
+                'attribute' => 'rate',
+                'label' => 'Rate',
+                'format' => 'raw',
+                'value' => function($model) {    
+                        return number_format($model->rate, 2);
+                            },
+             
+            ],
+            [
+                'attribute' => 'tests',
+                'label' => 'Tests',
+                'format' => 'raw',
+                'value' => function($model) {
+                        $tet = $model->tests;  
+                        $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";     
+             
+                        $Connection = Yii::$app->labdb;
+                        $command = $Connection->createCommand($sql);
+                        $row = $command->queryOne();    
+                        $tests = $row['GROUP_CONCAT(testName)'];  
 
+                        $space = explode(',', $tests);
+                        $d = '';
+                        $newline = ", ";
+                        foreach ($space as $s){
+                            $d.= $s.$newline;
+                        }
+                        
+                        return $d;
+
+                        //return "x";
+                        },
+                'contentOptions' => ['style' => 'width:20px;'],
+               'filterInputOptions' => ['placeholder' => 'Sample Type', 'testcategory_id' => 'grid-products-search-category_type_id']
+            ],
             ['class' => 'kartik\grid\ActionColumn',
-            'contentOptions' => ['style' => 'width: 8.7%'],
+          //  'contentOptions' => ['style' => 'width: 8.7%'],
             'template' => '{view}{update}{delete}',
             'buttons'=>[
                 'view'=>function ($url, $model) {
-                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::to(['/lab/labsampletype/view','id'=>$model->id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Lab Sample Type <font color='Blue'></font>")]);
+                    return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::to(['/lab/package/view','id'=>$model->id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Packages<font color='Blue'></font>")]);
                 },
                 'update'=>function ($url, $model) {
-                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/labsampletype/update','id'=>$model->id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Lab Sample Type<font color='Blue'></font>")]);
+                    return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/package/update','id'=>$model->id]),'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Packages<font color='Blue'></font>")]);
                 },
                 'delete'=>function ($url, $model) {
-                    $urls = '/lab/labsampletype/delete?id='.$model->id;
-                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Lab Sample Type','data-pjax'=>'0']);
+                    $urls = '/lab/package/delete?id='.$model->id;
+                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Packages','data-pjax'=>'0']);
                 },
             ],
         ],

@@ -54,7 +54,7 @@ class Testname extends \yii\db\ActiveRecord
         return [
             'testname_id' => 'Testname ID',
             'testName' => 'Test Name',
-            'status_id' => 'Status ID',
+            'status_id' => 'Status',
             'create_time' => 'Create Time',
             'update_time' => 'Update Time',
         ];

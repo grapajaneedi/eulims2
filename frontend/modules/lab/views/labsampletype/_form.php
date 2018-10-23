@@ -41,7 +41,7 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
             ])
     ?>
       <span class="input-group-btn" style="padding-top: 25.5px">
-                    <button onclick="LoadModal('Create New Sample Type', '/lab/sampletype/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+                    <button onclick="LoadModal('Create New Sample Type', '/lab/sampletype/createtype');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
      </span>
     </div>
 

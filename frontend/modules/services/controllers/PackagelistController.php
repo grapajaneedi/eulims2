@@ -4,6 +4,7 @@ namespace frontend\modules\services\controllers;
 
 use Yii;
 use common\models\lab\Packagelist;
+use common\models\lab\Methodreference;
 use common\models\lab\Package;
 use common\models\lab\PackagelistSearch;
 use common\models\lab\Analysis;
@@ -129,21 +130,11 @@ class PackagelistController extends Controller
         $session = Yii::$app->session;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        //     return $this->redirect(['view', 'id' => $model->analysis_id]);
-        // }
-
         if ($model->load(Yii::$app->request->post())) {
             $sample_ids= $_POST['sample_ids'];
             $ids = explode(',', $sample_ids);  
-            $post= Yii::$app->request->post();
-               //iloop yung mga tests dito (1,2,3,4,5)
-               //separate loop ang tests
-
-           
+            $post= Yii::$app->request->post();       
    }
-
-
             $samplesQuery = Sample::find()->where(['request_id' => $id]);
             $sampleDataProvider = new ActiveDataProvider([
                     'query' => $samplesQuery,
@@ -155,7 +146,6 @@ class PackagelistController extends Controller
 
             $request = $this->findRequest($request_id);
             $labId = $request->lab_id;
-    
             $testcategory = $this->listTestcategory($labId);
          
             $sampletype = [];
@@ -165,19 +155,13 @@ class PackagelistController extends Controller
                  $sample_ids= $_POST['sample_ids'];
                  $ids = explode(',', $sample_ids);  
                  $post= Yii::$app->request->post();
-                    //iloop yung mga tests dito (1,2,3,4,5)
-                    //separate loop ang tests
 
                     $test= $_POST['package_ids'];
                     $test_ids = explode(',', $test);  
 
                  foreach ($ids as $sample_id){
                      $analysis = new Analysis();
-
-                     //yung package name mo na ituuu
-                     //test
-                     $modelpackage =  Package::findOne(['id'=>$post['Packagelist']['name']]);
-
+                    $modelpackage =  Package::findOne(['id'=>$post['Packagelist']['name']]);
                      $analysis->sample_id = $sample_id;
                      $analysis->cancelled = 0;
                      $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
@@ -198,14 +182,12 @@ class PackagelistController extends Controller
                      $analysis->date_analysis = '2018-06-14 7:35:0';   
                      $analysis->save();
 
-
                      foreach ($test_ids as $id){
                         $analysis = new Analysis();
-   
-                        //yung package name mo na ituuu
-                        //test
                         $modeltest=  Testname::findOne(['testname_id'=>$id]);
-   
+                       // $modelmethod= Methodreference::findOne(['method_reference_id'=>1]);
+
+                        
                         $analysis->sample_id = $sample_id;
                         $analysis->cancelled = 0;
                         $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
@@ -219,23 +201,20 @@ class PackagelistController extends Controller
                         $analysis->is_package = 1;
                         $analysis->method = "-";
                         $analysis->fee = 0;
-                        $analysis->testname = "  ".$modeltest->testName;
+                        $analysis->testname = $modeltest->testName;
                         $analysis->references = "references";
                         $analysis->quantity = 1;
                         $analysis->sample_code = "sample";
                         $analysis->date_analysis = '2018-06-14 7:35:0';   
                         $analysis->save();
                     }      
-                 }      
-                 
-              
+                 }                   
                  Yii::$app->session->setFlash('success', 'Package Successfully Created');
                  return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
         } 
         if (Yii::$app->request->isAjax) {
 
             $analysismodel = new Analysis();
-
             $analysismodel->rstl_id = $GLOBALS['rstl_id'];
             $analysismodel->pstcanalysis_id = $GLOBALS['rstl_id'];
             $analysismodel->request_id = $GLOBALS['rstl_id'];
@@ -313,11 +292,11 @@ class PackagelistController extends Controller
             $id = (int) $_GET['packagelist_id'];
             $modelpackagelist =  Package::findOne(['id'=>$id]);
             if(count($modelpackagelist)>0){
-                $rate = $modelpackagelist->rate;
+                $rate = number_format($modelpackagelist->rate,2);
                 $tet = $modelpackagelist->tests;
 
                 $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";     
-                
+     
                 $Connection = Yii::$app->labdb;
                 $command = $Connection->createCommand($sql);
                 $row = $command->queryOne();    

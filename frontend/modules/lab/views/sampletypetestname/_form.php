@@ -32,7 +32,7 @@ $testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName'
             ])
     ?>
      <span class="input-group-btn" style="padding-top: 25.5px">
-                    <button onclick="LoadModal('Create New Sample Type', '/lab/sampletype/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+                    <button onclick="LoadModal('Create New Sample Type', '/lab/sampletype/createsampletype');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
      </span>
         </div>
 
@@ -44,7 +44,7 @@ $testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName'
             ])
     ?>
      <span class="input-group-btn" style="padding-top: 25.5px">
-                    <button onclick="LoadModal('Create New Test Name', '/lab/testname/create');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+                    <button onclick="LoadModal('Create New Test Name', '/lab/testname/createtestname');"class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
      </span>
         </div>
 

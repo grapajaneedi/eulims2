@@ -12,29 +12,44 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="package-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'rstl_id',
-            'testcategory_id',
-            'sampletype_id',
+           // 'id',
+           'sampletype.type',
             'name',
-            'rate',
-            'tests',
+            [
+                'label'=>'Rate',
+                'format'=>'raw',
+                'value' => function($model) {
+                    return number_format($model->rate, 2);
+                    },
+                'valueColOptions'=>['style'=>'width:30%'], 
+                'displayOnly'=>true
+            ],
+            [
+                'label'=>'Tests',
+                'format'=>'raw',
+                'value' => function($model) {
+                    $tet = $model->tests;  
+                    $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";     
+         
+                    $Connection = Yii::$app->labdb;
+                    $command = $Connection->createCommand($sql);
+                    $row = $command->queryOne();    
+                    $tests = $row['GROUP_CONCAT(testName)'];  
+
+                    $space = explode(',', $tests);
+                    $d = '';
+                    $newline = ", ";
+                    foreach ($space as $s){
+                        $d.= $s.$newline;
+                    }                   
+                    return $d;
+                    },
+                'valueColOptions'=>['style'=>'width:30%'], 
+                'displayOnly'=>true
+            ],
         ],
     ]) ?>
 

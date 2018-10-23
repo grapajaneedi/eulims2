@@ -53,8 +53,8 @@ class Testnamemethod extends \yii\db\ActiveRecord
     {
         return [
             'testname_method_id' => 'Testname Method ID',
-            'testname_id' => 'Testname ID',
-            'method_id' => 'Method ID',
+            'testname_id' => 'Test Name',
+            'method_id' => 'Method',
             'create_time' => 'Create Time',
             'update_time' => 'Update Time',
         ];
@@ -66,5 +66,10 @@ class Testnamemethod extends \yii\db\ActiveRecord
     public function getTestname()
     {
         return $this->hasOne(Testname::className(), ['testname_id' => 'testname_id']);
+    }
+
+    public function getMethod()
+    {
+        return $this->hasOne(Methodreference::className(), ['method_reference_id' => 'method_id']);
     }
 }

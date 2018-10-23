@@ -5,6 +5,7 @@ namespace frontend\modules\lab\controllers;
 use Yii;
 use common\models\lab\Methodreference;
 use common\models\lab\MethodreferenceSearch;
+use common\models\lab\TestnamemethodSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -44,6 +45,17 @@ class MethodreferenceController extends Controller
         ]);
     }
 
+    public function actionTestname()
+    {
+        $searchModel = new TestnamemethodSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('/testnamemethod/indextestname', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Displays a single Methodreference model.
      * @param integer $id
@@ -78,6 +90,25 @@ class MethodreferenceController extends Controller
        $model->testname_id = 0;
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_form', [
+                'model' => $model,
+            ]);
+       }
+    }
+
+    public function actionCreatemethod()
+    {
+        $model = new Methodreference();
+        $model->testname_id = 0;
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+           // Yii::$app->session->setFlash('success', 'Method Reference Successfully Created'); 
+            return $this->runAction('testname');
+        }
+        $model->create_time=date("Y-m-d h:i:s");
+        $model->update_time=date("Y-m-d h:i:s");
+
+       $model->testname_id = 0;
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_formmethodreference', [
                 'model' => $model,
             ]);
        }

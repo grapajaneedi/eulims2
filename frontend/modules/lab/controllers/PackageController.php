@@ -53,9 +53,11 @@ class PackageController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]);
+        }
     }
 
     /**
@@ -105,15 +107,28 @@ class PackageController extends Controller
      */
     public function actionUpdate($id)
     {
+        // $model = $this->findModel($id);
+
+        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        //     return $this->redirect(['view', 'id' => $model->id]);
+        // }
+
+        // return $this->render('update', [
+        //     'model' => $model,
+        // ]);
+
         $model = $this->findModel($id);
+        $sampletype = [];
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    Yii::$app->session->setFlash('success', 'Package Successfully Updated'); 
+                    return $this->redirect(['index']);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+                } else if (Yii::$app->request->isAjax) {
+                    return $this->renderAjax('_form', [
+                        'model' => $model,
+                        'sampletype'=>$sampletype
+                    ]);
+                 }
     }
 
     /**
@@ -125,9 +140,13 @@ class PackageController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = $this->findModel($id); 
+        if($model->delete()) {            
+            Yii::$app->session->setFlash('success', 'Package Successfully Deleted'); 
+            return $this->redirect(['index']);
+        } else {
+            return $model->error();
+        }
     }
 
     /**
@@ -147,14 +166,13 @@ class PackageController extends Controller
     }
 
     public function actionGetpackage() {
-        if(isset($_GET['id'])){
-            $id = (int) $_GET['id'];
-
-           
-             $modelpackagelist =  Package::findOne(['id'=>$id]);
-           
+        if(isset($_GET['packagelist_id'])){
+            $id = (int) $_GET['packagelist_id'];
+            $modelpackagelist =  Package::findOne(['id'=>$id]);
+            if(count($modelpackagelist)>0){
+                $rate = $modelpackagelist->rate;
                 $tet = $modelpackagelist->tests;
-              
+
                 $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";     
                 
                 $Connection = Yii::$app->labdb;
@@ -163,14 +181,19 @@ class PackageController extends Controller
                     $tests = $row['GROUP_CONCAT(testName)'];
                  
                       
-        
+            } else {
+                $rate = "";
+                $tests = "";
+                
+            }
         } else {
-         
+            $rate = "Error getting rate";
+            $tests = "Error getting tests";
         }
         return Json::encode([
-           
+            'rate'=>$rate,
             'tests'=>$tests,
-           
+            'ids'=>$tet,
         ]);
     }
 }

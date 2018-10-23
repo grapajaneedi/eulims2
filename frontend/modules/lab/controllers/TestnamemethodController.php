@@ -44,6 +44,17 @@ class TestnamemethodController extends Controller
         ]);
     }
 
+    public function actionIndextestnamemethod()
+    {
+        $searchModel = new TestnamemethodSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('indextestname', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Displays a single Testnamemethod model.
      * @param integer $id

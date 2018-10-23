@@ -5,6 +5,8 @@ namespace frontend\modules\lab\controllers;
 use Yii;
 use common\models\lab\Testname;
 use common\models\lab\TestnameSearch;
+use common\models\lab\TestnamemethodSearch;
+use common\models\lab\SampletypetestnameSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -77,6 +79,62 @@ class TestnameController extends Controller
             $model->create_time=date("Y-m-d h:i:s");
             $model->update_time=date("Y-m-d h:i:s");
             return $this->renderAjax('_form', [
+                'model' => $model,
+            ]);
+       }
+    }
+
+    public function actionTestname()
+    {
+        $searchModel = new SampletypetestnameSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('/sampletypetestname/indexsampletypetestname', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionTestnamemethod()
+    {
+        $searchModel = new TestnamemethodSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('/testnamemethod/indextestname', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionCreatetestname()
+    {
+        $model = new Testname();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->runAction('testname');
+        }
+
+        if(Yii::$app->request->isAjax){
+            $model->create_time=date("Y-m-d h:i:s");
+            $model->update_time=date("Y-m-d h:i:s");
+            return $this->renderAjax('_formtestname', [
+                'model' => $model,
+            ]);
+       }
+    }
+
+    public function actionCreatetestnamemethod()
+    {
+        $model = new Testname();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->runAction('testnamemethod');
+        }
+
+        if(Yii::$app->request->isAjax){
+            $model->create_time=date("Y-m-d h:i:s");
+            $model->update_time=date("Y-m-d h:i:s");
+            return $this->renderAjax('_formtestnamemethod', [
                 'model' => $model,
             ]);
        }

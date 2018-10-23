@@ -398,7 +398,7 @@ class ServicesController extends Controller
          { 
             $labsampletype = Labsampletype::find()->where(['lab_sampletype_id'=>$labsampletypeid])->one();
             if ($labsampletype){
-
+             
             }else{
                 $labsampletype = new Labsampletype();
                 $labsampletype->lab_sampletype_id = $var['lab_sampletype_id'];  
@@ -407,7 +407,7 @@ class ServicesController extends Controller
                 $labsampletype->effective_date = $var['effective_date'];
                 $labsampletype->added_by = $var['added_by'];
                 $labsampletype->save();
-            }  
+           }  
          }
 
         //  GALING SA API query via $sampletype_id

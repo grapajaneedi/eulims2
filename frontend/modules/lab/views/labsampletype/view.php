@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'lab_sampletype_id',
             'lab.labname',
-            'sampletype.type',
+            'sampletype.type', 'sampletype.type',
             'effective_date',
             'added_by',
         ],

@@ -17,12 +17,7 @@ use common\components\Functions;
 use linslin\yii2\curl;
 use yii\helpers\Json;
 
-
-
-
 $func=new Functions();
-
-
 
 $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/labs/search?labcount=0";
 $curl = new curl\Curl();

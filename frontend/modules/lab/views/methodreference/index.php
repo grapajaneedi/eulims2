@@ -44,7 +44,16 @@ $this->params['breadcrumbs'][] = $this->title;
                
             ],
          //   'contentOptions' => ['style' => 'width: 60%;word-wrap: break-word;white-space:pre-line;'],
-            'fee',
+         [
+            'attribute'=>'fee',
+            'format' => 'raw',
+            'value' => function($model) {
+                return number_format($model->fee, 2);
+                },
+            'enableSorting' => false,
+            'contentOptions' => ['style' => 'width: 70%;word-wrap: break-word;white-space:pre-line;'],
+           
+        ],
             //'create_time',
             //'update_time',
 
