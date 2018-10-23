@@ -35,7 +35,6 @@ return [
         //'class' => 'mdm\admin\components\AccessControl',
         'class' => 'common\modules\admin\components\AccessControl',
         'allowActions' => [
-            '/install/*',
             '/ajax/*',
             '/ajax/getlab',
             'site/*',
