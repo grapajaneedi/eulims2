@@ -22,7 +22,7 @@ class FinancialreportsController extends \yii\web\Controller
         $monthName = date("F", mktime(0, 0, 0, $imonth, 10));
         $moduleTitle = "Collection Summary for " . $monthName . ', ' . $iyear;
        // $queryA = new yii\db\Query;
-        $queryNew =  'Call eulims_finance.spGetCollectionSummary('. $iyear .','. $imonth . ');';
+        $queryNew =  'Call eulims_finance_migration.spGetCollectionSummary('. $iyear .','. $imonth . ');';
          $columnArray = array();
           $columnArrayNew = array();
           
@@ -66,7 +66,7 @@ class FinancialreportsController extends \yii\web\Controller
      $monthName = date("F", mktime(0, 0, 0, $imonth, 10));
      $moduleTitle = "Cash Receipt Journal for " . $monthName . ', ' . $iyear;
         
-     $sqlQueryString = 'Call eulims_finance.spGetCollectionSummary('. $iyear .','. $imonth . ');';    
+     $sqlQueryString = 'Call eulims_finance_migration.spGetCollectionSummary('. $iyear .','. $imonth . ');';    
      $dataHeader = Yii::$app->db->createCommand($sqlQueryString);
      $stringTable="<table>";
      $arrayUACS =['2-03-01-020','1-01-01-010','1-01-02-020','1-01-04-010','4-03-01-010','1-01-01-010(TF)','','',];
@@ -193,9 +193,9 @@ class FinancialreportsController extends \yii\web\Controller
                                
                                
                                
-        $queryNewest =  'Call eulims_finance.spGetCollectionReportNew('. $iyear .','. $imonth . ');';    //'Call eulims_finance.spGetCollectionReportNew(2018,5);';
+        $queryNewest =  'Call eulims_finance_migration.spGetCollectionReportNew('. $iyear .','. $imonth . ');';    //'Call eulims_finance.spGetCollectionReportNew(2018,5);';
     //     $queryNewest ='Call spGetCollectionReport(2018,5)';                      
-        $queryDaw =Yii::$app->db->createCommand('Call eulims_finance.spGetCollectionReportNew('. $iyear .','. $imonth . ');')->queryScalar(); 
+        $queryDaw =Yii::$app->db->createCommand('Call eulims_finance_migration.spGetCollectionReportNew('. $iyear .','. $imonth . ');')->queryScalar(); 
           
       //  $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM eulims_finance.tbl_collectiontype')->queryScalar();
       //  $columnHeaders = Yii::$app->db->createCommand('SELECT accountcode FROM eulims_finance.tbl_accountingcode')->queryAll();
