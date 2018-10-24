@@ -34,5 +34,5 @@ return [
     ],
     'system' => [
         'class' => 'common\modules\system\Module',
-    ],
+    ]
 ];
