@@ -175,7 +175,22 @@ $this->registerJs($js);
           
          <div class="row">
         <div class="col-sm-6">
-        <?= $form->field($model, 'fee')->textInput(['readonly' => true, 'style'=>'font-weight:bold']) ?>
+     
+        <?php
+            echo $form->field($model, 'fee')->widget(MaskMoney::classname(), [
+            'readonly'=>true,
+            'options'=>[
+                'style'=>'text-align: right'
+            ],
+            'pluginOptions' => [
+               'prefix' => '₱ ',
+               'allowNegative' => false,
+            ]
+           ])->label("Fee");
+        ?>
+
+        
+                    
         </div>
            <div class="col-sm-6">
              
@@ -213,6 +228,7 @@ $this->registerJs("$('#sample-test_id').on('depdrop:afterChange',function(){
             success: function (data, textStatus, jqXHR) {
                 $('#analysis-references').val(data.references);
                 $('#analysis-fee').val(data.fee);
+                $('#analysis-fee-disp').val(data.fee);
                 $('.image-loader').removeClass( \"img-loader\" );
             },
             beforeSend: function (xhr) {
@@ -237,9 +253,11 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
             method: 'GET',
             data: {method_reference_id: id},
             success: function (data, textStatus, jqXHR) {
-                $('#xyz').html(response);
+               
+           
                 $('#analysis-references').val(data.references);
                 $('#analysis-fee').val(data.fee);
+                $('#analysis-fee-disp').val(data.fee);
                 $('.image-loader').removeClass( \"img-loader\" );
                 $('.image-loader').removeClass( \"img-loader\" );
             },

@@ -93,7 +93,7 @@ class AnalysisController extends Controller
             $modelmethodreference=  Methodreference::findOne(['method_reference_id'=>$id]);
             if(count($modelmethodreference)>0){
                 $references = $modelmethodreference->reference;
-                $fee = number_format($modelmethodreference->fee,2);
+                $fee = $modelmethodreference->fee;
 
             } else {
                 $references = "";

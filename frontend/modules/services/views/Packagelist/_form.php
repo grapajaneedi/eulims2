@@ -16,6 +16,7 @@ use yii\web\JsExpression;
 use kartik\widgets\TypeaheadBasic;
 use kartik\widgets\Typeahead;
 use common\models\services\Test;
+use kartik\money\MaskMoney;
 
 
 /* @var $this yii\web\View */
@@ -41,7 +42,18 @@ $Sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sample_type_id','sa
              </div>
 
              <div class="col-md-6">
-             <?= $form->field($model, 'rate')->textInput(['maxlength' => true]) ?>
+             <?php
+            echo $form->field($model, 'rate')->widget(MaskMoney::classname(), [
+            'readonly'=>true,
+            'options'=>[
+                'style'=>'text-align: right'
+            ],
+            'pluginOptions' => [
+               'prefix' => '₱ ',
+               'allowNegative' => false,
+            ]
+           ])->label("Rate");
+        ?>
              
              </div>
          </div>

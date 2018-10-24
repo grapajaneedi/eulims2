@@ -39,13 +39,13 @@ class LabSampletype extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['lab_id', 'sampletype_id', 'added_by'], 'required'],
-            [['lab_id', 'sampletype_id'], 'integer'],
-            [['effective_date'], 'safe'],
-            [['added_by'], 'string', 'max' => 300],
-            [['sampletype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletype_id' => 'sampletype_id']],
-        ];
+        // return [
+        //     [['lab_id', 'sampletype_id', 'added_by'], 'required'],
+        //     [['lab_id', 'sampletype_id'], 'integer'],
+        //     [['effective_date'], 'safe'],
+        //     [['added_by'], 'string', 'max' => 300],
+        //     [['sampletype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletype_id' => 'sampletype_id']],
+        // ];
     }
 
     /**
