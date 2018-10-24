@@ -65,7 +65,7 @@ $this->registerJs($js);
 <?= Html::textInput('sampletypeid', $sampletypeid, ['class' => 'form-control', 'id'=>'sampletypeid', 'type'=>'hidden' ], ['readonly' => true]) ?>
 
 
-<?= Html::textInput('labsampletypeid', $labsampletypeid, ['class' => 'form-control', 'id'=>'labsampletypeid'], ['readonly' => true]) ?> 
+<?= Html::textInput('labsampletypeid', $labsampletypeid, ['class' => 'form-control', 'id'=>'labsampletypeid', 'type'=>'hidden'], ['readonly' => true]) ?> 
 
 <?= Html::textInput('sampletypetestname', $sampletypetestname, ['class' => 'form-control', 'id'=>'sampletypetestname', 'type'=>'hidden'], ['readonly' => true]) ?>
 

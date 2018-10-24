@@ -253,9 +253,11 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
             method: 'GET',
             data: {method_reference_id: id},
             success: function (data, textStatus, jqXHR) {
-                $('#xyz').html(response);
+               
+           
                 $('#analysis-references').val(data.references);
                 $('#analysis-fee').val(data.fee);
+                $('#analysis-fee-disp').val(data.fee);
                 $('.image-loader').removeClass( \"img-loader\" );
                 $('.image-loader').removeClass( \"img-loader\" );
             },

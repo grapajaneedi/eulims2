@@ -176,41 +176,14 @@ $this->params['breadcrumbs'][] = $this->title;
             method: "POST",
             data: {month:m, year:y},
             beforeSend: function(xhr) {
-
-                // var elem = document.getElementById("myBar");
-                // var width = 10;
-                // var id = setInterval(frame, 10);
-                // function frame() {
-                //     if (width >= 100) {
-                //         clearInterval(id);
-                //     } else {
-                //         width++;
-                //         elem.style.width = width + '%';
-                //         elem.innerHTML = width * 1 + '%';
-                //     }
-               //alert('Pogi!');
                 $('.image-loader').addClass("img-loader");
                }
             })
             .done(function( data ) {
                 $("#testname-grid").yiiGridView("applyFilter"); 
                 $('.image-loader').removeClass("img-loader");
-               // showSystemProgress(false); 
             });
-  
-                        // $.post('/api/lab/res', {
-                        //    month: m,
-                        //    year: y,
-                        // }, function(result){
-                        //     $("#testname-grid").yiiGridView("applyFilter");    
-
-                        // });
-
-                        // $.post({
-                        //     loader
-                        //     xxx
-                        //     }).done('tanggaling loader');
-                }
+        }
 </script>
 
 
