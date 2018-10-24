@@ -7,6 +7,27 @@
  * 10 23, 18 , 2:03:16 PM * 
  * Module: index * 
  */
+/*include "classes/MySQL.php";
+
+$MySQL=new MySQL('eulims');
+$tablename="tbl_user";
+$setvals=[
+    'username'=>'nolan',
+    'email'=>'nolan@tailormadetraffic.com'
+];
+$condition=[
+    'user_id'=>1
+];
+$arrayval=[
+  'name'=>'Eden',
+  'data'=>'Somocor'
+];
+$MySQL->deleteRow("tbl_auth_rule", $arrayval);
+//$MySQL->insertRow("tbl_auth_rule", $arrayval);
+//$MySQL->updateRow($tablename, $setvals, $condition);
+$MySQL->Destroy();
+ * 
+ */
 ?>
 
 
