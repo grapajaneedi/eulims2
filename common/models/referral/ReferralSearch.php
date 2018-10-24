@@ -8,24 +8,24 @@ use yii\data\ActiveDataProvider;
 use common\models\referral\Referral;
 
 /**
- * ReferralSearch represents the model behind the search form of `common\models\referral\Referral`.
+ * ReferralSearch represents the model behind the search form about `common\models\referral\Referral`.
  */
 class ReferralSearch extends Referral
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['referral_id', 'receiving_agency_id', 'testing_agency_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'purpose_id', 'discount_id', 'received_by', 'bid', 'cancelled'], 'integer'],
-            [['referral_code', 'referral_date', 'referral_time', 'sample_received_date', 'report_due', 'conforme', 'create_time', 'update_time'], 'safe'],
+            [['referral_id', 'receiving_agency_id', 'testing_agency_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'purpose_id', 'discount_id', 'received_by'], 'integer'],
+            [['referral_code', 'referral_date_time', 'sample_received_date', 'report_due', 'conforme', 'bid', 'cancelled', 'create_time', 'update_time'], 'safe'],
             [['discount_amt', 'total_fee'], 'number'],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function scenarios()
     {
@@ -61,7 +61,7 @@ class ReferralSearch extends Referral
         // grid filtering conditions
         $query->andFilterWhere([
             'referral_id' => $this->referral_id,
-            'referral_date' => $this->referral_date,
+            'referral_date_time' => $this->referral_date_time,
             'receiving_agency_id' => $this->receiving_agency_id,
             'testing_agency_id' => $this->testing_agency_id,
             'lab_id' => $this->lab_id,
@@ -75,15 +75,14 @@ class ReferralSearch extends Referral
             'total_fee' => $this->total_fee,
             'report_due' => $this->report_due,
             'received_by' => $this->received_by,
-            'bid' => $this->bid,
-            'cancelled' => $this->cancelled,
             'create_time' => $this->create_time,
             'update_time' => $this->update_time,
         ]);
 
         $query->andFilterWhere(['like', 'referral_code', $this->referral_code])
-            ->andFilterWhere(['like', 'referral_time', $this->referral_time])
-            ->andFilterWhere(['like', 'conforme', $this->conforme]);
+            ->andFilterWhere(['like', 'conforme', $this->conforme])
+            ->andFilterWhere(['like', 'bid', $this->bid])
+            ->andFilterWhere(['like', 'cancelled', $this->cancelled]);
 
         return $dataProvider;
     }
