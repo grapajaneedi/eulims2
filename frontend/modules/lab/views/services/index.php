@@ -17,27 +17,7 @@ use kartik\datetime\DateTimePicker;
 use common\components\Functions;
 use linslin\yii2\curl;
 use yii\helpers\Json;
-
 $func=new Functions();
-
-// $sampletypeid = 259;
-// $apiUrl_labtype="https://eulimsapi.onelab.ph/api/web/v1/labsampletypes/search?lab_sampletype_id=".$sampletypeid;
-// $curl = new curl\Curl();
-// $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-// $response_labtype = $curl->get($apiUrl_labtype);
-// $decode_labtype=Json::decode($response_labtype,TRUE);
-
-// foreach ($decode_labtype as $var)
-// {
-//      $labsampletype = new Labsampletype();
-//                 $labsampletype->lab_sampletype_id = 1;  
-//                 $labsampletype->lab_id = 1;
-//                 $labsampletype->sampletype_id = 1;
-//                 $labsampletype->effective_date = "1970-01-01";
-//                 $labsampletype->added_by = "dhdh";
-//                 $labsampletype->save(false);
-// }
-
 
 $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/labs/search?labcount=0";
 $curl = new curl\Curl();
@@ -45,49 +25,28 @@ $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
 $response = $curl->get($apiUrl);
 $decode=Json::decode($response);
 
-// foreach ($decode as $labsampletype) {
-    
-//     $labsampletypeid = $labsampletype['lab_sampletype_id'];
-// }
-
 $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
-
-
 $lablist= ArrayHelper::map($decode,'lab_id','labname');
-
-
 $this->title = 'Add/ Remove Services';
 $this->params['breadcrumbs'][] = $this->title;
-
-
 $services =  Services::find()->all();      
-
-
 ?>
-
-<?php
-       
-    ?>
 
 <div class="services-index" >
    
 <fieldset>
     <legend>Legend/Status</legend>
     <div>
-    <span class='badge btn-success legend-font' ><span class= 'glyphicon glyphicon-check'></span> UNOFFER</span>
-    <span class='badge btn-danger legend-font' ><span class= 'glyphicon glyphicon-check'></span> OFFER</span>
-
- 
-                
+        <span class='badge btn-success legend-font' ><span class= 'glyphicon glyphicon-check'></span> UNOFFER</span>
+        <span class='badge btn-danger legend-font' ><span class= 'glyphicon glyphicon-check'></span> OFFER</span>               
     </div>
-</fieldset>
-   
+</fieldset> 
     <div class="row">
-    <?php $form = ActiveForm::begin(); ?>
+     <?php $form = ActiveForm::begin(); ?>
    
         <div>
             <?php 
-          echo   $sampletype = "<div class='col-md-4'>".$form->field($model,'lab_id')->widget(Select2::classname(),[
+                echo$sampletype = "<div class='col-md-4'>".$form->field($model,'lab_id')->widget(Select2::classname(),[
                             'data' => $lablist,
                             'theme' => Select2::THEME_KRAJEE,
                             'options' => ['id'=>'lab_id'],
@@ -115,71 +74,58 @@ $services =  Services::find()->all();
                             'loadingText' => 'Loading Tests...',
                         ]
                     ])."</div>";
-            ?>
-
-            
+            ?>       
         </div>
         <?php ActiveForm::end(); ?>
     </div>
-    
-    
+      
     <div class="row" id="methodreference"  style="padding-left:15px;padding-right:15px">
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'pjax' => true,
+            'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
+            'panel' => [
+                    'type' => GridView::TYPE_PRIMARY,
+                    'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+                'after'=>false,
+                ],
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'pjax' => true,
-        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
-        'panel' => [
-                'type' => GridView::TYPE_PRIMARY,
-                'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-               'after'=>false,
+                [
+                    'header'=>'Offered',
+                    'format' => 'raw',
+                    'enableSorting' => false,
+                    'contentOptions' => ['style' => 'width:40px; white-space: normal;'],           
+                ],
+                [
+                    'header'=>'Method',
+                    'format' => 'raw',
+                    'enableSorting' => false,
+                    'contentOptions' => ['style' => 'width: 60%;word-wrap: break-word;white-space:pre-line;'],  
+                ],
+                [
+                    'header'=>'Reference',
+                    'format' => 'raw',
+                    'enableSorting' => false,
+                    'contentOptions' => ['style' => 'width: 60%;word-wrap: break-word;white-space:pre-line;'],      
+                ],
+                [
+                    'header'=>'Fee',
+                    'format' => 'raw',
+                    'enableSorting' => false,
+                    'contentOptions' => ['style' => 'width:40px; white-space: normal;'],             
+                ],
+                [
+                    'header'=>'Offered by',
+                    'format' => 'raw',
+                    'enableSorting' => false,
+                    'contentOptions' => ['style' => 'width:40px; white-space: normal;'],      
+                ],
+                ['class' => 'yii\grid\ActionColumn'],
             ],
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            [
-                'header'=>'Offered',
-                'format' => 'raw',
-                'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-                
-               
-            ],
-            [
-                'header'=>'Method',
-                'format' => 'raw',
-                'enableSorting' => false,
-              //  'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-                'contentOptions' => ['style' => 'width: 60%;word-wrap: break-word;white-space:pre-line;'],
-               
-            ],
-            [
-                'header'=>'Reference',
-                'format' => 'raw',
-                'enableSorting' => false,
-              //  'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-                'contentOptions' => ['style' => 'width: 60%;word-wrap: break-word;white-space:pre-line;'],
-               
-            ],
-            [
-                'header'=>'Fee',
-                'format' => 'raw',
-                'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-               
-            ],
-            [
-                'header'=>'Offered by',
-                'format' => 'raw',
-                'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
-               
-            ],
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-    </div>
+        ]); ?>
+ </div>
 </div>
 
 <script type="text/javascript">
@@ -192,9 +138,7 @@ $services =  Services::find()->all();
             data: { lab_id: $('#lab_id').val(),
              sample_type_id: $('#sample-sample_type_id').val()},
             success: function ( response ) {         
-              $("#methodreference").html(response);
-
-         
+              $("#methodreference").html(response);   
             },
             error: function ( xhr, ajaxOptions, thrownError ) {
                 alert( thrownError );
