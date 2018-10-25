@@ -5,6 +5,7 @@ namespace frontend\modules\lab\controllers;
 use Yii;
 use frontend\modules\lab\components\eRequest;
 use common\models\lab\exRequest;
+use common\models\lab\exRequestreferral;
 use common\models\lab\Request;
 use common\models\lab\Discount;
 use common\models\lab\Analysis;
@@ -481,7 +482,7 @@ class RequestController extends Controller
      */
     public function actionCreatereferral()
     {
-        $model = new eRequest();
+        $model = new exRequestreferral();
         $Func=new Functions();
         $Func->CheckRSTLProfile();
         //$GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
@@ -541,21 +542,21 @@ class RequestController extends Controller
     public function actionUpdatereferral($id)
     {
         //$model = $this->findModel($id);
-        $model= eRequest::findOne($id);
+        $model= exRequestreferral::findOne($id);
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Request Successfully Updated!');
+            Yii::$app->session->setFlash('success', 'Referral Request Successfully Updated!');
             return $this->redirect(['view', 'id' => $model->request_id]);
         } else {
             if($model->request_ref_num){
                 $model->request_ref_num=NULL;
             }
             if(\Yii::$app->request->isAjax){
-                return $this->renderAjax('update', [
+                return $this->renderAjax('updateReferral', [
                     'model' => $model,
                 ]);
             }else{
-                return $this->render('update', [
+                return $this->render('updateReferral', [
                     'model' => $model,
                 ]);
             }
