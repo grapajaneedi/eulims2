@@ -11,11 +11,11 @@ use common\models\lab\RequestMigration;
 use common\models\lab\SampleMigration;
 use common\models\lab\AnalysisMigration;
 use common\models\lab\Customer;
-use common\models\finance\CheckMigration
-use common\models\finance\ReceiptMigration
-use common\models\finance\PaymentitemMigration
-use common\models\finance\OrderofpaymentMigration
-use common\models\finance\DepositMigration
+use common\models\finance\CheckMigration;
+use common\models\finance\ReceiptMigration;
+use common\models\finance\PaymentitemMigration;
+use common\models\finance\OrderofpaymentMigration;
+use common\models\finance\DepositMigration;
 
 /* @property Customer $customer */
 class ApiController extends ActiveController

@@ -40,13 +40,13 @@ if($model->lab_id==3){
 }
 $js=<<<SCRIPT
     if(this.value==1){//Paid
-        $("#request-discount_id").val(0).trigger('change');
-        $("#request-discount_id").prop('disabled',false);
+        $("#erequest-discount_id").val(0).trigger('change');
+        $("#erequest-discount_id").prop('disabled',false);
     }else{//Fully Subsidized
-        $("#request-discount_id").val(0).trigger('change');
-        $("#request-discount_id").prop('disabled',true);
+        $("#erequest-discount_id").val(0).trigger('change');
+        $("#erequest-discount_id").prop('disabled',true);
     }
-    $("#payment_type_id").val(this.value);  
+    $("#erequest-payment_type_id").val(this.value);  
 SCRIPT;
 
         
