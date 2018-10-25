@@ -11,6 +11,11 @@ use common\models\lab\RequestMigration;
 use common\models\lab\SampleMigration;
 use common\models\lab\AnalysisMigration;
 use common\models\lab\Customer;
+use common\models\finance\CheckMigration
+use common\models\finance\ReceiptMigration
+use common\models\finance\PaymentitemMigration
+use common\models\finance\OrderofpaymentMigration
+use common\models\finance\DepositMigration
 
 /* @property Customer $customer */
 class ApiController extends ActiveController
@@ -469,6 +474,8 @@ class ApiController extends ActiveController
                 $data->local_deposit_id=$var['local_deposit_id'];
                 $data->local_deposit_type_id=$var['local_deposit_type_id'];
                 $data->local_collection_id=$var['local_collection_id'];
+                $data->orderofpayment_id=0;
+                $data->customer_id=0; //double check this
 
                 if($data->save(true)){
                     //addtional action here if necessarry
@@ -504,6 +511,10 @@ class ApiController extends ActiveController
                 $data->cancelled=$var['cancelled'];
                 $data->local_paymentitem_id=$var['local_paymentitem_id'];
                 $data->oldColumn_referral_id=$var['oldColumn_referral_id'];
+                $data->request_type_id=1;
+                $data->status=0;
+                $data->receipt_id=0;
+                $data->local_receipt_id=0;
 
                 if($data->save(true)){
                     //addtional action here if necessarry
@@ -542,7 +553,11 @@ class ApiController extends ActiveController
                 $data->oldColumn_customerName=$var['oldColumn_customerName'];
                 $data->oldColumn_address=$var['oldColumn_address'];
                 $data->payment_mode_id=$var['payment_mode_id'];
-                
+                $data->on_account=0;
+                $data->receipt_id="";
+                $data->payment_status_id=1;
+                $data->subsidiary_customer_ids="";
+
                 if($data->save(true)){
                     //addtional action here if necessarry
                 }else{
