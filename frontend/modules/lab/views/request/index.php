@@ -75,7 +75,8 @@ $gg = 1;
                 'label'=>'Request Date',
                 'attribute'=>'request_datetime',
                 'value'=>function($model){
-                    return date('d/m/Y H:i:s',strtotime($model->request_datetime));
+                    //return date('d/m/Y H:i:s',strtotime($model->request_datetime));
+                    return ($model->request_type_id == 2 && $model->request_datetime == '0000-00-00 00:00:00') ? null : date('d/m/Y H:i:s',strtotime($model->request_datetime));
                 },
                 'filter'=>DatePicker::widget([
                     'model' => $searchModel,
