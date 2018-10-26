@@ -174,27 +174,30 @@ $this->registerJs($PrintEvent);
 <div class="request-view ">
     <div class="container table-responsive">
         <?php
+
+        if($model->request_type_id == 2){
+            //for referral request
             echo DetailView::widget([
             'model'=>$model,
             'responsive'=>true,
             'hover'=>true,
             'mode'=>DetailView::MODE_VIEW,
             'panel'=>[
-                'heading'=>'<i class="glyphicon glyphicon-book"></i> Request # ' . $model->request_ref_num,
+                'heading'=>'<i class="glyphicon glyphicon-book"></i> Referral Code ' . $model->request_ref_num,
                 'type'=>DetailView::TYPE_PRIMARY,
             ],
             'buttons1' => '',
             'attributes'=>[
                 [
                     'group'=>true,
-                    'label'=>'Request Details '.$CancelButton,
+                    'label'=>'Referral Details '.$CancelButton,
                     'rowOptions'=>['class'=>'info']
                 ],
                 [
                     'columns' => [
                         [
                             'attribute'=>'request_ref_num', 
-                            'label'=>'Request Reference Number',
+                            'label'=>'Referral Code',
                             'displayOnly'=>true,
                             'valueColOptions'=>['style'=>'width:30%']
                         ],
@@ -210,9 +213,9 @@ $this->registerJs($PrintEvent);
                 [
                     'columns' => [
                         [
-                            'label'=>'Request Date',
+                            'label'=>'Referral Date',
                             'format'=>'raw',
-                            'value'=>Yii::$app->formatter->asDate($model->request_datetime, 'php:F j, Y'),
+                            'value'=> ($model->request_datetime != "0000-00-00 00:00:00") ? Yii::$app->formatter->asDate($model->request_datetime, 'php:F j, Y') : "<i style='color:#bb0000;font-size:12px;'>Pending referral request</i>",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -229,9 +232,9 @@ $this->registerJs($PrintEvent);
                 [
                     'columns' => [
                         [
-                            'label'=>'Request Time',
+                            'label'=>'Referral Time',
                             'format'=>'raw',
-                            'value'=>Yii::$app->formatter->asDate($model->request_datetime, 'php:h:i a'),
+                            'value'=> ($model->request_datetime != "0000-00-00 00:00:00") ? Yii::$app->formatter->asDate($model->request_datetime, 'php:h:i a') : "<i style='color:#bb0000;font-size:12px;'>Pending referral request</i>",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -248,9 +251,9 @@ $this->registerJs($PrintEvent);
                     'columns' => [
                         [
                             'attribute'=>'report_due',
-                            'label'=>'Report Due Date',
+                            'label'=>'Estimated Due Date',
                             'format'=>'raw',
-                            'value'=>Yii::$app->formatter->asDate($model->request_datetime, 'php:F j, Y'),
+                            'value'=> ($model->report_due != "0000-00-00 00:00:00") ? Yii::$app->formatter->asDate($model->report_due, 'php:F j, Y') : "<i style='color:#bb0000;font-size:12px;'>Pending referral request</i>",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -327,6 +330,163 @@ $this->registerJs($PrintEvent);
             ],
 
         ]);
+
+        } else {
+            //not referral request
+            echo DetailView::widget([
+            'model'=>$model,
+            'responsive'=>true,
+            'hover'=>true,
+            'mode'=>DetailView::MODE_VIEW,
+            'panel'=>[
+                'heading'=>'<i class="glyphicon glyphicon-book"></i> Request # ' . $model->request_ref_num,
+                'type'=>DetailView::TYPE_PRIMARY,
+            ],
+            'buttons1' => '',
+            'attributes'=>[
+                [
+                    'group'=>true,
+                    'label'=>'Request Details '.$CancelButton,
+                    'rowOptions'=>['class'=>'info']
+                ],
+                [
+                    'columns' => [
+                        [
+                            'attribute'=>'request_ref_num', 
+                            'label'=>'Request Reference Number',
+                            'displayOnly'=>true,
+                            'valueColOptions'=>['style'=>'width:30%']
+                        ],
+                        [
+                            'label'=>'Customer / Agency',
+                            'format'=>'raw',
+                            'value'=> $model->customer ? $model->customer->customer_name : "",
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                    ],
+                ],
+                [
+                    'columns' => [
+                        [
+                            'label'=>'Request Date',
+                            'format'=>'raw',
+                            'value'=>Yii::$app->formatter->asDate($model->request_datetime, 'php:F j, Y'),
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                        [
+                            'label'=>'Address',
+                            'format'=>'raw',
+                            'value'=>$model->customer ? $model->customer->address : "",
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                    ],
+                    
+                ],
+                [
+                    'columns' => [
+                        [
+                            'label'=>'Request Time',
+                            'format'=>'raw',
+                            'value'=>Yii::$app->formatter->asDate($model->request_datetime, 'php:h:i a'),
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                        [
+                            'label'=>'Tel no.',
+                            'format'=>'raw',
+                            'value'=>$model->customer ? $model->customer->tel : "",
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                    ],
+                ],
+                [
+                    'columns' => [
+                        [
+                            'attribute'=>'report_due',
+                            'label'=>'Report Due Date',
+                            'format'=>'raw',
+                            'value'=>Yii::$app->formatter->asDate($model->report_due, 'php:F j, Y'),
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                        [
+                            'label'=>'Fax no.',
+                            'format'=>'raw',
+                            'value'=>$model->customer ? $model->customer->fax : "",
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                    ],
+                ],
+                [
+                    'group'=>true,
+                    'label'=>'Payment Details',
+                    'rowOptions'=>['class'=>'info']
+                ],
+                [
+                    'columns' => [
+                        [
+                            'label'=>'OR No.',
+                            'value'=>$orNumbers,
+                            'displayOnly'=>true,
+                            'valueColOptions'=>['style'=>'width:30%']
+                        ],
+                        [
+                            'label'=>'Collection',
+                            'format'=>'raw',
+                            'value'=>"₱".$payment_total,
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                    ],
+                ],
+                [
+                    'columns' => [
+                        [
+                            'label'=>'OR Date',
+                            'value'=>$orDate,
+                            'displayOnly'=>true,
+                            'valueColOptions'=>['style'=>'width:30%']
+                        ],
+                        [
+                            'label'=>'Unpaid Balance',
+                            'format'=>'raw',
+                            'value'=>"₱".$UnpaidBalance,
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                    ],
+                ],
+                
+                [
+                    'group'=>true,
+                    'label'=>'Transaction Details',
+                    'rowOptions'=>['class'=>'info']
+                ],
+                [
+                    'columns' => [
+                        [
+                            'attribute'=>'receivedBy', 
+                            'format'=>'raw',
+                            'displayOnly'=>true,
+                            'valueColOptions'=>['style'=>'width:30%']
+                        ],
+                        [
+                            'attribute'=>'conforme',
+                            'format'=>'raw',
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                    ],
+                ],
+            ],
+
+        ]);
+        }
         ?>
     </div>
     <div class="container">
@@ -578,8 +738,6 @@ $this->registerJs($PrintEvent);
                     },
                 ],
             ],
-             
-               
             ];
             echo GridView::widget([
                 'id' => 'analysis-grid',
@@ -611,6 +769,108 @@ $this->registerJs($PrintEvent);
                 ],
             ]);
         ?>
+    </div>
+    <div class="container">
+        <div class="table-responsive">
+        <?php
+        if($model->request_type_id == 2){
+
+            $gridColumns = [
+                [
+                    'attribute'=>'sample_code',
+                    'enableSorting' => false,
+                    'contentOptions' => [
+                        'style'=>'max-width:70px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                    ],
+                ],
+                [
+                    'attribute'=>'samplename',
+                    'enableSorting' => false,
+                ],
+                [
+                    'attribute'=>'description',
+                    'format' => 'raw',
+                    'enableSorting' => false,
+                    'value' => function($data){
+                        return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".date("Y-m-d h:i A",strtotime($data->sampling_date))."</b></span>,&nbsp;".$data->description : $data->description;
+                    },
+                   'contentOptions' => [
+                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                    ],
+                ],
+                [
+                    'class' => 'kartik\grid\ActionColumn',
+                    'template' => '{update} {delete} {cancel}',
+                    'dropdown' => false,
+                    'dropdownOptions' => ['class' => 'pull-right'],
+                    'urlCreator' => function ($action, $model, $key, $index) {
+                        if ($action === 'delete') {
+                            $url ='/lab/sample/delete?id='.$model->sample_id;
+                            return $url;
+                        } 
+                        if ($action === 'cancel') {
+                            $url ='/lab/sample/cancel?id='.$model->sample_id;
+                            return $url;
+                        }
+                    },
+                    'headerOptions' => ['class' => 'kartik-sheet-style'],
+                    'buttons' => [
+                        'update' => function ($url, $model) {
+                            if($model->active == 1){
+                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', ['class'=>'btn btn-primary','title'=>'Update Sample','onclick' => 'updateSample('.$model->sample_id.')']);
+                            } else {
+                                return null;
+                            }
+                        },
+                        'delete' => function ($url, $model) {
+                            if($model->sample_code == "" && $model->active == 1){
+                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'data-method'=>'post','class'=>'btn btn-danger','title'=>'Delete Sample','data-pjax'=>'0']);
+                            } else {
+                                return null;
+                            }
+                        },
+                        'cancel' => function ($url, $model){
+                            if($model->sample_code != "" && $model->active == 1){
+                                return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', '#', ['class'=>'btn btn-warning','title'=>'Cancel Sample','onclick' => 'cancelSample('.$model->sample_id.')']);
+                            } else {
+                                return $model->active == 0 ? Html::a('<span style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>','#',['class'=>'btn btn-danger','title'=>'View Cancel Remarks','onclick' => 'viewRemarkSample('.$model->sample_id.')']) : '';
+                            }
+                        },
+                    ],
+                ],
+            ];
+
+            echo GridView::widget([
+                'id' => 'sample-grid',
+                'dataProvider'=> $sampleDataProvider,
+                'pjax'=>true,
+                'pjaxSettings' => [
+                    'options' => [
+                        'enablePushState' => false,
+                    ]
+                ],
+                'responsive'=>true,
+                'striped'=>true,
+                'hover'=>true,
+                'panel' => [
+                    'heading'=>'<h3 class="panel-title">Agencies</h3>',
+                    'type'=>'primary',
+                    /*'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>!$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/reports/preview?url=/lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
+                    'after'=>false,*/
+                    'before'=>'<i style="font-weight:bold;font-size:13px;">Note: Select agency to send referral notification.<i>',
+                ],
+                'columns' => $gridColumns,
+                'toolbar' => [
+                    'content'=> Html::a('<i class="glyphicon glyphicon-repeat"></i>', [Url::to(['request/view','id'=>$model->request_id])], [
+                                'class' => 'btn btn-default', 
+                                'title' => 'Reset Grid'
+                            ]),
+                    //'{toggleData}',
+                ],
+            ]);
+        }
+        ?>
+        </div>
     </div>
 </div>
 </div>

@@ -1,5 +1,4 @@
 <?php
-
 namespace frontend\controllers;
 
 use Yii;
@@ -12,6 +11,11 @@ use common\models\lab\RequestMigration;
 use common\models\lab\SampleMigration;
 use common\models\lab\AnalysisMigration;
 use common\models\lab\Customer;
+use common\models\finance\CheckMigration;
+use common\models\finance\ReceiptMigration;
+use common\models\finance\PaymentitemMigration;
+use common\models\finance\OrderofpaymentMigration;
+use common\models\finance\DepositMigration;
 
 /* @property Customer $customer */
 class ApiController extends ActiveController
@@ -28,6 +32,7 @@ class ApiController extends ActiveController
             'delete' => ['DELETE'],
         ];
     }
+
     public function actions() {
         $actions = parent::actions();
         $actions['index']['prepareDataProvider'] = function($action) {
@@ -35,7 +40,6 @@ class ApiController extends ActiveController
                 'query' => Profile::find()->where(['user_id' => Yii::$app->user->id]),
             ]);
         };
-
         return $actions;
     }
 
@@ -234,9 +238,376 @@ class ApiController extends ActiveController
   API FOr customer and payment details and others API Transactions
  * 
  */
-public function actionGetcustomer($id){
-    $Customers= Customer::findOne($id);
-     \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
-     return $Customers;
-}
+    public function actionGetcustomer($id){
+        $Customers= Customer::findOne($id);
+         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+         return $Customers;
+    }
+
+/*******************************************************************************
+  Api For the remaining tbl of lab
+*
+*/
+
+    //  public function actionSync_cancelledrequest(){ 
+    //     $post = Yii::$app->request->post();
+    //     $ctr = 0;
+    //     if(isset($post)){
+    //         $myvar = Json::decode($post['data']);
+    //         $ids="";
+    //         foreach ($myvar as $var) {
+    //             $new = new CancelledrequestMigration();
+    //             $new->request_id=$var['request_id'];
+    //             $new->request_ref_num=$var['request_ref_num'];
+    //             $new->reason=$var["reason"];
+    //             $new->cancel_date=$var["cancel_date"];
+    //             $new->cancelledby=$var["cancelledby"];
+    //             $new->local_cancelledrequest_id=$var["local_cancelledrequest_id"];             
+    //             if($new->save(true)){
+    //                 // ctr not anymore here
+    //             }else{
+    //                 $ids=$ids.$var['local_cancelledrequest_id'].',';
+    //             }
+    //             $ctr++;
+    //         }
+    //     }
+    //      \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+    //      // echo $ctr;
+    //      return [
+    //         'num'=>$ctr,
+    //         'ids'=>$ids
+    //      ];   
+    // }
+
+    // public function actionSync_samplename(){ 
+    //     $post = Yii::$app->request->post();
+    //     $ctr = 0;
+    //     if(isset($post)){
+    //         $myvar = Json::decode($post['data']);
+    //         $ids="";
+    //         foreach ($myvar as $var) {
+    //             $new = new SamplenameMigration();
+    //             $new->sample_name=$var['sample_name'];
+    //             $new->description=$var['description'];
+    //             $new->local_samplename_id=$var["local_samplename_id"];   
+    //             if($new->save(true)){
+    //                 // ctr not anymore here
+    //             }else{
+    //                 $ids=$ids.$var['local_samplename_id'].',';
+    //             }
+    //             $ctr++;
+    //         }
+    //     }
+    //      \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+    //      return [
+    //         'num'=>$ctr,
+    //         'ids'=>$ids
+    //      ];
+    // }
+
+
+    // public function actionSync_test(){ 
+    //     $post = Yii::$app->request->post();
+    //     $ctr = 0;
+    //     if(isset($post)){
+    //         $myvar = Json::decode($post['data']);
+    //         $ids="";
+    //         foreach ($myvar as $var) {
+    //             $new = new TestMigration();
+    //             $new->duration=$var['duration'];
+    //             $new->fee=$var['fee'];
+    //             $new->lab_id=$var["lab_id"];  
+    //             $new->testcategory_id=$var['testcategory_id'];
+    //             $new->rstl_id=$var['rstl_id'];
+    //             $new->sample_type_id=$var['sample_type_id'];
+    //             $new->testname=$var['testname'];
+    //             $new->payment_references=$var['payment_references'];
+    //             $new->local_test_id=$var['local_test_id'];
+    //             $new->oldColumn_method=$var['oldColumn_method'];
+    //             if($new->save(true)){
+    //                 // ctr not anymore here
+    //             }else{
+    //                 $ids=$ids.$var['local_test_id'].',';
+    //             }
+    //             $ctr++;
+    //         }
+    //     }
+    //      \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+    //      return [
+    //         'num'=>$ctr,
+    //         'ids'=>$ids
+    //      ];   
+    // }
+
+    // public function actionSync_testreport(){ 
+    //     $post = Yii::$app->request->post();
+    //     $ctr = 0;
+    //     if(isset($post)){
+    //         $myvar = Json::decode($post['data']);
+    //         $ids="";
+    //         foreach ($myvar as $var) {
+    //             $new = new TestreportMigration();
+    //             $new->request_id=$var['request_id'];
+    //             $new->lab_id=$var['lab_id'];
+    //             $new->report_num=$var["report_num"];  
+    //             $new->report_date=$var['report_date'];
+    //             $new->status_id=$var['status_id'];
+    //             $new->release_date=$var['release_date'];
+    //             $new->reissue=$var['reissue'];
+    //             $new->previous_id=$var['previous_id'];
+    //             $new->new_id=$var['new_id'];
+    //             $new->testreport_old_id=$var['testreport_old_id'];
+    //             $new->oldColumn_cancelled=$var['oldColumn_cancelled'];
+    //             $new->oldColumn_cellrange=$var['oldColumn_cellrange'];
+    //             if($new->save(true)){
+    //                 // ctr not anymore here
+    //             }else{
+    //                 $ids=$ids.$var['testreport_old_id'].',';
+    //             }
+    //             $ctr++;
+    //         }
+    //     }
+    //      \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+    //      return [
+    //         'num'=>$ctr,
+    //         'ids'=>$ids
+    //      ];   
+    // }
+
+    // public function actionSync_testreportsample(){
+    //     $post = Yii::$app->request->post();
+    //     $ctr = 0;
+    //     if(isset($post)){
+    //         $myvar = Json::decode($post['data']);
+    //         $ids="";
+    //         foreach ($myvar as $var) {
+    //             $new = new TestreportsampleMigration();
+    //             $new->testreport_id=$var['testreport_id'];
+    //             $new->sample_id=$var['sample_id'];
+    //             $new->local_testreport_sample_id=$var["local_testreport_sample_id"];
+    //             if($new->save(true)){
+    //                 // ctr not anymore here
+    //             }else{
+    //                 $ids=$ids.$var['local_testreport_sample_id'].',';
+    //             }
+    //             $ctr++;
+    //         }
+    //     }
+    //      \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+    //      return [
+    //         'num'=>$ctr,
+    //         'ids'=>$ids
+    //      ];   
+    // }
+
+    /* ***************************************************************************8
+      API for finance migration
+    *
+    */
+
+      public function actionSync_check(){
+        $post = Yii::$app->request->post(); //get the post
+        $ctr = 0;
+        if(isset($post)){
+            $myvar = Json::decode($post['data']);
+            $ids="";
+            foreach ($myvar as $var) {
+
+                $data = new CheckMigration();
+                $data->receipt_id=$var['receipt_id'];
+                $data->bank=$var['bank'];
+                $data->checknumber=$var['checknumber'];
+                $data->checkdate=$var['checkdate'];
+                $data->amount=$var['amount'];
+                $data->local_check_id=$var['local_check_id'];
+
+                if($data->save(true)){
+                    //addtional action here if necessarry
+                }else{
+                    $ids=$ids.$var['id'].',';
+                }
+                $ctr++;
+            }
+           
+        }
+         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+         return [
+            'num'=>$ctr,
+            'ids'=>$ids
+         ];   
+      }
+
+      public function actionSync_receipt(){
+        $post = Yii::$app->request->post(); //get the post
+        $ctr = 0;
+        if(isset($post)){
+            $myvar = Json::decode($post['data']);
+            $ids="";
+            foreach ($myvar as $var) {
+
+                $data = new ReceiptMigration();
+                $data->rstl_id=$var['rstl_id'];
+                $data->payment_mode_id=$var['payment_mode_id'];
+                $data->payor=$var['payor'];
+                $data->total=$var['total'];
+                $data->or_series_id=$var['or_series_id'];
+                $data->collectiontype_id=$var['collectiontype_id'];
+                $data->receiptDate=$var['receiptDate'];
+                $data->deposit_type_id=$var['deposit_type_id'];
+                $data->or_number=$var['or_number'];
+                $data->cancelled=$var['cancelled'];
+                $data->oldColumn_check_money_number=$var['oldColumn_check_money_number'];
+                $data->oldColumn_bank=$var['oldColumn_bank'];
+                $data->oldColumn_checkdate=$var['oldColumn_checkdate'];
+                $data->local_orderofpayment_id=$var['local_orderofpayment_id'];
+                $data->local_receipt_id=$var['local_receipt_id'];
+                $data->receipt_id=$var['receipt_id'];
+                $data->terminal_id=$var['terminal_id'];
+                $data->collection_id=$var['collection_id'];
+                $data->deposit_id=$var['deposit_id'];
+                $data->local_deposit_id=$var['local_deposit_id'];
+                $data->local_deposit_type_id=$var['local_deposit_type_id'];
+                $data->local_collection_id=$var['local_collection_id'];
+                $data->orderofpayment_id=0;
+                $data->customer_id=0; //double check this
+
+                if($data->save(true)){
+                    //addtional action here if necessarry
+                }else{
+                    $ids=$ids.$var['id'].',';
+                }
+                $ctr++;
+            }
+           
+        }
+         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+         return [
+            'num'=>$ctr,
+            'ids'=>$ids
+         ];   
+      }
+
+       public function actionSync_paymentitem(){
+        $post = Yii::$app->request->post(); //get the post
+        $ctr = 0;
+        if(isset($post)){
+            $myvar = Json::decode($post['data']);
+            $ids="";
+            foreach ($myvar as $var) {
+
+                $data = new PaymentitemMigration();
+                $data->rstl_id=$var['rstl_id'];
+                $data->request_id=$var['request_id'];
+                $data->orderofpayment_id=$var['orderofpayment_id'];
+                $data->details=$var['details'];
+                $data->amount=$var['amount'];
+                $data->cancelled=$var['cancelled'];
+                $data->local_paymentitem_id=$var['local_paymentitem_id'];
+                $data->oldColumn_referral_id=$var['oldColumn_referral_id'];
+                $data->request_type_id=1;
+                $data->status=0;
+                $data->receipt_id=0;
+                $data->local_receipt_id=0;
+
+                if($data->save(true)){
+                    //addtional action here if necessarry
+                }else{
+                    $ids=$ids.$var['id'].',';
+                }
+                $ctr++;
+            }
+           
+        }
+         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+         return [
+            'num'=>$ctr,
+            'ids'=>$ids
+         ];   
+      }
+
+      public function actionSync_orderofpayment(){
+        $post = Yii::$app->request->post(); //get the post
+        $ctr = 0;
+        if(isset($post)){
+            $myvar = Json::decode($post['data']);
+            $ids="";
+            foreach ($myvar as $var) {
+
+                $data = new OrderofpaymentMigration();
+                $data->rstl_id=$var['rstl_id'];
+                $data->transactionnum=$var['transactionnum'];
+                $data->collectiontype_id=$var['collectiontype_id'];
+                $data->order_date=$var['order_date'];
+                $data->customer_id=$var['customer_id'];
+                $data->purpose=$var['purpose'];
+                $data->total_amount=$var['total_amount'];
+                $data->local_orderofpayment_id=$var['local_orderofpayment_id'];
+                $data->oldColumn_customerName=$var['oldColumn_customerName'];
+                $data->oldColumn_address=$var['oldColumn_address'];
+                $data->payment_mode_id=$var['payment_mode_id'];
+                $data->on_account=0;
+                $data->receipt_id="";
+                $data->payment_status_id=1;
+                $data->subsidiary_customer_ids="";
+
+                if($data->save(true)){
+                    //addtional action here if necessarry
+                }else{
+                    $ids=$ids.$var['id'].',';
+                }
+                $ctr++;
+            }
+           
+        }
+         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+         return [
+            'num'=>$ctr,
+            'ids'=>$ids
+         ];   
+      }
+
+      public function actionSync_deposit(){
+        $post = Yii::$app->request->post(); //get the post
+        $ctr = 0;
+        if(isset($post)){
+            $myvar = Json::decode($post['data']);
+            $ids="";
+            foreach ($myvar as $var) {
+
+                $data = new DepositMigration();
+                $data->rstl_id=$var['rstl_id'];
+                $data->or_series_id=$var['or_series_id'];
+                $data->start_or=$var['start_or'];
+                $data->end_or=$var['end_or'];
+                $data->deposit_date=$var['deposit_date'];
+                $data->amount=$var['amount'];
+                $data->deposit_type_id=$var['deposit_type_id'];
+                $data->local_deposit_id=$var['local_deposit_id'];
+                
+                if($data->save(true)){
+                    //addtional action here if necessarry
+                }else{
+                    $ids=$ids.$var['id'].',';
+                }
+                $ctr++;
+            }
+           
+        }
+         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+         return [
+            'num'=>$ctr,
+            'ids'=>$ids
+         ];   
+      }
+
 }

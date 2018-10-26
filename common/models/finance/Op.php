@@ -162,11 +162,19 @@ class Op extends \yii\db\ActiveRecord
     
     public function getBankAccount(){
         $bank_account= BankAccount::find()->where(['rstl_id'=> Yii::$app->user->identity->profile->rstl_id])->one();
-     
-        return ([
+        if ($bank_account){
+            $var= [
             'bank_name'=>$bank_account->bank_name,
             'account_number'=>$bank_account->account_number
-        ]);
+            ];
+        }else {
+            $var=[
+                'bank_name'=>"",
+                'account_number'=>""
+            ];
+        }
+        return $var;
+        
     }
     
     function getReferences($op){

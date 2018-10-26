@@ -9,8 +9,7 @@ use Yii;
  *
  * @property int $referral_id
  * @property string $referral_code
- * @property string $referral_date
- * @property string $referral_time
+ * @property string $referral_date_time
  * @property int $receiving_agency_id
  * @property int $testing_agency_id
  * @property int $lab_id
@@ -69,12 +68,12 @@ class Referral extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['referral_code', 'referral_date', 'referral_time', 'receiving_agency_id', 'testing_agency_id', 'lab_id', 'sample_received_date', 'customer_id', 'modeofrelease_id', 'purpose_id', 'report_due', 'conforme', 'received_by', 'cancelled', 'create_time'], 'required'],
-            [['referral_date', 'sample_received_date', 'report_due', 'create_time', 'update_time'], 'safe'],
+            [['referral_date_time', 'sample_received_date', 'report_due', 'create_time', 'update_time'], 'safe'],
+            [['receiving_agency_id', 'testing_agency_id', 'lab_id', 'sample_received_date', 'customer_id', 'modeofrelease_id', 'purpose_id', 'report_due', 'conforme', 'received_by', 'cancelled', 'create_time'], 'required'],
             [['receiving_agency_id', 'testing_agency_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'purpose_id', 'discount_id', 'received_by', 'bid', 'cancelled'], 'integer'],
             [['discount_amt', 'total_fee'], 'number'],
-            [['referral_code', 'conforme'], 'string', 'max' => 50],
-            [['referral_time'], 'string', 'max' => 10],
+            [['referral_code'], 'string', 'max' => 50],
+            [['conforme'], 'string', 'max' => 60],
             [['payment_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Paymenttype::className(), 'targetAttribute' => ['payment_type_id' => 'payment_type_id']],
             [['modeofrelease_id'], 'exist', 'skipOnError' => true, 'targetClass' => Modeofrelease::className(), 'targetAttribute' => ['modeofrelease_id' => 'modeofrelease_id']],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
@@ -91,8 +90,7 @@ class Referral extends \yii\db\ActiveRecord
         return [
             'referral_id' => 'Referral ID',
             'referral_code' => 'Referral Code',
-            'referral_date' => 'Referral Date',
-            'referral_time' => 'Referral Time',
+            'referral_date_time' => 'Referral Date Time',
             'receiving_agency_id' => 'Receiving Agency ID',
             'testing_agency_id' => 'Testing Agency ID',
             'lab_id' => 'Lab ID',

@@ -150,7 +150,7 @@ class Request extends \yii\db\ActiveRecord
             'status_id' => 'Status',
             //'customer_name'=>'Customer Name',
             'selected' => 'Selected',
-            'request_type_id' => 'Request_Type', 
+            'request_type_id' => 'Request Type', 
             'position' => 'Position',
             'recommended_due_date' => 'Recommended Due Date',
             'est_date_completion' => 'Estimated Date of Completion',

@@ -359,6 +359,7 @@ class OpController extends Controller
             ->update('tbl_request', ['posted' => 1], 'request_id= '.$str_total[$i])
             ->execute(); 
          }
+         
      }
      
      public function updateTotalOP($id,$total){
@@ -480,7 +481,11 @@ class OpController extends Controller
 
         }
         $this->postRequest($request_ids);
-        return $total_amount;
+        $sum = Paymentitem::find()->where(['orderofpayment_id' => $opid])
+                 ->andWhere(['status' => 1])
+                 ->sum('amount');
+        $this->updateTotalOP($opid, $sum); 
+         return $total_amount;
     }
     
     protected function findModelReceipt($id)
@@ -496,11 +501,18 @@ class OpController extends Controller
     {
       //find the record the testreport
       $op =$this->findModel($id);
+      $var=$op->getBankAccount();
+      if($var['bank_name'] == ""){
+         Yii::$app->session->setFlash('warning', 'Please configure Bank Details!');
+          return $this->redirect(['/finance/op/view?id='.$id]); 
+      }else{
+          $exporter = new Opspreadsheet([
+            'model'=>$op,
+           ]);
+      }
       //echo $id;
       //exit;
-      $exporter = new Opspreadsheet([
-        'model'=>$op,
-        ]);
+      
     }
     
      public function actionUpdatePaymentmode(){

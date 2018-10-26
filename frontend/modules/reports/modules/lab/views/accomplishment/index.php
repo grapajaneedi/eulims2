@@ -265,8 +265,15 @@ $pdfFooter="{PAGENO}";
 			            'contentOptions' => ['class' => 'text-right'],
 			            'format'=>['decimal', 2],
 			            'value'=>function ($model, $key, $index, $widget) use ($labId, $startDate,$endDate) {
-		                   $totalGrossFee = $model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,5,$model->request_type_id);
+		                   //$totalGrossFee = $model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,5,$model->request_type_id);
+			            	//return ($totalGrossFee > 0) ? $totalGrossFee : 0;
+			            	$totalIncome = $model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,8,$model->request_type_id);
+			            	$totalDiscount = $model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,7,$model->request_type_id);
+			            	$totalGratis = $model->computeAccomplishment($labId,date('Y-m-d',strtotime($model->request_datetime)),$startDate,$endDate,6,$model->request_type_id);
+
+			            	$totalGrossFee = $totalIncome + $totalDiscount + $totalGratis;
 			            	return ($totalGrossFee > 0) ? $totalGrossFee : 0;
+
 		                },
 		                'pageSummary'=>true,
         				'pageSummaryFunc'=>GridView::F_SUM,
