@@ -33,12 +33,13 @@ $services =  Services::find()->all();
 
 ?>
 
+
 <div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
      <a href="#" class="close" data-dismiss="alert" >×</a>
     <p class="note" style="color:#265e8d"><b>Note:</b> Please contact administrator if you want to add new test that is not available in the dropdown list below.</p>
      
     </div>
-       
+    <div class="image-loader" style="display: hidden;"></div>
 <div class="services-index" >
 
 <fieldset>
@@ -135,22 +136,99 @@ $services =  Services::find()->all();
  </div>
 </div>
 
+
 <script type="text/javascript">
     $('#sample-test_id').on('change',function(e) {
-       e.preventDefault();
-         jQuery.ajax( {
-            type: 'GET',
+        $.ajax({
             url: '/lab/services/getmethod?id='+$(this).val(),
+            method: "GET",
             dataType: 'html',
             data: { lab_id: $('#lab_id').val(),
-             sample_type_id: $('#sample-sample_type_id').val()},
-            success: function ( response ) {         
-              $("#methodreference").html(response);   
-            },
-            error: function ( xhr, ajaxOptions, thrownError ) {
-                alert( thrownError );
-            }
-        });
+            sample_type_id: $('#sample-sample_type_id').val()},
+            beforeSend: function(xhr) {
+               $('.image-loader').addClass("img-loader");
+               }
+            })
+            .done(function( response ) {
+                $("#methodreference").html(response); 
+                $('.image-loader').removeClass("img-loader");  
+            });
+
     });
+
+//     function offerservices(mid){
+
+//         $.ajax({
+//             url: '/lab/services/offer',
+//             method: "POST",
+//             data: { id: mid,,
+//             sampletypeid: $('#sampletypeid').val(),
+//             methodreferenceid: $('#methodreferenceid').val(),
+//             labsampletypeid: $('#labsampletypeid').val(),
+//             sampletypetestname: $('#sampletypetestname').val(),
+//             testnamemethod: $('#testnamemethod').val(),
+//             testname: $('#testname').val(),
+//             beforeSend: function(xhr) {
+//                $('.image-loader').addClass("img-loader");
+//                }
+//             })
+//             .done(function( response ) {
+//                 $("#testname-grid").yiiGridView("applyFilter");   
+//                 $('.image-loader').removeClass("img-loader");  
+//             });
+// }
+   
+
+//GAWA GAWA
+//     function offerservices(mid){
+//     $.ajax({
+//         url: '/lab/services/offer',
+//         method: "POST",
+//         data: {  id: mid,
+//             sampletypeid: $('#sampletypeid').val(),
+//             methodreferenceid: $('#methodreferenceid').val(),
+//             labsampletypeid: $('#labsampletypeid').val(),
+//             sampletypetestname: $('#sampletypetestname').val(),
+//             testnamemethod: $('#testnamemethod').val(),
+//             testname: $('#testname').val(),
+//         beforeSend: function(xhr) {
+//            $('.image-loader').addClass("img-loader");
+//            }
+//         })
+//         .done(function( response ) {
+//             $("#testname-grid").yiiGridView("applyFilter");  
+//             $('.image-loader').removeClass("img-loader");  
+//         });
+// }
 </script>
 
+<style type="text/css">
+/* Absolute Center Spinner */
+.img-loader {
+    position: fixed;
+    z-index: 999;
+    /*height: 2em;
+    width: 2em;*/
+    height: 64px;
+    width: 64px;
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: url('/images/img-loader64.gif');
+    background-repeat: no-repeat;
+}
+/* Transparent Overlay */
+.img-loader:before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+}
+</style>
