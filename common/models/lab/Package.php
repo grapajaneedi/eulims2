@@ -39,11 +39,11 @@ class Package extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            // [['rstl_id', 'testcategory_id', 'sampletype_id', 'name', 'rate', 'tests'], 'required'],
-            // [['rstl_id', 'testcategory_id', 'sampletype_id'], 'integer'],
-            // [['rate'], 'number'],
-            // [['name'], 'string', 'max' => 40],
-            // [['tests'], 'string', 'max' => 100],
+            [['rstl_id', 'testcategory_id', 'sampletype_id', 'name', 'rate', 'tests'], 'required'],
+            [['rstl_id', 'testcategory_id', 'sampletype_id'], 'integer'],
+            [['rate'], 'number'],
+            [['name'], 'string', 'max' => 40],
+          //  [['tests'], 'string', 'max' => 100],
         ];
     }
 
