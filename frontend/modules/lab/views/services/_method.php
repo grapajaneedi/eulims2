@@ -22,21 +22,22 @@ $testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName'
 $this->title = 'Add/ Remove Services';
 //lagyan nalang flag if 1 or 0 para isang controller nalang ang pagdelete para yung id na kunin nya.. yun pa din
 $js=<<<SCRIPT
-    function offerservices(mid){
-                $.post('/lab/services/offer', {
-                   id: mid,
-                   labid: $('#labid').val(),
-                   sampletypeid: $('#sampletypeid').val(),
-                   methodreferenceid: $('#methodreferenceid').val(),
-                   labsampletypeid: $('#labsampletypeid').val(),
-                   sampletypetestname: $('#sampletypetestname').val(),
-                   testnamemethod: $('#testnamemethod').val(),
-                   testname: $('#testname').val(),
-                }, function(result){
-                    $("#testname-grid").yiiGridView("applyFilter");           
-                });
-        }
+   
 
+function offerservices(mid){
+    $.post('/lab/services/offer', {
+       id: mid,
+       labid: $('#labid').val(),
+       sampletypeid: $('#sampletypeid').val(),
+       methodreferenceid: $('#methodreferenceid').val(),
+       labsampletypeid: $('#labsampletypeid').val(),
+       sampletypetestname: $('#sampletypetestname').val(),
+       testnamemethod: $('#testnamemethod').val(),
+       testname: $('#testname').val(),
+    }, function(result){
+        $("#testname-grid").yiiGridView("applyFilter");           
+    });
+}
         function unofferservices(mid){
                             $.post('/lab/services/unoffer', {
                                 id: mid,

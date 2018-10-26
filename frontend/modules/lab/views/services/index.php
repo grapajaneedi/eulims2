@@ -29,11 +29,18 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
 $lablist= ArrayHelper::map($decode,'lab_id','labname');
 $this->title = 'Add/ Remove Services';
 $this->params['breadcrumbs'][] = $this->title;
-$services =  Services::find()->all();      
+$services =  Services::find()->all(); 
+
 ?>
 
+<div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
+     <a href="#" class="close" data-dismiss="alert" >×</a>
+    <p class="note" style="color:#265e8d"><b>Note:</b> Please contact administrator if you want to add new test that is not available in the dropdown list below.</p>
+     
+    </div>
+       
 <div class="services-index" >
-   
+
 <fieldset>
     <legend>Legend/Status</legend>
     <div>
