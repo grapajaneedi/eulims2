@@ -488,18 +488,12 @@ class RequestController extends Controller
         $Func->CheckRSTLProfile();
         $connection= Yii::$app->labdb;
         //$GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-        /*echo "<pre>";
-        print_r(Yii::$app->request->post());
-        echo "</pre>";
-        exit;
-         * 
-         */
+        
         if ($model->load(Yii::$app->request->post())) {
             $transaction = $connection->beginTransaction();
             $modelReferralrequest = new ReferralRequest();
             if ($model->save()){
                 $modelReferralrequest->request_id = $model->request_id;
-                //$modelReferralrequest->sample_receive_date = date('Y-m-d',strtotime($_POST['exrequestreferral']['sample_receive_date']));
                 $modelReferralrequest->sample_receive_date = date('Y-m-d h:i:s',strtotime($model->sample_receive_date));
                 $modelReferralrequest->receiving_agency_id = Yii::$app->user->identity->profile->rstl_id;
                 //$modelReferralrequest->testing_agency_id = null;
@@ -566,11 +560,33 @@ class RequestController extends Controller
     {
         //$model = $this->findModel($id);
         $model= exRequestreferral::findOne($id);
+        $modelReferralrequest = ReferralRequest::find()->where('request_id = :requestId', [':requestId' => $id])->one();
+        $connection= Yii::$app->labdb;
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Referral Request Successfully Updated!');
-            return $this->redirect(['view', 'id' => $model->request_id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $transaction = $connection->beginTransaction();
+            if ($model->save()){
+                $modelReferralrequest->request_id = $model->request_id;
+                $modelReferralrequest->sample_receive_date = date('Y-m-d h:i:s',strtotime($model->sample_receive_date));
+                $modelReferralrequest->receiving_agency_id = Yii::$app->user->identity->profile->rstl_id;
+                //$modelReferralrequest->testing_agency_id = null;
+                $modelReferralrequest->referral_type_id = 1;
+                if ($modelReferralrequest->save()){
+                    $transaction->commit();
+                } else {
+                    $transaction->rollBack();
+                    $modelReferralrequest->getErrors();
+                    return false;
+                }
+                Yii::$app->session->setFlash('success', 'Referral Request Successfully Updated!');
+                return $this->redirect(['view', 'id' => $model->request_id]);
+            } else {
+                $transaction->rollBack();
+                $model->getErrors();
+                return false;
+            }
         } else {
+            $model->sample_receive_date = $modelReferralrequest->sample_receive_date;
             if($model->request_ref_num){
                 $model->request_ref_num=NULL;
             }
