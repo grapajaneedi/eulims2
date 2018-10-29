@@ -762,7 +762,7 @@ $this->registerJs($PrintEvent);
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_package'])." ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_fees']),
                    'after'=>false,
-                   'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button>".$EnablePrint."</div>",
+                   'footer'=>$model->request_type_id == 2 ? "":"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button>".$EnablePrint."</div>",
                 ],
                 'columns' => $analysisgridColumns,
                 'toolbar' => [
@@ -778,6 +778,7 @@ $this->registerJs($PrintEvent);
             $gridColumns = [
                 [
                     'attribute'=>'sample_code',
+                    'header' => 'Agency',
                     'enableSorting' => false,
                     'contentOptions' => [
                         'style'=>'max-width:70px; overflow: auto; white-space: normal; word-wrap: break-word;'
@@ -786,9 +787,11 @@ $this->registerJs($PrintEvent);
                 [
                     'attribute'=>'samplename',
                     'enableSorting' => false,
+                    'header' => 'Region',
                 ],
                 [
                     'attribute'=>'description',
+                    'header' => 'Estimated Due Date',
                     'format' => 'raw',
                     'enableSorting' => false,
                     'value' => function($data){
@@ -800,7 +803,7 @@ $this->registerJs($PrintEvent);
                 ],
                 [
                     'class' => 'kartik\grid\ActionColumn',
-                    'template' => '{update} {delete} {cancel}',
+                    'template' => '{notification}',
                     'dropdown' => false,
                     'dropdownOptions' => ['class' => 'pull-right'],
                     'urlCreator' => function ($action, $model, $key, $index) {
@@ -815,14 +818,14 @@ $this->registerJs($PrintEvent);
                     },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
-                        'update' => function ($url, $model) {
+                        'notification' => function ($url, $model) {
                             if($model->active == 1){
-                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', ['class'=>'btn btn-primary','title'=>'Update Sample','onclick' => 'updateSample('.$model->sample_id.')']);
+                                return Html::a('<span class="glyphicon glyphicon-bell"></span> Notify', '#', ['class'=>'btn btn-primary','title'=>'Send Notification','onclick' => 'sendNotification('.$model->sample_id.')']);
                             } else {
                                 return null;
                             }
                         },
-                        'delete' => function ($url, $model) {
+                        /*'delete' => function ($url, $model) {
                             if($model->sample_code == "" && $model->active == 1){
                                 return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'data-method'=>'post','class'=>'btn btn-danger','title'=>'Delete Sample','data-pjax'=>'0']);
                             } else {
@@ -835,13 +838,13 @@ $this->registerJs($PrintEvent);
                             } else {
                                 return $model->active == 0 ? Html::a('<span style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>','#',['class'=>'btn btn-danger','title'=>'View Cancel Remarks','onclick' => 'viewRemarkSample('.$model->sample_id.')']) : '';
                             }
-                        },
+                        },*/
                     ],
                 ],
             ];
 
             echo GridView::widget([
-                'id' => 'sample-grid',
+                'id' => 'agency-grid',
                 'dataProvider'=> $sampleDataProvider,
                 'pjax'=>true,
                 'pjaxSettings' => [
@@ -857,7 +860,9 @@ $this->registerJs($PrintEvent);
                     'type'=>'primary',
                     /*'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>!$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/reports/preview?url=/lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
                     'after'=>false,*/
-                    'before'=>'<i style="font-weight:bold;font-size:13px;">Note: Select agency to send referral notification.<i>',
+                    'before'=>'<span style="font-weight:bold;font-size:13px;font-style:italic;color:#191970;">Note: Select agency to send referral notification.<span>',
+                    'after'=>false,
+                    //'footer'=>$model->request_type_id == 2 ? "":"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button>".$EnablePrint."</div>",
                 ],
                 'columns' => $gridColumns,
                 'toolbar' => [
@@ -908,6 +913,13 @@ $this->registerJs($PrintEvent);
     function updateAnalysis(id){
        var url = '/lab/analysis/update?id='+id;
         $('.modal-title').html('Update Analysis');
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
+    function sendNotification(id){
+        var url = '/lab/sample/update?id='+id;
+        $('.modal-title').html('Send Notification');
         $('#modal').modal('show')
             .find('#modalContent')
             .load(url);
