@@ -213,9 +213,9 @@ $this->registerJs($PrintEvent);
                 [
                     'columns' => [
                         [
-                            'label'=>'Referral Date',
+                            'label'=>'Referral Date / Time',
                             'format'=>'raw',
-                            'value'=> ($model->request_datetime != "0000-00-00 00:00:00") ? Yii::$app->formatter->asDate($model->request_datetime, 'php:F j, Y') : "<i style='color:#bb0000;font-size:12px;'>Pending referral request</i>",
+                            'value'=> ($model->request_datetime != "0000-00-00 00:00:00") ? Yii::$app->formatter->asDate($model->request_datetime, 'php:F j, Y h:i a') : "<i style='color:#bb0000;font-size:12px;'>Pending referral request</i>",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
@@ -231,10 +231,11 @@ $this->registerJs($PrintEvent);
                 ],
                 [
                     'columns' => [
-                        [
-                            'label'=>'Referral Time',
+                       [
+                            'attribute'=>'report_due',
+                            'label'=>'Sample Received Date',
                             'format'=>'raw',
-                            'value'=> ($model->request_datetime != "0000-00-00 00:00:00") ? Yii::$app->formatter->asDate($model->request_datetime, 'php:h:i a') : "<i style='color:#bb0000;font-size:12px;'>Pending referral request</i>",
+                            'value'=> !empty($model->referralrequest->sample_receive_date) ? Yii::$app->formatter->asDate($model->referralrequest->sample_receive_date, 'php:F j, Y') : "<i style='color:#bb0000;font-size:12px;'>No sample received date</i>",
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
