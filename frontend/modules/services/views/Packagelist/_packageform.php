@@ -22,7 +22,7 @@ use common\models\lab\Sampletypetestname;
 use common\models\lab\Testnamemethod;
 use common\models\lab\Methodreference;
 use common\models\lab\Testname;
-use kartik\money\MaskMoney;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Packagelist */
@@ -55,8 +55,6 @@ $(".select-on-check-all").change(function(){
 
 SCRIPT;
 $this->registerJs($js);
-
-
 ?>
 
 
@@ -131,7 +129,7 @@ $this->registerJs($js);
             </div>
         </div>
       
-       
+    
              <?= $form->field($model, 'tests')->textarea(['rows' => 4, 'readonly' => true]) ?>
 
              <?= Html::textInput('package_ids', '', ['class' => 'form-control', 'id'=>'package_ids', 'type'=>"hidden"], ['readonly' => true]) ?>
@@ -139,19 +137,8 @@ $this->registerJs($js);
              <?= $form->field($model, 'rstl_id')->hiddenInput(['value'=> 1])->label(false) ?>
 
              <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids',  'type'=>"hidden"], ['readonly' => true]) ?>
-       
-             <?php
-            echo $form->field($model, 'rate')->widget(MaskMoney::classname(), [
-            'readonly'=>true,
-            'options'=>[
-                'style'=>'text-align: right'
-            ],
-            'pluginOptions' => [
-               'prefix' => '₱ ',
-               'allowNegative' => false,
-            ]
-           ])->label("Rate");
-        ?>
+             <?= $form->field($model, 'rate')->textInput(['readonly' => true])->label("Rate") ?>         
+           
             <div class="row" style="float: right;padding-right: 30px">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'id'=>'package_btn', 'disabled'=>true]) ?>
                 <?php if($model->isNewRecord){ ?>

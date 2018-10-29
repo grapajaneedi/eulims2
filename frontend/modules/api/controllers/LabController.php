@@ -14,7 +14,7 @@ use common\models\lab\BackuprestoreSearch;
 use common\models\lab\Backuprestore;
 use yii\helpers\Json;
 
-set_time_limit(600);
+set_time_limit(1000);
 
 /**
  * Default controller for the `Lab` module
@@ -36,8 +36,7 @@ class LabController extends Controller
              'model'=>$model,
          ]);
      }
-     public function actionRes(){
-		
+     public function actionRes(){	
 		$searchModel = new BackuprestoreSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$model = new Backuprestore();
@@ -74,48 +73,35 @@ class LabController extends Controller
         $start = $year."-".$month_value;
         $end = $year."-".$month_value;
 		
-		//$start = "2018-01-04";
-		//$end = "2018-01-06";
-
         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
 
-          //$apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".$GLOBALS['rstl_id']."&reqds=".$year."-".$month_value."-01&reqde=".$year."-".$month_value."-31&pp=5&page=1";
-  
-          $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&reqds=".$start."&reqde=".$end;
-
-          //$curl = new curl\Curl();
-
-          //$curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-     
-          //$responselab = $curl->get($apiUrl);
-          
-          //$lab = Json::decode($responselab,true);
-		  
-			$curl = curl_init();
+        $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&reqds=".$start."&reqde=".$end;
+            
+        $curl = curl_init();
 				
-			curl_setopt($curl, CURLOPT_URL, $apiUrl);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
-			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
-			curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_URL, $apiUrl);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
+		curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-			$response = curl_exec($curl);
+		$response = curl_exec($curl);
 			
-			$data = json_decode($response, true);
+		$data = json_decode($response, true);
 		  
 		  /*echo "<pre>";
 		  print_r($data);
 		  echo "</pre>";
 		  exit;*/
        
-          $sql = "SET FOREIGN_KEY_CHECKS = 0;";
-          $connection = Yii::$app->labdb;
+        $sql = "SET FOREIGN_KEY_CHECKS = 0;";
+        $connection = Yii::$app->labdb;
         
-          $request_count = 0;
-          $sample_count = 0;
-          $analysis_count = 0;
-		  $samplenum = 0;
-		  $analysesnum = 0;
+        $request_count = 0;
+        $sample_count = 0;
+        $analysis_count = 0;
+		$samplenum = 0;
+		$analysesnum = 0;
 
          //Yii::$app->labdb->createCommand('set foreign_key_checks=0')->execute();
 			$transaction = $connection->beginTransaction();
@@ -168,15 +154,6 @@ class LabController extends Controller
                       $newRequest->save();
                       $request_count++;
 					  
-					  /* if($newRequest->save()){
-						  $flag = 1;
-					  } else {
-						  $flag = 0;
-					  } */
-          
-
-                      //$sample = $var['sample'];
-                     
                       foreach ($request['sample'] as $samp){
                           $sample_count++;          
                           $newSample = new Restore_sample();
@@ -204,13 +181,6 @@ class LabController extends Controller
                           $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                           $newSample->testcategory_id=$samp['testcategory_id'];
                           $newSample->save(true); 
-						  /* if($newSample->save()){
-							  $flag1 = 1;
-						  } else {
-							  $flag1 = 0;
-						  } */
-                          
-						//$analyses = $var['analyses'];
              
 					foreach ($samp['analyses'] as $anals){
 						$analysis_count++;
@@ -242,28 +212,15 @@ class LabController extends Controller
 						$newanalysis->old_sample_id=$anals['old_sample_id'];
 						$newanalysis->save(true);
 						
-						//if($newanalysis->save()){
-							//$newRequest->save();
-							//$newSample->save();
-							//$transaction->commit();
-						//} else {
-							//$transaction->rollBack();
-							//echo $newanalysis->getErrors();
-						//}
-						//$count++;
                     }
 				}
 				$samplenum = $samplenum + $request['countSample'];
 				$analysesnum = $analysesnum + $request['countAnalysis'];
 				
-				/* if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
-					$transaction->commit();
-				} else {
-					$transaction->rollBack();
-				} */
             }
-			//if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
-				$transaction->commit();
+	
+                Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
+                $transaction->commit();
 				
 				$sql = "SET FOREIGN_KEY_CHECKS = 1;";
                 
@@ -272,25 +229,30 @@ class LabController extends Controller
 				$model->data = count($data)."/".$request_count;
 				$model->status = "COMPLETED";
 				$model->month = $sample_count."/".$samplenum;
-				//$model->year = $analysis_count."/".$analysis_count;
-				$model->year = $analysis_count."/".$analysesnum;
+			
+                $model->year = $analysis_count."/".$analysesnum;
+                Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
 				$model->save(false);
-			//} else {
-				//$transaction->rollBack();
-			//}
-			//$transaction->commit();
+		
 		} catch (\Exception $e) {
-		   $transaction->rollBack();
+            Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
+          
+            $transaction->rollBack();
+           return $this->renderAjax('/lab/backup_restore', [
+            'model'=>$model,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
 		} catch (\Throwable $e) {
-		   $transaction->rollBack();
+            Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
+          
+            $transaction->rollBack();
+           return $this->renderAjax('/lab/backup_restore', [
+            'model'=>$model,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
 		}
-
-
-           //   Yii::$app->session->setFlash('success', ' Records Successfully Restored'.$request_count); 
-
-
-           //   return $this->redirect(['/api/lab/index']);
-
               return $this->renderAjax('/lab/backup_restore', [
                  'model'=>$model,
                  'searchModel' => $searchModel,

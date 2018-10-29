@@ -18,7 +18,6 @@ use kartik\widgets\Typeahead;
 use common\models\services\Test;
 use kartik\money\MaskMoney;
 
-
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Packagelist */
 /* @var $form yii\widgets\ActiveForm */

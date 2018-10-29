@@ -347,9 +347,17 @@ class AnalysisController extends Controller
                 $sampletype = [];
                 $test = [];
 
-            if ($model->load(Yii::$app->request->post())) {            
+            if ($model->load(Yii::$app->request->post())) { 
+
                     if($model->save(false)){
+
+                        //yung testname kasi naka 0 yun kaya malamang hindi talaga yun nag uupdate
                         
+                        // $Connection= Yii::$app->labdb;
+                        // $sql="UPDATE `tbl_analysis` SET `total`='$total' WHERE `request_id`=".$analysisquery->request_id;
+                        // $Command=$Connection->createCommand($sql);
+                        // $Command->execute();
+
                         $post= Yii::$app->request->post();
                         
                         

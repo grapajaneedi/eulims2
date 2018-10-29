@@ -20,32 +20,43 @@ $methodlist= ArrayHelper::map(Methodreference::find()->all(),'method_reference_i
 $testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName');
 
 $this->title = 'Add/ Remove Services';
-
+//lagyan nalang flag if 1 or 0 para isang controller nalang ang pagdelete para yung id na kunin nya.. yun pa din
 $js=<<<SCRIPT
-    function offerservices(mid){
-                $.post('/lab/services/offer', {
-                   id: mid,
-                   labid: $('#labid').val(),
-                   sampletypeid: $('#sampletypeid').val(),
-                   methodreferenceid: $('#methodreferenceid').val(),
+   
 
-                   labsampletypeid: $('#labsampletypeid').val(),
-                   sampletypetestname: $('#sampletypetestname').val(),
-                   testnamemethod: $('#testnamemethod').val(),
-                   testname: $('#testname').val(),
-
-                }, function(result){
-                    $("#testname-grid").yiiGridView("applyFilter");
-                
-                });
-        }
+function offerservices(mid){
+  
+    $.ajax({
+       url: '/lab/services/offer',
+       method: "post",
+        data: { id: mid,
+        labid: $('#labid').val(),
+        sampletypeid: $('#sampletypeid').val(),
+        methodreferenceid: $('#methodreferenceid').val(),
+        labsampletypeid: $('#labsampletypeid').val(),
+        sampletypetestname: $('#sampletypetestname').val(),
+        testnamemethod: $('#testnamemethod').val(),
+        testname: $('#testname').val()},
+        beforeSend: function(xhr) {
+           $('.image-loader').addClass("img-loader");
+           }
+        })
+        .done(function( response ) {   
+             $("#testname-grid").yiiGridView("applyFilter");   
+            $('.image-loader').removeClass("img-loader");  
+        });
+}
 
         function unofferservices(mid){
                             $.post('/lab/services/unoffer', {
-                               id: mid,
-                               labid: $('#labid').val(),
-                               sampletypeid: $('#sampletypeid').val(),
-                               methodreferenceid: $('#methodreferenceid').val(),
+                                id: mid,
+                                labid: $('#labid').val(),
+                                sampletypeid: $('#sampletypeid').val(),
+                                methodreferenceid: $('#methodreferenceid').val(),
+                                labsampletypeid: $('#labsampletypeid').val(),
+                                sampletypetestname: $('#sampletypetestname').val(),
+                                testnamemethod: $('#testnamemethod').val(),
+                                testname: $('#testname').val(),
                             }, function(result){
                                 $("#testname-grid").yiiGridView("applyFilter");    
                             });
@@ -55,29 +66,17 @@ $this->registerJs($js);
 
 ?>
 
-
 <?= Html::textInput('methodreferenceid', $methodreferenceid, ['class' => 'form-control', 'id'=>'methodreferenceid', 'type'=>'hidden'], ['readonly' => true]) ?>
-
-
 <?= Html::textInput('labid', $labid, ['class' => 'form-control', 'id'=>'labid', 'type'=>'hidden'], ['readonly' => true]) ?>
-
-
 <?= Html::textInput('sampletypeid', $sampletypeid, ['class' => 'form-control', 'id'=>'sampletypeid', 'type'=>'hidden' ], ['readonly' => true]) ?>
-
-
 <?= Html::textInput('labsampletypeid', $labsampletypeid, ['class' => 'form-control', 'id'=>'labsampletypeid', 'type'=>'hidden'], ['readonly' => true]) ?> 
-
 <?= Html::textInput('sampletypetestname', $sampletypetestname, ['class' => 'form-control', 'id'=>'sampletypetestname', 'type'=>'hidden'], ['readonly' => true]) ?>
-
 <?= Html::textInput('testnamemethod', $testnamemethod, ['class' => 'form-control', 'id'=>'testnamemethod', 'type'=>'hidden'], ['readonly' => true]) ?>
-
-
 <?= Html::textInput('testname', $testname, ['class' => 'form-control', 'id'=>'testname', 'type'=>'hidden'], ['readonly' => true]) ?>
 
 <?php
  $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
  $servicesquery= Services::find()->Where(['rstl_id'=>$GLOBALS['rstl_id']])->all();
-
  $servicecount = count($servicesquery);
 ?>
 
@@ -87,26 +86,24 @@ $this->registerJs($js);
         'id'=>'testname-grid',
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
         'rowOptions' => function($data){
-
             $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
             $servicesquery= Services::find()->where(['method_reference_id' => $data['method_reference_id']])->andWhere(['rstl_id'=>  $GLOBALS['rstl_id']])->one();
-
-            if ($servicesquery){
-                return ['class'=>'success'];
-            }else{
-               return ['class'=>'danger'];
-            }      
+                if ($servicesquery){
+                    return ['class'=>'success'];
+                }else{
+                return ['class'=>'danger'];
+                }      
        },
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-                'before'=>'<span class="btn btn-success legend-font" style="float:left" "id"="servicescount"><span class= "glyphicon glyphicon-upload"></span>SYNC '.$servicecount.'</span>',
-                'before'=>Html::button('<i class="glyphicon glyphicon-upload"></i> SYNC '.$servicecount, [ 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/lab/services/sync']) . "';" ,'title'=>'Sync',  'class' => 'btn btn-success']),
+                // 'before'=>'<span class="btn btn-success legend-font" style="float:left" "id"="servicescount"><span class= "glyphicon glyphicon-upload"></span>SYNC '.$servicecount.'</span>',
+                // 'before'=>Html::button('<i class="glyphicon glyphicon-upload"></i> SYNC '.$servicecount, [ 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/lab/services/sync']) . "';" ,'title'=>'Sync',  'class' => 'btn btn-success']),
                 'after'=>false,
             ],
         'columns' => [
             [
-                'header'=>'Offered',
+                'header'=>'Action',
                 'hAlign'=>'center',
                 'format' => 'raw',
                 'contentOptions' => ['style' => 'width: 5%;word-wrap: break-word;white-space:pre-line;'],
@@ -136,17 +133,27 @@ $this->registerJs($js);
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => $methodlist,
                 'format' => 'raw',
+                'contentOptions' => ['style' => 'width: 30%;word-wrap: break-word;white-space:pre-line;'], 
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                ],
             ],
-            'reference',
             [
-                'attribute' => 'fee',
-                'hAlign'=>'center',
+                'attribute' => 'reference',
+              
                 'format' => 'raw',
                 'enableSorting' => false,
-                'contentOptions' => ['style' => 'width: 5%;word-wrap: break-word;white-space:pre-line;'],     
+                'contentOptions' => ['style' => 'width: 80%;word-wrap: break-word;white-space:pre-line;'],     
+            ],
+            [
+                'attribute' => 'fee',
+                'format' => 'raw',
+                'hAlign'=>'right',
+                'value' => function($data) {   
+                     return number_format($data['fee'],2);
+                },
+                'enableSorting' => false,
+                'contentOptions' => ['style' => 'width: 10%;word-wrap: break-word;white-space:pre-line;'],     
             ],
        ],
     ]); ?>

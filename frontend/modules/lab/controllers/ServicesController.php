@@ -19,7 +19,7 @@ use yii\helpers\Json;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use linslin\yii2\curl;
-
+set_time_limit(1000);
 /**
  * ServicesController implements the CRUD actions for Services model.
  */
@@ -28,28 +28,6 @@ class ServicesController extends Controller
     /**
      * {@inheritdoc}
      */
-
-    //  public function verbs() {
-    //     parent::verbs();
-    //     return [
-    //         'index' => ['GET', 'HEAD'],
-    //         'view' => ['GET', 'HEAD'],
-    //         'create' => ['POST'],
-    //         'update' => ['PUT', 'PATCH'],
-    //         'delete' => ['DELETE'],
-    //     ];
-    // }
-    // public function actions() {
-    //     $actions = parent::actions();
-    //     $actions['index']['prepareDataProvider'] = function($action) {
-    //         return new \yii\data\ActiveDataProvider([
-    //             'query' => Profile::find()->where(['user_id' => Yii::$app->user->id]),
-    //         ]);
-    //     };
-
-    //     return $actions;
-    // }
-
 
     public function behaviors()
     {
@@ -70,21 +48,18 @@ class ServicesController extends Controller
     public function actionIndex()
     {
         $model = new Services();
-
         $modelmethod = new Methodreference();
         $searchModel = new ServicesSearch();
-
-        
+        $sampletype = [];
+        $test = [];
+     
         $samplesQuery = Sample::find()->where(['sample_id' =>0]);
         $dataProvider = new ActiveDataProvider([
                 'query' => $samplesQuery,
                 'pagination' => [
                     'pageSize' => 10,
-                ],
-             
+                ],       
         ]);
-        $sampletype = [];
-        $test = [];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -188,13 +163,6 @@ class ServicesController extends Controller
             $response = $curl->get($apiUrl);
             $decode=Json::decode($response);
 
-          //  $list = $decode->asArray()->all();
-            // $list =  Sampletype::find()
-            // ->innerJoin('tbl_lab_sampletype', 'tbl_lab_sampletype.sampletype_id=tbl_sampletype.sampletype_id')
-            // ->Where(['tbl_lab_sampletype.lab_id'=>$id])
-            // ->asArray()
-            // ->all();
-
             $selected  = null;
             if ($id != null && count($decode) > 0) {
                 $selected = '';
@@ -248,53 +216,25 @@ class ServicesController extends Controller
         $methodreferenceid = $id;
         $model = new Methodreference();
 
-      
-        // $sampletypetestname = 3;
-        // $testnamemethod = 4;
-        // $testname = 5;
-
-       
-
         $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/labsampletypes/restore?lab_id=".$labid."&sampletype_id=".$sampletypeid;
         $curl = new curl\Curl();
         $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
         $response_labsampletype = $curl->get($apiUrl);
         $decode_labsampletype=Json::decode($response_labsampletype);
 
-        foreach ($decode_labsampletype as $labsampletype) {
-            
-            $labsampletypeid = $labsampletype['lab_sampletype_id'];
-          
+        foreach ($decode_labsampletype as $labsampletype) {          
+            $labsampletypeid = $labsampletype['lab_sampletype_id'];        
         }
 
-      //ok
-
-      //kunin tlaga ito galing sa taas!! -icompare yung dalawa para imatch sya
-     // $apiUrl_sampletypetestnames="https://eulimsapi.onelab.ph/api/web/v1/sampletypetestnames/restore?sampletype_id=".$sampletypeid."&testname_id=".$methodreferenceid;
-      $apiUrl_sampletypetestnames="https://eulimsapi.onelab.ph/api/web/v1/sampletypetestnames/search?testname_id=".$methodreferenceid;
+        $apiUrl_sampletypetestnames="https://eulimsapi.onelab.ph/api/web/v1/sampletypetestnames/search?testname_id=".$methodreferenceid;
         $curl = new curl\Curl();
         $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
         $response_sampletypetestnames = $curl->get($apiUrl_sampletypetestnames);
         $decode_sampletypetestnames=Json::decode($response_sampletypetestnames);
 
-        foreach ($decode_sampletypetestnames as $sampletypetestnames) {
-            
-            $sampletypetestname = $sampletypetestnames['sampletype_testname_id'];
-             //$testname = $sampletypetestnames['testname_id'];
+        foreach ($decode_sampletypetestnames as $sampletypetestnames) {        
+            $sampletypetestname = $sampletypetestnames['sampletype_testname_id'];        
         }
-
-        //methodreference id makuha lang to dun sa niselect sa offer!!!!
-        // $apiUrl_testnamemethod="https://eulimsapi.onelab.ph/api/web/v1/testnamemethods/search?testname_id=".$testname;
-        // $curl = new curl\Curl();
-        // $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-        // $response_testnamemethod = $curl->get($apiUrl_testnamemethod);
-        // $decode_testnamemethod=Json::decode($response_testnamemethod);
-
-        // foreach ($decode_testnamemethod as $testnamemethods) {
-            
-        //     $testnamemethod = $testnamemethods['testname_method_id'];
-        // }
-
 
         $testnameQuery = Methodreference::find()
         ->leftJoin('tbl_testname_method', 'tbl_testname_method.method_id=tbl_methodreference.method_reference_id')
@@ -315,10 +255,10 @@ class ServicesController extends Controller
          ]);
          $testnamemethod = "";
          $testname = "";
-        $searchModel = new ServicesSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $sampletype = [];
-        $test = [];
+         $searchModel = new ServicesSearch();
+         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+         $sampletype = [];
+         $test = [];
 
          return $this->renderAjax('_method', [
             'model'=>$model,
@@ -330,7 +270,6 @@ class ServicesController extends Controller
             'methodreferenceid'=>$methodreferenceid,
             'labid'=>$labid,
             'sampletypeid'=>$sampletypeid,
-
             'labsampletypeid'=>$labsampletypeid,
             'sampletypetestname'=>$sampletypetestname,
             'testnamemethod'=>$testnamemethod,
@@ -346,9 +285,7 @@ class ServicesController extends Controller
           $sampletypeid = $_POST['sampletypeid'];
           $methodreferenceid = $_POST['methodreferenceid'];
           $labsampletypeid = $_POST['labsampletypeid'];
-
           $testname = $_POST['testname'];
-
           $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
 
           $apiUrl_testnamemethod="https://eulimsapi.onelab.ph/api/web/v1/testnamemethods/search?testname_id=".$methodreferenceid;
@@ -357,22 +294,19 @@ class ServicesController extends Controller
           $response_testnamemethod = $curl->get($apiUrl_testnamemethod);
           $decode_testnamemethod=Json::decode($response_testnamemethod);
   
-          foreach ($decode_testnamemethod as $testnamemethods) {
-              
+          foreach ($decode_testnamemethod as $testnamemethods) {         
               $testnamemethod = $testnamemethods['testname_method_id'];
           }
 
-          $apiUrl_sampletypetestnames="https://eulimsapi.onelab.ph/api/web/v1/sampletypetestnames/restore?sampletype_id=".$sampletypeid."&testname_id=".$methodreferenceid;
+           $apiUrl_sampletypetestnames="https://eulimsapi.onelab.ph/api/web/v1/sampletypetestnames/restore?sampletype_id=".$sampletypeid."&testname_id=".$methodreferenceid;
         
             $curl = new curl\Curl();
             $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
             $response_sampletypetestnames = $curl->get($apiUrl_sampletypetestnames);
             $decode_sampletypetestnames=Json::decode($response_sampletypetestnames);
     
-            foreach ($decode_sampletypetestnames as $sampletypetestnames) {
-                
-                $sampletypetestname = $sampletypetestnames['sampletype_testname_id'];
-               
+            foreach ($decode_sampletypetestnames as $sampletypetestnames) {       
+                $sampletypetestname = $sampletypetestnames['sampletype_testname_id'];      
             }
   
           $services = new Services();
@@ -443,8 +377,6 @@ class ServicesController extends Controller
                 $testname->save();
             }
          }
-
-        //to be fix
          $apiUrl_testnamemethod="https://eulimsapi.onelab.ph/api/web/v1/testnamemethods/restore?testname_id=".$methodreferenceid."&method_id=".$id;
          $curl = new curl\Curl();
          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
@@ -465,9 +397,7 @@ class ServicesController extends Controller
                 $testnamemethod->update_time = $var['update_time'];
                 $testnamemethod->save();
             }
-         }
-
-    
+         }  
          $apiUrl_sampletypetestnames="https://eulimsapi.onelab.ph/api/web/v1/sampletypetestnames/search?sampletype_testname_id=".$sampletypetestname;
          $curl = new curl\Curl();
          $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
@@ -487,7 +417,6 @@ class ServicesController extends Controller
                 $sampletypetestname->save();
             }
          }
-
           $apiUrl_methodreference="https://eulimsapi.onelab.ph/api/web/v1/methodreferences/search?method_reference_id=".$id;
           $curl = new curl\Curl();
           $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
@@ -517,16 +446,26 @@ class ServicesController extends Controller
      public function actionUnoffer()
      {
           $id = $_POST['id'];
+          $labid = $_POST['labid'];
+        //   $sampletypeid = $_POST['sampletypeid'];
+        //   $methodreferenceid = $_POST['methodreferenceid'];
+        //   $labsampletypeid = $_POST['labsampletypeid'];
+        //   $sampletypetestname = $_POST['sampletypetestname'];
+        //   $testnamemethod = $_POST['testnamemethod'];
+        //   $testname = $_POST['testname'];
 
           $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-
           $Connection= Yii::$app->labdb;
-          $sql="DELETE FROM `tbl_services`  WHERE `method_reference_id`=".$id." AND `rstl_id`=".$GLOBALS['rstl_id']." ";
+  
+          $sql="DELETE FROM `tbl_services`  WHERE `method_reference_id`=".$id." AND `rstl_id`=".$GLOBALS['rstl_id'].";";
+          $sql.="DELETE FROM `tbl_sampletype`  WHERE `sampletype_id`=".$id.";";
+          $sql.="DELETE FROM `tbl_lab_sampletype`  WHERE `lab_sampletype_id`=".$id.";";
+          $sql.="DELETE FROM `tbl_testname`  WHERE `testname_id`=".$id.";";
+          $sql.="DELETE FROM `tbl_sampletype_testname`  WHERE `sampletype_testname_id`=".$id.";";
+          $sql.="DELETE FROM `tbl_testname_method`  WHERE `testname_method_id`=".$id.";";
+          $sql.="DELETE FROM `tbl_methodreference`  WHERE `method_reference_id`=".$id.";";
           $Command=$Connection->createCommand($sql);
-          $Command->execute();
-          
-          
-          //delete lahat
+          $Command->execute();     
      }
 
      public function actionSync()

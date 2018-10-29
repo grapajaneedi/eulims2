@@ -598,8 +598,6 @@ $this->registerJs($PrintEvent);
     $enableRequest = false;
    }
 
-//    echo  $model->samples->samplename;
-
             $analysisgridColumns = [
                 [
                     'attribute'=>'sample_name',
@@ -610,7 +608,7 @@ $this->registerJs($PrintEvent);
                     'value' => function($model) {
                         return $model->sample ? $model->sample->samplename : '-';
                     },
-                    'contentOptions' => ['style' => 'width:20%; white-space: normal;'],
+                    'contentOptions' => ['style' => 'width:10%; white-space: normal;'],
                    
                 ],
                 [
@@ -618,21 +616,21 @@ $this->registerJs($PrintEvent);
                     'header'=>'Sample Code',
                     'value' => function($model) {
                         return $model->sample ? $model->sample->sample_code : '-';
-
-                       // return $model->analysis_id;
                     },
                     'enableSorting' => false,
+                    'contentOptions' => ['style' => 'width:10%; white-space: normal;'],
                 ],
                 [
                     'attribute'=>'testname',
                     'header'=>'Test/ Calibration Requested',
-                    'contentOptions' => ['style' => 'width: 30%;word-wrap: break-word;white-space:pre-line;'],
+                    'contentOptions' => ['style' => 'width: 15%;word-wrap: break-word;white-space:pre-line;'],
                     'enableSorting' => false,
                 ],
                 [
                     'attribute'=>'method',
                     'header'=>'Test Method',
-                    'enableSorting' => false,                
+                    'enableSorting' => false,  
+                    'contentOptions' => ['style' => 'width: 50%;word-wrap: break-word;white-space:pre-line;'],              
                 ],
                 [
                     'attribute'=>'quantity',
