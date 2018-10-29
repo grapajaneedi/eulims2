@@ -586,7 +586,7 @@ class RequestController extends Controller
                 return false;
             }
         } else {
-            $model->sample_receive_date = $modelReferralrequest->sample_receive_date;
+            $model->sample_receive_date = !empty($modelReferralrequest->sample_receive_date) ? $modelReferralrequest->sample_receive_date : null;
             if($model->request_ref_num){
                 $model->request_ref_num=NULL;
             }
