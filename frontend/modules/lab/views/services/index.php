@@ -101,7 +101,7 @@ $services =  Services::find()->all();
                 ['class' => 'yii\grid\SerialColumn'],
 
                 [
-                    'header'=>'Offered',
+                    'header'=>'Action',
                     'format' => 'raw',
                     'enableSorting' => false,
                     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],           
@@ -124,12 +124,12 @@ $services =  Services::find()->all();
                     'enableSorting' => false,
                     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],             
                 ],
-                [
-                    'header'=>'Offered by',
-                    'format' => 'raw',
-                    'enableSorting' => false,
-                    'contentOptions' => ['style' => 'width:40px; white-space: normal;'],      
-                ],
+                // [
+                //     'header'=>'Offered by',
+                //     'format' => 'raw',
+                //     'enableSorting' => false,
+                //     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],      
+                // ],
                 ['class' => 'yii\grid\ActionColumn'],
             ],
         ]); ?>
@@ -158,24 +158,7 @@ $services =  Services::find()->all();
 
 //     function offerservices(mid){
 
-//         $.ajax({
-//             url: '/lab/services/offer',
-//             method: "POST",
-//             data: { id: mid,,
-//             sampletypeid: $('#sampletypeid').val(),
-//             methodreferenceid: $('#methodreferenceid').val(),
-//             labsampletypeid: $('#labsampletypeid').val(),
-//             sampletypetestname: $('#sampletypetestname').val(),
-//             testnamemethod: $('#testnamemethod').val(),
-//             testname: $('#testname').val(),
-//             beforeSend: function(xhr) {
-//                $('.image-loader').addClass("img-loader");
-//                }
-//             })
-//             .done(function( response ) {
-//                 $("#testname-grid").yiiGridView("applyFilter");   
-//                 $('.image-loader').removeClass("img-loader");  
-//             });
+      
 // }
    
 
