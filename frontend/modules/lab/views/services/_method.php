@@ -25,19 +25,28 @@ $js=<<<SCRIPT
    
 
 function offerservices(mid){
-    $.post('/lab/services/offer', {
-       id: mid,
-       labid: $('#labid').val(),
-       sampletypeid: $('#sampletypeid').val(),
-       methodreferenceid: $('#methodreferenceid').val(),
-       labsampletypeid: $('#labsampletypeid').val(),
-       sampletypetestname: $('#sampletypetestname').val(),
-       testnamemethod: $('#testnamemethod').val(),
-       testname: $('#testname').val(),
-    }, function(result){
-        $("#testname-grid").yiiGridView("applyFilter");           
-    });
+  
+    $.ajax({
+       url: '/lab/services/offer',
+       method: "post",
+        data: { id: mid,
+        labid: $('#labid').val(),
+        sampletypeid: $('#sampletypeid').val(),
+        methodreferenceid: $('#methodreferenceid').val(),
+        labsampletypeid: $('#labsampletypeid').val(),
+        sampletypetestname: $('#sampletypetestname').val(),
+        testnamemethod: $('#testnamemethod').val(),
+        testname: $('#testname').val()},
+        beforeSend: function(xhr) {
+           $('.image-loader').addClass("img-loader");
+           }
+        })
+        .done(function( response ) {   
+             $("#testname-grid").yiiGridView("applyFilter");   
+            $('.image-loader').removeClass("img-loader");  
+        });
 }
+
         function unofferservices(mid){
                             $.post('/lab/services/unoffer', {
                                 id: mid,
@@ -88,13 +97,13 @@ $this->registerJs($js);
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-                'before'=>'<span class="btn btn-success legend-font" style="float:left" "id"="servicescount"><span class= "glyphicon glyphicon-upload"></span>SYNC '.$servicecount.'</span>',
-                'before'=>Html::button('<i class="glyphicon glyphicon-upload"></i> SYNC '.$servicecount, [ 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/lab/services/sync']) . "';" ,'title'=>'Sync',  'class' => 'btn btn-success']),
+                // 'before'=>'<span class="btn btn-success legend-font" style="float:left" "id"="servicescount"><span class= "glyphicon glyphicon-upload"></span>SYNC '.$servicecount.'</span>',
+                // 'before'=>Html::button('<i class="glyphicon glyphicon-upload"></i> SYNC '.$servicecount, [ 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/lab/services/sync']) . "';" ,'title'=>'Sync',  'class' => 'btn btn-success']),
                 'after'=>false,
             ],
         'columns' => [
             [
-                'header'=>'Offered',
+                'header'=>'Action',
                 'hAlign'=>'center',
                 'format' => 'raw',
                 'contentOptions' => ['style' => 'width: 5%;word-wrap: break-word;white-space:pre-line;'],
@@ -124,17 +133,27 @@ $this->registerJs($js);
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => $methodlist,
                 'format' => 'raw',
+                'contentOptions' => ['style' => 'width: 30%;word-wrap: break-word;white-space:pre-line;'], 
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                ],
             ],
-            'reference',
             [
-                'attribute' => 'fee',
-                'hAlign'=>'center',
+                'attribute' => 'reference',
+              
                 'format' => 'raw',
                 'enableSorting' => false,
-                'contentOptions' => ['style' => 'width: 5%;word-wrap: break-word;white-space:pre-line;'],     
+                'contentOptions' => ['style' => 'width: 80%;word-wrap: break-word;white-space:pre-line;'],     
+            ],
+            [
+                'attribute' => 'fee',
+                'format' => 'raw',
+                'hAlign'=>'right',
+                'value' => function($data) {   
+                     return number_format($data['fee'],2);
+                },
+                'enableSorting' => false,
+                'contentOptions' => ['style' => 'width: 10%;word-wrap: break-word;white-space:pre-line;'],     
             ],
        ],
     ]); ?>

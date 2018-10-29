@@ -19,7 +19,7 @@ use yii\helpers\Json;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use linslin\yii2\curl;
-
+set_time_limit(1000);
 /**
  * ServicesController implements the CRUD actions for Services model.
  */
