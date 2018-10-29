@@ -40,13 +40,14 @@ if($model->lab_id==3){
 }
 $js=<<<SCRIPT
     if(this.value==1){//Paid
-        $("#request-discount_id").val(0).trigger('change');
-        $("#request-discount_id").prop('disabled',false);
+        $("#exrequestreferral-discount_id").val(0).trigger('change');
+        $("#exrequestreferral-discount_id").prop('disabled',false);
     }else{//Fully Subsidized
-        $("#request-discount_id").val(0).trigger('change');
-        $("#request-discount_id").prop('disabled',true);
+        $("#exrequestreferral-discount_id").val(0).trigger('change');
+        $("#exrequestreferral-discount_id").prop('disabled',true);
     }
-    $("#payment_type_id").val(this.value);  
+    //$("#payment_type_id").val(this.value);
+    $("#exrequestreferral-payment_type_id").val(this.value);
 SCRIPT;
 
         
@@ -80,28 +81,52 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
     <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(RequestType::find()->where('request_type_id=2')->all(),'request_type_id','request_type'),
         'language' => 'en',
-        'options' => ['placeholder' => 'Select Request Type','disabled'=>'disabled'],
+        'options' => ['placeholder' => 'Select Request Type','readonly'=>'readonly'],
         'pluginOptions' => [
             'allowClear' => false
         ]
     ])->label('Request Type'); ?>
     </div>
+    <div class="col-md-6">
+    <?= $form->field($model, 'sample_receive_date')->widget(DateTimePicker::classname(), [
+        'readonly'=>true,
+        'disabled' => $disabled,
+    'options' => ['placeholder' => 'Enter Date'],
+        'value'=>function($model){
+             return date("m/d/Y h:i:s P", strtotime($model->sample_receive_date));
+        },
+        'convertFormat' => true,
+    'pluginOptions' => [
+            'autoclose' => true,
+            'removeButton' => false,
+            'todayHighlight' => true,
+            'todayBtn' => true,
+            'format' => 'php:Y-m-d H:i:s',
+            //'startDate'=>$RequestStartDate,
+    ],
+        'pluginEvents'=>[
+            "changeDate" => "function(e) { 
+                var dv=$('#exrequestreferral-sample_receive_date').val();
+                var d=dv.split(' ');
+                $('#exrequestreferral-request_date').val(d[0]);
+            }",
+        ]
+    ])->label('Sample Received Date'); ?>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-6">
-     <?= $form->field($model, 'lab_id')->widget(DepDrop::classname(), [
+     <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
-        'type'=>DepDrop::TYPE_SELECT2,
+        //'type'=>DepDrop::TYPE_SELECT2,
         'language' => 'en',
         'options' => ['placeholder' => 'Select Laboratory','disabled'=>$disabled],
-        'pluginOptions' => [
-            'allowClear' => true
-        ],
         'pluginOptions'=>[
            //'depends'=>['rstlid','erequest-request_type_id'],
            'placeholder'=>'Select Laboratory',
            //'url'=>Url::to(['/api/ajax/getlab']),
-           //'LoadingText'=>'Loading...'
+           'LoadingText'=>'Loading...',
+           'allowClear' => true
         ],
         'pluginEvents'=>[
             "change" => "function() { 
@@ -285,7 +310,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
                         discountid: discountid
                     }, function(result){
                     if(result){
-                       $("#erequest-discount").val(result.rate);
+                       $("#exrequestreferral-discount").val(result.rate);
                     }
                 });
             }
@@ -323,7 +348,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
         'pluginEvents'=>[
             "change" => "",
         ]
-    ])->label('Report Due'); ?>
+    ]); ?>
     </div>
 </div>
 <div class="row">

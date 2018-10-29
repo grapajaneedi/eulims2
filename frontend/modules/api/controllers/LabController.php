@@ -14,7 +14,7 @@ use common\models\lab\BackuprestoreSearch;
 use common\models\lab\Backuprestore;
 use yii\helpers\Json;
 
-set_time_limit(600);
+set_time_limit(1000);
 
 /**
  * Default controller for the `Lab` module
@@ -263,7 +263,8 @@ class LabController extends Controller
 				} */
             }
 			//if(count($data) == $request_count && $samplenum == $sample_count && $analysesnum == $analysis_count){
-				$transaction->commit();
+                Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
+                $transaction->commit();
 				
 				$sql = "SET FOREIGN_KEY_CHECKS = 1;";
                 
@@ -273,20 +274,23 @@ class LabController extends Controller
 				$model->status = "COMPLETED";
 				$model->month = $sample_count."/".$samplenum;
 				//$model->year = $analysis_count."/".$analysis_count;
-				$model->year = $analysis_count."/".$analysesnum;
+                $model->year = $analysis_count."/".$analysesnum;
+                Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
 				$model->save(false);
 			//} else {
 				//$transaction->rollBack();
 			//}
 			//$transaction->commit();
 		} catch (\Exception $e) {
+            Yii::$app->session->setFlash('success', ' There was a problem connecting to the server. Please try again'); 
 		   $transaction->rollBack();
 		} catch (\Throwable $e) {
+            Yii::$app->session->setFlash('success', ' There was a problem connecting to the server. Please try again'); 
 		   $transaction->rollBack();
 		}
 
 
-           //   Yii::$app->session->setFlash('success', ' Records Successfully Restored'.$request_count); 
+            
 
 
            //   return $this->redirect(['/api/lab/index']);

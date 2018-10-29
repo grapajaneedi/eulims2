@@ -61,14 +61,7 @@ $year = ['2013', '2014', '2015', '2016', '2017', '2018'];
 
 $this->title = 'Backup and Restore';
 $this->params['breadcrumbs'][] = $this->title;
-
-
-
 ?>
-
-<?php
-       
-    ?>
 
 <div class="services-index">
    
@@ -95,13 +88,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             'theme' => Select2::THEME_KRAJEE,
                             'options' => ['id'=>'month'],
                             'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Month'],
-                    ])."</div>"."<div class='col-md-2'>".$form->field($model,'year')->widget(Select2::classname(),[
+                    ])->label("Month")."</div>"."<div class='col-md-2'>".$form->field($model,'year')->widget(Select2::classname(),[
                         'data' => $year,
                         'id'=>'year',
                         'theme' => Select2::THEME_KRAJEE,
                         'options' => ['id'=>'year'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Year'],
-                ])."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span>"."</div></div>";
+                ])->label("Year")."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span>"."</div></div>";
             ?>
         </div>
         <?php ActiveForm::end(); ?>
