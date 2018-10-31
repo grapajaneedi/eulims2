@@ -279,4 +279,12 @@ class Request extends \yii\db\ActiveRecord
         //Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
         return $rows;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReferralrequest()
+    {
+        return $this->hasOne(ReferralRequest::className(), ['request_id' => 'request_id']);
+    }
 }
