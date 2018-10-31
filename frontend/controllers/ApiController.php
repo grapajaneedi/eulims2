@@ -429,7 +429,7 @@ class ApiController extends ActiveController
                 if($data->save(true)){
                     //addtional action here if necessarry
                 }else{
-                    $ids=$ids.$var['id'].',';
+                    $ids=$ids.$var['local_check_id'].',';
                 }
                 $ctr++;
             }
@@ -480,7 +480,7 @@ class ApiController extends ActiveController
                 if($data->save(true)){
                     //addtional action here if necessarry
                 }else{
-                    $ids=$ids.$var['id'].',';
+                    $ids=$ids.$var['local_receipt_id'].',';
                 }
                 $ctr++;
             }
@@ -519,7 +519,7 @@ class ApiController extends ActiveController
                 if($data->save(true)){
                     //addtional action here if necessarry
                 }else{
-                    $ids=$ids.$var['id'].',';
+                    $ids=$ids.$var['local_paymentitem_id'].',';
                 }
                 $ctr++;
             }
@@ -561,7 +561,7 @@ class ApiController extends ActiveController
                 if($data->save(true)){
                     //addtional action here if necessarry
                 }else{
-                    $ids=$ids.$var['id'].',';
+                    $ids=$ids.$var['local_orderofpayment_id'].',';
                 }
                 $ctr++;
             }
@@ -596,7 +596,7 @@ class ApiController extends ActiveController
                 if($data->save(true)){
                     //addtional action here if necessarry
                 }else{
-                    $ids=$ids.$var['id'].',';
+                    $ids=$ids.$var['local_deposit_id'].',';
                 }
                 $ctr++;
             }

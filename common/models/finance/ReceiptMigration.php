@@ -56,7 +56,8 @@ class ReceiptMigration extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rstl_id', 'terminal_id', 'deposit_type_id', 'or_series_id', 'or_number', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled', 'customer_id'], 'required'],
+            // [['rstl_id', 'terminal_id', 'deposit_type_id', 'or_series_id', 'or_number', 'receiptDate', 'payment_mode_id', 'payor', 'collectiontype_id', 'total', 'cancelled', 'customer_id'], 'required'],
+            [['rstl_id'], 'required'],
             [['rstl_id', 'terminal_id', 'orderofpayment_id', 'deposit_type_id', 'or_series_id', 'payment_mode_id', 'collectiontype_id', 'cancelled', 'deposit_id', 'customer_id', 'local_receipt_id', 'local_deposit_id', 'local_deposit_type_id', 'local_collection_id', 'local_orderofpayment_id', 'collection_id'], 'integer'],
             [['receiptDate', 'oldColumn_checkdate'], 'safe'],
             [['total'], 'number'],
