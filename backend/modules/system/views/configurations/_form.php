@@ -9,6 +9,7 @@ use common\models\system\Rstl;
 use kartik\base\InputWidget;
 use kartik\widgets\SwitchInput;
 use common\models\lab\CodeTemplate;
+use kartik\checkbox\CheckboxX;
 
 
 /* @var $this yii\web\View */
@@ -20,9 +21,11 @@ if(!$RequestcodedTemplate){
    $rstl_id=0; 
    $request_code_template='';
    $sample_code_template='';
+   $generate_mode=0;
 }else{
     $request_code_template=$RequestcodedTemplate->request_code_template;
     $sample_code_template=$RequestcodedTemplate->sample_code_template;
+    $generate_mode=$RequestcodedTemplate->generate_mode;
     $rstl_id=$RequestcodedTemplate->rstl_id;
 }
 $js=<<<SCRIPT
@@ -34,7 +37,8 @@ $js=<<<SCRIPT
         $.post('/ajax/saverequesttemplate', {
             rstl_id: $("#RSTLSelect2").val(),
             rtemp: $("#requestcodetemplate").val(),
-            stemp: $("#samplecodetemplate").val()
+            stemp: $("#samplecodetemplate").val(),
+            gmode: $("#_generatemode").val()
         }, function(result){
             //Return values
             if(result.Status=='Failed'){
@@ -62,7 +66,7 @@ $this->registerJs($js);
         echo $form->field($model, 'active')->hiddenInput()->label(false);
     }
     ?>
-    
+    <input type="hidden" id="_generatemode" name="_generatemode" value="<?= $generate_mode ?>">
     <div class="row">
         <div class="col-md-6">
         <?php
@@ -107,9 +111,12 @@ $this->registerJs($js);
             <?php
                 echo $form->field($model, 'active')->widget(SwitchInput::classname(), [
                     'type' => SwitchInput::CHECKBOX,
+                    'tristate' => false,
+                    'indeterminateValue' => -1, // set indeterminate as -1 default is null
+                    'indeterminateToggle' => ['label'=>'&lt;i class="glyphicon glyphicon-remove-sign">&lt;/i>'],
                     'pluginOptions' => [
-                        'onText' => 'Active',
-                        'offText' => 'Inactive',
+                        'onText' => 'YES',
+                        'offText' => 'NO',
                         'onColor' => 'success',
                         'offColor' => 'danger',
                         'handleWidth'=>110,
@@ -160,6 +167,31 @@ $this->registerJs($js);
                     <label class="control-label" for="samplecodetemplate">Sample Template</label>
                     <input type="text" class="form-control" id="samplecodetemplate" value="<?php echo $sample_code_template ?>"/>
                 </div>
+                <div class="col-md-6">
+                <?php
+                    echo '<label class="control-label" style="font-size:11px;">Reset sample code number every request</label>';
+                    echo SwitchInput::widget([
+                        'id'=>'generatemode',
+                        'name'=>'generatemode', 
+                        'value'=>$generate_mode,
+                        'tristate' => false,
+                        'indeterminateValue' => -1, // set indeterminate as -1 default is null
+                        'indeterminateToggle' => ['label'=>'&lt;i class="glyphicon glyphicon-remove-sign">&lt;/i>'],
+                        'pluginOptions' => [
+                            'onText' => 'YES',
+                            'offText' => 'NO',
+                            'onColor' => 'success',
+                            'offColor' => 'danger',
+                            'handleWidth'=>110,
+                        ],
+                        'pluginEvents' => [
+                            "init.bootstrapSwitch" => "function() { console.log('init'); }",
+                            "switchChange.bootstrapSwitch" => "function() { $('#_generatemode').val(this.checked ? 1:0); }",
+                        ]
+                    ]);
+                ?>
+        </div>
+                
             </div>
         </div>
     </div>

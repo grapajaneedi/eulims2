@@ -11,6 +11,7 @@ use Yii;
  * @property int $rstl_id
  * @property string $request_code_template
  * @property string $sample_code_template
+ * @property int $generate_mode
  */
 class CodeTemplate extends \yii\db\ActiveRecord
 {
@@ -37,7 +38,7 @@ class CodeTemplate extends \yii\db\ActiveRecord
     {
         return [
             [['rstl_id', 'request_code_template', 'sample_code_template'], 'required'],
-            [['rstl_id'], 'integer'],
+            [['rstl_id','generate_mode'], 'integer'],
             [['request_code_template', 'sample_code_template'], 'string', 'max' => 100],
         ];
     }
@@ -52,6 +53,7 @@ class CodeTemplate extends \yii\db\ActiveRecord
             'rstl_id' => 'Rstl ID',
             'request_code_template' => 'Request Code Template',
             'sample_code_template' => 'Sample Code Template',
+            'generate_mode'=>'Generate Mode'
         ];
     }
 }

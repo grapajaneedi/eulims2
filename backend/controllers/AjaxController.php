@@ -38,6 +38,7 @@ class AjaxController extends \yii\web\Controller{
         $rstl_id=$post['rstl_id'];
         $request_code_template=$post['rtemp'];
         $sample_code_template=$post['stemp'];
+        $gmode=$post['gmode'];
         $RequestcodeTemplate= CodeTemplate::find()->where(['rstl_id'=>$rstl_id])->one();
         if(!$RequestcodeTemplate){
             $RequestcodeTemplate=new CodeTemplate();
@@ -45,6 +46,7 @@ class AjaxController extends \yii\web\Controller{
         $RequestcodeTemplate->rstl_id=$rstl_id;
         $RequestcodeTemplate->request_code_template=$request_code_template;
         $RequestcodeTemplate->sample_code_template=$sample_code_template;
+        $RequestcodeTemplate->generate_mode=$gmode;
         if($RequestcodeTemplate->save()){//OK
             $Return=[
                 'Status'=>'Success',
