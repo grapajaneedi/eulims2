@@ -7,7 +7,7 @@ use edofre\fullcalendar\Fullcalendar;
 use miloschuman\highcharts\Highcharts;
 use miloschuman\highcharts\HighchartsAsset;
 use common\models\system\LoginForm;
-
+use rmrevin\yii\fontawesome\FA;
 
 /* @var $this yii\web\View */
 
@@ -202,9 +202,6 @@ function updateRecord(obj) {
     
     <?php if (!Yii::$app->user->isGuest) { ?>
         <div class="body-content">
-
-
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="box box-solid">
