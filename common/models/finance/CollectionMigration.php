@@ -21,6 +21,7 @@ use Yii;
  * @property int $oldColumn_receipt_id
  * @property string $oldColumn_receiptid
  * @property int $oldColumn_cancelled
+ * @property int $local_orderofpayment_id
  */
 class CollectionMigration extends \yii\db\ActiveRecord
 {
@@ -47,7 +48,7 @@ class CollectionMigration extends \yii\db\ActiveRecord
     {
         return [
             [['rstl_id', 'nature'], 'required'],
-            [['rstl_id', 'orderofpayment_id', 'referral_id', 'payment_status_id', 'collection_old_id', 'oldColumn_request_id', 'oldColumn_receipt_id', 'oldColumn_cancelled'], 'integer'],
+            [['rstl_id', 'orderofpayment_id', 'referral_id', 'payment_status_id', 'collection_old_id', 'oldColumn_request_id', 'oldColumn_receipt_id', 'oldColumn_cancelled', 'local_orderofpayment_id'], 'integer'],
             [['amount', 'wallet_amount', 'sub_total'], 'number'],
             [['nature', 'oldColumn_receiptid'], 'string', 'max' => 50],
             [['orderofpayment_id'], 'unique'],
@@ -74,6 +75,7 @@ class CollectionMigration extends \yii\db\ActiveRecord
             'oldColumn_receipt_id' => 'Old Column Receipt ID',
             'oldColumn_receiptid' => 'Old Column Receiptid',
             'oldColumn_cancelled' => 'Old Column Cancelled',
+            'local_orderofpayment_id' => 'Local Orderofpayment ID',
         ];
     }
 }
