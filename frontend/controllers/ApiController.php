@@ -611,8 +611,7 @@ class ApiController extends ActiveController
          ];   
       }
 
-      public function actionSynccollection(){
-        return "agasgsdgs"; exit;
+      public function actionSync_collection(){
         $post = Yii::$app->request->post(); //get the post
         $ctr = 0;
         if(isset($post)){
