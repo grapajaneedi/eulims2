@@ -16,6 +16,7 @@ use common\models\finance\ReceiptMigration;
 use common\models\finance\PaymentitemMigration;
 use common\models\finance\OrderofpaymentMigration;
 use common\models\finance\DepositMigration;
+use common\models\finance\CollectionMigration;
 
 /* @property Customer $customer */
 class ApiController extends ActiveController
@@ -610,7 +611,8 @@ class ApiController extends ActiveController
          ];   
       }
 
-      public function actionSync_collection(){
+      public function actionSynccollection(){
+        return "agasgsdgs"; exit;
         $post = Yii::$app->request->post(); //get the post
         $ctr = 0;
         if(isset($post)){
@@ -636,7 +638,7 @@ class ApiController extends ActiveController
                 if($data->save(true)){
                     //addtional action here if necessarry
                 }else{
-                    $ids=$ids.$var['local_collection_id'].',';
+                    $ids=$ids.$var['collection_old_id'].',';
                 }
                 $ctr++;
             }
