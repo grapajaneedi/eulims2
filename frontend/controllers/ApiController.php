@@ -610,4 +610,44 @@ class ApiController extends ActiveController
          ];   
       }
 
+      public function actionSync_collection(){
+        $post = Yii::$app->request->post(); //get the post
+        $ctr = 0;
+        if(isset($post)){
+            $myvar = Json::decode($post['data']);
+            $ids="";
+            foreach ($myvar as $var) {
+
+                $data = new CollectionMigration();
+                $data->rstl_id=$var['rstl_id'];
+                $data->referral_id=$var['referral_id'];
+                $data->oldColumn_receipt_id=$var['oldColumn_receipt_id'];
+                $data->nature=$var['nature'];
+                $data->amount=$var['amount'];
+                $data->oldColumn_receiptid=$var['oldColumn_receiptid'];
+                $data->oldColumn_cancelled=$var['oldColumn_cancelled'];
+                $data->oldColumn_request_id=$var['oldColumn_request_id'];
+                $data->local_collection_id=$var['local_collection_id'];
+                $data->wallet_amount=$var['wallet_amount'];
+                $data->sub_total=$var['sub_total'];
+                $data->payment_status_id=$var['payment_status_id'];
+                $data->local_orderofpayment_id=$var['local_orderofpayment_id'];
+                
+                if($data->save(true)){
+                    //addtional action here if necessarry
+                }else{
+                    $ids=$ids.$var['local_collection_id'].',';
+                }
+                $ctr++;
+            }
+           
+        }
+         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+
+         return [
+            'num'=>$ctr,
+            'ids'=>$ids
+         ];   
+      }
+
 }
