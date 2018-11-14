@@ -628,7 +628,7 @@ class ApiController extends ActiveController
                 $data->oldColumn_receiptid=$var['oldColumn_receiptid'];
                 $data->oldColumn_cancelled=$var['oldColumn_cancelled'];
                 $data->oldColumn_request_id=$var['oldColumn_request_id'];
-                $data->local_collection_id=$var['collection_old_id'];
+                $data->collection_old_id=$var['collection_old_id'];
                 $data->wallet_amount=$var['wallet_amount'];
                 $data->sub_total=$var['sub_total'];
                 $data->payment_status_id=$var['payment_status_id'];
