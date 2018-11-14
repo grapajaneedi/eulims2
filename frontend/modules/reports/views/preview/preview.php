@@ -7,7 +7,7 @@ use yii2assets\pdfjs\PdfJs;
  * 23 May, 2018 , 12:31:20 AM * 
  * Module: preview * 
  */
-$this->title = 'EULIMS | Preview';
+$this->title = 'Preview';
 $this->params['breadcrumbs'][] = ['label' => 'Reports', 'url' => ['/reports']];
 $this->params['breadcrumbs'][] ="Preview";
 ?>

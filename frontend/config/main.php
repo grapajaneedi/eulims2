@@ -25,10 +25,10 @@ return [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
-        'reports'=>[
+        'reports'=>[ //This configuration is for handling request reports for non-dost
             'class'=>'common\components\ReportConfig',
             'ReportName'=>'Request',
-            'ReportNumber'=>1
+            'ReportNumber'=>2
         ],
         'places' => [
             'class' => '\dosamigos\google\places\Places',
