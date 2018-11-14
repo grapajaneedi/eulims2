@@ -65,7 +65,7 @@ class Op extends \yii\db\ActiveRecord
     {
         return [
             [['transactionnum', 'collectiontype_id', 'payment_mode_id', 'order_date', 'customer_id', 'purpose'], 'required'],
-	        ['RequestIds', 'required','message' => 'Please select Request.'],
+	    ['RequestIds', 'required','message' => 'Please select Request.'],
             [['rstl_id', 'collectiontype_id', 'payment_mode_id', 'customer_id', 'receipt_id','on_account','payment_status_id'], 'integer'],
             [['order_date','RequestIds','payment_status_id','subsidiary_customer_ids'], 'safe'],
             [['total_amount'], 'number'],
@@ -118,29 +118,54 @@ class Op extends \yii\db\ActiveRecord
         'order_date', 
         'customer_id', 
         'purpose',
-		'rstl_id', 
-		'receipt_id',
-		'on_account',
-		'payment_status_id',
-		'order_date',
-		'RequestIds',
-		'subsidiary_customer_ids',
-		'total_amount',
-		'invoice_number',
-		'paymentitems'=>function()
-		{
-			return $this->paymentitems;    
-		},
+        'rstl_id', 
+        'receipt_id',
+        'on_account',
+        'payment_status_id',
+        'order_date',
+        'RequestIds',
+        'subsidiary_customer_ids',
+        'total_amount',
+        'invoice_number',
+        'paymentitems'=>function()
+        {
+            return $this->paymentitems;    
+        },
+        'subsidiary_customer'=>function()
+        {
+            return $this->subsidiaryCustomer;    
+        },
+        'op_billings'=>function()
+        {
+            return $this->opBillings;    
+        },
+        'cancelled_ops'=>function()
+        {
+            return $this->cancelledOps;    
+        },
+        'receipt'=>function()
+        {
+            return $this->receipt;    
+        }       
+                
         ];
 
     }
 
 
-	 /**
+     /**
     * @return \yii\db\ActiveQuery
      */
-		public function getOpBillings()
-	   {
+    public function getSubsidiaryCustomer()
+    {
+       return $this->hasMany(SubsidiaryCustomer::className(), ['orderofpayment_id' => 'orderofpayment_id']);
+    }
+    
+    /**
+    * @return \yii\db\ActiveQuery
+     */
+    public function getOpBillings()
+    {
        return $this->hasMany(OpBilling::className(), ['orderofpayment_id' => 'orderofpayment_id']);
     }
 
@@ -163,7 +188,7 @@ class Op extends \yii\db\ActiveRecord
 		/**
       * @return \yii\db\ActiveQuery
       */
-		public function getPaymentMode()
+      public function getPaymentMode()
      {
        return $this->hasOne(Paymentmode::className(), ['payment_mode_id' => 'payment_mode_id']);
      }
@@ -205,61 +230,61 @@ class Op extends \yii\db\ActiveRecord
          ]);
      }
     
-  //   public function getBankAccount(){
-  //       $bank_account= BankAccount::find()->where(['rstl_id'=> Yii::$app->user->identity->profile->rstl_id])->one();
-  //       if ($bank_account){
-  //           $var= [
-  //           'bank_name'=>$bank_account->bank_name,
-  //           'account_number'=>$bank_account->account_number
-  //           ];
-  //       }else {
-  //           $var=[
-  //               'bank_name'=>"",
-  //               'account_number'=>""
-  //           ];
-  //       }
-  //       return $var;
+     public function getBankAccount(){
+        $bank_account= BankAccount::find()->where(['rstl_id'=> Yii::$app->user->identity->profile->rstl_id])->one();
+       if ($bank_account){
+             $var= [
+             'bank_name'=>$bank_account->bank_name,
+             'account_number'=>$bank_account->account_number
+             ];
+         }else {
+             $var=[
+                 'bank_name'=>"",
+                 'account_number'=>""
+             ];
+         }
+         return $var;
         
-  //   }
+     }
     
-  //   function getReferences($op){
+     function getReferences($op){
 		
-  //       $references = '';
-  //       $count = count($op->paymentitems);
-  //       foreach($op->paymentitems as $item){
-  //               $references .= $item->details;
-  //               $references .= ($count > 1) ? ', ' : '';
-  //       }
-  //       return $references;
-  //   }
+         $references = '';
+         $count = count($op->paymentitems);
+         foreach($op->paymentitems as $item){
+                 $references .= $item->details;
+                 $references .= ($count > 1) ? ', ' : '';
+         }
+         return $references;
+     }
     
-  //   function getSamples($op){
-  //       $samples = "";
-  //       $countSamples = count($op->paymentitems);
-  //       foreach ($op->paymentitems as $item){
-  //           $request = Request::findOne($item->request_id);
-  //           foreach($request->samples as $sample){
-  //               $samples .= $sample->samplename;
-  //               $samples .= '(';
-  //               $countAnalyses = count($sample->analyses);
+     function getSamples($op){
+         $samples = "";
+         $countSamples = count($op->paymentitems);
+         foreach ($op->paymentitems as $item){
+             $request = Request::findOne($item->request_id);
+             foreach($request->samples as $sample){
+                 $samples .= $sample->samplename;
+                 $samples .= '(';
+                 $countAnalyses = count($sample->analyses);
 
-  //               foreach($sample->analyses as $analysis){
-  //                       $samples .= $analysis->testname;
-  //                       $samples .= ($countAnalyses > 1) ? ', ' : '';
-  //               }
-  //               $samples .= ')';
-  //               $samples .= ($countSamples > 1) ? ', ' : '';
-  //           }
-  //       }
-  //       return $samples;
-  //   }
+                 foreach($sample->analyses as $analysis){
+                         $samples .= $analysis->testname;
+                         $samples .= ($countAnalyses > 1) ? ', ' : '';
+                 }
+                 $samples .= ')';
+                 $samples .= ($countSamples > 1) ? ', ' : '';
+             }
+         }
+         return $samples;
+     }
     
-  //   public function getTRN($OpID){
-  //       $func=new Functions();
-  //       $Connection= Yii::$app->financedb;
-  //       $rows=$func->ExecuteStoredProcedureRows("spGetTRN(:opID)", [':opID'=> $OpID], $Connection);
-  //       return $rows;
-  //   }
+     public function getTRN($OpID){
+         $func=new Functions();
+         $Connection= Yii::$app->financedb;
+         $rows=$func->ExecuteStoredProcedureRows("spGetTRN(:opID)", [':opID'=> $OpID], $Connection);
+         return $rows;
+     }
 
     
 

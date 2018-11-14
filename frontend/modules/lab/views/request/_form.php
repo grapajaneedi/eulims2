@@ -357,7 +357,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
     <?= $form->field($model, 'conforme')->textInput(['readonly' => $disabled]) ?>
     </div>
     <div class="col-md-6">
-    <?= $form->field($model, 'receivedBy')->textInput(['readonly' => true]) ?>
+    <?= $form->field($model, 'receivedBy')->zInput(['readonly' => true]) ?>
     </div>
 </div>
     <div class="row" style="float: right;padding-right: 15px">

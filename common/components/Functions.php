@@ -259,7 +259,6 @@ class Functions extends Component{
     }
 
     function GetSampleCode($form,$model,$disabled=false,$Label=false){
-
 $dataExp = <<< SCRIPT
          function (params, page) {
                 return {
@@ -275,9 +274,11 @@ SCRIPT;
             }
 SCRIPT;
                 $url = \yii\helpers\Url::to(['/lab/tagging/getsamplecode']);
+              //  $url = '';
+                // Get the initial city description
                 $sample_code = empty($model->sample_code) ? '' : Sample::findOne($model->sample_code)->sample_code;
                 return $form->field($model, 'sample_code')->widget(Select2::classname(), [
-                    'initValueText' => $sample_code,
+                    'initValueText' => $sample_code, // set the initial display text
                     'options' => ['placeholder' => 'Search or Scan Sample Code ...','disabled'=>$disabled,'class'=>'.input-group.input-group-sm'],
                     'pluginOptions' => [
                         'allowClear' => true,

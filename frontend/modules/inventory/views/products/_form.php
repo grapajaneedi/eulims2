@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use common\models\inventory\Categorytype;
 use common\models\inventory\Suppliers;
+use common\models\inventory\Producttype;
 /* @var $this yii\web\View */
 /* @var $model common\models\inventory\Products */
 /* @var $form yii\widgets\ActiveForm */
@@ -90,6 +91,26 @@ use common\models\inventory\Suppliers;
             $form->field($model, 'suppliers_ids')->widget(\kartik\widgets\Select2::classname(), [
                 'data' => ArrayHelper::map(Suppliers::find()->orderBy('suppliers')->asArray()->all(), 'suppliers_id', 'suppliers'),
                 'options' => ['placeholder' => 'Choose Suppliers','multiple'=>true],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    "change" => "function() { 
+                        $('#suppliers_ids').val($(this).val());
+                    }
+                    ",
+                ],
+            ]);
+            ?>
+        </div>
+    </div>
+    <div class="row">
+         <div class="col-md-6">
+        <?= $form->field($model, 'created_by')->hiddenInput()->label(false) ?>
+        </div>
+        <div class="col-sm-6">
+            <?=
+            $form->field($model, 'producttype_id')->widget(\kartik\widgets\Select2::classname(), [
+                'data' => ArrayHelper::map(Producttype::find()->orderBy('producttype')->asArray()->all(), 'producttype_id', 'producttype'),
+                'options' => ['placeholder' => 'Choose Product Type'],
                 'pluginOptions' => [
                     'allowClear' => true
                 ],
