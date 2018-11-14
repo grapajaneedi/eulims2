@@ -22,7 +22,15 @@ class Printing {
 
     public function PrintRequest($id) {
         \Yii::$app->view->registerJsFile("css/pdf.css");
-        $mTemplate = $this->RequestTemplate($id);
+        $config= \Yii::$app->components['reports'];
+        $ReportNumber=(int)$config['ReportNumber'];
+        if($ReportNumber==1){
+            $mTemplate = $this->RequestTemplate($id);
+        }elseif($ReportNumber==2){
+            $mTemplate="THIS IS A TEST";
+        }else{// in case does not matched any
+            $mTemplate="<div class='col-md-12 danger'><h3>Report Configuration is not properly set.</h3></div>";
+        }
         $pdfFooter = [
             'L' => [
                 'content' => '',
@@ -59,7 +67,9 @@ class Printing {
         $mPDF->render();
         exit;
     }
-
+    private function FastReport($id){
+        
+    }
     private function RequestTemplate($id) {
         $Func = new Functions();
         $Proc = "spGetRequestServices(:nRequestID)";

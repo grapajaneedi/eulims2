@@ -25,6 +25,11 @@ return [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
+        'reports'=>[
+            'class'=>'common\components\ReportConfig',
+            'ReportName'=>'Request',
+            'ReportNumber'=>1
+        ],
         'places' => [
             'class' => '\dosamigos\google\places\Places',
             'key' => 'AIzaSyBkbMSbpiE90ee_Jvcrgbb12VRXZ9tlzIc',
