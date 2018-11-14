@@ -48,7 +48,6 @@ class Deposit extends \yii\db\ActiveRecord
             [['rstl_id', 'or_series_id', 'start_or', 'end_or', 'deposit_type_id'], 'integer'],
             [['deposit_date'], 'safe'],
             [['amount'], 'safe'],
-            [['deposit_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => DepositType::className(), 'targetAttribute' => ['deposit_type_id' => 'deposit_type_id']],
             [['or_series_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orseries::className(), 'targetAttribute' => ['or_series_id' => 'or_series_id']],
         ];
     }
@@ -74,7 +73,7 @@ class Deposit extends \yii\db\ActiveRecord
 	{
 
         return [
-			'deposit_id',
+	    'deposit_id',
             'rstl_id',
             'or_series_id',
             'start_or',
@@ -86,14 +85,7 @@ class Deposit extends \yii\db\ActiveRecord
 
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getDepositType()
-    {
-        return $this->hasOne(DepositType::className(), ['deposit_type_id' => 'deposit_type_id']);
-    }
-
+  
     /**
      * @return \yii\db\ActiveQuery
      */

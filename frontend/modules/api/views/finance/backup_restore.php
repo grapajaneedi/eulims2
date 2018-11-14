@@ -5,10 +5,8 @@
 use yii\helpers\Html;
 use yii\bootstrap\Progress;
 use kartik\grid\GridView;
-use common\models\lab\Sampletype;
-use common\models\lab\Services;
-use common\models\lab\Lab;
-use common\models\lab\Testname;
+use common\models\finance\Op;
+use common\models\finance\Paymentitem;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
@@ -26,50 +24,6 @@ use yii\helpers\Json;
 
 $func=new Functions();
 
-//   $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=11&reqds=2015-01-01&reqde=2015-02-01&pp=5&page=1";
-//            
-//        $curl = curl_init();
-//				
-//		curl_setopt($curl, CURLOPT_URL, $apiUrl);
-//		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
-//		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
-//		curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
-//		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-//
-//		$response = curl_exec($curl);
-//			
-//		$data = json_decode($response, true);
-//                
-//                print_r($data);
-//                exit;
-
-// $year = 2018;
-// $month_value = 01;
-// $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".$GLOBALS['rstl_id']."&reqds=".$year."-".$month_value."-01&reqde=".$year."-".$month_value."-31&pp=5&page=1";
-
-//         $curl = new curl\Curl();
-
-//         $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-   
-//         $responselab = $curl->get($apiUrl);
-        
-//         $lab = Json::decode($responselab);
-//         var_dump($lab);
-//         exit;
-
-//echo $func->GetAccessToken(11);
-
-// $curl = new curl\Curl();
-// $response = $curl->get($apiUrl);
-
-//$decode=Json::decode($response);
-// echo '<pre>';
-// print_r($response);
-// echo '</pre>';
-// echo $response;
-
-// $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
-// $lablist= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 
 $month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 $year = ['2013', '2014', '2015', '2016', '2017', '2018'];
@@ -99,13 +53,13 @@ $this->params['breadcrumbs'][] = $this->title;
    
         <div>
             <?php 
-          echo   $sampletype = "<div class='row'><div class='col-md-2'  style='margin-left:15px'>".$form->field($model,'month')->widget(Select2::classname(),[
+          echo   $sampletype = "<div class='row'><div class='col-md-2'  style='margin-left:15px'>".$form->field($model,'transaction_date')->widget(Select2::classname(),[
                             'data' => $month,
                             'id'=>'month',
                             'theme' => Select2::THEME_KRAJEE,
                             'options' => ['id'=>'month'],
                             'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Month'],
-                    ])->label("Month")."</div>"."<div class='col-md-2'>".$form->field($model,'year')->widget(Select2::classname(),[
+                    ])->label("Month")."</div>"."<div class='col-md-2'>".$form->field($model,'op_data')->widget(Select2::classname(),[
                         'data' => $year,
                         'id'=>'year',
                         'theme' => Select2::THEME_KRAJEE,
@@ -118,14 +72,14 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     
   
-    <div class = "row" style="padding-left:15px;padding-right:15px" id="methodreference">
+    <div class = "row" style="padding-left:15px;padding-right:15px" id="finance">
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'id'=>'testname-grid',
+        'id'=>'finance-grid',
         'pjax' => true,
       //  'showPageSummary' => true,
-        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
+        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container']],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
@@ -134,10 +88,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],     
             'activity',
-            'date',
-            'data',
-            'month',
-            'year',
+            'transaction_date',
+            'op_data',
+            'pi_data',
+            'sc_data',
+            'op_billing_data',
+            'cancelled_op_data',
+            'receipt_data',
+            'check_data',
+            'deposit_data',
             [
                 'header'=>'Status',
                 'hAlign'=>'center',
@@ -160,37 +119,21 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <script type="text/javascript">
-    $('#sample-test_id').on('change',function(e) {
-       e.preventDefault();
-         jQuery.ajax( {
-            type: 'GET',
-            url: '/lab/services/getmethod?id='+$(this).val(),
-            dataType: 'html',
-            data: { lab_id: $('#lab_id').val(), sample_type_id: $('#sample-sample_type_id').val()},
-            success: function ( response ) {         
-              $("#methodreference").html(response);
-            },
-            error: function ( xhr, ajaxOptions, thrownError ) {
-                alert( thrownError );
-            }
-        });
-    });
-
     function restore(){
 
-        var m = $('#month option:selected').text();
+        var m = $('#month option:selected').val();
         var y = $('#year option:selected').text();
-        
+    
         $.ajax({
-            url: "/api/lab/res",
+            url: "/api/finance/res",
             method: "POST",
             data: {month:m, year:y},
             beforeSend: function(xhr) {
                 $('.image-loader').addClass("img-loader");
                }
             })
-            .done(function( data ) {
-                $("#testname-grid").yiiGridView("applyFilter"); 
+            .done(function(data) {
+                $("#finance-grid").yiiGridView("applyFilter"); 
                 $('.image-loader').removeClass("img-loader");
             });
         }

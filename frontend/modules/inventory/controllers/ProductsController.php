@@ -8,7 +8,7 @@ use common\models\inventory\ProductsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use common\models\system\Profile;
 /**
  * ProductsController implements the CRUD actions for Products model.
  */
@@ -71,7 +71,12 @@ class ProductsController extends Controller
     {
         $model = new Products();
 
-        if ($model->load(Yii::$app->request->post()) && $model->saveAll()) {
+        $rstl_id=Yii::$app->user->identity->profile->rstl_id;
+        $model->created_by=$rstl_id;
+        if ($model->load(Yii::$app->request->post())) {
+            $ids= implode(',',$model->suppliers_ids);
+            $model->suppliers_ids=$ids;
+             $model->save();
             return $this->redirect(['view', 'id' => $model->product_id]);
         } else {
             return $this->render('create', [

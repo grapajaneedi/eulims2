@@ -67,7 +67,7 @@ class InventoryEntries extends \yii\db\ActiveRecord
             [['Image1', 'Image2'], 'string', 'max' => 100],
             [['suppliers_id'], 'exist', 'skipOnError' => true, 'targetClass' => Suppliers::className(), 'targetAttribute' => ['suppliers_id' => 'suppliers_id']],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::className(), 'targetAttribute' => ['product_id' => 'product_id']],
-            [['transaction_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Transactiontype::className(), 'targetAttribute' => ['transaction_type_id' => 'transactiontype_id']],
+           // [['transaction_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Transactiontype::className(), 'targetAttribute' => ['transaction_type_id' => 'transactiontype_id']],
         ];
     }
 
