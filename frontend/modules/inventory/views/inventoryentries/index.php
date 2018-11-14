@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
          'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
-                 'before'=>"<button type='button' onclick='LoadModal(\"Create New Entry\",\"inventoryentries/create\",true,\"900\")' class=\"btn btn-success\"><i class=\"fa fa-plus-o\"></i> Create New Entry</button>",
+                 'before'=>"<button type='button' onclick='LoadModal(\"Create New Entry\",\"create\",true,\"900\")' class=\"btn btn-success\"><i class=\"fa fa-plus-o\"></i> Create New Entry</button>",
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
         'exportConfig'=>$func->exportConfig("Inventory Entries", "inventory_entries", $Header),

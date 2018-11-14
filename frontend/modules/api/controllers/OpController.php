@@ -51,7 +51,7 @@ class OpController extends ActiveController
 
 
 
-	 public function actionSearch()
+    public function actionSearch()
     {
         if (!empty($_GET)) {
             $model = new $this->modelClass;
@@ -84,6 +84,62 @@ class OpController extends ActiveController
             throw new \yii\web\HttpException(400, 'There are no query string');
         }
     }  
+    
+     public function actionRestore()
+    {
+
+        if (!empty($_GET)) {
+            $model = new $this->modelClass;    
+           try {
+
+            if (!isset($_GET['rstl_id'])){
+            	$rstl = 11;
+            }else{
+            	$rstl = (int) $_GET['rstl_id'];
+            }
+
+            if (!isset($_GET['opds'])){
+            	//$requestdate = date('Y-m-d');
+		$opdate = date('Y-m');
+            }else{
+            	//$requestdate = date('Y-m-d', strtotime($_GET['reqds']));
+            	$opdate = date('Y-m', strtotime($_GET['opds']));
+            }
+
+             if (!isset($_GET['opde'])){
+            	//$requestdatend = date('Y-m-d');
+            	$opdatend = date('Y-m');
+            }else{
+            	//$requestdatend = date('Y-m-d', strtotime($_GET['reqde']));
+            	$opdatend = date('Y-m', strtotime($_GET['opde']));
+            }
+                $provider = new ActiveDataProvider([
+					//'query' => $model->find()->where(['between', 'DATE_FORMAT(request_datetime,"%Y-%m")',$requestdate,$requestdatend]),
+                    'query' => $model->find()->where(['rstl_id'=>$rstl])
+                    //'query' => $model->find()->with(['sample','sample.analyses'])->where(['rstl_id'=>$rstl])
+					//->andWhere(['between', 'DATE_FORMAT(request_datetime,"%Y-%m-%d")', $requestdate,$requestdatend]),
+                    ->andWhere(['between', 'DATE_FORMAT(order_date,"%Y-%m")', $opdate,$opdatend]),
+                    
+                    'pagination' => [
+                        'pageSize' => false,
+                    ],
+                ]);
+
+            } catch (Exception $ex) {
+                throw new \yii\web\HttpException(500, 'Internal server error');
+            }
+
+            if ($provider->getCount() <= 0) {
+                throw new \yii\web\HttpException(404, 'No entries found with this query string');
+            } else {
+            	 \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+                return $provider->getModels();
+            }
+        } else {
+            throw new \yii\web\HttpException(400, 'There are no query string');
+        }
+    }  
+
 
 }
 

@@ -1,8 +1,15 @@
 <?php
 
-namespace common\models\finance;
+/*
+ * Project Name: eulims_ * 
+ * Copyright(C)2018 Department of Science & Technology -IX * 
+ * Developer: Eng'r Nolan F. Sunico  * 
+ * 10 29, 18 , 10:58:00 AM * 
+ * Module: SubsidiaryCustomer * 
+ */
 
-
+namespace api\modules\v1\models;
+use Yii;
 /**
  * This is the model class for table "tbl_subsidiary_customer".
  *
@@ -27,7 +34,7 @@ class SubsidiaryCustomer extends \yii\db\ActiveRecord
      */
     public static function getDb()
     {
-        return \Yii::$app->get('financedb');
+        return Yii::$app->get('financedb');
     }
 
     /**
@@ -55,6 +62,18 @@ class SubsidiaryCustomer extends \yii\db\ActiveRecord
         ];
     }
 
+    
+    public function fields()
+
+    {
+
+        return [
+            'subsidiary_customer_id',
+            'orderofpayment_id',
+            'customer_id',
+        ];
+
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
