@@ -70,7 +70,6 @@ class WorkflowController extends Controller
         $model = new Workflow();
        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                // return $this->runAction('index'); 
                 $session = Yii::$app->session;
                 $session->set('savepopup',"executed");
                 return $this->redirect('/services/test/index'); 

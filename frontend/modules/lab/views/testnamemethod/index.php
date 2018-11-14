@@ -18,6 +18,11 @@ $testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName'
 $this->title = 'Test Name Methods';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
+     <a href="#" class="close" data-dismiss="alert" >×</a>
+    <p class="note" style="color:#265e8d"><b>Note:</b> To manage workflow click the orange button in actions column</p>
+     
+    </div>
 <div class="testnamemethod-index">
 
 <?php $this->registerJsFile("/js/services/services.js"); ?>
@@ -71,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['class' => 'kartik\grid\ActionColumn',
             'contentOptions' => ['style' => 'width: 8.7%'],
-           'template' => '{view}{update}{delete}',
+           'template' => '{view}{update}{delete}{workflow}',
             'buttons'=>[
                 'view'=>function ($url, $model) {
                     return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::to(['/lab/testnamemethod/view','id'=>$model->testname_method_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Test Name Method<font color='Blue'></font>")]);
@@ -83,8 +88,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     $urls = '/lab/testnamemethod/delete?id='.$model->testname_method_id;
                     return Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Test Name Method','data-pjax'=>'0']);
                 },
+                'workflow'=>function ($url, $model) {
+                  //  return Html::button('<span class="glyphicon glyphicon-cog"></span>', ['value'=>Url::to(['/lab/procedure/workflow','id'=>$model->testname_method_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-warning','title' => Yii::t('app', "Manage Workflow")]);
+                  $t = '/services/workflow/create?test_id='.$model->testname_method_id;
+                  
+
+                                          return Html::button('<span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-file"></span>', ['value'=>$t, 'class' => 'btn btn-warning btn-modal','name' => Yii::t('app', "Manage Workflow"),'title' => Yii::t('app', "Create Workflow")]);
+                },
                 ],
             ],
+          
         ],
     ]); ?>
 </div>
