@@ -18,6 +18,7 @@ use yii\helpers\Html;
                     ]
                 ); 
 		        ?>
+		        <?= Html::a('HAHAHA', ['withdraw'], ['class'=>'btn btn-primary']) ?>
 		    </div>
 		    <span class="close" onclick="searchToggle(this, event);"></span>
 		</div>
