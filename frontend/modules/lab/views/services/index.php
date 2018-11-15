@@ -19,6 +19,15 @@ use linslin\yii2\curl;
 use yii\helpers\Json;
 $func=new Functions();
 
+// $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/sampletypes/restore?id=3";
+// $curl = new curl\Curl();
+// $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
+// $response = $curl->get($apiUrl);
+// $decode=Json::decode($response);
+
+// var_dump($decode);
+//exit;
+
 $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/labs/search?labcount=0";
 $curl = new curl\Curl();
 $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
