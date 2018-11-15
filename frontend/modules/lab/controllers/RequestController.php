@@ -33,6 +33,7 @@ use linslin\yii2\curl;
 use codemix\excelexport\ExcelFile;
 use common\models\system\User;
 use frontend\modules\lab\components\Printing;
+use yii\helpers\Json;
 
 //use yii\helpers\Url;
 /**
@@ -600,5 +601,63 @@ class RequestController extends Controller
                 ]);
             }
         }
+    }
+    //referral customer list
+    public function actionReferralcustomerlist() {
+       /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = ['results' => ['id' => '', 'text' => '']];
+        if (!is_null($q)) {
+            $query = new Query;
+            $query->select('customer_id as id, customer_name AS text')
+                    ->from('tbl_customer')
+                    ->where(['like', 'customer_name', $q])
+                    ->limit(20);
+            $command = $query->createCommand();
+            $command->db= \Yii::$app->labdb;
+            $data = $command->queryAll();
+            $out['results'] = array_values($data);
+        } elseif ($id > 0) {
+            $out['results'] = ['id' => $id, 'text' =>Customer::find()->where(['customer_id'=>$id])->customer_name];
+        }
+        return $out;*/
+        //$url="https://eulimsapi.onelab.ph/api/web/referral/customers/list";
+        //$curl = new curl\Curl();
+         //   $res = $curl->get($url);
+         //   $decode=Json::decode($res);
+        //    print_r($decode);
+            //exit;
+
+      //  $curl = new curl\Curl();
+        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+       // $url="https://eulimsapi.onelab.ph/api/web/referral/customers/list";
+            
+        //$curl = curl_init();
+
+        
+      //  $response = $curl->get($url);
+                
+        // curl_setopt($curl, CURLOPT_URL, $url);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
+        // curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        // $response = curl_exec($curl);
+            
+        // $data = json_decode($response, true);
+
+        // echo "<pre>";
+        // print_r($data);
+        // echo "</pre>";
+
+       // return json_decode($response,true);
+        //return $response;
+        $apiUrl="https://eulimsapi.onelab.ph/api/web/referral/customers/list";
+            $curl = new curl\Curl();
+            $res = $curl->get($apiUrl);
+            $decode=json_encode($res);
+            echo "<pre>";
+            var_dump($decode);
+             echo "</pre>";
     }
 }
