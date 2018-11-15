@@ -49,24 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions' => ['placeholder' => 'Products', 'id' => 'grid-product-search']
             ],
             //'manufacturing_date',
-            [
-                'attribute'=> 'manufacturing_date',
-                'value'=>'manufacturing_date',
-                'format'=>'raw',
-                'filter'=>DatePicker::widget([
-                   'readonly' => true,
-                    'options' => ['placeholder' => 'Enter Date'],
-                
-                    'pluginOptions' => [
-                        'autoclose' => true,
-                        'removeButton' => false,
-                        'format' => 'yyyy-mm-dd'
-                    ],
-                    'pluginEvents' => [
-                        "change" => "function() {  }",
-                    ]
-                ]),
-            ],           
+                 
             'expiration_date',
             //'created_by',
             //'suppliers_id',
