@@ -603,7 +603,16 @@ class RequestController extends Controller
         }
     }
     //referral customer list
-    public function actionReferralcustomerlist() {
+    public function actionReferralcustomerlist()
+    {
+        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/customers/list';
+        $curl = new curl\Curl();
+        $res = $curl->get($apiUrl);
+        //$decode=Json::decode($res);
+        echo "<pre>";
+        print_r(json_decode($res));
+        echo "</pre>";
+        
        /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $out = ['results' => ['id' => '', 'text' => '']];
         if (!is_null($q)) {
@@ -652,12 +661,5 @@ class RequestController extends Controller
 
        // return json_decode($response,true);
         //return $response;
-        $apiUrl="https://eulimsapi.onelab.ph/api/web/referral/customers/list";
-            $curl = new curl\Curl();
-            $res = $curl->get($apiUrl);
-            $decode=json_encode($res);
-            echo "<pre>";
-            var_dump($decode);
-             echo "</pre>";
     }
 }
