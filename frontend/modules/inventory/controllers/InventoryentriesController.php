@@ -172,4 +172,11 @@ class InventoryentriesController extends Controller
         return $out;
     }
 
+    public function actionWithdraw(){
+
+          return $this->render('withdraw', [
+                // 'model' => $model,
+            ]);
+    }
+
 }
