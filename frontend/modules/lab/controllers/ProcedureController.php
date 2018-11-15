@@ -3,16 +3,16 @@
 namespace frontend\modules\lab\controllers;
 
 use Yii;
-use common\models\lab\SampleName;
-use common\models\lab\SampleNameSearch;
+use common\models\lab\Procedure;
+use common\models\lab\ProcedureSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * SamplenameController implements the CRUD actions for SampleName model.
+ * ProcedureController implements the CRUD actions for Procedure model.
  */
-class SamplenameController extends Controller
+class ProcedureController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,12 +30,12 @@ class SamplenameController extends Controller
     }
 
     /**
-     * Lists all SampleName models.
+     * Lists all Procedure models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new SampleNameSearch();
+        $searchModel = new ProcedureSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,18 +45,15 @@ class SamplenameController extends Controller
     }
 
     /**
-     * Displays a single SampleName model.
+     * Displays a single Procedure model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        /* return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]); */
-		if (Yii::$app->request->isAjax) {
-			return $this->renderAjax('_view', [
+        if (Yii::$app->request->isAjax) {
+			return $this->renderAjax('view', [
 				'model' => $this->findModel($id),
 			]);
         } else {
@@ -66,41 +63,39 @@ class SamplenameController extends Controller
         }
     }
 
+    public function actionWorkflow($id)
+    {
+    
+        if(Yii::$app->request->isAjax){
+        return $this->renderAjax('_workflow', [
+        ]);
+        }
+    }
+
     /**
-     * Creates a new SampleName model.
+     * Creates a new Procedure model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new SampleName();
+        $model = new Procedure();
 
-        /* if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->sample_name_id]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Procedure Successfully Created'); 
+            return $this->runAction('index');
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]); */
-		if ($model->load(Yii::$app->request->post())) {
-			if($model->save()){
-				Yii::$app->session->setFlash('success', $model->sample_name." Successfully Created.");
-                return $this->redirect('/lab/samplename');
-
-            }
-		} elseif (Yii::$app->request->isAjax) {
-			return $this->renderAjax('_form', [
-				'model' => $model,
-			]);
-        } else {
-            return $this->render('create', [
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_form', [
                 'model' => $model,
             ]);
-        }
+       }
+     
     }
 
     /**
-     * Updates an existing SampleName model.
+     * Updates an existing Procedure model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -108,11 +103,21 @@ class SamplenameController extends Controller
      */
     public function actionUpdate($id)
     {
+        // $model = $this->findModel($id);
+
+        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        //     return $this->redirect(['view', 'id' => $model->procedure_id]);
+        // }
+
+        // return $this->render('update', [
+        //     'model' => $model,
+        // ]);
+            //////
         $model = $this->findModel($id);
 		if ($model->load(Yii::$app->request->post())) {
 			if($model->save()){
-				Yii::$app->session->setFlash('success', $model->sample_name." Successfully Updated.");
-                return $this->redirect('/lab/samplename');
+				Yii::$app->session->setFlash('success', $model->procedure_name." Successfully Updated.");
+                return $this->runAction('index');
 
             }
 		} elseif (Yii::$app->request->isAjax) {
@@ -127,7 +132,7 @@ class SamplenameController extends Controller
     }
 
     /**
-     * Deletes an existing SampleName model.
+     * Deletes an existing Procedure model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -135,26 +140,21 @@ class SamplenameController extends Controller
      */
     public function actionDelete($id)
     {
-        //$this->findModel($id)->delete();
-		
-		if($this->findModel($id)->delete()){
-			Yii::$app->session->setFlash('warning', 'Successfully Deleted.');
-			return $this->redirect(['index']);
-		} else {
-			Yii::$app->session->setFlash('error', 'Delete not successful.');
-		}
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
     }
 
     /**
-     * Finds the SampleName model based on its primary key value.
+     * Finds the Procedure model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return SampleName the loaded model
+     * @return Procedure the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = SampleName::findOne($id)) !== null) {
+        if (($model = Procedure::findOne($id)) !== null) {
             return $model;
         }
 

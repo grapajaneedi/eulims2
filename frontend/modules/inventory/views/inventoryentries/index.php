@@ -5,7 +5,9 @@ use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 use yii\grid\ActionColumn;
 use common\components\Functions;
-
+use common\models\inventory\Products;
+use yii\helpers\ArrayHelper;
+use kartik\widgets\DatePicker;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\inventory\InventoryEntriesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -30,17 +32,47 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'inventory_transactions_id',
+           // 'inventory_transactions_id',
             // 'transaction_type_id',
             // 'rstl_id',
-            'product_id',
-            'manufacturing_date',
+            [
+                'attribute' => 'product_id',
+                'label' => 'Product',
+                'value' => function($model) {
+                    return $model->product->product_name;
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ArrayHelper::map(Products::find()->asArray()->all(), 'product_id', 'product_name'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Products', 'id' => 'grid-product-search']
+            ],
+            //'manufacturing_date',
+            [
+                'attribute'=> 'manufacturing_date',
+                'value'=>'manufacturing_date',
+                'format'=>'raw',
+                'filter'=>DatePicker::widget([
+                   'readonly' => true,
+                    'options' => ['placeholder' => 'Enter Date'],
+                
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
+                    ]
+                ]),
+            ],           
             'expiration_date',
             //'created_by',
             //'suppliers_id',
             //'po_number',
             'quantity',
-            //'amount',
+            'amount',
             //'total_amount',
             //'Image1',
             //'Image2',

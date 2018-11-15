@@ -26,32 +26,48 @@ use kartik\date\DatePicker;
             
             <?= $form->field($model, 'po_number')->textInput(['maxlength' => true]) ?>
             
-            <?php 
-                echo '<label>Manufacturing Date</label>';
+             <?php
+                 echo "<b>Manufacturing Date</b>";
                 echo DatePicker::widget([
-                    'name' => 'manufacturing_date', 
-                    'value' => date('Y-M-d'),
-                    'options' => ['placeholder' => 'Select manufacturing date ...'],
+                    'model' => $model,
+                    'attribute' => 'manufacturing_date',
+                    'readonly' => true,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("m/d/Y", $model->manufacturing_date);
+                    },
                     'pluginOptions' => [
-                        'format' => 'yyyy-M-dd',
-                        'todayHighlight' => true
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
                     ]
                 ]);
-            ?>
+                ?>
             <br>
 
-            <?php 
-                echo '<label>Expiration Date</label>';
+            <?php
+                echo "<b>Expiration Date</b>";
                 echo DatePicker::widget([
-                    'name' => 'expiration_date', 
-                    'value' => date('Y-M-d'),
-                    'options' => ['placeholder' => 'Select manufacturing date ...'],
+                    'model' => $model,
+                    'attribute' => 'expiration_date',
+                    'readonly' => true,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("m/d/Y", $model->expiration_date);
+                    },
                     'pluginOptions' => [
-                        'format' => 'yyyy-M-dd',
-                        'todayHighlight' => true
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
                     ]
                 ]);
-            ?>
+                ?>
 
         </div>
         <div class="col-md-6">
@@ -83,43 +99,19 @@ use kartik\date\DatePicker;
                         'width'=>'120px',
                     ],
                     'initialPreview' => [
-                        '<img src="'.Yii::$app->params['uploadUrl'].$model->Image1.'" width="200" class="file-preview-image">',
+                        '<img src="/uploads/img.png" width="200" class="file-preview-image">',
                     ],
                     'showUpload'=>false,
                     'showRemove'=>false,
                     'showBrowse'=>true,
-                    'showText'=>false
+                   // 'showText'=>false
                 ],
             ])->label(false);
         ?>    
         </div>
-        <div class="col-md-6">
-        <?php // your fileinput widget for single file upload
-            echo $form->field($model, 'Image2')->widget(FileInput::classname(), [
-                'options'=>[
-                    'id'=>'profileImage_upload2',
-                    'accept'=>'image/*'
-                ],
-                'pluginOptions'=>[
-                    'allowedFileExtensions'=>['jpg','gif','png'],
-                    'overwriteInitial'=>true,
-                    'resizeImages'=>true,
-                    'initialPreviewConfig'=>[
-                        'width'=>'120px',
-                    ],
-                    'initialPreview' => [
-                        '<img src="'.Yii::$app->params['uploadUrl'].$model->Image1.'" width="200" class="file-preview-image">',
-                    ],
-                    'showUpload'=>false,
-                    'showRemove'=>false,
-                    'showBrowse'=>true,
-                    'showText'=>false
-                ],
-            ])->label(false);
-        ?>
-        </div>
+      
      </div>
-
+    
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
