@@ -608,10 +608,14 @@ class RequestController extends Controller
         $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/customers/list';
         $curl = new curl\Curl();
         $res = $curl->get($apiUrl);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        \Yii::$app->response->data  =  $res;
         //$decode=Json::decode($res);
-        echo "<pre>";
-        print_r(json_decode($res));
-        echo "</pre>";
+        //echo "<pre>";
+        //print_r(json_decode($res));
+        //echo "</pre>";
+        
+        return $res;
         
        /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $out = ['results' => ['id' => '', 'text' => '']];
