@@ -233,7 +233,7 @@ $disable='';
     }
     
      $('#op-subsidiary_customer_ids').on('change',function(e) {
-         $(this).select2('close');
+        $(this).select2('close');
         e.preventDefault();
         var customer_id= $('#op-customer_id').val();
         var sdc=$(this).val();

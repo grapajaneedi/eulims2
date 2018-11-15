@@ -71,8 +71,8 @@ class ProductsController extends Controller
     {
         $model = new Products();
 
-        $rstl_id=Yii::$app->user->identity->profile->rstl_id;
-        $model->created_by=$rstl_id;
+        $user_id=Yii::$app->user->identity->profile->user_id;
+        $model->created_by=$user_id;
         if ($model->load(Yii::$app->request->post())) {
             $ids= implode(',',$model->suppliers_ids);
             $model->suppliers_ids=$ids;

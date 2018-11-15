@@ -11,6 +11,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
+use yii\web\UploadedFile;
 
 /**
  * InventoryentriesController implements the CRUD actions for InventoryEntries model.
@@ -68,11 +69,22 @@ class InventoryentriesController extends Controller
     public function actionCreate()
     {
         $model = new InventoryEntries();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $model->transaction_type_id=1;
+        $model->rstl_id=Yii::$app->user->identity->profile->rstl_id;
+        $user_id=Yii::$app->user->identity->profile->user_id;
+        $model->created_by=$user_id;
+        if ($model->load(Yii::$app->request->post())) {
+            $filename=$model->product->product_name;
+            
+            $model->Image1 = UploadedFile::getInstance($model,'Image1');
+            $model->Image1->saveAs('uploads/inventory/'.$filename.'.'.$model->Image1->extension);
+            $model->Image1='uploads/inventory/'.$filename.'.'.$model->Image1->extension;
+            
+            $model->save(false);
             return $this->redirect(['view', 'id' => $model->inventory_transactions_id]);
         }
-
+        
+        
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                     'model' => $model,
