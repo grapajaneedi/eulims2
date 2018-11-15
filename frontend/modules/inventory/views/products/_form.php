@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use common\models\inventory\Categorytype;
 use common\models\inventory\Suppliers;
 use common\models\inventory\Producttype;
+use kartik\widgets\FileInput;
 /* @var $this yii\web\View */
 /* @var $model common\models\inventory\Products */
 /* @var $form yii\widgets\ActiveForm */
@@ -118,6 +119,59 @@ use common\models\inventory\Producttype;
             ?>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+        <?php // your fileinput widget for single file upload
+            echo $form->field($model, 'Image1')->widget(FileInput::classname(), [
+                'options'=>[
+                    'id'=>'profileImage_upload',
+                    'accept'=>'image/*'
+                ],
+                'pluginOptions'=>[
+                    'allowedFileExtensions'=>['jpg','gif','png'],
+                    'overwriteInitial'=>true,
+                    'resizeImages'=>true,
+                    'initialPreviewConfig'=>[
+                        'width'=>'120px',
+                    ],
+                    'initialPreview' => [
+                        '<img src="/uploads/img.png" width="200" class="file-preview-image">',
+                    ],
+                    'showUpload'=>false,
+                    'showRemove'=>false,
+                    'showBrowse'=>true,
+                   // 'showText'=>false
+                ],
+            ])->label(false);
+        ?>    
+        </div>
+        <div class="col-md-6">
+        <?php // your fileinput widget for single file upload
+            echo $form->field($model, 'Image2')->widget(FileInput::classname(), [
+                'options'=>[
+                    'id'=>'profileImage2_upload',
+                    'accept'=>'image/*'
+                ],
+                'pluginOptions'=>[
+                    'allowedFileExtensions'=>['jpg','gif','png'],
+                    'overwriteInitial'=>true,
+                    'resizeImages'=>true,
+                    'initialPreviewConfig'=>[
+                        'width'=>'120px',
+                    ],
+                    'initialPreview' => [
+                        '<img src="/uploads/img.png" width="200" class="file-preview-image">',
+                    ],
+                    'showUpload'=>false,
+                    'showRemove'=>false,
+                    'showBrowse'=>true,
+                   // 'showText'=>false
+                ],
+            ])->label(false);
+        ?>    
+        </div>
+      
+     </div>
     <?php
     $forms = [
         [

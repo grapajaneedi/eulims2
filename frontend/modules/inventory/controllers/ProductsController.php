@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\system\Profile;
+use yii\web\UploadedFile;
 /**
  * ProductsController implements the CRUD actions for Products model.
  */
@@ -76,7 +77,18 @@ class ProductsController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $ids= implode(',',$model->suppliers_ids);
             $model->suppliers_ids=$ids;
-             $model->save();
+            $filename=$model->product_name;
+            $filename2=$model->product_name."2";
+            
+            $model->Image1 = UploadedFile::getInstance($model,'Image1');
+            $model->Image1->saveAs('uploads/products/'.$filename.'.'.$model->Image1->extension);
+            $model->Image1='uploads/products/'.$filename.'.'.$model->Image1->extension;
+            
+            $model->Image2 = UploadedFile::getInstance($model,'Image2');
+            $model->Image2->saveAs('uploads/products/'.$filename2.'.'.$model->Image2->extension);
+            $model->Image2='uploads/products/'.$filename2.'.'.$model->Image2->extension;
+            
+            $model->save();
             return $this->redirect(['view', 'id' => $model->product_id]);
         } else {
             return $this->render('create', [

@@ -3,42 +3,35 @@
 namespace common\models\inventory;
 
 use Yii;
-use common\models\Lab;
-use common\models\Rstl;
 
 /**
  * This is the model class for table "tbl_inventory_entries".
  *
- * @property integer $inventory_transactions_id
- * @property integer $transaction_type_id
- * @property integer $rstl_id
- * @property integer $product_id
+ * @property int $inventory_transactions_id
+ * @property int $transaction_type_id
+ * @property int $rstl_id
+ * @property int $product_id
  * @property string $manufacturing_date
  * @property string $expiration_date
- * @property integer $created_by
- * @property integer $suppliers_id
+ * @property int $created_by
+ * @property int $suppliers_id
  * @property string $po_number
- * @property integer $quantity
+ * @property int $quantity
  * @property string $amount
  * @property string $total_amount
- * @property string $Image1
- * @property string $Image2
- * @property integer $created_at
- * @property integer $updated_at
+ * @property int $created_at
+ * @property int $updated_at
  *
  * @property Equipmentservice[] $equipmentservices
  * @property EquipmentstatusEntry[] $equipmentstatusEntries
  * @property Suppliers $suppliers
  * @property Products $product
  * @property Transactiontype $transactionType
- * @property User $user
- * @property Lab $lab
- * @property Rstl $rstl
  */
 class InventoryEntries extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -54,7 +47,7 @@ class InventoryEntries extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -64,7 +57,6 @@ class InventoryEntries extends \yii\db\ActiveRecord
             [['manufacturing_date', 'expiration_date'], 'safe'],
             [['amount', 'total_amount'], 'number'],
             [['po_number'], 'string', 'max' => 50],
-            [['Image1', 'Image2'], 'string', 'max' => 100],
             [['suppliers_id'], 'exist', 'skipOnError' => true, 'targetClass' => Suppliers::className(), 'targetAttribute' => ['suppliers_id' => 'suppliers_id']],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::className(), 'targetAttribute' => ['product_id' => 'product_id']],
             [['transaction_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Transactiontype::className(), 'targetAttribute' => ['transaction_type_id' => 'transactiontype_id']],
@@ -72,7 +64,7 @@ class InventoryEntries extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -80,7 +72,7 @@ class InventoryEntries extends \yii\db\ActiveRecord
             'inventory_transactions_id' => 'Inventory Transactions ID',
             'transaction_type_id' => 'Transaction Type ID',
             'rstl_id' => 'Rstl ID',
-            'product_id' => 'Product',
+            'product_id' => 'Product ID',
             'manufacturing_date' => 'Manufacturing Date',
             'expiration_date' => 'Expiration Date',
             'created_by' => 'Created By',
@@ -89,8 +81,6 @@ class InventoryEntries extends \yii\db\ActiveRecord
             'quantity' => 'Quantity',
             'amount' => 'Amount',
             'total_amount' => 'Total Amount',
-            'Image1' => 'Image1',
-            'Image2' => 'Image2',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -135,19 +125,4 @@ class InventoryEntries extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Transactiontype::className(), ['transactiontype_id' => 'transaction_type_id']);
     }
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::className(), ['user_id' => 'created_by']);
-    }
-     /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRstl()
-    {
-        return $this->hasOne(Rstl::className(), ['rstl_id' => 'rstl_id']);
-    }
-    
 }
