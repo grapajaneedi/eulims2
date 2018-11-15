@@ -47,20 +47,28 @@ function offerservices(mid){
         });
 }
 
-        function unofferservices(mid){
-                            $.post('/lab/services/unoffer', {
-                                id: mid,
-                                labid: $('#labid').val(),
-                                sampletypeid: $('#sampletypeid').val(),
-                                methodreferenceid: $('#methodreferenceid').val(),
-                                labsampletypeid: $('#labsampletypeid').val(),
-                                sampletypetestname: $('#sampletypetestname').val(),
-                                testnamemethod: $('#testnamemethod').val(),
-                                testname: $('#testname').val(),
-                            }, function(result){
-                                $("#testname-grid").yiiGridView("applyFilter");    
-                            });
-                    }
+function unofferservices(mid){
+    
+      $.ajax({
+         url: '/lab/services/unoffer',
+         method: "post",
+          data: { id: mid,
+          labid: $('#labid').val(),
+          sampletypeid: $('#sampletypeid').val(),
+          methodreferenceid: $('#methodreferenceid').val(),
+          labsampletypeid: $('#labsampletypeid').val(),
+          sampletypetestname: $('#sampletypetestname').val(),
+          testnamemethod: $('#testnamemethod').val(),
+          testname: $('#testname').val()},
+          beforeSend: function(xhr) {
+             $('.image-loader').addClass("img-loader");
+             }
+          })
+          .done(function( response ) {   
+               $("#testname-grid").yiiGridView("applyFilter");   
+              $('.image-loader').removeClass("img-loader");  
+          });
+  }
 SCRIPT;
 $this->registerJs($js);
 
