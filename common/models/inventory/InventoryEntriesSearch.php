@@ -27,7 +27,7 @@ class InventoryEntriesSearch extends InventoryEntries
     {
         return [
             [['inventory_transactions_id', 'transaction_type_id', 'rstl_id', 'product_id', 'created_by', 'suppliers_id', 'quantity', 'created_at', 'updated_at'], 'integer'],
-            [['manufacturing_date', 'expiration_date', 'po_number', 'Image1', 'Image2','createDateStart','createDateEnd','createDateStart2','createDateEnd2'], 'safe'],
+            [['manufacturing_date', 'expiration_date', 'po_number','createDateStart','createDateEnd','createDateStart2','createDateEnd2'], 'safe'],
             [['amount', 'total_amount'], 'number'],
             [['createTimeRange','createTimeRange2'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
         ];
@@ -85,8 +85,6 @@ class InventoryEntriesSearch extends InventoryEntries
         ]);
 
         $query->andFilterWhere(['like', 'po_number', $this->po_number])
-            ->andFilterWhere(['like', 'Image1', $this->Image1])
-            ->andFilterWhere(['like', 'Image2', $this->Image2])
             ->andFilterWhere(['between', 'manufacturing_date', $this->createDateStart, $this->createDateEnd])
             ->andFilterWhere(['between', 'expiration_date', $this->createDateStart2, $this->createDateEnd2]);
         return $dataProvider;

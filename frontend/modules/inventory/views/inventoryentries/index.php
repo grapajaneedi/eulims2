@@ -8,6 +8,7 @@ use common\components\Functions;
 use common\models\inventory\Products;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\DatePicker;
+use kartik\daterange\DateRangePicker;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\inventory\InventoryEntriesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -49,7 +50,46 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions' => ['placeholder' => 'Products', 'id' => 'grid-product-search']
             ],
             //'manufacturing_date',
-                 
+            [
+               'attribute'=>'manufacturing_date',
+               'filterType'=> GridView::FILTER_DATE_RANGE,
+               'value' => function($model) {
+                    return date_format(date_create($model->manufacturing_date),"m/d/Y");
+                },
+                'filterWidgetOptions' => ([
+                     'model'=>$model,
+                     'useWithAddon'=>true,
+                     'attribute'=>'order_date',
+                     'startAttribute'=>'createDateStart',
+                     'endAttribute'=>'createDateEnd',
+                     'presetDropdown'=>TRUE,
+                     'convertFormat'=>TRUE,
+                     'pluginOptions'=>[
+                         'allowClear' => true,
+                        'locale'=>[
+                            'format'=>'Y-m-d',
+                            'separator'=>' to ',
+                        ],
+                         'opens'=>'left',
+                      ],
+                     'pluginEvents'=>[
+                        "cancel.daterangepicker" => "function(ev, picker) {
+                        picker.element[0].children[1].textContent = '';
+                        $(picker.element[0].nextElementSibling).val('').trigger('change');
+                        }",
+                        
+                        'apply.daterangepicker' => 'function(ev, picker) { 
+                        var val = picker.startDate.format(picker.locale.format) + picker.locale.separator +
+                        picker.endDate.format(picker.locale.format);
+
+                        picker.element[0].children[1].textContent = val;
+                        $(picker.element[0].nextElementSibling).val(val);
+                        }',
+                      ] 
+                     
+                ]),        
+               
+            ],     
             'expiration_date',
             //'created_by',
             //'suppliers_id',

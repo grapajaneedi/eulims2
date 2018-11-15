@@ -39,10 +39,12 @@ class InventoryentriesController extends Controller
      */
     public function actionIndex()
     {
+        $model = new InventoryEntries();
         $searchModel = new InventoryEntriesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'model'=>$model,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -74,12 +76,6 @@ class InventoryentriesController extends Controller
         $user_id=Yii::$app->user->identity->profile->user_id;
         $model->created_by=$user_id;
         if ($model->load(Yii::$app->request->post())) {
-            $filename=$model->product->product_name;
-            
-            $model->Image1 = UploadedFile::getInstance($model,'Image1');
-            $model->Image1->saveAs('uploads/inventory/'.$filename.'.'.$model->Image1->extension);
-            $model->Image1='uploads/inventory/'.$filename.'.'.$model->Image1->extension;
-            
             $model->save(false);
             return $this->redirect(['view', 'id' => $model->inventory_transactions_id]);
         }
