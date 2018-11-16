@@ -10,6 +10,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\system\Profile;
 use yii\web\UploadedFile;
+use common\models\inventory\Suppliers;
+use common\models\inventory\SuppliersSearch;
+use yii\data\ActiveDataProvider;
 /**
  * ProductsController implements the CRUD actions for Products model.
  */
@@ -223,5 +226,21 @@ class ProductsController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    public function actionSupplier($ids) {
+        $str= explode(',', $ids);
+        $searchModel = new SuppliersSearch();
+        $query = Suppliers::find()->where(['IN', 'suppliers_id', $str]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+            'pageSize' => 10,
+            ],
+        ]);
+        
+        return $this->renderAjax('_supplier', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }
