@@ -34,14 +34,12 @@ Modal::end();
 <div class="products-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Products', ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Advance Search', '#', ['class' => 'btn btn-info search-button']) ?>
-    </p>
+    
     <div class="search-form" style="display:none">
         <?=  $this->render('_search', ['model' => $searchModel]); ?>
     </div>
     <?php 
+   
     $gridColumn = [
         ['class' => 'yii\grid\SerialColumn'],
         [
@@ -100,6 +98,7 @@ Modal::end();
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
+            'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Product', ['value'=>'/inventory/products/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New Product"),'id'=>'btnProd','onclick'=>'addProduct(this.value,this.title)']),
             'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
         ],
         // your toolbar can include the additional full export menu
@@ -126,5 +125,7 @@ Modal::end();
     function showBonus(url,title){
         LoadModal(title,url,'true','700px');
     }
-  
+    function addProduct(url,title){
+        LoadModal(title,url,'true','800px');
+    }
 </script>
