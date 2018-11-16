@@ -84,7 +84,7 @@ Modal::end();
             "label" => "Suppliers",
             "format" => 'raw',
             "value" => function($model){
-                return '<input type="button" data-toggle="modal" data-target="#modalHeader" value="Suppliers" onclick="ShowModal()" />';
+                return Html::button('<span class="glyphicon glyphicon-eye"></span> Suppliers', ['value'=>'/inventory/products/supplier?ids='.$model->suppliers_ids, 'class' => 'btn btn-success','title' => Yii::t('app', "List of Supplier(s)"),'id'=>'btnSupplier','onclick'=>'showBonus(this.value,this.title)']);
             }
         ],
         [
@@ -122,3 +122,9 @@ Modal::end();
     ]); ?>
 
 </div>
+<script type="text/javascript">
+    function showBonus(url,title){
+        LoadModal(title,url,'true','700px');
+    }
+  
+</script>
