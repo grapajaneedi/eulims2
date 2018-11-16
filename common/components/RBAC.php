@@ -49,6 +49,7 @@ class RBAC {
             $AuthItem->name=$Url;
             $AuthItem->type=2;
             $AuthItem->save();
+        }
             //create permissions
             $sName= "access-".str_replace(" ", "-", strtolower(trim($SubModuleName)));//access-denominations
             $AuthItem2=AuthItem::find()->where(['name'=>$sName])->one();
@@ -66,9 +67,10 @@ class RBAC {
             $AuthItemChild->parent=$sName;
             $AuthItemChild->child=$Url;
             $AuthItemChild->save();
-        }else{
-            throw new \BadFunctionCallException('Failed to generate permissions.');
-        }
+       
+            //throw new \BadFunctionCallException('Failed to generate permissions.');
+            return true;
+       
     }
     
 }
