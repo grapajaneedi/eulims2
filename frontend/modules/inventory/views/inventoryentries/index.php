@@ -29,6 +29,12 @@ $this->params['breadcrumbs'][] = $this->title;
                  'before'=>"<button type='button' onclick='LoadModal(\"Create New Entry\",\"create\",true,\"900\")' class=\"btn btn-success\"><i class=\"fa fa-plus-o\"></i> Create New Entry</button>",
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
+        'pjax'=>true,
+        'pjaxSettings' => [
+            'options' => [
+                'enablePushState' => false,
+            ]
+        ],
         'exportConfig'=>$func->exportConfig("Inventory Entries", "inventory_entries", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -59,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterWidgetOptions' => ([
                      'model'=>$model,
                      'useWithAddon'=>true,
-                     'attribute'=>'order_date',
+                     'attribute'=>'manufacturing_date',
                      'startAttribute'=>'createDateStart',
                      'endAttribute'=>'createDateEnd',
                      'presetDropdown'=>TRUE,
@@ -89,8 +95,48 @@ $this->params['breadcrumbs'][] = $this->title;
                      
                 ]),        
                
-            ],     
-            'expiration_date',
+            ], 
+            [
+               'attribute'=>'expiration_date',
+               'filterType'=> GridView::FILTER_DATE_RANGE,
+               'value' => function($model) {
+                    return date_format(date_create($model->expiration_date),"m/d/Y");
+                },
+                'filterWidgetOptions' => ([
+                     'model'=>$model,
+                     'useWithAddon'=>true,
+                     'attribute'=>'expiration_date',
+                     'startAttribute'=>'createDateStart2',
+                     'endAttribute'=>'createDateEnd2',
+                     'presetDropdown'=>TRUE,
+                     'convertFormat'=>TRUE,
+                     'pluginOptions'=>[
+                         'allowClear' => true,
+                        'locale'=>[
+                            'format'=>'Y-m-d',
+                            'separator'=>' to ',
+                        ],
+                         'opens'=>'left',
+                      ],
+                     'pluginEvents'=>[
+                        "cancel.daterangepicker" => "function(ev, picker) {
+                        picker.element[0].children[1].textContent = '';
+                        $(picker.element[0].nextElementSibling).val('').trigger('change');
+                        }",
+                        
+                        'apply.daterangepicker' => 'function(ev, picker) { 
+                        var val = picker.startDate.format(picker.locale.format) + picker.locale.separator +
+                        picker.endDate.format(picker.locale.format);
+
+                        picker.element[0].children[1].textContent = val;
+                        $(picker.element[0].nextElementSibling).val(val);
+                        }',
+                      ] 
+                     
+                ]),        
+               
+            ],              
+           
             //'created_by',
             //'suppliers_id',
             //'po_number',

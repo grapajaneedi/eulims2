@@ -19,6 +19,7 @@ class InventoryEntriesSearch extends InventoryEntries
     public $createTimeRange;
     public $createDateStart;
     public $createDateEnd;
+    
     public $createTimeRange2;
     public $createDateStart2;
     public $createDateEnd2;
@@ -73,15 +74,11 @@ class InventoryEntriesSearch extends InventoryEntries
             'transaction_type_id' => $this->transaction_type_id,
             'rstl_id' => $this->rstl_id,
             'product_id' => $this->product_id,
-            'manufacturing_date' => $this->manufacturing_date,
-            'expiration_date' => $this->expiration_date,
             'created_by' => $this->created_by,
             'suppliers_id' => $this->suppliers_id,
             'quantity' => $this->quantity,
             'amount' => $this->amount,
             'total_amount' => $this->total_amount,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'po_number', $this->po_number])
