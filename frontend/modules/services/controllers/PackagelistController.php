@@ -162,6 +162,7 @@ class PackagelistController extends Controller
                  foreach ($ids as $sample_id){
                      $analysis = new Analysis();
                      $modelpackage =  Package::findOne(['id'=>$post['Packagelist']['name']]);
+
                      $analysis->sample_id = $sample_id;
                      $analysis->cancelled = 0;
                      $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
@@ -176,7 +177,7 @@ class PackagelistController extends Controller
                      $analysis->method = "-";
                      $analysis->fee = $post['Packagelist']['rate'];
                      $analysis->testname = $modelpackage->name;
-                     $analysis->references = "references";
+                     $analysis->references = "-";
                      $analysis->quantity = 1;
                      $analysis->sample_code = "sample";
                      $analysis->date_analysis = '2018-06-14 7:35:0';   
@@ -185,7 +186,8 @@ class PackagelistController extends Controller
                      foreach ($test_ids as $id){
                         $analysis = new Analysis();
                         $modeltest=  Testname::findOne(['testname_id'=>$id]);
-                        
+                       $modelmethod=  Methodreference::findOne(['testname_id'=>$id]);
+
                         $analysis->sample_id = $sample_id;
                         $analysis->cancelled = 0;
                         $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
@@ -197,7 +199,7 @@ class PackagelistController extends Controller
                         $analysis->sample_type_id = (int) $post['Packagelist']['sample_type_id'];
                         $analysis->testcategory_id = 1;
                         $analysis->is_package = 1;
-                        $analysis->method = "-";
+                        $analysis->method = $modelmethod->method;
                         $analysis->fee = 0;
                         $analysis->testname = $modeltest->testName;
                         $analysis->references = "references";

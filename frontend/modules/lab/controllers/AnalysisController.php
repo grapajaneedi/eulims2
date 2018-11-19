@@ -244,7 +244,6 @@ class AnalysisController extends Controller
                     $analysis->type_fee_id = 1;
                     $analysis->rstl_id = $GLOBALS['rstl_id'];
                     $analysis->test_id = (int) $post['Analysis']['test_id'];
-                   // $analysis->test_id = 1;
                     $analysis->sample_type_id = (int) $post['Analysis']['sample_type_id'];
                     $analysis->testcategory_id = 1;
                     $analysis->is_package = (int) $post['Analysis']['is_package'];
@@ -350,25 +349,45 @@ class AnalysisController extends Controller
             if ($model->load(Yii::$app->request->post())) { 
 
                     if($model->save(false)){
+                        $post= Yii::$app->request->post();
+                        $modelmethod=  Methodreference::findOne(['method_reference_id'=>$post['Analysis']['method']]);
+                        $modeltest=  Testname::findOne(['testname_id'=>$post['Analysis']['test_id']]);
 
-                        //yung testname kasi naka 0 yun kaya malamang hindi talaga yun nag uupdate
-                        
+                        // $sample_id = $post['Analysis']['sample_id'];
+                        // $pstc_id = $post['Analysis']['pstcanalysis_id'];
                         // $Connection= Yii::$app->labdb;
-                        // $sql="UPDATE `tbl_analysis` SET `total`='$total' WHERE `request_id`=".$analysisquery->request_id;
+                        // $sql="UPDATE `tbl_analysis` SET
+                        // 'sample_id' = '$sample_id',
+                        // 'cancelled' = 0,
+                        // 'pstcanalysis_id' = ".$post['Analysis']['pstcanalysis_id'].",
+                        // 'request_id' = ".$post['Analysis']['request_id'].",
+                        // 'type_fee_id' = 1,
+                        // 'rstl_id' = $GLOBALS[rstl_id],
+                        // 'test_id' = ".(int) $post['Analysis']['test_id'].",
+                        // 'sample_type_id' = ".(int) $post['Analysis']['sample_type_id'].",
+                        // 'testcategory_id' = 1,
+                        // 'is_package' = ".(int) $post['Analysis']['is_package'].",
+                        // 'method' = $modelmethod->method,
+                        // 'fee' = ".$post['Analysis']['fee'].",
+                        // 'testname' = '$modeltest->testName',
+                        // 'references' = ".$post['Analysis']['references'].",
+                        // 'quantity' = 1,
+                        // 'sample_code' = ".$post['Analysis']['sample_code'].",
+                        // 'date_analysis' = date('Y-m-d h:i:s'),
+                        // WHERE `analysis_id`=".$id;
                         // $Command=$Connection->createCommand($sql);
                         // $Command->execute();
-
+                        //yung testname kasi naka 0 yun kaya malamang hindi talaga yun nag uupdate
+                        
                         $post= Yii::$app->request->post();
-                        
-                        
-                     $modelmethod=  Methodreference::findOne(['method_reference_id'=>$post['Analysis']['method']]);
-                       $method = $modelmethod->method;
+                            
+                        $modelmethod=  Methodreference::findOne(['method_reference_id'=>$post['Analysis']['method']]);
+                        $method = $modelmethod->method;
 
                         $Connection= Yii::$app->labdb;
                         $sql="UPDATE `tbl_analysis` SET `method`='$method' WHERE `analysis_id`=".$id;
                         $Command=$Connection->createCommand($sql);
                         $Command->execute();
-
 
                         $requestquery = Request::find()->where(['request_id' =>$analysisquery->request_id])->one();
                         $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
