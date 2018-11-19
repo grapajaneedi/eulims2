@@ -78,8 +78,27 @@ class InventoryentriesController extends Controller
         $user_id=Yii::$app->user->identity->profile->user_id;
         $model->created_by=$user_id;
         if ($model->load(Yii::$app->request->post())) {
-            $model->save(false);
-            return $this->redirect(['view', 'id' => $model->inventory_transactions_id]);
+            $transaction = Yii::$app->inventorydb->beginTransaction();
+            $session = Yii::$app->session; 
+            try  {
+                $total= $model->quantity * $model->amount;
+                $model->total_amount=$total;
+                if ($model->save()){
+                    $qty=$model->product->qty_onhand;
+                    $total_qty=$qty + $model->quantity;
+                    $this->updateQtyProduct($model->product_id,$total_qty);
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('success', 'Product Entry Created!');
+                    return $this->redirect(['view', 'id' => $model->inventory_transactions_id]); 
+                }
+                
+                
+            } catch (Exception $e) {
+                $transaction->rollBack();
+               Yii::$app->session->setFlash('warning', 'Transaction Error!');
+                return $this->redirect(['/inventory/inventoryentries']);
+             }
+           
         }
         
         
@@ -211,6 +230,12 @@ class InventoryentriesController extends Controller
                
             ]);
         }
+    }
+    
+    public function updateQtyProduct($id,$qty) {
+        Yii::$app->inventorydb->createCommand()
+        ->update('tbl_products', ['qty_onhand' => $qty], 'product_id= '.$id)
+        ->execute(); 
     }
 
 }

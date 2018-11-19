@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use common\components\Functions;
 
 use kartik\date\DatePicker;
-
+use kartik\money\MaskMoney;
 /* @var $this yii\web\View */
 /* @var $model common\models\inventory\InventoryEntries */
 /* @var $form yii\widgets\ActiveForm */
@@ -75,11 +75,20 @@ use kartik\date\DatePicker;
                 echo $func->GetSupplierList($form,$model,false,"Supplier");
             ?> 
             
-            <?= $form->field($model, 'quantity')->textInput() ?>
+            <?= $form->field($model, 'quantity')->textInput(['type'=>'number']) ?>
 
-            <?= $form->field($model, 'amount')->textInput(['maxlength' => true]) ?>
+            <?php
+              echo $form->field($model, 'amount')->widget(MaskMoney::classname(), [
+                   'options'=>[
+                       'style'=>'text-align: right'
+                   ],
+                   'pluginOptions' => [
+                      'prefix' => '₱ ',
+                      'allowNegative' => false,
+                   ]
+                  ])->label('Amount');
+             ?>
 
-            <?= $form->field($model, 'total_amount')->textInput(['maxlength' => true]) ?>
         </div>
     </div>
 

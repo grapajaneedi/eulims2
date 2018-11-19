@@ -52,7 +52,7 @@ class InventoryEntries extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['transaction_type_id', 'rstl_id', 'product_id', 'created_by', 'suppliers_id', 'quantity'], 'required'],
+            [['transaction_type_id', 'rstl_id', 'product_id', 'created_by', 'suppliers_id', 'quantity','amount'], 'required'],
             [['transaction_type_id', 'rstl_id', 'product_id', 'created_by', 'suppliers_id', 'quantity', 'created_at', 'updated_at'], 'integer'],
             [['manufacturing_date', 'expiration_date'], 'safe'],
             [['amount', 'total_amount'], 'number'],

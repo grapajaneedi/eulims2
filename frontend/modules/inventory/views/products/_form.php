@@ -7,6 +7,7 @@ use common\models\inventory\Categorytype;
 use common\models\inventory\Suppliers;
 use common\models\inventory\Producttype;
 use kartik\widgets\FileInput;
+use kartik\money\MaskMoney;
 /* @var $this yii\web\View */
 /* @var $model common\models\inventory\Products */
 /* @var $form yii\widgets\ActiveForm */
@@ -100,15 +101,35 @@ use kartik\widgets\FileInput;
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($model, 'srp')->textInput(['maxlength' => true, 'placeholder' => 'Srp']) ?>
-        </div>
+            <?php
+              echo $form->field($model, 'srp')->widget(MaskMoney::classname(), [
+                   'options'=>[
+                       'style'=>'text-align: right'
+                   ],
+                   'pluginOptions' => [
+                      'prefix' => '₱ ',
+                      'allowNegative' => false,
+                   ]
+                  ])->label('Srp');
+              ?>
+        </div> 
         <div class="col-sm-6">
-            <?= $form->field($model, 'price')->textInput(['maxlength' => true, 'placeholder' => 'Price']) ?>
-        </div>
+            <?php
+              echo $form->field($model, 'price')->widget(MaskMoney::classname(), [
+                   'options'=>[
+                       'style'=>'text-align: right'
+                   ],
+                   'pluginOptions' => [
+                      'prefix' => '₱ ',
+                      'allowNegative' => false,
+                   ]
+                  ])->label('Price');
+              ?>
+        </div> 
     </div>
     <div class="row">
         <div class="col-sm-6">
-             <?= $form->field($model, 'qty_min_reorder')->textInput(['placeholder' => 'Qty Min Reorder']) ?>
+             <?= $form->field($model, 'qty_min_reorder')->textInput(['placeholder' => 'Qty Min Reorder','type'=>'number']) ?>
         </div>
         <div class="col-sm-6">
             <?=
@@ -124,19 +145,17 @@ use kartik\widgets\FileInput;
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($model, 'qty_reorder')->textInput(['placeholder' => 'Qty Reorder']) ?>
+            <?= $form->field($model, 'qty_reorder')->textInput(['placeholder' => 'Qty Reorder','type'=>'number']) ?>
         </div>
         <div class="col-sm-6">
-            <?= $form->field($model, 'qty_onhand')->textInput(['placeholder' => 'Qty Onhand']) ?>
+            <?= $form->field($model, 'qty_per_unit')->textInput(['maxlength' => true, 'placeholder' => 'Qty Per Unit','type'=>'number']) ?>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-6">
              <?= $form->field($model, 'discontinued')->checkbox() ?>
         </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'qty_per_unit')->textInput(['maxlength' => true, 'placeholder' => 'Qty Per Unit']) ?>
-        </div>
+       
     </div>
     <div class="row">
         <div class="col-sm-6">
