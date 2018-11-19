@@ -182,35 +182,4 @@ class InventoryentriesController extends Controller
         return $out;
     }
 
-     public function actionWithdraw($varsearch=""){
-        // $product=Products::find()->limit(20)->all();
-        $dataProvider = new ActiveDataProvider([
-            'query' =>Products::find(),
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
-
-        if($varsearch){
-              // $inventory=InventoryEntries::find('product')->where('like','product_name',$_GET['varsearch']);
-              
-              // var_dump($product); exit;
-        }
-
-          return $this->render('withdraw',['dataProvider'=>$dataProvider,'searchkey'=>$varsearch]);
-    }
-
-    public function actionIncart(){
-        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('withdraw', [
-                
-            ]);
-        }
-        else {
-            return $this->render('withdraw', [
-               
-            ]);
-        }
-    }
-
 }
