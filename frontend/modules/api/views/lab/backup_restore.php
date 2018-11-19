@@ -190,7 +190,9 @@ $this->params['breadcrumbs'][] = $this->title;
                }
             })
             .done(function( data ) {
+                alert('boom')
                 $("#testname-grid").yiiGridView("applyFilter"); 
+
                 $('.image-loader').removeClass("img-loader");
             });
         }
