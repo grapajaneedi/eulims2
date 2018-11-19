@@ -94,7 +94,7 @@ class ProductsController extends Controller
             $model->save();
             return $this->redirect(['view', 'id' => $model->product_id]);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }

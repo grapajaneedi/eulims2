@@ -10,6 +10,7 @@ use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+use common\models\inventory\Categorytype;
 
 $this->title = 'Products';
 $this->params['breadcrumbs'][] = $this->title;
@@ -34,14 +35,12 @@ Modal::end();
 <div class="products-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Products', ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Advance Search', '#', ['class' => 'btn btn-info search-button']) ?>
-    </p>
+    
     <div class="search-form" style="display:none">
         <?=  $this->render('_search', ['model' => $searchModel]); ?>
     </div>
     <?php 
+   
     $gridColumn = [
         ['class' => 'yii\grid\SerialColumn'],
         [
@@ -56,28 +55,25 @@ Modal::end();
             'headerOptions' => ['class' => 'kartik-sheet-style'],
             'expandOneOnly' => true
         ],
-        'product_id',
-        'product_code',
-        'product_name',
-        'description:ntext',
-        'price',
-        'srp',
         [
-                'attribute' => 'category_type_id',
+                'attribute' => 'categorytype_id',
                 'label' => 'Category Type',
                 'value' => function($model){                   
                     return $model->categorytype->categorytype;                   
                 },
                 'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(\common\models\inventory\Categorytype::find()->asArray()->all(), 'categorytype_id', 'categorytype'),
+                'filter' => ArrayHelper::map(Categorytype::find()->asArray()->all(), 'categorytype_id', 'categorytype'),
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Categorytype', 'id' => 'grid-products-search-category_type_id']
-        ],
-        'qty_reorder',
+        ],            
+        'product_code',
+        'product_name',
+        'description:ntext',
+        'price',
+        'srp',
         'qty_onhand',
-        'qty_min_reorder',
         'qty_per_unit',
         'discontinued:boolean',
         [
@@ -100,6 +96,7 @@ Modal::end();
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
+            'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Add Product', ['value'=>'/inventory/products/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Add New Product"),'id'=>'btnProd','onclick'=>'addProduct(this.value,this.title)']),
             'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
         ],
         // your toolbar can include the additional full export menu
@@ -126,5 +123,7 @@ Modal::end();
     function showBonus(url,title){
         LoadModal(title,url,'true','700px');
     }
-  
+    function addProduct(url,title){
+        LoadModal(title,url,'true','800px');
+    }
 </script>

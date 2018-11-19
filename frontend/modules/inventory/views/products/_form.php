@@ -36,6 +36,61 @@ use kartik\widgets\FileInput;
     <?= $form->errorSummary($model); ?>
      <?= $form->field($model, 'product_id')->hiddenInput()->label(false) ?>
     <div class="row">
+        <div class="col-md-6">
+        <?php // your fileinput widget for single file upload
+            echo "<b>Image 1 </b>";
+            echo $form->field($model, 'Image1')->widget(FileInput::classname(), [
+                'options'=>[
+                    'id'=>'profileImage_upload',
+                    'accept'=>'image/*'
+                ],
+                'pluginOptions'=>[
+                    'allowedFileExtensions'=>['jpg','gif','png'],
+                    'overwriteInitial'=>true,
+                    'resizeImages'=>true,
+                    'initialPreviewConfig'=>[
+                        'width'=>'120px',
+                    ],
+                    'initialPreview' => [
+                        '<img src="/uploads/img.png" width="200" class="file-preview-image">',
+                    ],
+                    'showUpload'=>false,
+                    'showRemove'=>false,
+                    'showBrowse'=>true,
+                   // 'showText'=>false
+                ],
+            ])->label(false);
+        ?>    
+        </div>
+        <div class="col-md-6">
+        <?php // your fileinput widget for single file upload
+            echo "<b>Image 2 </b>";
+            echo $form->field($model, 'Image2')->widget(FileInput::classname(), [
+                'options'=>[
+                    'id'=>'profileImage2_upload',
+                    'accept'=>'image/*'
+                ],
+                'pluginOptions'=>[
+                    'allowedFileExtensions'=>['jpg','gif','png'],
+                    'overwriteInitial'=>true,
+                    'resizeImages'=>true,
+                    'initialPreviewConfig'=>[
+                        'width'=>'120px',
+                    ],
+                    'initialPreview' => [
+                        '<img src="/uploads/img.png" width="200" class="file-preview-image">',
+                    ],
+                    'showUpload'=>false,
+                    'showRemove'=>false,
+                    'showBrowse'=>true,
+                   // 'showText'=>false
+                ],
+            ])->label(false);
+        ?>    
+        </div>
+      
+     </div>
+    <div class="row">
         <div class="col-sm-6">
             <?= $form->field($model, 'product_code')->textInput(['maxlength' => true, 'placeholder' => 'Product Code']) ?>
         </div>
@@ -101,13 +156,6 @@ use kartik\widgets\FileInput;
                 ],
             ]);
             ?>
-        </div>
-    </div>
-    <div class="row">
-         <div class="col-md-6">
-        <?= $form->field($model, 'created_by')->hiddenInput()->label(false) ?>
-        </div>
-        <div class="col-sm-6">
             <?=
             $form->field($model, 'producttype_id')->widget(\kartik\widgets\Select2::classname(), [
                 'data' => ArrayHelper::map(Producttype::find()->orderBy('producttype')->asArray()->all(), 'producttype_id', 'producttype'),
@@ -115,90 +163,21 @@ use kartik\widgets\FileInput;
                 'pluginOptions' => [
                     'allowClear' => true
                 ],
-            ]);
+            ])->label('Product Type');
             ?>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
-        <?php // your fileinput widget for single file upload
-            echo $form->field($model, 'Image1')->widget(FileInput::classname(), [
-                'options'=>[
-                    'id'=>'profileImage_upload',
-                    'accept'=>'image/*'
-                ],
-                'pluginOptions'=>[
-                    'allowedFileExtensions'=>['jpg','gif','png'],
-                    'overwriteInitial'=>true,
-                    'resizeImages'=>true,
-                    'initialPreviewConfig'=>[
-                        'width'=>'120px',
-                    ],
-                    'initialPreview' => [
-                        '<img src="/uploads/img.png" width="200" class="file-preview-image">',
-                    ],
-                    'showUpload'=>false,
-                    'showRemove'=>false,
-                    'showBrowse'=>true,
-                   // 'showText'=>false
-                ],
-            ])->label(false);
-        ?>    
+         <div class="col-md-6">
+        <?= $form->field($model, 'created_by')->hiddenInput()->label(false) ?>
         </div>
-        <div class="col-md-6">
-        <?php // your fileinput widget for single file upload
-            echo $form->field($model, 'Image2')->widget(FileInput::classname(), [
-                'options'=>[
-                    'id'=>'profileImage2_upload',
-                    'accept'=>'image/*'
-                ],
-                'pluginOptions'=>[
-                    'allowedFileExtensions'=>['jpg','gif','png'],
-                    'overwriteInitial'=>true,
-                    'resizeImages'=>true,
-                    'initialPreviewConfig'=>[
-                        'width'=>'120px',
-                    ],
-                    'initialPreview' => [
-                        '<img src="/uploads/img.png" width="200" class="file-preview-image">',
-                    ],
-                    'showUpload'=>false,
-                    'showRemove'=>false,
-                    'showBrowse'=>true,
-                   // 'showText'=>false
-                ],
-            ])->label(false);
-        ?>    
+        <div class="col-sm-6">
+            
         </div>
-      
-     </div>
-    <?php
-    $forms = [
-        [
-            'label' => '<i class="glyphicon glyphicon-book"></i> ' . Html::encode('Inventory Entries'),
-            'content' => $this->render('_formInventoryEntries', [
-                'row' => \yii\helpers\ArrayHelper::toArray($model->inventoryEntries),
-            ]),
-        ],
-        [
-            'label' => '<i class="glyphicon glyphicon-book"></i> ' . Html::encode('Inventory Withdrawal Details'),
-            'content' => $this->render('_formInventoryWithdrawaldetails', [
-                'row' => \yii\helpers\ArrayHelper::toArray($model->inventoryWithdrawaldetails),
-            ]),
-        ],
-    ];
-    echo kartik\tabs\TabsX::widget([
-        'items' => $forms,
-        'position' => kartik\tabs\TabsX::POS_ABOVE,
-        'encodeLabels' => false,
-        'pluginOptions' => [
-            'bordered' => true,
-            'sideways' => true,
-            'enableCache' => false,
-        ],
-    ]);
-    ?>
-    <div class="form-group">
+    </div>
+    
+    
+    <div class="form-group pull-right">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Cancel'), Yii::$app->request->referrer , ['class'=> 'btn btn-danger']) ?>
     </div>
