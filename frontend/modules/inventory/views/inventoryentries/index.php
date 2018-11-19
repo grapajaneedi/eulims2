@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
          'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
-                 'before'=>"<button type='button' onclick='LoadModal(\"Create New Entry\",\"create\",true,\"900\")' class=\"btn btn-success\"><i class=\"fa fa-plus-o\"></i> Create New Entry</button>",
+                 'before'=> Html::button('<span class="glyphicon glyphicon-plus"></span> Entry Product', ['value'=>'/inventory/inventoryentries/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Entry Product"),'id'=>'btnEntry','onclick'=>'addEntry(this.value,this.title)']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
             ],
         'pjax'=>true,
@@ -153,3 +153,8 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
     </div>
 </div>
+<script type="text/javascript">
+    function addEntry(url,title){
+        LoadModal(title,url,'true','800px');
+    }
+</script>

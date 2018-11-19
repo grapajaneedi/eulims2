@@ -63,7 +63,7 @@ class ProductsSearch extends Products
             'product_id' => $this->product_id,
             'price' => $this->price,
             'srp' => $this->srp,
-            'category_type_id' => $this->categorytype_id,
+            'categorytype_id' => $this->categorytype_id,
             'qty_reorder' => $this->qty_reorder,
             'qty_onhand' => $this->qty_onhand,
             'qty_min_reorder' => $this->qty_min_reorder,
