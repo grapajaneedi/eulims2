@@ -101,16 +101,7 @@ class Profile extends \yii\db\ActiveRecord
             'avatar'=>'Avatar',
         ];
     }
-    //public function getFullname(){
-    //    return $this->firstname. ' ' . $this->lastname;
-    //}
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::className(), ['user_id' => 'user_id']);
-    }
+   
     public function initialPreviewConfig($urldel = ['/controller/action-delete-files'])
     {
 
@@ -131,5 +122,26 @@ class Profile extends \yii\db\ActiveRecord
 
       return $return_json;
     }
-  
+    public function getFullname(){
+        return $this->firstname. ' ' . $this->lastname;
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['user_id' => 'user_id']);
+    }
+     public function getLab()
+    {
+        return $this->hasOne(Lab::className(), ['lab_id' => 'lab_id']);
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRstl()
+    {
+        return $this->hasOne(Rstl::className(), ['rstl_id' => 'rstl_id']);
+    }
+
 }
