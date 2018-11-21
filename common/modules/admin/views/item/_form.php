@@ -28,31 +28,33 @@ $this->registerJs($js);
 ?>
 
 <div class="auth-item-form">
+    <?php if(!Yii::$app->request->isAjax){ ?>
     <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => $labels['Items']]); ?>
-    <div class="panel panel-default col-xs-12">
-        <div class="panel-heading"><i class="fa fa-user-md fa-adn"></i> <?= $this->title ?></div>
-        <div class="panel-body">
-            <?php $form = ActiveForm::begin(['id' => 'item-form']); ?>
-            <div class="row">
-                <div class="col-sm-6">
-                    <?= $form->field($model, 'name')->textInput(['maxlength' => 64]) ?>
-
-                    <?= $form->field($model, 'description')->textarea(['rows' => 2]) ?>
-                </div>
-                <div class="col-sm-6">
-                    <?= $form->field($model, 'ruleName')->textInput(['id' => 'rule_name']) ?>
-
-                    <?= $form->field($model, 'data')->textarea(['rows' => 6]) ?>
-                </div>
-            </div>
-            <div class="form-group">
-                <?php
-                echo Html::submitButton($model->isNewRecord ? Yii::t('rbac-admin', 'Create') : Yii::t('rbac-admin', 'Update'), [
-                    'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
-                    'name' => 'submit-button'])
-                ?>
-            </div>
-            <?php ActiveForm::end(); ?>
+    <?php } ?>
+    <?php $form = ActiveForm::begin(['id' => 'item-form']); ?>
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'name')->textInput(['maxlength' => 64]) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'description')->textarea(['rows' => 2]) ?>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'ruleName')->textInput(['id' => 'rule_name']) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'data')->textarea(['rows' => 6]) ?>
+        </div>
+    </div>
+    <div class="form-group" style="float: right">
+        <?php
+        echo Html::submitButton($model->isNewRecord ? Yii::t('rbac-admin', 'Create') : Yii::t('rbac-admin', 'Update'), [
+            'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
+            'name' => 'submit-button'])
+        ?>
+        <button style='margin-left: 5px;' type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+    </div>
+    <?php ActiveForm::end(); ?>
 </div>

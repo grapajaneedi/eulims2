@@ -8,6 +8,7 @@ use common\modules\admin\models\searchs\Assignment as AssignmentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\system\Profile;
 
 /**
  * AssignmentController implements the CRUD actions for Assignment model.
@@ -86,13 +87,24 @@ class AssignmentController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-
-        return $this->render('view', [
-                'model' => $model,
-                'idField' => $this->idField,
-                'usernameField' => $this->usernameField,
-                'fullnameField' => $this->fullnameField,
-        ]);
+        $Profile= Profile::find()->where(['user_id'=>$id])->one();
+        if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                    'model' => $model,
+                    'profile'=>$Profile,
+                    'idField' => $this->idField,
+                    'usernameField' => $this->usernameField,
+                    'fullnameField' => $this->fullnameField,
+            ]);
+        }else{
+            return $this->render('view', [
+                    'model' => $model,
+                    'profile'=>$Profile,
+                    'idField' => $this->idField,
+                    'usernameField' => $this->usernameField,
+                    'fullnameField' => $this->fullnameField,
+            ]);
+        }
     }
 
     /**

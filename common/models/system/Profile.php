@@ -13,6 +13,7 @@ use common\models\lab\Lab;
  * @property integer $user_id
  * @property string $lastname
  * @property string $firstname
+ * @property string $fullname
  * @property string $designation
  * @property string $middleinitial
  * @property integer $rstl_id
@@ -20,7 +21,6 @@ use common\models\lab\Lab;
  * @property string $contact_numbers
  * @property string $image_url
  * @property string $avatar
- * @property string $fullname
  *
  * @property User $user
  * @property Lab $lab
@@ -33,7 +33,6 @@ class Profile extends \yii\db\ActiveRecord
     * widget for upload on the form
     */
     public $image;
-    public $Fullname;
     /**
      * @inheritdoc
      */
@@ -51,17 +50,15 @@ class Profile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['lastname', 'firstname', 'designation', 'rstl_id', 'lab_id'], 'required'],
+            [['lastname', 'firstname', 'designation','rstl_id','lab_id'], 'required'],
             [['user_id'],'required','message'=>'Please select Username!'],
-            [['user_id', 'rstl_id', 'lab_id'], 'integer'],
+            [['user_id','rstl_id','lab_id'], 'integer'],
             [['lastname', 'firstname', 'middleinitial','designation'], 'string', 'max' => 50],
             [['image_url','avatar','fullname','contact_numbers'], 'string', 'max' => 100],
             [['image'], 'safe'],
             [['image'], 'file', 'extensions'=>'jpg, gif, png'],
             ['user_id', 'unique', 'targetAttribute' => ['user_id'], 'message' => 'The Email has already been taken.'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'user_id']],
-            [['rstl_id'], 'exist', 'skipOnError' => true, 'targetClass' => Rstl::className(), 'targetAttribute' => ['rstl_id' => 'rstl_id']],
-            [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'user_id']]
         ];
     }
     public function getImageFile() 
@@ -94,8 +91,9 @@ class Profile extends \yii\db\ActiveRecord
             'user_id' => 'User',
             'lastname' => 'Lastname',
             'firstname' => 'Firstname',
+            'fullname' => 'FullName',
             'designation' => 'Designation',
-            'middleinitial' => 'Middlename',
+            'middleinitial' => 'Middle Initial',
             'rstl_id' => 'RSTL',
             'lab_id' => 'Lab',
             'contact_numbers' => 'Contact #',
@@ -103,9 +101,9 @@ class Profile extends \yii\db\ActiveRecord
             'avatar'=>'Avatar',
         ];
     }
-    public function getFullname(){
-        return $this->firstname. ' ' . $this->lastname;
-    }
+    //public function getFullname(){
+    //    return $this->firstname. ' ' . $this->lastname;
+    //}
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -133,18 +131,5 @@ class Profile extends \yii\db\ActiveRecord
 
       return $return_json;
     }
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLab()
-    {
-        return $this->hasOne(Lab::className(), ['lab_id' => 'lab_id']);
-    }
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRstl()
-    {
-        return $this->hasOne(Rstl::className(), ['rstl_id' => 'rstl_id']);
-    }
+  
 }

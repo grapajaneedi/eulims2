@@ -19,7 +19,7 @@ class ProfileSearch extends Profile
     public function rules()
     {
         return [
-            [['user_id', 'rstl_id', 'lab_id'], 'integer'],
+            [['user_id'], 'integer'],
             [['lastname', 'firstname', 'middleinitial','designation','contact_numbers'], 'safe'],
         ];
     }
@@ -57,21 +57,19 @@ class ProfileSearch extends Profile
             // $query->where('0=1');
             return $dataProvider;
         }
-         $query->andFilterWhere([
-                'user_id' => $this->user_id,
-                'rstl_id' => $this->rstl_id,
-                'lab_id' => $this->lab_id,
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'user_id' => $this->user_id
+        ]);
+        if(Yii::$app->user->can('access-his-profile')){
+            $query->andFilterWhere([
+                'user_id' => Yii::$app->user->identity->user_id,
             ]);
-        if(Yii::$app->user->can('profile-full-access')){
-            //
-        }elseif(Yii::$app->user->can('access-his-profile')){
-            $query->andFilterWhere(['user_id' => Yii::$app->user->id]); 
-        }else{
-            $query->andFilterWhere(['user_id' => -1]); 
         }
-       
         $query->andFilterWhere(['like', 'lastname', $this->lastname])
             ->andFilterWhere(['like', 'firstname', $this->firstname])
+            ->andFilterWhere(['like','user.username', $this->username])
             ->andFilterWhere(['like','designation', $this->designation])
             ->andFilterWhere(['like','contact_numbers', $this->contact_numbers])
             ->andFilterWhere(['like', 'middleinitial', $this->middleinitial]);

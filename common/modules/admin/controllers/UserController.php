@@ -9,6 +9,7 @@ use common\modules\admin\models\form\ResetPassword;
 use common\modules\admin\models\form\Signup;
 use common\modules\admin\models\form\ChangePassword;
 use common\modules\admin\models\User;
+use common\models\system\Profile;
 use common\modules\admin\models\searchs\User as UserSearch;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -79,10 +80,11 @@ class UserController extends Controller
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-            return $this->render('index', [
+
+        return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
-            ]); 
+        ]);
     }
     public function actionUpdate($id)
     {
@@ -100,11 +102,19 @@ class UserController extends Controller
             }
             $model->save(true);
             Helper::invalidate();
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', 'User Successfuly Updated!');
+            return $this->redirect("/admin/user");
         } else {
-            return $this->render('update', [
+            if(Yii::$app->request->isAjax){
+                return $this->renderAjax('update', [
                     'model' => $model,
-            ]);
+                ]); 
+            }else{
+                return $this->render('update', [
+                    'model' => $model,
+                ]); 
+            }
+            
         }
     }
     /**
@@ -114,9 +124,18 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        $Profile=Profile::find()->where(['user_id'=>$id])->one();
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
                 'model' => $this->findModel($id),
-        ]);
+                'profile'=>$Profile
+            ]);
+        }else{
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+                'profile'=>$Profile
+            ]); 
+        }
     }
     /**
      * Activate new user
@@ -132,24 +151,16 @@ class UserController extends Controller
         if ($user->status == User::STATUS_ACTIVE) {
             $user->status = User::STATUS_INACTIVE;
             if ($user->save()) {
-                Yii::$app->session->setFlash('success', 'User Account Successfully Deactivated!');
-                return $this->redirect(["/admin/user/view",'id'=>$id]);
+                Yii::$app->session->setFlash('success', 'User Successfully Deactivated!');
+                return $this->redirect('/admin/user');
+                //return Url::toRoute(['admin/user/view','id'=>$id]);
             } else {
                 $errors = $user->firstErrors;
-                Yii::$app->session->setFlash('warning', 'Error: '.$errors.'!');
-                return $this->redirect("/admin/user");
-            }
-        }else{
-            $user->status = User::STATUS_ACTIVE;
-            if ($user->save()) {
-                Yii::$app->session->setFlash('success', 'User Account Successfully Activated!');
-                return $this->redirect(["/admin/user/view",'id'=>$id]);
-            } else {
-                $errors = $user->firstErrors;
-                Yii::$app->session->setFlash('warning', 'Error: '.$errors.'!');
-                return $this->redirect("/admin/user");
+                throw new UserException(reset($errors));
             }
         }
+        return $this->goHome();
+        //return $this->run("/admin/user/view?id=".$id);
     }
     /**
      * Deletes an existing User model.
@@ -159,9 +170,16 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        try{
+            $model=$this->findModel($id);
+            if($model->delete()){
+                Yii::$app->session->setFlash('success', 'User Successfully Deleted!');
+                return $this->redirect(['index']);
+            }
+        }catch(Exception $e){
+            Yii::$app->session->setFlash('danger', 'Error: ' . $e->getMessage());
+        }
+        
     }
 
     /**
@@ -173,7 +191,7 @@ class UserController extends Controller
         if (!Yii::$app->getUser()->isGuest) {
             return $this->goHome();
         }
-        
+
         $model = new Login();
         if ($model->load(Yii::$app->getRequest()->post()) && $model->login()) {
             return $this->goBack();
@@ -207,23 +225,21 @@ class UserController extends Controller
                 if(Yii::$app->user->isGuest){
                     
                 }else{
-                    
-                   return $this->run('/admin/user'); 
+                    Yii::$app->session->setFlash('success', 'User Successfully Created!');
+                    return $this->redirect('/admin/user'); 
                 } 
             }
         }
-        
-        if (Yii::$app->request->isAjax)
-        {
+        if(\Yii::$app->request->isAjax){
             return $this->renderAjax('signup', [
                 'model' => $model,
-        ]);
-        }
-        else
-        {
-        return $this->render('signup', [
+                'isModal'=>true
+            ]);
+        }else{
+            return $this->render('signup', [
                 'model' => $model,
-        ]);
+                'isModal'=>false
+            ]);
         }
     }
 
@@ -302,8 +318,8 @@ class UserController extends Controller
         if ($user->status == User::STATUS_INACTIVE) {
             $user->status = User::STATUS_ACTIVE;
             if ($user->save()) {
-                return $this->runAction('view', ['id'=>$id]);
-                //return Url::toRoute(['admin/user/view','id'=>$id]);
+                Yii::$app->session->setFlash('success', 'User Successfully Activated!');
+                return $this->redirect('/admin/user');
             } else {
                 $errors = $user->firstErrors;
                 throw new UserException(reset($errors));

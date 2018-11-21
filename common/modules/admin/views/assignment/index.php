@@ -13,23 +13,29 @@ use common\components\Functions;
 $this->title = Yii::t('rbac-admin', 'Assignment');
 $this->params['breadcrumbs'][] = $this->title;
 
+$func=new Functions();
+$Header="Port Management System<br>";
+$Header.="List of Assignment";
+
 $columns = [
-    ['class' => 'kartik\grid\SerialColumn'],
+    ['class' => 'yii\grid\SerialColumn'],
     $usernameField,
 ];
 if (!empty($extraColumns)) {
     $columns = array_merge($columns, $extraColumns);
 }
 $columns[] = [
-    'class' => 'yii\grid\ActionColumn',
-    'template' => '{view}'
+    'class' => 'kartik\grid\ActionColumn',
+    'template' => '{view}',
+    'buttons' => [
+        'view'=>function ($url, $model) {
+            return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/admin/assignment/view?id='.$model->user_id, 'onclick'=>'ShowModal(this.title, this.value,true,"760px");', 'class' => 'btn btn-primary','title' => Yii::t('app', "View User</font>")]);
+        }
+    ]
 ];
-$func=new Functions();
-$Header="Department of Science and Technology<br>";
-$Header.="User Assignment List";
 ?>
 <div class="assignment-index">
-    <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => 'assignment']); ?>
+    <?= $this->renderFile(__DIR__.'/../menu.php',['button'=>'Assignment']); ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -39,22 +45,18 @@ $Header.="User Assignment List";
         'condensed' => true,
         'responsive' => false,
         'hover' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'heading' => '<i class="fa fa-user-circle fa-adn"></i> Assignment',
+        ],
         'pjax' => true, // pjax is set to always true for this demo
         'pjaxSettings' => [
             'options' => [
                     'enablePushState' => false,
               ],
         ],
-        'panel' => [
-            'type' => GridView::TYPE_PRIMARY,
-            'heading' => '<span class="fa fa-users"></span>  ' . Html::encode($this->title),
-            'before'=>Html::a(Yii::t('rbac-admin', 'Signup New User'), ['signup'], ['class' => 'btn btn-success',])
-        ],
-        'exportConfig'=>$func->exportConfig("User Assignment List", "user assignment", $Header),
+        'exportConfig'=>$func->exportConfig("List of Assignment", "Assignment", $Header),
         'columns' => $columns,
     ]);
     ?>
-    <p>
-        <?= Html::a(Yii::t('rbac-admin', 'Back to Dashboard'), ['../site/login'], ['class' => 'btn btn-success',]) ?>
-    </p>
 </div>

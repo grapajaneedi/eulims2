@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\base\NotSupportedException;
 use yii\filters\VerbFilter;
 use yii\rbac\Item;
+use common\models\system\User;
 
 /**
  * AuthItemController implements the CRUD actions for AuthItem model.
@@ -48,11 +49,17 @@ class ItemController extends Controller
     {
         $searchModel = new AuthItemSearch(['type' => $this->type]);
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
-        ]);
+        if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('index', [
+                'dataProvider' => $dataProvider,
+                'searchModel' => $searchModel,
+            ]);  
+        }else{
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+                'searchModel' => $searchModel,
+            ]);
+        }
     }
 
     /**
@@ -63,8 +70,15 @@ class ItemController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-
-        return $this->render('view', ['model' => $model]);
+        if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                'model' => $model
+            ]);
+        }else{
+            return $this->render('view', [
+                'model' => $model
+            ]);
+        }
     }
 
     /**
@@ -77,9 +91,14 @@ class ItemController extends Controller
         $model = new AuthItem(null);
         $model->type = $this->type;
         if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Item Successfuly Created, please add permission!');
             return $this->redirect(['view', 'id' => $model->name]);
         } else {
-            return $this->render('create', ['model' => $model]);
+            if(\Yii::$app->request->isAjax){
+                return $this->renderAjax('create', ['model' => $model]);
+            }else{
+                return $this->render('create', ['model' => $model]);
+            }
         }
     }
 
@@ -93,10 +112,20 @@ class ItemController extends Controller
     {
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->name]);
+            if($this->type === Item::TYPE_ROLE){
+                Yii::$app->session->setFlash('success', 'Role Successfuly Updated!');
+                return $this->redirect('/admin/role');
+            }else{
+                Yii::$app->session->setFlash('success', 'Permission Successfuly Updated!');
+                return $this->redirect('/admin/permission');
+            }
+            
         }
-
-        return $this->render('update', ['model' => $model]);
+        if(\Yii::$app->request->isAjax){
+            return $this->renderAjax('update', ['model' => $model]);
+        }else{
+            return $this->render('update', ['model' => $model]);
+        }
     }
 
     /**

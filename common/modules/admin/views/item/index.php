@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use common\modules\admin\components\Helper;
 use common\modules\admin\components\RouteRule;
 use common\modules\admin\components\Configs;
 use common\components\Functions;
@@ -20,60 +21,64 @@ $rules = array_keys(Configs::authManager()->getRules());
 $rules = array_combine($rules, $rules);
 unset($rules[RouteRule::RULE_NAME]);
 $func=new Functions();
-$Header="Department of Science and Technology<br>";
-$Header.="User Role List";
+$Header="Port Management System<br>";
+$Header.="List of $labels[Item]s";
+$ItemName= strtolower($labels["Item"]);
 ?>
 <div class="role-index">
-<?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => $labels['Items']]); ?>
-<?php
- echo GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'bordered' => true,
-        'striped' => true,
-        'condensed' => true,
-        'responsive' => false,
-        'hover' => true,
-        'pjax' => true, // pjax is set to always true for this demo
-        'pjaxSettings' => [
-            'options' => [
-                    'enablePushState' => false,
-              ],
-        ],
-        'panel' => [
-            'type' => GridView::TYPE_PRIMARY,
-            'heading' => '<span class="fa fa-users"></span>  ' . Html::encode($this->title),
-            'before'=>Html::a(Yii::t('rbac-admin', 'Create ' . $labels['Item']), ['create'], ['class' => 'btn btn-success'])
-        ],
-        'exportConfig'=>$func->exportConfig("User Roles List", "user roles", $Header),
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            [
-                'attribute' => 'name',
-                'label' => Yii::t('rbac-admin', 'Name'),
+    <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => $labels['Items']]); ?>
+    <div class="panel panel-default col-xs-12">
+        <?php
+        $dataProvider->pagination->pageSize=10;
+        echo GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'bordered' => true,
+            'striped' => true,
+            'condensed' => true,
+            'responsive' => false,
+            'hover' => true,
+            'panel' => [
+                'type' => GridView::TYPE_PRIMARY,
+                'heading' => '<i class="fa fa-user-circle fa-adn"></i> List of '.$labels['Item'].'s',
+                'before'=>"<button type='button' onclick='ShowModal(\"New $labels[Item]\",\"/admin/role/create\")' class=\"btn btn-success\"><i class=\"fa fa-book-o\"></i> Create new $labels[Item]</button>",
             ],
-            [
-                'attribute' => 'ruleName',
-                'label' => Yii::t('rbac-admin', 'Rule Name'),
-                'filter' => $rules
+            'pjax' => true, // pjax is set to always true for this demo
+            'pjaxSettings' => [
+                'options' => [
+                        'enablePushState' => false,
+                  ],
             ],
-            [
-                'attribute' => 'description',
-                'label' => Yii::t('rbac-admin', 'Description'),
-                'format' => 'html',
-                'noWrap' => false,
-                'mergeHeader'=>true,
-                'contentOptions' => ['style' => 'width: 60%;word-wrap: break-word;white-space:pre-line;'],
+            'exportConfig'=>$func->exportConfig("List of $labels[Item]s", "$labels[Item]s", $Header),
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+                [
+                    'attribute' => 'name',
+                    'label' => Yii::t('rbac-admin', 'Name'),
+                ],
+                [
+                    'attribute' => 'ruleName',
+                    'label' => Yii::t('rbac-admin', 'Rule Name'),
+                    'filter' => $rules
+                ],
+                [
+                    'attribute' => 'description',
+                    'label' => Yii::t('rbac-admin', 'Description'),
+                ],
+                [
+                    'class' => kartik\grid\ActionColumn::className(),
+                    'template' => Helper::filterActionColumn(['view','update','delete']),
+                    //'template' => '{view}{update}{delete}',
+                    'buttons' => [
+                        'view'=>function ($url, $model) use ($ItemName) {
+                            return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>"/admin/$ItemName/view?id=$model->name", 'onclick'=>'ShowModal(this.title, this.value,true,"800px");', 'class' => 'btn btn-primary','title' => Yii::t('app', "View ".ucwords($ItemName))]);
+                        },
+                        'update'=>function ($url, $model) use ($ItemName) {
+                            return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>"/admin/$ItemName/update?id=$model->name", 'onclick'=>'ShowModal(this.title, this.value,true,"800px");', 'class' => 'btn btn-success','title' => Yii::t('app', "Update ".ucwords($ItemName))]);
+                        }
+                    ]
+                ]
             ],
-            [
-                'class' => 'kartik\grid\ActionColumn',
-                //'width'=>'120px'
-            ],
-        ],
-    ])
-?>
-    <p>
-        <?= Html::a(Yii::t('rbac-admin', 'Back to Dashboard'), ['../site/login'], ['class' => 'btn btn-success',]) ?>
-    </p>
-     
+        ])
+        ?>
 </div>

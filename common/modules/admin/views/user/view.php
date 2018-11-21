@@ -1,9 +1,10 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+use kartik\detail\DetailView;
 use common\modules\admin\components\Helper;
 use yii\helpers\Url;
+use common\models\system\User;
 
 /* @var $this yii\web\View */
 /* @var $model common\modules\admin\models\User */
@@ -13,72 +14,38 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('rbac-admin', 'Users'), 'url
 $this->params['breadcrumbs'][] = $this->title;
 
 $controllerId = $this->context->uniqueId . '/';
+function GetUser($id){
+    $User= User::findOne($id);
+    return $User->username;
+}
 ?>
-<div class="user-view">
-<?= $this->renderFile(__DIR__.'/../menu.php',['button'=>'user']); ?>
-<div class="panel panel-default col-xs-12">
-        <div class="panel-heading"><i class="fa fa-user-circle fa-adn"></i> View</div>
-        <div class="panel-body">
-   <p>
-        <?php
-        if ($model->status == 0 && Helper::checkRoute($controllerId . 'activate')) {
-            echo Html::a(Yii::t('rbac-admin', 'Activate'), ['activate', 'id' => $model->id], [
-                'class' => 'btn btn-primary',
-                'data' => [
-                    'confirm' => Yii::t('rbac-admin', 'Are you sure you want to activate this user?'),
-                    'method' => 'post',
+    <div class="user-form">
+        <img border="5" src="<?= Yii::$app->params['uploadUrl'].$profile->getImageUrl() ?>" width="100">
+     <?=
+        DetailView::widget([
+            'model' => $profile,
+            'attributes' => [
+                [
+                    'attribute' => 'user_id',
+                    'label' => 'Username',
+                    'value' => GetUser($model->user_id)
                 ],
-            ]);
-        }else{
-            echo Html::a(Yii::t('rbac-admin', 'Deactivate'), ['deactivate', 'id' => $model->id], [
-                        'class' => 'btn btn-primary',
-                        'data' => [
-                            'confirm' => Yii::t('rbac-admin', 'Are you sure you want to Deactivate this user?'),
-                            'method' => 'post',
-                        ],
-                    ]); 
-                }
-        ?>
-        <?php
-        if (Helper::checkRoute($controllerId . 'delete')) {
-            echo Html::a(Yii::t('rbac-admin', 'Delete'), ['delete', 'id' => $model->id], [
-                'class' => 'btn btn-danger',
-                'data' => [
-                    'confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-                    'method' => 'post',
+                'fullname',
+                [
+                    'attribute' => 'user_id',
+                    'label' => 'Email',
+                    'value' => $model->email
                 ],
-            ]);
-        }
-        echo "&nbsp;".Html::a("Update", Url::to(['user/update','id'=>$model->id]),['class'=>'btn btn-primary']);
-        ?>
-    </p>
-
-    <?=
-    DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'username',
-            'email:email',
-            [
-                'attribute' => 'created_at',
-                'value' => function($model) {
-                    return gmdate("m/d/Y H:i A", $model->created_at); 
-                }, 
+                'designation',
+                'middleinitial',
+                'contact_numbers',
             ],
-            [
-                'attribute' => 'updated_at',
-                'value' => function($model) {
-                    return gmdate("m/d/Y H:i A", $model->updated_at); 
-                }, 
-            ],
-            [
-                'attribute'=>'status',
-                'value'=>$model->status==10 ? 'Active' : 'Inactive'
-            ],
-        ],
-    ])
+        ])
     ?>
-        </div>
-</div>
-
-</div>
+    </div>
+    <div class="form-group" style="float: right">
+        <?= Html::submitButton(Yii::t('rbac-admin', 'Save'), ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+        <?php if(Yii::$app->request->isAjax){ ?>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <?php } ?>
+    </div>

@@ -75,7 +75,11 @@ class RuleController extends Controller
 
             return $this->redirect(['view', 'id' => $model->name]);
         } else {
-            return $this->render('create', ['model' => $model,]);
+            if(Yii::$app->request->isAjax){
+                return $this->renderAjax('create', ['model' => $model,]);
+            }else{
+                return $this->render('create', ['model' => $model,]);
+            }
         }
     }
 

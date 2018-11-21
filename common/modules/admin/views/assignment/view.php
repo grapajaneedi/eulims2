@@ -5,6 +5,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\web\YiiAsset;
+use kartik\detail\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model mdm\admin\models\Assignment */
@@ -31,41 +32,58 @@ $this->registerJs($this->render('_script.js'));
 $animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></i>';
 ?>
 <div class="assignment-index">
+    <?php if(!Yii::$app->request->isAjax){ ?>
     <?= $this->renderFile(__DIR__.'/../menu.php',['button'=>'Assignment']); ?>
-    <div class="panel panel-default col-xs-12">
-        <div class="panel-heading"><i class="fa fa-user-circle fa-adn"></i></div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-5">
-                    <input class="form-control search" data-target="available"
-                           placeholder="<?= Yii::t('rbac-admin', 'Search for available'); ?>">
-                    <select multiple size="20" class="form-control list" data-target="available">
-                    </select>
-                </div>
-                <div class="col-sm-1">
-                    <br><br>
-                    <?=
-                    Html::a('&gt;&gt;' . $animateIcon, ['assign', 'id' => (string) $model->id], [
-                        'class' => 'btn btn-success btn-assign',
-                        'data-target' => 'available',
-                        'title' => Yii::t('rbac-admin', 'Assign'),
-                    ]);
-                    ?><br><br>
-                    <?=
-                    Html::a('&lt;&lt;' . $animateIcon, ['revoke', 'id' => (string) $model->id], [
-                        'class' => 'btn btn-danger btn-assign',
-                        'data-target' => 'assigned',
-                        'title' => Yii::t('rbac-admin', 'Remove'),
-                    ]);
-                    ?>
-                </div>
-                <div class="col-sm-5">
-                    <input class="form-control search" data-target="assigned"
-                           placeholder="<?= Yii::t('rbac-admin', 'Search for assigned'); ?>">
-                    <select multiple size="20" class="form-control list" data-target="assigned">
-                    </select>
-                </div>
-            </div>
+    <?php } ?>
+    <div class="row">
+        <?=
+        DetailView::widget([
+            'model' => $profile,
+            'panel' => [
+                'type' => DetailView::TYPE_PRIMARY,
+                'heading' => '<i class="fa fa-user-circle fa-adn"></i> View Assignment'
+            ],
+            'attributes' => [
+                'firstname',
+                'lastname',
+                'designation'
+            ],
+            'template' => '<tr><th style="width:25%">{label}</th><td>{value}</td></tr>',
+        ]);
+        ?>
+    </div>
+    <div class="row">
+        <div class="col-sm-5">
+            <input class="form-control search" data-target="available"
+                   placeholder="<?= Yii::t('rbac-admin', 'Search for available'); ?>">
+            <select multiple size="20" class="form-control list" data-target="available">
+            </select>
         </div>
+        <div class="col-sm-1">
+            <br><br>
+            <?=
+            Html::a('&gt;&gt;' . $animateIcon, ['assign', 'id' => (string) $model->id], [
+                'class' => 'btn btn-success btn-assign',
+                'data-target' => 'available',
+                'title' => Yii::t('rbac-admin', 'Assign'),
+            ]);
+            ?><br><br>
+            <?=
+            Html::a('&lt;&lt;' . $animateIcon, ['revoke', 'id' => (string) $model->id], [
+                'class' => 'btn btn-danger btn-assign',
+                'data-target' => 'assigned',
+                'title' => Yii::t('rbac-admin', 'Remove'),
+            ]);
+            ?>
+        </div>
+        <div class="col-sm-5">
+            <input class="form-control search" data-target="assigned"
+                   placeholder="<?= Yii::t('rbac-admin', 'Search for assigned'); ?>">
+            <select multiple size="20" class="form-control list" data-target="assigned">
+            </select>
+        </div>
+    </div>
+    <div class="form-group" style="float: right;padding-top: 5px">
+        <button style='margin-left: 5px;' type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
     </div>
 </div>

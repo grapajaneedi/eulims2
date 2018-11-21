@@ -23,7 +23,7 @@ class RoleController extends ItemController
             'Items' => 'Roles',
         ];
     }
-
+    
     /**
      * @inheritdoc
      */

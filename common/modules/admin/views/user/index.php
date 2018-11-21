@@ -12,11 +12,12 @@ use common\components\Functions;
 $this->title = Yii::t('rbac-admin', 'Users');
 $this->params['breadcrumbs'][] = $this->title;
 $func=new Functions();
-$Header="Department of Science and Technology<br>";
-$Header.="User Profile List";
+$Header="Port Management System<br>";
+$Header.="List of Users";
+$dataProvider->pagination->pageSize=8;
 ?>
 <div class="user-index">
-    <?= $this->renderFile(__DIR__ . '/../menu.php', ['button' => 'user']); ?>
+    <?= $this->renderFile(__DIR__.'/../menu.php',['button'=>'user']); ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -26,18 +27,18 @@ $Header.="User Profile List";
         'condensed' => true,
         'responsive' => false,
         'hover' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'heading' => '<i class="fa fa-user-circle fa-adn"></i> User',
+            'before'=>"<button type='button' onclick='ShowModal(\"New User Account\",\"/admin/user/signup\")' class=\"btn btn-success\"><i class=\"fa fa-book-o\"></i> New User Account</button>",
+        ],
         'pjax' => true, // pjax is set to always true for this demo
         'pjaxSettings' => [
             'options' => [
                     'enablePushState' => false,
               ],
         ],
-        'panel' => [
-            'type' => GridView::TYPE_PRIMARY,
-            'heading' => '<span class="fa fa-users"></span>  ' . Html::encode($this->title),
-            'before'=>Html::a(Yii::t('rbac-admin', 'Signup New User'), ['signup'], ['class' => 'btn btn-success',])
-        ],
-        'exportConfig'=>$func->exportConfig("Laboratory Request", "laboratory request", $Header),
+        'exportConfig'=>$func->exportConfig("List of Users", "Users", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'username',
@@ -54,37 +55,42 @@ $Header.="User Profile List";
                 ]
             ],
             [
-                'class' => 'kartik\grid\ActionColumn',
-                'template' =>"{view}{update}{delete}", //Helper::filterActionColumn(['view', 'activate', 'delete','update']),
-                'buttons'=>[
+                'class' => kartik\grid\ActionColumn::className(),
+                'template' => Helper::filterActionColumn(['view','update', 'activate']),
+                'buttons' => [
                     'view'=>function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/admin/user/view?id='.$model->user_id, 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Profile")]);
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/admin/user/view?id='.$model->user_id, 'onclick'=>'ShowModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View User</font>")]);
                     },
                     'update'=>function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/admin/user/update?id='.$model->user_id,'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Profile")]);
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/admin/user/update?id='.$model->user_id, 'onclick'=>'ShowModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update User")]);
                     },
-                    'delete'=>function($url, $model){
-                        if($model->status ==0){
-                           $msg="Activate";
+                    'activate' => function($url, $model) {
+                        if ($model->status == 10) {//Activated already
+                            $options = [
+                                'title' => Yii::t('rbac-admin', 'Deactivate'),
+                                'aria-label' => Yii::t('rbac-admin', 'Deactivate'),
+                                'data-confirm' => Yii::t('rbac-admin', 'Are you sure you want to deactivate this user?'),
+                                'data-method' => 'post',
+                                'data-pjax' => '0',
+                                'class'=>'btn btn-danger'
+                            ];
+                            $mUrl="/admin/user/deactivate?id=$model->user_id";
+                            return Html::a('<span class="glyphicon glyphicon-remove-circle"></span>', $mUrl, $options);
                         }else{
-                           $msg="Deactivate";
+                            $options = [
+                                'title' => Yii::t('rbac-admin', 'Activate'),
+                                'aria-label' => Yii::t('rbac-admin', 'Activate'),
+                                'data-confirm' => Yii::t('rbac-admin', 'Are you sure you want to activate this user?'),
+                                'data-method' => 'post',
+                                'data-pjax' => '0',
+                                'class'=>'btn btn-info'
+                            ];
+                            return Html::a('<span class="glyphicon glyphicon-ok"></span>', $url, $options);
                         }
-                        return Html::a("<span class='glyphicon glyphicon-trash'></span>", "/admin/user/deactivate?id=".$model->user_id, [
-                            "title"=>"Deactivate", 
-                            "aria-label"=>"Delete",
-                            "data-pjax"=>"0", 
-                            "data-method"=>"post", 
-                            "data-confirm"=>"Are you sure you want to $msg this account?",
-                            "class"=>"btn btn-danger"
-                        ]);
                     }
-                ],
-            ],
-                
-        ],
+                ]
+            ]
+        ]
     ]);
         ?>
-    <p>
-        <?= Html::a(Yii::t('rbac-admin', 'Back to Dashboard'), ['../site/login'], ['class' => 'btn btn-success',]) ?>
-    </p>
 </div>

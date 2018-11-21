@@ -9,17 +9,18 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="user-form">
-    <div class="panel panel-default col-xs-10">
-        <div class="panel-heading"><i class="fa fa-user-circle fa-adn"></i> Update User</div>
-        <div class="panel-body">
-            <?php $form = ActiveForm::begin(); ?>
-            <?= $form->field($model, 'username') ?>
-            <?= $form->field($model, 'email') ?>
-            <?= $form->field($model, 'password_hash')->passwordInput() ?>
-            <div class="form-group">
-                <?= Html::submitButton($model->isNewRecord ? Yii::t('rbac-admin', 'Create') : Yii::t('rbac-admin', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-            </div>
-            <?php ActiveForm::end(); ?>
-        </div>
+    <?php $form = ActiveForm::begin(); ?>
+    <?= $form->field($model, 'username') ?>
+    <?= $form->field($model, 'email') ?>
+    <?= $form->field($model, 'password_hash')->passwordInput() ?>
+    <div class="form-group">
+        
     </div>
+    <div class="form-group" style="float: right">
+        <?php
+        echo Html::submitButton($model->isNewRecord ? Yii::t('rbac-admin', 'Create') : Yii::t('rbac-admin', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) 
+        ?>
+        <button style='margin-left: 5px;' type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+    </div>
+    <?php ActiveForm::end(); ?>
 </div>

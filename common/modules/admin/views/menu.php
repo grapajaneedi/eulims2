@@ -1,6 +1,5 @@
 <?php
 use yii\helpers\Url;
-use yii\widgets\Pjax;
 /* 
  * Project Name: eulims * 
  * Copyright(C)2017 Department of Science & Technology -IX * 
@@ -75,7 +74,6 @@ switch($button){
         break;
 }
 ?>
-<?php if(!Yii::$app->request->isAjax){ ?>
 <div class="row div-hr" style="padding-left: 1px">
     <div class="col-lg-12">
         <?php if(Yii::$app->user->can('access-user')){ ?>
@@ -96,10 +94,9 @@ switch($button){
         <?php if(Yii::$app->user->can('access-menu')){ ?>
         <a href="<?= Url::toRoute('/admin/menu') ?>" class="btn btn-primary <?= $menu ?>"></i>Menu</a>
         <?php } ?>
-        <?php if(Yii::$app->user->can('access-ru;e')){ ?>
+        <?php if(Yii::$app->user->can('access-rule')){ ?>
         <a href="<?= Url::toRoute('/admin/rule') ?>" class="btn btn-primary <?= $rule ?>"></i>Rule</a>
         <?php } ?>
     </div>
     <hr style="padding-bottom: 0px">
 </div>
-<?php } ?>
