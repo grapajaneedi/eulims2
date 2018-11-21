@@ -96,7 +96,9 @@ class ProductsController extends Controller
                 $model->Image2='uploads/products/'.$filename2.'.'.$model->Image2->extension;
             }
             $model->save();
-            return $this->redirect(['view', 'id' => $model->product_id]);
+            
+            Yii::$app->session->setFlash('success', 'Product Successfully Added!');
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
@@ -114,10 +116,12 @@ class ProductsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->saveAll()) {
-            return $this->redirect(['view', 'id' => $model->product_id]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+           // return $this->redirect(['view', 'id' => $model->product_id]);
+            Yii::$app->session->setFlash('success', 'Product Successfully Updated!');
+            return $this->redirect(['index']);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
             ]);
         }

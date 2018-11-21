@@ -1,9 +1,9 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+use kartik\detail\DetailView;
 use kartik\grid\GridView;
-
+use yii\web\View;
 /* @var $this yii\web\View */
 /* @var $model common\models\inventory\Products */
 
@@ -11,35 +11,99 @@ use kartik\grid\GridView;
 <div class="products-view">
 
     <div class="row">
-        <div class="col-sm-9">
-            <h2><?= Html::encode($model->product_id) ?></h2>
-        </div>
-    </div>
+         <?= DetailView::widget([
+            'model'=>$model,
+            'responsive'=>true,
+            'hover'=>true,
+            'mode'=>DetailView::MODE_VIEW,
+            'panel'=>[
+                'heading'=>'<i class="glyphicon glyphicon-book"></i> Product Details',
+                'type'=>DetailView::TYPE_PRIMARY,
+            ],
+            'buttons1' => '',
+            'attributes' => [
+              
+                [
+                    'columns' => [
+                        [
+                            'label'=>'Product Code',
+                            'format'=>'raw',
+                            'value'=>$model->product_code,
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                        [
+                            'label'=>'Product Name',
+                            'format'=>'raw',
+                            'value'=>$model->product_name,
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                    ],
 
-    <div class="row">
-<?php 
-    $gridColumn = [
-        'product_id',
-        'product_code',
-        'product_name',
-        'description:ntext',
-        'price',
-        'srp',
-        [
-            'attribute' => 'categorytype.categorytype_id',
-            'label' => 'Category Type',
-        ],
-        'qty_reorder',
-        'qty_onhand',
-        'qty_min_reorder',
-        'qty_per_unit',
-        'discontinued',
-        'suppliers_ids:ntext',
-    ];
-    echo DetailView::widget([
-        'model' => $model,
-        'attributes' => $gridColumn
-    ]); 
-?>
+                ],
+                [
+                    'columns' => [
+                        [
+                            'label'=>'Category Type',
+                            'format'=>'raw',
+                            'value'=>$model->categorytype ? $model->categorytype->categorytype : "",
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+                        [
+                            'label'=>'Description',
+                            'format'=>'raw',
+                            'value'=>$model->description,
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true
+                        ],
+
+                    ],
+
+                ],
+               [
+                  'columns' => [
+                      [
+                            'label'=>'Srp',
+                            'format'=>'raw',
+                            'value'=>$model->srp,
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true,
+                            'hAlign'=>'left',
+                      ],
+                      [
+
+                        'label'=>'Price',
+                        'format'=>'raw',
+                        'value'=>$model->price,
+                        'valueColOptions'=>['style'=>'width:30%'], 
+                        'displayOnly'=>true
+                      ],
+                  ],
+               ],
+               [
+                  'columns' => [
+                      [
+                            'label'=>'Qty On-hand',
+                            'format'=>'raw',
+                            'value'=>$model->qty_onhand,
+                            'valueColOptions'=>['style'=>'width:30%'], 
+                            'displayOnly'=>true,
+                            'hAlign'=>'left',
+                      ],
+                      [
+
+                        'label'=>'Qty Reorder',
+                        'format'=>'raw',
+                        'value'=>$model->qty_reorder,
+                        'valueColOptions'=>['style'=>'width:30%'], 
+                        'displayOnly'=>true
+                      ],
+                  ],
+               ],
+              
+            ],
+        ]) ?>
     </div>
 </div>

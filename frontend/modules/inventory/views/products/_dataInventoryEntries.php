@@ -7,25 +7,43 @@ use yii\data\ArrayDataProvider;
         'key' => 'inventory_transactions_id'
     ]);
     $gridColumns = [
-        ['class' => 'yii\grid\SerialColumn'],
-        'inventory_transactions_id',
+        ['class' => 'kartik\grid\SerialColumn'],
+        
+        
         [
-                'attribute' => 'transactionType.transactiontype_id',
-                'label' => 'Transaction Type'
-            ],
-        'rstl_id',
-        [
-                'attribute' => 'suppliers.suppliers_id',
-                'label' => 'Suppliers'
-            ],
-        'po_number',
-        'quantity',
-        'amount',
-        'total_amount',
-        [
-            'class' => 'yii\grid\ActionColumn',
-            'controller' => 'inventory-entries'
+                'attribute' => 'suppliers_id',
+                'label' => 'Supplier',
+                'value' => function($model){                   
+                    return $model->suppliers->suppliers;                
+                },
         ],
+        [
+                'attribute' => 'created_at',
+                'label' => 'Transaction Date',
+                'value' => function($model){                   
+                    return date('Y-m-d', ($model->created_at));                
+                },
+        ],               
+         [
+             'attribute' => 'po_number',  
+             'pageSummary' => '<span style="float:right;">Total:</span>',
+         ],
+         [
+           'attribute' => 'quantity',   
+           'format' => ['decimal', 2],
+            'pageSummary' => true  
+         ],
+         [
+           'attribute' => 'amount',   
+           'format' => ['decimal', 2],
+            'pageSummary' => true  
+         ],
+         [
+           'attribute' => 'total_amount',   
+           'format' => ['decimal', 2],
+            'pageSummary' => true  
+         ],
+        
     ];
     
     echo GridView::widget([
@@ -46,6 +64,6 @@ use yii\data\ArrayDataProvider;
         'condensed' => true,
         'responsive' => true,
         'hover' => true,
-        'showPageSummary' => false,
+        'showPageSummary' => true,
         'persistResize' => false,
     ]);
