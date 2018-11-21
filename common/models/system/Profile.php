@@ -122,9 +122,6 @@ class Profile extends \yii\db\ActiveRecord
 
       return $return_json;
     }
-    public function getFullname(){
-        return $this->firstname. ' ' . $this->lastname;
-    }
     /**
      * @return \yii\db\ActiveQuery
      */
