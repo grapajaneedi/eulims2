@@ -7,19 +7,25 @@ use yii\data\ArrayDataProvider;
         'key' => 'inventory_withdrawaldetails_id'
     ]);
     $gridColumns = [
-        ['class' => 'yii\grid\SerialColumn'],
-        'inventory_withdrawaldetails_id',
+        ['class' => 'kartik\grid\SerialColumn'],
         [
-                'attribute' => 'inventoryWithdrawal.inventory_withdrawal_id',
-                'label' => 'Inventory Withdrawal'
-            ],
-        'quantity',
-        'price',
-        'withdarawal_status_id',
-        [
-            'class' => 'yii\grid\ActionColumn',
-            'controller' => 'inventory-withdrawaldetails'
+            'attribute' => 'inventory_withdrawal_id',
+            'label' => 'Transaction Date',
+            'value' => function($model){                   
+                return $model->inventoryWithdrawal->withdrawal_datetime;                
+            },
         ],
+        [
+           'attribute' => 'quantity',   
+           'format' => ['decimal', 2],
+            'pageSummary' => true  
+        ],
+        [
+           'attribute' => 'price',   
+           'format' => ['decimal', 2],
+            'pageSummary' => true  
+        ],
+        
     ];
     
     echo GridView::widget([
@@ -40,6 +46,6 @@ use yii\data\ArrayDataProvider;
         'condensed' => true,
         'responsive' => true,
         'hover' => true,
-        'showPageSummary' => false,
+        'showPageSummary' => true,
         'persistResize' => false,
     ]);

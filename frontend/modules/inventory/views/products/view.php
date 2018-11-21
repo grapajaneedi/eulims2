@@ -76,11 +76,7 @@ if($providerInventoryEntries->totalCount){
                 'label' => 'Transaction Type',
                 'value'=>'transactionType.transactiontype'
             ],
-            [
-                'attribute' => 'rstl.rstl_id',
-                'label' => 'RSTL',
-                'value'=>'rstl.name'
-            ],
+           
             [
                 'attribute' => 'suppliers.suppliers_id',
                 'label' => 'Suppliers',

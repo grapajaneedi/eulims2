@@ -6,6 +6,7 @@ use common\components\Functions;
 
 use kartik\date\DatePicker;
 use kartik\money\MaskMoney;
+use kartik\number\NumberControl;
 /* @var $this yii\web\View */
 /* @var $model common\models\inventory\InventoryEntries */
 /* @var $form yii\widgets\ActiveForm */
@@ -75,10 +76,33 @@ use kartik\money\MaskMoney;
                 echo $func->GetSupplierList($form,$model,false,"Supplier");
             ?> 
             
-            <?= $form->field($model, 'quantity')->textInput(['type'=>'number']) ?>
+            <?= $form->field($model, 'quantity')->textInput(['type'=>'number','onchange'=>'getTotal();']) ?>
 
             <?php
-              echo $form->field($model, 'amount')->widget(MaskMoney::classname(), [
+              echo $form->field($model, 'amount')->widget(NumberControl::classname(), [
+                   'options'=>[
+                       'style'=>'text-align: right'
+                   ],
+                   'maskedInputOptions' => [
+                      'prefix' => '₱ ',
+                      'allowNegative' => false,
+                   ], 
+                  'pluginEvents'=>[
+                        'change'=>"function(){
+                        getTotal();
+                        }"
+                   ],
+                  ])->label('Amount');
+             ?>
+
+        </div>
+       
+    </div>
+    <div class="row">
+         <div class="col-md-6">
+         <?php
+              echo $form->field($model, 'total_amount')->widget(MaskMoney::classname(), [
+                  'readonly'=>true,
                    'options'=>[
                        'style'=>'text-align: right'
                    ],
@@ -86,12 +110,11 @@ use kartik\money\MaskMoney;
                       'prefix' => '₱ ',
                       'allowNegative' => false,
                    ]
-                  ])->label('Amount');
+                 
+                  ])->label('Total Amount');
              ?>
-
-        </div>
+         </div>
     </div>
-
     
     
    <div class="form-group pull-right">
@@ -103,3 +126,15 @@ use kartik\money\MaskMoney;
     <?php ActiveForm::end(); ?>
 
 </div>
+    <script type="text/javascript">
+        function getTotal(){
+             qty= $('#inventoryentries-quantity').val();
+             amount=$('#inventoryentries-amount').val();
+             
+             total= qty * amount;
+            
+            $("#inventoryentries-total_amount-disp").val(total);
+            $("#inventoryentries-total_amount").val(total);
+            $("#inventoryentries-total_amount-disp").maskMoney('mask', total);
+        }
+    </script>

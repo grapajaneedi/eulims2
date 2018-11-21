@@ -29,6 +29,8 @@ Modal::begin([
     'id' => 'modalHeader',
     'header' => '<h4 class="modal-title">Details</h4>',
 ]);
+
+$Button="{update}{delete}";
 //$modalContent=$this->render('_form',['model'=>$searchModel]);
 Modal::end();
 ?>
@@ -85,6 +87,14 @@ Modal::end();
         ],
         [
             'class' => 'kartik\grid\ActionColumn',
+            'template' => $Button,
+            'buttons' => [
+                'update' => function ($url, $model) {
+                     return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/inventory/products/update?id=' . $model->product_id, 'class' => 'btn btn-success','title' => Yii::t('app', "Update Product"),'id'=>'btnProd','onclick'=>'addProduct(this.value,this.title)']);
+                     
+                },
+            ],
+            
         ],
     ]; 
     ?>
