@@ -781,4 +781,13 @@ return array (
       '@wbraganca/dynamicform' => $vendorDir . '/wbraganca/yii2-dynamicform',
     ),
   ),
+  'kartik-v/yii2-number' => 
+  array (
+    'name' => 'kartik-v/yii2-number',
+    'version' => '1.0.4',
+    'alias' => 
+    array (
+      '@kartik/number' => $vendorDir . '/kartik-v/yii2-number/src',
+    ),
+  ),
 );
