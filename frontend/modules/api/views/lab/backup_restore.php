@@ -184,13 +184,14 @@ $this->params['breadcrumbs'][] = $this->title;
         $.ajax({
             url: "/api/lab/res",
             method: "POST",
+            dataType: 'json',
             data: {month:m, year:y},
             beforeSend: function(xhr) {
                 $('.image-loader').addClass("img-loader");
                }
             })
             .done(function( data ) {
-                alert('boom')
+                alert(data.message);
                 $("#testname-grid").yiiGridView("applyFilter"); 
 
                 $('.image-loader').removeClass("img-loader");
