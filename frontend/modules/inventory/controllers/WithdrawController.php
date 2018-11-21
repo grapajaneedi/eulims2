@@ -5,6 +5,7 @@ namespace frontend\modules\inventory\controllers;
 use Yii;
 use common\models\inventory\InventoryWithdrawal;
 use common\models\inventory\InventoryWithdrawalSearch;
+use common\models\inventory\InventoryEntries;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -132,28 +133,40 @@ class WithdrawController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' =>Products::find(),
             'pagination' => [
-                'pageSize' => 10,
+                'pageSize' => 3,
             ],
         ]);
 
         if($varsearch){
-              // $inventory=InventoryEntries::find('product')->where('like','product_name',$_GET['varsearch']);
-              
-              // var_dump($product); exit;
+             $dataProvider = new ActiveDataProvider([
+            'query' =>Products::find()->where(['like', 'product_name', $varsearch]),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+             ]);
+
         }
 
           return $this->render('withdraw',['dataProvider'=>$dataProvider,'searchkey'=>$varsearch]);
     }
 
-    public function actionIncart(){
+    public function actionIncart($id){
+        $product = Products::findOne($id);
+        $entries = InventoryEntries::find()->with('suppliers')->where(['product_id'=>$id]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $entries,
+        ]);
+
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('cartin', [
-                
+                'dataProvider'=>$dataProvider,
+                'product'=>$product
             ]);
         }
         else {
             return $this->render('cartin', [
-               
+               'dataProvider'=>$dataProvider,
+               'product'=>$product
             ]);
         }
     }
