@@ -200,8 +200,7 @@ class InventoryentriesController extends Controller
         }
         return $out;
     }
-
-     public function actionWithdraw($varsearch=""){
+    public function actionWithdraw($varsearch=""){
         // $product=Products::find()->limit(20)->all();
         $dataProvider = new ActiveDataProvider([
             'query' =>Products::find(),
@@ -237,5 +236,4 @@ class InventoryentriesController extends Controller
         ->update('tbl_products', ['qty_onhand' => $qty], 'product_id= '.$id)
         ->execute(); 
     }
-
 }
