@@ -84,13 +84,17 @@ Modal::end();
             }
         ],
         [
-            'class' => 'yii\grid\ActionColumn',
+            'class' => 'kartik\grid\ActionColumn',
         ],
     ]; 
     ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'bordered' =>true,
+        'striped'=>true,
+        'condensed'=>false,
+        'responsive'=>true,
         'columns' => $gridColumn,
         'pjax' => true,
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],

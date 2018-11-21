@@ -37,9 +37,17 @@ class LabController extends Controller
          ]);
      }
      public function actionRes(){	
+
+        
+     
+        
+      
+
 		$searchModel = new BackuprestoreSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		$model = new Backuprestore();
+        $model = new Backuprestore();
+        
+       
 		 
         $month = $_POST['month'];
         $year =  $_POST['year'];
@@ -69,6 +77,16 @@ class LabController extends Controller
         }elseif ($month=="December"){
             $month_value = "12";
         }
+        $br = Backuprestore::find()->where([ 'monthyear'=> $month_value.$year])->one();
+
+       if ($br) {
+            $message = "The month you have selected has been succesfully restored.";
+            return Json::encode([
+                'message'=>$message,
+            
+            ]);
+            exit;
+            }
 
         $start = $year."-".$month_value;
         $end = $year."-".$month_value;
@@ -228,15 +246,23 @@ class LabController extends Controller
 				$model->date = date('Y-M-d');
 				$model->data = count($data)."/".$request_count;
 				$model->status = "COMPLETED";
-				$model->month = $sample_count."/".$samplenum;
+                $model->month = $sample_count."/".$samplenum;
+                $model->monthyear = $month_value.$year;
 			
                 $model->year = $analysis_count."/".$analysesnum;
                 Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
 				$model->save(false);
 		
 		} catch (\Exception $e) {
-            Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
+           
           
+            $message = "There was a problem connecting to the server. Please try again.";
+            return Json::encode([
+                'message'=>$message,
+            
+            ]);
+            exit;
+
             $transaction->rollBack();
            return $this->renderAjax('/lab/backup_restore', [
             'model'=>$model,
@@ -244,15 +270,26 @@ class LabController extends Controller
             'dataProvider' => $dataProvider,
         ]);
 		} catch (\Throwable $e) {
-            Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
-          
+            $message = "There was a problem connecting to the server. Please try again.";
+            return Json::encode([
+                'message'=>$message,
+            
+            ]);
+            exit;
             $transaction->rollBack();
            return $this->renderAjax('/lab/backup_restore', [
             'model'=>$model,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
-		}
+        }
+        
+        $message = "Data has been successfully restored.";
+        return Json::encode([
+            'message'=>$message,
+        
+        ]);
+        exit;
               return $this->renderAjax('/lab/backup_restore', [
                  'model'=>$model,
                  'searchModel' => $searchModel,

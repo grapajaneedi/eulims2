@@ -435,7 +435,7 @@ class ServicesController extends Controller
                   }else{
                     $methodreference = new Methodreference();
                     $methodreference->method_reference_id = $var['method_reference_id'];  
-                    $methodreference->testname_id = $var['testname_id'];
+                    $methodreference->testname_id = $methodreferenceid;
                     $methodreference->method = $var['method'];
                     $methodreference->reference = $var['reference'];
                     $methodreference->fee = $var['fee'];

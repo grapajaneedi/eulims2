@@ -34,6 +34,8 @@ use Yii;
  */
 class Products extends \yii\db\ActiveRecord
 {
+ 
+
     /**
      * {@inheritdoc}
      */
@@ -56,10 +58,11 @@ class Products extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['product_name', 'categorytype_id', 'qty_reorder', 'qty_onhand', 'qty_min_reorder', 'qty_per_unit', 'created_by'], 'required'],
+            [['product_name', 'categorytype_id', 'qty_reorder', 'qty_onhand', 'qty_min_reorder', 'qty_per_unit', 'created_by','srp','price'], 'required'],
             [['producttype_id', 'categorytype_id', 'qty_reorder', 'qty_onhand', 'qty_min_reorder', 'discontinued', 'created_by', 'created_at', 'updated_at'], 'integer'],
-            [['description', 'suppliers_ids'], 'string'],
+            [['description'], 'string'],
             [['price', 'srp'], 'number'],
+            [['suppliers_ids'], 'safe'],
             [['product_code', 'Image1', 'Image2'], 'string', 'max' => 100],
             [['product_name', 'qty_per_unit'], 'string', 'max' => 50],
             [['categorytype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categorytype::className(), 'targetAttribute' => ['categorytype_id' => 'categorytype_id']],
@@ -76,8 +79,8 @@ class Products extends \yii\db\ActiveRecord
             'product_id' => 'Product ID',
             'product_code' => 'Product Code',
             'product_name' => 'Product Name',
-            'producttype_id' => 'Producttype ID',
-            'categorytype_id' => 'Categorytype ID',
+            'producttype_id' => 'Product Type',
+            'categorytype_id' => 'Category Type',
             'description' => 'Description',
             'price' => 'Price',
             'srp' => 'Srp',

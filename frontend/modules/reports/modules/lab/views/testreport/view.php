@@ -32,11 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]]);
              }
 
-
-
-            
-
-
             //checks if the testreport is from a batch generated reports
             $chkbatch = Batchtestreport::find()->where(['request_id'=>$model->request_id])->one();
             if($chkbatch){

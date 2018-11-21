@@ -77,20 +77,24 @@ class ProductsController extends Controller
 
         $user_id=Yii::$app->user->identity->profile->user_id;
         $model->created_by=$user_id;
+        $model->qty_onhand=0;
         if ($model->load(Yii::$app->request->post())) {
             $ids= implode(',',$model->suppliers_ids);
             $model->suppliers_ids=$ids;
             $filename=$model->product_name;
             $filename2=$model->product_name."2";
-            
-            $model->Image1 = UploadedFile::getInstance($model,'Image1');
-            $model->Image1->saveAs('uploads/products/'.$filename.'.'.$model->Image1->extension);
-            $model->Image1='uploads/products/'.$filename.'.'.$model->Image1->extension;
-            
-            $model->Image2 = UploadedFile::getInstance($model,'Image2');
-            $model->Image2->saveAs('uploads/products/'.$filename2.'.'.$model->Image2->extension);
-            $model->Image2='uploads/products/'.$filename2.'.'.$model->Image2->extension;
-            
+            if(!empty($model->Image1))
+            {
+                $model->Image1 = UploadedFile::getInstance($model,'Image1');
+                $model->Image1->saveAs('uploads/products/'.$filename.'.'.$model->Image1->extension);
+                $model->Image1='uploads/products/'.$filename.'.'.$model->Image1->extension;
+            }
+            if(!empty($model->Image2))
+            {
+                $model->Image2 = UploadedFile::getInstance($model,'Image2');
+                $model->Image2->saveAs('uploads/products/'.$filename2.'.'.$model->Image2->extension);
+                $model->Image2='uploads/products/'.$filename2.'.'.$model->Image2->extension;
+            }
             $model->save();
             return $this->redirect(['view', 'id' => $model->product_id]);
         } else {
