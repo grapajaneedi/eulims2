@@ -47,10 +47,8 @@ class Signup extends Model
             [['rstl_id','lab_id'], 'integer'],
             
             [['password','verifypassword'], 'required'],
-            //['cpassword', 'required'],
             [['password', 'verifypassword'], 'string', 'min' => 6],
-            ['password', 'compare','message'=>'Password is not verified!', 'compareAttribute'=>'verifypassword'],
-            ['verifypassword', 'compare','message'=>'Password is not verified!', 'compareAttribute'=>'password'],
+            ['verifypassword', 'compare','message'=>'Password is not verified!', 'compareAttribute'=>'password'],  
         ];
     }
     /**
