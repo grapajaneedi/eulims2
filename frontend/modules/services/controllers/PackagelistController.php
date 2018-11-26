@@ -160,6 +160,14 @@ class PackagelistController extends Controller
                     $test_ids = explode(',', $test);  
 
                  foreach ($ids as $sample_id){
+                    
+                    $p = $post['Packagelist']['name'];
+                    $r = str_replace("," , "", $post['Packagelist']['rate']);
+                     $Connection= Yii::$app->labdb;
+                     $sql="UPDATE `tbl_sample` SET `package_id`=$p, `package_rate`='$r' WHERE `sample_id`=".$sample_ids;
+                     $Command=$Connection->createCommand($sql);
+                     $Command->execute();
+
                      $analysis = new Analysis();
                      $modelpackage =  Package::findOne(['id'=>$post['Packagelist']['name']]);
                      $analysis->sample_id = $sample_id;
@@ -167,11 +175,11 @@ class PackagelistController extends Controller
                      $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
                      $analysis->request_id = $request_id;
                      $analysis->rstl_id = $GLOBALS['rstl_id'];
-                     $analysis->test_id = 1;
+                     $analysis->test_id = 0;
                      $analysis->user_id = 1;
                      $analysis->type_fee_id = 2;
                      $analysis->sample_type_id = (int) $post['Packagelist']['sample_type_id'];
-                     $analysis->testcategory_id = 1;
+                     $analysis->testcategory_id = 0;
                      $analysis->is_package = 1;
                      $analysis->method = "-";
                      $analysis->fee = $post['Packagelist']['rate'];
