@@ -56,7 +56,7 @@ $func=new Functions();
             [
                 'attribute' => 'sampletype_id',
                 'format' => 'raw',
-                'value' => function($data){ return $data->sampletype->type;},
+                'value' => function($data){ return !empty($data->sampletype->type) ? $data->sampletype->type : "No record!";},
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => $sampletypes,
                 'filterWidgetOptions' => [
