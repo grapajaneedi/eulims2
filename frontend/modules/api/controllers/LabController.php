@@ -37,18 +37,10 @@ class LabController extends Controller
          ]);
      }
      public function actionRes(){	
-
-        
-     
-        
-      
-
 		$searchModel = new BackuprestoreSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $model = new Backuprestore();
-        
-       
-		 
+        	 
         $month = $_POST['month'];
         $year =  $_POST['year'];
             
@@ -124,7 +116,9 @@ class LabController extends Controller
          //Yii::$app->labdb->createCommand('set foreign_key_checks=0')->execute();
 			$transaction = $connection->beginTransaction();
 			$connection->createCommand('set foreign_key_checks=0')->execute();
-			
+            
+        //ADD CODE FOR CUSTOMERS HERE
+        
 		try {
           foreach ($data as $request)
           {    

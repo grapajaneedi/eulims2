@@ -162,7 +162,6 @@ class PackagelistController extends Controller
                  foreach ($ids as $sample_id){
                      $analysis = new Analysis();
                      $modelpackage =  Package::findOne(['id'=>$post['Packagelist']['name']]);
-
                      $analysis->sample_id = $sample_id;
                      $analysis->cancelled = 0;
                      $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
@@ -186,7 +185,7 @@ class PackagelistController extends Controller
                      foreach ($test_ids as $id){
                         $analysis = new Analysis();
                         $modeltest=  Testname::findOne(['testname_id'=>$id]);
-                       $modelmethod=  Methodreference::findOne(['testname_id'=>$id]);
+                        $modelmethod=  Methodreference::findOne(['testname_id'=>$id]);
 
                         $analysis->sample_id = $sample_id;
                         $analysis->cancelled = 0;

@@ -14,11 +14,26 @@ use common\models\lab\Analysis;
 use yii\data\ActiveDataProvider;
 use common\models\lab\Batchtestreport;
 use yii\bootstrap\Modal;
+use common\models\lab\Lab;
+use common\models\lab\Sampletype;
+use common\models\lab\Sample;
+use kartik\widgets\Select2;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\TaggingSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+$lablist= ArrayHelper::map(Sample::find()->all(),'sample_id','sample_code');
+$sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','type');
+
+// echo '<label class="control-label">Search or Scan Sample Code...</label>';
+// echo Select2::widget([
+//     'name' => 'state_10',
+//     'data' => $lablist,
+//     'options' => [
+//         'placeholder' => 'Select sample code ...',
+//     ],
+// ]);
 
 $this->title = 'Tagging';
 $this->params['breadcrumbs'][] = ['label' => 'Tagging', 'url' => ['/lab']];
