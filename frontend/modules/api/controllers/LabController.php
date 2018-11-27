@@ -298,18 +298,18 @@ class LabController extends Controller
      public function actionResyear(){	
 
     
-        for ($i = 1; $i < 11; $i++) {
-                $message = $i;
+        // for ($i = 1; $i < 11; $i++) {
+        //         $message = $i;
 
-                return Json::encode([
-                    'message'=>$message,
+        //         return Json::encode([
+        //             'message'=>$message,
                 
-                ]);
-        } 
+        //         ]);
+        // } 
 
        
 
-        exit;
+        // exit;
 
 		$searchModel = new BackuprestoreSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);

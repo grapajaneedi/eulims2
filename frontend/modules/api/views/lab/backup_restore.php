@@ -194,34 +194,26 @@ $this->params['breadcrumbs'][] = $this->title;
             });
         }
 
-      
-
         function restorebyyear(){
 
         var m = $('#month option:selected').text();
         var y = $('#year option:selected').text();
-
-        var i;
-        for (i = 1; i <= 12; i++) {
-            $.ajax({
+        
+        $.ajax({
             url: "/api/lab/resyear",
             method: "POST",
             dataType: 'json',
             data: {month:m, year:y},
             beforeSend: function(xhr) {
-               // $('.image-loader').addClass("img-loader");
+                $('.image-loader').addClass("img-loader");
                }
             })
             .done(function( data ) {
-                alert(i);
-                // alert(data.message);
-                // $("#testname-grid").yiiGridView("applyFilter"); 
+                alert(data.message);
+                $("#testname-grid").yiiGridView("applyFilter"); 
 
-                // $('.image-loader').removeClass("img-loader");
+                $('.image-loader').removeClass("img-loader");
             });
-        }
-        
-       
         }
 </script>
 
