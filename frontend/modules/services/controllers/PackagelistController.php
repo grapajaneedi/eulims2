@@ -134,14 +134,13 @@ class PackagelistController extends Controller
             $sample_ids= $_POST['sample_ids'];
             $ids = explode(',', $sample_ids);  
             $post= Yii::$app->request->post();       
-   }
+            }
             $samplesQuery = Sample::find()->where(['request_id' => $id]);
             $sampleDataProvider = new ActiveDataProvider([
                     'query' => $samplesQuery,
                     'pagination' => [
                         'pageSize' => false,
-                               ],  
-                 
+                               ],             
             ]);
 
             $request = $this->findRequest($request_id);
@@ -159,10 +158,11 @@ class PackagelistController extends Controller
                     $test= $_POST['package_ids'];
                     $test_ids = explode(',', $test);  
 
-                 foreach ($ids as $sample_id){
-                    
-                    $p = $post['Packagelist']['name'];
-                    $r = str_replace("," , "", $post['Packagelist']['rate']);
+                 foreach ($ids as $sample_id){  
+
+                     $p = $post['Packagelist']['name'];
+                     $r = str_replace("," , "", $post['Packagelist']['rate']);
+
                      $Connection= Yii::$app->labdb;
                      $sql="UPDATE `tbl_sample` SET `package_id`=$p, `package_rate`='$r' WHERE `sample_id`=".$sample_ids;
                      $Command=$Connection->createCommand($sql);
@@ -170,10 +170,11 @@ class PackagelistController extends Controller
 
                      $analysis = new Analysis();
                      $modelpackage =  Package::findOne(['id'=>$post['Packagelist']['name']]);
-                     $analysis->sample_id = $sample_id;
+
+                     $analysis->sample_id = 3403;
                      $analysis->cancelled = 0;
                      $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
-                     $analysis->request_id = $request_id;
+                     $analysis->request_id = 1575;
                      $analysis->rstl_id = $GLOBALS['rstl_id'];
                      $analysis->test_id = 0;
                      $analysis->user_id = 1;
@@ -182,7 +183,7 @@ class PackagelistController extends Controller
                      $analysis->testcategory_id = 0;
                      $analysis->is_package = 1;
                      $analysis->method = "-";
-                     $analysis->fee = $post['Packagelist']['rate'];
+                     $analysis->fee = $r;
                      $analysis->testname = $modelpackage->name;
                      $analysis->references = "-";
                      $analysis->quantity = 1;
