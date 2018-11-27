@@ -5,14 +5,14 @@ $columns =2;
 ?>
 <div class="container" >
 <div class="row">
-	<div class="col-md-9">
+	<div class="col-md-7" >
 		<!-- <i>Press Enter to Find</i> -->
 		<div id="srcbox">
 			<div class="search-wrapper">
 			    <div class="input-holder">
 			    	<form>
 			        <input id="searchbox" type="text" class="search-input" placeholder="Type to search then press 'Enter' to Find" name="varsearch" />
-			        <!-- <button idd="btnsub" class="search-icon" onclick="searchToggle(this, event);" href><span></span></button> -->
+			        <!-- <button idd="btnsub" class="search-icon" onclick="searchToggle(this, event);" href><div></div></button> -->
 			        <?php
 			        echo Html::button("<span></span>",
 	                    [
@@ -25,7 +25,7 @@ $columns =2;
 			       
 			        </form>
 			    </div>
-			    <span  id='btnx' class="close" onclick="searchToggle(this, event);"></span>
+			    <div  id='btnx' class="close" onclick="searchToggle(this, event);"></div>
 			</div>
 		</div>
 		<div class="row" style="margin-top:80px;">
@@ -54,19 +54,57 @@ $columns =2;
 			?>
 		</div>
 	</div>
-	<div class="col-md-3"  style="border-left: 5px solid #565656;">
+	<div class="col-md-3"  style="border-left: 2px solid #565656;">
 		<div id="cart">
-			<h4><img src="/images/icons/cart.png" height="40px" width="40px" /><b>CART</b></h4>
+			<h4><img src="/images/icons/cart.png" height="40px" width="40px" /><b>CART</b><?php
+			        echo Html::button("Withdraw",
+	                    [
+	                    	'class'=>'pull-right btn btn-success',
+	                    ]
+	                ); 
+			        ?></h4>
 			
-			<div>
-				<ul>
-					<li>Item 1</li>
-					<li>Item 2</li>
-					<li>Item 3</li>
-					<li>Item 4</li>
-					<li><i class="fa fa-search"></i>Item 5</li>
-				</ul>
+			<div class="items">
+				
+				<?php 
+					// var_dump(unserialize($session['cart']));
+					$total = 0;
+					 if($session->has('cart')){
+					 	$cart = unserialize($session['cart']);
+						foreach ($cart as $key) {
+							echo "<div class='col-md-12 item'>";
+							echo "<div class='col-md-12'>".Html::a('<b>x</b>', ['destroyitem','itemid'=>$key['ID']], ['class'=>'btn btn-primary pull-right','title'=>'destroy this order','style'=>'height:auto; color:red; background-color:#fafafa; border-color:#fafafa;'])."</div>";
+							echo "<div class='col-md-1'><span class='fa fa-ellipsis-v'></span></div>";
+							echo "<div class='iteminfo col-md-4'>";
+							echo "<div class='itemtitle'>".$key['Name']."</div>";
+							echo "<div class='itemcode'>".$key['Item']."</div>";
+							echo "</div>";
+
+							echo "<div class='iteminfo col-md-2'>";
+							echo "<div class='itemqty'>".$key['Quantity']."</div>";
+							echo "<div class='itemcost pull-right'>".$key['Cost']." php</div>";
+							echo "</div>";
+
+
+							
+							echo "<div class='itemfee col-md-5'>".$key['Subtotal']." php</div>";
+							echo "</div>";
+						}
+
+						echo Html::a("Destroy Order",
+							['destroyall'],
+		                    [
+		                    	'class'=>'pull-right btn btn-danger',
+		                    ]
+		                ); 
+					 }
+					
+			        
+
+				?>
+				
 			</div>
+			
 		</div>
 	</div>
 </div>
@@ -97,3 +135,5 @@ $this->registerJsFile("/js/inventory/float.js", [
 
 
 </script>
+
+<?php var_dump(unserialize($session['cart'])) ?>
