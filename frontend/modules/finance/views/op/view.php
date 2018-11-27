@@ -230,7 +230,7 @@ $payment_status_id=$model->payment_status_id;
                     'label'=>'payment_mode_id',
                     'format'=>'raw',
                     'label'=>'Payment Mode',
-                    'value'=>$model->paymentMode->payment_mode,
+                    'value'=>$model->paymentMode ? $model->paymentMode->payment_mode : "",
                     'valueColOptions'=>['style'=>'width:30%'], 
                     'displayOnly'=>true
                   ],

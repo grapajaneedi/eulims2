@@ -94,13 +94,8 @@ use kartik\number\NumberControl;
                    ],
                   ])->label('Amount');
              ?>
-
-        </div>
-       
-    </div>
-    <div class="row">
-         <div class="col-md-6">
-         <?php
+           
+             <?php
               echo $form->field($model, 'total_amount')->widget(MaskMoney::classname(), [
                   'readonly'=>true,
                    'options'=>[
@@ -113,7 +108,12 @@ use kartik\number\NumberControl;
                  
                   ])->label('Total Amount');
              ?>
-         </div>
+        
+        </div>
+       
+    </div>
+    <div class="row">
+        
     </div>
     
     

@@ -130,8 +130,8 @@ class FinanceController extends Controller
                 $model->activity = "Restored data for the month of ".$month."-".$year;
                 $model->transaction_date = date('Y-M-d');
                 $model->op_data = count($data)."/".$op_count;
-                $model->pi_data = count($op['paymentitems'])."/".$paymentitem_count;
-                $model->sc_data = count($op['subsidiary_customer'])."/".$op_count;
+                $model->pi_data = $paymentitem_count."/".$paymentitem_count;
+                $model->sc_data = $op_sc."/".$op_sc;
                 $model->status = "COMPLETED";
                 Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
                 $model->save(false);
