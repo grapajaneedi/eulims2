@@ -63,9 +63,14 @@ $gg = 1;
         ],
         'rowOptions' => function($model){
             $Obj=$model->getPaymentStatusDetails($model->request_id);
-            $class=$Obj[0]['class'];
-            $objClass= explode('-', $class);
-            return ['class'=>$objClass[1]];
+            if($Obj){
+                $class=$Obj[0]['class'];
+                $objClass= explode('-', $class);
+                $nClass=$objClass[1];
+            }else{
+                $nClass="btn-default";
+            }
+            return ['class'=>$nClass];
         },
         'exportConfig'=>$func->exportConfig("Laboratory Request", "laboratory request", $Header),
         'columns' => [
@@ -149,7 +154,7 @@ $gg = 1;
                   // return $c."<br>".$t;
 
                     if ($t==0 ){
-                        return "<span class='badge badge-success' style='width:80px!important;height:20px!important;'>PENDING</span>";
+                        return "<span class='badge btn-success' style='width:80px!important;height:20px!important;'>PENDING</span>";
                     }else if ($t<$c){
                            return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
                     }else if ($c==$t){
