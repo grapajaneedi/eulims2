@@ -81,8 +81,15 @@ class LabController extends Controller
             }
 
         for($month=1;$month < 13;$month++){
-            $start = $year."-"."0".$month;
-            $end = $year."-"."0".$month;
+
+            if ($month>9){
+                $start = $year."-".$month;
+                $end = $year."-".$month;
+            }else{
+                $start = $year."-"."0".$month;
+                $end = $year."-"."0".$month;
+            }
+          
             
             $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
     
