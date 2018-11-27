@@ -335,6 +335,44 @@ SCRIPT;
         ])->label($Label);
     }
 
+//referral customer list
+function GetReferralCustomerList($form,$model,$disabled=false,$Label=false){
+$dataExp = <<< SCRIPT
+    function (params, page) {
+        return {
+            q: params.term, // search term
+        };
+    }
+SCRIPT;
+$dataResults = <<< SCRIPT
+    function (data, page) {
+        return {
+          results: data.results
+        };
+    }
+SCRIPT;
+        $url = \yii\helpers\Url::to(['/lab/request/referralcustomerlist']);
+        // Get the initial city description
+        $cust_name = empty($model->customer) ? '' : Customer::findOne($model->customer_id)->customer_name;
+        return $form->field($model, 'customer_id')->widget(Select2::classname(), [
+            'initValueText' => $cust_name, // set the initial display text
+            'options' => ['placeholder' => 'Search for a customer ...','disabled'=>$disabled,'class'=>'.input-group.input-group-sm'],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'minimumInputLength' => 3,
+                'language' => [
+                    'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                ],
+                'ajax' => [
+                    'url' => $url,
+                    'dataType' => 'json',
+                    'data' => new JsExpression($dataExp),
+                    'results' => new JsExpression($dataResults)
+                ]
+            ],
+        ])->label($Label);
+    }
+
 
 //bergel cutara
 function GetSupplierList($form,$model,$disabled=false,$Label=false){

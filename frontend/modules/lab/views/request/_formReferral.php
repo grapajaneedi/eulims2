@@ -262,7 +262,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
             <div class="input-group">
                 <?php
                 $func = new Functions();
-                echo $func->GetCustomerList($form, $model, $disabled,'Customer');
+                echo $func->GetReferralCustomerList($form, $model, $disabled,'Customer');
                 if($disabled){
                     $btnDisp=" disabled='disabled'";
                 }else{

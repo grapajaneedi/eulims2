@@ -603,19 +603,44 @@ class RequestController extends Controller
         }
     }
     //referral customer list
-    public function actionReferralcustomerlist()
+    public function actionReferralcustomerlist($q = null, $id = null)
     {
-        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/customers/list';
-        $curl = new curl\Curl();
-        $res = $curl->get($apiUrl);
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        \Yii::$app->response->data  =  $res;
+
+        //echo 'Curl: ', function_exists('curl_version') ? 'Enabled' . "\xA" : 'Disabled' . "\xA";
+
+        //exit;
+        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        // if (!is_null($q)) {
+        //     $query = new Query;
+        //     $query->select('customer_id as id, customer_name AS text')
+        //             ->from('tbl_customer')
+        //             ->where(['like', 'customer_name', $q])
+        //             ->limit(20);
+        //     $command = $query->createCommand();
+        //     $command->db= \Yii::$app->labdb;
+        //     $data = $command->queryAll();
+        //     $out['results'] = array_values($data);
+        // } elseif ($id > 0) {
+        //     $out['results'] = ['id' => $id, 'text' =>Customer::find()->where(['customer_id'=>$id])->customer_name];
+        // }
+        // return $out;
+
+        if (!is_null($q)) {
+            $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/customers/searchname?keyword='.$q;
+            $curl = new curl\Curl();
+            $show = $curl->get($apiUrl);
+        } else {
+            $show = ['results' => ['id' => '', 'text' => '']];
+        }
+        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        //\Yii::$app->response->data  =  $res;
         //$decode=Json::decode($res);
         //echo "<pre>";
         //print_r(json_decode($res));
         //echo "</pre>";
         
-        return $res;
+        return $show;
         
        /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $out = ['results' => ['id' => '', 'text' => '']];
