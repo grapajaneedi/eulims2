@@ -111,7 +111,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'theme' => Select2::THEME_KRAJEE,
                         'options' => ['id'=>'year'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Year'],
-                ])->label("Year")."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span>"."</div></div>";
+                ])->label("Year")."</div><div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restorebyyear()'>RESTORE BY YEAR</span><div class='col-md-4' style='margin-top:4px'><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span></div>";
             ?>
         </div>
         <?php ActiveForm::end(); ?>
@@ -148,15 +148,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width:10px; white-space: normal;'],
                 // 'pageSummary' => 'Total',
-                // 'pageSummary' => true,
-                
+                // 'pageSummary' => true,               
             ],
         ],
     ]);
-    
-
     ?>
-  
 </div>
 
 <script type="text/javascript">
@@ -183,6 +179,28 @@ $this->params['breadcrumbs'][] = $this->title;
         
         $.ajax({
             url: "/api/lab/res",
+            method: "POST",
+            dataType: 'json',
+            data: {month:m, year:y},
+            beforeSend: function(xhr) {
+                $('.image-loader').addClass("img-loader");
+               }
+            })
+            .done(function( data ) {
+                alert(data.message);
+                $("#testname-grid").yiiGridView("applyFilter"); 
+
+                $('.image-loader').removeClass("img-loader");
+            });
+        }
+
+        function restorebyyear(){
+
+        var m = $('#month option:selected').text();
+        var y = $('#year option:selected').text();
+        
+        $.ajax({
+            url: "/api/lab/resyear",
             method: "POST",
             dataType: 'json',
             data: {month:m, year:y},

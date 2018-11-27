@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use kartik\detail\DetailView;
 use kartik\grid\GridView;
@@ -8,7 +7,6 @@ use common\models\lab\Analysis;
 use yii\data\ActiveDataProvider;
 use common\models\lab\Batchtestreport;
 use yii\bootstrap\Modal;
-
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Testreport */
@@ -35,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //checks if the testreport is from a batch generated reports
             $chkbatch = Batchtestreport::find()->where(['request_id'=>$model->request_id])->one();
             if($chkbatch){
-                $t = 'viewmultiple?id='.$chkbatch->batchtestreport_id;
+                    $t = 'viewmultiple?id='.$chkbatch->batchtestreport_id;
                 echo Html::a('<i class="glyphicon glyphicon-arrow-up"></i> View Batch',$t,['target'=>'_blank','class'=>'btn btn-primary pull-right']);
             }
             ?>
@@ -87,8 +85,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'expandOneOnly' => true
                 ],
-
-
                 [
                     'attribute'=>'sample.sample_code',
                     'enableSorting' => false,
@@ -124,10 +120,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="form-row">
         <div class="container table-responsive">
-
              <?= Html::button('<span class="glyphicon glyphicon-download"></span> Print', ['value'=>'/customer/info/create', 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Print Report"),'onclick'=>"ShowGModal('Select Template',true,'300px')"]); ?>
-
-
         </div>
     </div>
     <!-- <h1><?= Html::encode($this->title) ?></h1> -->

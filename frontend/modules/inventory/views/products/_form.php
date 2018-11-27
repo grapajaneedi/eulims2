@@ -28,6 +28,14 @@ use kartik\money\MaskMoney;
         'isNewRecord' => ($model->isNewRecord) ? 1 : 0
     ]
 ]);
+$stat="";
+
+if ($model->isNewRecord){
+    $stat=true;
+}else{
+    $stat=false;
+}
+        
 ?>
 
 <div class="products-form">
@@ -103,6 +111,7 @@ use kartik\money\MaskMoney;
         <div class="col-sm-6">
             <?php
               echo $form->field($model, 'srp')->widget(MaskMoney::classname(), [
+                  'readonly'=>true,
                    'options'=>[
                        'style'=>'text-align: right'
                    ],
@@ -116,6 +125,7 @@ use kartik\money\MaskMoney;
         <div class="col-sm-6">
             <?php
               echo $form->field($model, 'price')->widget(MaskMoney::classname(), [
+                  'readonly'=>true,
                    'options'=>[
                        'style'=>'text-align: right'
                    ],

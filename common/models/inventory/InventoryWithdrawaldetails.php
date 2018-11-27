@@ -7,20 +7,20 @@ use Yii;
 /**
  * This is the model class for table "tbl_inventory_withdrawaldetails".
  *
- * @property integer $inventory_withdrawaldetails_id
- * @property integer $inventory_withdrawal_id
- * @property integer $product_id
- * @property integer $quantity
+ * @property int $inventory_withdrawaldetails_id
+ * @property int $inventory_withdrawal_id
+ * @property int $inventory_transactions_id
+ * @property int $quantity
  * @property string $price
- * @property integer $withdarawal_status_id
+ * @property int $withdarawal_status_id
  *
  * @property InventoryWithdrawal $inventoryWithdrawal
- * @property Products $product
+ * @property InventoryEntries $inventoryTransactions
  */
 class InventoryWithdrawaldetails extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -36,28 +36,28 @@ class InventoryWithdrawaldetails extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['inventory_withdrawal_id', 'product_id', 'quantity', 'withdarawal_status_id'], 'required'],
-            [['inventory_withdrawal_id', 'product_id', 'quantity', 'withdarawal_status_id'], 'integer'],
+            [['inventory_withdrawal_id', 'inventory_transactions_id', 'quantity', 'withdarawal_status_id'], 'required'],
+            [['inventory_withdrawal_id', 'inventory_transactions_id', 'quantity', 'withdarawal_status_id'], 'integer'],
             [['price'], 'number'],
             [['inventory_withdrawal_id'], 'exist', 'skipOnError' => true, 'targetClass' => InventoryWithdrawal::className(), 'targetAttribute' => ['inventory_withdrawal_id' => 'inventory_withdrawal_id']],
-            [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::className(), 'targetAttribute' => ['product_id' => 'product_id']],
+            [['inventory_transactions_id'], 'exist', 'skipOnError' => true, 'targetClass' => InventoryEntries::className(), 'targetAttribute' => ['inventory_transactions_id' => 'inventory_transactions_id']],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
             'inventory_withdrawaldetails_id' => 'Inventory Withdrawaldetails ID',
             'inventory_withdrawal_id' => 'Inventory Withdrawal ID',
-            'product_id' => 'Product ID',
+            'inventory_transactions_id' => 'Inventory Transactions ID',
             'quantity' => 'Quantity',
             'price' => 'Price',
             'withdarawal_status_id' => 'Withdarawal Status ID',
@@ -75,8 +75,8 @@ class InventoryWithdrawaldetails extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProduct()
+    public function getInventoryTransactions()
     {
-        return $this->hasOne(Products::className(), ['product_id' => 'product_id']);
+        return $this->hasOne(InventoryEntries::className(), ['inventory_transactions_id' => 'inventory_transactions_id']);
     }
 }

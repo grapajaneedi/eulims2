@@ -133,7 +133,7 @@ class WithdrawController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' =>Products::find(),
             'pagination' => [
-                'pageSize' => 3,
+                'pageSize' => 10,
             ],
         ]);
 
@@ -147,7 +147,9 @@ class WithdrawController extends Controller
 
         }
 
-          return $this->render('withdraw',['dataProvider'=>$dataProvider,'searchkey'=>$varsearch]);
+        $session = Yii::$app->session;
+
+          return $this->render('withdraw',['dataProvider'=>$dataProvider,'searchkey'=>$varsearch,'session'=>$session]);
     }
 
     public function actionIncart($id){
@@ -156,6 +158,28 @@ class WithdrawController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => $entries,
         ]);
+
+        $var = Yii::$app->request->post();
+         if ($var) {
+            $ctr=0;
+            //use session to add to cart
+            //refer to the code written on the old ulims inventory
+
+            foreach ($var as $key => $value) {
+                if($ctr>0){
+                    
+                     $var2 = explode("_", $key);
+                    
+                     
+                     if($value){
+                        $this->customsave($var2[0],$value);
+                     }
+                }
+                $ctr++;
+            }
+            
+            return $this->redirect(['out']);
+         }
 
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('cartin', [
@@ -169,5 +193,98 @@ class WithdrawController extends Controller
                'product'=>$product
             ]);
         }
+    }
+
+    protected function customsave($id,$value){
+        $session = Yii::$app->session;
+        $unserialize = [];
+        if($session->has('cart')){
+            $unserialize = unserialize($session['cart']);
+        }
+        //get the inventory entry along with the product profile
+        $entry = InventoryEntries::find()->with('product')->where(['inventory_transactions_id' => $id])->one();
+        
+        $mthrarry = array();
+        $myarry = array(
+            'ID'=>$id,
+            'Item'=> $entry->product->product_code, //code
+            'Name'=>$entry->product->product_name, //oroduct name
+            'Quantity'=> $value, //qty to order
+            'Cost'=> $entry->amount, //price per product
+            'Subtotal'=>$entry->amount * $value, //qty x price
+            );
+        
+        $key = $this->find_order_with_item($unserialize,$myarry['ID']);
+        // echo $key; exit();
+        if($key!==false){
+            $unserialize[$key]['Quantity'] = $unserialize[$key]['Quantity'] + $myarry['Quantity'];
+            $unserialize[$key]['Subtotal'] = $unserialize[$key]['Subtotal'] + $myarry['Subtotal'];
+            $session['cart'] = serialize($unserialize);
+        }else if($unserialize==""){
+
+            array_push($mthrarry, $myarry);
+            $session['cart'] = serialize($mthrarry);
+        }else{
+            array_push($unserialize, $myarry);
+            $session['cart'] = serialize($unserialize);
+        }
+    }
+
+    protected function find_order_with_item($orders, $item) {
+        foreach($orders as $index => $order) {
+            if($order['ID'] == $item) return $index;
+        }
+        return FALSE;
+    }
+
+    public function actionDestroyitem($itemid){
+
+        $session = Yii::$app->session;
+        $unserialize = unserialize($session['cart']);
+
+        //find the item in the array and stored it in #key variable
+        $key = $this->find_order_with_item($unserialize,$itemid);
+
+        //delete the array of that item
+        if($key!==false){
+            
+            array_splice($unserialize,$key,1);
+            $session['cart'] = serialize($unserialize);
+        }
+
+        //redirect to the withdraw/out
+        return $this->redirect(['out']);
+    }
+
+    public function actionDestroyall(){
+        $session = Yii::$app->session;
+        $session['cart']=serialize([]);
+        return $this->redirect(['out']);
+    }
+
+    public function actionOutcart(){
+        //gather data from cart
+        $session = Yii::$app->session();
+        $session = unserialize($session);
+
+        //use transaction
+
+        $connection = Yii::$app->inventorydb;
+        $transaction = $connection->beginTransaction();
+        try {
+            //check if the stocks are on
+
+            $connection->createCommand($sql1)->execute();
+            $connection->createCommand($sql2)->execute();
+            //.... other SQL executions
+            $transaction->commit();
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+
     }
 }

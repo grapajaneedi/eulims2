@@ -259,6 +259,8 @@ class Functions extends Component{
     }
 
     function GetSampleCode($form,$model,$disabled=false,$Label=false){
+        //isali sa query na year 2018(this year) ang ioutput na sample codes para hindi malito 
+        //pag multi year na gamitin
 $dataExp = <<< SCRIPT
          function (params, page) {
                 return {
@@ -276,7 +278,8 @@ SCRIPT;
                 $url = \yii\helpers\Url::to(['/lab/tagging/getsamplecode']);
               //  $url = '';
                 // Get the initial city description
-                $sample_code = empty($model->sample_code) ? '' : Sample::findOne($model->sample_code)->sample_code;
+               $sample_code = empty($model->sample_code) ? '' : Sample::findOne($model->sample_code)->sample_code;
+             // $sample_code = "ssdf";
                 return $form->field($model, 'sample_code')->widget(Select2::classname(), [
                     'initValueText' => $sample_code, // set the initial display text
                     'options' => ['placeholder' => 'Search or Scan Sample Code ...','disabled'=>$disabled,'class'=>'.input-group.input-group-sm'],

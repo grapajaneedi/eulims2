@@ -170,7 +170,7 @@ class ProductsController extends Controller
             'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
             'cssInline' => '.kv-heading-1{font-size:18px}',
             'options' => ['title' => \Yii::$app->name],
-            'methods' => [
+            'methods' => [ 
                 'SetHeader' => [\Yii::$app->name],
                 'SetFooter' => ['{PAGENO}'],
             ]

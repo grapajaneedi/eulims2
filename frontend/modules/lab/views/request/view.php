@@ -638,8 +638,7 @@ $this->registerJs($PrintEvent);
                     'header'=>'Quantity',
                     'hAlign'=>'center',
                     'enableSorting' => false,
-                    'pageSummary' => '<span style="float:right";>SUBTOTAL<BR>DISCOUNT<BR><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL</B></span>',
-                   
+                    'pageSummary' => '<span style="float:right";>SUBTOTAL<BR>DISCOUNT<BR><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL</B></span>',       
                 ],
                 [
                     'attribute'=>'fee',
@@ -663,9 +662,6 @@ $this->registerJs($PrintEvent);
                             $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
                             $samplesquery = Sample::find()->where(['request_id' => $id])->one();
                             $rate =  $discountquery->rate;
-
-                            ///
-                          
                             $sample_ids = '';
                             $samples = Sample::find()->where(['request_id' => $id])->all();
                             foreach ($samples as $sample){

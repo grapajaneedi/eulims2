@@ -72,7 +72,7 @@ if(Yii::$app->user->can('allow-cancel-op')){
                'value'=>function($model){
                     $Obj=$model->getTRN($model->orderofpayment_id);
                     if($Obj){
-                       return "<span style='word-wrap: break-word!important;'>".$Obj[0]['dtls']."</span>";
+                       return "<span style='word-wrap: break-word!important;max-width:50px!important;height:100px;overflow:auto;'>".$Obj[0]['dtls']."</span>";
                 
                     }else{
                         return "";
@@ -80,7 +80,10 @@ if(Yii::$app->user->can('allow-cancel-op')){
                    //
                 },   
                 'hAlign'=>'left',
-                'width' => '25%',       
+                'width' => '30%',  
+                 'contentOptions' => [
+                    'style'=>'max-width:150px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                ],
             ],
             [
                 'attribute' => 'collectiontype_id',
