@@ -79,7 +79,7 @@ class OpController extends Controller
          $paymentitemDataProvider = new ActiveDataProvider([
             'query' => $paymentitem_Query,
             'pagination' => [
-                'pageSize' => 10,
+                'pageSize' => 20,
              ],
          ]);
          return $this->render('view', [
