@@ -167,10 +167,10 @@ div.view img{
 }
 
 div.view img:hover{
-     transform: scale(1.1);
-      z-index: -1;
+     transform: scale(.8);
+      /*z-index: -1;*/
       border-radius: 10px;
-      transition: all .3s cubic-bezier(0.80, 0.105, 0.105, 0.105);
+      transition: all .3s cubic-bezier(0.80, 0.105, 0.6, 1);
 }
 
 div.view{
@@ -185,6 +185,7 @@ div.view{
   position: fixed;
   top: 0;
   margin-right: 10px;
+  width: auto;
 }
 
 .stickysrchbox {

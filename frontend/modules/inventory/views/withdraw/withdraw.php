@@ -57,14 +57,8 @@ $columns =2;
 	<div class="col-md-3"  style="border-left: 2px solid #565656;">
 		<div id="cart">
 			<div class="items"><img src="/images/icons/cart.png" height="40px" width="40px" class="pull-left" /><font size="5"><b>CART</b></font>
-				<i class="pullright" />
-				<?php
-			        echo Html::button("Withdraw",
-	                    [
-	                    	'class'=>'pull-right btn btn-success',
-	                    ]
-	                ); 
-			        ?></div>
+				
+				</div>
 			
 			<div class="items">
 				
@@ -93,6 +87,12 @@ $columns =2;
 							echo "</div>";
 						}
 
+				        echo Html::button("Withdraw",
+		                    [
+		                    	'class'=>'pull-left btn btn-success',
+		                    ]
+		                ); 
+			      
 						echo Html::a("Destroy Order",
 							['destroyall'],
 		                    [
