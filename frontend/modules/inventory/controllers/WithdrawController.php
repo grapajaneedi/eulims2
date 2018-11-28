@@ -286,5 +286,37 @@ class WithdrawController extends Controller
             throw $e;
         }
 
+        //try
+        try {
+            //begin transaction
+            $transaction = $connection->beginTransaction();
+                //while{
+
+                    //check avaialbility of withdrawal product ~> else proceed to A. [collect info for system visibility]
+
+                    //execute calculations
+
+                    //save operation ~> else proceed to A. [issue error code]
+
+                //} end while
+
+            //end transaction 
+        } catch (Exception $e) {
+             $transaction->rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+        
+
+        
+
+
+        //catch
+            //point A. rollback
+
+
+        //end try
     }
 }

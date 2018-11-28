@@ -161,7 +161,7 @@
 
 
 div.view img{
-    height:60%;
+    height:200px;
     width: 100%;
     /*display: inline-block;*/
 }
@@ -262,3 +262,5 @@ div.itemfee{
     text-align: right;
     white-space: nowrap;
 }
+
+.tab { margin-left: 30px; }

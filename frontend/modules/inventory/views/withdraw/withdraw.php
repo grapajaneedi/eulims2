@@ -56,13 +56,15 @@ $columns =2;
 	</div>
 	<div class="col-md-3"  style="border-left: 2px solid #565656;">
 		<div id="cart">
-			<h4><img src="/images/icons/cart.png" height="40px" width="40px" /><b>CART</b><?php
+			<div class="items"><img src="/images/icons/cart.png" height="40px" width="40px" class="pull-left" /><font size="5"><b>CART</b></font>
+				<i class="pullright" />
+				<?php
 			        echo Html::button("Withdraw",
 	                    [
 	                    	'class'=>'pull-right btn btn-success',
 	                    ]
 	                ); 
-			        ?></h4>
+			        ?></div>
 			
 			<div class="items">
 				
@@ -135,5 +137,3 @@ $this->registerJsFile("/js/inventory/float.js", [
 
 
 </script>
-
-<?php var_dump(unserialize($session['cart'])) ?>
