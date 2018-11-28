@@ -107,10 +107,10 @@ $this->registerJs($js);
             ],
             'floatHeaderOptions' => ['scrollingTop' => true],
             'columns' => [
-                  [
-               'class' => '\kartik\grid\CheckboxColumn',
-               'width' => '5px',
-            ],
+          //         [
+             //   'class' => '\kartik\grid\CheckboxColumn',
+           //     'width' => '5px',
+         //    ],
                      [
                         'header'=>'Test Name',
                         'format' => 'raw',
