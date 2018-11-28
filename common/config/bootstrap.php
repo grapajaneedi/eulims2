@@ -21,10 +21,10 @@ if (isset($_SERVER['SERVER_NAME'])) {
         $BaseURI = "http://localhost/eulims/backend/web/";
         $FrontendBaseURI = "http://localhost/eulims/frontend/web/";
     }
-    /*$Upload_URI="https://ulimsbackend.onelab.ph/uploads/user/photo/";
-    $BaseURI="https://ulimsbackend.onelab.ph/";
-    $FrontendBaseURI="https://ulimsportal.onelab.ph/";
-    */
+    $Upload_URI="http://192.168.1.90:8081/uploads/user/photo/";
+    $BaseURI="http://192.168.1.90:8081/";
+    $FrontendBaseURI="http://eulims.dost9.ph/";
+    
     $GLOBALS['upload_url'] = $Upload_URI;
     $GLOBALS['base_uri'] = $BaseURI;
     $GLOBALS['frontend_base_uri'] = $FrontendBaseURI;
