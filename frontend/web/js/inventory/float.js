@@ -16,6 +16,10 @@
 	var y = document.getElementById("srcbox");
 	var sticky = y.offsetTop;
 	var swtc =0;
+	 if (window.pageYOffset > sticky) {
+	 	swtc =1;
+	 	$(btnx).click();
+	 }
 	function myFunction2() {
 	  if (window.pageYOffset > sticky) {
 	    y.classList.add("stickysrchbox");
