@@ -28,7 +28,7 @@ return [
         'reports'=>[ //This configuration is for handling request reports for non-dost
             'class'=>'common\components\ReportConfig',
             'ReportName'=>'Request',
-            'ReportNumber'=>2
+            'ReportNumber'=>1
         ],
         'places' => [
             'class' => '\dosamigos\google\places\Places',
