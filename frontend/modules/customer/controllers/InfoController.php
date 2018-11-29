@@ -236,7 +236,7 @@ class InfoController extends Controller
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);
-            $list = Barangay::find()->andWhere(['barangay_id'=>$id])->asArray()->all();
+            $list = Barangay::find()->andWhere(['municipality_city_id'=>$id])->asArray()->all();
             $selected  = null;
             if ($id != null && count($list) > 0) {
                 $selected = '';
