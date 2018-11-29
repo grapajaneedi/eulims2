@@ -152,9 +152,12 @@ class ProfileController extends Controller
     public function actionUpdate($id)
     {
         Yii::$app->params['uploadPath'] = realpath(dirname(__FILE__)).'\..\web\uploads\user\photo\\';
-        $BackendEndPath = realpath(dirname(__FILE__)).'\..\..\backend\web\uploads\user\photo\\';
+        $BackendEndPath = realpath(dirname(__FILE__)).'\..\web\uploads\user\photo\\';
         $model = $this->findModel($id);
         
+        //echo $BackendEndPath;
+       // copy(Yii::$app->params['uploadPath'].'\123.jpg', $BackendEndPath.'\test.png');
+        //exit;
         if(Yii::$app->user->can('access-his-profile') && !Yii::$app->user->can('profile-full-access')){
             if($model->user_id!=Yii::$app->user->id){
                 throw new NotFoundHttpException('Error: The requested profile does not exist or you are not permitted to view this profile.');
@@ -164,27 +167,27 @@ class ProfileController extends Controller
         $OldImageUrl=$model->image_url;
         $changeImage=false;
         if ($model->load(Yii::$app->request->post())) {
-                $image = UploadedFile::getInstance($model, 'image');
-                if($image){
-                    // store the source file name
-                    $model->image_url = $image->name;
-                    $imagename=explode(".", $image->name);
-                    $ext = $imagename[1];
-                    // generate a unique file name
-                    $model->avatar = hash('haval160,4',$model->user_id).".{$ext}";
-                    $path = Yii::$app->params['uploadPath'] . $model->avatar;
-                    $BackendEndPath=$BackendEndPath . $model->avatar;
-                    $changeImage=true;
-                }
-                $NewImageUrl=$model->image_url;
-                if($model->avatar==''){
-                    $model->avatar=$model->avatar=='' ? null : $model->avatar;
-                    $model->image_url=$model->image_url=='' ? null : $model->$model->image_url;
-                }
+            $image = UploadedFile::getInstance($model, 'image');
+           if($image){
+                // store the source file name
+                $model->image_url = $image->name;
+                $imagename=explode(".", $image->name);
+                $ext = $imagename[1];
+                // generate a unique file name
+                $model->avatar = hash('haval160,4',$model->user_id).".{$ext}";
+                $path = Yii::$app->params['uploadPath'] .'\\'. $model->avatar;
+                $BackendEndPath=$BackendEndPath . $model->avatar;
+                $changeImage=true;
+            }
+            $NewImageUrl=$model->image_url;
+            if($model->avatar==''){
+                $model->avatar=$model->avatar=='' ? null : $model->avatar;
+                $model->image_url=$model->image_url=='' ? null : $model->$model->image_url;
+            }
             if($model->save()){
                 if($changeImage){
-                    $image->saveAs($path);
-                    copy($path, $BackendEndPath);
+                    $image->saveAs("C:\inetpub\wwwroot\eulims2\backend\web\uploads\user\photo\123.jpg");
+                    //copy($path, $BackendEndPath);
                 }elseif($OldImageUrl!='' && $NewImageUrl==''){
                     //Unlink Image
                     //unlink(Yii::$app->params['uploadPath'].$OldAvatar);
