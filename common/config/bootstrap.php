@@ -21,6 +21,7 @@ if (isset($_SERVER['SERVER_NAME'])) {
         $BaseURI = "http://localhost/eulims/backend/web/";
         $FrontendBaseURI = "http://localhost/eulims/frontend/web/";
     }
+    
     $Upload_URI="http://192.168.1.90:8081/uploads/user/photo/";
     $BaseURI="http://192.168.1.90:8081/";
     $FrontendBaseURI="http://eulims.dost9.ph/";
