@@ -143,20 +143,20 @@ class FinanceController extends Controller
                 Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
 
                 $transaction->rollBack();
-                return $this->renderAjax('/finance/backup_restore', [
+                /*return $this->renderAjax('/finance/backup_restore', [
                     'model'=>$model,
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
-                 ]);
+                 ]);*/
             }catch (\Throwable $e) {
                 Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
 
                 $transaction->rollBack();
-               return $this->renderAjax('/finance/backup_restore', [
+              /* return $this->renderAjax('/finance/backup_restore', [
                 'model'=>$model,
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
-            ]);
+            ]);*/
             }	
         }
        
