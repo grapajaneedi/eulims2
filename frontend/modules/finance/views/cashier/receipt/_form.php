@@ -16,6 +16,12 @@ use common\components\Functions;
 /* @var $form yii\widgets\ActiveForm */
 $paymentlist='';
 $func= new Functions();
+$customer_name='';
+if($op_model == ""){
+    $customer_name='';
+}else{
+    $customer_name=$op_model->customer->customer_name;
+}
 ?>
 
 <div class="receipt-form" style="margin:0important;padding:0px!important;padding-bottom: 10px!important;">
@@ -116,7 +122,7 @@ $func= new Functions();
         <div class="row">
             <div class="col-sm-12">
              
-            <?php echo $form->field($model, 'payor')->textInput(['value'=>$op_model->customer->customer_name])->label('Payor') ?>
+            <?php echo $form->field($model, 'payor')->textInput(['value'=>$customer_name])->label('Payor') ?>
             </div>
         </div>
         <div class="form-group pull-right">
