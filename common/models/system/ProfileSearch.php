@@ -62,7 +62,7 @@ class ProfileSearch extends Profile
         $query->andFilterWhere([
             'user_id' => $this->user_id
         ]);
-        if(Yii::$app->user->can('access-his-profile')){
+        if(!Yii::$app->user->can('profile-full-access')){
             $query->andFilterWhere([
                 'user_id' => Yii::$app->user->identity->user_id,
             ]);
