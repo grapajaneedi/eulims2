@@ -244,25 +244,41 @@ class CashierController extends \yii\web\Controller
         $receipt=$this->findModelReceipt($receiptid);
       //  $collection_id=$receipt->collection_id;
         //$collection=$this->findModelCollection($collection_id);
+        $op_model="";
         $op_id=$receipt->orderofpayment_id;
+        if($op_id == 0 || $op_id ==""){
+            $op_model="";
+        }else{
+            $op_model=$this->findModel($op_id);
+        }
         
         $paymentitem_Query = Paymentitem::find()->where(['receipt_id' => $receiptid])->andWhere(['status' => 2]);
-        $paymentitemDataProvider = new ActiveDataProvider([
+        if($paymentitem_Query){
+            $paymentitemDataProvider = new ActiveDataProvider([
             'query' => $paymentitem_Query,
             'pagination' => [
             'pageSize' => 10,
             ],
-        ]);
+            ]);
+        }else{
+            $paymentitemDataProvider ="";
+        }
+        
         $check_Query = Check::find()->where(['receipt_id' => $receiptid]);
-        $checkDataProvider = new ActiveDataProvider([
+        if($check_Query){
+            $checkDataProvider = new ActiveDataProvider([
             'query' => $check_Query,
             'pagination' => [
             'pageSize' => 10,
             ],
-        ]);
+            ]);
+        }else{
+            $checkDataProvider ="";
+        }
+        
         return $this->render('receipt/view', [
             'model' => $receipt,
-            'op_model'=>$this->findModel($op_id),
+            'op_model'=>$op_model,
             'paymentitemDataProvider' => $paymentitemDataProvider,
             'check_model'=>$checkDataProvider,
             'receipt'=>$receipt,
@@ -682,5 +698,55 @@ class CashierController extends \yii\web\Controller
       $exporter = new Orspreadsheet([
         'model'=>$receipt,
         ]);
+    }
+    
+     public function actionAddReceipt()
+    {
+        $model = new Receipt();
+        
+        if ($model->load(Yii::$app->request->post())) {
+            $connection=Yii::$app->financedb;
+            $transaction =$connection->beginTransaction();
+            $session = Yii::$app->session;
+           
+             try {
+                 
+               // $model->getDb()=$connection;
+                $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
+                $model->terminal_id=$GLOBALS['terminal_id'];
+                $model->orderofpayment_id=0;
+                $this->update_nextor($model->or_series_id,$connection);
+                
+               // $model->or_series_id=$model->or_series_id;
+                $model->or_number=$model->or;
+                $model->total=0;
+                $model->customer_id=0;
+                $model->cancelled=0;
+                $model->save(false);
+                 $transaction->commit();
+                $this->created_receipt(0,$model->receipt_id);
+                $this->Savecollection($model->receipt_id,"");
+              
+                return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]); 
+             } catch (Exception $e) {
+                 $transaction->rollBack();
+                 return $e;
+             }
+        }
+            $model->deposit_type_id=1;
+            $model->receiptDate=date('Y-m-d');
+            $model->payment_mode_id=1;
+            $model->collectiontype_id=1;
+        if(Yii::$app->request->isAjax){
+           return $this->renderAjax('receipt/_form', [
+                'model' => $model,
+                'op_model'=> "",
+           ]);
+        }else{
+            return $this->render('receipt/_form', [
+                'model' => $model,
+                'op_model'=> "",
+            ]);
+        }
     }
 }

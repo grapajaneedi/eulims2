@@ -41,6 +41,7 @@ $Header.="Receipt";
         ],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
+                'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Create Receipt', ['value' => Url::to(['/finance/cashier/add-receipt']),'title'=>'Create Receipt', 'onclick'=>'addReceipt(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
                 
         ],
@@ -144,3 +145,14 @@ $Header.="Receipt";
   </div>
 </div>
 
+ <script type="text/javascript">
+   
+    function addReceipt(url,title){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       //var url = '/lab/sample/update?id='+id;
+        $(".modal-title").html(title);
+        $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
+ </script>
