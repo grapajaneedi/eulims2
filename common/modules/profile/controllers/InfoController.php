@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\controllers;
+namespace common\modules\profile\controllers;
 
 use Yii;
 use common\models\system\Profile;
@@ -11,11 +11,12 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\helpers\Html;
 use common\components\MyPDF;
+use common\modules\profile\ProfileAsset;
 
 /**
  * ProfileController implements the CRUD actions for Profile model.
  */
-class ProfileController extends Controller
+class InfoController extends Controller
 {
     /**
      * @inheritdoc
@@ -36,7 +37,7 @@ class ProfileController extends Controller
         return [
             'uploadPhoto' => [
                 'class' => 'budyaga\cropper\actions\UploadAction',
-                'url' => '/upload/user/photo',
+                'url' => 'http://admin.eulims.local/upload/user/photo',
                 'path' => '@frontend/web/uploads/user/photo',
             ]
         ];
@@ -62,6 +63,7 @@ class ProfileController extends Controller
                 'pdfContent'=>$pdfContent,
             ]);
         }else{
+            $dataProvider->pagination->pageSize=7;
             return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
@@ -77,19 +79,15 @@ class ProfileController extends Controller
      */
     public function actionView($id)
     {
-        //$model=$this->findModel($id);
-        //$content= $this->renderPartial('view',['model'=>$model]);
-        //$PDF=new MyPDF($content);
-        //$PDF->renderPDF();
-        if(\Yii::$app->request->isAjax){
+         if(\Yii::$app->request->isAjax){
             return $this->renderAjax('view', [
                 'model' => $this->findModel($id),
             ]);
-        }else{
-            return $this->render('view', [
+         }else{
+             return $this->render('view', [
                 'model' => $this->findModel($id),
-            ]);
-        }
+            ]); 
+         }
     }
     /**
      * Creates a new Profile model.
@@ -98,7 +96,7 @@ class ProfileController extends Controller
      */
     public function actionCreate()
     {
-        Yii::$app->params['uploadPath'] = realpath(dirname(__FILE__)).'\..\..' . '\backend\web\uploads\user\photo\\';
+        Yii::$app->params['uploadPath'] = realpath(dirname(__FILE__)).'\..' . '\assets\photo\\';
         $model = new Profile();
         $HasImage=false;
         if ($model->load(Yii::$app->request->post())) {
@@ -112,15 +110,13 @@ class ProfileController extends Controller
                 $path = Yii::$app->params['uploadPath'] . $model->avatar;
                 $HasImage=true;
             }
-            if($model->image_url=="" || $model->avatar==""){
-                $model->image_url=NULL;
-                $model->avatar=null;
-            }
             if($model->validate() && $model->save()){
                 if($HasImage){
                     $image->saveAs($path);
                 }
-                //return "Saved...";
+                Yii::$app->assetManager->forceCopy=true;
+                ProfileAsset::register(\Yii::$app->view);
+                Yii::$app->assetManager->forceCopy=false;
                 Yii::$app->session->setFlash('success', 'Profile Successfully Created!');
                 return $this->redirect('/profile');
             }else{
@@ -131,7 +127,7 @@ class ProfileController extends Controller
                 ]);
             }
         } else {
-            if(\Yii::$app->request->isAjax){
+            if(Yii::$app->request->isAjax){
                 return $this->renderAjax('create', [
                     'model' => $model,
                 ]);
@@ -151,62 +147,66 @@ class ProfileController extends Controller
      */
     public function actionUpdate($id)
     {
-        Yii::$app->params['uploadPath'] = realpath(dirname(__FILE__)).'\..\web\uploads\user\photo\\';
-        $BackendEndPath = realpath(dirname(__FILE__)).'\..\web\uploads\user\photo\\';
-        $model = $this->findModel($id);
+        Yii::$app->params['uploadPath'] = realpath(dirname(__FILE__)).'\..' . '\assets\photo\\';
+        //$BackendUploadPath = realpath(dirname(__FILE__)).'\..\..' . '\backend\web\uploads\user\photo\\';
         
-        //echo $BackendEndPath;
-       // copy(Yii::$app->params['uploadPath'].'\123.jpg', $BackendEndPath.'\test.png');
-        //exit;
-        if(Yii::$app->user->can('access-his-profile') && !Yii::$app->user->can('profile-full-access')){
-            if($model->user_id!=Yii::$app->user->id){
-                throw new NotFoundHttpException('Error: The requested profile does not exist or you are not permitted to view this profile.');
+        $model = $this->findModel($id);
+        if(Yii::$app->user->can('access-his-profile')){
+            if($model->user_id!=Yii::$app->user->identity->user_id){
+                throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');
             }
         }
         $OldAvatar=$model->avatar;
         $OldImageUrl=$model->image_url;
         $changeImage=false;
         if ($model->load(Yii::$app->request->post())) {
-            $image = UploadedFile::getInstance($model, 'image');
-           if($image){
-                // store the source file name
-                $model->image_url = $image->name;
-                $imagename=explode(".", $image->name);
-                $ext = $imagename[1];
-                // generate a unique file name
-                $model->avatar = hash('haval160,4',$model->user_id).".{$ext}";
-                $path = Yii::$app->params['uploadPath'] .'\\'. $model->avatar;
-                $BackendEndPath=$BackendEndPath . $model->avatar;
-                $changeImage=true;
-            }
-            $NewImageUrl=$model->image_url;
-            if($model->avatar==''){
-                $model->avatar=$model->avatar=='' ? null : $model->avatar;
-                $model->image_url=$model->image_url=='' ? null : $model->$model->image_url;
-            }
+            //echo "Saving..";
+                $image = UploadedFile::getInstance($model, 'image');
+                if($image){
+                    // store the source file name
+                    $model->image_url = $image->name;
+                    $Imagename=explode(".",$image->name);
+                    $ext = $Imagename[1];
+                    // generate a unique file name
+                    $model->avatar = hash('haval160,4',$model->user_id).".{$ext}";
+                    $path = Yii::$app->params['uploadPath'] . $model->avatar;
+                    //$backendpath = $BackendUploadPath . $model->avatar;
+                    $changeImage=true;
+                }
+                $NewImageUrl=$model->image_url;
+                if($model->avatar==''){
+                    $model->avatar=$model->avatar=='' ? null : $model->avatar;
+                    $model->image_url=$model->image_url=='' ? null : $model->$model->image_url;
+                }
             if($model->save()){
                 if($changeImage){
-                    $image->saveAs("C:\inetpub\wwwroot\eulims2\backend\web\uploads\user\photo\123.jpg");
-                    //copy($path, $BackendEndPath);
+                    //Save image to frontend photo folder
+                    $image->saveAs($path);
+                    //Save image to backend photo folder
+                    //copy($path,$backendpath);
                 }elseif($OldImageUrl!='' && $NewImageUrl==''){
                     //Unlink Image
                     //unlink(Yii::$app->params['uploadPath'].$OldAvatar);
-                    $this->actionDeleteimage( Yii::$app->params['uploadPath'] . $OldAvatar);
+                    $this->actionDeleteimage($OldAvatar);
                 }
+                //return "Saved...";
+                Yii::$app->assetManager->forceCopy=true;
+                ProfileAsset::register(\Yii::$app->view);
+                Yii::$app->assetManager->forceCopy=false;
                 Yii::$app->session->setFlash('success', 'Profile Successfully Updated!');
-                return $this->redirect('/profile');
+                return $this->redirect(['/profile']);
             } else {
                 throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');
             }
         } else {
-            if(\Yii::$app->request->isAjax){
-                return $this->renderAjax('update', [
-                    'model' => $model,
-                ]);
+            if(Yii::$app->request->isAjax){
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
             }else{
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
+               return $this->render('update', [
+                'model' => $model,
+            ]); 
             }
         }
     }
@@ -238,7 +238,7 @@ class ProfileController extends Controller
         if (($model = Profile::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('Error: The requested profile does not exist or you are not permitted to view this profile.');
+            throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');
         }
     }
 }
