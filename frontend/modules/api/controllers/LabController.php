@@ -459,7 +459,13 @@ class LabController extends Controller
                           $newSample->sample_code=$samp['sample_code'];
                           $newSample->samplename=$samp['samplename'];
                           $newSample->description=$samp['description'];
-                          $newSample->sampling_date=$samp['sampling_date'];
+                        $sampdate = $samp['sampling_date'];
+                          if ($sampdate=="0000-00-00 00:00:00"){
+                            $newSample->sampling_date=null;
+                          }else{
+                            $newSample->sampling_date=$sampdate;
+                          }
+                          
                           $newSample->remarks=$samp['remarks'];
                           $newSample->request_id=$samp['old_request_id'];
                           $newSample->sample_month=$samp['sample_month'];
