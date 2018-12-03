@@ -34,6 +34,7 @@ use codemix\excelexport\ExcelFile;
 use common\models\system\User;
 use frontend\modules\lab\components\Printing;
 use yii\helpers\Json;
+use yii\helpers\ArrayHelper;
 
 //use yii\helpers\Url;
 /**
@@ -542,10 +543,12 @@ class RequestController extends Controller
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('createReferral', [
                     'model' => $model,
+                    'labreferral' => $this->listlabreferral(),
                 ]);
             }else{
                 return $this->renderAjax('createReferral', [
                     'model' => $model,
+                    'labreferral' => $this->listlabreferral(),
                 ]);
             }
         }
@@ -690,5 +693,40 @@ class RequestController extends Controller
 
        // return json_decode($response,true);
         //return $response;
+    }
+
+    //get laboratory list for referral
+    public function actionListlabreferral()
+    {
+        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/labs/listall';
+        $curl = new curl\Curl();
+        $list = $curl->get($apiUrl);
+
+        /*$list = [
+            '1' => 'Chemical Laboratory',
+            '2' => 'Microbiology Laboratory',
+        ];*/
+
+        // $laboratories = ArrayHelper::map($list, 'lab_id', 
+        //     function($laboratories, $defaultValue) {
+        //         return $laboratories['labname'];
+        // });
+
+        //return $list;
+        //print_r($list);
+       /* $laboratories = ArrayHelper::map($list, 'lab_id', 
+            function($laboratories, $defaultValue) {
+                return $laboratories['labname'];
+        });
+        return $laboratories;*/
+
+        //$labs = ArrayHelper::map($list, 'lab_id', 'labname');
+
+        //$labs = [
+        //    $list['lab_id'] => $list['labname']
+        //];
+
+        return $list;
+
     }
 }
