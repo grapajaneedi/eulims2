@@ -86,19 +86,31 @@ $columns =2;
 							echo "<div class='itemfee col-md-5'>".$key['Subtotal']." php</div>";
 							echo "</div>";
 						}
-
-				        echo Html::button("Withdraw",
-		                    [
-		                    	'class'=>'pull-left btn btn-success',
-		                    ]
-		                ); 
-			      
-						echo Html::a("Destroy Order",
-							['destroyall'],
-		                    [
-		                    	'class'=>'pull-right btn btn-danger',
-		                    ]
-		                ); 
+						if(sizeof($cart)>0){
+							echo Html::a("Withdraw",
+					        	['outcart'],
+			                    [
+			                    	'data-confirm' => "Are you sure you want to withdraw the cart?",
+			                    	'class'=>'pull-left btn btn-success',
+			                    ]
+			                ); 
+				      
+							echo Html::a("Destroy Order",
+								['destroyall'],
+			                    [
+			                    	'data-confirm' =>"Are you sure you want to destroy the cart?",
+			                    	'class'=>'pull-right btn btn-danger',
+			                    ]
+			                ); 	
+						}
+						 else{
+						 	echo "<pre align='center'>~EMPTY~</pre>";
+						 }
+				        
+		               
+					 }
+					 else{
+					 	echo "<pre align='center'>~EMPTY~</pre>";
 					 }
 					
 			        
