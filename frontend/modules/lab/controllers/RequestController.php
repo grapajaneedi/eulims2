@@ -658,7 +658,7 @@ class RequestController extends Controller
         
         return $data;
     }
-    //get referral model of release list
+    //get referral mode of release list
     protected function listModereleasereferral()
     {
         $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/moderelease';
@@ -668,5 +668,22 @@ class RequestController extends Controller
         $data = ArrayHelper::map(json_decode($list), 'modeofrelease_id', 'mode');
         
         return $data;
+    }
+    //insert customer api
+    public function actionInsertcustomer()
+    {
+        //$curl = new curl\Curl();
+        //$model->rstl_id=Yii::$app->user->identity->profile->rstl_id;
+        /*$params = [
+            'key' => 'value',
+            'secondKey' => 'secondValue'
+        ];
+
+        $response = $curl->setRequestBody(json_encode($params))
+            ->setHeaders([
+                'Content-Type' => 'application/json',
+                'Content-Length' => strlen(json_encode($params))
+            ])
+            ->post('http://example.com/');*/
     }
 }
