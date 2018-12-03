@@ -5,6 +5,8 @@ use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use common\models\system\User;
 use yii\helpers\ArrayHelper;
+use common\models\system\Rstl;
+use common\models\lab\Lab;
 //use cozumel\cropper\ImageCropper;
 use kartik\widgets\FileInput;
 use yii\web\View;
@@ -19,6 +21,9 @@ if(Yii::$app->user->can('access-his-profile')){
 }else{
     $UserList= ArrayHelper::map(User::find()->all(),'user_id','email');
 }
+$RstlList= ArrayHelper::map(Rstl::find()->all(),'rstl_id','name');
+$LabList= ArrayHelper::map(lab::find()->all(),'lab_id','labname');
+
 $js =<<< SCRIPT
    $('#profileImage_upload').on('fileclear', function(event) {
       $('#profile-image_url').val('');
@@ -96,6 +101,28 @@ $imagePath=\Yii::$app->getModule("profile")->assetsUrl."/photo/";
         </div>
         <div class="col-md-6">
         <?= $form->field($model, 'contact_numbers')->textInput() ?>
+        </div>
+    </div>
+     <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'rstl_id')->widget(Select2::classname(), [
+                'data' => $RstlList,
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select RSTL'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ]); ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
+                'data' => $LabList,
+                'language' => 'en',
+                'options' => ['placeholder' => 'Select Lab'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ]); ?>
         </div>
     </div>
     <div class="row pull-right" style="padding-right: 15px">
