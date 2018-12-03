@@ -696,7 +696,7 @@ class RequestController extends Controller
     }
 
     //get laboratory list for referral
-    public function actionListlabreferral()
+    protected function listlabreferral()
     {
         $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/labs/listall';
         $curl = new curl\Curl();
@@ -720,13 +720,15 @@ class RequestController extends Controller
         });
         return $laboratories;*/
 
-        //$labs = ArrayHelper::map($list, 'lab_id', 'labname');
+        $labs = ArrayHelper::map(json_decode($list), 'lab_id', 'labname');
 
         //$labs = [
         //    $list['lab_id'] => $list['labname']
         //];
 
-        return $list;
+        //return json_decode($list);
+        
+        return $labs;
 
     }
 }
