@@ -13,6 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="request-create">
     <?= $this->render('_formReferral', [
         'model' => $model,
+        'labreferral' => $labreferral,
     ]) ?>
 
 </div>

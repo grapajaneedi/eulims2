@@ -85,6 +85,30 @@ class Functions extends Component{
         }
         return ArrayHelper::map($list, 'icon', 'icon');
     }
+    /**
+     * @description Checks if url (Image, Files, Page) does exist
+     * @param string $url
+     * @return boolean
+     */
+    public function CheckUrlExist($url){
+        //$file = 'http://www.port-management.com/assets/41a8fcb2/photo/c1f44f4d32ce6b10fcb6ec71f292cfa43323ee6c1.jpg';
+        $ServerName=Yii::$app->getRequest()->serverName;
+        if (strpos($url, 'http') == false) {
+            if(Yii::$app->getRequest()->isSecureConnection){//SSL
+                $url="https://$ServerName".$url;
+            }else{
+                $url="http://$ServerName".$url;
+            }
+        }
+        $file_headers = @get_headers($url);
+        if($file_headers[0] == 'HTTP/1.1 200 OK') {
+            $exists = true;
+        }
+        else {
+            $exists = false;
+        }
+        return $exists;
+    }
     public function CheckRSTLProfile(){
         if(!Yii::$app->user->identity->profile){
             throw new NotFoundHttpException("Warning: The requested profile does not exist, Please add Profile.");

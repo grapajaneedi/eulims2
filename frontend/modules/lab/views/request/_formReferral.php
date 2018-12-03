@@ -117,7 +117,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
 <div class="row">
     <div class="col-md-6">
      <?= $form->field($model, 'lab_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Lab::find()->all(),'lab_id','labname'),
+        'data' => $labreferral,
         //'type'=>DepDrop::TYPE_SELECT2,
         'language' => 'en',
         'options' => ['placeholder' => 'Select Laboratory','disabled'=>$disabled],

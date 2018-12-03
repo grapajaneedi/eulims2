@@ -10,8 +10,8 @@ return [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
-                'username' => 'paymentonelab@gmail.com',
-                'password' => 'Arkem@88',
+                'username' => '',
+                'password' => '',
                 'port' => '587',
                 'encryption' => 'tls',
                 'streamOptions'=>[

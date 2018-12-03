@@ -18,8 +18,8 @@ if($Request_URI=='/'){//alias ex: http://admin.eulims.local
 }else{//http://localhost/eulims/backend/web
     $Backend_URI=Url::base().'/uploads/user/photo/';
 }
-Yii::$app->params['uploadUrl']=$Backend_URI;
-
+Yii::$app->params['uploadUrl']=\Yii::$app->getModule("profile")->assetsUrl."/photo/";//$GLOBALS['upload_url'];
+$imagePath=Yii::$app->params['uploadUrl'];
 if(Yii::$app->user->isGuest){
     $CurrentUserName="Visitor";
     $CurrentUserAvatar=Yii::$app->params['uploadUrl'] . 'no-image.png';

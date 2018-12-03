@@ -5,6 +5,7 @@ namespace common\models\system;
 use Yii;
 use common\models\system\User;
 use common\models\lab\Lab;
+use common\components\Functions;
 
 /**
  * This is the model class for table "tbl_profile".
@@ -78,7 +79,12 @@ class Profile extends \yii\db\ActiveRecord
         //}else{
         //    $ImageUrl= $this->avatar;
         //}
+        $func=new Functions();
         $avatar = isset($this->avatar) ? $this->avatar : 'no-image.png';
+        $imgUrl=\Yii::$app->getModule("profile")->assetsUrl."/photo/$avatar";
+        if(!$func->CheckUrlExist($imgUrl)){
+            $avatar="image-not-found.png";
+        }
         return $avatar;
         //return $ImageUrl;
     }
