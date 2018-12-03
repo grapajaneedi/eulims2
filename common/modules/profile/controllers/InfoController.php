@@ -148,10 +148,9 @@ class InfoController extends Controller
     public function actionUpdate($id)
     {
         Yii::$app->params['uploadPath'] = realpath(dirname(__FILE__)).'\..' . '\assets\photo\\';
-        //$BackendUploadPath = realpath(dirname(__FILE__)).'\..\..' . '\backend\web\uploads\user\photo\\';
         
         $model = $this->findModel($id);
-        if(Yii::$app->user->can('access-his-profile')){
+        if(Yii::$app->user->can('access-his-profile') && !Yii::$app->user->can('profile-full-access')){
             if($model->user_id!=Yii::$app->user->identity->user_id){
                 throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');
             }
@@ -182,13 +181,14 @@ class InfoController extends Controller
                 if($changeImage){
                     //Save image to frontend photo folder
                     $image->saveAs($path);
+                    $this->Deleteimage($OldAvatar);
                     //Save image to backend photo folder
                     //copy($path,$backendpath);
-                }elseif($OldImageUrl!='' && $NewImageUrl==''){
+                }/*elseif($OldImageUrl!==$model->image_url){
                     //Unlink Image
                     //unlink(Yii::$app->params['uploadPath'].$OldAvatar);
-                    $this->actionDeleteimage($OldAvatar);
-                }
+                    $this->Deleteimage($OldAvatar);
+                }*/
                 //return "Saved...";
                 Yii::$app->assetManager->forceCopy=true;
                 ProfileAsset::register(\Yii::$app->view);
@@ -210,8 +210,11 @@ class InfoController extends Controller
             }
         }
     }
-    public function actionDeleteimage($avatar){
-        unlink(Yii::$app->params['uploadPath'].$avatar);
+    public function Deleteimage($avatar){
+        $ImageUrl = realpath(dirname(__FILE__)).'/..' . '/assets/photo/'.$avatar;
+        if(file_exists($ImageUrl)){
+            unlink($ImageUrl);
+        }
     }
     /**
      * Deletes an existing Profile model.
@@ -235,7 +238,7 @@ class InfoController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Profile::findOne($id)) !== null) {
+        if (($model = Profile::find()->where(['profile_id'=>$id])->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested profile does not exist or you are not permitted to view this profile.');

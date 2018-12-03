@@ -16,7 +16,7 @@ use yii\web\View;
 /* @var $this yii\web\View */
 /* @var $model common\models\Profile */
 /* @var $form yii\widgets\ActiveForm */
-if(Yii::$app->user->can('access-his-profile')){
+if(Yii::$app->user->can('access-his-profile') && !Yii::$app->user->can('profile-full-access')){
     $UserList= ArrayHelper::map(User::findAll(['user_id'=>Yii::$app->user->identity->user_id]),'user_id','email');
 }else{
     $UserList= ArrayHelper::map(User::find()->all(),'user_id','email');
