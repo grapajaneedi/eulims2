@@ -400,7 +400,7 @@ class LabController extends Controller
             
         //ADD CODE FOR CUSTOMERS HERE
         
-		try {
+	//	try {
           foreach ($data as $request)
           {    
                       $newRequest = new Restore_request();    
@@ -528,36 +528,36 @@ class LabController extends Controller
                 Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
 				$model->save(false);
 		
-		} catch (\Exception $e) {
+		// } catch (\Exception $e) {
            
           
-            $message = "There was a problem connecting to the server. Please try again.";
-            return Json::encode([
-                'message'=>$message,
+        //     $message = "There was a problem connecting to the server. Please try again.";
+        //     return Json::encode([
+        //         'message'=>$message,
             
-            ]);
-            exit;
+        //     ]);
+        //     exit;
 
-            $transaction->rollBack();
-           return $this->renderAjax('/lab/backup_restore', [
-            'model'=>$model,
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-		} catch (\Throwable $e) {
-            $message = "There was a problem connecting to the server. Please try again.";
-            return Json::encode([
-                'message'=>$message,
+        //     $transaction->rollBack();
+        //    return $this->renderAjax('/lab/backup_restore', [
+        //     'model'=>$model,
+        //     'searchModel' => $searchModel,
+        //     'dataProvider' => $dataProvider,
+        // ]);
+		// } catch (\Throwable $e) {
+        //     $message = "There was a problem connecting to the server. Please try again.";
+        //     return Json::encode([
+        //         'message'=>$message,
             
-            ]);
-            exit;
-            $transaction->rollBack();
-           return $this->renderAjax('/lab/backup_restore', [
-            'model'=>$model,
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-        }
+        //     ]);
+        //     exit;
+        //     $transaction->rollBack();
+        //    return $this->renderAjax('/lab/backup_restore', [
+        //     'model'=>$model,
+        //     'searchModel' => $searchModel,
+        //     'dataProvider' => $dataProvider,
+        // ]);
+        // }
         
         $message = "Data has been successfully restored.";
         return Json::encode([
