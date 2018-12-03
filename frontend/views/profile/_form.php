@@ -21,7 +21,7 @@ if(Yii::$app->user->can('profile-full-access')){
     $UserList= ArrayHelper::map(User::findAll(['user_id'=>Yii::$app->user->identity->user_id]),'user_id','email');
 }
 $RstlList= ArrayHelper::map(Rstl::find()->all(),'rstl_id','name');
-$LabList= ArrayHelper::map(lab::find()->all(),'lab_id','labname');
+$LabList= ArrayHelper::map(Lab::find()->all(),'lab_id','labname');
 $js =<<< SCRIPT
    $('#profileImage_upload').on('fileclear', function(event) {
       $('#profile-image_url').val('');

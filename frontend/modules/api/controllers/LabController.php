@@ -400,7 +400,7 @@ class LabController extends Controller
             
         //ADD CODE FOR CUSTOMERS HERE
         
-		try {
+	//	try {
           foreach ($data as $request)
           {    
                       $newRequest = new Restore_request();    
@@ -459,7 +459,14 @@ class LabController extends Controller
                           $newSample->sample_code=$samp['sample_code'];
                           $newSample->samplename=$samp['samplename'];
                           $newSample->description=$samp['description'];
-                          $newSample->sampling_date=$samp['sampling_date'];
+                           $sampdate = $samp['sampling_date'];
+
+                          if ($sampdate=="0000-00-00 00:00:00"){
+                            $newSample->sampling_date=null;
+                          }else{
+                            $newSample->sampling_date=$sampdate;
+                          }
+                          
                           $newSample->remarks=$samp['remarks'];
                           $newSample->request_id=$samp['old_request_id'];
                           $newSample->sample_month=$samp['sample_month'];
@@ -468,7 +475,14 @@ class LabController extends Controller
                           $newSample->sample_old_id=$samp['sample_old_id'];
                           $newSample->oldColumn_requestId=$samp['oldColumn_requestId'];
                           $newSample->oldColumn_completed=$samp['oldColumn_completed'];
-                          $newSample->oldColumn_datedisposal=$samp['oldColumn_datedisposal'];
+                          $datedisposed = $samp['oldColumn_datedisposal'];
+
+                          if ($datedisposed="0000-00-00"){
+                            $newSample->oldColumn_datedisposal=null;
+                          }else{
+                            $newSample->oldColumn_datedisposal=$datedisposed;
+                          }
+                         
                           $newSample->oldColumn_mannerofdisposal=$samp['oldColumn_mannerofdisposal'];
                           $newSample->oldColumn_batch_num=$samp['oldColumn_batch_num'];
                           $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
@@ -528,36 +542,36 @@ class LabController extends Controller
                 Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
 				$model->save(false);
 		
-		} catch (\Exception $e) {
+		// } catch (\Exception $e) {
            
           
-            $message = "There was a problem connecting to the server. Please try again.";
-            return Json::encode([
-                'message'=>$message,
+        //     $message = "There was a problem connecting to the server. Please try again.";
+        //     return Json::encode([
+        //         'message'=>$message,
             
-            ]);
-            exit;
+        //     ]);
+        //     exit;
 
-            $transaction->rollBack();
-           return $this->renderAjax('/lab/backup_restore', [
-            'model'=>$model,
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-		} catch (\Throwable $e) {
-            $message = "There was a problem connecting to the server. Please try again.";
-            return Json::encode([
-                'message'=>$message,
+        //     $transaction->rollBack();
+        //    return $this->renderAjax('/lab/backup_restore', [
+        //     'model'=>$model,
+        //     'searchModel' => $searchModel,
+        //     'dataProvider' => $dataProvider,
+        // ]);
+		// } catch (\Throwable $e) {
+        //     $message = "There was a problem connecting to the server. Please try again.";
+        //     return Json::encode([
+        //         'message'=>$message,
             
-            ]);
-            exit;
-            $transaction->rollBack();
-           return $this->renderAjax('/lab/backup_restore', [
-            'model'=>$model,
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-        }
+        //     ]);
+        //     exit;
+        //     $transaction->rollBack();
+        //    return $this->renderAjax('/lab/backup_restore', [
+        //     'model'=>$model,
+        //     'searchModel' => $searchModel,
+        //     'dataProvider' => $dataProvider,
+        // ]);
+        // }
         
         $message = "Data has been successfully restored.";
         return Json::encode([

@@ -11,6 +11,7 @@ use Imagine\Image\Box;
 use yii\bootstrap\Modal;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
+use common\components\Functions;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Profile */
@@ -18,13 +19,16 @@ use kartik\grid\GridView;
 $this->title = $model->firstname;
 //$this->params['breadcrumbs'][] = ['label' => 'Profile', 'url' => ['/profile']];
 //$this->params['breadcrumbs'][] = $this->title;
-$path = \Yii::$app->getModule("profile")->assetsUrl."\photo\\";
+$func=new Functions();
+$path = \Yii::$app->getModule("profile")->assetsUrl."/photo/";
+$ImageUrl=$path.$model->getImageUrl();
+
 ?>
 <div class="profile-view">
     <div class="panel panel-default col-xs-12">
         <div class="panel-body">
             <div class="col-md-12" style="text-align: center">
-               <?= Html::img($path.$model->getImageUrl(), [ 
+               <?= Html::img($ImageUrl, [ 
                     'class' => 'img-thumbnail img-responsive',
                     'alt' => $model->user->username,
                     'width'=>200,

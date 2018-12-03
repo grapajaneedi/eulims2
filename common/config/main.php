@@ -14,6 +14,9 @@ return [
         'datecontrol' =>  [
             'class' => '\kartik\datecontrol\Module'
         ],
+        'profile' => [
+            'class' => 'common\modules\profile\Module',
+        ],
         'pdfjs' => [
             'class' => '\yii2assets\pdfjs\Module',
             'waterMark'=>[
