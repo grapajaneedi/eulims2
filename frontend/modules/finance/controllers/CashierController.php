@@ -31,7 +31,8 @@ use yii\data\ArrayDataProvider;
 use common\components\Functions;
 use yii2tech\spreadsheet\Myspreadsheet;
 use frontend\modules\reports\modules\finance\templates\Orspreadsheet;
-
+use frontend\modules\finance\components\models\Model;
+use common\models\lab\RequestSearch;
 
 class CashierController extends \yii\web\Controller
 {
@@ -748,5 +749,76 @@ class CashierController extends \yii\web\Controller
                 'op_model'=> "",
             ]);
         }
+    }
+    
+    public function actionAddpaymentitem($collectiontype_id,$receiptid) {
+       
+        $paymentitem = [new Paymentitem()];
+        
+         if (Yii::$app->request->post()) {
+           
+            Model::loadMultiple($paymentitem, Yii::$app->request->post());
+              
+            $paymentitem = Model::createMultiple(Paymentitem::classname());
+            
+            $valid = Model::validateMultiple($paymentitem);
+            
+                $connection= Yii::$app->financedb;
+                $transaction = $connection->beginTransaction();
+                $connection->createCommand('set foreign_key_checks=0')->execute();
+                try {
+                    $posts=Yii::$app->request->post();
+                
+                     $total=0;
+                       $posts=$posts["Paymentitem"];
+                        foreach ($posts as $post) {
+                            $paymentitems = new Paymentitem();
+                            $paymentitems->rstl_id =$GLOBALS['rstl_id'];
+                            $paymentitems->request_id = 0;
+                            $paymentitems->orderofpayment_id = 0;
+                            $paymentitems->details=$post['details'];
+                            $paymentitems->amount=$post['amount'];
+                            $paymentitems->status=2; //Paid
+                            $paymentitems->receipt_id=$receiptid;
+                            $paymentitems->save(false);
+                            $total+=$post['amount'];
+                        }
+                       $transaction->commit();
+                       $this->UpdateTotalReceipt($receiptid);//update total of receipt
+                       
+                       Yii::$app->session->setFlash('success','Successfully Saved');
+                       return $this->redirect(['/finance/cashier/view-receipt', 'receiptid' => $receiptid]);
+                
+                } catch (Exception $e) {
+                    Yii::$app->session->setFlash('danger','Transaction failed');
+                    $transaction->rollBack();
+                }
+       }
+       else{
+          if($collectiontype_id == 1 || $collectiontype_id == 2){
+                $searchModel = new RequestSearch();
+                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+                $dataProvider->pagination->pageSize=10;
+                 /* $query = Request::find()->where(['not', ['posted' => 1]]);
+                    $dataProvider = new ActiveDataProvider([
+                        'query' => $query,
+                    ]); */
+                  return $this->renderAjax('receipt/_request', ['dataProvider'=>$dataProvider, 'searchModel' => $searchModel]);
+          }else{
+              return $this->renderAjax('receipt/_form_paymentitem', [
+                'paymentitem' => (empty($paymentitem)) ? [new Paymentitem()] : $paymentitem
+                ]);
+          }
+       } 
+    }
+    
+    public function UpdateTotalReceipt($receiptid) {
+        $sum = Paymentitem::find()->where(['receipt_id' => $receiptid])
+                 ->sum('amount');
+        
+        Yii::$app->financedb->createCommand()
+            ->update('tbl_receipt', ['total'=>$sum], 'receipt_id= '.$receiptid)
+            ->execute();
+        
     }
 }
