@@ -7,22 +7,20 @@ use Yii;
 /**
  * This is the model class for table "tbl_inventory_withdrawal".
  *
- * @property integer $inventory_withdrawal_id
- * @property integer $created_by
+ * @property int $inventory_withdrawal_id
+ * @property int $created_by
  * @property string $withdrawal_datetime
- * @property integer $lab_id
- * @property integer $total_qty
+ * @property int $lab_id
+ * @property int $total_qty
  * @property string $total_cost
  * @property string $remarks
- * @property integer $inventory_status_id
  *
- * @property InventoryStatus $inventoryStatus
  * @property InventoryWithdrawaldetails[] $inventoryWithdrawaldetails
  */
 class InventoryWithdrawal extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -38,22 +36,21 @@ class InventoryWithdrawal extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['created_by', 'withdrawal_datetime', 'total_qty', 'inventory_status_id'], 'required'],
-            [['created_by', 'lab_id', 'total_qty', 'inventory_status_id'], 'integer'],
+            [['created_by', 'withdrawal_datetime', 'total_qty'], 'required'],
+            [['created_by', 'lab_id', 'total_qty'], 'integer'],
             [['withdrawal_datetime'], 'safe'],
             [['total_cost'], 'number'],
             [['remarks'], 'string'],
-            [['inventory_status_id'], 'exist', 'skipOnError' => true, 'targetClass' => InventoryStatus::className(), 'targetAttribute' => ['inventory_status_id' => 'inventory_status_id']],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -65,16 +62,7 @@ class InventoryWithdrawal extends \yii\db\ActiveRecord
             'total_qty' => 'Total Qty',
             'total_cost' => 'Total Cost',
             'remarks' => 'Remarks',
-            'inventory_status_id' => 'Inventory Status ID',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getInventoryStatus()
-    {
-        return $this->hasOne(InventoryStatus::className(), ['inventory_status_id' => 'inventory_status_id']);
     }
 
     /**
