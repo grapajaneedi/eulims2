@@ -2,6 +2,7 @@
 use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\models\inventory\InventoryWithdrawaldetails;
 ?>
 
 	<?php $form = ActiveForm::begin(); ?>
@@ -12,12 +13,23 @@ use yii\widgets\ActiveForm;
 	            ['class' => 'yii\grid\SerialColumn'],
 	            'expiration_date',
 	            'suppliers.suppliers',
-	            'quantity',
+	            // 'quantity',
 	            'amount',
-	            [
-				    'header' => 'to_order',
+	             [
+				    'header' => 'Onhand',
 				    'value' => function($model){
-				        return Html::textInput($model->inventory_transactions_id."_name",0,['id'=>$model->inventory_transactions_id.'_id','type'=>'number','min'=>0,'max'=>$model->quantity,'onkeypress'=>"return false;"]);
+				    	$withdrawn = InventoryWithdrawaldetails::find()->where(['inventory_transactions_id'=>$model->inventory_transactions_id])->sum('quantity');
+
+				        return $model->quantity-$withdrawn;
+				    },
+				    'format' => 'raw'
+				],
+	            [
+				    'header' => 'Order',
+				    'value' => function($model){
+				    	$withdrawn = InventoryWithdrawaldetails::find()->where(['inventory_transactions_id'=>$model->inventory_transactions_id])->sum('quantity');
+
+				        return Html::textInput($model->inventory_transactions_id."_name",0,['id'=>$model->inventory_transactions_id.'_id','type'=>'number','min'=>0,'max'=>$model->quantity-$withdrawn,'onkeypress'=>"return false;"]);
 				    },
 				    'format' => 'raw'
 				],
