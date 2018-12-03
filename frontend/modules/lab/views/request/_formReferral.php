@@ -276,7 +276,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
     </div>
     <div class="col-md-6">
      <?= $form->field($model, 'modeofreleaseids')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Modeofrelease::find()->all(),'modeofrelease_id','mode'),
+        'data' => $modereleasereferral,
         //'initValueText'=>$model->modeofrelease_ids,
         'language' => 'en',
          'options' => [
@@ -296,7 +296,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
 <div class="row">
     <div class="col-md-6">
     <?= $form->field($model, 'discount_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Discount::find()->all(),'discount_id','type'),
+        'data' => $discountreferral,
         'language' => 'en',
         'options' => ['placeholder' => 'Select Discount','disabled'=>$disabled || $model->payment_type_id==2],
         'pluginOptions' => [
@@ -306,7 +306,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
             "change" => 'function() { 
                 var discountid=this.value;
                 console.log(discountid);
-                $.post("/ajax/getdiscount/", {
+                $.post("/ajax/getdiscountreferral/", {
                         discountid: discountid
                     }, function(result){
                     if(result){
@@ -324,7 +324,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
 <div class="row">
     <div class="col-md-6">
     <?= $form->field($model, 'purpose_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Purpose::find()->all(),'purpose_id','name'),
+        'data' => $purposereferral,
         'language' => 'en',
         'options' => ['placeholder' => 'Select Purpose','disabled'=>$disabled],
         'pluginOptions' => [
