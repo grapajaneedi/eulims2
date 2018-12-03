@@ -104,7 +104,8 @@ class InfoController extends Controller
             if($image){
                 // store the source file name
                 $model->image_url = $image->name;
-                $ext = end((explode(".", $image->name)));
+                $Imagename=explode(".",$image->name);
+                $ext = $Imagename[1];
                 // generate a unique file name
                 $model->avatar = hash('haval160,4',$model->user_id).".{$ext}";
                 $path = Yii::$app->params['uploadPath'] . $model->avatar;
