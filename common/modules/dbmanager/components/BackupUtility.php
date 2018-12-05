@@ -9,6 +9,9 @@ use yii\helpers\FileHelper;
 
 /**
  * Backup component
+ * Class Created by: Eng'r Nolan F. Sunico
+ * December 5, 2018, 11:15 PM
+ * this class performs dumping of data using mysqldump untility
  *
  * @package backup
  */
@@ -17,12 +20,6 @@ class BackupUtility extends \yii\base\Component
     /** @var string Path/Alias to folder for backups storing. e.g. "@app/backups" */
     public $backupsFolder;
     /**
-     * if string - value will be used in date() function.
-     * if callable:
-     * function(\demi\backup\Component $component) {
-     *     return date('Y_m_d-H_i_s');
-     * }
-     *
      * @var string|callable
      */
     public $backupFilename = 'Y_m_d-H_i_s';
@@ -132,15 +129,20 @@ class BackupUtility extends \yii\base\Component
     /**
      * Create dump of all directories and all databases and save result to bakup folder with timestamp named tar-archive
      *
+     * @param integer $IsbackupFiles
+     * @param integer $IsBackupDB
      * @return string Full path to created backup file
      * @throws Exception
      */
-    public function create()
+    public function create($IsbackupFiles,$IsBackupDB, $database)
     {
         $folder = $this->getBackupFolder();
-       
-        $files = $this->backupFiles($folder);
-        $db = $this->backupDatabase($folder);
+        if($IsbackupFiles==1){
+            $files = $this->backupFiles($folder);
+        }
+        if($IsBackupDB==1){
+            $db = $this->backupDatabase($folder, $database);
+        }
         $resultFilename = $this->getBackupFilename();
         $archiveFile = dirname($folder) . DIRECTORY_SEPARATOR . $resultFilename . '.'.$this->ext;
 
@@ -153,7 +155,7 @@ class BackupUtility extends \yii\base\Component
         // Remove temp directory
         FileHelper::removeDirectory($folder);
 
-        return $archiveFile;
+        return $resultFilename. '.'.$this->ext;
     }
 
     /**
@@ -194,13 +196,16 @@ class BackupUtility extends \yii\base\Component
      *
      * @return bool
      */
-    public function backupDatabase($saveTo)
+    public function backupDatabase($saveTo,$database)
     {
         $saveTo .= DIRECTORY_SEPARATOR . 'sql';
         if(!file_exists($saveTo)){
             mkdir($saveTo);
         }
         foreach ($this->databases as $name => $params) {
+            if($database!='all' && $database!=$params['db']){
+                continue;
+            }
             // Get mysqldump command
             $command = isset($params['command']) && !empty($params['command']) ? $params['command'] : $this->mysqldump;
             
@@ -215,13 +220,8 @@ class BackupUtility extends \yii\base\Component
             }
 
             $file = $saveTo . DIRECTORY_SEPARATOR . $name . '.sql.'.$this->ext;
-            $path='"C:\Program Files\MySQL\MySQL Server 5.7\bin\\';
             $cmd=$command . ' > ' . $file;
-            //echo $cmd;
-            //exit;
-            //$this->runProcess($cmd);
             exec($cmd);
-            //return $ret;
         }
 
         return true;

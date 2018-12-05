@@ -4,7 +4,8 @@ use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
 use kartik\select2\Select2;
 use kartik\checkbox\CheckboxX;
-//use kartik\grid\GridView;
+use kartik\grid\GridView;
+use common\components\Functions;
 //use bs\dbManager\models\BaseDumpManager;
 
 /* @var $this yii\web\View */
@@ -29,24 +30,25 @@ $dbList=$dbComponents['backup']['databases'];
 $dbs=[
     'all'=>'All Databases',
 ];
-var_dump($dbList);
-/*$dbs=[
-    'all'=>'All Databases',
-    'eulims'=>'eulims',
-    'eulims_lab'=>'eulims lab',
-    'eulims_inventory'=>'eulims inventory',
-    'eulims_finance'=>'eulims finance',
-    'eulims_address'=>'eulims address',
-    'eulims_referral_lab'=>'eulims referral lab'
-];
- * 
- */
+foreach($dbList as $db){
+   $dbs[$db['db']]=$db['db'];
+}
+$js=<<<SCRIPT
+    $("#btnGenerate").click(function(){
+        $("#btnGenerate").attr("disabled", "disabled");
+        $("#frmBackup").submit();
+    });
+SCRIPT;
+$this->registerJs($js);
 $ext=[
     'tar'=>'Tape Archive (*.tar)',
     'zip'=>'Winzip (*.zip)',
     'gz'=>'Gzip (*.gz)',
     'rar'=>'Winrar(*.rar)'
 ];
+$func=new Functions();
+$Header="Department of Science and Technology<br>";
+$Header.="Laboratory Request";
 ?>
 <div class="panel panel-primary">
     <div class="panel-heading">Database Manager</div>
@@ -123,13 +125,112 @@ $ext=[
                 ])->label(false);
                 ?>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12" style="padding-right: 15px">
-                <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
-                <button style='margin-left: 5px' type='button' class='btn btn-secondary pull-left-sm' data-dismiss='modal'>Cancel</button>
+            <div class="col-md-3" style="padding-right: 15px">
+                <?= Html::Button('<i class="fa fa-download"></i> Generate Backup', ['id'=>'btnGenerate','class' => 'btn btn-primary']) ?>
             </div>
         </div>
     </div>
     <?php ActiveForm::end(); ?>
+    <div class="row">
+        <div class="col-md-12" style="margin-left: 5px;padding-right: 25px">
+     <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'bordered' => true,
+        'striped' => true,
+        'condensed' => true,
+        'responsive' => false,
+        'hover' => true,
+        'pjax' => true, // pjax is set to always true for this demo
+        'pjaxSettings' => [
+            'options' => [
+                    'enablePushState' => false,
+              ],
+        ],
+        //'panel' => [
+        //    'type' => GridView::TYPE_PRIMARY,
+        //    'heading' => '<i class="glyphicon glyphicon-book"></i>  Backup Scripts',
+        //    //'before'=>"<button type='button' onclick='LoadModal(\"Create Request\",\"/lab/request/create\")' class=\"btn btn-success\"><i class=\"fa fa-book-o\"></i> Create Request</button>&nbsp;&nbsp;&nbsp;<button type='button' onclick='LoadModal(\"Create Referral Request\",\"/lab/request/createreferral\")' class=\"btn btn-success\"><i class=\"fa fa-book-o\"></i> Create Referral Request</button>",
+        //],
+        'exportConfig'=>$func->exportConfig("Laboratory Request", "laboratory request", $Header),
+        'columns' => [
+            [
+                'attribute' => 'type',
+                'label' => Yii::t('dbManager', 'Type'),
+            ],
+            [
+                'attribute' => 'name',
+                'label' => Yii::t('dbManager', 'Name'),
+            ],
+            [
+                'attribute' => 'size',
+                'label' => Yii::t('dbManager', 'Size'),
+            ],
+            [
+                'attribute' => 'create_at',
+                'label' => Yii::t('dbManager', 'Create time'),
+            ],
+
+            [
+                'class' => 'kartik\grid\ActionColumn',
+                'template' => '{download} {storage} {delete}', //{restore}
+                'buttons' => [
+                    'download' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-download-alt"></span>',
+                            [
+                                'download',
+                                'id' => $model['id'],
+                            ],
+                            [
+                                'title' => Yii::t('dbManager', 'Download'),
+                                'class' => 'btn btn-sm btn-default',
+                            ]);
+                    },
+                    'restore' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-import"></span>',
+                            [
+                                'restore',
+                                'id' => $model['id'],
+                            ],
+                            [
+                                'title' => Yii::t('dbManager', 'Restore'),
+                                'class' => 'btn btn-sm btn-default',
+                            ]);
+                    },
+                    'storage' => function ($url, $model) {
+                        if (Yii::$app->has('backupStorage')) {
+                            $exists = Yii::$app->backupStorage->has($model['name']);
+
+                            return Html::a('<span class="glyphicon glyphicon-cloud-upload"></span>',
+                                [
+                                    'storage',
+                                    'id' => $model['id'],
+                                ],
+                                [
+                                    'title' => $exists ? Yii::t('dbManager', 'Delete from storage') : Yii::t('dbManager', 'Upload from storage'),
+                                    'class' => $exists ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success',
+                                ]);
+                        }
+                    },
+                    'delete' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>',
+                            [
+                                'delete',
+                                'id' => $model['id'],
+                            ],
+                            [
+                                'title' => Yii::t('dbManager', 'Delete'),
+                                'data-method' => 'post',
+                                'data-confirm' => Yii::t('dbManager', 'Are you sure?'),
+                                'class' => 'btn btn-sm btn-danger',
+                            ]);
+                    },
+                ],
+            ],
+        ],
+    ]) ?>
+        </div>
+    </div>
 </div>
+<?php if($file!=="") { ?>
+<iframe width="1" height="1" frameborder="0" src="<?= $file ?>"></iframe>
+<?php } ?>
