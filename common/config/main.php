@@ -17,6 +17,9 @@ return [
         'profile' => [
             'class' => 'common\modules\profile\Module',
         ],
+        'dbmanager' => [
+            'class' => 'common\modules\dbmanager\Module',
+        ],
         'pdfjs' => [
             'class' => '\yii2assets\pdfjs\Module',
             'waterMark'=>[

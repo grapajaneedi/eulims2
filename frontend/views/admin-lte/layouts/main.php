@@ -26,9 +26,9 @@ if (Yii::$app->controller->action->id === 'login') {
     }
     frontend\assets\AppAsset::register($this);
     dmstr\web\AdminLteAsset::register($this);
-    Yii::$app->assetManager->forceCopy=true;
+    //Yii::$app->assetManager->forceCopy=true;
     ProfileAsset::register($this);
-    Yii::$app->assetManager->forceCopy=false;
+    //Yii::$app->assetManager->forceCopy=false;
     $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
     
     ?>

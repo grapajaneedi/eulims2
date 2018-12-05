@@ -41,7 +41,7 @@ $ItemName= strtolower($labels["Item"]);
             'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<i class="fa fa-user-circle fa-adn"></i> List of '.$labels['Item'].'s',
-                'before'=>"<button type='button' onclick='ShowModal(\"New $labels[Item]\",\"/admin/role/create\")' class=\"btn btn-success\"><i class=\"fa fa-book-o\"></i> Create new $labels[Item]</button>",
+                'before'=>"<button type='button' onclick='ShowModal(\"New $labels[Item]\",\"/admin/$ItemName/create\")' class=\"btn btn-success\"><i class=\"fa fa-book-o\"></i> Create new $labels[Item]</button>",
             ],
             'pjax' => true, // pjax is set to always true for this demo
             'pjaxSettings' => [

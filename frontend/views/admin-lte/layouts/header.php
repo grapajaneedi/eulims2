@@ -55,7 +55,7 @@ if($TotalMsg<=0){
 if($TotalMsg==0){
     $TotalMsg='';
 }
-$GLOBALS['rstl_id']= 16;//Yii::$app->user->identity->profile->rstl_id;
+$GLOBALS['rstl_id']= 11;
 ?>
 
 <header class="main-header">
