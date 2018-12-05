@@ -140,7 +140,7 @@ $Header.="Laboratory Request";
         'condensed' => true,
         'responsive' => false,
         'hover' => true,
-        'pjax' => true, // pjax is set to always true for this demo
+        'pjax' => false, // pjax is set to always true for this demo
         'pjaxSettings' => [
             'options' => [
                     'enablePushState' => false,
@@ -172,7 +172,7 @@ $Header.="Laboratory Request";
 
             [
                 'class' => 'kartik\grid\ActionColumn',
-                'template' => '{download} {storage} {delete}', //{restore}
+                'template' => '{download} {restore} {storage} {delete}', //{restore}
                 'buttons' => [
                     'download' => function ($url, $model) {
                         return Html::a('<span class="glyphicon glyphicon-download-alt"></span>',
