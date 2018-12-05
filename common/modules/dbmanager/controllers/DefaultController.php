@@ -117,13 +117,18 @@ class DefaultController extends Controller
     public function actionCreateBackup(){
         $post= \Yii::$app->request->post();
         $BackModel=$post['BackupModel'];
+        if(!isset($BackModel['database'])){
+            $database='';
+        }else{
+            $database=$BackModel['database'];
+        }
         //echo "<pre>";
         //var_dump($BackModel);
         //echo "</pre>";
         //exit;
         $backup =\Yii::$app->backup; 
         $backup->ext=$BackModel['extension'];
-        $file = $backup->create($BackModel['backupfiles'],$BackModel['backupdatabase'],$BackModel['database']);
+        $file = $backup->create($BackModel['backupfiles'],$BackModel['backupdatabase'],$database);
         $downloadFile="";
         if((int)$BackModel['download']==1){
             $downloadFile=\Yii::$app->getRequest()->serverName ."/backups/$file";
