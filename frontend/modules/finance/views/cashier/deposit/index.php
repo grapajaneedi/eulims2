@@ -102,7 +102,7 @@ $Header.="Deposit";
                 'attribute' => 'deposit_type_id',
                 'label' => 'Deposit Type',
                 'value' => function($model) {
-                    return $model->depositType->deposit_type;
+                    return $model->depositType ? $model->depositType->deposit_type : " ";
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(DepositType::find()->asArray()->all(), 'deposit_type_id', 'deposit_type'),
