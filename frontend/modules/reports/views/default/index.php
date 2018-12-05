@@ -90,7 +90,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-2 col-sm-6 col-xs-12">
              
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
-                   <a href="/reports/lab/accomplishment/" title="Accomplishment"><img class="imgHover" src="/images/sampleregistersquare.png" style="height:120px;width: 120px"></a>
+                   <a href="/lab/sampleregister" title="Accomplishment"><img class="imgHover" src="/images/sampleregistersquare.png" style="height:120px;width: 120px"></a>
               </div>
             </div>
             
