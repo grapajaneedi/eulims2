@@ -113,12 +113,6 @@ $Header.="Laboratory Request";
                     'options'=>['id'=>'backupfiles'],
                     'disabled'=>!$Configured,
                     'pluginOptions'=>['threeState'=>false],
-                    'pluginEvents'=>[
-                        "change"=>"function() { 
-                            //$('#backupmodel-database').prop('disabled', this.value==0 ? true : false);
-                        }    
-                    "
-                    ],
                 ])->label(false);
                 ?>
             </div>
@@ -129,17 +123,15 @@ $Header.="Laboratory Request";
                     'options'=>['id'=>'download'],
                     'disabled'=>!$Configured,
                     'pluginOptions'=>['threeState'=>false],
-                    'pluginEvents'=>[
-                        "change"=>"function() { 
-                            //$('#backupmodel-database').prop('disabled', this.value==0 ? true : false);
-                        }    
-                    "
-                    ],
                 ])->label(false);
                 ?>
             </div>
             <div class="col-md-3" style="padding-right: 15px">
+                <?php if(!$Configured){ ?>
+                <?= Html::Button('<i class="fa fa-download"></i> Generate Backup', ['class' => 'btn btn-primary','disabled'=>!$Configured]) ?>
+                <?php }else{ ?>
                 <?= Html::Button('<i class="fa fa-download"></i> Generate Backup', ['id'=>'btnGenerate','class' => 'btn btn-primary','disabled'=>!$Configured]) ?>
+                <?php } ?>
             </div>
         </div>
     </div>

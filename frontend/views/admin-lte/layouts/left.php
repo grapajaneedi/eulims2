@@ -106,7 +106,7 @@ if(Yii::$app->user->isGuest){
             'url' => ["#"],
             'items'=>[
                 [
-                    'label' => '<img src="/images/icons/help.png" style="width:20px">  <span>DB Manager</span>', 
+                    'label' => '<img src="/images/icons/dbmanager.png" style="width:20px">  <span>DB Manager</span>', 
                     'icon'=>' " style="display:none;width:0px"',
                     'url' => ["/dbmanager"],
                     'visible'=>Yii::$app->user->can('access-db-manager')
