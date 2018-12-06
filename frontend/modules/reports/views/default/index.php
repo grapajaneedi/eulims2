@@ -72,8 +72,8 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>      
         <div class="box-body">
           <div class="row">
-            <div class="col-md-2 col-sm-6 col-xs-12 col-md-offset-1">
-             
+            <div class="col-md-2 col-sm-6 col-xs-12">
+               <!-- col-md-offset-1  if 5 columns --> 
              <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
                  <a href="#" title="Tagging"><img class="imgHover" src="/images/taggingsquare.png" style="height:120px;width: 120px"></a>
               </div>
@@ -87,6 +87,13 @@ $this->params['breadcrumbs'][] = $this->title;
               </div>
             </div>
             <!-- /.col -->
+            <div class="col-md-2 col-sm-6 col-xs-12">
+             
+               <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">
+                   <a href="/lab/sampleregister" title="Accomplishment"><img class="imgHover" src="/images/sampleregistersquare.png" style="height:120px;width: 120px"></a>
+              </div>
+            </div>
+            
             <div class="col-md-2 col-sm-6 col-xs-12">
              
                <div  style="padding-top: 1px;padding-bottom: 1px;display:block;text-align: center">

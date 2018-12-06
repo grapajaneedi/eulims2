@@ -31,6 +31,9 @@ body {
     z-index: 20000;
     width: 100%;
     height: 100%;
+    top: 0;
+    left: 0;
+    background: url('/images/img-loader64.gif') no-repeat center;
 }
 .progress-stop{
     display: none
@@ -40,6 +43,7 @@ body {
     background-color: white;
     opacity: 0.8
 }
+
 /******* Processing DIV *************/
 .wrap {
     min-height: 100%;

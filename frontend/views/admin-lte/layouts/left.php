@@ -14,7 +14,7 @@ if($Request_URI=='/'){//alias ex: http://admin.eulims.local
 }else{//http://localhost/eulims/backend/web
     $Backend_URI=Url::base().'/uploads/user/photo/';
 }
-Yii::$app->params['uploadUrl']=$Backend_URI;
+Yii::$app->params['uploadUrl']=\Yii::$app->getModule("profile")->assetsUrl."\photo\\";
 if(Yii::$app->user->isGuest){
     $CurrentUserName="Visitor";
     $CurrentUserAvatar=Yii::$app->params['uploadUrl'] . 'no-image.png';
@@ -105,6 +105,18 @@ if(Yii::$app->user->isGuest){
             'icon'=>' " style="display:none;width:0px"',
             'url' => ["#"],
             'items'=>[
+                [
+                    'label' => '<img src="/images/icons/dbmanager.png" style="width:20px">  <span>DB Manager</span>', 
+                    'icon'=>' " style="display:none;width:0px"',
+                    'url' => ["/dbmanager"],
+                    'visible'=>Yii::$app->user->can('access-db-manager')
+                ],
+                [
+                    'label' => '<img src="/images/icons/dbconfig.png" style="width:20px">  <span>Configurations</span>', 
+                    'icon'=>' " style="display:none;width:0px"',
+                    'url' => ["/dbmanager/config"],
+                    'visible'=>Yii::$app->user->can('access-db-config')
+                ],
                 [
                     'label' => '<img src="/images/icons/admin.png" style="width:20px">  <span>API Configuration</span>', 
                     'icon'=>' " style="display:none;width:0px"',

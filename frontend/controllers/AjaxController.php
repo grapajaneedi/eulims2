@@ -19,6 +19,7 @@ use common\models\finance\PostedOp;
 use frontend\modules\finance\components\epayment\ePayment;
 use common\models\finance\Op;
 use common\models\system\ApiSettings;
+use linslin\yii2\curl;
 
 /**
  * Description of AjaxController
@@ -92,6 +93,15 @@ class AjaxController extends Controller{
         $discount= Discount::find()->where(['discount_id'=>$id])->one();
         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
         return $discount;
+    }
+    public function actionGetdiscountreferral(){
+        $post= \Yii::$app->request->post();
+        $id=$post['discountid'];
+        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/discountbyid?discount_id='.$id;
+        $curl = new curl\Curl();
+        $discount = $curl->get($apiUrl);
+        \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+        return json_decode($discount);
     }
     public function actionGetcustomerhead($id){
         \Yii::$app->response->format =\yii\web\Response::FORMAT_JSON;

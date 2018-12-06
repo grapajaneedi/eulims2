@@ -21,10 +21,11 @@ if(Yii::$app->user->can('access-his-profile')){
 }else{
     $UserList= ArrayHelper::map(User::find()->all(),'user_id','username');
 }
+
 if(!Yii::$app->user->can('can-delete-profile')){
-   $Buttontemplate='{view}{update}';
+   $Buttontemplate="{view}{update}";
 }else{
-   $Buttontemplate='{view}{update}{delete}'; 
+   $Buttontemplate="{view}{update}{delete}"; 
 }
 $gridColumn = [
     ['class' => 'yii\grid\SerialColumn'],
@@ -54,7 +55,13 @@ $gridColumn = [
                   return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>'/profile/info/view?id='.$model->profile_id, 'onclick'=>'ShowModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "View Profile <font color='Blue'></font>")]);
               },
               'update'=>function ($url, $model) {
-                  return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/profile/info/update?id='.$model->profile_id,'onclick'=>'ShowModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Profile<font color='Blue'></font>")]);
+                  $profile= \common\models\system\Profile::find()->where(['profile_id'=>$model->profile_id])->one();
+                  if($profile){
+                      return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/profile/info/update?id='.$model->profile_id,'onclick'=>'ShowModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update Profile<font color='Blue'></font>")]);
+                  }else{
+                      return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'#','onclick'=>'', 'class' => 'btn btn-success disabled','title' => Yii::t('app', "Update Profile<font color='Blue'></font>")]);
+                  }
+                  
               }
           ],
     ],

@@ -14,6 +14,13 @@ return [
         'datecontrol' =>  [
             'class' => '\kartik\datecontrol\Module'
         ],
+        'profile' => [
+            'class' => 'common\modules\profile\Module',
+        ],
+        'dbmanager' => [
+            'class' => 'common\modules\dbmanager\Module',
+            'path' => dirname(dirname(__DIR__)) . '/frontend/web/backups/',
+        ],
         'pdfjs' => [
             'class' => '\yii2assets\pdfjs\Module',
             'waterMark'=>[

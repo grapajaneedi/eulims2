@@ -278,3 +278,9 @@ common/config/params.php
 common/config/params.php
 common/components/Functions_20181126.php
 common/config/bootstrap.php
+frontend/modules/lab/views/request/_formReferral_20181126.php
+frontend/modules/lab/controllers/RequestController_20181203.php
+frontend/modules/lab/controllers/RequestController_20181203b.php
+frontend/modules/lab/views/sample/_form_20180730.php
+frontend/modules/lab/controllers/SampleController_20181019.php
+frontend/modules/lab/views/sample/create_20180729.php

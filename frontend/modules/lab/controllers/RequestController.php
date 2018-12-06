@@ -34,6 +34,7 @@ use codemix\excelexport\ExcelFile;
 use common\models\system\User;
 use frontend\modules\lab\components\Printing;
 use yii\helpers\Json;
+use yii\helpers\ArrayHelper;
 
 //use yii\helpers\Url;
 /**
@@ -542,10 +543,18 @@ class RequestController extends Controller
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('createReferral', [
                     'model' => $model,
+                    'labreferral' => $this->listLabreferral(),
+                    'discountreferral' => $this->listDiscountreferral(),
+                    'purposereferral' => $this->listPurposereferral(),
+                    'modereleasereferral' => $this->listModereleasereferral(),
                 ]);
             }else{
                 return $this->renderAjax('createReferral', [
                     'model' => $model,
+                    'labreferral' => $this->listLabreferral(),
+                    'discountreferral' => $this->listDiscountreferral(),
+                    'purposereferral' => $this->listPurposereferral(),
+                    'modereleasereferral' => $this->listModereleasereferral(),
                 ]);
             }
         }
@@ -602,30 +611,9 @@ class RequestController extends Controller
             }
         }
     }
-    //referral customer list
+    //get referral customer list
     public function actionReferralcustomerlist($q = null, $id = null)
     {
-
-        //echo 'Curl: ', function_exists('curl_version') ? 'Enabled' . "\xA" : 'Disabled' . "\xA";
-
-        //exit;
-        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        
-        // if (!is_null($q)) {
-        //     $query = new Query;
-        //     $query->select('customer_id as id, customer_name AS text')
-        //             ->from('tbl_customer')
-        //             ->where(['like', 'customer_name', $q])
-        //             ->limit(20);
-        //     $command = $query->createCommand();
-        //     $command->db= \Yii::$app->labdb;
-        //     $data = $command->queryAll();
-        //     $out['results'] = array_values($data);
-        // } elseif ($id > 0) {
-        //     $out['results'] = ['id' => $id, 'text' =>Customer::find()->where(['customer_id'=>$id])->customer_name];
-        // }
-        // return $out;
-
         if (!is_null($q)) {
             $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/customers/searchname?keyword='.$q;
             $curl = new curl\Curl();
@@ -633,62 +621,69 @@ class RequestController extends Controller
         } else {
             $show = ['results' => ['id' => '', 'text' => '']];
         }
-        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        //\Yii::$app->response->data  =  $res;
-        //$decode=Json::decode($res);
-        //echo "<pre>";
-        //print_r(json_decode($res));
-        //echo "</pre>";
-        
+
         return $show;
+    }
+    //get referral laboratory list
+    protected function listLabreferral()
+    {
+        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/lab';
+        $curl = new curl\Curl();
+        $list = $curl->get($apiUrl);
+
+        $data = ArrayHelper::map(json_decode($list), 'lab_id', 'labname');
         
-       /* \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $out = ['results' => ['id' => '', 'text' => '']];
-        if (!is_null($q)) {
-            $query = new Query;
-            $query->select('customer_id as id, customer_name AS text')
-                    ->from('tbl_customer')
-                    ->where(['like', 'customer_name', $q])
-                    ->limit(20);
-            $command = $query->createCommand();
-            $command->db= \Yii::$app->labdb;
-            $data = $command->queryAll();
-            $out['results'] = array_values($data);
-        } elseif ($id > 0) {
-            $out['results'] = ['id' => $id, 'text' =>Customer::find()->where(['customer_id'=>$id])->customer_name];
-        }
-        return $out;*/
-        //$url="https://eulimsapi.onelab.ph/api/web/referral/customers/list";
+        return $data;
+
+    }
+    //get referral discount list
+    protected function listDiscountreferral()
+    {
+        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/discount';
+        $curl = new curl\Curl();
+        $list = $curl->get($apiUrl);
+
+        $data = ArrayHelper::map(json_decode($list), 'discount_id', 'type');
+        
+        return $data;
+    }
+    //get referral purpose list
+    protected function listPurposereferral()
+    {
+        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/purpose';
+        $curl = new curl\Curl();
+        $list = $curl->get($apiUrl);
+
+        $data = ArrayHelper::map(json_decode($list), 'purpose_id', 'name');
+        
+        return $data;
+    }
+    //get referral mode of release list
+    protected function listModereleasereferral()
+    {
+        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/moderelease';
+        $curl = new curl\Curl();
+        $list = $curl->get($apiUrl);
+
+        $data = ArrayHelper::map(json_decode($list), 'modeofrelease_id', 'mode');
+        
+        return $data;
+    }
+    //insert customer api
+    public function actionInsertcustomer()
+    {
         //$curl = new curl\Curl();
-         //   $res = $curl->get($url);
-         //   $decode=Json::decode($res);
-        //    print_r($decode);
-            //exit;
+        //$model->rstl_id=Yii::$app->user->identity->profile->rstl_id;
+        /*$params = [
+            'key' => 'value',
+            'secondKey' => 'secondValue'
+        ];
 
-      //  $curl = new curl\Curl();
-        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-       // $url="https://eulimsapi.onelab.ph/api/web/referral/customers/list";
-            
-        //$curl = curl_init();
-
-        
-      //  $response = $curl->get($url);
-                
-        // curl_setopt($curl, CURLOPT_URL, $url);
-        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
-        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
-        // curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
-        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-        // $response = curl_exec($curl);
-            
-        // $data = json_decode($response, true);
-
-        // echo "<pre>";
-        // print_r($data);
-        // echo "</pre>";
-
-       // return json_decode($response,true);
-        //return $response;
+        $response = $curl->setRequestBody(json_encode($params))
+            ->setHeaders([
+                'Content-Type' => 'application/json',
+                'Content-Length' => strlen(json_encode($params))
+            ])
+            ->post('http://example.com/');*/
     }
 }

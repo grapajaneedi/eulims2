@@ -1,6 +1,6 @@
 <?php
 use yii\helpers\Html;
-
+use common\modules\profile\ProfileAsset;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
@@ -26,7 +26,9 @@ if (Yii::$app->controller->action->id === 'login') {
     }
     frontend\assets\AppAsset::register($this);
     dmstr\web\AdminLteAsset::register($this);
-
+    //Yii::$app->assetManager->forceCopy=true;
+    ProfileAsset::register($this);
+    //Yii::$app->assetManager->forceCopy=false;
     $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
     
     ?>

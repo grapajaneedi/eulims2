@@ -56,6 +56,20 @@ function MessageBox(){
         function (result) {alert(result);}
     );
 }
+/**
+ * @description To enable Progress events
+ * @param {type} df
+ * @returns {undefined}
+ */
+function ShowProgress(df=true){
+    if(df){
+       $("#eulims_progress").removeClass("progress-stop");
+       $("#eulims_progress").addClass("progress-start");
+    }else{
+       $("#eulims_progress").removeClass("progress-start");
+       $("#eulims_progress").addClass("progress-stop");
+    }
+}
 function ConfirmBox(Title, Message){
     bootbox.confirm(
         {
