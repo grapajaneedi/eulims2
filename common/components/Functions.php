@@ -61,6 +61,7 @@ class Functions extends Component{
     function getPesoSign(){
         return "₱";
     }
+    
     /**
      * Get the corresponding access token using rstl_id 
      * @param int $id The RSTL_ID for each RSTL

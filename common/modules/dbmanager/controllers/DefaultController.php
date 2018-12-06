@@ -9,11 +9,14 @@ use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\helpers\StringHelper;
+use common\models\system\BackupConfig;
+use kartik\helpers\Enum;
 /**
  * Default controller for the `dbmanager` module
  */
 class DefaultController extends Controller
 {
+    public $mysqllocation="C:\Program Files\MySQL\MySQL Server 5.7\bin\\";
     /**
      * @return Module
      */
@@ -27,6 +30,7 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+        
         if(isset($_GET['file'])){
             $file="//".$_GET['file'];
         }else{
@@ -42,10 +46,11 @@ class DefaultController extends Controller
         $dataProvider->pagination->pageSize=6;
         $model=new BackupModel();
         $model->database='all';
-        $model->extension='tar';
+        $model->extension='zip';
         $model->backupdatabase=1;
         $model->download=0;
         $model->backupfiles=0;
+        
         return $this->render('index', [
             'model' => $model,
             'dataProvider' => $dataProvider,
@@ -126,14 +131,22 @@ class DefaultController extends Controller
         //var_dump($BackModel);
         //echo "</pre>";
         //exit;
+        //Get the config
+        $BackupConfig=BackupConfig::findOne(1);
+        if(!$BackupConfig){
+           $dumpPath= $this->mysqllocation;
+        }else{
+           $dumpPath=$BackupConfig->mysqldump_path;   
+        }
         $backup =\Yii::$app->backup; 
         $backup->ext=$BackModel['extension'];
-        $file = $backup->create($BackModel['backupfiles'],$BackModel['backupdatabase'],$database);
+        $file = $backup->create($BackModel['backupfiles'],$BackModel['backupdatabase'],$database, $dumpPath);
         $downloadFile="";
         if((int)$BackModel['download']==1){
             $downloadFile=\Yii::$app->getRequest()->serverName ."/backups/$file";
         }
-        \Yii::$app->session->setFlash('success', 'Backup created Successfully!');
+        $elapsedtime=\Yii::getLogger()->getElapsedTime();
+        \Yii::$app->session->setFlash('success', "Backup created Successfully with ".number_format($elapsedtime,2)." seconds!");
         $this->redirect(["/dbmanager",'file'=>$downloadFile]);
     }
 }

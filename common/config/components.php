@@ -101,8 +101,8 @@ return [
         // it helpful when mysql password is not set.
         // You can override this command with you custom params,
         // just add them to $databases config.
-        'mysqldump' => "\"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysqldump\" --add-drop-table --allow-keywords -q -c -u{username} -h{host} -p{password} {db} | gzip -9",
-
+        //'mysqldump' => "\"C:\Program Files\MySQL\MySQL Server 5.7\bin\mysqldump\" --add-drop-table --allow-keywords -q -c -u{username} -h{host} -p{password} {db} | gzip -9",
+        'mysqldump'=>"--add-drop-table --allow-keywords -q -c -u{username} -h{host} -p{password} {db}",
         // Number of seconds after which the file is considered deprecated and will be deleted.
         // To prevent deleting any files you can set this param as NULL/FALSE/0.
         'expireTime' => 2592000, // 1 month

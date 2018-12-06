@@ -88,7 +88,7 @@ class BackupUtility extends \yii\base\Component
      *
      * @var string
      */
-    public $mysqldump = 'mysqldump --add-drop-table --allow-keywords -q -c -u "{username}" -h "{host}" -p\'{password}\' {db} | gzip -9';
+    public $mysqldump = '--add-drop-table --allow-keywords -q -c -u "{username}" -h "{host}" -p\'{password}\' {db} | gzip -9';
 
     /**
      * @inheritdoc
@@ -134,14 +134,14 @@ class BackupUtility extends \yii\base\Component
      * @return string Full path to created backup file
      * @throws Exception
      */
-    public function create($IsbackupFiles,$IsBackupDB, $database)
+    public function create($IsbackupFiles,$IsBackupDB, $database, $dumpPath)
     {
         $folder = $this->getBackupFolder();
         if($IsbackupFiles==1){
             $files = $this->backupFiles($folder);
         }
         if($IsBackupDB==1){
-            $db = $this->backupDatabase($folder, $database);
+            $db = $this->backupDatabase($folder, $database,$dumpPath);
         }
         $resultFilename = $this->getBackupFilename();
         $archiveFile = dirname($folder) . DIRECTORY_SEPARATOR . $resultFilename . '.'.$this->ext;
@@ -196,7 +196,7 @@ class BackupUtility extends \yii\base\Component
      *
      * @return bool
      */
-    public function backupDatabase($saveTo,$database)
+    public function backupDatabase($saveTo,$database, $dumpPath)
     {
         $saveTo .= DIRECTORY_SEPARATOR . 'sql';
         if(!file_exists($saveTo)){
@@ -207,7 +207,11 @@ class BackupUtility extends \yii\base\Component
                 continue;
             }
             // Get mysqldump command
-            $command = isset($params['command']) && !empty($params['command']) ? $params['command'] : $this->mysqldump;
+            $command =isset($params['command']) && !empty($params['command']) ? $params['command'] : $this->mysqldump;
+            if(substr($dumpPath, -1)!=="\\"){
+               $dumpPath.="\\"; 
+            }
+            $command= '"'.$dumpPath.'mysqldump" ' . $command;
             
             if ((string)$params['password'] === '') {
                 // Remove password option
@@ -219,8 +223,10 @@ class BackupUtility extends \yii\base\Component
                 $command = str_replace('{' . $k . '}', $v, $command);
             }
 
-            $file = $saveTo . DIRECTORY_SEPARATOR . $name . '.sql.'.$this->ext;
+            $file = $saveTo . DIRECTORY_SEPARATOR . $name . '.sql';
             $cmd=$command . ' > ' . $file;
+            //echo $cmd;
+            //exit;
             exec($cmd);
         }
 
