@@ -88,7 +88,7 @@ class BackupUtility extends \yii\base\Component
      *
      * @var string
      */
-    public $mysqldump = '--add-drop-table --allow-keywords -q -c -u "{username}" -h "{host}" -p\'{password}\' {db} | gzip -9';
+    public $mysqldump = '--add-drop-table --allow-keywords -q -c -u "{username}" -h "{host}" -p\'{password}\' --databases {db} | gzip -9';
 
     /**
      * @inheritdoc
