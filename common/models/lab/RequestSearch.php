@@ -85,6 +85,11 @@ class RequestSearch extends exRequest
         $query->andFilterWhere(['like','request_ref_num', $this->request_ref_num])
             ->andFilterWhere(['like', 'conforme', $this->conforme])
             ->andFilterWhere(['like', 'receivedBy', $this->receivedBy]);
+        // Checks for Lab Permissions
+        if(Yii::$app->user->can("lab-manager")){//Lab Manager
+           $labid=Yii::$app->user->identity->profile->lab_id;
+           $query->andFilterWhere(['lab_id'=>$labid]);     
+        }
 
         return $dataProvider;
     }
