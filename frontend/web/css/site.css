@@ -31,8 +31,8 @@ body {
     z-index: 20000;
     width: 100%;
     height: 100%;
-   /* background-image: url('/images/img-loader64.gif');
-    background-repeat: no-repeat center;*/
+    top: 0;
+    left: 0;
     background: url('/images/img-loader64.gif') no-repeat center;
 }
 .progress-stop{
