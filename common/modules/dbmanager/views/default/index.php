@@ -181,7 +181,7 @@ $Header.="Laboratory Request";
 
             [
                 'class' => 'kartik\grid\ActionColumn',
-                'template' => '{download} {restore} {storage} {delete}', //{restore}
+                'template' => '{download} {storage} {delete}', //{restore}
                 'buttons' => [
                     'download' => function ($url, $model) {
                         return Html::a('<span class="glyphicon glyphicon-download-alt"></span>',
@@ -229,7 +229,7 @@ $Header.="Laboratory Request";
                             [
                                 'title' => Yii::t('dbManager', 'Delete'),
                                 'data-method' => 'post',
-                                'data-confirm' => Yii::t('dbManager', 'Are you sure?'),
+                                'data-confirm' => Yii::t('dbManager', "Are you sure you want to delete '$model[name]' script?"),
                                 'class' => 'btn btn-sm btn-danger',
                             ]);
                     },

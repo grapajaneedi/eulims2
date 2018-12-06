@@ -116,7 +116,7 @@ class DefaultController extends Controller
         foreach ($this->getModule()->getFileList() as $id => $file) {
             $columns = [];
             $columns['id'] = $id;
-            $columns['type'] = pathinfo($file, PATHINFO_EXTENSION);
+            $columns['type'] = strtoupper(pathinfo($file, PATHINFO_EXTENSION)).' File';
             $columns['name'] = StringHelper::basename($file);
             $columns['size'] = Yii::$app->formatter->asSize(filesize($file));
             $columns['create_at'] = Yii::$app->formatter->asDatetime(filectime($file));

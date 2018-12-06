@@ -112,7 +112,7 @@ if(Yii::$app->user->isGuest){
                     'visible'=>Yii::$app->user->can('access-db-manager')
                 ],
                 [
-                    'label' => '<img src="/images/icons/cog.png" style="width:20px">  <span>Configurations</span>', 
+                    'label' => '<img src="/images/icons/dbconfig.png" style="width:20px">  <span>Configurations</span>', 
                     'icon'=>' " style="display:none;width:0px"',
                     'url' => ["/dbmanager/config"],
                     'visible'=>Yii::$app->user->can('access-db-config')
