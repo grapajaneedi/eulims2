@@ -43,6 +43,12 @@ class DefaultController extends Controller
                 'pageSize' => 30,
             ],
         ]);
+        $modelBackup =BackupConfig::find()->all();
+        if(!$modelBackup){
+            $Configured=false;
+        }else{
+            $Configured=true;
+        }
         $dataProvider->pagination->pageSize=6;
         $model=new BackupModel();
         $model->database='all';
@@ -54,7 +60,8 @@ class DefaultController extends Controller
         return $this->render('index', [
             'model' => $model,
             'dataProvider' => $dataProvider,
-            'file'=>$file
+            'file'=>$file,
+            'Configured'=>$Configured
         ]);
     }
     /**

@@ -36,6 +36,7 @@ foreach($dbList as $db){
 $js=<<<SCRIPT
     $("#btnGenerate").click(function(){
         $("#btnGenerate").attr("disabled", "disabled");
+        ShowProgress();
         $("#frmBackup").submit();
     });
 SCRIPT;
@@ -53,6 +54,13 @@ $Header.="Laboratory Request";
 <div class="panel panel-primary">
     <div class="panel-heading">Database Manager</div>
     <div class="panel-body">
+        <?php if(!$Configured){ ?>
+        <div class="alert alert-danger">
+            <span>MySQL Bin Folder is not configured, Please Configure the path of MySQL bin folder! or &nbsp;
+                <a href="/dbmanager/config" class="link">Take me to configuration page.</a>
+            </span>
+        </div>
+        <?php } ?>
         <div class="row">
             <div class="col-md-3">
                 <?=
@@ -61,7 +69,8 @@ $Header.="Laboratory Request";
                     'language' => 'en',
                     'options' => ['placeholder' => 'Select Extension'],
                     'pluginOptions' => [
-                        'allowClear' => true
+                        'allowClear' => true,
+                        'disabled'=>!$Configured
                     ],
                 ]);
                 ?>
@@ -71,6 +80,7 @@ $Header.="Laboratory Request";
                 <?=
                 $form->field($model, 'backupdatabase')->widget(CheckboxX::class, [
                     'options'=>['id'=>'backupdatabase'],
+                    'disabled'=>!$Configured,
                     'pluginOptions'=>['threeState'=>false],
                     'pluginEvents'=>[
                         "change"=>"function() { 
@@ -88,7 +98,8 @@ $Header.="Laboratory Request";
                     'language' => 'en',
                     'options' => ['placeholder' => 'Select Database'],
                     'pluginOptions' => [
-                        'allowClear' => false
+                        'allowClear' => false,
+                        'disabled'=>!$Configured
                     ],
                 ]);
                 ?>
@@ -100,6 +111,7 @@ $Header.="Laboratory Request";
                 <?=
                 $form->field($model, 'backupfiles')->widget(CheckboxX::class, [
                     'options'=>['id'=>'backupfiles'],
+                    'disabled'=>!$Configured,
                     'pluginOptions'=>['threeState'=>false],
                     'pluginEvents'=>[
                         "change"=>"function() { 
@@ -115,6 +127,7 @@ $Header.="Laboratory Request";
                 <?=
                 $form->field($model, 'download')->widget(CheckboxX::class, [
                     'options'=>['id'=>'download'],
+                    'disabled'=>!$Configured,
                     'pluginOptions'=>['threeState'=>false],
                     'pluginEvents'=>[
                         "change"=>"function() { 
@@ -126,7 +139,7 @@ $Header.="Laboratory Request";
                 ?>
             </div>
             <div class="col-md-3" style="padding-right: 15px">
-                <?= Html::Button('<i class="fa fa-download"></i> Generate Backup', ['id'=>'btnGenerate','class' => 'btn btn-primary']) ?>
+                <?= Html::Button('<i class="fa fa-download"></i> Generate Backup', ['id'=>'btnGenerate','class' => 'btn btn-primary','disabled'=>!$Configured]) ?>
             </div>
         </div>
     </div>
@@ -146,11 +159,7 @@ $Header.="Laboratory Request";
                     'enablePushState' => false,
               ],
         ],
-        //'panel' => [
-        //    'type' => GridView::TYPE_PRIMARY,
-        //    'heading' => '<i class="glyphicon glyphicon-book"></i>  Backup Scripts',
-        //    //'before'=>"<button type='button' onclick='LoadModal(\"Create Request\",\"/lab/request/create\")' class=\"btn btn-success\"><i class=\"fa fa-book-o\"></i> Create Request</button>&nbsp;&nbsp;&nbsp;<button type='button' onclick='LoadModal(\"Create Referral Request\",\"/lab/request/createreferral\")' class=\"btn btn-success\"><i class=\"fa fa-book-o\"></i> Create Referral Request</button>",
-        //],
+       
         'exportConfig'=>$func->exportConfig("Laboratory Request", "laboratory request", $Header),
         'columns' => [
             [
