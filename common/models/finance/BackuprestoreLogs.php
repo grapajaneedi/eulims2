@@ -13,8 +13,6 @@ use Yii;
  * @property string $op_data
  * @property string $pi_data
  * @property string $sc_data
- * @property string $op_billing_data
- * @property string $cancelled_op_data
  * @property string $receipt_data
  * @property string $check_data
  * @property string $deposit_data
@@ -46,7 +44,7 @@ class BackuprestoreLogs extends \yii\db\ActiveRecord
         return [
             [['transaction_date'], 'safe'],
             [['activity'], 'string', 'max' => 200],
-            [['op_data', 'pi_data', 'sc_data', 'op_billing_data', 'cancelled_op_data', 'receipt_data', 'check_data', 'deposit_data', 'status'], 'string', 'max' => 100],
+            [['op_data', 'pi_data', 'sc_data', 'receipt_data', 'check_data', 'deposit_data', 'status'], 'string', 'max' => 50],
         ];
     }
 
@@ -62,8 +60,6 @@ class BackuprestoreLogs extends \yii\db\ActiveRecord
             'op_data' => 'Op Data',
             'pi_data' => 'Pi Data',
             'sc_data' => 'Sc Data',
-            'op_billing_data' => 'Op Billing Data',
-            'cancelled_op_data' => 'Cancelled Op Data',
             'receipt_data' => 'Receipt Data',
             'check_data' => 'Check Data',
             'deposit_data' => 'Deposit Data',

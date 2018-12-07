@@ -19,7 +19,7 @@ class BackuprestoreLogsSearch extends BackuprestoreLogs
     {
         return [
             [['id'], 'integer'],
-            [['activity', 'transaction_date', 'op_data', 'pi_data', 'sc_data', 'op_billing_data', 'cancelled_op_data', 'receipt_data', 'check_data', 'deposit_data', 'status'], 'safe'],
+            [['activity', 'transaction_date', 'op_data', 'pi_data', 'sc_data', 'receipt_data', 'check_data', 'deposit_data', 'status'], 'safe'],
         ];
     }
 
@@ -67,8 +67,6 @@ class BackuprestoreLogsSearch extends BackuprestoreLogs
             ->andFilterWhere(['like', 'op_data', $this->op_data])
             ->andFilterWhere(['like', 'pi_data', $this->pi_data])
             ->andFilterWhere(['like', 'sc_data', $this->sc_data])
-            ->andFilterWhere(['like', 'op_billing_data', $this->op_billing_data])
-            ->andFilterWhere(['like', 'cancelled_op_data', $this->cancelled_op_data])
             ->andFilterWhere(['like', 'receipt_data', $this->receipt_data])
             ->andFilterWhere(['like', 'check_data', $this->check_data])
             ->andFilterWhere(['like', 'deposit_data', $this->deposit_data])
