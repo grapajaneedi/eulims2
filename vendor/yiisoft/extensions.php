@@ -790,4 +790,13 @@ return array (
       '@kartik/number' => $vendorDir . '/kartik-v/yii2-number/src',
     ),
   ),
+  'philippfrenzel/yii2fullcalendar' => 
+  array (
+    'name' => 'philippfrenzel/yii2fullcalendar',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@yii2fullcalendar' => $vendorDir . '/philippfrenzel/yii2fullcalendar',
+    ),
+  ),
 );

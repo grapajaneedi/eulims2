@@ -20,6 +20,7 @@ return array(
     'yii\\' => array($vendorDir . '/yiisoft/yii2'),
     'yii2tech\\spreadsheet\\' => array($vendorDir . '/yii2tech/spreadsheet/src'),
     'yii2mod\\alert\\' => array($vendorDir . '/yii2mod/yii2-sweet-alert'),
+    'yii2fullcalendar\\' => array($vendorDir . '/philippfrenzel/yii2fullcalendar'),
     'yii2assets\\printthis\\' => array($vendorDir . '/yii2assets/yii2-printthis'),
     'yii2assets\\pdfjs\\' => array($vendorDir . '/yii2assets/yii2-pdfjs'),
     'wbraganca\\dynamicform\\' => array($vendorDir . '/wbraganca/yii2-dynamicform'),

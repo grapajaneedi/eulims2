@@ -120,7 +120,8 @@
         "kartik-v/yii2-money": "*",
         "yii2tech/spreadsheet": "*",
         "wbraganca/yii2-dynamicform": "*",
-        "kartik-v/yii2-export": "*"
+        "kartik-v/yii2-export": "*",
+        "philippfrenzel/yii2fullcalendar": "*"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "^2.0"

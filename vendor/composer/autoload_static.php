@@ -35,6 +35,7 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
             'yii\\' => 4,
             'yii2tech\\spreadsheet\\' => 21,
             'yii2mod\\alert\\' => 14,
+            'yii2fullcalendar\\' => 17,
             'yii2assets\\printthis\\' => 21,
             'yii2assets\\pdfjs\\' => 17,
         ),
@@ -261,6 +262,10 @@ class ComposerStaticInitb2e31f2d92d734baadeb2c74aa89265e
         'yii2mod\\alert\\' => 
         array (
             0 => __DIR__ . '/..' . '/yii2mod/yii2-sweet-alert',
+        ),
+        'yii2fullcalendar\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/philippfrenzel/yii2fullcalendar',
         ),
         'yii2assets\\printthis\\' => 
         array (
