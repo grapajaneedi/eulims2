@@ -143,7 +143,11 @@ class BackupUtility extends \yii\base\Component
         if($IsBackupDB==1){
             $db = $this->backupDatabase($folder, $database,$dumpPath);
         }
-        $resultFilename = $this->getBackupFilename();
+        if($database!='all' && $IsBackupDB==0){
+            $resultFilename=$database;
+        }else{
+            $resultFilename = $this->getBackupFilename();
+        }
         $archiveFile = dirname($folder) . DIRECTORY_SEPARATOR . $resultFilename . '.'.$this->ext;
 
         // Create new archive
