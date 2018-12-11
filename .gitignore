@@ -283,3 +283,5 @@ frontend/modules/lab/controllers/RequestController_20181203b.php
 frontend/modules/lab/views/sample/_form_20180730.php
 frontend/modules/lab/controllers/SampleController_20181019.php
 frontend/modules/lab/views/sample/create_20180729.php
+frontend/modules/lab/controllers/AnalysisController_20181121.php
+frontend/modules/lab/controllers/SampleController_20181203.php
