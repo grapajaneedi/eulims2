@@ -92,8 +92,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'op_data',
             'pi_data',
             'sc_data',
-            'op_billing_data',
-            'cancelled_op_data',
             'receipt_data',
             'check_data',
             'deposit_data',

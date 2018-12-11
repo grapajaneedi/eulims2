@@ -39,13 +39,7 @@ class FinanceController extends Controller
         $year =  $_POST['year'];
         
         for($month=1;$month < 13;$month++){
-             $searchModel = new BackuprestoreLogsSearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-            $model = new BackuprestoreLogs();
-
-
-
-
+          
             $month_value=str_pad($month,2,"0",STR_PAD_LEFT);
             $start = $year."-".$month_value;
             $end = $year."-".$month_value;
@@ -78,10 +72,12 @@ class FinanceController extends Controller
             $connection= Yii::$app->financedb;
             $transaction = $connection->beginTransaction();
             $connection->createCommand('set foreign_key_checks=0')->execute();
-
+    
+           
             try {
              foreach ($data as $op)
              {    
+                   
                     $newOp = new Restore_op();  
 
                     $newOp->orderofpayment_id= $op['orderofpayment_id'];
@@ -96,10 +92,11 @@ class FinanceController extends Controller
                     $newOp->customer_id= $op['customer_id'];
                     $newOp->purpose= $op['purpose'];
                     $newOp->payment_status_id= $op['payment_status_id'];
-                    $newOp->save(false);
+                    $newOp->save();
                     $op_count++;
 
                     foreach ($op['paymentitems'] as $item){
+                       // echo "<pre>";var_dump($item);echo "<pre>";exit;
                         $paymentitem_count++;          
                         $newPaymentitem = new Restore_paymentitem();
                         $newPaymentitem->paymentitem_id= $item['paymentitem_id'];
@@ -112,57 +109,41 @@ class FinanceController extends Controller
                         $newPaymentitem->cancelled=$item['cancelled'];
                         $newPaymentitem->status=$item['status'];
                         $newPaymentitem->receipt_id=$item['receipt_id'];
-                        $newPaymentitem->save(true); 
+                        $newPaymentitem->save(); 
                     }
 
-                    foreach ($op['subsidiary_customer'] as $item1){
-                        $sc= new SubsidiaryCustomer();
-                        $sc->subsidiary_customer_id= $item1['subsidiary_customer_id'];
-                        $sc->orderofpayment_id=$item1['orderofpayment_id'];
-                        $sc->customer_id=$item1['customer_id'];
-                        $sc->save();
-                        $op_sc++;
-                    }
-             }
-                    Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
+             } 
+            
+               
+                $model = new BackuprestoreLogs();
+                
 
-
-                    $sql = "SET FOREIGN_KEY_CHECKS = 1;";
-
-                    $model->activity = "Restored data for the month of ".$month."-".$year;
-                    $model->transaction_date = date('Y-M-d');
-                    $model->op_data = count($data)."/".$op_count;
-                    $model->pi_data = $paymentitem_count."/".$paymentitem_count;
-                    $model->sc_data = $op_sc."/".$op_sc;
-                    $model->status = "COMPLETED";
-                    Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
-                    $model->save(false);
-
-                    $transaction->commit();
+                $model->activity = "Restored data for the month of ".$month."-".$year;
+                $model->transaction_date = date('Y-M-d');
+                $model->op_data = count($data)."/".$op_count;
+                $model->pi_data = $paymentitem_count."/".$paymentitem_count;
+                $model->status = "COMPLETED";
+                $model->save();
+                
+                $transaction->commit();
+                
+                $sql = "SET FOREIGN_KEY_CHECKS = 1;";
+                Yii::$app->session->setFlash('success', ' Records Successfully Restored for the year '.$year); 
+                  
             }catch (\Exception $e) {
                 Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
 
                 $transaction->rollBack();
-                /*return $this->renderAjax('/finance/backup_restore', [
-                    'model'=>$model,
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
-                 ]);*/
             }catch (\Throwable $e) {
                 Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
-
                 $transaction->rollBack();
-              /* return $this->renderAjax('/finance/backup_restore', [
-                'model'=>$model,
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);*/
+          
             }	
         }
        
 	
        
-        //return $this->redirect('/api/finance');
+        return $this->redirect('/api/finance');
      
      }
 

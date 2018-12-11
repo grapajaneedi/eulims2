@@ -22,7 +22,7 @@ $func=new Functions();
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'id'=>'RequestGrid',
+        'id'=>'grid',
         'filterModel' => $searchModel,
         'containerOptions' => ['style' => 'overflow-x: none!important','class'=>'kv-grid-container'], // only set when $responsive = false
         'headerRowOptions' => ['class' => 'kartik-sheet-style'],
@@ -45,8 +45,18 @@ $func=new Functions();
         
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
-            'request_ref_num',
             [
+             'class' => '\kartik\grid\CheckboxColumn',
+             'checkboxOptions' => function($model) {
+                if($model['posted'] == 1 && $model['payment_status_id'] <> 2){
+                   return ['disabled' => true];
+                }else{
+                   return [];
+                }
+             },
+           ],
+            'request_ref_num',
+          /*  [
                 'label'=>'Request Date',
                 'attribute'=>'request_datetime',
                 'value'=>function($model){
@@ -63,38 +73,44 @@ $func=new Functions();
                         'todayHighlight' => true
                     ]
                 ]),
-            ],
+            ], */
+            
+           
             [
-                'attribute' => 'customer_id', 
-                'label'=>'Customer',
-                'vAlign' => 'middle',
-                'width' => '180px',
-               
-                'value' => function ($model, $key, $index, $widget) { 
-                    return $model->customer ? $model->customer->customer_name : "";
+                'attribute' => 'customer_id',
+                'label' => 'Customer Name',
+                'value' => function($model) {
+                    if($model->customer){
+                        return $model->customer->customer_name;
+                    }else{
+                        return "";
+                    }
                 },
-                //'group'=>true,  // enable grouping
                 'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ArrayHelper::map(Customer::find()->orderBy('customer_name')->asArray()->all(), 'customer_id', 'customer_name'), 
+                'filter' => ArrayHelper::map(Customer::find()->asArray()->all(), 'customer_id', 'customer_name'),
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'Select Customer'],
-               
-                'format' => 'raw',
-                'noWrap' => false,
-                'mergeHeader'=>true,
-                'contentOptions' => ['style' => 'width: 60%;word-wrap: break-word;white-space:pre-line;'],
-            ],      
+                'filterInputOptions' => ['placeholder' => 'Customer Name', 'id' => 'grid-op-search-customer_id']
+            ],
             [
                 'label'=>'Total',
                 'attribute'=>'total',
                 'hAlign'=>'right',
                 'format' => ['decimal', 2],
+                'pageSummary' => '<span id="total">0.00</span>',
             ],
           
         ],
+        'showPageSummary' => true,          
 ]); ?>
+
+<div class="form-group pull-right">
+    <button  id='btnreq' class='btn btn-success' ><i class='fa fa-save'></i> Save </button>
+    <?php if(Yii::$app->request->isAjax){ ?>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    <?php } ?>
+  </div>
 <script type="text/javascript">
     function settotal(){
         
@@ -111,7 +127,7 @@ $func=new Functions();
             var data_key=$(row).attr("data-key");
             for (i = 0; i < dkeys.length; i++) { 
                 if(data_key==dkeys[i]){
-                    amt=StringToFloat(trows[index].cells[4].innerHTML);
+                    amt=StringToFloat(trows[index].cells[5].innerHTML);
                     Total=Total+parseFloat(amt);
                 }
             }
