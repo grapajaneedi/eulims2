@@ -30,6 +30,11 @@ return [
             'ReportName'=>'Request',
             'ReportNumber'=>1
         ],
+        'epayment_config'=>[// ePayment Configuration
+            'class'=>'common\components\EpaymentConfig',
+            'URI'=>'https://yii2customer.onelab.ph/web/api/op',
+            
+        ],
         'places' => [
             'class' => '\dosamigos\google\places\Places',
             'key' => 'AIzaSyBkbMSbpiE90ee_Jvcrgbb12VRXZ9tlzIc',
