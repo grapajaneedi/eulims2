@@ -24,6 +24,7 @@ use yii\db\Query;
 use yii\web\Response;
 use yii\db\ActiveQuery;
 use common\components\Functions;
+use linslin\yii2\curl;
 
 /**
  * SampleController implements the CRUD actions for Sample model.
@@ -94,10 +95,20 @@ class SampleController extends Controller
         {
             $requestId = (int) Yii::$app->request->get('request_id');
         }
+
+        /*if(Yii::$app->request->get('request_type')){
+            $requestType = (int) Yii::$app->request->get('request_type');
+        } else {
+            $requestType = 1;
+        }*/
+
         $request = $this->findRequest($requestId);
         $labId = $request->lab_id;
-        $sampletype = $this->listSampletype($labId);
+        //$sampletype = $this->listSampletype($labId);
         $rstlId = Yii::$app->user->identity->profile->rstl_id;
+        //$sampletypereferral = $this->listSampletypereferral($labId);
+
+        $sampletype = ($request->request_type_id == 2) ? $this->listSampletypereferral($labId) : $this->listSampletype($labId);
 
         if ($model->load(Yii::$app->request->post())) {
             if(isset($_POST['Sample']['sampling_date'])){
@@ -161,7 +172,8 @@ class SampleController extends Controller
 			return $this->renderAjax('_form', [
 				'model' => $model,
 				//'testcategory' => $testcategory,
-				'sampletype' => $sampletype,
+                'sampletype' => $sampletype,
+				//'sampletypereferral' => $sampletypereferral,
 				'labId' => $labId,
 				'sampletemplate' => $this->listSampletemplate(),
 			]);
@@ -171,6 +183,7 @@ class SampleController extends Controller
                 'model' => $model,
                 //'testcategory' => $testcategory,
                 'sampletype' => $sampletype,
+                //'sampletypereferral' => $sampletypereferral,
                 'labId' => $labId,
                 'sampletemplate' => $this->listSampletemplate(),
             ]);
@@ -189,7 +202,8 @@ class SampleController extends Controller
 
         $request = $this->findRequest($model->request_id);
         $labId = $request->lab_id;
-        $sampletype = $this->listSampletype($labId);
+        //$sampletype = $this->listSampletype($labId);
+        $sampletype = ($request->request_type_id == 2) ? $this->listSampletypereferral($labId) : $this->listSampletype($labId);
 
         if ($model->load(Yii::$app->request->post())) {
             if(isset($_POST['Sample']['sampling_date'])){
@@ -208,6 +222,7 @@ class SampleController extends Controller
                     'model' => $model,
                     //'testcategory' => $testcategory,
                     'sampletype' => $sampletype,
+                    //'sampletypereferral' => $sampletypereferral,
                     'labId' => $labId,
                     'sampletemplate' => $this->listSampletemplate(),
                 ]);
@@ -216,6 +231,7 @@ class SampleController extends Controller
                 'model' => $model,
                 //'testcategory' => $testcategory,
                 'sampletype' => $sampletype,
+                //'sampletypereferral' => $sampletypereferral,
                 'labId' => $labId,
                 'sampletemplate' => $this->listSampletemplate(),
             ]);
@@ -563,5 +579,25 @@ class SampleController extends Controller
         $modelSampletemplate->save();
 
         return $modelSampletemplate;
+    }
+    //get referral sample type list
+    protected function listSampletypereferral($labId)
+    {
+        //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/labsampletypebylab?lab_id='.$labId;
+        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/sampletypebylab?lab_id='.$labId;
+        $curl = new curl\Curl();
+        $list = $curl->get($apiUrl);
+
+        $data = ArrayHelper::map(json_decode($list), 'sampletype_id', 'type');
+        
+        return $data;
+        //echo "<pre>";
+        //print_r($data);
+        //echo "</pre>";
+        //exit;
+       
+        //echo "<pre>";
+        //print_r(json_decode($list['sampletype']));
+        //echo "</pre>";
     }
 }

@@ -75,16 +75,16 @@ class OpController extends Controller
     public function actionView($id)
     { 
         $model=$this->findModel($id);
-         $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $id]);
-         $paymentitemDataProvider = new ActiveDataProvider([
-            'query' => $paymentitem_Query,
-            'pagination' => [
-                'pageSize' => 20,
-             ],
-         ]);
-         return $this->render('view', [
-            'model' => $model,
-            'paymentitemDataProvider' => $paymentitemDataProvider,
+        $paymentitem_Query = Paymentitem::find()->where(['orderofpayment_id' => $id]);
+        $paymentitemDataProvider = new ActiveDataProvider([
+           'query' => $paymentitem_Query,
+           'pagination' => [
+               'pageSize' => 20,
+            ],
+        ]);
+        return $this->render('view', [
+           'model' => $model,
+           'paymentitemDataProvider' => $paymentitemDataProvider,
         ]);
 
     }

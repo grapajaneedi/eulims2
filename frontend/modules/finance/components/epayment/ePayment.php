@@ -58,11 +58,10 @@ class ePayment {
         ];
         
         $content = json_encode($TransactDetails);
-        //echo $json;
-        //exit;
-        //return $TransactDetails;
+        //Get the epayment config
+        $compo=Yii::$app->components['epayment_config'];
         $curl = new curl\Curl();
-        $EpaymentURI="https://yii2customer.onelab.ph/web/api/op";
+        $EpaymentURI=$compo['URI'];//"https://yii2customer.onelab.ph/web/api/op";
         //$EpaymentURI="http://www.eulims.local/capi/op";
         
         $response = $curl->setRequestBody($content)
