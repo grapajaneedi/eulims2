@@ -92,6 +92,7 @@ class Functions extends Component{
      * @return boolean
      */
     public function CheckUrlExist($url){
+        return false;
         //$file = 'http://www.port-management.com/assets/41a8fcb2/photo/c1f44f4d32ce6b10fcb6ec71f292cfa43323ee6c1.jpg';
         $ServerName=Yii::$app->getRequest()->serverName;
         if (strpos($url, 'http') == false) {

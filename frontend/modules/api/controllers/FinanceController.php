@@ -11,6 +11,8 @@ use common\models\finance\SubsidiaryCustomer;
 use common\models\finance\BackuprestoreLogs;
 use common\models\finance\BackuprestoreLogsSearch;
 use yii\helpers\Json;
+use common\models\finance\Restore_receipt;
+use common\models\finance\Restore_deposit;
 
 set_time_limit(1000);
 
@@ -80,7 +82,7 @@ class FinanceController extends Controller
                    
                     $newOp = new Restore_op();  
 
-                    $newOp->orderofpayment_id= $op['orderofpayment_id'];
+                    $newOp->orderofpayment_id= $op['local_orderofpayment_id'];
 
                     $newOp->rstl_id= $op['rstl_id'];
 
@@ -96,10 +98,10 @@ class FinanceController extends Controller
                     $op_count++;
 
                     foreach ($op['paymentitems'] as $item){
-                       // echo "<pre>";var_dump($item);echo "<pre>";exit;
+                       
                         $paymentitem_count++;          
                         $newPaymentitem = new Restore_paymentitem();
-                        $newPaymentitem->paymentitem_id= $item['paymentitem_id'];
+                        $newPaymentitem->paymentitem_id= $item['local_paymentitem_id'];
                         $newPaymentitem->rstl_id=$item['rstl_id'];
                         $newPaymentitem->request_id=$item['request_id'];
                         $newPaymentitem->request_type_id=$item['request_type_id'];
@@ -117,7 +119,6 @@ class FinanceController extends Controller
                
                 $model = new BackuprestoreLogs();
                 
-
                 $model->activity = "Restored data for the month of ".$month."-".$year;
                 $model->transaction_date = date('Y-M-d');
                 $model->op_data = count($data)."/".$op_count;
@@ -151,4 +152,119 @@ class FinanceController extends Controller
     {
         return $this->render('customers');
     }
+    
+    public function actionRes_receipt(){
+	//$month = (int)$_POST['month'] + 1;
+        $year =  $_GET['year'];
+        
+        for($month=1;$month < 13;$month++){
+          
+            $month_value=str_pad($month,2,"0",STR_PAD_LEFT);
+            $start = $year."-".$month_value;
+            $end = $year."-".$month_value;
+
+            $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+
+            $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/receipts/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&opds=".$start."&opde=".$end;
+
+
+
+            $curl = curl_init();
+
+            curl_setopt($curl, CURLOPT_URL, $apiUrl);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
+            curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($curl);
+
+            $data = json_decode($response, true);
+
+            $sql = "SET FOREIGN_KEY_CHECKS = 0;";
+
+
+            $receipt_count = 0;
+            $deposit_count = 0;
+            $check_count=0;
+
+            $connection= Yii::$app->financedb;
+            $transaction = $connection->beginTransaction();
+            $connection->createCommand('set foreign_key_checks=0')->execute();
+    
+           // echo"<pre>".var_dump($data)."</pre>";exit;
+            try {
+             foreach ($data as $receipt)
+             {    
+                   
+                    $newReceipt = new Restore_receipt(); 
+                    
+                    $newReceipt->receipt_id=$receipt['receipt_id'];
+                    $newReceipt->rstl_id=$receipt['rstl_id'];
+                    $newReceipt->orderofpayment_id=$receipt['local_orderofpayment_id'];
+                    $newReceipt->deposit_type_id=$receipt['deposit_type_id'];
+                    $newReceipt->or_series_id=$receipt['or_series_id'];
+                    $newReceipt->or_number=$receipt['or_number'];
+                    $newReceipt->receiptDate=$receipt['receiptDate'];
+                    $newReceipt->payment_mode_id=$receipt['payment_mode_id'];
+                    $newReceipt->payor=$receipt['payor'];
+                    $newReceipt->collectiontype_id=$receipt['collectiontype_id'];
+                    $newReceipt->total=$receipt['total'];
+                    $newReceipt->deposit_id=$receipt['local_deposit_id'];
+                    $newReceipt->customer_id=$receipt['customer_id'];
+                    $newReceipt->save(false);
+                    $receipt_count++;
+
+                    /*echo "<pre>";var_dump($receipt);echo "</pre>";exit; 
+                    
+                    foreach ($receipt['deposit'] as $item){
+                        
+                           
+                        $newDeposit = new Restore_deposit();
+                    
+                       
+                        $newDeposit->deposit_id= $item['local_deposit_id'];
+                        $newDeposit->rstl_id= $item['rstl_id'];
+                        $newDeposit->or_series_id= $item['or_series_id'];
+                        $newDeposit->start_or= $item['start_or'];
+                        $newDeposit->end_or= $item['end_or'];
+                        $newDeposit->amount= $item['amount'];
+                        $newDeposit->deposit_type_id= $item['deposit_type_id'];
+                        $newDeposit->deposit_date= $item['deposit_date'];
+                        $newDeposit->save(); 
+                    }*/
+
+             } 
+            
+               
+                /*$model = new BackuprestoreLogs();
+                
+                $model->activity = "Restored data for the month of ".$month."-".$year;
+                $model->transaction_date = date('Y-M-d');
+                $model->op_data = count($data)."/".$op_count;
+                $model->pi_data = $paymentitem_count."/".$paymentitem_count;
+                $model->status = "COMPLETED";
+                $model->save();
+                */
+                $transaction->commit();
+                
+                $sql = "SET FOREIGN_KEY_CHECKS = 1;";
+                Yii::$app->session->setFlash('success', ' Records Successfully Restored for the year '.$year); 
+                  
+            }catch (\Exception $e) {
+                Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
+
+                $transaction->rollBack();
+            }catch (\Throwable $e) {
+                Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
+                $transaction->rollBack();
+          
+            }
+        }
+       
+	
+       
+        return $this->redirect('/api/finance');
+     
+     }
 }
