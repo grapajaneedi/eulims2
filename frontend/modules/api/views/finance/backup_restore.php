@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'theme' => Select2::THEME_KRAJEE,
                         'options' => ['id'=>'year'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Year'],
-                ])->label("Year")."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span>"."</div></div>";
+                ])->label("Year")."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_receipt' onclick='restore_receipt()'>RESTORE Receipt</span>";
             ?>
         </div>
         <?php ActiveForm::end(); ?>
@@ -104,8 +104,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width:10px; white-space: normal;'],
-                // 'pageSummary' => 'Total',
-                // 'pageSummary' => true,
                 
             ],
         ],
@@ -126,6 +124,23 @@ $this->params['breadcrumbs'][] = $this->title;
             url: "/api/finance/res",
             method: "POST",
             data: {month:m, year:y},
+            beforeSend: function(xhr) {
+                $('.image-loader').addClass("img-loader");
+               }
+            })
+            .done(function(data) {
+                $("#finance-grid").yiiGridView("applyFilter"); 
+                $('.image-loader').removeClass("img-loader");
+            });
+        }
+        function restore_receipt(){
+
+        var y = $('#year option:selected').text();
+    alert(y);
+        $.ajax({
+            url: "/api/finance/res_receipt",
+            method: "POST",
+            data: {year:y},
             beforeSend: function(xhr) {
                 $('.image-loader').addClass("img-loader");
                }
