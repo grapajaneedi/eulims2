@@ -35,6 +35,10 @@ return [
             'URI'=>'https://yii2customer.onelab.ph/web/api/op',
             
         ],
+        'api_config' => [
+            'class' => 'common\components\ApiConfig',
+            'api_url' => 'https://eulimsapi.onelab.ph/api/web/v1/'
+        ],
         'places' => [
             'class' => '\dosamigos\google\places\Places',
             'key' => 'AIzaSyBkbMSbpiE90ee_Jvcrgbb12VRXZ9tlzIc',
