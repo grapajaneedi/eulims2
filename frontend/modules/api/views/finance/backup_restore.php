@@ -54,19 +54,13 @@ $this->params['breadcrumbs'][] = $this->title;
    
         <div>
             <?php 
-          echo   $sampletype = "<div class='row'><div class='col-md-2'  style='margin-left:15px'>".$form->field($model,'transaction_date')->widget(Select2::classname(),[
-                            'data' => $month,
-                            'id'=>'month',
-                            'theme' => Select2::THEME_KRAJEE,
-                            'options' => ['id'=>'month'],
-                            'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Month'],
-                    ])->label("Month")."</div>"."<div class='col-md-2'>".$form->field($model,'op_data')->widget(Select2::classname(),[
+          echo   $sampletype = "<div class='row'><div class='col-md-2'>".$form->field($model,'transaction_date')->widget(Select2::classname(),[
                         'data' => $year,
                         'id'=>'year',
                         'theme' => Select2::THEME_KRAJEE,
                         'options' => ['id'=>'year'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Year'],
-                ])->label("Year")."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_receipt' onclick='restore_receipt()'>RESTORE Receipt</span>";
+                ])->label("Year")."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_receipt' onclick='restore_receipt()'>RESTORE Receipt</span></div>";
             ?>
         </div>
         <?php ActiveForm::end(); ?>
@@ -84,18 +78,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-               'after'=>false,
+                'after'=>false,
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],     
             'activity',
             'transaction_date',
-            'op_data',
-            'pi_data',
-            'sc_data',
-            'receipt_data',
-            'check_data',
-            'deposit_data',
+            'data_date',
+            'op',
+            'paymentitem',
+            'receipt',
+            'check',
+            'deposit',
             [
                 'header'=>'Status',
                 'hAlign'=>'center',
@@ -118,13 +112,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <script type="text/javascript">
     function restore(){
 
-        var m = $('#month option:selected').val();
         var y = $('#year option:selected').text();
     
         $.ajax({
             url: "/api/finance/res",
             method: "POST",
-            data: {month:m, year:y},
+            data: {year:y},
             beforeSend: function(xhr) {
                 $('.image-loader').addClass("img-loader");
                }
@@ -137,7 +130,6 @@ $this->params['breadcrumbs'][] = $this->title;
         function restore_receipt(){
 
         var y = $('#year option:selected').text();
-    alert(y);
         $.ajax({
             url: "/api/finance/res_receipt",
             method: "POST",

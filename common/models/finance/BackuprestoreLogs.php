@@ -10,12 +10,12 @@ use Yii;
  * @property int $id
  * @property string $activity
  * @property string $transaction_date
- * @property string $op_data
- * @property string $pi_data
- * @property string $sc_data
- * @property string $receipt_data
- * @property string $check_data
- * @property string $deposit_data
+ * @property string $data_date
+ * @property string $op
+ * @property string $paymentitem
+ * @property string $receipt
+ * @property string $check
+ * @property string $deposit
  * @property string $status
  */
 class BackuprestoreLogs extends \yii\db\ActiveRecord
@@ -42,9 +42,9 @@ class BackuprestoreLogs extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['transaction_date'], 'safe'],
             [['activity'], 'string', 'max' => 200],
-            [['op_data', 'pi_data', 'sc_data', 'receipt_data', 'check_data', 'deposit_data', 'status'], 'string', 'max' => 50],
+            [['transaction_date'], 'string', 'max' => 100],
+            [['data_date', 'op', 'paymentitem', 'receipt', 'check', 'deposit', 'status'], 'string', 'max' => 50],
         ];
     }
 
@@ -57,12 +57,12 @@ class BackuprestoreLogs extends \yii\db\ActiveRecord
             'id' => 'ID',
             'activity' => 'Activity',
             'transaction_date' => 'Transaction Date',
-            'op_data' => 'Op Data',
-            'pi_data' => 'Pi Data',
-            'sc_data' => 'Sc Data',
-            'receipt_data' => 'Receipt Data',
-            'check_data' => 'Check Data',
-            'deposit_data' => 'Deposit Data',
+            'data_date' => 'Data Date',
+            'op' => 'Op',
+            'paymentitem' => 'Paymentitem',
+            'receipt' => 'Receipt',
+            'check' => 'Check',
+            'deposit' => 'Deposit',
             'status' => 'Status',
         ];
     }
