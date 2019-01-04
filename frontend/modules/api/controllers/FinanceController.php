@@ -160,7 +160,7 @@ class FinanceController extends Controller
       
         $year =  $_POST['year'];
         
-        for($month=1;$month < 13;$month++){
+        for($month=12;$month > 0;$month--){
           
             $month_value=str_pad($month,2,"0",STR_PAD_LEFT);
             $start = $year."-".$month_value;
@@ -244,9 +244,20 @@ class FinanceController extends Controller
                 $dt=$month."-".$year;
           
                 $model= BackuprestoreLogs::find()->where(['data_date'=>$dt])->one();
-                $model->receipt=$receipt_count;
-                $model->check=$check_count;  
-                $model->save(false);
+               
+                if($model){
+                    $model->receipt=$receipt_count;
+                    $model->check=$check_count;  
+                    $model->save(false);
+                }else{
+                    $model= new BackuprestoreLogs();
+                    $model->activity = "Restored data for the month of ".$month."-".$year;
+                    $model->transaction_date = date('Y-M-d');
+                    $model->data_date=$month."-".$year;
+                    $model->receipt=$receipt_count;
+                    $model->check=$check_count;  
+                    $model->save(false);
+                }
                 
               //  $this->Res_deposit($year);
                 $sql = "SET FOREIGN_KEY_CHECKS = 1;";
@@ -268,7 +279,7 @@ class FinanceController extends Controller
      public function Res_deposit($year){
          
 	
-        for($month=1;$month < 13;$month++){
+        for($month=12;$month > 0;$month--){
           
             $month_value=str_pad($month,2,"0",STR_PAD_LEFT);
             $start = $year."-".$month_value;
@@ -334,8 +345,18 @@ class FinanceController extends Controller
                 $dt=$month."-".$year;
           
                 $model= BackuprestoreLogs::find()->where(['data_date'=>$dt])->one();
-                $model->deposit = $deposit_count;
-                $model->save(false);
+                if($model){
+                   $model->deposit = $deposit_count;
+                   $model->save(false); 
+                }else{
+                   $model= new BackuprestoreLogs();
+                   $model->activity = "Restored data for the month of ".$month."-".$year;
+                    $model->transaction_date = date('Y-M-d');
+                    $model->data_date=$month."-".$year;
+                   $model->deposit = $deposit_count;
+                   $model->save(false);
+                }
+                
                 
                 $sql = "SET FOREIGN_KEY_CHECKS = 1;";
                 Yii::$app->session->setFlash('success', ' Records Successfully Restored for the year '.$year); 
