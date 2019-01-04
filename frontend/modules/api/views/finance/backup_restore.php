@@ -26,7 +26,7 @@ $func=new Functions();
 
 
 $month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-$year = ['2013', '2014', '2015', '2016', '2017', '2018'];
+$year = ['1970','2013', '2014', '2015', '2016', '2017', '2018'];
 
 //$lablist= ArrayHelper::map( $decode,'lab_id','labname');
 
