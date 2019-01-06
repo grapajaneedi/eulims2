@@ -13,6 +13,7 @@ use common\models\lab\Sampletype;
 use common\models\finance\Paymentitem;
 
 use common\models\lab\Package;
+use yii\bootstrap\Modal;
 
 $Connection = Yii::$app->financedb;
 $func = new Functions();
@@ -119,10 +120,12 @@ if($Request_Ref){//With Reference
     $disableButton="disabled";///reports/preview?url=/lab/request/print-request?id=10
     $EnablePrint="<a href='/reports/preview?url=/lab/request/print-request?id=".$model->request_id."' class='btn btn-primary' style='margin-left: 5px'><i class='fa fa-print'></i> Print Request</a>";
     $ClickButton='';
+    $ClickButtonAnalysisReferral='';
     $btnID="";
 }else{ // NO reference number yet
     $enableRequest=false;
     $ClickButton='addSample(this.value,this.title)';
+    $ClickButtonAnalysisReferral='addAnalysisReferral(this.value,this.title)';
     $disableButton="";
     $EnablePrint="<span class='btn btn-primary' disabled style='margin-left: 5px'><i class='fa fa-print'></i> Print Request</span>";
     $btnID="id='btnSaveRequest'";
@@ -753,7 +756,7 @@ $this->registerJs($PrintEvent);
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Analysis</h3>',
                     'type'=>'primary',
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => Url::to(['analysis/create','id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_analysis'])."   ".
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => $model->request_type_id == 2 ? Url::to(['analysisreferral/create','request_id'=>$model->request_id]) : Url::to(['analysis/create','id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=> $model->request_type_id == 2 ? $ClickButtonAnalysisReferral : $ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_analysis'])."   ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_package'])." ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_fees']),
                    'after'=>false,
@@ -905,6 +908,14 @@ $this->registerJs($PrintEvent);
             .find('#modalContent')
             .load(url);
     }
+    function addAnalysisReferral(url,title){
+       //var url = 'Url::to(['sample/update']) . "?id=' + id;
+       //var url = '/lab/sample/update?id='+id;
+        $(".modal-title").html(title);
+        $('#modalAnalysis').modal('show')
+            .find('#modalContent')
+            .load(url);
+    }
     function updateAnalysis(id){
        var url = '/lab/analysis/update?id='+id;
         $('.modal-title').html('Update Analysis');
@@ -951,4 +962,22 @@ $this->registerJs("
 
     }*/
 ");
+    Modal::begin([
+        'clientOptions' => ['backdrop' => 'static', 'keyboard' => false],
+        'bodyOptions'=>[
+            'class' => 'modal-body',
+            'style'=>'padding-bottom: 20px',
+        ],
+        'options' => [
+            'id' => 'modalAnalysis',
+            'tabindex' => false, // important for Select2 to work properly
+        ],
+        'header' => '<h4 class="fa fa-clone" style="padding-top: 0px;margin-top: 0px;padding-bottom:0px;margin-bottom: 0px"> <span class="modal-title" style="font-size: 16px;font-family: \'Source Sans Pro\',sans-serif;"></span></h4>',
+        'size'   => 'modal-lg',
+    ]);
+    echo "<div>";
+    echo "<div id='modalContent' style='margin-left: 5px;'><div style='text-align:center;'><img src='/images/img-loader64.gif' alt=''></div></div>";
+    echo "<div>&nbsp;</div>";
+    echo "</div>";
+    Modal::end();
 ?>
