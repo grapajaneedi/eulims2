@@ -319,6 +319,9 @@ class TaggingController extends Controller
         $id = $_GET['analysis_id'];
         $analysis_id = $id;
         $model = new Tagging();
+
+       
+
          $samplesQuery = Sample::find()->where(['sample_id' => $id]);
          $sampleDataProvider = new ActiveDataProvider([
                  'query' => $samplesQuery,
@@ -340,6 +343,7 @@ class TaggingController extends Controller
          return $this->renderAjax('_viewAnalysis', [
             'request'=>$request,
             'model'=>$model,
+            'samplesQuery'=>$samplesQuery,
             'sampleDataProvider' => $sampleDataProvider,
             'analysisdataprovider'=> $analysisdataprovider,
             'analysis_id'=>$analysis_id,

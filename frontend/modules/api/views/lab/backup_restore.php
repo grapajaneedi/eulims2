@@ -112,7 +112,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'theme' => Select2::THEME_KRAJEE,
                         'options' => ['id'=>'year'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Year'],
-                ])->label("Year")."</div><div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restorebyyear()'>RESTORE BY YEAR</span><div class='col-md-4' style='margin-top:4px'><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span></div>";
+                ])->label("Year")."</div><div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restorebyyear()'>RESTORE BY MONTH</span><div class='col-md-4' style='margin-top:4px'><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span></div>";
             ?>
         </div>
         <?php ActiveForm::end(); ?>

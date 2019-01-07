@@ -125,3 +125,62 @@ class LabController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
+
+
+////////////////////////////////
+
+// public function actionSynccustomer($start,$url = "http://ulimsportal.onelab.ph/api/sync_customer"){
+//     // public function actionSynccustomer($start,$url = "http://www.eulims.local/api/sync_customer"){
+//      //get all the customers
+//      $customers= Yii::app()->db->createCommand("SELECT * FROM ulimslab.customer ORDER BY id ASC LIMIT ".$start.",500")->queryAll();
+//      // $customers = Customer::model()->findAll(); 
+//      // var_dump($customers); exit;
+//      $allCustomers = [];
+//      foreach($customers as $customer){
+//       // var_dump($customer); 
+//       $temp = [
+//        'customerName' => $customer['customerName'],
+//        'rstl_id'=> $customer['rstl_id'],
+//                    'classification_id'=> 1,
+//                    'latitude'=> "",
+//                    'longitude'=> "",
+//                    'head'=> $customer['head']? $customer['head']:"N/A",
+//                    'barangay_id'=> $customer['barangay_id'],
+//                    'address'=> $customer['address']?$customer['address']:"NA",
+//                    'tel'=> $customer['tel']?$customer['tel']:"NA",
+//                    'fax'=> $customer['fax']?$customer['fax']:"NA",
+//                    'email'=> $customer['email']?$customer['email']:"NA",
+//                    'typeId'=> $customer['typeId'],
+//                    'natureId'=> $customer['natureId'],
+//                    'industryId'=> $customer['industryId'],
+//                    'created'=> $customer['created'],
+//                    'id'=> $customer['id'],
+//                    'municipalitycity_id'=> $customer['municipalitycity_id'],
+//                    'district'=> $customer['district'],
+//       ];
+//       array_push($allCustomers, $temp);
+//      }
+   
+//      $response = Yii::app()->curl->post($url, ['data'=>json_encode($allCustomers)]);
+   
+//      $response=json_decode($response);
+   
+//      if($response){
+//       $table = "customer";
+//       $num = $response->num;
+//       $ids = $response->ids;
+//       //parse the json file here
+   
+//       $yiimig = Yiimigration::model()->findByattributes(['tblname'=>$table]);
+      
+//       if($yiimig){
+//        $yiimig->num = $yiimig->num + $num;
+//        $yiimig->ids = $yiimig->ids.$ids;
+//        $yiimig->save();
+//       }
+//      }
+     
+//      $this->redirect(array(
+//       'index'
+
+//       /////////////////////////

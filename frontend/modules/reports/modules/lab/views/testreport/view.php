@@ -15,6 +15,7 @@ $this->title = $model->report_num;
 $this->params['breadcrumbs'][] = ['label' => 'Testreports', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="testreport-view">
     <div class="form-row">
         <div class="container table-responsive">
@@ -95,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 
             ];
-
+          
             echo GridView::widget([
                 'id' => 'sample-grid',
                 'dataProvider'=> $trsamples,

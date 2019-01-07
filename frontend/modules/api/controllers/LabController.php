@@ -36,7 +36,11 @@ class LabController extends Controller
              'model'=>$model,
          ]);
      }
-     public function actionRes(){	
+     public function actionRes(){
+         //by year	
+
+        
+
 		$searchModel = new BackuprestoreSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $model = new Backuprestore();
@@ -74,14 +78,19 @@ class LabController extends Controller
        if ($br) {
             $message = "The month you have selected has been succesfully restored.";
             return Json::encode([
-                'message'=>$message,
-            
+                'message'=>$message,        
             ]);
             exit;
             }
 
-        for($month=1;$month < 13;$month++){
+          
 
+        for($month=1;$month < 13;$month++){
+            $request_count = 0;
+            $sample_count = 0;
+            $analysis_count = 0;
+            $samplenum = 0;
+            $analysesnum = 0;
             if ($month>9){
                 $start = $year."-".$month;
                 $end = $year."-".$month;
@@ -89,45 +98,28 @@ class LabController extends Controller
                 $start = $year."-"."0".$month;
                 $end = $year."-"."0".$month;
             }
-          
-            
+                 
             $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-    
             $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&reqds=".$start."&reqde=".$end;
                 
-            $curl = curl_init();
-                    
+            $curl = curl_init();                   
             curl_setopt($curl, CURLOPT_URL, $apiUrl);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
             curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    
             $response = curl_exec($curl);
                 
             $data = json_decode($response, true);
-              
-              /*echo "<pre>";
-              print_r($data);
-              echo "</pre>";
-              exit;*/
-           
+             
             $sql = "SET FOREIGN_KEY_CHECKS = 0;";
             $connection = Yii::$app->labdb;
             
-            $request_count = 0;
-            $sample_count = 0;
-            $analysis_count = 0;
-            $samplenum = 0;
-            $analysesnum = 0;
-    
-             //Yii::$app->labdb->createCommand('set foreign_key_checks=0')->execute();
-                $transaction = $connection->beginTransaction();
-                $connection->createCommand('set foreign_key_checks=0')->execute();
-                
-            //ADD CODE FOR CUSTOMERS HERE
-            
-          //  try {
+           
+
+            $transaction = $connection->beginTransaction();
+            $connection->createCommand('set foreign_key_checks=0')->execute();
+          
               foreach ($data as $request)
               {    
                           $newRequest = new Restore_request();    
@@ -186,14 +178,12 @@ class LabController extends Controller
                               $newSample->sample_code=$samp['sample_code'];
                               $newSample->samplename=$samp['samplename'];
                               $newSample->description=$samp['description'];
-                              $sampdate = $samp['sampling_date'];
-                              
-                                                        if ($sampdate=="0000-00-00 00:00:00"){
-                                                          $newSample->sampling_date=null;
-                                                        }else{
-                                                          $newSample->sampling_date=$sampdate;
-                                                        }
-                                                        
+                              $sampdate = $samp['sampling_date'];        
+                                    if ($sampdate=="0000-00-00 00:00:00"){
+                                            $newSample->sampling_date=null;
+                                    }else{
+                                            $newSample->sampling_date=$sampdate;
+                                    }                        
                               $newSample->remarks=$samp['remarks'];
                               $newSample->request_id=$samp['old_request_id'];
                               $newSample->sample_month=$samp['sample_month'];
@@ -212,7 +202,6 @@ class LabController extends Controller
                               $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                               $newSample->testcategory_id=$samp['testcategory_id'];
                               $newSample->save(true); 
-                 
                         foreach ($samp['analyses'] as $anals){
                             $analysis_count++;
                             $newanalysis = new Restore_analysis();
@@ -241,93 +230,43 @@ class LabController extends Controller
                             $newanalysis->testcategory_id=$anals['testcategory_id'];
                             $newanalysis->sample_type_id=$anals['sample_type_id'];
                             $newanalysis->old_sample_id=$anals['old_sample_id'];
-                            $newanalysis->save(true);
-                            
+                            $newanalysis->save(true);                  
                         }
                     }
                     $samplenum = $samplenum + $request['countSample'];
-                    $analysesnum = $analysesnum + $request['countAnalysis'];
-                    
+                    $analysesnum = $analysesnum + $request['countAnalysis'];             
                 }
         
-                    Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
+                    Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$year); 
                     $transaction->commit();
                     
                     $sql = "SET FOREIGN_KEY_CHECKS = 1;";
                     
-                    $model->activity = "Restored data for the month of ".$month."-".$year;
+                    $model->activity = "Restored data for the year ".$year;
                     $model->date = date('Y-M-d');
-                    $model->data = count($data)."/".$request_count;
+                    $model->data = $request_count."/".$request_count;
                     $model->status = "COMPLETED";
                     $model->month = $sample_count."/".$samplenum;
                     $model->monthyear = $month_value.$year;
                 
-                    $model->year = $analysis_count."/".$analysesnum;
-                    Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
+                    $model->year = $analysis_count."/".$analysis_count;
+                    Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$year); 
                     $model->save(false);
-            
-        //     } catch (\Exception $e) {
-               
-              
-        //         $message = "There was a problem connecting to the server. Please try again.";
-        //         return Json::encode([
-        //             'message'=>$message,
-                
-        //         ]);
-        //         exit;
-    
-        //         $transaction->rollBack();
-        //        return $this->renderAjax('/lab/backup_restore', [
-        //         'model'=>$model,
-        //         'searchModel' => $searchModel,
-        //         'dataProvider' => $dataProvider,
-        //     ]);
-        //     } catch (\Throwable $e) {
-        //         $message = "There was a problem connecting to the server. Please try again.";
-        //         return Json::encode([
-        //             'message'=>$message,
-                
-        //         ]);
-        //         exit;
-        //         $transaction->rollBack();
-        //        return $this->renderAjax('/lab/backup_restore', [
-        //         'model'=>$model,
-        //         'searchModel' => $searchModel,
-        //         'dataProvider' => $dataProvider,
-        //     ]);
-        //     }
-         }
-      
-        
+         }     
         $message = "Data has been successfully restored.";
         return Json::encode([
-            'message'=>$message,
-        
+            'message'=>$message,    
         ]);
         exit;
               return $this->renderAjax('/lab/backup_restore', [
                  'model'=>$model,
                  'searchModel' => $searchModel,
                  'dataProvider' => $dataProvider,
-             ]);
-     
+             ]);  
      }
 
-     public function actionResyear(){	
-
-    
-        // for ($i = 1; $i < 11; $i++) {
-        //         $message = $i;
-
-        //         return Json::encode([
-        //             'message'=>$message,
-                
-        //         ]);
-        // } 
-
-       
-
-        // exit;
+     public function actionResyear(){	 
+        //by month
 
 		$searchModel = new BackuprestoreSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -366,8 +305,7 @@ class LabController extends Controller
        if ($br) {
             $message = "The month you have selected has been succesfully restored.";
             return Json::encode([
-                'message'=>$message,
-            
+                'message'=>$message,          
             ]);
             exit;
             }
@@ -528,13 +466,11 @@ class LabController extends Controller
 						$newanalysis->testcategory_id=$anals['testcategory_id'];
 						$newanalysis->sample_type_id=$anals['sample_type_id'];
 						$newanalysis->old_sample_id=$anals['old_sample_id'];
-						$newanalysis->save(true);
-						
+						$newanalysis->save(true);					
                     }
 				}
 				$samplenum = $samplenum + $request['countSample'];
-				$analysesnum = $analysesnum + $request['countAnalysis'];
-				
+				$analysesnum = $analysesnum + $request['countAnalysis'];			
             }
 	
                 Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$month.' '.$year); 
