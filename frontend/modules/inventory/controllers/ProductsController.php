@@ -13,6 +13,7 @@ use yii\web\UploadedFile;
 use common\models\inventory\Suppliers;
 use common\models\inventory\SuppliersSearch;
 use yii\data\ActiveDataProvider;
+use common\models\inventory\Equipmentservice;
 /**
  * ProductsController implements the CRUD actions for Products model.
  */
@@ -251,4 +252,76 @@ class ProductsController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+
+    public function actionEquipment($varsearch=""){
+        $dataProvider = new ActiveDataProvider([
+            'query' =>Products::find()->where(['producttype_id'=>2]),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+
+        if($varsearch){
+             $dataProvider = new ActiveDataProvider([
+            'query' =>Products::find()->where(['like', 'product_name', $varsearch],['producttype_id'=>2]),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+             ]);
+
+        }
+
+          return $this->render('equipment',['dataProvider'=>$dataProvider,'searchkey'=>$varsearch]);
+    }
+
+    public function actionOpensched($id){
+
+         if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_schedule', [
+                
+            ]);
+        }
+        else {
+            return $this->render('_schedule', [
+              
+            ]);
+        }
+    }
+
+    public function actionJsoncalendar($start=NULL,$end=NULL,$_=NULL){
+
+    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+    // $times = \app\modules\timetrack\models\Timetable::find()->where(array('category'=>\app\modules\timetrack\models\Timetable::CAT_TIMETRACK))->all();
+
+    $events = array();
+
+    // foreach ($times AS $time){
+    //   //Testing
+    //   $Event = new \yii2fullcalendar\models\Event();
+    //   $Event->id = $time->id;
+    //   $Event->title = $time->categoryAsString;
+    //   $Event->start = date('Y-m-d\TH:i:s\Z',strtotime($time->date_start.' '.$time->time_start));
+    //   $Event->end = date('Y-m-d\TH:i:s\Z',strtotime($time->date_end.' '.$time->time_end));
+    //   $events[] = $Event;
+    // }
+
+      $Event = new Equipmentservice();
+  $Event->equipmentservice_id = 1;
+  // $Event->title = 'Testing';
+  $Event->startdate = date('Y-m-d\TH:i:s\Z');
+      // $event->nonstandard = [
+      //   'field1' => 'Something I want to be included in object #1',
+      //   'field2' => 'Something I want to be included in object #2',
+      // ];
+  $events[] = $Event;
+
+  $Event = new Equipmentservice();
+  $Event->equipmentservice_id = 2;
+  // $Event->title = 'Testing';
+  $Event->startdate = date('Y-m-d\TH:i:s\Z',strtotime('tomorrow 6am'));
+  $events[] = $Event;
+
+    return $events;
+  }
 }

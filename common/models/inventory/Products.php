@@ -109,10 +109,10 @@ class Products extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getInventoryWithdrawaldetails()
-    {
-        return $this->hasMany(InventoryWithdrawaldetails::className(), ['product_id' => 'product_id']);
-    }
+    // public function getInventoryWithdrawaldetails()
+    // {
+    //     return $this->hasMany(InventoryWithdrawaldetails::className(), ['product_id' => 'product_id']);
+    // }
 
     /**
      * @return \yii\db\ActiveQuery
