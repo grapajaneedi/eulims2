@@ -16,13 +16,13 @@ $items = [
             'row' => $model->inventoryEntries,
         ]),
     ],
-            [
-        'label' => '<i class="glyphicon glyphicon-book"></i> '. Html::encode('Inventory Withdrawaldetails'),
-        'content' => $this->render('_dataInventoryWithdrawaldetails', [
-            'model' => $model,
-            'row' => $model->inventoryWithdrawaldetails,
-        ]),
-    ],
+    //         [
+    //     'label' => '<i class="glyphicon glyphicon-book"></i> '. Html::encode('Inventory Withdrawaldetails'),
+    //     'content' => $this->render('_dataInventoryWithdrawaldetails', [
+    //         'model' => $model,
+    //         'row' => $model->inventoryWithdrawaldetails,
+    //     ]),
+    // ],
         ];
 echo TabsX::widget([
     'items' => $items,

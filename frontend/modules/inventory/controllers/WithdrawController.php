@@ -132,19 +132,36 @@ class WithdrawController extends Controller
      public function actionOut($varsearch=""){
         // $product=Products::find()->limit(20)->all();
         $dataProvider = new ActiveDataProvider([
-            'query' =>Products::find(),
+            'query' =>Products::find()->where(['producttype_id'=>1]),
             'pagination' => [
                 'pageSize' => 10,
             ],
         ]);
 
         if($varsearch){
-             $dataProvider = new ActiveDataProvider([
-            'query' =>Products::find()->where(['like', 'product_name', $varsearch]),
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-             ]);
+            //  $dataProvider = new ActiveDataProvider([
+            // 'query' =>Products::find()->where(['like', 'product_name', $varsearch],['producttype_id'=>1]),
+            // 'pagination' => [
+            //     'pageSize' => 10,
+            // ],
+            //  ]);
+
+            $query = Products::find();
+
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+            ]);
+
+            $query->andFilterWhere([
+                'producttype_id' => 1,
+            ]);
+
+            $query->andFilterWhere(['like', 'product_name', $varsearch]);
+
+            //$here = Products::find()->where(['like', 'product_name', $varsearch],['producttype_id'=>1]);
+             //print_r($dataProvider);
+             //echo "here"; 
+             //exit;
 
         }
 
@@ -248,7 +265,6 @@ class WithdrawController extends Controller
 
         //delete the array of that item
         if($key!==false){
-            
             array_splice($unserialize,$key,1);
             $session['cart'] = serialize($unserialize);
         }
@@ -366,8 +382,6 @@ class WithdrawController extends Controller
             $transaction->rollBack();
             throw $e;
         }
-        
-
         
          return $this->redirect(['out']);
     }
