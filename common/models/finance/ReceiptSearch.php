@@ -54,8 +54,10 @@ class ReceiptSearch extends Receipt
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['receiptDate'=>SORT_DESC]],
         ]);
 
+        
         $this->load($params);
 
         if (!$this->validate()) {
