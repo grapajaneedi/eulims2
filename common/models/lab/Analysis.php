@@ -33,6 +33,8 @@ use Yii;
  */
 class Analysis extends \yii\db\ActiveRecord
 {
+
+  public $sampletype_id;
   
     /**
      * {@inheritdoc}
@@ -94,7 +96,8 @@ class Analysis extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'is_package' => 'Is Package',
             'testcategory_id' => 'Sample Type',
-            'sample_type_id' => 'Sample Type',
+            //'sample_type_id' => 'Sample Type',
+            'sampletype_id' => 'Sample Type',
         ];
     }
 

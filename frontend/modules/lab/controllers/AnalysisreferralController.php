@@ -14,6 +14,7 @@ use linslin\yii2\curl;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\db\Query;
 use yii\db\ActiveQuery;
 
@@ -83,6 +84,9 @@ class AnalysisreferralController extends Controller
         
         $sampleDataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
         ]);
         //$sampleDataProvider->sort = false;
         //$sampleDataProvider->pagination->pageSize=1;
@@ -95,6 +99,40 @@ class AnalysisreferralController extends Controller
         //$samples = $this->listSample($requestId);
         $testname = $this->listsampletypereferrals($requestId);
 
+        if(Yii::$app->request->get('testname_id')>0){
+            $testnameId = Yii::$app->request->get('testname_id');
+            $methods = json_decode($this->listReferralmethodref($testnameId),true);
+        } else {
+            //$testnameId = null;
+            $methods = [];
+        }
+
+
+        //foreach($methods['methodreference'] as $method)
+        //{
+            //echo $method['method']."<br/>";
+        //}
+
+        //echo "<pre>";
+       // print_r($methods);
+        //echo "</pre>";
+
+        //exit;
+
+        $methodrefDataProvider = new ArrayDataProvider([
+            //'key' => 'id',
+            'allModels' => $methods,
+            /*'pagination' => [
+                'pageSize' => 10,
+            ],*/
+        ]);
+
+        /*$methodrefDataProvider = new ActiveDataProvider([
+            'query' => $methods,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+        ]);*/
 
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -107,6 +145,7 @@ class AnalysisreferralController extends Controller
                 'testname' => $testname,
                 'labId' => $labId,
                 'sampleDataProvider' => $sampleDataProvider,
+                'methodrefDataProvider' => $methodrefDataProvider,
             ]);
         } else {
             return $this->render('create', [
@@ -374,5 +413,74 @@ class AnalysisreferralController extends Controller
         //return $data;
         //return json_encode();
         return ['data' => $data];
+    }
+
+    public function actionGettestnamemethod()
+    {
+        if(Yii::$app->request->get('testname_id')>0){
+            $testnameId = Yii::$app->request->get('testname_id');
+            $methods = json_decode($this->listReferralmethodref($testnameId),true);
+        } else {
+            //$testnameId = null;
+            $methods = [];
+        }
+
+        if (Yii::$app->request->isAjax) {
+            $methodrefDataProvider = new ArrayDataProvider([
+                //'key'=>'id',
+                'allModels' => $methods,
+                /*'pagination' => [
+                    'pageSize' => 10,
+                ],*/
+            ]);
+        }
+        return $this->renderAjax('_methodreference', [
+            'methodProvider' => $methodrefDataProvider,
+        ]);
+    }
+
+    //get referral method reference
+    protected function listReferralmethodref($testnameId)
+    {
+
+        //if(Yii::$app->request->get('testname_id'))
+        if(isset($testnameId))
+        {
+            //$sampletypeId = (int) Yii::$app->request->get('sampletype_id');
+            //$sampletypeId = json_encode(Yii::$app->request->get('sampletype_id'));
+            /*if(count(Yii::$app->request->get('sampletype_id'))>1){
+                //Yii::$app->request->get('sampletype_id')
+                $sampletypeId = implode(",",Yii::$app->request->get('sampletype_id'));
+            } else {
+                $sampletypeId = (int) Yii::$app->request->get('sampletype_id');
+            }*/
+            //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/labsampletypebylab?lab_id='.$labId;
+            //$testnameId = Yii::$app->request->get('testname_id');
+
+            if($testnameId > 0){
+                $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnamemethodref?testname_id='.$testnameId;
+                $curl = new curl\Curl();
+                //$list = $curl->get($apiUrl);
+                $data = $curl->get($apiUrl);
+            } else {
+                $data = [];
+            }
+
+            //$data = ArrayHelper::map(json_decode($list), 'testname_id', 'test_name');
+            //$query = Sample::find()->where('request_id = :requestId', [':requestId' => $requestId]);
+            
+            /*$data = new ActiveDataProvider([
+                'query' => json_decode($list),
+            ]);*/
+            //$data = json_decode($list);
+
+        } else {
+            $data =[];
+        }
+        return $data;
+
+        //echo "<pre>";
+        //print_r(json_decode($list));
+        //echo "</pre>";
     }
 }

@@ -9,6 +9,7 @@ use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
 use yii\helpers\Json;
+use yii\web\View;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Analysis */
@@ -33,38 +34,6 @@ if ($samplecount==0){
 <div class="analysis-form">
 
     <?php $form = ActiveForm::begin(); ?>
-<!--
-    <?= $form->field($model, 'date_analysis')->textInput() ?>
-
-    <?= $form->field($model, 'rstl_id')->textInput() ?>
-
-    <?= $form->field($model, 'pstcanalysis_id')->textInput() ?>
-
-    <?= $form->field($model, 'request_id')->textInput() ?>
-
-    <?= $form->field($model, 'sample_id')->textInput() ?>
-
-    <?= $form->field($model, 'sample_code')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'testname')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'method')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'references')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'quantity')->textInput() ?>
-
-    <?= $form->field($model, 'fee')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'test_id')->textInput() ?>
-
-    <?= $form->field($model, 'cancelled')->textInput() ?>
-
-    <?= $form->field($model, 'user_id')->textInput() ?>
-
-    <?= $form->field($model, 'is_package')->textInput() ?>
-
--->
 
     <div class="row">
         <div class="col-lg-12">
@@ -74,12 +43,12 @@ if ($samplecount==0){
                 [
                     'class' => 'yii\grid\SerialColumn',
                     'headerOptions' => ['class' => 'text-center'],
-                    'contentOptions' => ['class' => 'text-center'],
+                    'contentOptions' => ['class' => 'text-center','style'=>'max-width:10px;'],
                 ],
                 [
                     'class' => 'yii\grid\CheckboxColumn',
                     'headerOptions' => ['class' => 'text-center'],
-                    'contentOptions' => ['class' => 'text-center'],
+                    'contentOptions' => ['class' => 'text-center','style'=>'max-width:10px;'],
 
                 ],
                 /*[
@@ -102,6 +71,7 @@ if ($samplecount==0){
                 [
                     'attribute'=>'samplename',
                     'enableSorting' => false,
+                    'contentOptions' => ['style'=>'max-width:200px;'],
                 ],
                 [
                     'attribute'=>'description',
@@ -111,7 +81,7 @@ if ($samplecount==0){
                         return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".date("Y-m-d h:i A",strtotime($data->sampling_date))."</b></span>,&nbsp;".$data->description : $data->description;
                     },
                    'contentOptions' => [
-                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
+                        'style'=>'max-width:200px; overflow: auto; white-space: normal; word-wrap: break-word;'
                     ],
                 ],
             ];
@@ -119,15 +89,15 @@ if ($samplecount==0){
             echo GridView::widget([
                 'id' => 'sample-analysis-grid',
                 'dataProvider'=> $sampleDataProvider,
-                'pjax'=>false,
-                /*'pjax'=>true,
-                'headerRowOptions' => ['class' => 'kartik-sheet-style'],
-                'filterRowOptions' => ['class' => 'kartik-sheet-style'],
+                //'pjax'=>false,
+                'pjax'=>true,
+                //'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+                //'filterRowOptions' => ['class' => 'kartik-sheet-style'],
                 'pjaxSettings' => [
                     'options' => [
                         'enablePushState' => false,
                     ]
-                ],*/
+                ],
                 'containerOptions'=>[
                     'style'=>'overflow:auto; height:180px',
                 ],
@@ -204,9 +174,69 @@ if ($samplecount==0){
                 //'data' => [],
                 'theme' => Select2::THEME_KRAJEE,
                 //'theme' => Select2::THEME_BOOTSTRAP,
-                //'options' => ['style'=>'z-index:100;'],
                 'options' => $options,
-                'pluginOptions' => ['allowClear' => true,'dropdownParent' => new yii\web\JsExpression('$("#modalAnalysis")')],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'dropdownParent' => new yii\web\JsExpression('$("#modalAnalysis")')
+                ],
+                'pluginEvents' => [
+                    "change" => "function() {
+                        var test_id = this.value;
+                        //alert(test_id);
+                        /*$.ajax({
+                            url: '".Url::toRoute("analysisreferral/getreferralmethodref?testname_id='+test_id+'")."',
+                            success: function (data) {
+                                select2options.data = data.data;
+                                select.select2(select2options);
+                                select.val(data.selected).trigger('change');
+                                $('.image-loader').removeClass( \"img-loader\" );
+                            },
+                            beforeSend: function (xhr) {
+                                //alert('Please wait...');
+                                $('.image-loader').addClass( \"img-loader\" );
+                            }
+                        });*/
+                        $.ajax({
+                            //url: '".Url::toRoute("analysisreferral/getreferralmethodref?testname_id='+test_id+'")."',
+                            url: '".Url::toRoute("analysisreferral/gettestnamemethod")."',
+                            //dataType: 'json',
+                            method: 'GET',
+                            data: {testname_id: test_id},
+                            success: function (data, textStatus, jqXHR) {
+                                $('.image-loader').removeClass( \"img-loader\" );
+                                $('#methodreference').html(data);
+                            },
+                            beforeSend: function (xhr) {
+                                //alert('Please wait...');
+                                $('.image-loader').addClass( \"img-loader\" );
+                            },
+                            error: function (data, jqXHR, textStatus, errorThrown) {
+                                console.log('An error occured!');
+                                //alert('Error in ajax request');
+                                //console.log(data);
+                                //alert(data.error);
+                            }
+                        });
+                        // $.post( \"".Yii::$app->urlManager->createUrl('stock/artcheck')."\", {artsel:$(this).val()}, function( data ) {
+                        //     $( \".view-art\" ).html( data );
+                        //     $( \".view-art-spec\" ).empty();
+                        //     });
+                        //     $(\"#stock-qta\").focus();
+                    }",
+                ],
+                /*'pluginEvents'=>[
+                    "change" => 'function() { 
+                        var discountid=this.value;
+                        console.log(discountid);
+                        $.post("/ajax/getdiscount/", {
+                                discountid: discountid
+                            }, function(result){
+                            if(result){
+                               $("#erequest-discount").val(result.rate);
+                            }
+                        });
+                    }
+                ',]*/
             ])->label('Test Name');
         ?>
         </div>
@@ -214,89 +244,9 @@ if ($samplecount==0){
     
     <div class="row">
         <div class="col-lg-12">
-        <div class="table-responsive">
-        <?php
-            $gridColumns = [
-                /*[
-                    'class' => 'yii\grid\SerialColumn',
-                    'headerOptions' => ['class' => 'text-center'],
-                    'contentOptions' => ['class' => 'text-center'],
-                ],*/
-                [
-                    'class' => 'yii\grid\CheckboxColumn',
-                    'headerOptions' => ['class' => 'text-center'],
-                    'contentOptions' => ['class' => 'text-center'],
-
-                ],
-                /*[
-                    'attribute'=>'sample_id',
-                    'enableSorting' => false,
-                    //'class' => '\kartik\grid\BooleanColumn',
-                    //'trueLabel' => 'Yes', 
-                    //'falseLabel' => 'No',
-                    'contentOptions' => [
-                        'style'=>'max-width:70px; overflow: auto; white-space: normal; word-wrap: break-word;'
-                    ],
-                ],*/
-                /*[
-                    'attribute'=>'sampletype_id',
-                    'enableSorting' => false,
-                    'value' => function($data){
-                        return !empty($data->sampletype->type) ? $data->sampletype->type : null;
-                    },
-                ],*/
-                [
-                    'attribute'=>'samplename',
-                    'enableSorting' => false,
-                ],
-                [
-                    'attribute'=>'description',
-                    'format' => 'raw',
-                    'enableSorting' => false,
-                    'value' => function($data){
-                        return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".date("Y-m-d h:i A",strtotime($data->sampling_date))."</b></span>,&nbsp;".$data->description : $data->description;
-                    },
-                   'contentOptions' => [
-                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
-                    ],
-                ],
-            ];
-
-            echo GridView::widget([
-                'id' => 'method-reference-grid',
-                'dataProvider'=> $sampleDataProvider,
-                'pjax'=>false,
-                /*'pjax'=>true,
-                'pjaxSettings' => [
-                    'options' => [
-                        'enablePushState' => false,
-                    ]
-                ],*/
-                'responsive'=>true,
-                'striped'=>true,
-                'hover'=>true,
-                'containerOptions'=>[
-                    'style'=>'overflow:auto; height:180px',
-                ],
-                'panel' => [
-                   'heading'=>'<h3 class="panel-title">Method</h3>',
-                   'type'=>'primary',
-                   'before' => '',
-                    //'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>!$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/reports/preview?url=/lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
-                   'after'=>false,
-                ],
-                'columns' => $gridColumns,
-                'toolbar' => false,
-                // 'toolbar' => [
-                //     'content'=> Html::a('<i class="glyphicon glyphicon-repeat"></i>', [Url::to(['request/view','id'=>$model->request_id])], [
-                //                 'class' => 'btn btn-default', 
-                //                 'title' => 'Reset Grid'
-                //             ]),
-                //     '{toggleData}',
-                // ],
-            ]);
-        ?>
-        </div>
+            <div id="methodreference">
+                <?php echo $this->render('_methodreference', [ 'methodProvider' => $methodrefDataProvider]); ?>
+            </div>
         </div>
     </div>
 
@@ -317,22 +267,6 @@ if ($samplecount==0){
 
 </div>
 <script type="text/javascript">
-
-//$.fn.modal.Constructor.prototype.enforceFocus = $.noop;
-//$.fn.modal.Constructor.prototype.enforceFocus = function() {};
-
-
-function checkBox(){
-    /*$("#sample-analysis-grid").click(function () {
-        if ($(this).is(":checked")) {
-            alert('you need to be fluent in English to apply for the job');
-            //$("#dvPassport").show();
-        } else {
-            //$("#dvPassport").hide();
-            confirm('you need to be fluent in English to apply for the job');
-        }
-    });*/
-}
 
 function isSampleCheck()
 {

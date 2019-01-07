@@ -288,3 +288,4 @@ frontend/modules/lab/controllers/SampleController_20181203.php
 frontend/modules/lab/views/analysisreferral/_form - Copy.php
 frontend/modules/lab/views/analysisreferral/_form_20180104.php
 frontend/modules/lab/views/request/view_2018.php
+frontend/modules/lab/views/analysisreferral/_form_20180106.php
