@@ -47,9 +47,6 @@ $Header.="Receipt";
         ],
         'exportConfig'=>$func->exportConfig("Receipt", "receipt", $Header),
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            
             'or_number',
             [
                'attribute'=>'receiptDate',
