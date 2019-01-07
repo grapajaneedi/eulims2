@@ -232,7 +232,7 @@ class FinanceController extends Controller
                         $newCheck->checknumber=$item['checknumber'];
                         $newCheck->checkdate=$item['checkdate'];
                         $newCheck->amount=$item['amount'];
-                        $newCheck->save(); 
+                        $newCheck->save(false); 
                              
                         $check_count++;    
                     }
