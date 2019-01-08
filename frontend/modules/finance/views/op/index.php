@@ -60,10 +60,6 @@ if(Yii::$app->user->can('allow-cancel-op')){
         'exportConfig'=>$func->exportConfig("Order of Payment", "op", $Header),
         
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-           // 'orderofpayment_id',
-           // 'rstl_id',
             'transactionnum',
             [
                'label'=>'TRN', 
