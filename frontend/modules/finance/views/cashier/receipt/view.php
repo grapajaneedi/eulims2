@@ -45,7 +45,7 @@ $add_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paym
                     [
                         'label'=>'Nature of Collection',
                         'format'=>'raw',
-                        'value'=>$model->collectiontype->natureofcollection,
+                        'value'=>$model->collectiontype ? $model->collectiontype->natureofcollection : "",
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
