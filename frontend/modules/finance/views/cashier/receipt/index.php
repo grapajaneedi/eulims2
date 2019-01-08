@@ -89,7 +89,11 @@ $Header.="Receipt";
                
             ],
             'payor',
-            'total',
+            [
+                 'attribute' => 'total',
+                 'format' => ['decimal', 2],
+                 'pageSummary' => true
+            ], 
             [
                 'attribute' => 'payment_mode_id',
                 'label' => 'Payment Mode',
