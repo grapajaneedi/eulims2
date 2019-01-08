@@ -15,6 +15,7 @@ use common\models\finance\Restore_receipt;
 use common\models\finance\Restore_deposit;
 use common\models\finance\Restore_check;
 use common\models\finance\Deposit;
+use common\models\finance\Paymentitem;
 set_time_limit(1000);
 
 /**
@@ -379,4 +380,90 @@ class FinanceController extends Controller
         $dep = Deposit::find()->where(['deposit_id'=> $depositid])->count();
         return $dep;
     }
+    public function findPaymentitem($paymentitemid)
+    {
+        $pi = Paymentitem::find()->where(['paymentitem_id'=> $paymentitemid])->count();
+        return $pi;
+    }
+    
+    public function actionRes_paymentitem(){
+         
+	
+            $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+
+            $apicom=Yii::$app->components['api_config'];
+            
+            $apiUrl=$apicom['api_url']."paymentitems/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id;
+            
+            $curl = curl_init();
+
+            curl_setopt($curl, CURLOPT_URL, $apiUrl);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
+            curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($curl);
+
+            $data = json_decode($response, true);
+           /* echo "<pre>";
+            print_r($data);
+            echo "</pre>";
+            exit;*/
+            $sql = "SET FOREIGN_KEY_CHECKS = 0;";
+
+
+           
+            $paymentitem_count = 0;
+            
+
+            $connection= Yii::$app->financedb;
+            $transaction = $connection->beginTransaction();
+            $connection->createCommand('set foreign_key_checks=0')->execute();
+    
+            try {
+                foreach ($data as $item){
+                    $newPaymentitem = new Restore_paymentitem();
+                    $id=$item['paymentitem_id'];
+                    $count=$this->findPaymentitem($id);
+                    
+                    if($count == 1){
+                        
+                    }else{ 
+                        $newPaymentitem->paymentitem_id= $item['paymentitem_id'];
+                        $newPaymentitem->rstl_id=$item['rstl_id'];
+                        $newPaymentitem->request_id=$item['request_id'];
+                        $newPaymentitem->request_type_id=$item['request_type_id'];
+                        $newPaymentitem->orderofpayment_id=0;
+                        $newPaymentitem->details=$item['details'];
+                        $newPaymentitem->amount=$item['amount'];
+                        $newPaymentitem->cancelled=$item['cancelled'];
+                        $newPaymentitem->status=$item['status'];
+                        $newPaymentitem->receipt_id=$item['receipt_id'];
+                        $newPaymentitem->save();
+                        $paymentitem_count++;
+                    }
+                             
+                              
+                }
+               
+                $transaction->commit();
+                
+                
+                $sql = "SET FOREIGN_KEY_CHECKS = 1;";
+                Yii::$app->session->setFlash('success', ' Records Successfully Restored for the year '); 
+                  
+            }catch (\Exception $e) {
+                Yii::$app->session->setFlash('warning', $e->getMessage()); 
+
+                $transaction->rollBack();
+            }
+        
+       
+	
+       
+        return $this->redirect('/api/finance');
+     
+     }
+     
 }
