@@ -71,6 +71,7 @@ class PaymentitemMigration extends \yii\db\ActiveRecord
             'local_paymentitem_id' => 'Local Paymentitem ID',
             'oldColumn_referral_id' => 'Old Column Referral ID',
             'local_receipt_id' => 'Local Receipt ID',
+            'local_orderofpayment_id' => 'Local Orderpayment ID',
         ];
     }
 }

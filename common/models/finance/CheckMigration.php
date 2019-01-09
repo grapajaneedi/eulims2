@@ -60,6 +60,7 @@ class CheckMigration extends \yii\db\ActiveRecord
             'checkdate' => 'Checkdate',
             'amount' => 'Amount',
             'local_check_id' => 'Local Check ID',
+            'local_receipt_id' => 'Local Receipt ID',
         ];
     }
 }
