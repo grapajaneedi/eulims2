@@ -1,5 +1,5 @@
 <?php
-namespace frontend\controllers;
+namespace frontend\modules\api\controllers;
 
 use Yii;
 use yii\rest\ActiveController;
@@ -426,6 +426,7 @@ class ApiController extends ActiveController
                 $data->checkdate=$var['checkdate'];
                 $data->amount=$var['amount'];
                 $data->local_check_id=$var['local_check_id'];
+                $data->local_receipt_id = $var['receipt_id'];
 
                 if($data->save(true)){
                     //addtional action here if necessarry
@@ -516,6 +517,7 @@ class ApiController extends ActiveController
                 $data->status=0;
                 $data->receipt_id=0;
                 $data->local_receipt_id=0;
+                $data->local_orderofpayment_id=$var['orderofpayment_id'];
 
                 if($data->save(true)){
                     //addtional action here if necessarry
@@ -558,6 +560,7 @@ class ApiController extends ActiveController
                 $data->receipt_id="";
                 $data->payment_status_id=1;
                 $data->subsidiary_customer_ids="";
+                $data->local_customer_id=$var['customer_id'];
 
                 if($data->save(true)){
                     //addtional action here if necessarry

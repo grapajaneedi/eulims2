@@ -84,6 +84,7 @@ class OrderofpaymentMigration extends \yii\db\ActiveRecord
             'local_orderofpayment_id' => 'Local Orderofpayment ID',
             'oldColumn_customerName' => 'Old Column Customer Name',
             'oldColumn_address' => 'Old Column Address',
+            'local_customer_id'=>'Local Customer ID',
         ];
     }
 }
