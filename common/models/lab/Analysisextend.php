@@ -41,20 +41,18 @@ use linslin\yii2\curl;
  */
 class Analysisextend extends Analysis
 {
-
-  public $sampletype_id;
-
+  
   //get referral sample type list by sampletype_id
-  protected function listSampletypereferral($sampletypeId)
-  {
+  //protected function listSampletypereferral($sampletypeId)
+  //{
       //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/labsampletypebylab?lab_id='.$labId;
-      $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/sampletypebylab?lab_id='.$labId;
-      $curl = new curl\Curl();
-      $list = $curl->get($apiUrl);
+  //    $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/sampletypebylab?lab_id='.$labId;
+  //    $curl = new curl\Curl();
+  //    $list = $curl->get($apiUrl);
 
-      $data = ArrayHelper::map(json_decode($list), 'sampletype_id', 'type');
+  //    $data = ArrayHelper::map(json_decode($list), 'sampletype_id', 'type');
       
-      return $data;
+  //    return $data;
       //echo "<pre>";
       //print_r($data);
       //echo "</pre>";
@@ -63,5 +61,26 @@ class Analysisextend extends Analysis
       //echo "<pre>";
       //print_r(json_decode($list['sampletype']));
       //echo "</pre>";
+  //}
+
+  /**
+  * {@inheritdoc}
+  */
+  public function rules()
+  {
+      return [
+          [['date_analysis', 'rstl_id', 'request_id', 'sample_id', 'testname', 'method', 'references', 'quantity', 'test_id', 'cancelled'], 'required'],
+          [['date_analysis'], 'safe'],
+          [['rstl_id', 'pstcanalysis_id', 'request_id', 'sample_id', 'quantity', 'test_id', 'cancelled', 'user_id', 'is_package'], 'integer'],
+          [['fee'], 'number'],
+        //  [['sample_code'], 'string', 'max' => 20],
+        //  [['testname'], 'string', 'max' => 200],
+        //  [['method'], 'string', 'max' => 150],
+        //  [['references'], 'string', 'max' => 500],
+       //   [['test_id'], 'exist', 'skipOnError' => true, 'targetClass' => Test::className(), 'targetAttribute' => ['test_id' => 'test_id']],
+          [['sample_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sample::className(), 'targetAttribute' => ['sample_id' => 'sample_id']],
+          [['request_id'], 'exist', 'skipOnError' => true, 'targetClass' => Request::className(), 'targetAttribute' => ['request_id' => 'request_id']],
+    //      [['test_id'], 'exist', 'skipOnError' => true, 'targetClass' => Test::className(), 'targetAttribute' => ['test_id' => 'test_id']],
+    ];
   }
 }

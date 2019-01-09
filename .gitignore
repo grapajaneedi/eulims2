@@ -289,3 +289,5 @@ frontend/modules/lab/views/analysisreferral/_form - Copy.php
 frontend/modules/lab/views/analysisreferral/_form_20180104.php
 frontend/modules/lab/views/request/view_2018.php
 frontend/modules/lab/views/analysisreferral/_form_20180106.php
+frontend/modules/lab/controllers/AnalysisreferralController_20190109.php
+frontend/modules/lab/controllers/RequestController_20181206.php

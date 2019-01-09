@@ -92,7 +92,9 @@ class RequestController extends Controller
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $sampleDataProvider = new ActiveDataProvider([
                 'query' => $samplesQuery,
-                'pagination' => false,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
         ]);
         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
         
@@ -615,6 +617,7 @@ class RequestController extends Controller
     public function actionReferralcustomerlist($q = null, $id = null)
     {
         if (!is_null($q)) {
+            //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/customers/searchname?keyword='.$q;
             $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/customers/searchname?keyword='.$q;
             $curl = new curl\Curl();
             $show = $curl->get($apiUrl);
@@ -627,7 +630,7 @@ class RequestController extends Controller
     //get referral laboratory list
     protected function listLabreferral()
     {
-        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/lab';
+        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/lab';
         $curl = new curl\Curl();
         $list = $curl->get($apiUrl);
 
@@ -639,7 +642,7 @@ class RequestController extends Controller
     //get referral discount list
     protected function listDiscountreferral()
     {
-        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/discount';
+        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/discount';
         $curl = new curl\Curl();
         $list = $curl->get($apiUrl);
 
@@ -650,7 +653,7 @@ class RequestController extends Controller
     //get referral purpose list
     protected function listPurposereferral()
     {
-        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/purpose';
+        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/purpose';
         $curl = new curl\Curl();
         $list = $curl->get($apiUrl);
 
@@ -661,7 +664,7 @@ class RequestController extends Controller
     //get referral mode of release list
     protected function listModereleasereferral()
     {
-        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/moderelease';
+        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/moderelease';
         $curl = new curl\Curl();
         $list = $curl->get($apiUrl);
 

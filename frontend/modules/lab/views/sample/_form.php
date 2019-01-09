@@ -71,7 +71,7 @@ if(count($sampletype) > 0){
                     'theme' => Select2::THEME_KRAJEE,
                     //'theme' => Select2::THEME_BOOTSTRAP,
                     'options' => ['id'=>'sample-sampletype_id'],
-                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type','dropdownParent' => new yii\web\JsExpression('$("#modal")')],
+                    'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
                 ]);
             echo $endDiv;
 
@@ -108,7 +108,7 @@ if(count($sampletype) > 0){
                 'name' => 'saved_templates',
                 'data' => $sampletemplate,
                 'theme' => Select2::THEME_KRAJEE,
-                'pluginOptions' => ['allowClear' => true,'placeholder' => 'Search sample template ...','dropdownParent' => new yii\web\JsExpression('$("#modal")')],
+                'pluginOptions' => ['allowClear' => true,'placeholder' => 'Search sample template ...'],
                 'options' => ['id' => 'saved_templates']
             ]);
             echo "<br>";

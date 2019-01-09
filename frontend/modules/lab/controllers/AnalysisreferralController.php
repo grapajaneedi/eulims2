@@ -7,6 +7,8 @@ use common\models\lab\Analysisextend;
 use common\models\lab\AnalysisreferralSearch;
 use common\models\lab\Request;
 use common\models\lab\Sample;
+use common\models\lab\Methodreference;
+use common\models\lab\Testname;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -17,6 +19,7 @@ use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;
 use yii\db\ActiveQuery;
+use common\components\ReferralComponent;
 
 /**
  * AnalysisreferralController implements the CRUD actions for Analysis model.
@@ -74,6 +77,8 @@ class AnalysisreferralController extends Controller
     public function actionCreate()
     {
         $model = new Analysisextend();
+        $component = new ReferralComponent();
+        //$connection= Yii::$app->labdb;
 
         if(Yii::$app->request->get('request_id'))
         {
@@ -84,9 +89,10 @@ class AnalysisreferralController extends Controller
         
         $sampleDataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
+            /*'pagination' => [
+                'pageSize' => 5,
+            ],*/
+            'pagination' => false,
         ]);
         //$sampleDataProvider->sort = false;
         //$sampleDataProvider->pagination->pageSize=1;
@@ -107,38 +113,89 @@ class AnalysisreferralController extends Controller
             $methods = [];
         }
 
-
-        //foreach($methods['methodreference'] as $method)
-        //{
-            //echo $method['method']."<br/>";
-        //}
-
-        //echo "<pre>";
-       // print_r($methods);
-        //echo "</pre>";
-
-        //exit;
-
         $methodrefDataProvider = new ArrayDataProvider([
-            //'key' => 'id',
+            //'key'=>'sample_id',
             'allModels' => $methods,
-            /*'pagination' => [
+            'pagination' => [
                 'pageSize' => 10,
-            ],*/
+            ],
+            //'pagination'=>false,
         ]);
 
-        /*$methodrefDataProvider = new ActiveDataProvider([
-            'query' => $methods,
-            'pagination' => [
-                'pageSize' => 20,
-            ],
-        ]);*/
+        if ($model->load(Yii::$app->request->post())) {
+            /*$transaction = $connection->beginTransaction();
+            try {
+            } catch (\Exception $e) {
+               $transaction->rollBack();
+               //$return="false";
+            } catch (\Throwable $e) {
+               $transaction->rollBack();
+               //$return="false";
+            }*/
 
+            
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            //print_r($method);
 
-            return $this->redirect(['view', 'id' => $model->analysis_id]);
+            //$model->save();
+            //return $this->redirect(['view', 'id' => $model->analysis_id]);
+            /*$model->rstl_id = $rstlId;
+            //$model->sample_code = 0;
+            $model->date_analysis = date('Y-m-d');
+            $model->request_id = $request->request_id;
+            //$model->sample_code = null;
+            if($model->save()){
+                Yii::$app->session->setFlash('success', "Analysis Successfully Saved.");
+                return $this->redirect(['/lab/request/view', 'id' => $requestId]);
+            }*/
+            //echo "<pre>";
+            //print_r(Yii::$app->request->post());
+            //var_dump($_POST['sample_ids']);
+            //echo "</pre>";
 
+            //foreach ($_POST['sample_ids'] as $sample) {
+             //   echo $sample."<br />";
+            //}
+            //$number_sample = count(Yii::$app->request->post('selection'));
+
+            $postData = Yii::$app->request->post();
+
+            /*echo "<pre>";
+            print_r($postData['sample_ids']);
+            var_dump($postData['methodref_id']);
+            echo "</pre>";
+             foreach ($postData['sample_ids'] as $value) {
+                echo $value."<br />";
+            }*/
+
+            foreach ($postData['sample_ids'] as $sample) {
+                //$testnameId = (int) $_POST['Analysisextend']['testname_id'];
+                //$method =  Methodreference::findOne(['method_reference_id=:methodId',':methodId'=>Yii::$app->request->post('methodref_id')]);
+                //$testname = Testname::findOne(['testname_id=:testnameId',':testnameId'=>$testnameId])->testName;
+
+                $testnameId = $postData['Analysisextend']['testname_id'];
+                $methodrefId = $postData['methodref_id'];
+                $test = $component->getTestnameOne($testnameId);
+                $method = $component->getMethodrefOne($methodrefId);
+
+                $analysis = new Analysisextend();
+                $analysis->rstl_id = (int) $rstlId;
+                $analysis->date_analysis = date('Y-m-d');
+                $analysis->request_id = (int) $requestId;
+                $analysis->sample_id = (int) $sample;
+                $analysis->testname = $test->test_name;
+                $analysis->methodref_id = $method->methodreference_id;
+                $analysis->method = $method->method;
+                $analysis->references = $method->reference;
+                $analysis->fee =$method->fee;
+                $analysis->quantity = 1; 
+                $analysis->test_id = (int) $testnameId;
+                //$model->sample_type_id = null;
+                //$model->testcategory_id = null;
+                $analysis->save(false);
+            }
+            Yii::$app->session->setFlash('success', "Analysis Successfully Saved.");
+            return $this->redirect(['/lab/request/view', 'id' => $requestId]);
         } elseif (Yii::$app->request->isAjax) {
             return $this->renderAjax('_form', [
                 'model' => $model,
@@ -427,16 +484,24 @@ class AnalysisreferralController extends Controller
 
         if (Yii::$app->request->isAjax) {
             $methodrefDataProvider = new ArrayDataProvider([
-                //'key'=>'id',
+                //'key'=>'sample_id',
                 'allModels' => $methods,
-                /*'pagination' => [
+                'pagination' => [
                     'pageSize' => 10,
-                ],*/
+                ],
+                //'pagination'=>false,
+            ]);
+            return $this->renderAjax('_methodreference', [
+                'methodProvider' => $methodrefDataProvider,
             ]);
         }
-        return $this->renderAjax('_methodreference', [
-            'methodProvider' => $methodrefDataProvider,
-        ]);
+        //return $this->renderAjax('_methodreference', [
+        //    'methodProvider' => $methodrefDataProvider,
+        //]);
+        /*return $this->renderPartial('_methodreference', [
+           'methodProvider' => $methodrefDataProvider,
+        ]);*/
+        //return $this->render('_methodreference', ['methodProvider' => $methodrefDataProvider,]);
     }
 
     //get referral method reference

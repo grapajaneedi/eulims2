@@ -22,18 +22,23 @@ use yii\helpers\Json;
             <?php
                 $gridColumns = [
                     [
-                        'class' => 'yii\grid\SerialColumn',
+                        'class' => '\kartik\grid\SerialColumn',
                         'headerOptions' => ['class' => 'text-center'],
                         'contentOptions' => ['class' => 'text-center','style'=>'max-width:20px;'],
                     ],
                     [
-                        'class' => 'yii\grid\RadioButtonColumn',
+                        'class' =>  '\kartik\grid\RadioColumn',
                         'radioOptions' => function ($model) {
                             return [
                                 'value' => $model['methodreference_id'],
+                                //'name' => 'methodref_id',
                                 //'checked' => $model['testname_method_id'] == 2
+                                //'onclick' => "checkMethodref(".$model['methodreference_id'].")",
+                                //'onclick' => "checkMethodref()",
                             ];
                         },
+                        'name' => 'methodref_id',
+                        'showClear' => true,
                         'headerOptions' => ['class' => 'text-center'],
                         'contentOptions' => ['class' => 'text-center','style'=>'max-width:20px;'],
                     ],
@@ -103,7 +108,7 @@ use yii\helpers\Json;
                         ]
                     ],
                     'containerOptions'=>[
-                        'style'=>'overflow:auto; height:180px',
+                        'style'=>'overflow:auto; height:200px',
                     ],
                     'floatHeaderOptions' => ['scrollingTop' => true],
                     'responsive'=>true,
@@ -115,6 +120,7 @@ use yii\helpers\Json;
                        'type'=>'primary',
                        'before' => '',
                        'after'=>false,
+                       //'footer'=>false,
                     ],
                     'columns' => $gridColumns,
                     'toolbar' => false,
@@ -124,3 +130,20 @@ use yii\helpers\Json;
         </div>
     </div>
 </div>
+<script type="text/javascript">
+
+//function checkMethodref(methodreferenceId){
+//    var $grid = $('#method-reference-grid'); // your grid identifier 
+    //var getVal = "";
+    //$grid.on('grid.radiochecked', function(ev, key, val) {
+        //alert("Key = " + key + ", Val = " + val);
+        //getVal.val(val);
+    //});
+
+//    alert(methodreferenceId);
+    //alert($grid.on('grid.radiochecked').val());
+    /*$grid.on('grid.radiocleared', function(ev, key, val) {
+        alert("Key = " + key + ", Val = " + val);
+    });*/
+//}
+</script>
