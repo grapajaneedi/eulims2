@@ -78,7 +78,6 @@ class AnalysisreferralController extends Controller
     {
         $model = new Analysisextend();
         $component = new ReferralComponent();
-        //$connection= Yii::$app->labdb;
 
         if(Yii::$app->request->get('request_id'))
         {
@@ -89,27 +88,19 @@ class AnalysisreferralController extends Controller
         
         $sampleDataProvider = new ActiveDataProvider([
             'query' => $query,
-            /*'pagination' => [
-                'pageSize' => 5,
-            ],*/
             'pagination' => false,
         ]);
-        //$sampleDataProvider->sort = false;
-        //$sampleDataProvider->pagination->pageSize=1;
 
         $request = $this->findRequest($requestId);
         $labId = $request->lab_id;
         $rstlId = Yii::$app->user->identity->profile->rstl_id;
 
-        //$sampletype = $this->listSampletypereferral($labId);
-        //$samples = $this->listSample($requestId);
         $testname = $this->listsampletypereferrals($requestId);
 
-        if(Yii::$app->request->get('testname_id')>0){
-            $testnameId = Yii::$app->request->get('testname_id');
+        if(Yii::$app->request->get('test_id')>0){
+            $testnameId = Yii::$app->request->get('test_id');
             $methods = json_decode($this->listReferralmethodref($testnameId),true);
         } else {
-            //$testnameId = null;
             $methods = [];
         }
 
@@ -123,59 +114,12 @@ class AnalysisreferralController extends Controller
         ]);
 
         if ($model->load(Yii::$app->request->post())) {
-            /*$transaction = $connection->beginTransaction();
-            try {
-            } catch (\Exception $e) {
-               $transaction->rollBack();
-               //$return="false";
-            } catch (\Throwable $e) {
-               $transaction->rollBack();
-               //$return="false";
-            }*/
-
-            
-
-            //print_r($method);
-
-            //$model->save();
-            //return $this->redirect(['view', 'id' => $model->analysis_id]);
-            /*$model->rstl_id = $rstlId;
-            //$model->sample_code = 0;
-            $model->date_analysis = date('Y-m-d');
-            $model->request_id = $request->request_id;
-            //$model->sample_code = null;
-            if($model->save()){
-                Yii::$app->session->setFlash('success', "Analysis Successfully Saved.");
-                return $this->redirect(['/lab/request/view', 'id' => $requestId]);
-            }*/
-            //echo "<pre>";
-            //print_r(Yii::$app->request->post());
-            //var_dump($_POST['sample_ids']);
-            //echo "</pre>";
-
-            //foreach ($_POST['sample_ids'] as $sample) {
-             //   echo $sample."<br />";
-            //}
-            //$number_sample = count(Yii::$app->request->post('selection'));
-
             $postData = Yii::$app->request->post();
 
-            /*echo "<pre>";
-            print_r($postData['sample_ids']);
-            var_dump($postData['methodref_id']);
-            echo "</pre>";
-             foreach ($postData['sample_ids'] as $value) {
-                echo $value."<br />";
-            }*/
-
             foreach ($postData['sample_ids'] as $sample) {
-                //$testnameId = (int) $_POST['Analysisextend']['testname_id'];
-                //$method =  Methodreference::findOne(['method_reference_id=:methodId',':methodId'=>Yii::$app->request->post('methodref_id')]);
-                //$testname = Testname::findOne(['testname_id=:testnameId',':testnameId'=>$testnameId])->testName;
-
-                $testnameId = $postData['Analysisextend']['testname_id'];
+                $testId = $postData['Analysisextend']['test_id'];
                 $methodrefId = $postData['methodref_id'];
-                $test = $component->getTestnameOne($testnameId);
+                $test = $component->getTestnameOne($testId);
                 $method = $component->getMethodrefOne($methodrefId);
 
                 $analysis = new Analysisextend();
@@ -189,7 +133,7 @@ class AnalysisreferralController extends Controller
                 $analysis->references = $method->reference;
                 $analysis->fee =$method->fee;
                 $analysis->quantity = 1; 
-                $analysis->test_id = (int) $testnameId;
+                $analysis->test_id = (int) $testId;
                 //$model->sample_type_id = null;
                 //$model->testcategory_id = null;
                 $analysis->save(false);
@@ -210,6 +154,7 @@ class AnalysisreferralController extends Controller
                 'testname' => $testname,
                 'labId' => $labId,
                 'sampleDataProvider' => $sampleDataProvider,
+                'methodrefDataProvider' => $methodrefDataProvider,
             ]);
         }
     }
@@ -224,14 +169,122 @@ class AnalysisreferralController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $component = new ReferralComponent();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->analysis_id]);
+        if(Yii::$app->request->get('request_id'))
+        {
+            $requestId = (int) Yii::$app->request->get('request_id');
         }
 
-        return $this->render('update', [
-            'model' => $model,
+        $query = Sample::find()->where('request_id = :requestId', [':requestId' => $requestId]);
+
+        $sampleDataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => false,
         ]);
+
+        $request = $this->findRequest($requestId);
+        $labId = $request->lab_id;
+        $rstlId = Yii::$app->user->identity->profile->rstl_id;
+
+        $testname = $this->listsampletypereferrals($requestId);
+
+        if (Yii::$app->request->get('test_id')>0){
+            $testnameId = Yii::$app->request->get('test_id');
+            $methods = json_decode($this->listReferralmethodref($testnameId),true);
+        } 
+        elseif ($model->test_id>0){
+            $methods = json_decode($this->listReferralmethodref($model->test_id),true);
+        } 
+        else {
+            $methods = [];
+        }
+
+        //$arr = array();
+
+        //$boxes=Box::model()->findAll();
+
+        //echo "<pre>";
+        //print_r($methods);
+        //echo "</pre>";
+
+        //exit;
+
+        /*foreach($boxes as $box){
+            $arr[]=$box->id;
+            $pos=array_search($model->id,$arr);
+            $page=ceil(($pos+1)/10);//10 indicates pagesize
+            //$this->redirect(array('view','id'=>$model->id));
+            $this->redirect(array('admin','Box_page'=>$page));
+        }*/
+
+        /*foreach ($methods as $method) {
+            $arr[] = $method['methodreference_id'];
+            $pos = array_search($model->methodreference_id, $arr);
+            $page = ceil(($pos+1)/10); //10 indicates pagesize
+            //$this->redirect(array(''));
+            //echo $arr." ";
+            //analysisreferral/update?id=111&request_id=19&page=3&per-page=10
+            return $this->redirect(['/lab/analysisreferral/update', 'id'=>$model->analysis_id,'request_id'=>$requestId,'page'=>$page,'per-page'=>10]);
+        }*/
+
+        //$pageSize = 10;
+
+        $methodrefDataProvider = new ArrayDataProvider([
+            'allModels' => $methods,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $postData = Yii::$app->request->post();
+            
+            $testId = $postData['Analysisextend']['test_id'];
+            $methodrefId = $postData['methodref_id'];
+            $test = $component->getTestnameOne($testId);
+            $method = $component->getMethodrefOne($methodrefId);
+            //start saving
+            $model->rstl_id = (int) $rstlId;
+            $model->date_analysis = date('Y-m-d');
+            $model->request_id = (int) $requestId;
+            $model->sample_id = (int) $postData['sample_id'];
+            $model->testname = $test->test_name;
+            $model->methodref_id = $method->methodreference_id;
+            $model->method = $method->method;
+            $model->references = $method->reference;
+            $model->fee =$method->fee;
+            $model->quantity = 1; 
+            $model->test_id = (int) $testId;
+            //$model->sample_type_id = null;
+            //$model->testcategory_id = null;
+            if($model->save(false))
+            {
+                Yii::$app->session->setFlash('success', "Analysis Successfully Updated.");
+                return $this->redirect(['/lab/request/view', 'id' => $requestId]);
+            }
+        } elseif (Yii::$app->request->isAjax) {
+            return $this->renderAjax('_form', [
+                'model' => $model,
+                'testname' => $testname,
+                'labId' => $labId,
+                'sampleDataProvider' => $sampleDataProvider,
+                'methodrefDataProvider' => $methodrefDataProvider,
+            ]);
+        } else {
+            //$model->testname_id = 1;
+            return $this->render('update', [
+                'model' => $model,
+                'testname' => $testname,
+                'labId' => $labId,
+                'sampleDataProvider' => $sampleDataProvider,
+                'methodrefDataProvider' => $methodrefDataProvider,
+            ]);
+        }
+
+        //return $this->render('update', [
+        //    'model' => $model,
+        //]);
     }
 
     /**
@@ -257,7 +310,7 @@ class AnalysisreferralController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Analysis::findOne($id)) !== null) {
+        if (($model = Analysisextend::findOne($id)) !== null) {
             return $model;
         }
 
@@ -474,12 +527,24 @@ class AnalysisreferralController extends Controller
 
     public function actionGettestnamemethod()
     {
-        if(Yii::$app->request->get('testname_id')>0){
-            $testnameId = Yii::$app->request->get('testname_id');
-            $methods = json_decode($this->listReferralmethodref($testnameId),true);
+        if (Yii::$app->request->get('analysis_id')>0){
+            $analysisId = (int) Yii::$app->request->get('analysis_id');
+            $model = $this->findModel($analysisId);
+           //test_id = $model->test_id;
         } else {
-            //$testnameId = null;
-            $methods = [];
+            $model = new Analysisextend();
+        }
+
+        if (Yii::$app->request->get('test_id')>0){
+            $testnameId = (int) Yii::$app->request->get('test_id');
+            $methods = json_decode($this->listReferralmethodref($testnameId),true);
+        }
+        else {
+            //if ($test_id > 0){
+                //$methods = json_decode($this->listReferralmethodref($test_id),true);
+            //} else {
+                $methods = [];
+            //}
         }
 
         if (Yii::$app->request->isAjax) {
@@ -493,6 +558,7 @@ class AnalysisreferralController extends Controller
             ]);
             return $this->renderAjax('_methodreference', [
                 'methodProvider' => $methodrefDataProvider,
+                'model' => $model,
             ]);
         }
         //return $this->renderAjax('_methodreference', [

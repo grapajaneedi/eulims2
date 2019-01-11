@@ -49,4 +49,15 @@ class ReferralComponent extends Component{
         $list = $curl->get($apiUrl);
         return json_decode($list);
     }
+
+    function getMethodTotal($testnameId){
+        if($testnameId > 0){
+            $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnamemethodref?testname_id='.$testnameId;
+            $curl = new curl\Curl();
+            $data = $curl->get($apiUrl);
+        } else {
+            $data = [];
+        }
+        return count($data);
+    }
 }

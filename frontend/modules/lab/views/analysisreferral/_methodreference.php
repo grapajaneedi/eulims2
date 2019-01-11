@@ -15,6 +15,10 @@ use yii\helpers\Json;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+<?php
+    $checkMethod = ($model->methodref_id) ? $model->methodref_id : null;
+?>
+
 <div class="analysismethodreference-form">
     <div class="row">
         <div class="col-lg-12">
@@ -28,11 +32,11 @@ use yii\helpers\Json;
                     ],
                     [
                         'class' =>  '\kartik\grid\RadioColumn',
-                        'radioOptions' => function ($model) {
+                        'radioOptions' => function ($model) use ($checkMethod) {
                             return [
                                 'value' => $model['methodreference_id'],
                                 //'name' => 'methodref_id',
-                                //'checked' => $model['testname_method_id'] == 2
+                                'checked' => $model['methodreference_id'] == $checkMethod,
                                 //'onclick' => "checkMethodref(".$model['methodreference_id'].")",
                                 //'onclick' => "checkMethodref()",
                             ];
@@ -130,20 +134,3 @@ use yii\helpers\Json;
         </div>
     </div>
 </div>
-<script type="text/javascript">
-
-//function checkMethodref(methodreferenceId){
-//    var $grid = $('#method-reference-grid'); // your grid identifier 
-    //var getVal = "";
-    //$grid.on('grid.radiochecked', function(ev, key, val) {
-        //alert("Key = " + key + ", Val = " + val);
-        //getVal.val(val);
-    //});
-
-//    alert(methodreferenceId);
-    //alert($grid.on('grid.radiochecked').val());
-    /*$grid.on('grid.radiocleared', function(ev, key, val) {
-        alert("Key = " + key + ", Val = " + val);
-    });*/
-//}
-</script>
