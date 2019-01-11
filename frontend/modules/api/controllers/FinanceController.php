@@ -84,7 +84,7 @@ class FinanceController extends Controller
                    
                     $newOp = new Restore_op();  
 
-                    $newOp->orderofpayment_id= $op['orderofpayment_id'];
+                    $newOp->orderofpayment_id= $op['local_orderofpayment_id'];
 
                     $newOp->rstl_id= $op['rstl_id'];
 
