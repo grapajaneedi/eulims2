@@ -46,10 +46,29 @@ class UpdbController extends \yii\web\Controller{
         $table = "tbl_orderofpayment";
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         $id=$model->num;
-        $limit=$id+100;
+        $limit=$id+5;
         $data = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_orderofpayment` WHERE is_sync_up=0 AND orderofpayment_id > ".$id." AND orderofpayment_id < ".$limit)->queryAll();
         $Op_details=[];
+        
         foreach($data as $op){
+            $opid=$op['orderofpayment_id'];
+            $paymentitem = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_paymentitem` WHERE `orderofpayment_id` = ".$opid)->queryAll();
+            $Paymentitem_details=[];
+            foreach($paymentitem as $item){
+                $detail_paymentitem=[
+                    'paymentitem_id'=> $item['paymentitem_id'],
+                    'rstl_id'=>$item['rstl_id'],
+                    'request_id'=>$item['request_id'],
+                    'request_type_id'=>$item['request_type_id'],
+                    'orderofpayment_id'=>$opid,
+                    'details'=>$item['details'],
+                    'amount'=>$item['amount'],
+                    'cancelled'=>$item['cancelled'],
+                    'status'=>$item['status'],
+                    'receipt_id'=>$item['receipt_id']
+                ];
+                array_push($Paymentitem_details, $detail_paymentitem);
+            }
             $detail=[
                     'orderofpayment_id'=>$op['orderofpayment_id'],
                     'rstl_id'=> $op['rstl_id'],
@@ -67,7 +86,8 @@ class UpdbController extends \yii\web\Controller{
                     'payment_status_id'=> $op['payment_status_id'],
                     'is_sync_up' => $op['is_sync_up'],
                     'is_updated' => $op['is_updated'],
-                    'is_deleted' => $op['is_deleted']
+                    'is_deleted' => $op['is_deleted'],
+                    'payment_item' => $Paymentitem_details
                    
             ];
             array_push($Op_details, $detail);
@@ -76,7 +96,7 @@ class UpdbController extends \yii\web\Controller{
         $curl = new curl\Curl();
         
         $content = json_encode(['data'=>$Op_details]);
-        
+       // echo "<pre>";var_dump(json_decode($content));echo "</pre>";exit;
         $response = $curl->setRequestBody($content)
             ->setHeaders([
               'Content-Type' => 'application/json',

@@ -73,6 +73,22 @@ class ApiController extends ActiveController
             $newOp->payment_status_id= $op['payment_status_id'];
             $newOp->local_orderofpayment_id=$op['orderofpayment_id'];
             if($newOp->save()){
+                foreach ($op['payment_item'] as $paymentitem) {
+                    $newPaymentitem = new PaymentitemMigration();
+                    //$newPaymentitem->paymentitem_id= $item['local_paymentitem_id'];
+                    $newPaymentitem->rstl_id=$paymentitem['rstl_id'];
+                    $newPaymentitem->request_id=$paymentitem['request_id'];
+                    $newPaymentitem->request_type_id=$paymentitem['request_type_id'];
+                    $newPaymentitem->orderofpayment_id=$newOp->orderofpayment_id;
+                    $newPaymentitem->local_orderofpayment_id=$paymentitem['orderofpayment_id'];
+                    $newPaymentitem->details=$paymentitem['details'];
+                    $newPaymentitem->amount=$paymentitem['amount'];
+                    $newPaymentitem->cancelled=$paymentitem['cancelled'];
+                    $newPaymentitem->status=$paymentitem['status'];
+                    $newPaymentitem->receipt_id=$paymentitem['receipt_id'];
+                    $newPaymentitem->local_paymentitem_id= $paymentitem['paymentitem_id'];
+                    $newPaymentitem->save();
+                }
                 $ctr++;
                // array_push($idsave, $op['orderofpayment_id']);
                 $idsave=$op['orderofpayment_id'];
@@ -91,5 +107,50 @@ class ApiController extends ActiveController
         
         return $listIds;
       }
+      
+       public function actionSync_orderofpaymentx(){
+          
+        $post = Yii::$app->request->post(); //get the post
+        $data = Yii::$app->request->post('data');
+        
+        $ctr = 0;
+        //$idsave=[];
+        $idsave="";
+        $idfail="";
+        $listIds = [];
+        foreach ($data as $op) {
+            $newOp = new OrderofpaymentMigration();
+            $newOp->rstl_id= $op['rstl_id'];
+
+            $newOp->transactionnum= $op['transactionnum'];
+            $newOp->collectiontype_id= $op['collectiontype_id'];
+            $newOp->payment_mode_id= $op['payment_mode_id'];
+            $newOp->on_account= $op['on_account'];
+            $newOp->order_date= $op['order_date'];
+            $newOp->customer_id= $op['customer_id'];
+            $newOp->receipt_id=null;//$op['receipt_id'];
+            $newOp->purpose= $op['purpose'];
+            $newOp->payment_status_id= $op['payment_status_id'];
+            $newOp->local_orderofpayment_id=$op['orderofpayment_id'];
+            if($newOp->save()){
+                $ctr++;
+               // array_push($idsave, $op['orderofpayment_id']);
+                $idsave=$op['orderofpayment_id'];
+            }
+            else{
+                $idfail=$op['orderofpayment_id'];
+            }
+        }
+        $detail=[
+            'num'=>$ctr,
+            'idsave'=>$idsave,
+            'idfail'=>$idfail
+                
+        ];
+        array_push($listIds, $detail);
+        
+        return $listIds;
+      }
+
 
 }
