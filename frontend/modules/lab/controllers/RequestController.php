@@ -23,6 +23,7 @@ use common\models\lab\Customer;
 use DateTime;
 use common\models\system\Profile;
 use common\components\Functions;
+use common\components\ReferralComponent;
 //use linslin\yii2\curl\Curl;
 use kartik\mpdf\Pdf;
 use frontend\modules\finance\components\epayment\ePayment;
@@ -91,11 +92,14 @@ class RequestController extends Controller
         $dataProvider->pagination->pageSize=10;
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $sampleDataProvider = new ActiveDataProvider([
-                'query' => $samplesQuery,
-                'pagination' => [
-                    'pageSize' => 10,
-                ],
+            'query' => $samplesQuery,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
         ]);
+
+        $request_type = $this->findModel($id)->request_type_id;
+
         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
         
         $samples = Sample::find()->where(['request_id' => $id])->all();
@@ -115,25 +119,45 @@ class RequestController extends Controller
         $analysisQuery = Analysis::find()
         ->where(['IN', 'sample_id', $ids]);
 
-
       //  $analysisQuery = Analysis::find()->where(['sample_id' =>$samples->sample_id]);
-        $analysisdataprovider = new ActiveDataProvider([
+        if($request_type == 2) {
+            $analysisdataprovider = new ActiveDataProvider([
+                'query' => $analysisQuery,
+                'pagination' => [
+                    'pageSize' => 10,
+                ]
+            ]);
+        } else {
+            $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
                 'pagination' =>false,
-             
-        ]);
+            ]);
+        }
+        
         if(\Yii::$app->user->can('view-all-rstl')){
             $model=exRequest::findOne($id);
         }else{
             $model=$this->findRequestModel($id);
         }
-        return $this->render('view', [
-            'model' => $model,
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'sampleDataProvider' => $sampleDataProvider,
-            'analysisdataprovider'=> $analysisdataprovider,
-        ]);
+
+        if($request_type == 2){
+            return $this->render('viewreferral', [
+                'model' => $model,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'sampleDataProvider' => $sampleDataProvider,
+                'analysisdataprovider'=> $analysisdataprovider,
+            ]);
+
+        } else {
+            return $this->render('view', [
+                'model' => $model,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'sampleDataProvider' => $sampleDataProvider,
+                'analysisdataprovider'=> $analysisdataprovider,
+            ]);
+        }
     }
     public function actionCustomerlist($q = null, $id = null) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -489,9 +513,14 @@ class RequestController extends Controller
     {
         $model = new exRequestreferral();
         $Func=new Functions();
+        $refcomponent = new ReferralComponent();
         $Func->CheckRSTLProfile();
         $connection= Yii::$app->labdb;
         //$GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+        $labreferral = ArrayHelper::map(json_decode($refcomponent->listLabreferral()), 'lab_id', 'labname');
+        $discountreferral = ArrayHelper::map(json_decode($refcomponent->listDiscountreferral()), 'discount_id', 'type');
+        $purposereferral = ArrayHelper::map(json_decode($refcomponent->listPurposereferral()), 'purpose_id', 'name');
+        $modereleasereferral = ArrayHelper::map(json_decode($refcomponent->listModereleasereferral()), 'modeofrelease_id', 'mode');
         
         if ($model->load(Yii::$app->request->post())) {
             $transaction = $connection->beginTransaction();
@@ -545,18 +574,18 @@ class RequestController extends Controller
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('createReferral', [
                     'model' => $model,
-                    'labreferral' => $this->listLabreferral(),
-                    'discountreferral' => $this->listDiscountreferral(),
-                    'purposereferral' => $this->listPurposereferral(),
-                    'modereleasereferral' => $this->listModereleasereferral(),
+                    'labreferral' => $labreferral,
+                    'discountreferral' => $discountreferral,
+                    'purposereferral' => $purposereferral,
+                    'modereleasereferral' => $modereleasereferral,
                 ]);
             }else{
                 return $this->renderAjax('createReferral', [
                     'model' => $model,
-                    'labreferral' => $this->listLabreferral(),
-                    'discountreferral' => $this->listDiscountreferral(),
-                    'purposereferral' => $this->listPurposereferral(),
-                    'modereleasereferral' => $this->listModereleasereferral(),
+                    'labreferral' => $labreferral,
+                    'discountreferral' => $discountreferral,
+                    'purposereferral' => $purposereferral,
+                    'modereleasereferral' => $modereleasereferral,
                 ]);
             }
         }
@@ -574,7 +603,13 @@ class RequestController extends Controller
         $model= exRequestreferral::findOne($id);
         $modelReferralrequest = ReferralRequest::find()->where('request_id = :requestId', [':requestId' => $id])->one();
         $connection= Yii::$app->labdb;
+        $refcomponent = new ReferralComponent();
         
+        $labreferral = ArrayHelper::map(json_decode($refcomponent->listLabreferral()), 'lab_id', 'labname');
+        $discountreferral = ArrayHelper::map(json_decode($refcomponent->listDiscountreferral()), 'discount_id', 'type');
+        $purposereferral = ArrayHelper::map(json_decode($refcomponent->listPurposereferral()), 'purpose_id', 'name');
+        $modereleasereferral = ArrayHelper::map(json_decode($refcomponent->listModereleasereferral()), 'modeofrelease_id', 'mode');
+
         if ($model->load(Yii::$app->request->post())) {
             $transaction = $connection->beginTransaction();
             if ($model->save()){
@@ -582,7 +617,7 @@ class RequestController extends Controller
                 $modelReferralrequest->sample_receive_date = date('Y-m-d h:i:s',strtotime($model->sample_receive_date));
                 $modelReferralrequest->receiving_agency_id = Yii::$app->user->identity->profile->rstl_id;
                 //$modelReferralrequest->testing_agency_id = null;
-                $modelReferralrequest->referral_type_id = 1;
+                //$modelReferralrequest->referral_type_id = 1;
                 if ($modelReferralrequest->save()){
                     $transaction->commit();
                 } else {
@@ -605,20 +640,27 @@ class RequestController extends Controller
             if(\Yii::$app->request->isAjax){
                 return $this->renderAjax('updateReferral', [
                     'model' => $model,
+                    'labreferral' => $labreferral,
+                    'discountreferral' => $discountreferral,
+                    'purposereferral' => $purposereferral,
+                    'modereleasereferral' => $modereleasereferral,
                 ]);
             }else{
-                return $this->render('updateReferral', [
+                return $this->renderAjax('updateReferral', [
                     'model' => $model,
+                    'labreferral' => $labreferral,
+                    'discountreferral' => $discountreferral,
+                    'purposereferral' => $purposereferral,
+                    'modereleasereferral' => $modereleasereferral,
                 ]);
             }
         }
     }
     //get referral customer list
-    public function actionReferralcustomerlist($q = null, $id = null)
+    public function actionReferralcustomerlist($query = null, $id = null)
     {
-        if (!is_null($q)) {
-            //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/customers/searchname?keyword='.$q;
-            $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/customers/searchname?keyword='.$q;
+        if (!is_null($query)) {
+            $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/customers/searchname?keyword='.$query;
             $curl = new curl\Curl();
             $show = $curl->get($apiUrl);
         } else {
@@ -627,66 +669,9 @@ class RequestController extends Controller
 
         return $show;
     }
-    //get referral laboratory list
-    protected function listLabreferral()
+    //send notification
+    public function actionNotify()
     {
-        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/lab';
-        $curl = new curl\Curl();
-        $list = $curl->get($apiUrl);
-
-        $data = ArrayHelper::map(json_decode($list), 'lab_id', 'labname');
-        
-        return $data;
-
-    }
-    //get referral discount list
-    protected function listDiscountreferral()
-    {
-        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/discount';
-        $curl = new curl\Curl();
-        $list = $curl->get($apiUrl);
-
-        $data = ArrayHelper::map(json_decode($list), 'discount_id', 'type');
-        
-        return $data;
-    }
-    //get referral purpose list
-    protected function listPurposereferral()
-    {
-        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/purpose';
-        $curl = new curl\Curl();
-        $list = $curl->get($apiUrl);
-
-        $data = ArrayHelper::map(json_decode($list), 'purpose_id', 'name');
-        
-        return $data;
-    }
-    //get referral mode of release list
-    protected function listModereleasereferral()
-    {
-        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/moderelease';
-        $curl = new curl\Curl();
-        $list = $curl->get($apiUrl);
-
-        $data = ArrayHelper::map(json_decode($list), 'modeofrelease_id', 'mode');
-        
-        return $data;
-    }
-    //insert customer api
-    public function actionInsertcustomer()
-    {
-        //$curl = new curl\Curl();
-        //$model->rstl_id=Yii::$app->user->identity->profile->rstl_id;
-        /*$params = [
-            'key' => 'value',
-            'secondKey' => 'secondValue'
-        ];
-
-        $response = $curl->setRequestBody(json_encode($params))
-            ->setHeaders([
-                'Content-Type' => 'application/json',
-                'Content-Length' => strlen(json_encode($params))
-            ])
-            ->post('http://example.com/');*/
+        return "notification sent";
     }
 }

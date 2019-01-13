@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'notification_id',
             'referral_id',
-            'notificationtype_id',
+            'notification_type_id',
             'recipient_id',
             'sender_id',
             //'sender_name',

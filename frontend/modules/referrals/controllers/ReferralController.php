@@ -8,6 +8,7 @@ use common\models\referral\ReferralSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use linslin\yii2\curl;
 
 /**
  * ReferralController implements the CRUD actions for Referral model.
@@ -156,4 +157,18 @@ class ReferralController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+	
+	public function actionNotify()
+	{
+        //if(Yii::$app->request->get())
+        //{
+
+        //}
+        print_r(Yii::$app->request->get());
+        //return "http://localhost/eulimsapi.onelab.ph/api/web/referral/referrals/insert";
+        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/referrals/insert';
+        //$curl = new curl\Curl();
+        //$list = $curl->get($apiUrl);
+        //return $list;
+	}
 }

@@ -64,9 +64,20 @@ class AnalysisreferralController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        /*return $this->render('view', [
             'model' => $this->findModel($id),
-        ]);
+        ]);*/
+
+        $model = $this->findModel($id);
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('view', [
+                'model' => $model,
+            ]);
+        } else {
+            return $this->render('view', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
@@ -168,6 +179,7 @@ class AnalysisreferralController extends Controller
      */
     public function actionUpdate($id)
     {
+
         $model = $this->findModel($id);
         $component = new ReferralComponent();
 
@@ -613,5 +625,30 @@ class AnalysisreferralController extends Controller
         //echo "<pre>";
         //print_r(json_decode($list));
         //echo "</pre>";
+    }
+    //get default pagination page on load for the checked method reference
+    public function actionGetdefaultpage()
+    {
+        if (Yii::$app->request->get('analysis_id')){
+            $analysisId = (int) Yii::$app->request->get('analysis_id');
+        } else {
+            $analysisId = null;
+        }
+
+        //per page pagination should be the same 
+        //default page size of the method reference dataprovider
+        $perpage = 10;
+
+        if($analysisId > 0){
+            $model = $this->findModel($analysisId);
+            $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/setpagemethodref?testname_id='.$model->test_id.'&methodref_id='.$model->methodref_id.'&perpage='.$perpage;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            $cpage = json_decode($list,true);
+            $data = $cpage['count_page'];
+        } else {
+            $data = [];
+        }
+        return $data;
     }
 }

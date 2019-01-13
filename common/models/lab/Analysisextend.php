@@ -83,4 +83,25 @@ class Analysisextend extends Analysis
     //      [['test_id'], 'exist', 'skipOnError' => true, 'targetClass' => Test::className(), 'targetAttribute' => ['test_id' => 'test_id']],
     ];
   }
+
+  /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'analysis_id' => 'Analysis ID',
+            'date_analysis' => 'Date Analysis',
+            'request_id' => 'Request',
+            'sample_id' => 'Sample',
+            'sample_code' => 'Sample Code',
+            'testname' => 'Test name',
+            'method' => 'Method',
+            'references' => 'References',
+            'quantity' => 'Quantity',
+            'fee' => 'Fee',
+            'test_id' => 'Test Name',
+            'cancelled' => 'Cancelled',
+        ];
+    }
 }

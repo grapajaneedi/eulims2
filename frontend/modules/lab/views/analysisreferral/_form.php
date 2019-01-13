@@ -36,8 +36,8 @@ use yii\web\JsExpression;
         <div class="col-lg-12">
         <div class="table-responsive">
         <?php
-            //echo Yii::$app->request->get('id');
-            if(Yii::$app->request->get('id') == $model->analysis_id){
+            //if(Yii::$app->request->get('id') == $model->analysis_id){
+            if(Yii::$app->controller->action->id === 'update'){
                 $gridColumns = [
                     [
                         'class' => '\kartik\grid\SerialColumn',
@@ -265,8 +265,7 @@ echo Dialog::widget([
     };
 </script>
 <?php
-
-if(Yii::$app->request->get('id') == $model->analysis_id){
+if(Yii::$app->controller->action->id === 'update'){
     $this->registerJs("
         $('#add_analysis').on('click',function(){
             //var radioSample = $('#sample-analysis-grid').yiiGridView('getSelectedRows');

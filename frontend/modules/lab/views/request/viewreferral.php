@@ -26,9 +26,9 @@ $Year=date('Y', strtotime($model->request_datetime));
 $paymentitem= Paymentitem::find()->where(['request_id'=> $model->request_id])->one();
 
 if ($paymentitem){
-    $analysistemplate = "";
+    $analysistemplate = "{view}";
 }else{
-    $analysistemplate = "{update} {delete}";
+    $analysistemplate = "{view} {update} {delete}";
 }
 // /lab/request/saverequestransaction
 $js=<<<SCRIPT
@@ -146,6 +146,7 @@ $this->registerJs($PrintEvent);
 </div> 
 <div class="<?= $BackClass ?>"></div>
 <div class="request-view ">
+    <div class="image-loader" style="display: hidden;"></div>
     <div class="container table-responsive">
         <?php
 
@@ -546,12 +547,16 @@ $this->registerJs($PrintEvent);
                 'template' => $analysistemplate,
                 'buttons'=>[
                     'update'=>function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/analysisreferral/update','id'=>$model->analysis_id,'request_id'=>$model->request_id,'page'=>3]), 'onclick'=>'updateAnalysisReferral('.$model->analysis_id.',this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Update Analysis']);
+                        //return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/analysisreferral/update','id'=>$model->analysis_id,'request_id'=>$model->request_id,'page'=>3]), 'onclick'=>'updateAnalysisReferral('.$model->analysis_id.',this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Update Analysis']);
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['onclick'=>'updateAnalysisReferral('.$model->analysis_id.','.$model->request_id.',this.title)', 'class' => 'btn btn-primary','title' => 'Update Analysis']);
                     },
                     'delete'=>function ($url, $model) {
                         $urls = '/lab/analysis/delete?id='.$model->analysis_id;
                         return Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Analysis','data-pjax'=>'0']);
                        // return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/lab/analysis/delete','id'=>$model->analysis_id]), 'class' => 'btn btn-danger']);
+                    },
+                    'view' => function ($url, $model){
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value'=>Url::to(['/lab/analysisreferral/view','id'=>$model->analysis_id]), 'onclick'=>'viewAnalysisReferral(this.value,this.title)', 'class' => 'btn btn-primary','title' => 'View Analysis']);
                     },
                 ],
             ],
@@ -635,11 +640,12 @@ $this->registerJs($PrintEvent);
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
                         'notification' => function ($url, $model) {
-                            if($model->active == 1){
-                                return Html::a('<span class="glyphicon glyphicon-bell"></span> Notify', '#', ['class'=>'btn btn-primary','title'=>'Send Notification','onclick' => 'sendNotification('.$model->sample_id.')']);
-                            } else {
-                                return null;
-                            }
+                            //if($model->active == 1){
+                            //    return Html::a('<span class="glyphicon glyphicon-bell"></span> Notify', '#', ['class'=>'btn btn-primary','title'=>'Send Notification','onclick' => 'sendNotification(19,11)']);
+                            return Html::button('<span class="glyphicon glyphicon-bell"></span>', ['value'=>Url::to(['/referrals/referral/notify']), 'onclick'=>'sendNotification(19,11,this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Notify Agency']);
+                            //} else {
+                            //    return null;
+                            //}
                         },
                     ],
                 ],
@@ -809,16 +815,62 @@ $this->registerJs($PrintEvent);
             .find('#modalContent')
             .load(url);
     }
-    function updateAnalysisReferral(id,url,title){
-       //var url = '/lab/analysis/update?id='+id;
+    //function updateAnalysisReferral(id,url,title){
+    function updateAnalysisReferral(id,requestId,title){
+        //var url = '/lab/analysisreferral/update?id='+id;
+        //var url = '/lab/analysisreferral/update?id='+id+'&request_id='+requestId;
+        //var url = '/lab/analysisreferral/getdefaultpage?analysis_id='+id;
+        //$('.modal-title').html(title);
+        //$('#modalAnalysis').modal('show')
+        //    .find('#modalContent')
+        //    .load(url);
+        /*$.ajax({
+            url: '/lab/analysisreferral/getdefaultpage',
+            //dataType: 'json',
+            method: 'GET',
+            data: {analysis_id:analysisId},
+            //data: $(this).serialize(),
+            success: function (data, textStatus, jqXHR) {
+                $('.image-loader').removeClass("img-loader");
+                //$('#methodreference').html(data);
+                var url = '/lab/analysisreferral/update?id='+id+'&request_id='+requestId+'&perpage='data.count_page;
+                $('.modal-title').html(title);
+                $('#modalAnalysis').modal('show')
+                    .find('#modalContent')
+                    .load(url);
+            },
+            beforeSend: function (xhr) {
+                $('.image-loader').addClass("img-loader");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alertWarning.alert("<p class='text-danger' style='font-weight:bold;'>Error Encountered!</p>");
+            }
+        });*/
+            $.ajax({
+                url: '/lab/analysisreferral/getdefaultpage?analysis_id='+id,
+                success: function (data) {
+                    $('.image-loader').removeClass('img-loader');
+                    //alert(data);
+                    var url = '/lab/analysisreferral/update?id='+id+'&request_id='+requestId+'&page='+data;
+                    $('.modal-title').html(title);
+                    $('#modalAnalysis').modal('show')
+                        .find('#modalContent')
+                        .load(url);
+                },
+                beforeSend: function (xhr) {
+                    $('.image-loader').addClass('img-loader');
+                }
+            });
+    }
+    function viewAnalysisReferral(url,title){
         $('.modal-title').html(title);
-        $('#modalAnalysis').modal('show')
+        $('#modal').modal('show')
             .find('#modalContent')
             .load(url);
     }
-    function sendNotification(id){
-        var url = '/lab/sample/update?id='+id;
-        $('.modal-title').html('Send Notification');
+    function sendNotification(referralId,recipiendId,url,title){
+        //var url = '/lab/sample/update?id='+id;
+        $('.modal-title').html(title);
         $('#modal').modal('show')
             .find('#modalContent')
             .load(url);
@@ -847,3 +899,33 @@ Modal::begin([
     echo "</div></div>";
 Modal::end();
 ?>
+<style type="text/css">
+/* Absolute Center Spinner */
+.img-loader {
+    position: fixed;
+    z-index: 999;
+    /*height: 2em;
+    width: 2em;*/
+    height: 64px;
+    width: 64px;
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: url('/images/img-loader64.gif');
+    background-repeat: no-repeat;
+}
+/* Transparent Overlay */
+.img-loader:before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+}
+</style>

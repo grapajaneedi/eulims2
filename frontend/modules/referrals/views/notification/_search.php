@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'referral_id') ?>
 
-    <?= $form->field($model, 'notificationtype_id') ?>
+    <?= $form->field($model, 'notification_type_id') ?>
 
     <?= $form->field($model, 'recipient_id') ?>
 

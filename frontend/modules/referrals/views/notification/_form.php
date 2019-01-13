@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'referral_id')->textInput() ?>
 
-    <?= $form->field($model, 'notificationtype_id')->textInput() ?>
+    <?= $form->field($model, 'notification_type_id')->textInput() ?>
 
     <?= $form->field($model, 'recipient_id')->textInput() ?>
 
@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'remarks')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'viewed')->textInput() ?>
+    <?= $form->field($model, 'seen')->textInput() ?>
 
     <?= $form->field($model, 'notification_date')->textInput() ?>
 

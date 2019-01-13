@@ -15,6 +15,7 @@ use yii\web\JsExpression;
 //use common\models\lab\Request;
 //use kartik\grid\GridView;
 use yii\web\NotFoundHttpException;
+//use common\models\lab\Analysisextend;
 //use common\models\system\LogSync;
 //use common\models\system\ApiSettings;
 use linslin\yii2\curl;
@@ -25,15 +26,16 @@ use linslin\yii2\curl;
  * Get Data from Referral API for local eULIMS
  * @author OneLab
  */
-class ReferralComponent extends Component{
+class ReferralComponent extends Component {
 
+    public $source = 'http://localhost/eulimsapi.onelab.ph';
     /**
      * FindOne testname
      * @param integer $testnameId
      * @return array
      */
     function getTestnameOne($testnameId){
-        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnameone?testname_id='.$testnameId;
+        $apiUrl=$this->source.'/api/web/referral/listdatas/testnameone?testname_id='.$testnameId;
         $curl = new curl\Curl();
         $list = $curl->get($apiUrl);
         return json_decode($list);
@@ -44,20 +46,54 @@ class ReferralComponent extends Component{
      * @return array
      */
     function getMethodrefOne($methodrefId){
-        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/methodreferenceone?methodref_id='.$methodrefId;
+        $apiUrl=$this->source.'/api/web/referral/listdatas/methodreferenceone?methodref_id='.$methodrefId;
         $curl = new curl\Curl();
         $list = $curl->get($apiUrl);
         return json_decode($list);
     }
+    //get referral laboratory list
+    function listLabreferral()
+    {
+        $apiUrl=$this->source.'/api/web/referral/listdatas/lab';
+        $curl = new curl\Curl();
+        $list = $curl->get($apiUrl);
 
-    function getMethodTotal($testnameId){
-        if($testnameId > 0){
-            $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnamemethodref?testname_id='.$testnameId;
-            $curl = new curl\Curl();
-            $data = $curl->get($apiUrl);
-        } else {
-            $data = [];
-        }
-        return count($data);
+        //$data = ArrayHelper::map(json_decode($list), 'lab_id', 'labname');
+        
+        return $list;
+
+    }
+    //get referral discount list
+    function listDiscountreferral()
+    {
+        $apiUrl=$this->source.'/api/web/referral/listdatas/discount';
+        $curl = new curl\Curl();
+        $list = $curl->get($apiUrl);
+
+        //$data = ArrayHelper::map(json_decode($list), 'discount_id', 'type');
+        
+        return $list;
+    }
+    //get referral purpose list
+    function listPurposereferral()
+    {
+        $apiUrl=$this->source.'/api/web/referral/listdatas/purpose';
+        $curl = new curl\Curl();
+        $list = $curl->get($apiUrl);
+
+        //$data = ArrayHelper::map(json_decode($list), 'purpose_id', 'name');
+        
+        return $list;
+    }
+    //get referral mode of release list
+    function listModereleasereferral()
+    {
+        $apiUrl=$this->source.'/api/web/referral/listdatas/moderelease';
+        $curl = new curl\Curl();
+        $list = $curl->get($apiUrl);
+
+        //$data = ArrayHelper::map(json_decode($list), 'modeofrelease_id', 'mode');
+        
+        return $list;
     }
 }

@@ -35,10 +35,7 @@ use yii\helpers\Json;
                         'radioOptions' => function ($model) use ($checkMethod) {
                             return [
                                 'value' => $model['methodreference_id'],
-                                //'name' => 'methodref_id',
                                 'checked' => $model['methodreference_id'] == $checkMethod,
-                                //'onclick' => "checkMethodref(".$model['methodreference_id'].")",
-                                //'onclick' => "checkMethodref()",
                             ];
                         },
                         'name' => 'methodref_id',
@@ -46,21 +43,6 @@ use yii\helpers\Json;
                         'headerOptions' => ['class' => 'text-center'],
                         'contentOptions' => ['class' => 'text-center','style'=>'max-width:20px;'],
                     ],
-                    /*[
-                        'class' => 'yii\grid\CheckboxColumn',
-                        'headerOptions' => ['class' => 'text-center'],
-                        'contentOptions' => ['class' => 'text-center'],
-                        'multiple'=>false,
-
-                    ],*/
-                    /*[
-                        'attribute'=>'testname_method_id',
-                        'enableSorting' => false,
-                    ],*/
-                    /*[
-                        'attribute'=>'methodreference_id',
-                        'enableSorting' => false,
-                    ],*/
                     [
                         //'attribute'=>'testname_method_id',
                         'header' => 'Method',
@@ -102,10 +84,7 @@ use yii\helpers\Json;
                 echo GridView::widget([
                     'id' => 'method-reference-grid',
                     'dataProvider'=> $methodProvider,
-                    //'pjax'=>false,
                     'pjax'=>true,
-                    //'headerRowOptions' => ['class' => 'kartik-sheet-style'],
-                    //'filterRowOptions' => ['class' => 'kartik-sheet-style'],
                     'pjaxSettings' => [
                         'options' => [
                             'enablePushState' => false,
@@ -124,7 +103,6 @@ use yii\helpers\Json;
                        'type'=>'primary',
                        'before' => '',
                        'after'=>false,
-                       //'footer'=>false,
                     ],
                     'columns' => $gridColumns,
                     'toolbar' => false,

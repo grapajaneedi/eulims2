@@ -18,7 +18,7 @@ class NotificationSearch extends Notification
     public function rules()
     {
         return [
-            [['notification_id', 'referral_id', 'notificationtype_id', 'recipient_id', 'sender_id', 'viewed'], 'integer'],
+            [['notification_id', 'referral_id', 'notification_type_id', 'recipient_id', 'sender_id', 'seen'], 'integer'],
             [['sender_name', 'remarks', 'notification_date'], 'safe'],
         ];
     }
@@ -61,10 +61,10 @@ class NotificationSearch extends Notification
         $query->andFilterWhere([
             'notification_id' => $this->notification_id,
             'referral_id' => $this->referral_id,
-            'notificationtype_id' => $this->notificationtype_id,
+            'notification_type_id' => $this->notification_type_id,
             'recipient_id' => $this->recipient_id,
             'sender_id' => $this->sender_id,
-            'viewed' => $this->viewed,
+            'seen' => $this->seen,
             'notification_date' => $this->notification_date,
         ]);
 

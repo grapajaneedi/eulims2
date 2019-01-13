@@ -296,3 +296,9 @@ frontend/modules/lab/views/analysisreferral/_form_20190104.php
 frontend/modules/lab/views/analysisreferral/_form_20190106.php
 frontend/modules/lab/views/analysisreferral/_form_20190109.php
 frontend/modules/lab/views/request/view_20190109.php
+common/components/ReferralComponent_20190111.php
+frontend/modules/lab/controllers/AnalysisreferralController_20190112.php
+frontend/modules/lab/controllers/RequestController_20190112.php
+frontend/modules/lab/views/analysisreferral/_form_20190112.php
+frontend/modules/lab/views/analysisreferral/_methodreference_20190110.php
+frontend/modules/lab/views/analysisreferral/view_20181207.php
