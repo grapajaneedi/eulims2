@@ -8,6 +8,9 @@ use kartik\grid\GridView;
 use common\models\lab\Sampletype;
 use common\models\lab\Services;
 use common\models\lab\Request;
+use common\models\lab\Sample;
+use common\models\lab\Analysis;
+use common\models\lab\Backuprestore;
 use common\models\lab\Lab;
 use common\models\lab\Testname;
 use yii\helpers\ArrayHelper;
@@ -53,6 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
         // echo "<pre>";
         // var_dump($data);
         // echo "</pre>";
+      
 
 ?>
 
@@ -106,12 +110,13 @@ $this->params['breadcrumbs'][] = $this->title;
   
     <div class = "row" style="padding-left:15px;padding-right:15px" id="methodreference">
     <?php
-    //local and api number of request
 
     $request = Request::find()->count();
+    $analysis = Analysis::find()->count();
+    $sample = Sample::find()->count();
 
     $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-    $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/countrequest?rstl_id=11";        
+    $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/countrequest?rstl_id=".$GLOBALS['rstl_id'];        
     $curl = curl_init();			
     curl_setopt($curl, CURLOPT_URL, $apiUrl);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -120,19 +125,42 @@ $this->params['breadcrumbs'][] = $this->title;
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($curl);			
     $data = json_decode($response, true);
+
+    //analysis
+    $apiUrl_analysis="https://eulimsapi.onelab.ph/api/web/v1/analysisdatas/countanalysis?rstl_id=".$GLOBALS['rstl_id'];        
+    $curl_analysis = curl_init();			
+    curl_setopt($curl_analysis, CURLOPT_URL, $apiUrl_analysis);
+    curl_setopt($curl_analysis, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($curl_analysis, CURLOPT_SSL_VERIFYHOST, FALSE); 
+    curl_setopt($curl_analysis, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+    curl_setopt($curl_analysis, CURLOPT_RETURNTRANSFER, true);
+    $response_analysis = curl_exec($curl_analysis);			
+    $data_analysis = json_decode($response_analysis, true);
+
+    //sample
+    $apiUrl_sample="https://eulimsapi.onelab.ph/api/web/v1/samples/countsample?rstl_id=".$GLOBALS['rstl_id'];        
+    $curl_sample = curl_init();			
+    curl_setopt($curl_sample, CURLOPT_URL, $apiUrl_sample);
+    curl_setopt($curl_sample, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($curl_sample, CURLOPT_SSL_VERIFYHOST, FALSE); 
+    curl_setopt($curl_sample, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+    curl_setopt($curl_sample, CURLOPT_RETURNTRANSFER, true);
+    $response_sample = curl_exec($curl_sample);			
+    $data_sample = json_decode($response_sample, true);
+
+   // var_dump($data_sample);
     ?>
     <?= 
-   
     GridView::widget([
         'dataProvider' => $dataProvider,
         'id'=>'testname-grid',
         'pjax' => true,
-      //  'showPageSummary' => true,
+    
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-products']],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-                'before'=> "<b>No. of Requests: </b>".$request."/ ".$data."",
+                'before'=> "<b>No. of Requests: </b>".number_format($request)."/ ".number_format($data)."<b><br>No. of Analyses:</b>".number_format($analysis)."/".number_format($data_analysis)."<b><br>No. of Sample: </b>".number_format($sample)."/".number_format($data_sample),
                'after'=>false,
             ],
         'columns' => [

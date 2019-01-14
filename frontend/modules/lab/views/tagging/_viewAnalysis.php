@@ -111,9 +111,13 @@ $this->registerJs($js);
                             'query' => $query,
                         ]);
                  
-                         return $this->render('workflow.php', [
+                         return $this->renderAjax('workflow.php', [
                              'model'=>$proceduredataProvider,
                          ]);
+
+ 
+                         
+
                     },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'expandOneOnly' => true
@@ -138,22 +142,22 @@ $this->registerJs($js);
                     },
                     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                      
                 ],
-                // [
-                //     'header'=>'Analyst',
-                //     'format' => 'raw',
-                //     'enableSorting' => false,
-                //     'value'=> function ($model){
+                [
+                    'header'=>'Analysts',
+                    'format' => 'raw',
+                    'enableSorting' => false,
+                    'value'=> function ($model){
 
-                //         if ($model->tagging){
-                //             $profile= Profile::find()->where(['user_id'=> $model->tagging->user_id])->one();
-                //             return $profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
-                //         }else{
-                //             return "";
-                //         }
+                        if ($model->tagging){
+                            $profile= Profile::find()->where(['user_id'=> $model->tagging->user_id])->one();
+                            return $profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
+                        }else{
+                            return "";
+                        }
                        
-                //     },
-                //     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
-                // ],
+                    },
+                    'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
+                ],
                 [
                     'header'=>'Status',
                     'hAlign'=>'center',
