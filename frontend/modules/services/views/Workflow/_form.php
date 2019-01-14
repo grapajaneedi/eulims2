@@ -5,6 +5,9 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use common\models\services\Test;
 use common\models\lab\Testname;
+use common\models\lab\Sample;
+use common\models\lab\Testnamemethod;
+use common\models\lab\Methodreference;
 use kartik\sortinput\SortableInput;
 
 $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','testname');
@@ -17,8 +20,22 @@ $TestList= ArrayHelper::map(Test::find()->orderBy('testname')->all(),'test_id','
 $model->test_id=$test_id;
 //configures the items for the workflow
 
-?>
 
+//procedure
+
+
+//$testnamemethod = Testnamemethod::find()->where(['testname_method_id' => 1]);
+$modeltestnamemethod =  Testnamemethod::findOne(['testname_method_id'=>$test_id]);
+$modeltestname =  Testname::findOne(['testname_id'=>$modeltestnamemethod->testname_id]);
+$modelmethodreference =  Methodreference::findOne(['method_reference_id'=>$modeltestnamemethod->method_id]);
+
+echo "".$modeltestname->testName;
+echo "<br>";
+echo "".$modelmethodreference->method;
+// echo "<pre>";
+// var_dump($testnamemethod);
+// echo "</pre>";
+?>
 <div class="workflow-form" style="padding-bottom: 10px">
 
     <?php $form = ActiveForm::begin(); ?>

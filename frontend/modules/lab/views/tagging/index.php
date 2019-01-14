@@ -101,7 +101,7 @@ $func=new Functions();
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],       
             ],
             [
-                'header'=>'Analyst',
+                'header'=>'Analysts',
                 'hAlign'=>'center',
                 'format' => 'raw',
                 'enableSorting' => false,
@@ -123,13 +123,13 @@ $func=new Functions();
                 'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
                
             ],
-            [
-                'header'=>'Remarks',
-                'hAlign'=>'center',
-                'format' => 'raw',
-                'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],      
-        ],     
+        //     [
+        //         'header'=>'Remarks',
+        //         'hAlign'=>'center',
+        //         'format' => 'raw',
+        //         'enableSorting' => false,
+        //         'contentOptions' => ['style' => 'width:40px; white-space: normal;'],      
+        // ],     
         ],
     ]); ?>
     </div>

@@ -8,6 +8,7 @@ use common\models\lab\Restore_request;
 use common\models\lab\Restore_sample;
 use common\models\lab\Restore_analysis;
 use common\models\lab\Sample;
+use common\models\lab\Request;
 use common\models\lab\Analysis;
 use common\models\lab\Customer;
 use common\models\lab\BackuprestoreSearch;
@@ -38,32 +39,39 @@ class LabController extends Controller
      }
 
      public function actionRessync(){
-
+         //TAKE NOTE OF THE REQUEST OLD ID KAPAG HINDI GALING SA YII
         $searchModel = new BackuprestoreSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $model = new Backuprestore();
-        	 
-       
-            
-       
-       
-          
 
-      
-                 
+            #All data are sync
+
+            $request = Request::find()->count();
+        
             $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-           // $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&reqds=".$start."&reqde=".$end;
-            
+            $apiUrls="https://eulimsapi.onelab.ph/api/web/v1/requests/countrequest?rstl_id=".$GLOBALS['rstl_id'];        
+            $curls = curl_init();			
+            curl_setopt($curls, CURLOPT_URL, $apiUrls);
+            curl_setopt($curls, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($curls, CURLOPT_SSL_VERIFYHOST, FALSE); 
+            curl_setopt($curls, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+            curl_setopt($curls, CURLOPT_RETURNTRANSFER, true);
+            $responses = curl_exec($curls);			
+            $api = json_decode($responses, true);
 
-           //last id nalang ang kunin
-
-          // $br = Backuprestore::find()->where([ 'last_num'=> $month_value.$year])->one();
-
-
-
-            $lastid = 10160;
-
-            $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restoresyncnew?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&id=10136";
+            if ($request>=$api){
+                $message = "All data are sync";
+                return Json::encode([
+                    'message'=>$message,        
+                ]);
+                exit;
+            }
+        	           
+         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+     
+         $lastid =  Backuprestore::find()->max('last_num');  
+          
+         $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restoresyncnew?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&id=".$lastid;
 
             $curl = curl_init();                   
             curl_setopt($curl, CURLOPT_URL, $apiUrl);
@@ -222,7 +230,7 @@ class LabController extends Controller
                     $model->month =1;
                     $model->monthyear = 1;
                     $model->last_num = $data;
-                
+                    $analysis_count = 1;
                     $model->year = $analysis_count."/".$analysis_count;
                     Yii::$app->session->setFlash('success', 'Sync all data'); 
                     $model->save(false);
@@ -465,7 +473,7 @@ class LabController extends Controller
                     $model->month = $sample_count."/".$samplenum;
                     $model->monthyear = $month_value.$year;
                     $model->last_num = $data['last_request_id'];
-                
+                 
                     $model->year = $analysis_count."/".$analysis_count;
                     Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$year); 
                     $model->save(false);
