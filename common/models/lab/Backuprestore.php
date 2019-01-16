@@ -14,6 +14,7 @@ use Yii;
  * @property string $status
   * @property string $month
     * @property string $year
+     * @property string $customer
  */
 class Backuprestore extends \yii\db\ActiveRecord
 {
@@ -59,6 +60,7 @@ class Backuprestore extends \yii\db\ActiveRecord
             'status' => 'Status',
             'month' => 'No. of Samples',
             'year' => 'No. of Analyses',
+            'customer' => 'No. of Customer',
         ];
     }
 }
