@@ -26,13 +26,14 @@ $func=new Functions();
 
 
 $month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-$year = ['1970','2013', '2014', '2015', '2016', '2017', '2018'];
+$year = ['0000','1970','2013', '2014', '2015', '2016', '2017', '2018','2019'];
 
 //$lablist= ArrayHelper::map( $decode,'lab_id','labname');
 
 $this->title = 'Backup and Restore';
 $this->params['breadcrumbs'][] = ['label' => 'API', 'url' => ['/api']];
 $this->params['breadcrumbs'][] = $this->title;
+//$op_button="<button type='button' value='/finance/cashier/view-receipt?receiptid=$model->receipt_id' id='Receipt2' style='float: right;margin-right: 5px' class='btn btn-success' onclick='location.href=this.value'><i class='fa fa-eye'></i> Op</button>";  
 ?>
 
 <div class="services-index">
@@ -60,8 +61,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'theme' => Select2::THEME_KRAJEE,
                         'options' => ['id'=>'year'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Year'],
-                ])->label("Year")."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_receipt' onclick='restore_receipt()'>RESTORE Receipt</span>"
-                  . "&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_paymentitem' onclick='restore_paymentitem()'>RESTORE Paymentitem</span></div>";
+                ])->label("Year")."</div>"."<div class='col-md-10' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>OP</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_receipt' onclick='restore_receipt()'>Receipt</span>"
+                  . "&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_paymentitem' onclick='restore_paymentitem()'>Paymentitem</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_deposit' onclick='restore_deposit()'>Deposit</span></div>";
             ?>
         </div>
         <?php ActiveForm::end(); ?>
@@ -79,6 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+                'before'=> "<b>OP: </b>".$op."<b><br>Paymentitem:</b>".$paymentitem."<b><br>Receipt: </b>".$receipt."<b><br>Deposit: </b>".$deposit,
                 'after'=>false,
             ],
         'columns' => [
@@ -150,6 +152,22 @@ $this->params['breadcrumbs'][] = $this->title;
             url: "/api/finance/res_paymentitem",
             method: "POST",
             data: {},
+            beforeSend: function(xhr) {
+                $('.image-loader').addClass("img-loader");
+               }
+            })
+            .done(function(data) {
+                $("#finance-grid").yiiGridView("applyFilter"); 
+                $('.image-loader').removeClass("img-loader");
+            });
+        }
+        
+        function restore_deposit(){
+        var y = $('#year option:selected').text();    
+        $.ajax({
+            url: "/api/finance/res_deposit",
+            method: "POST",
+            data: {year:y},
             beforeSend: function(xhr) {
                 $('.image-loader').addClass("img-loader");
                }

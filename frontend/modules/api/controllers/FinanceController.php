@@ -14,8 +14,11 @@ use yii\helpers\Json;
 use common\models\finance\Restore_receipt;
 use common\models\finance\Restore_deposit;
 use common\models\finance\Restore_check;
-use common\models\finance\Deposit;
+
+use common\models\finance\Op;
 use common\models\finance\Paymentitem;
+use common\models\finance\Receipt;
+use common\models\finance\Deposit;
 set_time_limit(1000);
 
 /**
@@ -32,10 +35,69 @@ class FinanceController extends Controller
          $searchModel = new BackuprestoreLogsSearch();
          $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
          $model = new BackuprestoreLogs();
+         
+        $op = Op::find()->count();
+        $paymentitem = Paymentitem::find()->count();
+        $receipt = Receipt::find()->count();
+        $deposit= Deposit::find()->count();
+
+        $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+        $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/ops/countop?rstl_id=".$GLOBALS['rstl_id'];        
+        $curl = curl_init();			
+        curl_setopt($curl, CURLOPT_URL, $apiUrl);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); 
+        curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);			
+        $data = json_decode($response, true);
+
+        //paymentitem
+        $apiUrl_paymentitem="https://eulimsapi.onelab.ph/api/web/v1/paymentitems/countpaymentitem?rstl_id=".$GLOBALS['rstl_id'];        
+        $curl_paymentitem = curl_init();			
+        curl_setopt($curl_paymentitem, CURLOPT_URL, $apiUrl_paymentitem);
+        curl_setopt($curl_paymentitem, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl_paymentitem, CURLOPT_SSL_VERIFYHOST, FALSE); 
+        curl_setopt($curl_paymentitem, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+        curl_setopt($curl_paymentitem, CURLOPT_RETURNTRANSFER, true);
+        $response_paymentitem = curl_exec($curl_paymentitem);			
+        $data_paymentitem = json_decode($response_paymentitem, true);
+
+        //receipt
+        $apiUrl_receipt="https://eulimsapi.onelab.ph/api/web/v1/receipts/countreceipt?rstl_id=".$GLOBALS['rstl_id'];        
+        $curl_receipt = curl_init();			
+        curl_setopt($curl_receipt, CURLOPT_URL, $apiUrl_receipt);
+        curl_setopt($curl_receipt, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl_receipt, CURLOPT_SSL_VERIFYHOST, FALSE); 
+        curl_setopt($curl_receipt, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+        curl_setopt($curl_receipt, CURLOPT_RETURNTRANSFER, true);
+        $response_receipt = curl_exec($curl_receipt);			
+        $data_receipt = json_decode($response_receipt, true);
+        
+        //deposit
+        $apiUrl_deposit="https://eulimsapi.onelab.ph/api/web/v1/deposits/countdeposit?rstl_id=".$GLOBALS['rstl_id'];        
+        $curl_deposit = curl_init();			
+        curl_setopt($curl_deposit, CURLOPT_URL, $apiUrl_deposit);
+        curl_setopt($curl_deposit, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl_deposit, CURLOPT_SSL_VERIFYHOST, FALSE); 
+        curl_setopt($curl_deposit, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+        curl_setopt($curl_deposit, CURLOPT_RETURNTRANSFER, true);
+        $response_deposit = curl_exec($curl_deposit);			
+        $data_deposit = json_decode($response_deposit, true);
+        
+        
+        $opdata=number_format($op)."/ ".number_format($data);
+        $paymentitemdata=number_format($paymentitem)."/ ".number_format($data_paymentitem);
+        $receiptdata=number_format($receipt)."/ ".number_format($data_receipt);
+        $depositdata=number_format($deposit)."/ ".number_format($data_deposit);
          return $this->render('backup_restore', [
              'searchModel' => $searchModel,
              'dataProvider' => $dataProvider,
              'model'=>$model,
+             'op'=>$opdata,
+             'paymentitem'=> $paymentitemdata, 
+             'receipt'=> $receiptdata, 
+             'deposit'=> $depositdata
          ]);
      }
      public function actionRes(){
@@ -43,7 +105,7 @@ class FinanceController extends Controller
         $year =  $_POST['year'];
         
         for($month=1;$month < 13;$month++){
-          
+       // for($month=12;$month > 0;$month--){  
             $month_value=str_pad($month,2,"0",STR_PAD_LEFT);
             $start = $year."-".$month_value;
             $end = $year."-".$month_value;
@@ -65,85 +127,91 @@ class FinanceController extends Controller
             $response = curl_exec($curl);
 
             $data = json_decode($response, true);
+            //var_dump($data);exit;
+            if($data){
+                 $sql = "SET FOREIGN_KEY_CHECKS = 0;";
 
-            $sql = "SET FOREIGN_KEY_CHECKS = 0;";
 
-
-            $op_count = 0;
-            $paymentitem_count = 0;
-            $op_sc=0;
-
-            $connection= Yii::$app->financedb;
-            $transaction = $connection->beginTransaction();
-            $connection->createCommand('set foreign_key_checks=0')->execute();
-    
-           
-            try {
-             foreach ($data as $op)
-             {    
-                   
-                    $newOp = new Restore_op();  
-
-                    $newOp->orderofpayment_id= $op['local_orderofpayment_id'];
-
-                    $newOp->rstl_id= $op['rstl_id'];
-
-                    $newOp->transactionnum= $op['transactionnum'];
-                    $newOp->collectiontype_id= $op['collectiontype_id'];
-                    $newOp->payment_mode_id= $op['payment_mode_id'];
-                    $newOp->on_account= $op['on_account'];
-                    $newOp->order_date= $op['order_date'];
-                    $newOp->customer_id= $op['customer_id'];
-                    $newOp->receipt_id=$op['receipt_id'];
-                    $newOp->purpose= $op['purpose'];
-                    $newOp->payment_status_id= $op['payment_status_id'];
-                    $newOp->save();
-                    $op_count++;
-
-                    foreach ($op['paymentitems'] as $item){
-                       
-                        $paymentitem_count++;          
-                        $newPaymentitem = new Restore_paymentitem();
-                        $newPaymentitem->paymentitem_id= $item['local_paymentitem_id'];
-                        $newPaymentitem->rstl_id=$item['rstl_id'];
-                        $newPaymentitem->request_id=$item['request_id'];
-                        $newPaymentitem->request_type_id=$item['request_type_id'];
-                        $newPaymentitem->orderofpayment_id=$newOp->orderofpayment_id;
-                        $newPaymentitem->details=$item['details'];
-                        $newPaymentitem->amount=$item['amount'];
-                        $newPaymentitem->cancelled=$item['cancelled'];
-                        $newPaymentitem->status=$item['status'];
-                        $newPaymentitem->receipt_id=$item['receipt_id'];
-                        $newPaymentitem->save(); 
-                    }
-
-             } 
-            
-               
-                $model = new BackuprestoreLogs();
+                $op_count = 0;
+                $paymentitem_count = 0;
+                $op_sc=0;
+                $receipt_count = 0;
+                $deposit_count = 0;
+                $check_count=0;
+                $connection= Yii::$app->financedb;
+                $transaction = $connection->beginTransaction();
+                $connection->createCommand('set foreign_key_checks=0')->execute();
                 
-                $model->activity = "Restored data for the month of ".$month."-".$year;
-                $model->transaction_date = date('Y-M-d');
-                $model->data_date=$month."-".$year;
-                $model->op = count($data)."/".$op_count;
-                $model->paymentitem = $paymentitem_count."/".$paymentitem_count;
-                $model->status = "COMPLETED";
-                $model->save();
-                
-                $transaction->commit();
-                
-                $sql = "SET FOREIGN_KEY_CHECKS = 1;";
-                Yii::$app->session->setFlash('success', ' Records Successfully Restored for the year '.$year); 
-                  
-            }catch (\Exception $e) {
-                Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
 
-                $transaction->rollBack();
-            }catch (\Throwable $e) {
-                Yii::$app->session->setFlash('warning', ' There was a problem connecting to the server. Please try again'); 
-                $transaction->rollBack();
-          
-            }	
+                try {
+                 foreach ($data as $op)
+                 {    
+
+                        $newOp = new Restore_op();  
+
+                        $newOp->orderofpayment_id= $op['orderofpayment_id'];
+
+                        $newOp->rstl_id= $op['rstl_id'];
+
+                        $newOp->transactionnum= $op['transactionnum'];
+                        $newOp->collectiontype_id= $op['collectiontype_id'];
+                        $newOp->payment_mode_id= $op['payment_mode_id'];
+                        $newOp->on_account= $op['on_account'];
+                        $newOp->order_date= $op['order_date'];
+                        $newOp->customer_id= $op['customer_id'];
+                        $newOp->receipt_id=$op['receipt_id'];
+                        $newOp->purpose= $op['purpose'];
+                        $newOp->payment_status_id= $op['payment_status_id'];
+                        $newOp->save();
+                        $op_count++;
+
+                        foreach ($op['paymentitems'] as $item){
+
+                            $paymentitem_count++;          
+                            $newPaymentitem = new Restore_paymentitem();
+                            $newPaymentitem->paymentitem_id= $item['paymentitem_id'];
+                            $newPaymentitem->rstl_id=$item['rstl_id'];
+                            $newPaymentitem->request_id=$item['request_id'];
+                            $newPaymentitem->request_type_id=$item['request_type_id'];
+                            $newPaymentitem->orderofpayment_id=$newOp->orderofpayment_id;
+                            $newPaymentitem->details=$item['details'];
+                            $newPaymentitem->amount=$item['amount'];
+                            $newPaymentitem->cancelled=$item['cancelled'];
+                            $newPaymentitem->status=$item['status'];
+                            $newPaymentitem->receipt_id=$item['receipt_id'];
+                            $newPaymentitem->save(); 
+                        }
+                        
+
+                 } 
+
+
+                    $model = new BackuprestoreLogs();
+
+                    $model->activity = "Restored data for the month of ".$month."-".$year;
+                    $model->transaction_date = date('Y-M-d');
+                    $model->data_date=$month."-".$year;
+                    $model->op = count($data)."/".$op_count; 
+                    $model->paymentitem = $paymentitem_count."/".$paymentitem_count;
+                    $model->status = "COMPLETED";
+                    $model->save();
+
+                    $transaction->commit();
+
+                    $sql = "SET FOREIGN_KEY_CHECKS = 1;";
+                    Yii::$app->session->setFlash('success', ' Records Successfully Restored for the year '.$year); 
+
+                }catch (\Exception $e) {
+                    Yii::$app->session->setFlash('warning', $e->getMessage()); 
+
+                    $transaction->rollBack();
+                }catch (\Throwable $e) {
+                    Yii::$app->session->setFlash('warning', $e->getMessage()); 
+                    $transaction->rollBack();
+
+                }
+            }        
+           	
         }
        
 	
@@ -160,18 +228,23 @@ class FinanceController extends Controller
     public function actionRes_receipt(){
       
         $year =  $_POST['year'];
-        
-        for($month=12;$month > 0;$month--){
-          
-            $month_value=str_pad($month,2,"0",STR_PAD_LEFT);
-            $start = $year."-".$month_value;
-            $end = $year."-".$month_value;
-
+      
+        $month=1;
+        while($month < 13){
             $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-
             $apicom=Yii::$app->components['api_config'];
             
-            $apiUrl=$apicom['api_url']."receipts/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&opds=".$start."&opde=".$end;
+            if($year == "0000"){
+              $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/receipts/restore?rstl_id=11&opds=0000-00-00&opde=00-00-00";
+            }
+            else{
+                $month_value=str_pad($month,2,"0",STR_PAD_LEFT);
+                $start = $year."-".$month_value;
+                $end = $year."-".$month_value;
+                $apiUrl=$apicom['api_url']."receipts/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&opds=".$start."&opde=".$end;
+                 
+            }
+           
             
             $curl = curl_init();
 
@@ -203,9 +276,10 @@ class FinanceController extends Controller
                     
                     $newReceipt = new Restore_receipt(); 
                     
+                    //$newReceipt->receipt_id=$receipt['receipt_id'];
                     $newReceipt->receipt_id=$receipt['receipt_id'];
                     $newReceipt->rstl_id=$receipt['rstl_id'];
-                    $newReceipt->orderofpayment_id=$receipt['local_orderofpayment_id'];
+                    $newReceipt->orderofpayment_id=$receipt['orderofpayment_id'];
                     $newReceipt->deposit_type_id=$receipt['deposit_type_id'];
                     $newReceipt->or_series_id=$receipt['or_series_id'];
                     $newReceipt->or_number=$receipt['or_number'];
@@ -228,6 +302,7 @@ class FinanceController extends Controller
                         $newCheck = new Restore_check();
 
                         $newCheck->check_id=$item['local_check_id'];
+                       // $newCheck->receipt_id=$item['receipt_id'];
                         $newCheck->receipt_id=$item['receipt_id'];
                         $newCheck->bank=$item['bank'];
                         $newCheck->checknumber=$item['checknumber'];
@@ -259,29 +334,34 @@ class FinanceController extends Controller
                     $model->check=$check_count;  
                     $model->save(false);
                 }
+                if($year == "0000"){
+                    $month=$month + 12;
+                }
+                else{
+                    $month++;
+                }
                 
               //  $this->Res_deposit($year);
                 $sql = "SET FOREIGN_KEY_CHECKS = 1;";
                 Yii::$app->session->setFlash('success', ' Records Successfully Restored for the year '.$year); 
                   
             }catch (\Exception $e) {
+                
                 Yii::$app->session->setFlash('warning', $e->getMessage()); 
 
                 $transaction->rollBack();
             }
         }
        
-	$this->Res_deposit($year);
-       
         return $this->redirect('/api/finance');
      
      }
      
-     public function Res_deposit($year){
-         
+     public function actionRes_deposit(){
+         $year =  $_POST['year'];
 	
-        for($month=12;$month > 0;$month--){
-          
+       //for($month=13;$month > 0;$month--){
+        for($month=1;$month < 13;$month++){   
             $month_value=str_pad($month,2,"0",STR_PAD_LEFT);
             $start = $year."-".$month_value;
             $end = $year."-".$month_value;
@@ -406,10 +486,7 @@ class FinanceController extends Controller
             $response = curl_exec($curl);
 
             $data = json_decode($response, true);
-           /* echo "<pre>";
-            print_r($data);
-            echo "</pre>";
-            exit;*/
+          
             $sql = "SET FOREIGN_KEY_CHECKS = 0;";
 
 
@@ -427,7 +504,7 @@ class FinanceController extends Controller
                     $id=$item['paymentitem_id'];
                     $count=$this->findPaymentitem($id);
                     
-                    if($count == 1){
+                    if($count > 0){
                         
                     }else{ 
                         $newPaymentitem->paymentitem_id= $item['paymentitem_id'];
