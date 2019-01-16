@@ -6,6 +6,8 @@ use yii\helpers\Html;
 use yii\bootstrap\Progress;
 use kartik\grid\GridView;
 use common\models\lab\Sampletype;
+use common\models\lab\Customer;
+use common\models\lab\Restore_customer;
 use common\models\lab\Services;
 use common\models\lab\Request;
 use common\models\lab\Sample;
@@ -30,46 +32,65 @@ use yii\helpers\Json;
 
 $func=new Functions();
 
-
-
 $month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 $year = ['2013', '2014', '2015', '2016', '2017', '2018', '2019'];
-
-//$lablist= ArrayHelper::map( $decode,'lab_id','labname');
 
 $this->title = 'Backup and Restore';
 $this->params['breadcrumbs'][] = ['label' => 'API', 'url' => ['/api']];
 $this->params['breadcrumbs'][] = $this->title;
-
-    
-        // $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restoresyncnew?rstl_id=11&id=10148";
-        // $curl = curl_init();                   
-        // curl_setopt($curl, CURLOPT_URL, $apiUrl);
-        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
-        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
-        // curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
-        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        // $response = curl_exec($curl);
-                        
-        // $data = json_decode($response, true);
-
-        // echo "<pre>";
-        // var_dump($data);
-        // echo "</pre>";
-      
-
-?>
-
-<!-- <div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
-     <a href="#" class="close" data-dismiss="alert" >×</a>
-    <p class="note" style="color:#265e8d"><b>EULIMS Migration</b></p>
-    <br>
-    <p class="note" style="color:#265e8d"><b>BY YEAR:</b> Choose a year</p>
-    <p class="note" style="color:#265e8d"><b>BY MONTH:</b> Choose a month and year</p>
-    <p class="note" style="color:#265e8d"><b>SYNC:</b> You can only use this if you have already migrated all the data by year</p>
-    </div>
-<div class="services-index"> -->
    
+      
+// $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=11&reqds=2013-01-01&reqde=2013-01-31&pp=5&page=1";
+
+//             $curl = curl_init();                   
+//             curl_setopt($curl, CURLOPT_URL, $apiUrl);
+//             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
+//             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
+//             curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
+//             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//             $response = curl_exec($curl);
+                
+//             $data = json_decode($response, true);
+        
+//               foreach ($data as $request)
+//               {
+//                         foreach ($request['customer'] as $customer){
+//                         echo $customer['customer_name']." ".$customer['customer_id']." ".$customer['customer_old_id']."<br>";
+                        // $newcustomer = new Restore_customer();
+                        // $cus = Customer::find()->where([ 'customer_name'=>  $customer['customer_name']])->all();
+                        // if ($cus){
+                            
+                        // }else{
+                        //     $newcustomer->customer_id = $customer['customer_id'];
+                        //     $newcustomer->rstl_id = $customer['rstl_id'];
+                        //     $newcustomer->customer_code = $customer['customer_code'];
+                        //     $newcustomer->customer_name = $customer['customer_name'];
+                        //     $newcustomer->classification_id = $customer['classification_id'];
+                        //     $newcustomer->latitude = $customer['latitude'];
+                        //     $newcustomer->longitude = $customer['longitude'];
+                        //     $newcustomer->head = $customer['head'];
+                        //     $newcustomer->barangay_id = $customer['barangay_id'];
+                        //     $newcustomer->address = $customer['address'];
+                        //     $newcustomer->tel = $customer['tel'];
+                        //     $newcustomer->fax = $customer['fax'];
+                        //     $newcustomer->email = $customer['email'];
+                        //     $newcustomer->customer_type_id = $customer['customer_type_id'];
+                        //     $newcustomer->business_nature_id = $customer['business_nature_id'];
+                        //     $newcustomer->industrytype_id = $customer['industrytype_id'];
+                        //     $newcustomer->created_at = $customer['created_at'];
+                        //     $newcustomer->customer_old_id = $customer['customer_id'];
+                        //     $newcustomer->Oldcolumn_municipalitycity_id = $customer['Oldcolumn_municipalitycity_id'];
+                        //     $newcustomer->Oldcolumn_district = $customer['Oldcolumn_district'];
+                        //     $newcustomer->local_customer_id = $customer['local_customer_id'];
+                        //     $newcustomer->is_sync_up = $customer['is_sync_up'];
+                        //     $newcustomer->is_updated = $customer['is_updated'];
+                        //     $newcustomer->is_deleted = $customer['is_deleted'];
+                        //     $newcustomer->save(false);
+                        // }
+            //             }    
+            //   }    
+
+?>   
 <fieldset>
     <legend>Legend/Status</legend>
     <div>
@@ -109,47 +130,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
   
     <div class = "row" style="padding-left:15px;padding-right:15px" id="methodreference">
-    <?php
-
-    $request = Request::find()->count();
-    $analysis = Analysis::find()->count();
-    $sample = Sample::find()->count();
-
-    $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-    $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/countrequest?rstl_id=".$GLOBALS['rstl_id'];        
-    $curl = curl_init();			
-    curl_setopt($curl, CURLOPT_URL, $apiUrl);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); 
-    curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($curl);			
-    $data = json_decode($response, true);
-
-    //analysis
-    $apiUrl_analysis="https://eulimsapi.onelab.ph/api/web/v1/analysisdatas/countanalysis?rstl_id=".$GLOBALS['rstl_id'];        
-    $curl_analysis = curl_init();			
-    curl_setopt($curl_analysis, CURLOPT_URL, $apiUrl_analysis);
-    curl_setopt($curl_analysis, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt($curl_analysis, CURLOPT_SSL_VERIFYHOST, FALSE); 
-    curl_setopt($curl_analysis, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
-    curl_setopt($curl_analysis, CURLOPT_RETURNTRANSFER, true);
-    $response_analysis = curl_exec($curl_analysis);			
-    $data_analysis = json_decode($response_analysis, true);
-
-    //sample
-    $apiUrl_sample="https://eulimsapi.onelab.ph/api/web/v1/samples/countsample?rstl_id=".$GLOBALS['rstl_id'];        
-    $curl_sample = curl_init();			
-    curl_setopt($curl_sample, CURLOPT_URL, $apiUrl_sample);
-    curl_setopt($curl_sample, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt($curl_sample, CURLOPT_SSL_VERIFYHOST, FALSE); 
-    curl_setopt($curl_sample, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
-    curl_setopt($curl_sample, CURLOPT_RETURNTRANSFER, true);
-    $response_sample = curl_exec($curl_sample);			
-    $data_sample = json_decode($response_sample, true);
-
-   // var_dump($data_sample);
-    ?>
+  
     <?= 
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -160,13 +141,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-                'before'=> "<b>No. of Requests: </b>".number_format($request)."/ ".number_format($data)."<b><br>No. of Analyses:</b>".number_format($analysis)."/".number_format($data_analysis)."<b><br>No. of Sample: </b>".number_format($sample)."/".number_format($data_sample),
+                'before'=> "<b>No. of Customers: </b>".number_format($customer)."/ ".number_format($data_customer)."<br>"."<b>No. of Requests: </b>  ".number_format($request)."/ ".number_format($data)."<b><br>No. of Analyses:</b>".number_format($analysis)."/".number_format($data_analysis)."<b><br>No. of Sample: </b>".number_format($sample)."/".number_format($data_sample),
                'after'=>false,
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],     
             'activity',
             'date',
+            'customer',
             'data',
             'month',
             'year',
