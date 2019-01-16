@@ -16,7 +16,7 @@ $Header="Port Management System<br>";
 $Header.="List of Users";
 $dataProvider->pagination->pageSize=8;
 
-echo "test";
+
 ?>
 <div class="user-index">
     <?= $this->renderFile(__DIR__.'/../menu.php',['button'=>'user']); ?>
