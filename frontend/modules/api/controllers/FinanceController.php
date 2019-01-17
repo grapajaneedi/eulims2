@@ -332,6 +332,7 @@ class FinanceController extends Controller
                     $model->data_date=$month."-".$year;
                     $model->receipt=$receipt_count;
                     $model->check=$check_count;  
+                    
                     $model->save(false);
                 }
                 if($year == "0000"){
@@ -346,7 +347,7 @@ class FinanceController extends Controller
                 Yii::$app->session->setFlash('success', ' Records Successfully Restored for the year '.$year); 
                   
             }catch (\Exception $e) {
-                
+                return $this->redirect('/api/finance');
                 Yii::$app->session->setFlash('warning', $e->getMessage()); 
 
                 $transaction->rollBack();

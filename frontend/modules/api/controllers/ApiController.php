@@ -64,7 +64,8 @@ class ApiController extends ActiveController
         $idfail="";
         $listIds = [];
         foreach ($data as $op) {
-            $newOp = new Restore_op();
+           // $newOp = new Restore_op();
+            $newOp= new OrderofpaymentMigration();
             $newOp->rstl_id= $op['rstl_id'];
 
             $newOp->transactionnum= $op['transactionnum'];
@@ -79,7 +80,8 @@ class ApiController extends ActiveController
             $newOp->local_orderofpayment_id=$op['orderofpayment_id'];
             if($newOp->save()){
                 foreach ($op['payment_item'] as $paymentitem) {
-                    $newPaymentitem = new Restore_paymentitem();
+                   // $newPaymentitem = new Restore_paymentitem();
+                    $newPaymentitem = new PaymentitemMigration();
                     //$newPaymentitem->paymentitem_id= $item['local_paymentitem_id'];
                     $newPaymentitem->rstl_id=$paymentitem['rstl_id'];
                     $newPaymentitem->request_id=$paymentitem['request_id'];
@@ -168,8 +170,8 @@ class ApiController extends ActiveController
         $idfail="";
         $listIds = [];
         foreach ($data as $receipt) {
-            $newReceipt = new Restore_receipt();
-          
+            //$newReceipt = new Restore_receipt();
+            $newReceipt = new ReceiptMigration();
             ////////-----------------------------------------///////////////////////
             $newReceipt->rstl_id=$receipt['rstl_id'];
             $newReceipt->orderofpayment_id=$receipt['local_orderofpayment_id'];
@@ -190,7 +192,8 @@ class ApiController extends ActiveController
             ///////////////----------------------------------
             if($newReceipt->save()){
                 foreach ($receipt['check'] as $item) {
-                    $newCheck = new Restore_check();
+                    //$newCheck = new Restore_check();
+                     $newCheck = new CheckMigration();
                      $newCheck->receipt_id= $newReceipt->receipt_id;
                      $newCheck->local_receipt_id=$receipt['local_receipt_id'];
                      $newCheck->local_check_id=$item['local_check_id'];
@@ -229,7 +232,8 @@ class ApiController extends ActiveController
         $idfail="";
         $listIds = [];
         foreach ($data as $item) {
-            $newDeposit = new Restore_deposit();
+           // $newDeposit = new Restore_deposit();
+            $newDeposit = new DepositMigration();
             $newDeposit->local_deposit_id= $item['local_deposit_id'];
             $newDeposit->rstl_id= $item['rstl_id'];
             $newDeposit->or_series_id= $item['or_series_id'];
@@ -268,7 +272,8 @@ class ApiController extends ActiveController
         $idfail="";
         $listIds = [];
         foreach ($data as $paymentitem) {
-           $newPaymentitem = new Restore_paymentitem();
+           //$newPaymentitem = new Restore_paymentitem();
+            $newPaymentitem = new PaymentitemMigration();
             //$newPaymentitem->paymentitem_id= $item['local_paymentitem_id'];
             $newPaymentitem->rstl_id=$paymentitem['rstl_id'];
             $newPaymentitem->request_id=$paymentitem['request_id'];
