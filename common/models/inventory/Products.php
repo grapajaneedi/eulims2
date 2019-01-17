@@ -12,13 +12,13 @@ use Yii;
  * @property string $product_name
  * @property int $producttype_id
  * @property int $categorytype_id
- * @property string $description
- * @property string $price
- * @property string $srp
- * @property int $qty_reorder
- * @property int $qty_onhand
- * @property int $qty_min_reorder
- * @property string $qty_per_unit
+ * @property string $description   //can be alcohol content or specify the unit of the product
+ * @property string $price    //original price of the item
+ * @property string $srp      //the price of the item based on the formula
+ * @property int $qty_reorder     //how many item will be reordered
+ * @property int $qty_onhand       
+ * @property int $qty_min_reorder   //threshold, if a certain item reaches its threshold reorder begins
+ * @property string $qty_per_unit    //number , how many item is in the unit can be box or etc //see desc
  * @property int $discontinued
  * @property string $suppliers_ids
  * @property int $created_by

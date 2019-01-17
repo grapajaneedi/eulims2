@@ -29,7 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'inventory_transactions_id',
-            'transaction_type_id',
             'rstl_id',
             'product_id',
             'manufacturing_date',

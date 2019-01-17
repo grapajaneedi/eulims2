@@ -1,6 +1,7 @@
 <?php
 use kartik\grid\GridView;
 use yii\data\ArrayDataProvider;
+use common\models\inventory\InventoryWithdrawaldetails;
 
     $dataProvider = new ArrayDataProvider([
         'allModels' => $model->inventoryEntries,
@@ -8,7 +9,18 @@ use yii\data\ArrayDataProvider;
     ]);
     $gridColumns = [
         ['class' => 'kartik\grid\SerialColumn'],
-        
+        [
+            'class' => 'kartik\grid\ExpandRowColumn',
+            'width' => '50px',
+            'value' => function ($model, $key, $index, $column) {
+                return GridView::ROW_COLLAPSED;
+            },
+            'detail' => function ($model, $key, $index, $column) {
+                return Yii::$app->controller->renderPartial('_dataInventoryWithdrawaldetails', ['model' => $model->withdrawdetails]);
+            },
+            'headerOptions' => ['class' => 'kartik-sheet-style'],
+            'expandOneOnly' => true
+        ],
         
         [
                 'attribute' => 'suppliers_id',
@@ -33,6 +45,21 @@ use yii\data\ArrayDataProvider;
            'format' => ['decimal', 2],
             'pageSummary' => true  
          ],
+         [
+                'attribute' => 'withdrawdetails',
+                'label' => 'Withdrawn',
+                'value' => function($model){  
+
+
+                $withdrawn = InventoryWithdrawaldetails::find()->where(['inventory_transactions_id'=>$model->inventory_transactions_id])->sum('quantity');
+
+
+                    return $withdrawn;                
+                },
+                'format' => ['decimal', 2],
+                'pageSummary' => true  
+
+        ],
          [
            'attribute' => 'amount',   
            'format' => ['decimal', 2],

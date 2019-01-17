@@ -73,7 +73,6 @@ class InventoryentriesController extends Controller
     public function actionCreate()
     {
         $model = new InventoryEntries();
-        $model->transaction_type_id=1;
         $model->rstl_id=Yii::$app->user->identity->profile->rstl_id;
         $user_id=Yii::$app->user->identity->profile->user_id;
         $model->created_by=$user_id;
