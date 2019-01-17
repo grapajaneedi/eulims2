@@ -14,6 +14,7 @@ use common\models\inventory\Suppliers;
 use common\models\inventory\SuppliersSearch;
 use yii\data\ActiveDataProvider;
 use common\models\inventory\Equipmentservice;
+use frontend\modules\inventory\components\_class\Equipmentevent;
 /**
  * ProductsController implements the CRUD actions for Products model.
  */
@@ -276,6 +277,8 @@ class ProductsController extends Controller
 
     public function actionOpensched($id){
 
+        //retrieve the schedules using the $id
+
          if(Yii::$app->request->isAjax){
             return $this->renderAjax('_schedule', [
                 
@@ -292,10 +295,21 @@ class ProductsController extends Controller
 
     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-    // $times = \app\modules\timetrack\models\Timetable::find()->where(array('category'=>\app\modules\timetrack\models\Timetable::CAT_TIMETRACK))->all();
 
     $events = array();
 
+    $Event= new Equipmentevent();
+    $Event->id = 1;
+    $Event->title = 'Equipmentevent Testing';
+    $Event->start = date('Y-m-d\TH:i:s\Z');
+    // $event->nonstandard = [
+    //     'field1' => 'Something I want to be included in object #1',
+    //     'field2' => 'Something I want to be included in object #2',
+    //   ];
+    $events[] = $Event;
+    
+
+  
     // foreach ($times AS $time){
     //   //Testing
     //   $Event = new \yii2fullcalendar\models\Event();
@@ -306,22 +320,26 @@ class ProductsController extends Controller
     //   $events[] = $Event;
     // }
 
-      $Event = new Equipmentservice();
-  $Event->equipmentservice_id = 1;
-  // $Event->title = 'Testing';
-  $Event->startdate = date('Y-m-d\TH:i:s\Z');
-      // $event->nonstandard = [
-      //   'field1' => 'Something I want to be included in object #1',
-      //   'field2' => 'Something I want to be included in object #2',
-      // ];
-  $events[] = $Event;
 
-  $Event = new Equipmentservice();
-  $Event->equipmentservice_id = 2;
-  // $Event->title = 'Testing';
-  $Event->startdate = date('Y-m-d\TH:i:s\Z',strtotime('tomorrow 6am'));
-  $events[] = $Event;
+    // $Event= new bergevent();
+    // $Event->id = 1;
+    // $Event->title = 'Testing';
+    // $Event->start = date('Y-m-d\TH:i:s\Z');
+    // $event->nonstandard = [
+    //     'field1' => 'Something I want to be included in object #1',
+    //     'field2' => 'Something I want to be included in object #2',
+    //   ];
+    // $events[] = $Event;
 
     return $events;
   }
+
+  public function actionDayClickCalendarEvent()
+{
+ //save date
+    echo "wow"; exit;
 }
+
+}
+
+ 

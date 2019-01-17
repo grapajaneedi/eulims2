@@ -3,6 +3,7 @@ use yii\widgets\ListView;
 use yii\helpers\Html;
 $columns =2;
 ?>
+<div class="products-view">
 <div class="container" >
 <div class="row">
 	<div class="col-md-10" >
@@ -12,7 +13,6 @@ $columns =2;
 			    <div class="input-holder">
 			    	<form>
 			        <input id="searchbox" type="text" class="search-input" placeholder="Type to search then press 'Enter' to Find" name="varsearch" />
-			        <!-- <button idd="btnsub" class="search-icon" onclick="searchToggle(this, event);" href><div></div></button> -->
 			        <?php
 			        echo Html::button("<span></span>",
 	                    [
@@ -22,7 +22,6 @@ $columns =2;
 	                    ]
 	                ); 
 			        ?>
-			       
 			        </form>
 			    </div>
 			    <div  id='btnx' class="close" onclick="searchToggle(this, event);"></div>
@@ -55,7 +54,9 @@ $columns =2;
 		</div>
 	</div>
 </div>
+</div>	
 </div>
+
 <?php 
 $this->registerCssFile("/css/modcss/equipmentmod.css", [
     // 'depends' => [\yii\bootstrap\BootstrapAsset::className()],
@@ -74,12 +75,9 @@ $this->registerJsFile("/js/inventory/floatequipment.js", [
 
 
 <script type="text/javascript">
-
-
 	$( document ).ready(function() {
 	    $(btnsub).click();
 	});
-
-	
-
 </script>
+
+
