@@ -1,7 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
+use kartik\helpers;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\api\YiiMigrationSearch */
@@ -9,10 +10,11 @@ use yii\grid\GridView;
 
 $this->title = 'Yii Migrations';
 $this->params['breadcrumbs'][] = $this->title;
+$Button="{view}{update}";
 ?>
 <div class="yii-migration-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -22,6 +24,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+         'id'=>'yii-grid',
+        'pjax' => true,
+      //  'showPageSummary' => true,
+        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container']],
+        'panel' => [
+                'type' => GridView::TYPE_PRIMARY,
+                'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+                'before'=> "<b>OP: </b>".$op."<b><br>Paymentitem:</b>".$paymentitem."<b><br>Receipt: </b>".$receipt."<b><br>Deposit: </b>".$deposit,
+                'after'=>false,
+            ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -30,7 +42,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'num',
             'ids',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [   'class' => kartik\grid\ActionColumn::className(),
+                'template' => $Button,
+                'buttons' => [
+                    'view'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-upload"></span> Sync Up', ['value'=>'/finance/updb/sync?tblname='.$model->tblname, 'onclick'=>'ShowModal(this.title, this.value);', 'class' => 'btn btn-primary','title' => Yii::t('app', "Sync</font>")]);
+                    },
+                     'update'=>function ($url, $model) {
+                        return Html::button('<span class="glyphicon glyphicon-pencil"></span> Edit', ['value'=>'/finance/updb/update?id='.$model->id, 'onclick'=>'ShowModal(this.title, this.value);', 'class' => 'btn btn-success','title' => Yii::t('app', "Update</font>")]);
+                    },        
+                ]
+            ],
+            
         ],
     ]); ?>
 </div>
