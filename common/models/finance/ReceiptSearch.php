@@ -24,7 +24,7 @@ class ReceiptSearch extends Receipt
     {
         return [
             [['receipt_id', 'rstl_id', 'terminal_id', 'orderofpayment_id', 'deposit_type_id', 'or_number', 'collectiontype_id', 'payment_mode_id', 'cancelled'], 'integer'],
-            [['receiptDate','total'], 'safe'],
+            [['receiptDate','total','createDateStart','createDateEnd'], 'safe'],
             [['payor'], 'string'],
             [['createTimeRange'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
         ];

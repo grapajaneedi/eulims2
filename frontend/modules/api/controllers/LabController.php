@@ -5,16 +5,18 @@ use yii\web\Controller;
 use Yii;
 use linslin\yii2\curl;
 use common\models\lab\Restore_request;
+use common\models\lab\Restore_customer;
 use common\models\lab\Restore_sample;
 use common\models\lab\Restore_analysis;
 use common\models\lab\Sample;
+use common\models\lab\Request;
 use common\models\lab\Analysis;
 use common\models\lab\Customer;
 use common\models\lab\BackuprestoreSearch;
 use common\models\lab\Backuprestore;
 use yii\helpers\Json;
 
-set_time_limit(2000);
+set_time_limit(5000);
 
 /**
  * Default controller for the `Lab` module
@@ -29,41 +31,112 @@ class LabController extends Controller
      {
          $searchModel = new BackuprestoreSearch();
          $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+         
         $model = new Backuprestore();
+
+
+        $request = Request::find()->count();
+        $customer = Customer::find()->count();
+        $analysis = Analysis::find()->count();
+        $sample = Sample::find()->count();
+    
+        //customer
+        $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+        $apiUrl_customer="https://eulimsapi.onelab.ph/api/web/v1/customers/countcustomer?rstl_id=".$GLOBALS['rstl_id'];        
+        $curl_customer = curl_init();			
+        curl_setopt($curl_customer, CURLOPT_URL, $apiUrl_customer);
+        curl_setopt($curl_customer, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl_customer, CURLOPT_SSL_VERIFYHOST, FALSE); 
+        curl_setopt($curl_customer, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+        curl_setopt($curl_customer, CURLOPT_RETURNTRANSFER, true);
+        $response_customer = curl_exec($curl_customer);			
+        $data_customer = json_decode($response_customer, true);
+    
+        //analysis
+        $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+        $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/countrequest?rstl_id=".$GLOBALS['rstl_id'];        
+        $curl = curl_init();			
+        curl_setopt($curl, CURLOPT_URL, $apiUrl);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); 
+        curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);			
+        $data = json_decode($response, true);
+    
+        //analysis
+        $apiUrl_analysis="https://eulimsapi.onelab.ph/api/web/v1/analysisdatas/countanalysis?rstl_id=".$GLOBALS['rstl_id'];        
+        $curl_analysis = curl_init();			
+        curl_setopt($curl_analysis, CURLOPT_URL, $apiUrl_analysis);
+        curl_setopt($curl_analysis, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl_analysis, CURLOPT_SSL_VERIFYHOST, FALSE); 
+        curl_setopt($curl_analysis, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+        curl_setopt($curl_analysis, CURLOPT_RETURNTRANSFER, true);
+        $response_analysis = curl_exec($curl_analysis);			
+        $data_analysis = json_decode($response_analysis, true);
+    
+        //sample
+        $apiUrl_sample="https://eulimsapi.onelab.ph/api/web/v1/samples/countsample?rstl_id=".$GLOBALS['rstl_id'];        
+        $curl_sample = curl_init();			
+        curl_setopt($curl_sample, CURLOPT_URL, $apiUrl_sample);
+        curl_setopt($curl_sample, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl_sample, CURLOPT_SSL_VERIFYHOST, FALSE); 
+        curl_setopt($curl_sample, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+        curl_setopt($curl_sample, CURLOPT_RETURNTRANSFER, true);
+        $response_sample = curl_exec($curl_sample);			
+        $data_sample = json_decode($response_sample, true);
+
+
          return $this->render('backup_restore', [
              'searchModel' => $searchModel,
              'dataProvider' => $dataProvider,
              'model'=>$model,
+             'data_analysis'=>$data_analysis,
+             'data_sample'=>$data_sample,
+             'data_customer'=>$data_customer,
+             'data'=>$data,
+             'request'=>$request,
+             'customer'=>$customer,
+             'analysis'=>$analysis,
+             'sample'=>$sample
          ]);
      }
 
      public function actionRessync(){
-
+         //TAKE NOTE OF THE REQUEST OLD ID KAPAG HINDI GALING SA YII
         $searchModel = new BackuprestoreSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $model = new Backuprestore();
-        	 
-       
-            
-       
-       
-          
 
-      
-                 
+            #All data are sync
+
+            $request = Request::find()->count();
+        
             $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-           // $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&reqds=".$start."&reqde=".$end;
-            
+            $apiUrls="https://eulimsapi.onelab.ph/api/web/v1/requests/countrequest?rstl_id=".$GLOBALS['rstl_id'];        
+            $curls = curl_init();			
+            curl_setopt($curls, CURLOPT_URL, $apiUrls);
+            curl_setopt($curls, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($curls, CURLOPT_SSL_VERIFYHOST, FALSE); 
+            curl_setopt($curls, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+            curl_setopt($curls, CURLOPT_RETURNTRANSFER, true);
+            $responses = curl_exec($curls);			
+            $api = json_decode($responses, true);
 
-           //last id nalang ang kunin
-
-          // $br = Backuprestore::find()->where([ 'last_num'=> $month_value.$year])->one();
-
-
-
-            $lastid = 10160;
-
-            $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restoresyncnew?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&id=10136";
+            if ($request>=$api){
+                $message = "All data are sync";
+                return Json::encode([
+                    'message'=>$message,        
+                ]);
+                exit;
+            }
+        	           
+         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+     
+         $lastid =  Backuprestore::find()->max('last_num');  
+          
+         $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/restoresyncnew?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&id=".$lastid;
 
             $curl = curl_init();                   
             curl_setopt($curl, CURLOPT_URL, $apiUrl);
@@ -79,7 +152,6 @@ class LabController extends Controller
             $connection = Yii::$app->labdb;
             
            
-
             $transaction = $connection->beginTransaction();
             $connection->createCommand('set foreign_key_checks=0')->execute();
           
@@ -128,7 +200,7 @@ class LabController extends Controller
                           $newRequest->tmpCustomerID= $request['tmpCustomerID'];
                           $newRequest->save();
                          
-                          
+                         
                           foreach ($request['sample'] as $samp){
                                    
                               $newSample = new Restore_sample();
@@ -165,8 +237,8 @@ class LabController extends Controller
                               $newSample->oldColumn_package_count=$samp['oldColumn_package_count'];
                               $newSample->testcategory_id=$samp['testcategory_id'];
                               $newSample->save(true); 
+
                         foreach ($samp['analyses'] as $anals){
-                        
                             $newanalysis = new Restore_analysis();
                             $newanalysis->analysis_id=$anals['analysis_old_id'];
                             $newanalysis->rstl_id=$anals['rstl_id'];
@@ -193,10 +265,42 @@ class LabController extends Controller
                             $newanalysis->testcategory_id=$anals['testcategory_id'];
                             $newanalysis->sample_type_id=$anals['sample_type_id'];
                             $newanalysis->old_sample_id=$anals['old_sample_id'];
-                            $newanalysis->save(true);                  
-                        }
-                    }
-                         
+                            $newanalysis->save(true);  
+                            
+                    //         foreach ($request['customer'] as $customer){
+                    //             $newcustomer = new Restore_customer();
+                    //             $cus = Customer::find()->where([ 'customer_id'=>  $customer['customer_old_id']])->one();
+                    //             if ($cus){
+                    //             }else{
+                    //                 $newcustomer->customer_id = $customer['customer_old_id'];
+                    //                 $newcustomer->rstl_id = $customer['rstl_id'];
+                    //                 $newcustomer->customer_code = $customer['customer_code'];
+                    //                 $newcustomer->customer_name = $customer['customer_name'];
+                    //                 $newcustomer->classification_id = $customer['classification_id'];
+                    //                 $newcustomer->latitude = $customer['latitude'];
+                    //                 $newcustomer->longitude = $customer['longitude'];
+                    //                 $newcustomer->head = $customer['head'];
+                    //                 $newcustomer->barangay_id = $customer['barangay_id'];
+                    //                 $newcustomer->address = $customer['address'];
+                    //                 $newcustomer->tel = $customer['tel'];
+                    //                 $newcustomer->fax = $customer['fax'];
+                    //                 $newcustomer->email = $customer['email'];
+                    //                 $newcustomer->customer_type_id = $customer['customer_type_id'];
+                    //                 $newcustomer->business_nature_id = $customer['business_nature_id'];
+                    //                 $newcustomer->industrytype_id = $customer['industrytype_id'];
+                    //                 $newcustomer->created_at = $customer['created_at'];
+                    //                 $newcustomer->customer_old_id = $customer['customer_old_id'];
+                    //                 $newcustomer->Oldcolumn_municipalitycity_id = $customer['Oldcolumn_municipalitycity_id'];
+                    //                 $newcustomer->Oldcolumn_district = $customer['Oldcolumn_district'];
+                    //                 $newcustomer->local_customer_id = $customer['local_customer_id'];
+                    //                 $newcustomer->is_sync_up = $customer['is_sync_up'];
+                    //                 $newcustomer->is_updated = $customer['is_updated'];
+                    //                 $newcustomer->is_deleted = $customer['is_deleted'];
+                    //                 $newcustomer->save(true);
+                    //            }
+                    //    }
+                   }
+                  }      
                 }
         
                    // Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$year); 
@@ -217,12 +321,13 @@ class LabController extends Controller
                     
                     $model->activity = "Sync all data";
                     $model->date = date('Y-M-d');
+                    $model->customer = 1;
                     $model->data =1;
                     $model->status = "COMPLETED";
                     $model->month =1;
                     $model->monthyear = 1;
                     $model->last_num = $data;
-                
+                    $analysis_count = 1;
                     $model->year = $analysis_count."/".$analysis_count;
                     Yii::$app->session->setFlash('success', 'Sync all data'); 
                     $model->save(false);
@@ -434,7 +539,41 @@ class LabController extends Controller
                             $newanalysis->testcategory_id=$anals['testcategory_id'];
                             $newanalysis->sample_type_id=$anals['sample_type_id'];
                             $newanalysis->old_sample_id=$anals['old_sample_id'];
-                            $newanalysis->save(true);                  
+                            $newanalysis->save(true); 
+
+                            foreach ($request['customer'] as $customer){
+                                $newcustomer = new Restore_customer();
+                                $cus = Customer::find()->where(['customer_id'=>  $customer['customer_id']])->all();
+                                if ($cus){
+                                    
+                                }else{
+                                    $newcustomer->customer_id = $customer['customer_id'];
+                                    $newcustomer->rstl_id = $customer['rstl_id'];
+                                    $newcustomer->customer_code = $customer['customer_code'];
+                                    $newcustomer->customer_name = $customer['customer_name'];
+                                    $newcustomer->classification_id = $customer['classification_id'];
+                                    $newcustomer->latitude = $customer['latitude'];
+                                    $newcustomer->longitude = $customer['longitude'];
+                                    $newcustomer->head = $customer['head'];
+                                    $newcustomer->barangay_id = $customer['barangay_id'];
+                                    $newcustomer->address = $customer['address'];
+                                    $newcustomer->tel = $customer['tel'];
+                                    $newcustomer->fax = $customer['fax'];
+                                    $newcustomer->email = $customer['email'];
+                                    $newcustomer->customer_type_id = $customer['customer_type_id'];
+                                    $newcustomer->business_nature_id = $customer['business_nature_id'];
+                                    $newcustomer->industrytype_id = $customer['industrytype_id'];
+                                    $newcustomer->created_at = $customer['created_at'];
+                                    $newcustomer->customer_old_id = $customer['customer_old_id'];
+                                    $newcustomer->Oldcolumn_municipalitycity_id = $customer['Oldcolumn_municipalitycity_id'];
+                                    $newcustomer->Oldcolumn_district = $customer['Oldcolumn_district'];
+                                    $newcustomer->local_customer_id = $customer['local_customer_id'];
+                                    $newcustomer->is_sync_up = $customer['is_sync_up'];
+                                    $newcustomer->is_updated = $customer['is_updated'];
+                                    $newcustomer->is_deleted = $customer['is_deleted'];
+                                    $newcustomer->save(false);
+                                }
+                              }                 
                         }
                     }
                     $samplenum = $samplenum + $request['countSample'];
@@ -465,7 +604,7 @@ class LabController extends Controller
                     $model->month = $sample_count."/".$samplenum;
                     $model->monthyear = $month_value.$year;
                     $model->last_num = $data['last_request_id'];
-                
+                 
                     $model->year = $analysis_count."/".$analysis_count;
                     Yii::$app->session->setFlash('success', ' Records Successfully Restored for '.$year); 
                     $model->save(false);
@@ -675,8 +814,42 @@ class LabController extends Controller
 						$newanalysis->testcategory_id=$anals['testcategory_id'];
 						$newanalysis->sample_type_id=$anals['sample_type_id'];
 						$newanalysis->old_sample_id=$anals['old_sample_id'];
-						$newanalysis->save(true);					
-                    }
+                        $newanalysis->save(true);	
+                        
+                        foreach ($request['customer'] as $customer){
+                            $newcustomer = new Restore_customer();
+                            $cus = Customer::find()->where(['customer_id'=>  $customer['customer_id']])->all();
+                            if ($cus){
+                                
+                            }else{
+                                $newcustomer->customer_id = $customer['customer_id'];
+                                $newcustomer->rstl_id = $customer['rstl_id'];
+                                $newcustomer->customer_code = $customer['customer_code'];
+                                $newcustomer->customer_name = $customer['customer_name'];
+                                $newcustomer->classification_id = $customer['classification_id'];
+                                $newcustomer->latitude = $customer['latitude'];
+                                $newcustomer->longitude = $customer['longitude'];
+                                $newcustomer->head = $customer['head'];
+                                $newcustomer->barangay_id = $customer['barangay_id'];
+                                $newcustomer->address = $customer['address'];
+                                $newcustomer->tel = $customer['tel'];
+                                $newcustomer->fax = $customer['fax'];
+                                $newcustomer->email = $customer['email'];
+                                $newcustomer->customer_type_id = $customer['customer_type_id'];
+                                $newcustomer->business_nature_id = $customer['business_nature_id'];
+                                $newcustomer->industrytype_id = $customer['industrytype_id'];
+                                $newcustomer->created_at = $customer['created_at'];
+                                $newcustomer->customer_old_id = $customer['customer_old_id'];
+                                $newcustomer->Oldcolumn_municipalitycity_id = $customer['Oldcolumn_municipalitycity_id'];
+                                $newcustomer->Oldcolumn_district = $customer['Oldcolumn_district'];
+                                $newcustomer->local_customer_id = $customer['local_customer_id'];
+                                $newcustomer->is_sync_up = $customer['is_sync_up'];
+                                $newcustomer->is_updated = $customer['is_updated'];
+                                $newcustomer->is_deleted = $customer['is_deleted'];
+                                $newcustomer->save(false);
+                          }
+                        }
+                   }
 				}
 				$samplenum = $samplenum + $request['countSample'];
 				$analysesnum = $analysesnum + $request['countAnalysis'];			
@@ -701,7 +874,8 @@ class LabController extends Controller
                 //echo $data['last_request_id'];
                 
 				$model->activity = "Restored data for the month of ".$month."-".$year;
-				$model->date = date('Y-M-d');
+                $model->date = date('Y-M-d');
+                $model->customer = 1;
 				$model->data = count($data)."/".$request_count;
 				$model->status = "COMPLETED";
                 $model->month = $sample_count."/".$samplenum;

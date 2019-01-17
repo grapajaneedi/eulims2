@@ -57,7 +57,7 @@ $Header.="Receipt";
                 'filterWidgetOptions' => ([
                      'model'=>$model,
                      'useWithAddon'=>true,
-                     'attribute'=>'order_date',
+                     'attribute'=>'receiptDate',
                      'startAttribute'=>'createDateStart',
                      'endAttribute'=>'createDateEnd',
                      'presetDropdown'=>TRUE,
@@ -111,7 +111,7 @@ $Header.="Receipt";
                 'attribute' => 'collectiontype_id',
                 'label' => 'Collection Type',
                 'value' => function($model) {
-                    return $model->collectiontype->natureofcollection;
+                    return $model->collectiontype ? $model->collectiontype->natureofcollection : "";
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Collectiontype::find()->asArray()->all(), 'collectiontype_id', 'natureofcollection'),
