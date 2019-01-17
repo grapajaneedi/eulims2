@@ -20,7 +20,7 @@ $items = [
     //     'label' => '<i class="glyphicon glyphicon-book"></i> '. Html::encode('Inventory Withdrawaldetails'),
     //     'content' => $this->render('_dataInventoryWithdrawaldetails', [
     //         'model' => $model,
-    //         'row' => $model->inventoryWithdrawaldetails,
+    //         'row' => $model->inventoryEntries->Withdrawdetails?$model->inventoryEntries->Withdrawdetails:"",
     //     ]),
     // ],
         ];

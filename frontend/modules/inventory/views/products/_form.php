@@ -20,14 +20,14 @@ use kartik\money\MaskMoney;
         'isNewRecord' => ($model->isNewRecord) ? 1 : 0
     ]
 ]);
-\mootensai\components\JsBlock::widget(['viewFile' => '_script', 'pos'=> \yii\web\View::POS_END, 
-    'viewParams' => [
-        'class' => 'InventoryWithdrawaldetails', 
-        'relID' => 'inventory-withdrawaldetails', 
-        'value' => \yii\helpers\Json::encode($model->inventoryWithdrawaldetails),
-        'isNewRecord' => ($model->isNewRecord) ? 1 : 0
-    ]
-]);
+// \mootensai\components\JsBlock::widget(['viewFile' => '_script', 'pos'=> \yii\web\View::POS_END, 
+//     'viewParams' => [
+//         'class' => 'InventoryWithdrawaldetails', 
+//         'relID' => 'inventory-withdrawaldetails', 
+//         'value' => \yii\helpers\Json::encode($model->inventoryWithdrawaldetails),
+//         'isNewRecord' => ($model->isNewRecord) ? 1 : 0
+//     ]
+// ]);
 $stat="";
 
 if ($model->isNewRecord){
