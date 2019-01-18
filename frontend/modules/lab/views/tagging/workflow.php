@@ -59,9 +59,7 @@ $this->registerJs($js);
                         'header'=>'Analyst',
                         'hAlign'=>'center',
                         'format'=>'raw',
-                        'value' => function($model) {
-                      
-                        
+                        'value' => function($model) {          
                          
                         },
                         'enableSorting' => false,
@@ -71,10 +69,7 @@ $this->registerJs($js);
                         'header'=>'Status',
                         'hAlign'=>'center',
                         'format'=>'raw',
-                        'value' => function($model) {
-                      
-                        
-                         
+                        'value' => function($model) {   
                         },
                         'enableSorting' => false,
                         'contentOptions' => ['style' => 'width:30px; white-space: normal;'],
@@ -84,9 +79,6 @@ $this->registerJs($js);
                         'hAlign'=>'center',
                         'format'=>'raw',
                         'value' => function($model) {
-                      
-                        
-                         
                         },
                         'enableSorting' => false,
                         'contentOptions' => ['style' => 'width:30px; white-space: normal;'],

@@ -33,6 +33,7 @@ if(Yii::$app->user->can('allow-cancel-request')){
 $gg = 1;
 
 ?>
+
 <div class="request-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <?php
@@ -154,7 +155,7 @@ $gg = 1;
                   // return $c."<br>".$t;
 
                     if ($t==0 ){
-                        return "<span class='badge btn-success' style='width:80px!important;height:20px!important;'>PENDING</span>";
+                        return "<span class='badge btn-default' style='width:80px!important;height:20px!important;'>PENDING</span>";
                     }else if ($t<$c){
                            return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
                     }else if ($c==$t){

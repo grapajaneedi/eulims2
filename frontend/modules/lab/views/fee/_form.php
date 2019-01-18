@@ -112,7 +112,6 @@ $this->registerJs($js);
         <?= $form->field($model, 'name')->widget(Select2::classname(), [
                         'data' => $namelist,
                         'language' => 'en',
-                       // 'disabled'=>true,
                          'options' => ['placeholder' => 'Select Name', 'id'=>'fee_list'],
                          'pluginOptions' => [
                          'allowClear' => true
@@ -187,7 +186,6 @@ $this->registerJs("$('#fee_list').on('change',function(){
             method: 'GET',
             data: {fee_id: id},
             success: function (data, textStatus, jqXHR) {
-                  //  alert('boom');
                     $('#fee-unit_cost').val(data.unit_cost);
                     $('#fee-unit_cost-disp').val(data.unit_cost);
                 $('.image-loader').removeClass( \"img-loader\" );

@@ -3,20 +3,16 @@
 namespace frontend\modules\lab\controllers;
 
 use Yii;
-use common\models\lab\Labsampletype;
-use common\models\lab\Sampletype;
-use common\models\lab\LabsampletypeSearch;
+use common\models\lab\Issuancewithdrawal;
+use common\models\lab\IssuancewithdrawalSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\Json;
-use common\models\system\Profile;
-use DateTime;
 
 /**
- * LabsampletypeController implements the CRUD actions for Labsampletype model.
+ * IssuancewithdrawalController implements the CRUD actions for Issuancewithdrawal model.
  */
-class LabsampletypeController extends Controller
+class IssuancewithdrawalController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -34,12 +30,12 @@ class LabsampletypeController extends Controller
     }
 
     /**
-     * Lists all Labsampletype models.
+     * Lists all Issuancewithdrawal models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new LabsampletypeSearch();
+        $searchModel = new IssuancewithdrawalSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -49,13 +45,14 @@ class LabsampletypeController extends Controller
     }
 
     /**
-     * Displays a single Labsampletype model.
+     * Displays a single Issuancewithdrawal model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
+      
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('view', [
                     'model' => $this->findModel($id),
@@ -64,43 +61,29 @@ class LabsampletypeController extends Controller
     }
 
     /**
-     * Creates a new Labsampletype model.
+     * Creates a new Issuancewithdrawal model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Labsampletype();
+        $model = new Issuancewithdrawal();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Lab Sample Type Successfully Created'); 
+            Yii::$app->session->setFlash('success', 'Issuance/ Withdrawal Form Successfully Created'); 
             return $this->runAction('index');
         }
 
-        $sampletype = [];
+        return $this->renderAjax('_form', [
+            'model' => $model,
+        ]);
 
-        if(Yii::$app->request->isAjax){
-           
-          $date2 = new DateTime();
-          date_add($date2,date_interval_create_from_date_string("1 day"));
-          $model->effective_date=date_format($date2,"Y-m-d");
-          $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
-          if($profile){
-            $model->added_by=$profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
-            }else{
-                $model->added_by="";
-            }
+        //////
 
-            return $this->renderAjax('_form', [
-                'model' => $model,
-                'sampletype'=>$sampletype,
-            ]);
-       }
-  
     }
 
     /**
-     * Updates an existing Labsampletype model.
+     * Updates an existing Issuancewithdrawal model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -111,7 +94,7 @@ class LabsampletypeController extends Controller
         $model = $this->findModel($id);
         
                 if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    Yii::$app->session->setFlash('success', 'Lab Sample Type Successfully Updated'); 
+                    Yii::$app->session->setFlash('success', 'Issuance/ Withdrawal Form Successfully Updated'); 
                     return $this->redirect(['index']);
 
                 } else if (Yii::$app->request->isAjax) {
@@ -122,7 +105,7 @@ class LabsampletypeController extends Controller
     }
 
     /**
-     * Deletes an existing Labsampletype model.
+     * Deletes an existing Issuancewithdrawal model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -131,29 +114,27 @@ class LabsampletypeController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id); 
-                    if($model->delete()) {            
-                        Yii::$app->session->setFlash('success', 'Lab Sample Type Successfully Deleted'); 
-                        return $this->redirect(['index']);
-                    } else {
-                        return $model->error();
-                    }
+        if($model->delete()) {            
+            Yii::$app->session->setFlash('success', 'Issuance/ Withdrawal Form Successfully Deleted'); 
+            return $this->redirect(['index']);
+        } else {
+            return $model->error();
+        }
     }
 
     /**
-     * Finds the Labsampletype model based on its primary key value.
+     * Finds the Issuancewithdrawal model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Labsampletype the loaded model
+     * @return Issuancewithdrawal the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Labsampletype::findOne($id)) !== null) {
+        if (($model = Issuancewithdrawal::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
-  
 }
