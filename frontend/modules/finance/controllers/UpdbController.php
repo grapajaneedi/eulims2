@@ -230,7 +230,8 @@ class UpdbController extends \yii\web\Controller{
     
    public function actionPostreceipt(){
         //$url = "http://ulimsportal.onelab.ph/api/api/sync_receipt";
-        $url = "http://www.eulims.local/api/api/sync_receipt";
+        //$url = "http://www.eulims.local/api/api/sync_receipt";
+       $url="https://eulimsapi.onelab.ph/api/web/v1/apis/sync_receipt";
         $table = "tbl_receipt";
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         $id=$model->num;
@@ -255,6 +256,51 @@ class UpdbController extends \yii\web\Controller{
                     ];
                     array_push($check_details, $detail_check);
                 }
+                //-----------------------------
+                $ops = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_orderofpayment` WHERE `receipt_id` = ".$receiptid)->queryAll();
+                $op_details=[];
+                foreach($ops as $op){
+                    $opid=$op['orderofpayment_id'];
+                    $paymentitem = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_paymentitem` WHERE `orderofpayment_id` = ".$opid)->queryAll();
+                    $Paymentitem_details=[];
+                    foreach($paymentitem as $item){
+                        $detail_paymentitem=[
+                            'paymentitem_id'=> $item['paymentitem_id'],
+                            'rstl_id'=>$item['rstl_id'],
+                            'request_id'=>$item['request_id'],
+                            'request_type_id'=>$item['request_type_id'],
+                            'orderofpayment_id'=>$opid,
+                            'details'=>$item['details'],
+                            'amount'=>$item['amount'],
+                            'cancelled'=>$item['cancelled'],
+                            'status'=>$item['status'],
+                            'receipt_id'=>$receiptid,
+                        ];
+                        array_push($Paymentitem_details, $detail_paymentitem);
+                    }
+                    $detail_op=[
+                        'orderofpayment_id'=>$op['orderofpayment_id'],
+                        'rstl_id'=> $op['rstl_id'],
+                        'transactionnum'=>$op['transactionnum'],
+                        'collectiontype_id'=>$op['collectiontype_id'],
+                        'order_date'=>$op['order_date'],
+                        'customer_id'=>$op['customer_id'],
+                        'purpose'=>$op['purpose'],
+                        'total_amount'=>$op['total_amount'],
+                        'local_orderofpayment_id'=>$op['orderofpayment_id'],
+                        'payment_mode_id'=> $op['payment_mode_id'],
+                        'on_account'=> $op['on_account'],
+                        'receipt_id'=>$receiptid,
+                        'purpose'=> $op['purpose'],
+                        'payment_status_id'=> $op['payment_status_id'],
+                        'is_sync_up' => $op['is_sync_up'],
+                        'is_updated' => $op['is_updated'],
+                        'is_deleted' => $op['is_deleted'],
+                        'payment_item' => $Paymentitem_details
+                    ];
+                    array_push($op_details, $detail_op);
+                }
+                
                 $detail=[
                         'local_receipt_id'=>$receipt['receipt_id'],
                         'rstl_id'=>$receipt['rstl_id'],
@@ -271,7 +317,8 @@ class UpdbController extends \yii\web\Controller{
                         'customer_id'=>$receipt['customer_id'],
                         'terminal_id'=>1,
                         'cancelled'=>0,
-                        'check' => $check_details
+                        'check' => $check_details,
+                        'op'=> $op_details
 
                 ];
                 array_push($Receipt_details, $detail);
@@ -280,23 +327,26 @@ class UpdbController extends \yii\web\Controller{
             $curl = new curl\Curl();
 
             $content = json_encode(['data'=>$Receipt_details]);
-            //echo "<pre>";var_dump(json_decode($content));echo "</pre>";exit;
+          // echo "<pre>";var_dump(json_decode($content));echo "</pre>";exit;
             $response = $curl->setRequestBody($content)
                 ->setHeaders([
                   'Content-Type' => 'application/json',
                   'Content-Length' => strlen($content),
                 ])->post($url);
-           //echo "<pre>";var_dump(json_decode($response));echo "</pre>";exit;
+         //echo "<pre>";var_dump(json_decode($response));echo "</pre>";exit;
             if($response){
                $data = json_decode($response);
                foreach ($data as $res) {
                    //$ids= implode(',',$res->idsave);
                    $idsave = $res->idsave ? $res->idsave : "";
+                   $idsaveop= $res->idsaveop;
+                   $idsavepaymentitem=$res->idsavepaymentitem;
                   // $idfail=$res->idfail;
                }
 
-               $updatemodel = Yii::$app->financedb->createCommand("UPDATE tbl_receipt set is_sync_up=1 WHERE receipt_id > ".$id." AND receipt_id < ".$idsave)->execute();
-
+               $updatemodel = Yii::$app->financedb->createCommand("UPDATE tbl_receipt set is_sync_up=1 WHERE receipt_id > ".$id." AND receipt_id <= ".$idsave)->execute();
+               $updatemodelop = Yii::$app->financedb->createCommand("UPDATE tbl_orderofpayment set is_sync_up=1 WHERE receipt_id > ".$id." AND receipt_id <= ".$idsave)->execute();
+               $updatemodelpayment = Yii::$app->financedb->createCommand("UPDATE tbl_paymentitem set is_sync_up=1 WHERE receipt_id > ".$id." AND receipt_id <= ".$idsave)->execute();
                if($model){
                     $model->num=$idsave;
                     $model->save(false);
