@@ -105,7 +105,8 @@ $this->registerJs($js);
 
                         // $workflow = Workflow::find()->where(['workflow_id'=>2]);
                         // $procedure = Workflow::find()->where(['IN', 'workflow', $ids]);
-
+                        
+                        //magpasa ng unique ID dito!!!
                         $query = Procedure::find()->where(['testname_id'=>1]);
                         $proceduredataProvider = new ActiveDataProvider([
                             'query' => $query,
@@ -113,10 +114,7 @@ $this->registerJs($js);
                  
                          return $this->renderAjax('workflow.php', [
                              'model'=>$proceduredataProvider,
-                         ]);
-
- 
-                         
+                         ]);  
 
                     },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],

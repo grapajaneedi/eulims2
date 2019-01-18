@@ -189,10 +189,6 @@ class FeeController extends Controller
         if(isset($_GET['fee_id'])){
             $id = (int) $_GET['fee_id'];
             $modelFee =  Fee::findOne(['fee_id'=>$id]);
-            //echo "<pre>";
-            //var_dump($modelFee);
-            //echo "</pre>";
-            //exit;
             $unit_cost = $modelFee->unit_cost;
         } else {
             $unit_cost = "Error getting unit cost";
@@ -200,8 +196,6 @@ class FeeController extends Controller
         return Json::encode([
             'unit_cost'=>$unit_cost,
         ]);
-
-      //  echo "huhu";
     }
 
     protected function findRequest($requestId)
