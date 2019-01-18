@@ -181,7 +181,7 @@ class AnalysisController extends Controller
                     }
                 }
                 
-               // echo Json::encode(['output' => $out, 'selected'=>$selected]);
+               //    echo Json::encode(['output' => $out, 'selected'=>$selected]);
                 \Yii::$app->response->data = Json::encode(['output'=>$out, 'selected'=>'']);
                 return;
             }

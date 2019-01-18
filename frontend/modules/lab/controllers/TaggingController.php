@@ -187,21 +187,14 @@ class TaggingController extends Controller
                         $tagging->cancelled_by = 1;
                     //    $tagging->disposed_date = "0000-00-00";
                         $tagging->iso_accredited = 1;
-                        $tagging->save(false); 
-
-
-                       	
+                        $tagging->save(false);               	
                     }
                  
             }
 
         }
        
-
-            $analysis_id = $_POST['analysis_id'];
-
-            
-            
+            $analysis_id = $_POST['analysis_id'];    
             $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
             $sampleDataProvider = new ActiveDataProvider([
                     'query' => $samplesQuery,
@@ -344,6 +337,7 @@ class TaggingController extends Controller
             'request'=>$request,
             'model'=>$model,
             'samplesQuery'=>$samplesQuery,
+            'analysisQuery'=>$analysisQuery,
             'sampleDataProvider' => $sampleDataProvider,
             'analysisdataprovider'=> $analysisdataprovider,
             'analysis_id'=>$analysis_id,
