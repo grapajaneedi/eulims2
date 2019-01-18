@@ -75,28 +75,36 @@ class ProductsController extends Controller
      */
     public function actionCreate()
     {
+
         $model = new Products();
 
         $user_id=Yii::$app->user->identity->profile->user_id;
         $model->created_by=$user_id;
         $model->qty_onhand=0;
+        $model->producttype_id=1;
         if ($model->load(Yii::$app->request->post())) {
-            $ids= implode(',',$model->suppliers_ids);
+            // var_dump(Yii::$app->request->post()); exit;
+            $ids="";
+            if($model->suppliers_ids)
+                $ids= implode(',',$model->suppliers_ids);
+
             $model->suppliers_ids=$ids;
             $filename=$model->product_name;
             $filename2=$model->product_name."2";
-            if(!empty($model->Image1))
-            {
-                $model->Image1 = UploadedFile::getInstance($model,'Image1');
-                $model->Image1->saveAs('uploads/products/'.$filename.'.'.$model->Image1->extension);
-                $model->Image1='uploads/products/'.$filename.'.'.$model->Image1->extension;
+            
+             $image1= UploadedFile::getInstance($model, 'Image1');
+            $image2= UploadedFile::getInstance($model, 'Image2');
+            if(!empty($image1) && $image1->size !== 0) {
+                $image1->saveAs('uploads/products/'.$model->product_name.$model->product_id.'1.'.$image1->extension);
+                $model->Image1='uploads/products/'.$model->product_name.$model->product_id.'1.'.$image1->extension;
             }
-            if(!empty($model->Image2))
-            {
-                $model->Image2 = UploadedFile::getInstance($model,'Image2');
-                $model->Image2->saveAs('uploads/products/'.$filename2.'.'.$model->Image2->extension);
-                $model->Image2='uploads/products/'.$filename2.'.'.$model->Image2->extension;
+
+            if(!empty($image2) && $image2->size !== 0) {
+                $image2->saveAs('uploads/products/'.$model->product_name.$model->product_id.'2.'.$image2->extension);
+                $model->Image2='uploads/products/'.$model->product_name.$model->product_id.'2.'.$image2->extension;
             }
+
+
             $model->save();
             
             Yii::$app->session->setFlash('success', 'Product Successfully Added!');
@@ -117,10 +125,39 @@ class ProductsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $origimg1=$model->Image1;
+        $origimg2=$model->Image2;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-           // return $this->redirect(['view', 'id' => $model->product_id]);
-            Yii::$app->session->setFlash('success', 'Product Successfully Updated!');
+        if ($model->load(Yii::$app->request->post())) {
+
+            $ids="";
+            if($model->suppliers_ids)
+                $ids= implode(',',$model->suppliers_ids);
+
+
+            $image1= UploadedFile::getInstance($model, 'Image1');
+            // var_dump($model); exit;
+            $image2= UploadedFile::getInstance($model, 'Image2');
+            if(!empty($image1) && $image1->size !== 0) {
+                $image1->saveAs('uploads/products/'.$model->product_name.'1.'.$image1->extension);
+                $model->Image1='uploads/products/'.$model->product_name.'1.'.$image1->extension;
+            }else{
+                $model->Image1=$origimg1;
+            }
+
+            if(!empty($image2) && $image2->size !== 0) {
+                $image2->saveAs('uploads/products/'.$model->product_name.'2.'.$image2->extension);
+                $model->Image2='uploads/products/'.$model->product_name.'2.'.$image2->extension;
+            }else{
+                $model->Image2=$origimg2;
+            }
+
+            if($model->save()){
+                Yii::$app->session->setFlash('success', 'Product Successfully Updated!');
+            }else{
+                Yii::$app->session->setFlash('error', 'Product Failed to Update!');
+            }
+            
             return $this->redirect(['index']);
         } else {
             return $this->renderAjax('update', [

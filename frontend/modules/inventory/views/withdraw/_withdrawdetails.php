@@ -7,7 +7,7 @@ use yii\data\ActiveDataProvider;
 
 
     $dataProvider = new ArrayDataProvider([
-        'allModels' => $model->withdrawdetails,
+        'allModels' => $model->inventoryWithdrawaldetails,
         'key' => 'inventory_withdrawaldetails_id'
     ]);
 
@@ -17,6 +17,14 @@ use yii\data\ActiveDataProvider;
 
     $gridColumns = [
         ['class' => 'kartik\grid\SerialColumn'],
+        [
+            'attribute' => 'inventory_transactions_id',
+            'label' => 'Product',
+            'value' => function($model){                   
+                $prod =$model->inventoryTransactions->product;
+                return $prod->product_name;                
+            },
+        ],
         [
             'attribute' => 'inventory_withdrawal_id',
             'label' => 'Transaction Date',
