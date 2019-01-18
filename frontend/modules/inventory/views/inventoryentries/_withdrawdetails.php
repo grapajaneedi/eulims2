@@ -18,6 +18,14 @@ use yii\data\ActiveDataProvider;
     $gridColumns = [
         ['class' => 'kartik\grid\SerialColumn'],
         [
+            'attribute' => 'inventory_transactions_id',
+            'label' => 'Product',
+            'value' => function($model){                   
+                $prod =$model->inventoryTransactions->product;
+                return $prod->product_name;                
+            },
+        ],
+        [
             'attribute' => 'inventory_withdrawal_id',
             'label' => 'Transaction Date',
             'value' => function($model){                   

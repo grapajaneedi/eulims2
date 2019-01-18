@@ -10,19 +10,6 @@ use common\models\inventory\InventoryWithdrawaldetails;
     $gridColumns = [
         ['class' => 'kartik\grid\SerialColumn'],
         [
-            'class' => 'kartik\grid\ExpandRowColumn',
-            'width' => '50px',
-            'value' => function ($model, $key, $index, $column) {
-                return GridView::ROW_COLLAPSED;
-            },
-            'detail' => function ($model, $key, $index, $column) {
-                return Yii::$app->controller->renderPartial('_dataInventoryWithdrawaldetails', ['model' => $model->withdrawdetails]);
-            },
-            'headerOptions' => ['class' => 'kartik-sheet-style'],
-            'expandOneOnly' => true
-        ],
-        
-        [
                 'attribute' => 'suppliers_id',
                 'label' => 'Supplier',
                 'value' => function($model){                   
@@ -78,6 +65,11 @@ use common\models\inventory\InventoryWithdrawaldetails;
         'columns' => $gridColumns,
         'containerOptions' => ['style' => 'overflow: auto'],
         'pjax' => true,
+        'pjaxSettings' => [
+            'options' => [
+                'enablePushState' => false,
+            ]
+        ],
         'beforeHeader' => [
             [
                 'options' => ['class' => 'skip-export']

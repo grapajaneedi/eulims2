@@ -62,11 +62,12 @@ class Products extends \yii\db\ActiveRecord
             [['producttype_id', 'categorytype_id', 'qty_reorder', 'qty_onhand', 'qty_min_reorder', 'discontinued', 'created_by', 'created_at', 'updated_at'], 'integer'],
             [['description'], 'string'],
             [['price', 'srp'], 'number'],
-            [['suppliers_ids'], 'safe'],
+            [['suppliers_ids','Image1','Image2'], 'safe'],
             [['product_code', 'Image1', 'Image2'], 'string', 'max' => 100],
             [['product_name', 'qty_per_unit'], 'string', 'max' => 50],
             [['categorytype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categorytype::className(), 'targetAttribute' => ['categorytype_id' => 'categorytype_id']],
             [['producttype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Producttype::className(), 'targetAttribute' => ['producttype_id' => 'producttype_id']],
+             [['Image1', 'Image2'], 'file', 'extensions'=>'jpg, gif, png, jpeg', 'skipOnEmpty' => true] //experiment only
         ];
     }
 

@@ -38,10 +38,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'exportConfig'=>$func->exportConfig("Inventory Entries", "inventory_entries", $Header),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-           // 'inventory_transactions_id',
-            // 'transaction_type_id',
             // 'rstl_id',
+             [
+                'class' => 'kartik\grid\ExpandRowColumn',
+                'width' => '50px',
+                'value' => function ($model, $key, $index, $column) {
+                    return GridView::ROW_COLLAPSED;
+                },
+                'detail' => function ($model, $key, $index, $column) {
+                    return Yii::$app->controller->renderPartial('_withdrawdetails', ['model' => $model]);
+                },
+                'headerOptions' => ['class' => 'kartik-sheet-style'],
+                'expandOneOnly' => true
+            ],
+
             [
                 'attribute' => 'product_id',
                 'label' => 'Product',
