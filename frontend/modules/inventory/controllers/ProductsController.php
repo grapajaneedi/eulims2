@@ -84,8 +84,10 @@ class ProductsController extends Controller
         $model->producttype_id=1;
         if ($model->load(Yii::$app->request->post())) {
             // var_dump(Yii::$app->request->post()); exit;
-            
-            $ids= implode(',',$model->suppliers_ids);
+            $ids="";
+            if($model->suppliers_ids)
+                $ids= implode(',',$model->suppliers_ids);
+
             $model->suppliers_ids=$ids;
             $filename=$model->product_name;
             $filename2=$model->product_name."2";
@@ -128,7 +130,8 @@ class ProductsController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
 
-            
+            $ids="";
+            if($model->suppliers_ids)
                 $ids= implode(',',$model->suppliers_ids);
 
 
