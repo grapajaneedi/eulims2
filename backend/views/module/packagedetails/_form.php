@@ -56,11 +56,11 @@ $FontAwesomeList=FA::getConstants();
     <div class="row">
         <div class="col-md-6">
             <label class="control-label" for="packagedetails-icon">Create At</label>
-            <span class="form-control"><?= date("m/d/Y h:i:s A",$model->created_at) ?></span>
+            <span class="form-control"><?= date("m/d/Y h:i:s A", strtotime($model->created_at)) ?></span>
         </div>
         <div class="col-md-6">
             <label class="control-label" for="packagedetails-icon">Updated At</label>
-            <span class="form-control"><?= date("m/d/Y h:i:s A",$model->updated_at) ?></span>
+            <span class="form-control"><?= date("m/d/Y h:i:s A",strtotime($model->updated_at)) ?></span>
         </div>
     </div>
     <br>
