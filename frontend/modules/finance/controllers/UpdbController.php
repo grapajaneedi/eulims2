@@ -146,7 +146,8 @@ class UpdbController extends \yii\web\Controller{
     ////////////----------------------------------------------------------------//////////////////////////////////////
     public function actionPostop(){
         //$url = "http://ulimsportal.onelab.ph/api/api/sync_orderofpayment";
-         $url = "http://www.eulims.local/api/api/sync_orderofpayment";
+         //$url = "http://www.eulims.local/api/api/sync_orderofpayment";
+        $url="https://eulimsapi.onelab.ph/api/web/v1/apis/sync_orderofpayment"; 
         $table = "tbl_orderofpayment";
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         $id=$model->num;
@@ -156,7 +157,7 @@ class UpdbController extends \yii\web\Controller{
         if($data){
             foreach($data as $op){
                 $opid=$op['orderofpayment_id'];
-                $paymentitem = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_paymentitem` WHERE `orderofpayment_id` = ".$opid)->queryAll();
+                $paymentitem = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_paymentitem` WHERE is_sync_up=0 AND `orderofpayment_id` = ".$opid)->queryAll();
                 $Paymentitem_details=[];
                 foreach($paymentitem as $item){
                     $detail_paymentitem=[
@@ -206,17 +207,17 @@ class UpdbController extends \yii\web\Controller{
                   'Content-Type' => 'application/json',
                   'Content-Length' => strlen($content),
                 ])->post($url);
-            //echo "<pre>";var_dump(json_decode($response));echo "</pre>";exit;
+           // echo "<pre>";var_dump(json_decode($response));echo "</pre>";exit;
             if($response){
                $data = json_decode($response);
                foreach ($data as $res) {
                    //$ids= implode(',',$res->idsave);
                    $idsave = $res->idsave;
-                  // $idfail=$res->idfail;
+                   $idfirst=$res->idfirst;
                }
 
-               $updatemodel = Yii::$app->financedb->createCommand("UPDATE tbl_orderofpayment set is_sync_up=1 WHERE orderofpayment_id > ".$id." AND orderofpayment_id <= ".$idsave)->execute();
-
+               $updatemodel = Yii::$app->financedb->createCommand("UPDATE tbl_orderofpayment set is_sync_up=1 WHERE orderofpayment_id >= ".$idfirst." AND orderofpayment_id <= ".$idsave)->execute();
+               $updatemodelpayment = Yii::$app->financedb->createCommand("UPDATE tbl_paymentitem set is_sync_up=1 WHERE orderofpayment_id >= ".$idfirst." AND orderofpayment_id <= ".$idsave)->execute();     
                if($model){
                     $model->num=$idsave;
                     $model->save(false);
@@ -235,14 +236,14 @@ class UpdbController extends \yii\web\Controller{
         $table = "tbl_receipt";
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         $id=$model->num;
-        $limit=$id+2;
+        $limit=$id+100;
         $data = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_receipt` WHERE is_sync_up=0 AND receipt_id > ".$id." AND receipt_id < ".$limit)->queryAll();
         $Receipt_details=[];
         // echo "<pre>";echo $id.$limit;echo "</pre>";exit;
         if($data){
            foreach($data as $receipt){
                 $receiptid=$receipt['receipt_id'];
-                $check = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_check` WHERE `receipt_id` = ".$receiptid)->queryAll();
+                $check = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_check` WHERE is_sync_up=0 AND `receipt_id` = ".$receiptid)->queryAll();
                 $check_details=[];
                 foreach($check as $item){
                     $detail_check=[
@@ -257,11 +258,11 @@ class UpdbController extends \yii\web\Controller{
                     array_push($check_details, $detail_check);
                 }
                 //-----------------------------
-                $ops = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_orderofpayment` WHERE `receipt_id` = ".$receiptid)->queryAll();
+                $ops = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_orderofpayment` WHERE is_sync_up=0 AND `receipt_id` = ".$receiptid)->queryAll();
                 $op_details=[];
                 foreach($ops as $op){
                     $opid=$op['orderofpayment_id'];
-                    $paymentitem = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_paymentitem` WHERE `orderofpayment_id` = ".$opid)->queryAll();
+                    $paymentitem = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_paymentitem` WHERE is_sync_up=0 AND `orderofpayment_id` = ".$opid)->queryAll();
                     $Paymentitem_details=[];
                     foreach($paymentitem as $item){
                         $detail_paymentitem=[
@@ -363,7 +364,7 @@ class UpdbController extends \yii\web\Controller{
         $table = "tbl_deposit";
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         $id=$model->num;
-        $limit=$id+2;
+        $limit=$id+100;
         $data = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_deposit` WHERE is_sync_up=0 AND deposit_id > ".$id." AND deposit_id <= ".$limit)->queryAll();
         $Deposit_details=[];
         if($data){
@@ -392,7 +393,7 @@ class UpdbController extends \yii\web\Controller{
                   'Content-Type' => 'application/json',
                   'Content-Length' => strlen($content),
                 ])->post($url);
-            echo "<pre>";var_dump(json_decode($response));echo "</pre>";exit;
+           // echo "<pre>";var_dump(json_decode($response));echo "</pre>";exit;
             if($response){
                $data = json_decode($response);
                foreach ($data as $res) {
@@ -416,7 +417,8 @@ class UpdbController extends \yii\web\Controller{
 
      public function actionPostpaymentitem(){
         //$url = "http://ulimsportal.onelab.ph/api/api/sync_paymentitem";
-        $url = "http://www.eulims.local/api/api/sync_paymentitem";
+       // $url = "http://www.eulims.local/api/api/sync_paymentitem";
+        $url="https://eulimsapi.onelab.ph/api/web/v1/apis/sync_paymentitem";
         $table = "tbl_paymentitem";
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         /*$id=$model->num;
