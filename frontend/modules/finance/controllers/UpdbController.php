@@ -151,7 +151,7 @@ class UpdbController extends \yii\web\Controller{
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         $id=$model->num;
         $limit=$id+2;
-        $data = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_orderofpayment` WHERE is_sync_up=0 AND orderofpayment_id > ".$id." AND orderofpayment_id < ".$limit)->queryAll();
+        $data = Yii::$app->financedb->createCommand("SELECT * FROM `tbl_orderofpayment` WHERE is_sync_up=0")->queryAll();
         $Op_details=[];
         if($data){
             foreach($data as $op){
@@ -359,7 +359,7 @@ class UpdbController extends \yii\web\Controller{
     
      public function actionPostdeposit(){
        //$url = "http://ulimsportal.onelab.ph/api/api/sync_deposit";
-        $url = "http://www.eulims.local/api/api/sync_deposit";
+        $url = "https://eulimsapi.onelab.ph/api/web/v1/apis/sync_deposit";
         $table = "tbl_deposit";
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         $id=$model->num;
@@ -392,7 +392,7 @@ class UpdbController extends \yii\web\Controller{
                   'Content-Type' => 'application/json',
                   'Content-Length' => strlen($content),
                 ])->post($url);
-           // echo "<pre>";var_dump(json_decode($response));echo "</pre>";exit;
+            echo "<pre>";var_dump(json_decode($response));echo "</pre>";exit;
             if($response){
                $data = json_decode($response);
                foreach ($data as $res) {

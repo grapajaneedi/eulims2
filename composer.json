@@ -121,7 +121,8 @@
         "yii2tech/spreadsheet": "*",
         "wbraganca/yii2-dynamicform": "*",
         "kartik-v/yii2-export": "*",
-        "philippfrenzel/yii2fullcalendar": "*"
+        "philippfrenzel/yii2fullcalendar": "*",
+		"yiisoft/yii2-queue": "^2.0@dev"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "^2.0"
