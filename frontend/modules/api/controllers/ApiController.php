@@ -60,6 +60,7 @@ class ApiController extends ActiveController
         
         $ctr = 0;
         //$idsave=[];
+        $idfirst="";
         $idsave="";
         $idfail="";
         $listIds = [];
@@ -96,6 +97,10 @@ class ApiController extends ActiveController
                     $newPaymentitem->local_paymentitem_id= $paymentitem['paymentitem_id'];
                     $newPaymentitem->save();
                 }
+                if($ctr == 0){
+                    $idfirst=$op['orderofpayment_id'];
+                }
+                
                 $ctr++;
                // array_push($idsave, $op['orderofpayment_id']);
                 $idsave=$op['orderofpayment_id'];
@@ -106,6 +111,7 @@ class ApiController extends ActiveController
         }
         $detail=[
             'num'=>$ctr,
+            'idfirst'=>$idfirst,
             'idsave'=>$idsave,
             'idfail'=>$idfail
                 
