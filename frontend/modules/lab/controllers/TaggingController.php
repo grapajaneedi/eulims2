@@ -7,6 +7,7 @@ use common\models\lab\Tagging;
 use common\models\lab\Analysis;
 use common\models\lab\Request;
 use common\models\lab\Sample;
+use common\models\lab\Procedure;
 use common\models\TaggingSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -163,6 +164,9 @@ class TaggingController extends Controller
 
     public function actionStartanalysis()
     {
+        print_r(Yii::$app->request->get());
+
+        exit;
         
         if(isset($_POST['id'])){
 			$ids = $_POST['id'];
@@ -220,6 +224,27 @@ class TaggingController extends Controller
             
         }
             
+     }
+
+     public function actionTag($id)
+     {
+       $analysisQuery = Analysis::find()->where(['analysis_id' => $id]);
+       $procedure = Procedure::find()->where(['testname_id' => 1]);
+
+       $analysisdataprovider = new ActiveDataProvider([
+               'query' => $procedure,
+               'pagination' => [
+                   'pageSize' => false,
+                          ],                 
+       ]);
+
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('tag', [
+                'id'=>$id,
+                'analysisdataprovider'=>$analysisdataprovider,
+                ]);
+        }
+
      }
 
      public function actionCompletedanalysis()
