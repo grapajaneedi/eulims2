@@ -8,6 +8,8 @@ use common\models\inventory\SuppliersSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use console\controllers\HelloController;
+
 
 /**
  * SuppliersController implements the CRUD actions for Suppliers model.
@@ -35,6 +37,15 @@ class SuppliersController extends Controller
      */
     public function actionIndex()
     {
+        
+       
+        $consoleController = new HelloController(Yii::$app->controller->id, Yii::$app);
+        $var= shell_exec($consoleController->actionIndex().' > /dev/null &');
+       
+        echo "ended ";
+
+        exit;
+
         $searchModel = new SuppliersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
