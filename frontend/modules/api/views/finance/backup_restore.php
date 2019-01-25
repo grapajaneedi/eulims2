@@ -61,8 +61,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'theme' => Select2::THEME_KRAJEE,
                         'options' => ['id'=>'year'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Year'],
-                ])->label("Year")."</div>"."<div class='col-md-10' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>OP</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_receipt' onclick='restore_receipt()'>Receipt</span>"
-                  . "&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_paymentitem' onclick='restore_paymentitem()'>Paymentitem</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_deposit' onclick='restore_deposit()'>Deposit</span></div>";
+                ])->label("Year")."</div>"."<div class='col-md-10' style='margin-top:4px'><br><span class='btn btn-success' id='restore_paymentitem' onclick='restore_paymentitem()'>Paymentitem</span>"
+                  . "&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_sync' onclick='restoresync()'>Restore</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='resync' onclick='resync()'>Re-Sync</span></div>";
             ?>
         </div>
         <?php ActiveForm::end(); ?>
@@ -130,6 +130,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 $('.image-loader').removeClass("img-loader");
             });
         }
+         function restoresync(){
+
+        var y = $('#year option:selected').text();
+    
+        $.ajax({
+            url: "/api/finance/ressync",
+            method: "POST",
+            data: {year:y},
+            beforeSend: function(xhr) {
+                $('.image-loader').addClass("img-loader");
+               }
+            })
+            .done(function(data) {
+                $("#finance-grid").yiiGridView("applyFilter"); 
+                $('.image-loader').removeClass("img-loader");
+            });
+        }
         function restore_receipt(){
 
         var y = $('#year option:selected').text();
@@ -166,6 +183,23 @@ $this->params['breadcrumbs'][] = $this->title;
         var y = $('#year option:selected').text();    
         $.ajax({
             url: "/api/finance/res_deposit",
+            method: "POST",
+            data: {year:y},
+            beforeSend: function(xhr) {
+                $('.image-loader').addClass("img-loader");
+               }
+            })
+            .done(function(data) {
+                $("#finance-grid").yiiGridView("applyFilter"); 
+                $('.image-loader').removeClass("img-loader");
+            });
+        }
+        function resync(){
+        var today = new Date();
+        var y = today.getFullYear();  
+  
+        $.ajax({
+            url: "/api/finance/syncagain",
             method: "POST",
             data: {year:y},
             beforeSend: function(xhr) {
