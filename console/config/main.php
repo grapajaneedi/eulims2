@@ -16,6 +16,7 @@ return [
         '@npm'   => '@vendor/npm-asset',
         '@console' =>  dirname(dirname(__DIR__)) . '/console',
         '@web/assets' => dirname(dirname(__DIR__)) . '/frontend/web/assets',
+        '@webroot/assets' => dirname(dirname(__DIR__)) . '/frontend/web',
     ],
     'controllerMap' => [
         'fixture' => [
