@@ -9,13 +9,8 @@
 return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log'], 
     'controllerNamespace' => 'console\controllers',
-    'modules' => [
-        'datecontrol' =>  [
-                'class' => '\kartik\datecontrol\Module'
-            ],
-    ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
