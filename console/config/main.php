@@ -11,9 +11,15 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'console\controllers',
+    'modules' => [
+        'datecontrol' =>  [
+                'class' => '\kartik\datecontrol\Module'
+            ],
+    ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@console' =>  dirname(dirname(__DIR__)) . '/console',
     ],
     'controllerMap' => [
         'fixture' => [
@@ -50,6 +56,28 @@ return [
             //'enableAutoLogin' => true,
             //'loginUrl' => ['admin/user/login'],
         ],
+         'inventorydb'=>[
+            'class' => 'yii\db\Connection',  
+            'dsn' => 'mysql:host=localhost;dbname=eulims_inventory',
+            'username' => 'eulims',
+            'password' => 'eulims',
+            //'username'=>'arisro9',
+            //'password'=>'qwerty!@#$%', 
+            'charset' => 'utf8',
+            'tablePrefix' => 'tbl_',
+        ],
+        'labdb'=>[
+            'class' => 'yii\db\Connection',  
+            'dsn' => 'mysql:host=localhost;dbname=eulims_lab',
+            'username' => 'eulims',
+            'password' => 'eulims',
+            //'username'=>'arisro9',
+            //'password'=>'qwerty!@#$%', 
+            'charset' => 'utf8',
+            'tablePrefix' => 'tbl_',
+        ],
+        
+
     ],
     //'params' => $params,
 ];
