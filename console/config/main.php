@@ -15,7 +15,7 @@ return [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
         '@console' =>  dirname(dirname(__DIR__)) . '/console',
-        '@webroot' => dirname(dirname(__FILE__)) . '/web',
+        '@webroot/assets' => dirname(dirname(__FILE__)) . '/web/assets',
     ],
     'controllerMap' => [
         'fixture' => [
