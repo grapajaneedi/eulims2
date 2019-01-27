@@ -302,3 +302,7 @@ frontend/modules/lab/controllers/RequestController_20190112.php
 frontend/modules/lab/views/analysisreferral/_form_20190112.php
 frontend/modules/lab/views/analysisreferral/_methodreference_20190110.php
 frontend/modules/lab/views/analysisreferral/view_20181207.php
+common/components/ReferralComponent_20190113.php
+common/config/main_bk.php
+frontend/views/admin-lte/layouts/left_bk.php
+frontend/modules/lab/views/request/viewreferral_20190114.php

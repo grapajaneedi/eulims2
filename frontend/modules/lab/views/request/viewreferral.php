@@ -147,6 +147,9 @@ $this->registerJs($PrintEvent);
 <div class="<?= $BackClass ?>"></div>
 <div class="request-view ">
     <div class="image-loader" style="display: hidden;"></div>
+    <!--<div id="notification_details" style="display: hidden;">
+        <input type="text" name="sender_remarks" />
+    </div>-->
     <div class="container table-responsive">
         <?php
 
@@ -598,7 +601,8 @@ $this->registerJs($PrintEvent);
         if($model->request_type_id == 2){
             $gridColumns = [
                 [
-                    'attribute'=>'sample_code',
+                    //'attribute'=>'sample_code',
+                    'attribute'=>'agency_id',
                     'enableSorting' => false,
                     'header' => 'Agency',
                     'contentOptions' => [
@@ -606,17 +610,19 @@ $this->registerJs($PrintEvent);
                     ],
                 ],
                 [
-                    'attribute'=>'samplename',
+                    //'attribute'=>'samplename',
+                    'attribute'=>'agency_id',
                     'enableSorting' => false,
                     'header' => 'Region',
                 ],
                 [
-                    'attribute'=>'description',
+                    //'attribute'=>'description',
+                    'attribute'=>'agency_id',
                     'format' => 'raw',
                     'header' => 'Turnaround Time (Estimated)',
                     'enableSorting' => false,
                     'value' => function($data){
-                        return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".date("Y-m-d h:i A",strtotime($data->sampling_date))."</b></span>,&nbsp;".$data->description : $data->description;
+                        //return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".date("Y-m-d h:i A",strtotime($data->sampling_date))."</b></span>,&nbsp;".$data->description : $data->description;
                     },
                    'contentOptions' => [
                         'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
@@ -627,22 +633,12 @@ $this->registerJs($PrintEvent);
                     'template' => '{notification}',
                     'dropdown' => false,
                     'dropdownOptions' => ['class' => 'pull-right'],
-                    'urlCreator' => function ($action, $model, $key, $index) {
-                        if ($action === 'delete') {
-                            $url ='/lab/sample/delete?id='.$model->sample_id;
-                            return $url;
-                        } 
-                        if ($action === 'cancel') {
-                            $url ='/lab/sample/cancel?id='.$model->sample_id;
-                            return $url;
-                        }
-                    },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
                         'notification' => function ($url, $model) {
                             //if($model->active == 1){
                             //    return Html::a('<span class="glyphicon glyphicon-bell"></span> Notify', '#', ['class'=>'btn btn-primary','title'=>'Send Notification','onclick' => 'sendNotification(19,11)']);
-                            return Html::button('<span class="glyphicon glyphicon-bell"></span>', ['value'=>Url::to(['/referrals/referral/notify']), 'onclick'=>'sendNotification(19,11,this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Notify Agency']);
+                            return Html::button('<span class="glyphicon glyphicon-bell"></span> Notify', ['value'=>Url::to(['/referrals/referral/notify','request_id'=>$model->request_id,'agency_id'=>4]), 'onclick'=>'sendNotification(this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Notify Agency']);
                             //} else {
                             //    return null;
                             //}
@@ -653,7 +649,7 @@ $this->registerJs($PrintEvent);
 
             echo GridView::widget([
                 'id' => 'agency-grid',
-                'dataProvider'=> $sampleDataProvider,
+                'dataProvider'=> $agencydataprovider,
                 'pjax'=>true,
                 'pjaxSettings' => [
                     'options' => [
@@ -868,12 +864,26 @@ $this->registerJs($PrintEvent);
             .find('#modalContent')
             .load(url);
     }
-    function sendNotification(referralId,recipiendId,url,title){
+    function sendNotification(url,title){
         //var url = '/lab/sample/update?id='+id;
         $('.modal-title').html(title);
         $('#modal').modal('show')
-            .find('#modalContent')
-            .load(url);
+           .find('#modalContent')
+           .load(url);
+        /*$.ajax({
+            url: url,
+            success: function (data) {
+                $('.image-loader').removeClass('img-loader');
+                var url = '/lab/analysisreferral/update?id='+id+'&request_id='+requestId+'&page='+data;
+                $('.modal-title').html(title);
+                $('#modalAnalysis').modal('show')
+                    .find('#modalContent')
+                    .load(url);
+            },
+            beforeSend: function (xhr) {
+                $('.image-loader').addClass('img-loader');
+            }
+        });*/
     }
     
 </script>
