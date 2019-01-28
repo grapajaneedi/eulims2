@@ -80,20 +80,12 @@ class ProcedureController extends Controller
     public function actionCreate()
     {
         $model = new Procedure();
-      
-
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->procedure_code=1;
-            $model->testname_id=2;
-            $model->testname_method_id=3;
             Yii::$app->session->setFlash('success', 'Procedure Successfully Created'); 
             return $this->runAction('index');
         }
-      
-        $model->procedure_code=1;
-        $model->testname_id=2;
-        $model->testname_method_id=3;
+
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_form', [
                 'model' => $model,
