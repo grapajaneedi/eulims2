@@ -4,10 +4,14 @@ namespace frontend\modules\lab\controllers;
 
 use Yii;
 use common\models\lab\Testnamemethod;
+use common\models\lab\Workflow;
+use common\models\lab\ProcedureSearch;
+use common\models\lab\Procedure;
 use common\models\lab\TestnamemethodSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 
 /**
  * TestnamemethodController implements the CRUD actions for Testnamemethod model.
@@ -41,6 +45,19 @@ class TestnamemethodController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionWorkflow()
+    {
+        $searchModel = new TestnamemethodSearch();
+        $model = new Testnamemethod();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('indexworkflow', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'model'=>$model,
         ]);
     }
 
@@ -92,6 +109,158 @@ class TestnamemethodController extends Controller
             ]);
        }
     }
+
+    public function actionCreateworkflow()
+    {
+        $id = $_GET['test_id'];
+        $testname_id = $id;
+        $searchModel = new ProcedureSearch();
+        $model = new Procedure();
+        
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $workflow = Workflow::find()->where(['testname_method_id' => $id]);
+
+        $workflowdataprovider = new ActiveDataProvider([
+                'query' => $workflow,
+                'pagination' => [
+                    'pageSize' => false,
+                ],
+             
+        ]);
+
+        return $this->renderAjax('_createworkflow', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'workflowdataprovider'=>$workflowdataprovider,
+            'testname_id'=>$testname_id,
+            'model'=>$model,
+        ]);
+    }
+
+    public function actionAddworkflow()
+    {
+        $id = $_POST['id'];
+        $testname_id = $_POST['testname_id'];
+        $searchModel = new ProcedureSearch();
+        $model = new Procedure();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+
+        $procedure = Procedure::find()->where(['procedure_id' => $id])->one();
+
+        
+        $workflow = new Workflow();
+        $workflow->testname_method_id = $testname_id;
+        $workflow->method_id = $id;
+        $workflow->procedure_name = $procedure->procedure_name;
+        $workflow->status = 1;
+        $workflow->save();
+
+        $workflow = Workflow::find()->where(['testname_method_id' => $testname_id]);
+        
+                $workflowdataprovider = new ActiveDataProvider([
+                        'query' => $workflow,
+                        'pagination' => [
+                            'pageSize' => false,
+                        ],
+                     
+                ]);
+
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_createworkflow', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'workflowdataprovider'=>$workflowdataprovider,
+                'testname_id'=>$testname_id,
+                'model'=>$model,
+            ]);
+        }
+    
+        
+   }
+
+   public function actionAddprocedure()
+   {
+       $procedure_name = $_POST['procedure_name'];
+       $testname_id = $_POST['testname_id'];
+       $searchModel = new ProcedureSearch();
+       $model = new Procedure();
+       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+      // $procedure = Procedure::find()->where(['procedure_id' => $id])->one();
+  
+       $procedure = new Procedure();
+       $procedure->procedure_name = $procedure_name;
+       $procedure->procedure_code = "1";
+       $procedure->testname_id = "1";
+       $procedure->testname_method_id = "1";
+       $procedure->save();
+
+       $workflow = Workflow::find()->where(['testname_method_id' => $testname_id]);
+       
+               $workflowdataprovider = new ActiveDataProvider([
+                       'query' => $workflow,
+                       'pagination' => [
+                           'pageSize' => false,
+                       ],
+                    
+               ]);
+
+       if(Yii::$app->request->isAjax){
+           return $this->renderAjax('_createworkflow', [
+               'searchModel' => $searchModel,
+               'dataProvider' => $dataProvider,
+               'workflowdataprovider'=>$workflowdataprovider,
+               'testname_id'=>$testname_id,
+               'model'=>$model,
+           ]);
+       }
+   
+       
+  }
+
+   public function actionDeleteworkflow()
+   {
+       $id = $_POST['id'];
+       $testname_id = $_POST['testname_id'];
+       $searchModel = new ProcedureSearch();
+       $model = new Procedure();
+       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+
+       $procedure = Procedure::find()->where(['procedure_id' => $id])->one();
+
+       
+
+      $workflow = Workflow::find()->where(['testname_method_id' => $testname_id]);
+
+       $Connection= Yii::$app->labdb;
+       $sql=" DELETE FROM `tbl_workflow` WHERE `workflow_id`=".$id;
+       $Command=$Connection->createCommand($sql);
+       $Command->execute();    
+
+               $workflowdataprovider = new ActiveDataProvider([
+                       'query' => $workflow,
+                       'pagination' => [
+                           'pageSize' => false,
+                       ],
+                    
+               ]);
+
+       if(Yii::$app->request->isAjax){
+           return $this->renderAjax('_createworkflow', [
+               'searchModel' => $searchModel,
+               'dataProvider' => $dataProvider,
+               'workflowdataprovider'=>$workflowdataprovider,
+               'testname_id'=>$testname_id,
+               'model'=>$model,
+           ]);
+       }
+     //  $services_model = Services::find()->where(['services_id' => $services->services_id])->one();
+       
+  }
+
 
     /**
      * Updates an existing Testnamemethod model.
