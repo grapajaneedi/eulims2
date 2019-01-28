@@ -26,8 +26,8 @@ $js=<<<SCRIPT
 function offerservices(mid){
   
     $.ajax({
-       url: '/lab/services/offer',
-       method: "post",
+        url: '/lab/services/offer',
+        method: "post",
         data: { id: mid,
         labid: $('#labid').val(),
         sampletypeid: $('#sampletypeid').val(),
