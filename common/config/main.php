@@ -11,9 +11,9 @@ return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'modules' => [
         'gridview' => ['class' => 'kartik\grid\Module'],
-        // 'datecontrol' =>  [
-        //     'class' => 'kartik\datecontrol\Module'
-        // ],
+        'datecontrol' =>  [
+            'class' => '\kartik\datecontrol\Module'
+        ],
         'profile' => [
             'class' => 'common\modules\profile\Module',
         ],
