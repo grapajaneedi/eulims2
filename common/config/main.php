@@ -50,6 +50,5 @@ return [
             '/lab/analysis/listtest',
         ]
     ],
-    'timeZone' => 'Asia/Manila', //set timezone to Asia/Manila
     'components' => $components
 ];
