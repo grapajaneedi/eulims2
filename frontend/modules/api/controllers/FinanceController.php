@@ -85,14 +85,11 @@ class FinanceController extends Controller
         $response_deposit = curl_exec($curl_deposit);			
         $data_deposit = json_decode($response_deposit, true);
         
+        
         $opdata=number_format($op)."/ ".number_format($data);
-        
         $paymentitemdata=number_format($paymentitem)."/ ".number_format($data_paymentitem);
-        
         $receiptdata=number_format($receipt)."/ ".number_format($data_receipt);
-        
         $depositdata=number_format($deposit)."/ ".number_format($data_deposit);
-        
          return $this->render('backup_restore', [
              'searchModel' => $searchModel,
              'dataProvider' => $dataProvider,
@@ -103,17 +100,9 @@ class FinanceController extends Controller
              'deposit'=> $depositdata
          ]);
      }
-     public function actionRessync(){
-        $year =  $_POST['year']; 
-        $this->actionRes($year);
-        $this->actionRes_deposit($year);
-       // $this->actionRes_paymentitem();
-        $this->actionRes_receipt($year);
-        return $this->redirect('/api/finance');
-     }
-     public function actionRes($year){
+     public function actionRes(){
 	//$month = (int)$_POST['month'] + 1;
-        //$year =  $_POST['year'];
+        $year =  $_POST['year'];
         
         for($month=1;$month < 13;$month++){
        // for($month=12;$month > 0;$month--){  
@@ -227,7 +216,7 @@ class FinanceController extends Controller
        
 	
        
-        //return $this->redirect('/api/finance');
+        return $this->redirect('/api/finance');
      
      }
 
@@ -236,9 +225,9 @@ class FinanceController extends Controller
         return $this->render('customers');
     }
     
-    public function actionRes_receipt($year){
+    public function actionRes_receipt(){
       
-        //$year =  $_POST['year'];
+        $year =  $_POST['year'];
       
         $month=1;
         while($month < 13){
@@ -365,12 +354,12 @@ class FinanceController extends Controller
             }
         }
        
-        //return $this->redirect('/api/finance');
+        return $this->redirect('/api/finance');
      
      }
      
-     public function actionRes_deposit($year){
-         //$year =  $_POST['year'];
+     public function actionRes_deposit(){
+         $year =  $_POST['year'];
 	
        //for($month=13;$month > 0;$month--){
         for($month=1;$month < 13;$month++){   
@@ -463,7 +452,7 @@ class FinanceController extends Controller
        
 	
        
-        //return $this->redirect('/api/finance');
+        return $this->redirect('/api/finance');
      
      }
      
@@ -903,5 +892,4 @@ class FinanceController extends Controller
          //Yii::$app->session->setFlash('success', 'Hype!!!');
          return $this->redirect('/api/finance');
      }
-     
 }
