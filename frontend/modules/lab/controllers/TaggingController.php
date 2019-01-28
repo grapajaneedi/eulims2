@@ -163,39 +163,34 @@ class TaggingController extends Controller
     }
 
     public function actionStartanalysis()
-    {
-        print_r(Yii::$app->request->get());
-
-        exit;
-        
+    {           
         if(isset($_POST['id'])){
-			$ids = $_POST['id'];
-            $analysisID = explode(",", $ids);
-                
+           
+     
+            $ids = $_POST['id'];
+            $analysis = $_POST['analysis_id'];
+            $analysisID = explode(",", $ids);  
+            $analysiss= Analysis::find()->where(['analysis_id'=> $_POST['analysis_id']])->one();
+            $samplesq = Sample::find()->where(['sample_id' =>$analysiss->sample_id])->one();             
+            $samcount = $samplesq->completed;          
 			if ($ids){
 				foreach ($analysisID as $aid){
                     
                     $taggingmodel = Tagging::find()->where(['analysis_id'=>$aid])->one();
                     if ($taggingmodel){
-
                     }else{
                         $tagging = new Tagging();
                         $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
                         $tagging->user_id = $profile->user_id;
                         $tagging->analysis_id = $aid;
                         $tagging->start_date = date("Y-m-d");
-                       // $tagging->end_date = "0000-00-00";
                         $tagging->tagging_status_id = 1;
-                     //   $tagging->cancel_date = "0000-00-00";
                         $tagging->reason = 1;
-                        $tagging->cancelled_by = 1;
-                    //    $tagging->disposed_date = "0000-00-00";
+                        $tagging->cancelled_by = $_POST['analysis_id'];
                         $tagging->iso_accredited = 1;
                         $tagging->save(false);               	
-                    }
-                 
+                    }      
             }
-
         }
        
             $analysis_id = $_POST['analysis_id'];    
@@ -207,20 +202,22 @@ class TaggingController extends Controller
                     ],
                  
             ]);
-            $analysisQuery = Analysis::find()->where(['sample_id' => $analysis_id]);      
+            $procedure = Procedure::find()->where(['testname_id' => 1]);
+            $count = Procedure::find()->where(['testname_id' => 1])->count();
             $analysisdataprovider = new ActiveDataProvider([
-                    'query' => $analysisQuery,
+                    'query' => $procedure,
                     'pagination' => [
                         'pageSize' => 10,
                     ],
                  
             ]);
-            return $this->renderAjax('_viewAnalysis', [
-                'sampleDataProvider' => $sampleDataProvider,
+            return $this->renderAjax('tag', [
+               // 'sampleDataProvider' => $sampleDataProvider,
                 'analysisdataprovider'=> $analysisdataprovider,
                 'analysis_id'=>$analysis_id,
+                'count'=>$count,
+                'samcount'=>$samcount,
              ]);
-         
             
         }
             
@@ -229,19 +226,29 @@ class TaggingController extends Controller
      public function actionTag($id)
      {
        $analysisQuery = Analysis::find()->where(['analysis_id' => $id]);
-       $procedure = Procedure::find()->where(['testname_id' => 1]);
+    
+       $analysis= Analysis::find()->where(['analysis_id'=> $id])->one();
+       $samplesq = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();             
+       $samcount = $samplesq->completed;
 
+       //baguhin pa ito!!!
+       $procedure = Procedure::find()->where(['testname_id' => 1]);
+       $count = Procedure::find()->where(['testname_id' => 1])->count();
+      $analysis_id = $id;
        $analysisdataprovider = new ActiveDataProvider([
                'query' => $procedure,
                'pagination' => [
                    'pageSize' => false,
                           ],                 
        ]);
-
+       
+       
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('tag', [
-                'id'=>$id,
+                'analysis_id'=>$analysis_id,
                 'analysisdataprovider'=>$analysisdataprovider,
+                'count'=>$count,
+                'samcount'=>$samcount,
                 ]);
         }
 
@@ -258,7 +265,8 @@ class TaggingController extends Controller
              if ($ids){
                  foreach ($analysisID as $aid){
                     $tagging= Tagging::find()->where(['analysis_id'=> $aid])->one();
-                    $analysis= Analysis::find()->where(['analysis_id'=> $aid])->one();
+                    $analysis= Analysis::find()->where(['analysis_id'=> $_POST['analysis_id']])->one();
+                   
                 
                     if ($tagging){
                         $now = date('Y-m-d');
@@ -269,7 +277,7 @@ class TaggingController extends Controller
                         $sample= Sample::find()->where(['sample_id'=> $aid])->one();
                                       
                         $taggingcount= Tagging::find()
-                        ->leftJoin('tbl_analysis', 'tbl_tagging.analysis_id=tbl_analysis.analysis_id')
+                        ->leftJoin('tbl_analysis', 'tbl_tagging.cancelled_by=tbl_analysis.analysis_id')
                         ->leftJoin('tbl_sample', 'tbl_analysis.sample_id=tbl_sample.sample_id')    
                         ->where(['tbl_tagging.tagging_status_id'=>2, 'tbl_sample.sample_id'=>$analysis->sample_id ])
                         ->all();                                        
@@ -281,10 +289,13 @@ class TaggingController extends Controller
              if ($taggingcount){
                 $counttag = count($taggingcount); 
              } 
-              $sql="UPDATE `tbl_sample` SET `completed`='$counttag' WHERE `sample_id`=".$analysis_id;
+
+             //fix this
+
+              $sql="UPDATE `tbl_sample` SET `completed`='$counttag' WHERE `sample_id`=".$analysis->sample_id;
               $Command=$Connection->createCommand($sql);
               $Command->execute();                 
-              $samplesq = Sample::find()->where(['sample_id' =>$analysis_id])->one();             
+              $samplesq = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();             
               $samcount = $samplesq->completed;
 
               $sampletagged= Sample::find()
@@ -312,19 +323,24 @@ class TaggingController extends Controller
                      ],
                   
              ]);
-             $analysisQuery = Analysis::find()->where(['sample_id' => $analysis_id]);   
+             $procedure = Procedure::find()->where(['testname_id' => 1]);
+             $count = Procedure::find()->where(['testname_id' => 1])->count();
              $analysisdataprovider = new ActiveDataProvider([
-                     'query' => $analysisQuery,
+                     'query' => $procedure,
                      'pagination' => [
                          'pageSize' => 10,
                      ],
                   
              ]);
+
+            
  
-             return $this->renderAjax('_viewAnalysis', [
+             return $this->renderAjax('tag', [
                  'sampleDataProvider' => $sampleDataProvider,
                  'analysisdataprovider'=> $analysisdataprovider,
                  'analysis_id'=>$analysis_id,
+                 'count'=>$count,
+                 'samcount'=>$samcount,
               ]);
           
              
