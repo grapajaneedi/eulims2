@@ -136,7 +136,7 @@ class ReferralComponent extends Component {
             return $data['methodref_id'];
         }, $analysis));
 
-        /*print_r($request->lab_id);
+        print_r($request->lab_id);
         echo "sampletypeId";
         print_r($sampletypeId);
         echo "testnameId";
@@ -144,7 +144,7 @@ class ReferralComponent extends Component {
         echo "methodrefId";
         print_r($methodrefId);
 
-        exit;*/
+        exit;
 
         $apiUrl=$this->source.'/api/web/referral/services/listmatchagency?lab_id='.$request->lab_id.'&sampletype_id='.$sampletypeId.'&testname_id='.$testnameId.'&methodref_id='.$methodrefId;
         $curl = new curl\Curl();
