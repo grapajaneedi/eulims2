@@ -543,9 +543,7 @@ class FinanceController extends Controller
         return $this->redirect('/api/finance');
      
      }
-     
-<<<<<<< HEAD
-=======
+
      public function actionSyncagain(){
         $op = Op::find()->count();
         $paymentitem = Paymentitem::find()->count();
@@ -894,5 +892,5 @@ class FinanceController extends Controller
          //Yii::$app->session->setFlash('success', 'Hype!!!');
          return $this->redirect('/api/finance');
      }
->>>>>>> 98730be8ce2423a56196daddd64859bea1e6ce48
+
 }
