@@ -19,7 +19,7 @@ use common\models\finance\Op;
 use common\models\finance\Paymentitem;
 use common\models\finance\Receipt;
 use common\models\finance\Deposit;
-set_time_limit(1000);
+set_time_limit(10000);
 
 /**
  * Default controller for the `Lab` module
@@ -662,25 +662,7 @@ class FinanceController extends Controller
                         $newOp->purpose= $op['purpose'];
                         $newOp->payment_status_id= $op['payment_status_id'];
                         $newOp->save();
-                        $op_count++;
-
-                        foreach ($op['paymentitems'] as $item){
-
-                            $paymentitem_count++;          
-                            $newPaymentitem = new Restore_paymentitem();
-                            $newPaymentitem->paymentitem_id= $item['paymentitem_id'];
-                            $newPaymentitem->rstl_id=$item['rstl_id'];
-                            $newPaymentitem->request_id=$item['request_id'];
-                            $newPaymentitem->request_type_id=$item['request_type_id'];
-                            $newPaymentitem->orderofpayment_id=$newOp->orderofpayment_id;
-                            $newPaymentitem->details=$item['details'];
-                            $newPaymentitem->amount=$item['amount'];
-                            $newPaymentitem->cancelled=$item['cancelled'];
-                            $newPaymentitem->status=$item['status'];
-                            $newPaymentitem->receipt_id=$item['receipt_id'];
-                            $newPaymentitem->save(); 
-                        }
-                        
+                       
 
                  } 
                     $transaction->commit();
@@ -701,7 +683,8 @@ class FinanceController extends Controller
         if($paymentitem < $data_paymentitem){
             $paymentitemcount=1;
             $paymentitemlastid = Paymentitem::find()->max('paymentitem_id');
-           
+        
+
             $apicom=Yii::$app->components['api_config'];
             
            // $apiUrl=$apicom['api_url']."paymentitems/restore?rstl_id=".Yii::$app->user->identity->profile->rstl_id;
@@ -719,10 +702,6 @@ class FinanceController extends Controller
 
             $data = json_decode($response, true);
           
-            $sql = "SET FOREIGN_KEY_CHECKS = 0;";
-
-
-           
             $paymentitem_count = 0;
             
 
@@ -770,6 +749,90 @@ class FinanceController extends Controller
         if($receipt < $data_receipt){
             $receiptcount=1;
             $receiptlastid = Receipt::find()->max('receipt_id');
+            
+               $apicom=Yii::$app->components['api_config'];
+
+               $apiUrl=$apicom['api_url']."receipts/resync?rstl_id=".Yii::$app->user->identity->profile->rstl_id."&id=".$receiptlastid;
+           
+
+
+                $curl = curl_init();
+
+                curl_setopt($curl, CURLOPT_URL, $apiUrl);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); //additional code
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); //additional code
+                curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); //additional code
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+                $response = curl_exec($curl);
+
+                $data = json_decode($response, true);
+
+                $sql = "SET FOREIGN_KEY_CHECKS = 0;";
+
+
+                $receipt_count = 0;
+                $deposit_count = 0;
+                $check_count=0;
+
+                $connection= Yii::$app->financedb;
+                $transaction = $connection->beginTransaction();
+                $connection->createCommand('set foreign_key_checks=0')->execute();
+
+                try {
+                 foreach ($data as $receipt)
+                 {     
+
+                        $newReceipt = new Restore_receipt(); 
+                        $newReceipt->receipt_id=$receipt['receipt_id'];
+                        $newReceipt->rstl_id=$receipt['rstl_id'];
+                        $newReceipt->orderofpayment_id=$receipt['orderofpayment_id'];
+                        $newReceipt->deposit_type_id=$receipt['deposit_type_id'];
+                        $newReceipt->or_series_id=$receipt['or_series_id'];
+                        $newReceipt->or_number=$receipt['or_number'];
+                        $newReceipt->receiptDate=$receipt['receiptDate'];
+                        $newReceipt->payment_mode_id=$receipt['payment_mode_id'];
+                        $newReceipt->payor=$receipt['payor'];
+                        $newReceipt->collectiontype_id=$receipt['collectiontype_id'];
+                        $newReceipt->total=$receipt['total'];
+                        $newReceipt->deposit_id=$receipt['local_deposit_id'];
+                        $newReceipt->customer_id=$receipt['customer_id'];
+                        $newReceipt->terminal_id=1;
+                        $newReceipt->cancelled=0;
+
+
+                        $newReceipt->save();
+                        $receipt_count++;
+
+                        foreach ($receipt['check'] as $item){
+
+                            $newCheck = new Restore_check();
+
+                            $newCheck->check_id=$item['local_check_id'];
+                           // $newCheck->receipt_id=$item['receipt_id'];
+                            $newCheck->receipt_id=$item['receipt_id'];
+                            $newCheck->bank=$item['bank'];
+                            $newCheck->checknumber=$item['checknumber'];
+                            $newCheck->checkdate=$item['checkdate'];
+                            $newCheck->amount=$item['amount'];
+                            $newCheck->save(false); 
+
+                            $check_count++;    
+                        }
+
+
+                 } 
+
+                    $transaction->commit();
+                    
+                }catch (\Exception $e) {
+                   
+                    Yii::$app->session->setFlash('warning', $e->getMessage()); 
+
+                    $transaction->rollBack();
+                }
+            
+       
         }
         
         if($deposit < $data_deposit){
@@ -837,7 +900,7 @@ class FinanceController extends Controller
             
         }
         
-         Yii::$app->session->setFlash('success', 'Hype!!!');
+         //Yii::$app->session->setFlash('success', 'Hype!!!');
          return $this->redirect('/api/finance');
      }
      
