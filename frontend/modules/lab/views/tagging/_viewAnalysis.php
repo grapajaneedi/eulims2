@@ -121,7 +121,7 @@ $this->registerJs($js);
            'template' => '{update}',
            'buttons'=>[
                'update'=>function ($url, $model) {
-                   return Html::button('<span class="glyphicon glyphicon-tag"></span>', ['value'=>Url::to(['/lab/tagging/tag','id'=>$model->analysis_id]),'onclick'=>'LoadModal(this.title, this.value, true, 900);', 'class' => 'btn btn-success','title' => Yii::t('app', "Tagging for ".$model->testname."<font color='Blue'></font>")]);
+                   return Html::button('<span class="glyphicon glyphicon-tag"></span>', ['value'=>Url::to(['/lab/tagging/tag','id'=>$model->analysis_id]),'onclick'=>'LoadModal(this.title, this.value, true, 950);', 'class' => 'btn btn-success','title' => Yii::t('app', "Tagging for ".$model->testname."<font color='Blue'></font>")]);
                },
            ],
        ],
@@ -167,12 +167,16 @@ $this->registerJs($js);
                         'enableSorting' => false,
                         'value'=> function ($model){
                             return "";
-                            // if ($model->tagging){
-                            //     $profile= Profile::find()->where(['user_id'=> $model->tagging->user_id])->one();
-                            //     return $profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
-                            // }else{
-                            //     return "";
-                            // }
+                           
+                        },
+                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
+                    ],
+                    [
+                        'header'=>'Cycle Time',
+                        'format' => 'raw',
+                        'enableSorting' => false,
+                        'value'=> function ($model){
+                            return "";
                            
                         },
                         'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   

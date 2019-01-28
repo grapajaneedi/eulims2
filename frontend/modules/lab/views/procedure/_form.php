@@ -14,11 +14,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'procedure_name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'procedure_code')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'procedure_code')->hiddenInput(['maxlength' => true])->label(false); ?>
 
-    <?= $form->field($model, 'testname_id')->textInput() ?>
+    <?= $form->field($model, 'testname_id')->hiddenInput()->label(false); ?>
 
-    <?= $form->field($model, 'testname_method_id')->textInput() ?>
+    <?= $form->field($model, 'testname_method_id')->hiddenInput()->label(false); ?>
 
     <div class="form-group pull-right">
     <?php if(Yii::$app->request->isAjax){ ?>
