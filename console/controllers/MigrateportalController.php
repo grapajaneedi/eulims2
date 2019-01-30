@@ -21,6 +21,7 @@ class MigrateportalController extends Controller
 
     public function actionIndex()
     {
+
         //get the job queries based on chrono. order but only one which would appear the next job to get
         $job = Jobportal::find()->orderBy(["job_id"=>SORT_ASC])->where(['isdone'=>0])->one();
 
@@ -103,7 +104,6 @@ class MigrateportalController extends Controller
         }else{
             echo "no pending job.";
         }
-    	
     }
     
     public function actionCreate($message = 'hello world')

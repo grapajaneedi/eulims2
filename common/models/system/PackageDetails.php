@@ -14,6 +14,7 @@ use common\components\RBAC;
  * @property string $Package_Detail
  * @property string $url
  * @property string $icon
+ * @property int $extra_element
  * @property integer $created_at
  * @property integer $updated_at
  *
@@ -65,7 +66,7 @@ class PackageDetails extends \yii\db\ActiveRecord
     {
         return [
             [['PackageID', 'Package_Detail'], 'required'],
-            [['PackageID', 'created_at', 'updated_at'], 'integer'],
+            [['PackageID', 'extra_element', 'created_at', 'updated_at'], 'integer'],
             [['Package_Detail', 'icon'], 'string', 'max' => 100],
             [['url'], 'string', 'max' => 200],
             [['Package_Detail'], 'unique'],
@@ -84,6 +85,7 @@ class PackageDetails extends \yii\db\ActiveRecord
             'Package_Detail' => 'Package  Detail',
             'url' => 'Url',
             'icon' => 'Icon',
+			'extra_element' => 'Extra Element',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

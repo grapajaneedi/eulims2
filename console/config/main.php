@@ -9,14 +9,11 @@
 return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'], 
+    'bootstrap' => ['log'],
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
-        '@console' =>  dirname(dirname(__DIR__)) . '/console',
-        '@web/assets' => dirname(dirname(__DIR__)) . '/frontend/web/assets',
-        '@webroot/assets' => dirname(dirname(__DIR__)) . '/frontend/web',
     ],
     'controllerMap' => [
         'fixture' => [
@@ -53,16 +50,7 @@ return [
             //'enableAutoLogin' => true,
             //'loginUrl' => ['admin/user/login'],
         ],
-         'inventorydb'=>[
-            'class' => 'yii\db\Connection',  
-            'dsn' => 'mysql:host=localhost;dbname=eulims_inventory',
-            'username' => 'eulims',
-            'password' => 'eulims',
-            //'username'=>'arisro9',
-            //'password'=>'qwerty!@#$%', 
-            'charset' => 'utf8',
-            'tablePrefix' => 'tbl_',
-        ],
+        
         'labdb'=>[
             'class' => 'yii\db\Connection',  
             'dsn' => 'mysql:host=localhost;dbname=eulims_lab',
@@ -73,8 +61,7 @@ return [
             'charset' => 'utf8',
             'tablePrefix' => 'tbl_',
         ],
-        
-
     ],
+
     //'params' => $params,
 ];
