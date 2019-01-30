@@ -57,7 +57,7 @@ class MigrateportalController extends Controller
                     break;
                 case '1':
                         try {
-                            $func->ExecuteStoredProcedure("spMigrate_EULIMS_LAB_Final(:param_Rstl_ID,:param_Region_Initial)", [':param_Rstl_ID'=> $job->rstl_id,'param_Region_Initial'=>$job->region_initial], $Connection); 
+                            $func->ExecuteStoredProcedure("spMigrate_EULIMS_LAB_Final_Portal(:param_Rstl_ID,:param_Region_Initial)", [':param_Rstl_ID'=> $job->rstl_id,'param_Region_Initial'=>$job->region_initial], $Connection); 
                             $Transaction->commit();
                             $job->remarks= date("Y-m-d")." (Success)"; //save remarks
                             if($job->save(false)){
