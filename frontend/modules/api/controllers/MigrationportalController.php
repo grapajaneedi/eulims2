@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 use common\models\lab\Customer;
 use common\models\lab\CustomerMigration;
 use common\models\api\CustomerMigrationportal;
+use common\models\lab\Jobportal;
+use yii\data\ActiveDataProvider;
+
 
 /**
  * MigrationportalController implements the CRUD actions for Migrationportal model.
@@ -40,16 +43,18 @@ class MigrationportalController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new MigrationportalSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        // $searchModel = new MigrationportalSearch();
+        // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $fetchlings = Migrationportal::find()->all();
         
+        $jobs = Jobportal::find()->where(['rstl_id'=>Yii::$app->user->identity->profile->rstl_id]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $jobs,
+        ]);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'fetchlings'=>$fetchlings,
         ]);
     }
 
@@ -73,13 +78,19 @@ class MigrationportalController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Migrationportal();
+        $model = new Jobportal();
+        $model->rstl_id=Yii::$app->user->identity->profile->rstl_id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->pm_id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->rstl_id=Yii::$app->user->identity->profile->rstl_id;
+            $model->job_type=0;
+            if($model->save()){
+                Yii::$app->session->setFlash('success', "Successfully created a job.");
+                return $this->redirect('index');
+            }
         }
 
-        return $this->render('create', [
+        return $this->renderAjax('create', [
             'model' => $model,
         ]);
     }

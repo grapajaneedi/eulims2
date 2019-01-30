@@ -8,15 +8,13 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="migrationportal-form">
+<div class="jobportal-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(); ?> 
 
-    <?= $form->field($model, 'date_migrated')->textInput() ?>
+    <?= $form->field($model, 'rstl_id')->textInput(['value'=>Yii::$app->user->identity->profile->rstl_id]) ?>
 
-    <?= $form->field($model, 'record_id')->textInput() ?>
-
-    <?= $form->field($model, 'table_name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'region_initial')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
