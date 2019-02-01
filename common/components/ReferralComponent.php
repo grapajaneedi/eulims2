@@ -128,7 +128,7 @@ class ReferralComponent extends Component {
             return $data['methodref_id'];
         }, $analysis));
 
-        $apiUrl=$this->source.'/api/web/referral/services/listmatchagency?lab_id='.$request->lab_id.'&sampletype_id='.$sampletypeId.'&testname_id='.$testnameId.'&methodref_id='.$methodrefId;
+        $apiUrl=$this->source.'/api/web/referral/services/listmatchagency?rstl_id='.$request->rstl_id.'&lab_id='.$request->lab_id.'&sampletype_id='.$sampletypeId.'&testname_id='.$testnameId.'&methodref_id='.$methodrefId;
         $curl = new curl\Curl();
         $list = $curl->get($apiUrl);
 
@@ -170,10 +170,10 @@ class ReferralComponent extends Component {
         }
     }
     //check if active lab
-    function checkActiveLab($requestId, $agencyId)
+    function checkActiveLab($labId, $agencyId)
     {
-        if($requestId > 0 && $agencyId > 0) {
-            $apiUrl=$this->source.'/api/web/referral/referrals/checkactivelab?request_id='.$requestId.'&agency_id='.$agencyId;
+        if($labId > 0 && $agencyId > 0) {
+            $apiUrl=$this->source.'/api/web/referral/referrals/checkactivelab?lab_id='.$labId.'&agency_id='.$agencyId;
             $curl = new curl\Curl();
             $list = $curl->get($apiUrl);
             return $list;
