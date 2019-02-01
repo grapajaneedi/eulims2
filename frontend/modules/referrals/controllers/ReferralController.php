@@ -264,6 +264,9 @@ class ReferralController extends Controller
                     'Content-Length' => strlen($data),
                 ])->post($referralUrl);
 
+                //print_r($referralreturn);
+                //exit;
+
                 $referralResponse = Json::decode($referralreturn);
                 switch ($referralResponse['response']) {
                     case 0:

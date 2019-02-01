@@ -131,15 +131,16 @@ class RequestController extends Controller
                 ]
             ]);
 
-            $agency = json_decode($refcomponent->listMatchAgency($id),true);
+            $agency = Json::decode($refcomponent->listMatchAgency($id));
 
             $agencydataprovider = new ArrayDataProvider([
                 'allModels' => $agency,
                 'pagination'=>false,
             ]);
-
-            //print_r($agency);
-            //exit;
+            /*echo "<pre>";
+            print_r($agency);
+            echo "</pre>";
+            exit;*/
         } else {
             $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
