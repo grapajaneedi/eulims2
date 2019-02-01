@@ -53,7 +53,7 @@ class ApiController extends ActiveController
     }
 
    
-      public function actionSync_orderofpayment(){
+      public function actionSync_orderofpayment_yii2(){
           
         $post = Yii::$app->request->post(); //get the post
         $data = Yii::$app->request->post('data');
@@ -165,7 +165,7 @@ class ApiController extends ActiveController
         return $listIds;
       }
       
-      public function actionSync_receipt(){
+      public function actionSync_receipt_yii2(){
           
         $post = Yii::$app->request->post(); //get the post
         $data = Yii::$app->request->post('data');
@@ -268,7 +268,7 @@ class ApiController extends ActiveController
         return $listIds;
       }
 
-     public function actionSync_deposit(){
+     public function actionSync_deposit_yii2(){
           
         $post = Yii::$app->request->post(); //get the post
         $data = Yii::$app->request->post('data');
@@ -308,7 +308,7 @@ class ApiController extends ActiveController
         return $listIds;
       }
       
-      public function actionSync_paymentitem(){
+      public function actionSync_paymentitem_yii2(){
           
         $post = Yii::$app->request->post(); //get the post
         $data = Yii::$app->request->post('data');
