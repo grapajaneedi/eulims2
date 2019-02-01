@@ -5,6 +5,7 @@ use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use common\components\Functions;
+use common\components\ReferralComponent;
 use common\models\lab\Cancelledrequest;
 use common\models\lab\Discount;
 use common\models\lab\Request;
@@ -17,6 +18,7 @@ use yii\bootstrap\Modal;
 
 $Connection = Yii::$app->financedb;
 $func = new Functions();
+$referralcomp = new ReferralComponent();
 
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
@@ -599,10 +601,11 @@ $this->registerJs($PrintEvent);
         <div class="table-responsive">
         <?php
         if($model->request_type_id == 2){
+            $requestId = $model->request_id;
             $gridColumns = [
                 [
                     //'attribute'=>'sample_code',
-                    'attribute'=>'agency_id',
+                    'attribute'=>'name',
                     'enableSorting' => false,
                     'header' => 'Agency',
                     'contentOptions' => [
@@ -611,7 +614,7 @@ $this->registerJs($PrintEvent);
                 ],
                 [
                     //'attribute'=>'samplename',
-                    'attribute'=>'agency_id',
+                    'attribute'=>'region',
                     'enableSorting' => false,
                     'header' => 'Region',
                 ],
@@ -630,18 +633,42 @@ $this->registerJs($PrintEvent);
                 ],
                 [
                     'class' => 'kartik\grid\ActionColumn',
-                    'template' => '{notification}',
+                    'template' => '{notification} {confirm} {sendreferral}',
                     'dropdown' => false,
                     'dropdownOptions' => ['class' => 'pull-right'],
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
-                        'notification' => function ($url, $model) {
+                        'notification' => function ($url, $data) use ($model,$referralcomp) {
                             //if($model->active == 1){
                             //    return Html::a('<span class="glyphicon glyphicon-bell"></span> Notify', '#', ['class'=>'btn btn-primary','title'=>'Send Notification','onclick' => 'sendNotification(19,11)']);
-                            return Html::button('<span class="glyphicon glyphicon-bell"></span> Notify', ['value'=>Url::to(['/referrals/referral/notify','request_id'=>$model->request_id,'agency_id'=>4]), 'onclick'=>'sendNotification(this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Notify Agency']);
-                            //} else {
-                            //    return null;
-                            //}
+
+                            $checkNotify = $referralcomp->checkNotify($model->request_id,$data['agency_id']);
+                            $checkActive = $referralcomp->checkActiveLab($model->request_id,$data['agency_id']);
+
+                            //print_r($checkActive);
+                           // exit;
+
+                            switch ($checkNotify) {
+                                case 0:
+                                    alert('Not valid request!');
+                                    /*return Html::button('<span class="glyphicon glyphicon-bell"></span> Notify', ['value'=>Url::to(['/referrals/referral/notify','request_id'=>$model->request_id,'agency_id'=>$data['agency_id']]), 'onclick'=>'sendNotification(this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Notify Agency']);
+                                    break;*/
+                                    if($checkActive != 1)
+                                    {
+                                        return 'Lab not active.';
+                                    }
+                                case 1:
+                                    if($checkActive == 1){
+                                        return Html::button('<span class="glyphicon glyphicon-bell"></span> Notify', ['value'=>Url::to(['/referrals/referral/notify','request_id'=>$model->request_id,'agency_id'=>$data['agency_id']]), 'onclick'=>'sendNotification(this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Notify Agency']);
+                                        //echo $checkActive;
+                                    } else {
+                                        return 'Lab not active.';
+                                    }
+                                    break;
+                                case 2: 
+                                    return 'Notice sent.';
+                                    break;
+                            }
                         },
                     ],
                 ],

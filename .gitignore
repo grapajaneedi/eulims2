@@ -308,3 +308,4 @@ frontend/views/admin-lte/layouts/left_bk.php
 frontend/modules/lab/views/request/viewreferral_20190114.php
 frontend/web/images/img-loader30--.gif
 common/models/system/PackageDetails_bk.php
+common/components/ReferralComponent_20190128.php
