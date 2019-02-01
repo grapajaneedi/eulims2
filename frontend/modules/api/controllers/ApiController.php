@@ -8,7 +8,7 @@ use kartik\mpdf\Pdf;
 use yii\helpers\Json;
 use common\models\lab\CustomerMigration;
 use common\models\lab\RequestMigration;
-use common\models\lab\SampleMigration;
+use common\models\lab\SampleMigration; 
 use common\models\lab\AnalysisMigration;
 use common\models\lab\Customer;
 use common\models\finance\CheckMigration;
