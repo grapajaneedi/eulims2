@@ -645,9 +645,6 @@ $this->registerJs($PrintEvent);
                             $checkNotify = $referralcomp->checkNotify($model->request_id,$data['agency_id']);
                             $checkActive = $referralcomp->checkActiveLab($model->request_id,$data['agency_id']);
 
-                            //print_r($checkActive);
-                           // exit;
-
                             switch ($checkNotify) {
                                 case 0:
                                     alert('Not valid request!');
