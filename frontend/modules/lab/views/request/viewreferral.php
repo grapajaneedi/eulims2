@@ -660,7 +660,6 @@ $this->registerJs($PrintEvent);
                                 case 1:
                                     if($checkActive == 1){
                                         return Html::button('<span class="glyphicon glyphicon-bell"></span> Notify', ['value'=>Url::to(['/referrals/referral/notify','request_id'=>$model->request_id,'agency_id'=>$data['agency_id']]), 'onclick'=>'sendNotification(this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Notify Agency']);
-                                        //echo $checkActive;
                                     } else {
                                         return 'Lab not active.';
                                     }

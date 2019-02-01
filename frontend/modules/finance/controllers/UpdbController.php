@@ -147,7 +147,7 @@ class UpdbController extends \yii\web\Controller{
     public function actionPostop(){
         //$url = "http://ulimsportal.onelab.ph/api/api/sync_orderofpayment";
          //$url = "http://www.eulims.local/api/api/sync_orderofpayment";
-        $url="https://eulimsapi.onelab.ph/api/web/v1/apis/sync_orderofpayment_yii2"; 
+        $url="https://eulimsapi.onelab.ph/api/web/v1/apis/sync_orderofpayment"; 
         $table = "tbl_orderofpayment";
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         $id=$model->num;
@@ -232,7 +232,7 @@ class UpdbController extends \yii\web\Controller{
    public function actionPostreceipt(){
         //$url = "http://ulimsportal.onelab.ph/api/api/sync_receipt";
         //$url = "http://www.eulims.local/api/api/sync_receipt";
-       $url="https://eulimsapi.onelab.ph/api/web/v1/apis/sync_receipt_yii2";
+       $url="https://eulimsapi.onelab.ph/api/web/v1/apis/sync_receipt";
         $table = "tbl_receipt";
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         $id=$model->num;
@@ -360,7 +360,7 @@ class UpdbController extends \yii\web\Controller{
     
      public function actionPostdeposit(){
        //$url = "http://ulimsportal.onelab.ph/api/api/sync_deposit";
-        $url = "https://eulimsapi.onelab.ph/api/web/v1/apis/sync_deposit_yii2";
+        $url = "https://eulimsapi.onelab.ph/api/web/v1/apis/sync_deposit";
         $table = "tbl_deposit";
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         $id=$model->num;
@@ -418,7 +418,7 @@ class UpdbController extends \yii\web\Controller{
      public function actionPostpaymentitem(){
         //$url = "http://ulimsportal.onelab.ph/api/api/sync_paymentitem";
        // $url = "http://www.eulims.local/api/api/sync_paymentitem";
-        $url="https://eulimsapi.onelab.ph/api/web/v1/apis/sync_paymentitem_yii2";
+        $url="https://eulimsapi.onelab.ph/api/web/v1/apis/sync_paymentitem";
         $table = "tbl_paymentitem";
         $model= YiiMigration::find()->where(['tblname'=>$table])->one();
         /*$id=$model->num;
