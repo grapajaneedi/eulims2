@@ -73,13 +73,15 @@ $this->registerJs($js, $this::POS_READY);
 </html>
 
 <div id="janeedi">
-<div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
+<!-- <div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
      <a href="#" class="close" data-dismiss="alert" >×</a>
     <p class="note" style="color:#265e8d"><b>Sample Name:</b> Please scan barcode in the dropdown list below. .</p>
      
-    </div>
+    </div> -->
 <?php
 
+// echo $count."<br>";
+// echo $samcount;
 $max = 100/$count; 
 $num = $samcount * $max;
 
@@ -139,7 +141,7 @@ $num = $samcount * $max;
             'format' => 'raw',
             'enableSorting' => false,
             'value'=> function ($model){
-                $tagging= Tagging::find()->where(['analysis_id'=> $model->procedure_id])->one();
+                $tagging= Tagging::find()->where(['analysis_id'=> $model->workflow_id])->one();
 
                 if ($tagging){
                     $profile= Profile::find()->where(['user_id'=> $tagging->user_id])->one();
@@ -165,7 +167,7 @@ $num = $samcount * $max;
               'hAlign'=>'center',
               'format'=>'raw',
               'value' => function($model) {
-                    $tagging= Tagging::find()->where(['analysis_id'=> $model->procedure_id])->one();
+                    $tagging= Tagging::find()->where(['analysis_id'=> $model->workflow_id])->one();
                     if ($tagging){
 
                      if ($tagging->tagging_status_id==1) {
@@ -196,7 +198,7 @@ $num = $samcount * $max;
             'width' => '100px',
             'value' => function($model) {
 
-                $tagging= Tagging::find()->where(['analysis_id'=> $model->procedure_id])->one();
+                $tagging= Tagging::find()->where(['analysis_id'=> $model->workflow_id])->one();
                 if ($tagging){
 
                                             return "<b>Start Date:&nbsp;&nbsp;</b>".$tagging->start_date."

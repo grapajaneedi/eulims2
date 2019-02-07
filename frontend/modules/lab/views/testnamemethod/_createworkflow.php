@@ -77,10 +77,10 @@ $this->registerJs($js);
 
 ?>
 <div id="workflow">
-<div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
+<!-- <div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
      <a href="#" class="close" data-dismiss="alert" >×</a>
     <p class="note" style="color:#265e8d"><b>Instructions:</b><br>1.<br>2.<br>3.</p>  
-    </div>
+    </div> -->
 <?= Html::textInput('testname_id', $testname_id, ['class' => 'form-control', 'id'=>'testname_id', 'type'=>'hidden'], ['readonly' => true]) ?>
 
 <div class="procedure-index">
