@@ -81,13 +81,8 @@ if(Yii::$app->user->isGuest){
                 $pkgdetails1=strtolower($mItem->Package_Detail);
                 $pkgdetails2=str_replace(" ","-",$pkgdetails1);
                 $SubmodulePermission="access-".$pkgdetails2; //access-Order of Payment
-				if($mItem->extra_element == 1){
-					$numNotification = '&nbsp;&nbsp;<span class="label label-danger">1000</span>';
-				} else {
-					$numNotification = '';
-				}
                 $ItemS=[
-                   'label' =>'<img src="/images/icons/' .$mItem->icon. '.png" style="width:20px">  <span>' . $mItem->Package_Detail ." ".$numNotification. '</span>', 
+                   'label' =>'<img src="/images/icons/' .$mItem->icon. '.png" style="width:20px">  <span>' . $mItem->Package_Detail . '</span>', 
                    'icon'=>' " style="display:none;width:0px"',
                    'url'=>[$mItem->url],
                    'visible'=>Yii::$app->user->can($SubmodulePermission)

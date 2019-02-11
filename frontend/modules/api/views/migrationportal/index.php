@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use kartik\grid\GridView;
+use yii\grid\GridView;
 use yii\bootstrap\progress;
 use common\models\lab\CustomerMigration;
 use common\models\api\CustomerMigrationportal;
@@ -33,55 +33,61 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endif; ?>
 
     <h1>Yii 1.0 to 2.0 Migration [Ulimsportal Only]</h1>
-    
+    <?php
+    foreach ($fetchlings as $fetch) {
+        echo "<div>";
+        echo "<h3>TBL_".$fetch->table_name."</h3>";
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'panel' => [
-                'type' => GridView::TYPE_PRIMARY,
-                'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Job', ['value'=>'/api/migrationportal/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Job")]),
-                'heading' => '<span class="glyphicon glyphicon-hand"></span>  ' . Html::encode($this->title),
-         ],
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            [
-                'attribute'=>'isdone',
-                'header'=>'Status',
-                'value'=>function($model){
-                    if($model->isdone==0){
-                        return "Pending Job";
-                    }elseif($model->isdone==1){
-                        return "Performed Job";
-                    }
-                }
-            ],
-            [
-                'attribute' => 'job_type',
-                'value' => function($model){     
-                    switch($model->job_type){
-                        case '0':
-                        return "BackUp Yii 1.0 DB";
-                        break;
-                        case '1':
-                        return "Perform DB Link";
-                        break;
-                        case '2':
-                        return "Posting DB to Yii 2.0";
-                        break;
-                        default:
-                        return "Unknown Job Type";
-                        break;
-                    }             
-                },
-            ],
-            'remarks:ntext',
-            'logs:ntext',
+        if($fetch->table_name=="customer"){
 
-            // ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+            $count_m = CustomerMigration::find()->count();
+            $count_mp = CustomerMigrationportal::find()->count();
+
+            echo Html::a('Fetch',array('fetch_customer','start'=>$fetch->record_id),['class'=>'btn btn-primary btn-small']);
+            echo "<br>";
+            echo "$count_mp  /$count_m records fetch from migration table";
+            echo "<br>";
+
+            //know the percentage
+            $perc_fetch=0;
+
+            if($count_m!=0){
+                $perc_fetch = ($fetch->record_id/$count_m)*100;
+                
+            }
+            $perc_fetch = number_format((float)$perc_fetch, 2, '.', '');
+            echo Progress::widget([
+                'percent' => $perc_fetch,
+                'label' => $perc_fetch.'% Fetch',
+                'options' => ['class' => 'progress-success active progress-striped']
+            ]);
+
+            //**********************
+            
+            echo Html::a('Run Script',array('script_customer','start'=>$fetch->record_idscript),['class'=>'btn btn-primary btn-small']);
+            echo "<br>";
+            echo "$fetch->record_idscript /$count_mp records process";
+            echo "<br>";
+            //know the percentage
+            $perc_fetch_mp=0;
+            if($count_mp!=0){
+                $perc_fetch_mp = ($fetch->record_idscript/$count_mp)*100;
+            }
+                 $perc_fetch_mp = number_format((float)$perc_fetch_mp, 2, '.', '');
+             echo Progress::widget([
+                'percent' => $perc_fetch_mp,
+                'label' => $perc_fetch_mp.'% Processed',
+                'options' => ['class' => 'progress-success  active progress-striped']
+            ]);
 
 
+
+        }
+        echo "</div>";
+    }
+
+
+    ?>
 </div>
 
 <?php 

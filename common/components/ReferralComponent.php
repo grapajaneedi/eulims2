@@ -19,9 +19,6 @@ use yii\web\NotFoundHttpException;
 //use common\models\system\LogSync;
 //use common\models\system\ApiSettings;
 use linslin\yii2\curl;
-use common\models\lab\exRequestreferral;
-use common\models\lab\Analysis;
-use common\models\lab\Sample;
 
 
 /**
@@ -98,87 +95,5 @@ class ReferralComponent extends Component {
         //$data = ArrayHelper::map(json_decode($list), 'modeofrelease_id', 'mode');
         
         return $list;
-    }
-    //get matching services
-    function listMatchAgency($requestId){
-
-        $request = exRequestreferral::findOne($requestId);
-
-        $sample = Sample::find()
-            ->select('sampletype_id')
-            ->where('request_id = :requestId', [':requestId' => $requestId])
-            ->groupBy('sampletype_id')
-            ->asArray()->all();
-
-        $sampletypeId = implode(',', array_map(function ($data) {
-            return $data['sampletype_id'];
-        }, $sample));
-
-        $analysis = Analysis::find()
-            ->joinWith('sample')
-            ->where('tbl_sample.request_id = :requestId',[':requestId'=>$requestId])
-            ->groupBy(['testname_id','methodref_id'])
-            ->asArray()->all();
-
-        $testnameId = implode(',', array_map(function ($data) {
-            return $data['test_id'];
-        }, $analysis));
-
-        $methodrefId = implode(',', array_map(function ($data) {
-            return $data['methodref_id'];
-        }, $analysis));
-
-        $apiUrl=$this->source.'/api/web/referral/services/listmatchagency?rstl_id='.$request->rstl_id.'&lab_id='.$request->lab_id.'&sampletype_id='.$sampletypeId.'&testname_id='.$testnameId.'&methodref_id='.$methodrefId;
-        $curl = new curl\Curl();
-        $list = $curl->get($apiUrl);
-
-        if($list == 'false'){
-            return null;
-        } else {
-            $agencyId = implode(',', array_map(function ($data) {
-                return $data['agency_id'];
-            }, json_decode($list,true)));
-            
-            $list_agency = $this->listAgency($agencyId);
-            return $list_agency;
-        }
-    }
-    //get list agencies
-    function listAgency($agencyId)
-    {   
-        if(!empty($agencyId)){
-            $agencies = rtrim($agencyId);
-
-            $apiUrl=$this->source.'/api/web/referral/listdatas/listagency?agency_id='.$agencies;
-            $curl = new curl\Curl();
-            $list = $curl->get($apiUrl);
-            return $list;
-        } else {
-            return null;
-        }
-    }
-    //check if notified
-    function checkNotify($requestId,$agencyId)
-    {
-        if($requestId > 0 && $agencyId > 0) {
-            $apiUrl=$this->source.'/api/web/referral/notifications/checknotify?request_id='.$requestId.'&agency_id='.$agencyId;
-            $curl = new curl\Curl();
-            $list = $curl->get($apiUrl);
-            return $list;
-        } else {
-            return 'Not valid request!';
-        }
-    }
-    //check if active lab
-    function checkActiveLab($labId, $agencyId)
-    {
-        if($labId > 0 && $agencyId > 0) {
-            $apiUrl=$this->source.'/api/web/referral/referrals/checkactivelab?lab_id='.$labId.'&agency_id='.$agencyId;
-            $curl = new curl\Curl();
-            $list = $curl->get($apiUrl);
-            return $list;
-        } else {
-            return 'Not valid request!';
-        }
     }
 }

@@ -36,7 +36,6 @@ use common\models\system\User;
 use frontend\modules\lab\components\Printing;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
-use yii\data\ArrayDataProvider;
 
 //use yii\helpers\Url;
 /**
@@ -122,25 +121,12 @@ class RequestController extends Controller
 
       //  $analysisQuery = Analysis::find()->where(['sample_id' =>$samples->sample_id]);
         if($request_type == 2) {
-            $refcomponent = new ReferralComponent();
-
             $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
                 'pagination' => [
                     'pageSize' => 10,
                 ]
             ]);
-
-            $agency = Json::decode($refcomponent->listMatchAgency($id));
-
-            $agencydataprovider = new ArrayDataProvider([
-                'allModels' => $agency,
-                'pagination'=>false,
-            ]);
-            /*echo "<pre>";
-            print_r($agency);
-            echo "</pre>";
-            exit;*/
         } else {
             $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
@@ -161,7 +147,6 @@ class RequestController extends Controller
                 'dataProvider' => $dataProvider,
                 'sampleDataProvider' => $sampleDataProvider,
                 'analysisdataprovider'=> $analysisdataprovider,
-                'agencydataprovider'=> $agencydataprovider,
             ]);
 
         } else {
@@ -542,7 +527,7 @@ class RequestController extends Controller
             $modelReferralrequest = new ReferralRequest();
             if ($model->save()){
                 $modelReferralrequest->request_id = $model->request_id;
-                $modelReferralrequest->sample_received_date = date('Y-m-d h:i:s',strtotime($model->sample_received_date));
+                $modelReferralrequest->sample_receive_date = date('Y-m-d h:i:s',strtotime($model->sample_receive_date));
                 $modelReferralrequest->receiving_agency_id = Yii::$app->user->identity->profile->rstl_id;
                 //$modelReferralrequest->testing_agency_id = null;
                 $modelReferralrequest->referral_type_id = 1;
@@ -629,7 +614,7 @@ class RequestController extends Controller
             $transaction = $connection->beginTransaction();
             if ($model->save()){
                 $modelReferralrequest->request_id = $model->request_id;
-                $modelReferralrequest->sample_received_date = date('Y-m-d h:i:s',strtotime($model->sample_received_date));
+                $modelReferralrequest->sample_receive_date = date('Y-m-d h:i:s',strtotime($model->sample_receive_date));
                 $modelReferralrequest->receiving_agency_id = Yii::$app->user->identity->profile->rstl_id;
                 //$modelReferralrequest->testing_agency_id = null;
                 //$modelReferralrequest->referral_type_id = 1;
@@ -648,7 +633,7 @@ class RequestController extends Controller
                 return false;
             }
         } else {
-            $model->sample_received_date = !empty($modelReferralrequest->sample_received_date) ? $modelReferralrequest->sample_received_date : null;
+            $model->sample_receive_date = !empty($modelReferralrequest->sample_receive_date) ? $modelReferralrequest->sample_receive_date : null;
             if($model->request_ref_num){
                 $model->request_ref_num=NULL;
             }

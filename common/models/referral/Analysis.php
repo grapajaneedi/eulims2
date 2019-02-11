@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "tbl_analysis".
  *
  * @property int $analysis_id
+ * @property int $analysis_type_id
  * @property string $date_analysis
  * @property int $agency_id
  * @property int $pstcanalysis_id
@@ -17,11 +18,8 @@ use Yii;
  * @property string $analysis_fee
  * @property int $cancelled
  * @property int $status
- * @property int $is_package
- * @property int $type_fee_id
- * @property int $local_sample_id
- * @property string $created_at
- * @property string $updated_at
+ * @property int $created_at
+ * @property int $updated_at
  *
  * @property Sample $sample
  * @property Methodreference $methodreference
@@ -51,9 +49,9 @@ class Analysis extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date_analysis', 'agency_id', 'sample_id', 'testname_id', 'methodreference_id', 'cancelled', 'status', 'type_fee_id', 'local_sample_id', 'created_at'], 'required'],
-            [['date_analysis', 'created_at', 'updated_at'], 'safe'],
-            [['agency_id', 'pstcanalysis_id', 'sample_id', 'testname_id', 'methodreference_id', 'cancelled', 'status', 'is_package', 'type_fee_id', 'local_sample_id'], 'integer'],
+            [['analysis_type_id', 'agency_id', 'pstcanalysis_id', 'sample_id', 'testname_id', 'methodreference_id', 'cancelled', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['date_analysis', 'agency_id', 'pstcanalysis_id', 'sample_id', 'testname_id', 'methodreference_id', 'cancelled', 'status', 'created_at', 'updated_at'], 'required'],
+            [['date_analysis'], 'safe'],
             [['analysis_fee'], 'number'],
             [['sample_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sample::className(), 'targetAttribute' => ['sample_id' => 'sample_id']],
             [['methodreference_id'], 'exist', 'skipOnError' => true, 'targetClass' => Methodreference::className(), 'targetAttribute' => ['methodreference_id' => 'methodreference_id']],
@@ -68,6 +66,7 @@ class Analysis extends \yii\db\ActiveRecord
     {
         return [
             'analysis_id' => 'Analysis ID',
+            'analysis_type_id' => 'Analysis Type ID',
             'date_analysis' => 'Date Analysis',
             'agency_id' => 'Agency ID',
             'pstcanalysis_id' => 'Pstcanalysis ID',
@@ -77,9 +76,6 @@ class Analysis extends \yii\db\ActiveRecord
             'analysis_fee' => 'Analysis Fee',
             'cancelled' => 'Cancelled',
             'status' => 'Status',
-            'is_package' => 'Is Package',
-            'type_fee_id' => 'Type Fee ID',
-            'local_sample_id' => 'Local Sample ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
