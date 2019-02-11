@@ -14,12 +14,6 @@ use yii\helpers\Url;
 $this->title = 'Procedures';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
-<div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
-     <a href="#" class="close" data-dismiss="alert" >×</a>
-    <p class="note" style="color:#265e8d"><b>Sample Name:</b> Please scan barcode in the dropdown list below. .</p>
-     
-    </div>
 <div class="procedure-index">
 
  
@@ -38,10 +32,16 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+
+           // 'procedure_id',
             'procedure_name',
+            'procedure_code',
+            'testname_id',
+            'testname_method_id',
+
             ['class' => 'kartik\grid\ActionColumn',
             'contentOptions' => ['style' => 'width: 8.7%'],
-            'template' => '{update}',
+            'template' => '{view}{update}',
            
             'buttons'=>[
                 'view'=>function ($url, $model) {

@@ -6,13 +6,11 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\api\Migrationportal */
 
-$this->title = 'Create Migrationportal';
-$this->params['breadcrumbs'][] = ['label' => 'Migrationportals', 'url' => ['index']];
+$this->title = 'Create Job';
+$this->params['breadcrumbs'][] = ['label' => 'jobportal', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="migrationportal-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="jobportal-create">
 
     <?= $this->render('_form', [
         'model' => $model,

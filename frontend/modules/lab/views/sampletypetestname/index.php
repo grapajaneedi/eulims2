@@ -39,14 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'sampletype_id',
                 'label' => 'Sample Type',
                 'value' => function($model) {
-
-                    if ($model->sampletype){
-                        return $model->sampletype->type;
-                    }
-                    else{
-                        return "";
-                    }
-                    
+                    return $model->sampletype->type;
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => $sampletypelist,

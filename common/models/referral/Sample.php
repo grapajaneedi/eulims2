@@ -21,7 +21,11 @@ use Yii;
  * @property string $remarks
  * @property int $sample_month
  * @property int $sample_year
+ * @property int $local_request_id
+ * @property int $local_sample_id
  * @property int $active
+ * @property string $created_at
+ * @property string $updated_at
  *
  * @property Analysis[] $analyses
  * @property Packagelist[] $packagelists
@@ -54,13 +58,14 @@ class Sample extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['referral_id', 'receiving_agency_id', 'pstcsample_id', 'sample_type_id', 'sample_code', 'samplename', 'description', 'sampling_date', 'remarks', 'sample_month', 'sample_year'], 'required'],
-            [['referral_id', 'receiving_agency_id', 'pstcsample_id', 'package_id', 'sample_type_id', 'sample_month', 'sample_year', 'active'], 'integer'],
+            [['referral_id', 'receiving_agency_id', 'sample_type_id', 'samplename', 'description', 'sampling_date', 'sample_month', 'sample_year', 'local_request_id', 'local_sample_id', 'created_at'], 'required'],
+            [['referral_id', 'receiving_agency_id', 'pstcsample_id', 'package_id', 'sample_type_id', 'sample_month', 'sample_year', 'local_request_id', 'local_sample_id', 'active'], 'integer'],
             [['package_fee'], 'number'],
             [['description'], 'string'],
-            [['sampling_date'], 'safe'],
-            [['sample_code'], 'string', 'max' => 20],
-            [['samplename', 'remarks'], 'string', 'max' => 150],
+            [['sampling_date', 'created_at', 'updated_at'], 'safe'],
+            [['sample_code'], 'string', 'max' => 30],
+            [['samplename'], 'string', 'max' => 150],
+            [['remarks'], 'string', 'max' => 200],
             [['sample_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sample_type_id' => 'sampletype_id']],
             [['package_id'], 'exist', 'skipOnError' => true, 'targetClass' => Packagelist::className(), 'targetAttribute' => ['package_id' => 'package_id']],
             [['referral_id'], 'exist', 'skipOnError' => true, 'targetClass' => Referral::className(), 'targetAttribute' => ['referral_id' => 'referral_id']],
@@ -88,7 +93,11 @@ class Sample extends \yii\db\ActiveRecord
             'remarks' => 'Remarks',
             'sample_month' => 'Sample Month',
             'sample_year' => 'Sample Year',
+            'local_request_id' => 'Local Request ID',
+            'local_sample_id' => 'Local Sample ID',
             'active' => 'Active',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 
