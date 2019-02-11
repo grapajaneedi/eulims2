@@ -5,6 +5,9 @@ namespace frontend\modules\lab\controllers;
 use Yii;
 use common\models\lab\Tagging;
 use common\models\lab\Analysis;
+use common\models\lab\Workflow;
+use common\models\lab\Testnamemethod;
+use common\models\lab\Methodreference;
 use common\models\lab\Request;
 use common\models\lab\Sample;
 use common\models\lab\Procedure;
@@ -169,9 +172,21 @@ class TaggingController extends Controller
         exit;
         
         if(isset($_POST['id'])){
+<<<<<<< HEAD
+           
+     
+            $ids = $_POST['id'];
+            $analysis = $_POST['analysis_id'];
+            $analysisID = explode(",", $ids);  
+            $analysiss= Analysis::find()->where(['analysis_id'=> $_POST['analysis_id']])->one();
+            $samplesq = Sample::find()->where(['sample_id' =>$analysiss->sample_id])->one();             
+            $samcount = $analysiss->completed;  
+
+=======
 			$ids = $_POST['id'];
             $analysisID = explode(",", $ids);
                 
+>>>>>>> upstream/master
 			if ($ids){
 				foreach ($analysisID as $aid){
                     
@@ -207,9 +222,27 @@ class TaggingController extends Controller
                     ],
                  
             ]);
+<<<<<<< HEAD
+            $procedure = Procedure::find()->where(['testname_id' => 1]);
+
+         
+
+            $analysisQuery = Analysis::findOne(['analysis_id' => $analysis]);
+            $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);
+            
+            $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
+          
+     
+            $workflow = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id]);
+            $count = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();
+
+            $analysisdataprovider = new ActiveDataProvider([
+                    'query' => $workflow,
+=======
             $analysisQuery = Analysis::find()->where(['sample_id' => $analysis_id]);      
             $analysisdataprovider = new ActiveDataProvider([
                     'query' => $analysisQuery,
+>>>>>>> upstream/master
                     'pagination' => [
                         'pageSize' => 10,
                     ],
@@ -228,11 +261,33 @@ class TaggingController extends Controller
 
      public function actionTag($id)
      {
+<<<<<<< HEAD
+       $analysisQuery = Analysis::findOne(['analysis_id' => $id]);
+       $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);
+       
+       $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
+     
+
+       $workflow = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id]);
+    
+       $analysis= Analysis::find()->where(['analysis_id'=> $id])->one();
+       $samplesq = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();             
+       $samcount = $analysis->completed;
+
+       //baguhin pa ito!!!
+       $procedure = Procedure::find()->where(['testname_id' => 1]);
+       //count sa workflow
+       $count =  Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();
+       $analysis_id = $id;
+
+       
+=======
        $analysisQuery = Analysis::find()->where(['analysis_id' => $id]);
        $procedure = Procedure::find()->where(['testname_id' => 1]);
 
+>>>>>>> upstream/master
        $analysisdataprovider = new ActiveDataProvider([
-               'query' => $procedure,
+               'query' => $workflow,
                'pagination' => [
                    'pageSize' => false,
                           ],                 
@@ -281,11 +336,22 @@ class TaggingController extends Controller
              if ($taggingcount){
                 $counttag = count($taggingcount); 
              } 
+<<<<<<< HEAD
+
+             //fix this
+
+              $sql="UPDATE `tbl_analysis` SET `completed`='$counttag' WHERE `analysis_id`=".$analysis->analysis_id;
+              $Command=$Connection->createCommand($sql);
+              $Command->execute();                 
+              $samplesq = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();             
+              $samcount = $analysis->completed;
+=======
               $sql="UPDATE `tbl_sample` SET `completed`='$counttag' WHERE `sample_id`=".$analysis_id;
               $Command=$Connection->createCommand($sql);
               $Command->execute();                 
               $samplesq = Sample::find()->where(['sample_id' =>$analysis_id])->one();             
               $samcount = $samplesq->completed;
+>>>>>>> upstream/master
 
               $sampletagged= Sample::find()
               ->leftJoin('tbl_analysis', 'tbl_sample.sample_id=tbl_analysis.sample_id')
@@ -312,9 +378,26 @@ class TaggingController extends Controller
                      ],
                   
              ]);
+<<<<<<< HEAD
+             $procedure = Procedure::find()->where(['testname_id' => 1]);
+            
+
+             $analysisQuery = Analysis::findOne(['analysis_id' => $analysis_id]);
+             $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);
+             
+             $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
+           
+      
+             $workflow = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id]);
+             $count = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();     
+
+             $analysisdataprovider = new ActiveDataProvider([
+                     'query' => $workflow,
+=======
              $analysisQuery = Analysis::find()->where(['sample_id' => $analysis_id]);   
              $analysisdataprovider = new ActiveDataProvider([
                      'query' => $analysisQuery,
+>>>>>>> upstream/master
                      'pagination' => [
                          'pageSize' => 10,
                      ],

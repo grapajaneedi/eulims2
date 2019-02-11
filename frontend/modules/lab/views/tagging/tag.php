@@ -37,13 +37,75 @@ SCRIPT;
 $this->registerJs($js, $this::POS_READY);
 
 ?>
+<<<<<<< HEAD
+
+
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+<style>
+
+#myBar {
+/* set default value of progress bar */
+  width: 0%;
+  height: 30px;
+  background-color: #2e86c1 ;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+</style>
+<body>
+
+
+
+
+</body>
+</html>
+
+<div id="janeedi">
+<!-- <div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
+=======
 <div id="hi">
 <div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
+>>>>>>> upstream/master
      <a href="#" class="close" data-dismiss="alert" >×</a>
     <p class="note" style="color:#265e8d"><b>Note:</b> Please scan barcode in the dropdown list below. .</p>
      
+<<<<<<< HEAD
+    </div> -->
+<?php
+
+// echo $count."<br>";
+// echo $samcount;
+$max = 100/$count; 
+$num = $samcount * $max;
+
+// $max = 99;
+// $num = 100;
+
+//echo $count."<br>".$samcount;
+
+
+//count muna ilan ang completed para icompare dito
+?>
+
+<div class="progress" >
+    <div id="myBar" class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow=<?php echo $num?> aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $num."%"?>">
+      <span class="sr-only">70% Complete</span>
+    </div>
+    </div>
+
+<?= Html::textInput('max', $max, ['class' => 'form-control', 'id'=>'max','type'=>'hidden'], ['readonly' => true]) ?>
+<?= Html::textInput('text', $num, ['class' => 'form-control', 'id'=>'text','type'=>'hidden'], ['readonly' => true]) ?>
+
+=======
     </div>
     
+>>>>>>> upstream/master
 <?= GridView::widget([
     'dataProvider' => $analysisdataprovider,
     'pjax'=>true,
@@ -81,7 +143,18 @@ $this->registerJs($js, $this::POS_READY);
             'format' => 'raw',
             'enableSorting' => false,
             'value'=> function ($model){
+<<<<<<< HEAD
+                $tagging= Tagging::find()->where(['analysis_id'=> $model->workflow_id])->one();
+
+                if ($tagging){
+                    $profile= Profile::find()->where(['user_id'=> $tagging->user_id])->one();
+                    return $profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
+                }else{
+                    return "";
+                }  
+=======
                 return "";   
+>>>>>>> upstream/master
             },
             'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
         ],
@@ -89,22 +162,67 @@ $this->registerJs($js, $this::POS_READY);
               'header'=>'Status',
               'hAlign'=>'center',
               'format'=>'raw',
+<<<<<<< HEAD
+              'value' => function($model) {
+                    $tagging= Tagging::find()->where(['analysis_id'=> $model->workflow_id])->one();
+                    if ($tagging){
+
+                     if ($tagging->tagging_status_id==1) {
+                            return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
+                        }else if ($tagging->tagging_status_id==2) {
+                            return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
+                        }
+                        else if ($tagging->tagging_status_id==3) {
+                            return "<span class='badge btn-warning' style='width:90px;height:20px'>ASSIGNED</span>";
+                        }
+                        else if ($tagging->tagging_status_id==4) {
+                            return "<span class='badge btn-danger' style='width:90px;height:20px'>CANCELLED</span>";
+                        }
+                         
+                  
+                    }else{
+                        return "<span class='badge btn-default' style='width:80px;height:20px'>PENDING</span>";
+                    }
+                   
+                  },
+                  'enableSorting' => false,
+                  'contentOptions' => ['style' => 'width:10px; white-space: normal;'],
+              ],
+=======
               'value' => function($model) {     
                 return "";
               },
               'enableSorting' => false,
               'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
           ],
+>>>>>>> upstream/master
           [
             'header'=>'Remarks',
             'format' => 'raw',
             'width' => '100px',
             'value' => function($model) {
+<<<<<<< HEAD
+
+                $tagging= Tagging::find()->where(['analysis_id'=> $model->workflow_id])->one();
+                if ($tagging){
+
+                                            return "<b>Start Date:&nbsp;&nbsp;</b>".$tagging->start_date."
+                                                <br><b>End Date:&nbsp;&nbsp;</b>".$tagging->end_date;
+                                            }else{
+                                                return "<b>Start Date: <br>End Date:</b>";
+                                            }
+                                           
+                                    },
+                                        'enableSorting' => false,
+                                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
+                                ],
+=======
                 return "";
         },
             'enableSorting' => false,
             'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
     ],
+>>>>>>> upstream/master
 
 ],
 ]); 
