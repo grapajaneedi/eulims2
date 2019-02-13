@@ -29,7 +29,7 @@ class MigrateportalController extends Controller
              $job->isdone=1; //initially take the job prematurely so that the cron job wont pick it up again while running
              $job->remarks= date("Y-m-d")." (still working on)"; //save remarks
              $job->save(false);
-            echo "starting job \n";
+            echo "starting job \n job type : ".$job->job_type;
             $func = new Functions;
             $Connection= Yii::$app->labdb;
             $Transaction =$Connection->beginTransaction();
