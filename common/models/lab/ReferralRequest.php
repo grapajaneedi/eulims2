@@ -38,7 +38,7 @@ class Referralrequest extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['request_id', 'sample_received_date', 'receiving_agency_id', 'referral_type_id'], 'required'],
+            [['request_id', 'sample_received_date', 'referral_type_id'], 'required'],
             [['request_id', 'receiving_agency_id', 'testing_agency_id', 'referral_type_id'], 'integer'],
             [['sample_received_date'], 'safe'],
             [['request_id'], 'unique'],
