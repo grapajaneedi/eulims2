@@ -63,6 +63,8 @@ class RequestSearch extends exRequest
         if(!Yii::$app->user->identity->profile){
             throw new NotFoundHttpException('Warning: The requested profile does not exist, Please add Profile.');
         }
+        //echo $this->customer_id;
+        //exit;
         // grid filtering conditions
         $query->andFilterWhere([
             'request_id' => $this->request_id,
