@@ -13,6 +13,8 @@ use yii\web\UploadedFile;
 use common\models\inventory\Suppliers;
 use common\models\inventory\SuppliersSearch;
 use yii\data\ActiveDataProvider;
+use common\models\inventory\Equipmentservice;
+use frontend\modules\inventory\components\_class\Equipmentevent;
 /**
  * ProductsController implements the CRUD actions for Products model.
  */
@@ -73,28 +75,36 @@ class ProductsController extends Controller
      */
     public function actionCreate()
     {
+
         $model = new Products();
 
         $user_id=Yii::$app->user->identity->profile->user_id;
         $model->created_by=$user_id;
         $model->qty_onhand=0;
+        $model->producttype_id=1;
         if ($model->load(Yii::$app->request->post())) {
-            $ids= implode(',',$model->suppliers_ids);
+            // var_dump(Yii::$app->request->post()); exit;
+            $ids="";
+            if($model->suppliers_ids)
+                $ids= implode(',',$model->suppliers_ids);
+
             $model->suppliers_ids=$ids;
             $filename=$model->product_name;
             $filename2=$model->product_name."2";
-            if(!empty($model->Image1))
-            {
-                $model->Image1 = UploadedFile::getInstance($model,'Image1');
-                $model->Image1->saveAs('uploads/products/'.$filename.'.'.$model->Image1->extension);
-                $model->Image1='uploads/products/'.$filename.'.'.$model->Image1->extension;
+            
+             $image1= UploadedFile::getInstance($model, 'Image1');
+            $image2= UploadedFile::getInstance($model, 'Image2');
+            if(!empty($image1) && $image1->size !== 0) {
+                $image1->saveAs('uploads/products/'.$model->product_name.$model->product_id.'1.'.$image1->extension);
+                $model->Image1='uploads/products/'.$model->product_name.$model->product_id.'1.'.$image1->extension;
             }
-            if(!empty($model->Image2))
-            {
-                $model->Image2 = UploadedFile::getInstance($model,'Image2');
-                $model->Image2->saveAs('uploads/products/'.$filename2.'.'.$model->Image2->extension);
-                $model->Image2='uploads/products/'.$filename2.'.'.$model->Image2->extension;
+
+            if(!empty($image2) && $image2->size !== 0) {
+                $image2->saveAs('uploads/products/'.$model->product_name.$model->product_id.'2.'.$image2->extension);
+                $model->Image2='uploads/products/'.$model->product_name.$model->product_id.'2.'.$image2->extension;
             }
+
+
             $model->save();
             
             Yii::$app->session->setFlash('success', 'Product Successfully Added!');
@@ -115,10 +125,39 @@ class ProductsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $origimg1=$model->Image1;
+        $origimg2=$model->Image2;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-           // return $this->redirect(['view', 'id' => $model->product_id]);
-            Yii::$app->session->setFlash('success', 'Product Successfully Updated!');
+        if ($model->load(Yii::$app->request->post())) {
+
+            $ids="";
+            if($model->suppliers_ids)
+                $ids= implode(',',$model->suppliers_ids);
+
+
+            $image1= UploadedFile::getInstance($model, 'Image1');
+            // var_dump($model); exit;
+            $image2= UploadedFile::getInstance($model, 'Image2');
+            if(!empty($image1) && $image1->size !== 0) {
+                $image1->saveAs('uploads/products/'.$model->product_name.'1.'.$image1->extension);
+                $model->Image1='uploads/products/'.$model->product_name.'1.'.$image1->extension;
+            }else{
+                $model->Image1=$origimg1;
+            }
+
+            if(!empty($image2) && $image2->size !== 0) {
+                $image2->saveAs('uploads/products/'.$model->product_name.'2.'.$image2->extension);
+                $model->Image2='uploads/products/'.$model->product_name.'2.'.$image2->extension;
+            }else{
+                $model->Image2=$origimg2;
+            }
+
+            if($model->save()){
+                Yii::$app->session->setFlash('success', 'Product Successfully Updated!');
+            }else{
+                Yii::$app->session->setFlash('error', 'Product Failed to Update!');
+            }
+            
             return $this->redirect(['index']);
         } else {
             return $this->renderAjax('update', [
@@ -251,4 +290,93 @@ class ProductsController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+
+    public function actionEquipment($varsearch=""){
+        $dataProvider = new ActiveDataProvider([
+            'query' =>Products::find()->where(['producttype_id'=>2]),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+
+        if($varsearch){
+             $dataProvider = new ActiveDataProvider([
+            'query' =>Products::find()->where(['like', 'product_name', $varsearch],['producttype_id'=>2]),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+             ]);
+
+        }
+
+          return $this->render('equipment',['dataProvider'=>$dataProvider,'searchkey'=>$varsearch]);
+    }
+
+    public function actionOpensched($id){
+
+        //retrieve the schedules using the $id
+
+         if(Yii::$app->request->isAjax){
+            return $this->renderAjax('_schedule', [
+                
+            ]);
+        }
+        else {
+            return $this->render('_schedule', [
+              
+            ]);
+        }
+    }
+
+    public function actionJsoncalendar($start=NULL,$end=NULL,$_=NULL){
+
+    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+
+    $events = array();
+
+    $Event= new Equipmentevent();
+    $Event->id = 1;
+    $Event->title = 'Equipmentevent Testing';
+    $Event->start = date('Y-m-d\TH:i:s\Z');
+    // $event->nonstandard = [
+    //     'field1' => 'Something I want to be included in object #1',
+    //     'field2' => 'Something I want to be included in object #2',
+    //   ];
+    $events[] = $Event;
+    
+
+  
+    // foreach ($times AS $time){
+    //   //Testing
+    //   $Event = new \yii2fullcalendar\models\Event();
+    //   $Event->id = $time->id;
+    //   $Event->title = $time->categoryAsString;
+    //   $Event->start = date('Y-m-d\TH:i:s\Z',strtotime($time->date_start.' '.$time->time_start));
+    //   $Event->end = date('Y-m-d\TH:i:s\Z',strtotime($time->date_end.' '.$time->time_end));
+    //   $events[] = $Event;
+    // }
+
+
+    // $Event= new bergevent();
+    // $Event->id = 1;
+    // $Event->title = 'Testing';
+    // $Event->start = date('Y-m-d\TH:i:s\Z');
+    // $event->nonstandard = [
+    //     'field1' => 'Something I want to be included in object #1',
+    //     'field2' => 'Something I want to be included in object #2',
+    //   ];
+    // $events[] = $Event;
+
+    return $events;
+  }
+
+  public function actionDayClickCalendarEvent()
+{
+ //save date
+    echo "wow"; exit;
 }
+
+}
+
+ 

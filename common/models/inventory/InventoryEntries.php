@@ -8,7 +8,6 @@ use yii\behaviors\TimestampBehavior;
  * This is the model class for table "tbl_inventory_entries".
  *
  * @property int $inventory_transactions_id
- * @property int $transaction_type_id
  * @property int $rstl_id
  * @property int $product_id
  * @property string $manufacturing_date
@@ -26,7 +25,7 @@ use yii\behaviors\TimestampBehavior;
  * @property EquipmentstatusEntry[] $equipmentstatusEntries
  * @property Suppliers $suppliers
  * @property Products $product
- * @property Transactiontype $transactionType
+ * @property Transactiontype $Withdrawdetails
  */
 class InventoryEntries extends \yii\db\ActiveRecord
 {
@@ -52,14 +51,13 @@ class InventoryEntries extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['transaction_type_id', 'rstl_id', 'product_id', 'created_by', 'suppliers_id', 'quantity','amount'], 'required'],
-            [['transaction_type_id', 'rstl_id', 'product_id', 'created_by', 'suppliers_id', 'quantity', 'created_at', 'updated_at'], 'integer'],
+            [['rstl_id', 'product_id', 'created_by', 'suppliers_id', 'quantity','amount'], 'required'],
+            [[ 'rstl_id', 'product_id', 'created_by', 'suppliers_id', 'quantity', 'created_at', 'updated_at'], 'integer'],
             [['manufacturing_date', 'expiration_date'], 'safe'],
             [['amount', 'total_amount'], 'number'],
             [['po_number'], 'string', 'max' => 50],
             [['suppliers_id'], 'exist', 'skipOnError' => true, 'targetClass' => Suppliers::className(), 'targetAttribute' => ['suppliers_id' => 'suppliers_id']],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Products::className(), 'targetAttribute' => ['product_id' => 'product_id']],
-            [['transaction_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Transactiontype::className(), 'targetAttribute' => ['transaction_type_id' => 'transactiontype_id']],
         ];
     }
     /**
@@ -129,8 +127,8 @@ class InventoryEntries extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTransactionType()
+    public function getWithdrawdetails()
     {
-        return $this->hasOne(Transactiontype::className(), ['transactiontype_id' => 'transaction_type_id']);
+        return $this->hasMany(InventoryWithdrawaldetails::className(), ['inventory_transactions_id' => 'inventory_transactions_id']);
     }
 }

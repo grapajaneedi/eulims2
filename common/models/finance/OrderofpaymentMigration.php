@@ -1,5 +1,11 @@
 <?php
-
+/*
+ * Project Name: eulims * 
+ * Copyright(C)2018 Department of Science & Technology -IX * 
+ * Developer: Eden G. Galleno  * 
+ * 12 22, 18 , 3:52:38 PM * 
+ * Module: OrderofpaymentMigration * 
+ */
 namespace common\models\finance;
 
 use Yii;
@@ -84,6 +90,7 @@ class OrderofpaymentMigration extends \yii\db\ActiveRecord
             'local_orderofpayment_id' => 'Local Orderofpayment ID',
             'oldColumn_customerName' => 'Old Column Customer Name',
             'oldColumn_address' => 'Old Column Address',
+            'local_customer_id'=>'Local Customer ID',
         ];
     }
 }

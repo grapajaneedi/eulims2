@@ -18,7 +18,7 @@ class InventoryWithdrawalSearch extends InventoryWithdrawal
     public function rules()
     {
         return [
-            [['inventory_withdrawal_id', 'created_by', 'lab_id', 'total_qty', 'inventory_status_id'], 'integer'],
+            [['inventory_withdrawal_id', 'created_by', 'lab_id', 'total_qty'], 'integer'],
             [['withdrawal_datetime', 'remarks'], 'safe'],
             [['total_cost'], 'number'],
         ];
@@ -66,7 +66,6 @@ class InventoryWithdrawalSearch extends InventoryWithdrawal
             'lab_id' => $this->lab_id,
             'total_qty' => $this->total_qty,
             'total_cost' => $this->total_cost,
-            'inventory_status_id' => $this->inventory_status_id,
         ]);
 
         $query->andFilterWhere(['like', 'remarks', $this->remarks]);

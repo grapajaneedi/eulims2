@@ -47,9 +47,6 @@ $Header.="Receipt";
         ],
         'exportConfig'=>$func->exportConfig("Receipt", "receipt", $Header),
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            
             'or_number',
             [
                'attribute'=>'receiptDate',
@@ -60,7 +57,7 @@ $Header.="Receipt";
                 'filterWidgetOptions' => ([
                      'model'=>$model,
                      'useWithAddon'=>true,
-                     'attribute'=>'order_date',
+                     'attribute'=>'receiptDate',
                      'startAttribute'=>'createDateStart',
                      'endAttribute'=>'createDateEnd',
                      'presetDropdown'=>TRUE,
@@ -92,7 +89,11 @@ $Header.="Receipt";
                
             ],
             'payor',
-            'total',
+            [
+                 'attribute' => 'total',
+                 'format' => ['decimal', 2],
+                 'pageSummary' => true
+            ], 
             [
                 'attribute' => 'payment_mode_id',
                 'label' => 'Payment Mode',
@@ -110,7 +111,7 @@ $Header.="Receipt";
                 'attribute' => 'collectiontype_id',
                 'label' => 'Collection Type',
                 'value' => function($model) {
-                    return $model->collectiontype->natureofcollection;
+                    return $model->collectiontype ? $model->collectiontype->natureofcollection : "";
                 },
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Collectiontype::find()->asArray()->all(), 'collectiontype_id', 'natureofcollection'),

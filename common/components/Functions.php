@@ -369,7 +369,7 @@ function GetReferralCustomerList($form,$model,$disabled=false,$Label=false){
 $dataExp = <<< SCRIPT
     function (params, page) {
         return {
-            q: params.term, // search term
+            query: params.term, // search term
         };
     }
 SCRIPT;

@@ -1,6 +1,7 @@
 <?php
 use kartik\grid\GridView;
 use yii\data\ArrayDataProvider;
+use common\models\inventory\InventoryWithdrawaldetails;
 
     $dataProvider = new ArrayDataProvider([
         'allModels' => $model->inventoryEntries,
@@ -8,8 +9,6 @@ use yii\data\ArrayDataProvider;
     ]);
     $gridColumns = [
         ['class' => 'kartik\grid\SerialColumn'],
-        
-        
         [
                 'attribute' => 'suppliers_id',
                 'label' => 'Supplier',
@@ -34,6 +33,21 @@ use yii\data\ArrayDataProvider;
             'pageSummary' => true  
          ],
          [
+                'attribute' => 'withdrawdetails',
+                'label' => 'Withdrawn',
+                'value' => function($model){  
+
+
+                $withdrawn = InventoryWithdrawaldetails::find()->where(['inventory_transactions_id'=>$model->inventory_transactions_id])->sum('quantity');
+
+
+                    return $withdrawn;                
+                },
+                'format' => ['decimal', 2],
+                'pageSummary' => true  
+
+        ],
+         [
            'attribute' => 'amount',   
            'format' => ['decimal', 2],
             'pageSummary' => true  
@@ -51,6 +65,11 @@ use yii\data\ArrayDataProvider;
         'columns' => $gridColumns,
         'containerOptions' => ['style' => 'overflow: auto'],
         'pjax' => true,
+        'pjaxSettings' => [
+            'options' => [
+                'enablePushState' => false,
+            ]
+        ],
         'beforeHeader' => [
             [
                 'options' => ['class' => 'skip-export']

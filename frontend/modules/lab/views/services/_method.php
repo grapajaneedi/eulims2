@@ -20,9 +20,8 @@ $methodlist= ArrayHelper::map(Methodreference::find()->all(),'method_reference_i
 $testnamelist= ArrayHelper::map(Testname::find()->all(),'testname_id','testName');
 
 $this->title = 'Add/ Remove Services';
-//lagyan nalang flag if 1 or 0 para isang controller nalang ang pagdelete para yung id na kunin nya.. yun pa din
+
 $js=<<<SCRIPT
-   
 
 function offerservices(mid){
   

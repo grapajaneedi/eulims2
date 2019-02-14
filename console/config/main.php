@@ -50,6 +50,18 @@ return [
             //'enableAutoLogin' => true,
             //'loginUrl' => ['admin/user/login'],
         ],
+        
+        'labdb'=>[
+            'class' => 'yii\db\Connection',  
+            'dsn' => 'mysql:host=localhost;dbname=eulims_lab',
+            'username' => 'eulims',
+            'password' => 'eulims',
+            //'username'=>'arisro9',
+            //'password'=>'qwerty!@#$%', 
+            'charset' => 'utf8',
+            'tablePrefix' => 'tbl_',
+        ],
     ],
+
     //'params' => $params,
 ];

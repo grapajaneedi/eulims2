@@ -1,5 +1,11 @@
 <?php
-
+/*
+ * Project Name: eulims * 
+ * Copyright(C)2018 Department of Science & Technology -IX * 
+ * Developer: Eden G. Galleno  * 
+ * 12 22, 18 , 3:52:38 PM * 
+ * Module: Orseries * 
+ */
 namespace common\models\finance;
 
 use Yii;
@@ -43,7 +49,7 @@ class Orseries extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['or_category_id', 'terminal_id', 'rstl_id', 'or_series_name', 'startor', 'nextor', 'endor'], 'required'],
+            [['or_category_id', 'rstl_id', 'or_series_name', 'startor', 'nextor', 'endor'], 'required'],
             [['or_category_id', 'terminal_id', 'rstl_id', 'startor', 'nextor', 'endor'], 'integer'],
             [['or_series_name'], 'string', 'max' => 250],
             [['or_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orcategory::className(), 'targetAttribute' => ['or_category_id' => 'or_category_id']],
@@ -70,7 +76,7 @@ class Orseries extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOrCategory()
+    public function getOrcategory()
     {
         return $this->hasOne(Orcategory::className(), ['or_category_id' => 'or_category_id']);
     }

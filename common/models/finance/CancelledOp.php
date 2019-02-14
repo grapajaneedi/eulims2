@@ -1,4 +1,11 @@
 <?php
+/*
+ * Project Name: eulims * 
+ * Copyright(C)2018 Department of Science & Technology -IX * 
+ * Developer: Eden G. Galleno  * 
+ * 11 22, 18 , 3:52:38 PM * 
+ * Module: CancelledOp * 
+ */
 
 namespace common\models\finance;
 

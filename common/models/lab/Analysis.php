@@ -33,6 +33,8 @@ use Yii;
  */
 class Analysis extends \yii\db\ActiveRecord
 {
+
+  public $sampletype_id;
   
     /**
      * {@inheritdoc}
@@ -62,8 +64,8 @@ class Analysis extends \yii\db\ActiveRecord
             [['fee'], 'number'],
             [['sample_code'], 'string', 'max' => 20],
             [['testname'], 'string', 'max' => 200],
-            [['method'], 'string', 'max' => 150],
-            [['references'], 'string', 'max' => 500],
+            //[['method'], 'string', 'max' => 150], //set to 300
+            //[['references'], 'string', 'max' => 500], //set to 500 in database
          //   [['test_id'], 'exist', 'skipOnError' => true, 'targetClass' => Test::className(), 'targetAttribute' => ['test_id' => 'test_id']],
             [['sample_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sample::className(), 'targetAttribute' => ['sample_id' => 'sample_id']],
             [['request_id'], 'exist', 'skipOnError' => true, 'targetClass' => Request::className(), 'targetAttribute' => ['request_id' => 'request_id']],
@@ -94,7 +96,8 @@ class Analysis extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'is_package' => 'Is Package',
             'testcategory_id' => 'Sample Type',
-            'sample_type_id' => 'Sample Type',
+            //'sample_type_id' => 'Sample Type',
+            'sampletype_id' => 'Sample Type',
         ];
     }
 

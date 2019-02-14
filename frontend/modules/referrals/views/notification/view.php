@@ -30,12 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'notification_id',
             'referral_id',
-            'notificationtype_id',
+            'notification_type_id',
             'recipient_id',
             'sender_id',
             'sender_name',
             'remarks',
-            'viewed',
+            'seen',
             'notification_date',
         ],
     ]) ?>

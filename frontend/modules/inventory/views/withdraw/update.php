@@ -11,9 +11,6 @@ $this->params['breadcrumbs'][] = ['label' => $model->inventory_withdrawal_id, 'u
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="inventory-withdrawal-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

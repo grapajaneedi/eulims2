@@ -1,11 +1,20 @@
+<h3>Withdrawal Details</h3>
 <?php
 use kartik\grid\GridView;
 use yii\data\ArrayDataProvider;
+use yii\data\ActiveDataProvider;
+
+
 
     $dataProvider = new ArrayDataProvider([
-        'allModels' => $model->inventoryWithdrawaldetails,
+        'allModels' => $model->withdrawdetails,
         'key' => 'inventory_withdrawaldetails_id'
     ]);
+
+    // $dataProvider = new ActiveDataProvider([
+    //         'query' => $model,
+    //     ]);
+
     $gridColumns = [
         ['class' => 'kartik\grid\SerialColumn'],
         [

@@ -27,9 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php $this->registerJsFile("/js/services/services.js"); ?>
 
-  
-
-    <?= GridView::widget([
+<?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'pjax' => true,
@@ -91,8 +89,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'workflow'=>function ($url, $model) {
                   //  return Html::button('<span class="glyphicon glyphicon-cog"></span>', ['value'=>Url::to(['/lab/procedure/workflow','id'=>$model->testname_method_id]), 'onclick'=>'LoadModal(this.title, this.value);', 'class' => 'btn btn-warning','title' => Yii::t('app', "Manage Workflow")]);
                   $t = '/services/workflow/create?test_id='.$model->testname_method_id;
-                  
-
                                           return Html::button('<span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-file"></span>', ['value'=>$t, 'class' => 'btn btn-warning btn-modal','name' => Yii::t('app', "Manage Workflow"),'title' => Yii::t('app', "Create Workflow")]);
                 },
                 ],

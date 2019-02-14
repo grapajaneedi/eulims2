@@ -1,5 +1,11 @@
 <?php
-
+/*
+ * Project Name: eulims * 
+ * Copyright(C)2018 Department of Science & Technology -IX * 
+ * Developer: Eden G. Galleno  * 
+ * 12 22, 18 , 3:52:38 PM * 
+ * Module: PaymentitemMigration * 
+ */
 namespace common\models\finance;
 
 use Yii;
@@ -71,6 +77,7 @@ class PaymentitemMigration extends \yii\db\ActiveRecord
             'local_paymentitem_id' => 'Local Paymentitem ID',
             'oldColumn_referral_id' => 'Old Column Referral ID',
             'local_receipt_id' => 'Local Receipt ID',
+            'local_orderofpayment_id' => 'Local Orderpayment ID',
         ];
     }
 }

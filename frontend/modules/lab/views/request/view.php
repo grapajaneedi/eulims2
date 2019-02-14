@@ -13,6 +13,7 @@ use common\models\lab\Sampletype;
 use common\models\finance\Paymentitem;
 
 use common\models\lab\Package;
+use yii\bootstrap\Modal;
 
 $Connection = Yii::$app->financedb;
 $func = new Functions();
@@ -174,166 +175,6 @@ $this->registerJs($PrintEvent);
 <div class="request-view ">
     <div class="container table-responsive">
         <?php
-
-        if($model->request_type_id == 2){
-            //for referral request
-            echo DetailView::widget([
-            'model'=>$model,
-            'responsive'=>true,
-            'hover'=>true,
-            'mode'=>DetailView::MODE_VIEW,
-            'panel'=>[
-                'heading'=>'<i class="glyphicon glyphicon-book"></i> Referral Code ' . $model->request_ref_num,
-                'type'=>DetailView::TYPE_PRIMARY,
-            ],
-            'buttons1' => '',
-            'attributes'=>[
-                [
-                    'group'=>true,
-                    'label'=>'Referral Details '.$CancelButton,
-                    'rowOptions'=>['class'=>'info']
-                ],
-                [
-                    'columns' => [
-                        [
-                            'attribute'=>'request_ref_num', 
-                            'label'=>'Referral Code',
-                            'displayOnly'=>true,
-                            'valueColOptions'=>['style'=>'width:30%']
-                        ],
-                        [
-                            'label'=>'Customer / Agency',
-                            'format'=>'raw',
-                            'value'=> $model->customer ? $model->customer->customer_name : "",
-                            'valueColOptions'=>['style'=>'width:30%'], 
-                            'displayOnly'=>true
-                        ],
-                    ],
-                ],
-                [
-                    'columns' => [
-                        [
-                            'label'=>'Referral Date / Time',
-                            'format'=>'raw',
-                            'value'=> ($model->request_datetime != "0000-00-00 00:00:00") ? Yii::$app->formatter->asDate($model->request_datetime, 'php:F j, Y h:i a') : "<i style='color:#bb0000;font-size:12px;'>Pending referral request</i>",
-                            'valueColOptions'=>['style'=>'width:30%'], 
-                            'displayOnly'=>true
-                        ],
-                        [
-                            'label'=>'Address',
-                            'format'=>'raw',
-                            'value'=>$model->customer ? $model->customer->address : "",
-                            'valueColOptions'=>['style'=>'width:30%'], 
-                            'displayOnly'=>true
-                        ],
-                    ],
-                    
-                ],
-                [
-                    'columns' => [
-                       [
-                            'attribute'=>'report_due',
-                            'label'=>'Sample Received Date',
-                            'format'=>'raw',
-                            'value'=> !empty($model->referralrequest->sample_receive_date) ? Yii::$app->formatter->asDate($model->referralrequest->sample_receive_date, 'php:F j, Y') : "<i style='color:#bb0000;font-size:12px;'>No sample received date</i>",
-                            'valueColOptions'=>['style'=>'width:30%'], 
-                            'displayOnly'=>true
-                        ],
-                        [
-                            'label'=>'Tel no.',
-                            'format'=>'raw',
-                            'value'=>$model->customer ? $model->customer->tel : "",
-                            'valueColOptions'=>['style'=>'width:30%'], 
-                            'displayOnly'=>true
-                        ],
-                    ],
-                ],
-                [
-                    'columns' => [
-                        [
-                            'attribute'=>'report_due',
-                            'label'=>'Estimated Due Date',
-                            'format'=>'raw',
-                            'value'=> ($model->report_due != "0000-00-00 00:00:00") ? Yii::$app->formatter->asDate($model->report_due, 'php:F j, Y') : "<i style='color:#bb0000;font-size:12px;'>Pending referral request</i>",
-                            'valueColOptions'=>['style'=>'width:30%'], 
-                            'displayOnly'=>true
-                        ],
-                        [
-                            'label'=>'Fax no.',
-                            'format'=>'raw',
-                            'value'=>$model->customer ? $model->customer->fax : "",
-                            'valueColOptions'=>['style'=>'width:30%'], 
-                            'displayOnly'=>true
-                        ],
-                    ],
-                ],
-                [
-                    'group'=>true,
-                    'label'=>'Payment Details',
-                    'rowOptions'=>['class'=>'info']
-                ],
-                [
-                    'columns' => [
-                        [
-                            'label'=>'OR No.',
-                            'value'=>$orNumbers,
-                            'displayOnly'=>true,
-                            'valueColOptions'=>['style'=>'width:30%']
-                        ],
-                        [
-                            'label'=>'Collection',
-                            'format'=>'raw',
-                            'value'=>"₱".$payment_total,
-                            'valueColOptions'=>['style'=>'width:30%'], 
-                            'displayOnly'=>true
-                        ],
-                    ],
-                ],
-                [
-                    'columns' => [
-                        [
-                            'label'=>'OR Date',
-                            'value'=>$orDate,
-                            'displayOnly'=>true,
-                            'valueColOptions'=>['style'=>'width:30%']
-                        ],
-                        [
-                            'label'=>'Unpaid Balance',
-                            'format'=>'raw',
-                            'value'=>"₱".$UnpaidBalance,
-                            'valueColOptions'=>['style'=>'width:30%'], 
-                            'displayOnly'=>true
-                        ],
-                    ],
-                ],
-                
-                [
-                    'group'=>true,
-                    'label'=>'Transaction Details',
-                    'rowOptions'=>['class'=>'info']
-                ],
-                [
-                    'columns' => [
-                        [
-                            'attribute'=>'receivedBy', 
-                            'format'=>'raw',
-                            'displayOnly'=>true,
-                            'valueColOptions'=>['style'=>'width:30%']
-                        ],
-                        [
-                            'attribute'=>'conforme',
-                            'format'=>'raw',
-                            'valueColOptions'=>['style'=>'width:30%'], 
-                            'displayOnly'=>true
-                        ],
-                    ],
-                ],
-            ],
-
-        ]);
-
-        } else {
-            //not referral request
             echo DetailView::widget([
             'model'=>$model,
             'responsive'=>true,
@@ -487,7 +328,6 @@ $this->registerJs($PrintEvent);
             ],
 
         ]);
-        }
         ?>
     </div>
     <div class="container">
@@ -578,11 +418,11 @@ $this->registerJs($PrintEvent);
                 ],
                 'columns' => $gridColumns,
                 'toolbar' => [
-                    'content'=> Html::a('<i class="glyphicon glyphicon-repeat"></i>', [Url::to(['request/view','id'=>$model->request_id])], [
+                    'content'=> Html::a('<i class="glyphicon glyphicon-repeat"></i> Refresh Grid', [Url::to(['request/view','id'=>$model->request_id])], [
                                 'class' => 'btn btn-default', 
-                                'title' => 'Reset Grid'
+                                'title' => 'Refresh Grid'
                             ]),
-                    '{toggleData}',
+                    //'{toggleData}',
                 ],
             ]);
         ?>
@@ -591,135 +431,134 @@ $this->registerJs($PrintEvent);
     <div class="container">
     <?php
 
+        $samplecount = $sampleDataProvider->getTotalCount();
+        if ($samplecount==0){
+            $enableRequest = true;
+        }else{
+            $enableRequest = false;
+        }
 
-   $samplecount = $sampleDataProvider->getTotalCount();
-   if ($samplecount==0){
-        $enableRequest = true;
-   }else{
-    $enableRequest = false;
-   }
-
-            $analysisgridColumns = [
-                [
-                    'attribute'=>'sample_name',
-                    'header'=>'Sample',
-                  
-                    'format' => 'raw',
-                    'enableSorting' => false,
-                    'value' => function($model) {
-                        return $model->sample ? $model->sample->samplename : '-';
-                    },
-                    'contentOptions' => ['style' => 'width:10%; white-space: normal;'],
-                   
+        $analysisgridColumns = [
+            [
+                'attribute'=>'sample_name',
+                'header'=>'Sample',
+              
+                'format' => 'raw',
+                'enableSorting' => false,
+                'value' => function($model) {
+                    return $model->sample ? $model->sample->samplename : '-';
+                },
+                'contentOptions' => ['style' => 'width:10%; white-space: normal;'],
+               
+            ],
+            [
+                'attribute'=>'sample_code',
+                'header'=>'Sample Code',
+                'value' => function($model) {
+                    return $model->sample ? $model->sample->sample_code : '-';
+                },
+                'enableSorting' => false,
+                'contentOptions' => ['style' => 'width:10%; white-space: normal;'],
+            ],
+            [
+                'attribute'=>'testname',
+                'header'=>'Test/ Calibration Requested',
+                'contentOptions' => ['style' => 'width: 15%;word-wrap: break-word;white-space:pre-line;'],
+                'enableSorting' => false,
+            ],
+            [
+                'attribute'=>'method',
+                'header'=>'Test Method',
+                'enableSorting' => false,  
+                'contentOptions' => ['style' => 'width: 50%;word-wrap: break-word;white-space:pre-line;'],              
+            ],
+            [
+                'attribute'=>'quantity',
+                'header'=>'Quantity',
+                'hAlign'=>'center',
+                'enableSorting' => false,
+                'pageSummary' => '<span style="float:right";>SUBTOTAL<BR>DISCOUNT<BR><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL</B></span>',       
+            ],
+            [
+                'attribute'=>'fee',
+                'header'=>'Unit Price',
+                'enableSorting' => false,
+                'hAlign'=>'right',
+                'value'=>function($model){
+                    return number_format($model->fee,2);
+                },
+                'contentOptions' => [
+                    'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
                 ],
-                [
-                    'attribute'=>'sample_code',
-                    'header'=>'Sample Code',
-                    'value' => function($model) {
-                        return $model->sample ? $model->sample->sample_code : '-';
-                    },
-                    'enableSorting' => false,
-                    'contentOptions' => ['style' => 'width:10%; white-space: normal;'],
-                ],
-                [
-                    'attribute'=>'testname',
-                    'header'=>'Test/ Calibration Requested',
-                    'contentOptions' => ['style' => 'width: 15%;word-wrap: break-word;white-space:pre-line;'],
-                    'enableSorting' => false,
-                ],
-                [
-                    'attribute'=>'method',
-                    'header'=>'Test Method',
-                    'enableSorting' => false,  
-                    'contentOptions' => ['style' => 'width: 50%;word-wrap: break-word;white-space:pre-line;'],              
-                ],
-                [
-                    'attribute'=>'quantity',
-                    'header'=>'Quantity',
-                    'hAlign'=>'center',
-                    'enableSorting' => false,
-                    'pageSummary' => '<span style="float:right";>SUBTOTAL<BR>DISCOUNT<BR><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL</B></span>',       
-                ],
-                [
-                    'attribute'=>'fee',
-                    'header'=>'Unit Price',
-                    'enableSorting' => false,
-                    'hAlign'=>'right',
-                    'value'=>function($model){
-                        return number_format($model->fee,2);
-                    },
-                    'contentOptions' => [
-                        'style'=>'max-width:80px; overflow: auto; white-space: normal; word-wrap: break-word;'
-                    ],
-                    'hAlign' => 'right', 
-                    'vAlign' => 'left',
-                    'width' => '7%',
-                    'format' => 'raw',
-                      'pageSummary'=> function (){
-                            $url = \Yii::$app->request->url;
-                            $id = substr($url, 21);
-                            $requestquery = Request::find()->where(['request_id' => $id])->one();
-                            $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
-                            $samplesquery = Sample::find()->where(['request_id' => $id])->one();
-                            $rate =  $discountquery->rate;
-                            $sample_ids = '';
-                            $samples = Sample::find()->where(['request_id' => $id])->all();
-                            foreach ($samples as $sample){
-                                $sample_ids .= $sample->sample_id.",";
-                            }
-                            $sample_ids = substr($sample_ids, 0, strlen($sample_ids)-1);
-                           
-                            if ($samplesquery){
-                                $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE sample_id IN ($sample_ids)";     
+                'hAlign' => 'right', 
+                'vAlign' => 'left',
+                'width' => '7%',
+                'format' => 'raw',
+                  'pageSummary'=> function (){
+                        $url = \Yii::$app->request->url;
+                        $id = substr($url, 21);
+                        $requestquery = Request::find()->where(['request_id' => $id])->one();
+                        $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
+                        $samplesquery = Sample::find()->where(['request_id' => $id])->one();
+                        $rate =  $discountquery->rate;
+                        $sample_ids = '';
+                        $samples = Sample::find()->where(['request_id' => $id])->all();
+                        foreach ($samples as $sample){
+                            $sample_ids .= $sample->sample_id.",";
+                        }
+                        $sample_ids = substr($sample_ids, 0, strlen($sample_ids)-1);
+                       
+                        if ($samplesquery){
+                            $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE sample_id IN ($sample_ids)";     
+                            
+                                 $Connection = Yii::$app->labdb;
+                                 $command = $Connection->createCommand($sql);
+                                 $row = $command->queryOne();
+                                 $subtotal = $row['subtotal'];
+                                 $discounted = ($subtotal * ($rate/100));
+                                 $total = $subtotal - $discounted;
                                 
-                                     $Connection = Yii::$app->labdb;
-                                     $command = $Connection->createCommand($sql);
-                                     $row = $command->queryOne();
-                                     $subtotal = $row['subtotal'];
-                                     $discounted = ($subtotal * ($rate/100));
-                                     $total = $subtotal - $discounted;
-                                    
-                                     if ($total <= 0){
-                                         return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0.00</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
-                                     }else{
-                                         return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($discounted, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
-                                     }
-                            }else{
-                                return '';
-                            }     
-                      },
-                ],
-                
-                [
-                    'header'=>'Status',
-                    'hAlign'=>'center',
-                    'format'=>'raw',
-                    'value' => function($model) {
-                  
-                      if ($model->tagging){
+                                 if ($total <= 0){
+                                     return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0.00</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                                 }else{
+                                     return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($discounted, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
+                                 }
+                        }else{
+                            return '';
+                        }     
+                  },
+            ],
+            [
+                'header'=>'Status',
+                'hAlign'=>'center',
+                'format'=>'raw',
+                'value' => function($model) {
+              
+                  if ($model->tagging){
 
-                       if ($model->tagging->tagging_status_id==1) {
-                              return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
-                          }else if ($model->tagging->tagging_status_id==2) {
-                              return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
-                          }
-                          else if ($model->tagging->tagging_status_id==3) {
-                              return "<span class='badge btn-warning' style='width:90px;height:20px'>ASSIGNED</span>";
-                          }
-                          else if ($model->tagging->tagging_status_id==4) {
-                              return "<span class='badge btn-danger' style='width:90px;height:20px'>CANCELLED</span>";
-                          }
-                           
-                    
-                      }else{
-                          return "<span class='badge badge-success' style='width:80px!important;height:20px!important;'>PENDING</span>";
+                   if ($model->tagging->tagging_status_id==1) {
+                          return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
+                      }else if ($model->tagging->tagging_status_id==2) {
+                          return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
                       }
-                     
-                    },
-                    'enableSorting' => false,
-                    'contentOptions' => ['style' => 'width:10px; white-space: normal;'],
-                ],
-                ['class' => 'kartik\grid\ActionColumn',
+                      else if ($model->tagging->tagging_status_id==3) {
+                          return "<span class='badge btn-warning' style='width:90px;height:20px'>ASSIGNED</span>";
+                      }
+                      else if ($model->tagging->tagging_status_id==4) {
+                          return "<span class='badge btn-danger' style='width:90px;height:20px'>CANCELLED</span>";
+                      }
+                       
+                
+                  }else{
+                      return "<span class='badge badge-success' style='width:80px!important;height:20px!important;'>PENDING</span>";
+                  }
+                 
+                },
+                'enableSorting' => false,
+                'contentOptions' => ['style' => 'width:10px; white-space: normal;'],
+            ],
+            [
+                'class' => 'kartik\grid\ActionColumn',
                 'contentOptions' => ['style' => 'width: 8.7%'],
                 'template' => $analysistemplate,
                 'buttons'=>[
@@ -733,7 +572,7 @@ $this->registerJs($PrintEvent);
                     },
                 ],
             ],
-            ];
+        ];
             echo GridView::widget([
                 'id' => 'analysis-grid',
                 'responsive'=>true,
@@ -753,11 +592,11 @@ $this->registerJs($PrintEvent);
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Analysis</h3>',
                     'type'=>'primary',
-                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => Url::to(['analysis/create','id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_analysis'])."   ".
+                    'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => Url::to(['analysis/create','id'=>$model->request_id]),'title'=>'Add Analyses', 'onclick'=> $ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_analysis'])."   ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_package'])." ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_fees']),
                    'after'=>false,
-                   'footer'=>$model->request_type_id == 2 ? "":"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button>".$EnablePrint."</div>",
+                   'footer'=>"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button>".$EnablePrint."</div>",
                 ],
                 'columns' => $analysisgridColumns,
                 'toolbar' => [
@@ -765,116 +604,10 @@ $this->registerJs($PrintEvent);
             ]);
         ?>
     </div>
-    <div class="container">
-        <div class="table-responsive">
-        <?php
-        if($model->request_type_id == 2){
-
-            $gridColumns = [
-                [
-                    'attribute'=>'sample_code',
-                    'header' => 'Agency',
-                    'enableSorting' => false,
-                    'contentOptions' => [
-                        'style'=>'max-width:70px; overflow: auto; white-space: normal; word-wrap: break-word;'
-                    ],
-                ],
-                [
-                    'attribute'=>'samplename',
-                    'enableSorting' => false,
-                    'header' => 'Region',
-                ],
-                [
-                    'attribute'=>'description',
-                    'header' => 'Estimated Due Date',
-                    'format' => 'raw',
-                    'enableSorting' => false,
-                    'value' => function($data){
-                        return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".date("Y-m-d h:i A",strtotime($data->sampling_date))."</b></span>,&nbsp;".$data->description : $data->description;
-                    },
-                   'contentOptions' => [
-                        'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
-                    ],
-                ],
-                [
-                    'class' => 'kartik\grid\ActionColumn',
-                    'template' => '{notification}',
-                    'dropdown' => false,
-                    'dropdownOptions' => ['class' => 'pull-right'],
-                    'urlCreator' => function ($action, $model, $key, $index) {
-                        if ($action === 'delete') {
-                            $url ='/lab/sample/delete?id='.$model->sample_id;
-                            return $url;
-                        } 
-                        if ($action === 'cancel') {
-                            $url ='/lab/sample/cancel?id='.$model->sample_id;
-                            return $url;
-                        }
-                    },
-                    'headerOptions' => ['class' => 'kartik-sheet-style'],
-                    'buttons' => [
-                        'notification' => function ($url, $model) {
-                            if($model->active == 1){
-                                return Html::a('<span class="glyphicon glyphicon-bell"></span> Notify', '#', ['class'=>'btn btn-primary','title'=>'Send Notification','onclick' => 'sendNotification('.$model->sample_id.')']);
-                            } else {
-                                return null;
-                            }
-                        },
-                        /*'delete' => function ($url, $model) {
-                            if($model->sample_code == "" && $model->active == 1){
-                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'data-method'=>'post','class'=>'btn btn-danger','title'=>'Delete Sample','data-pjax'=>'0']);
-                            } else {
-                                return null;
-                            }
-                        },
-                        'cancel' => function ($url, $model){
-                            if($model->sample_code != "" && $model->active == 1){
-                                return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', '#', ['class'=>'btn btn-warning','title'=>'Cancel Sample','onclick' => 'cancelSample('.$model->sample_id.')']);
-                            } else {
-                                return $model->active == 0 ? Html::a('<span style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>','#',['class'=>'btn btn-danger','title'=>'View Cancel Remarks','onclick' => 'viewRemarkSample('.$model->sample_id.')']) : '';
-                            }
-                        },*/
-                    ],
-                ],
-            ];
-
-            echo GridView::widget([
-                'id' => 'agency-grid',
-                'dataProvider'=> $sampleDataProvider,
-                'pjax'=>true,
-                'pjaxSettings' => [
-                    'options' => [
-                        'enablePushState' => false,
-                    ]
-                ],
-                'responsive'=>true,
-                'striped'=>true,
-                'hover'=>true,
-                'panel' => [
-                    'heading'=>'<h3 class="panel-title">Agencies</h3>',
-                    'type'=>'primary',
-                    /*'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>!$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/reports/preview?url=/lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']),
-                    'after'=>false,*/
-                    'before'=>'<span style="font-weight:bold;font-size:13px;font-style:italic;color:#191970;">Note: Select agency to send referral notification.<span>',
-                    'after'=>false,
-                    //'footer'=>$model->request_type_id == 2 ? "":"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button>".$EnablePrint."</div>",
-                ],
-                'columns' => $gridColumns,
-                'toolbar' => [
-                    'content'=> Html::a('<i class="glyphicon glyphicon-repeat"></i>', [Url::to(['request/view','id'=>$model->request_id])], [
-                                'class' => 'btn btn-default', 
-                                'title' => 'Reset Grid'
-                            ]),
-                    //'{toggleData}',
-                ],
-            ]);
-        }
-        ?>
-        </div>
-    </div>
 </div>
 </div>
 <script type="text/javascript">
+
     $('#sample-grid tbody td').css('cursor', 'pointer');
     function updateSample(id){
        var url = '/lab/sample/update?id='+id;
@@ -919,36 +652,5 @@ $this->registerJs($PrintEvent);
             .find('#modalContent')
             .load(url);
     }
+    
 </script>
-
-<?php
-$this->registerJs("
-   /* function loadMessage(url,id){
-        $.ajax({
-            url: url,
-            dataType: 'json',
-            method: 'GET',
-            data: form.serialize(),
-            success: function (data, textStatus, jqXHR) {
-                //$('#sample-samplename').val(data.name);
-                //$('#sample-description').val(data.description);
-                $('.image-loader').removeClass( \"img-loader\" );
-                $('.modal-title').html('Sample');
-                var content = $('#modalContent').html(data.)
-                $('#modal').modal('show')
-                        .find(content)
-                        .load(url);
-            },
-            beforeSend: function (xhr) {
-                //alert('Please wait...');
-                $('.image-loader').addClass( \"img-loader\" );
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log('An error occured!');
-                alert('Error in ajax request');
-            }
-        });
-
-    }*/
-");
-?>

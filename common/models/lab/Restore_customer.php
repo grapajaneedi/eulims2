@@ -78,20 +78,20 @@ class Restore_customer extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
-            [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'barangay_id', 'customer_type_id', 'business_nature_id', 'industrytype_id','classification_id'], 'required'],
-            [['rstl_id', 'barangay_id', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'classification_id', 'created_at'], 'integer'],
-            [['latitude', 'longitude'], 'number'],
-            [['customer_code'], 'string', 'max' => 11],
-            [['customer_name', 'address'], 'string', 'max' => 200],
-            [['head'], 'string', 'max' => 100],
-            [['tel', 'fax', 'email'], 'string', 'max' => 50],
-            [['customer_name', 'head', 'address'], 'unique', 'targetAttribute' => ['customer_name', 'head', 'address']],
-            [['customer_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customertype::className(), 'targetAttribute' => ['customer_type_id' => 'customertype_id']],
-            [['business_nature_id'], 'exist', 'skipOnError' => true, 'targetClass' => Businessnature::className(), 'targetAttribute' => ['business_nature_id' => 'business_nature_id']],
-            [['industrytype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Industrytype::className(), 'targetAttribute' => ['industrytype_id' => 'industrytype_id']],
-            [['classification_id'], 'exist', 'skipOnError' => true, 'targetClass' => Classification::className(), 'targetAttribute' => ['classification_id' => 'classification_id']],
-        ];
+        // return [
+        //     [['rstl_id', 'customer_name', 'head', 'tel', 'fax', 'email', 'barangay_id', 'customer_type_id', 'business_nature_id', 'industrytype_id','classification_id'], 'required'],
+        //     [['rstl_id', 'barangay_id', 'customer_type_id', 'business_nature_id', 'industrytype_id', 'classification_id', 'created_at'], 'integer'],
+        //     [['latitude', 'longitude'], 'number'],
+        //     [['customer_code'], 'string', 'max' => 11],
+        //     [['customer_name', 'address'], 'string', 'max' => 200],
+        //     [['head'], 'string', 'max' => 100],
+        //     [['tel', 'fax', 'email'], 'string', 'max' => 50],
+        //     [['customer_name', 'head', 'address'], 'unique', 'targetAttribute' => ['customer_name', 'head', 'address']],
+        //     [['customer_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customertype::className(), 'targetAttribute' => ['customer_type_id' => 'customertype_id']],
+        //     [['business_nature_id'], 'exist', 'skipOnError' => true, 'targetClass' => Businessnature::className(), 'targetAttribute' => ['business_nature_id' => 'business_nature_id']],
+        //     [['industrytype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Industrytype::className(), 'targetAttribute' => ['industrytype_id' => 'industrytype_id']],
+        //     [['classification_id'], 'exist', 'skipOnError' => true, 'targetClass' => Classification::className(), 'targetAttribute' => ['classification_id' => 'classification_id']],
+        // ];
     }
     /**
      * {@inheritdoc}
@@ -123,52 +123,60 @@ class Restore_customer extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCustomerType()
-    {
-        return $this->hasOne(Customertype::className(), ['customertype_id' => 'customer_type_id']);
-    }
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getBusinessNature()
-    {
-        return $this->hasOne(Businessnature::className(), ['business_nature_id' => 'business_nature_id']);
-    }
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getIndustrytype()
-    {
-        return $this->hasOne(Industrytype::className(), ['industrytype_id' => 'industrytype_id']);
-    }
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRequests()
-    {
-        return $this->hasMany(Request::className(), ['customer_id' => 'customer_id']);
-    }
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getClassification()
-    {
-        return $this->hasOne(Classification::className(), ['classification_id' => 'classification_id']);
-    }
+    // public function getCustomerType()
+    // {
+    //     return $this->hasOne(Customertype::className(), ['customertype_id' => 'customer_type_id']);
+    // }
+    // /**
+    //  * @return \yii\db\ActiveQuery
+    //  */
+    // public function getBusinessNature()
+    // {
+    //     return $this->hasOne(Businessnature::className(), ['business_nature_id' => 'business_nature_id']);
+    // }
+    // /**
+    //  * @return \yii\db\ActiveQuery
+    //  */
+    // public function getIndustrytype()
+    // {
+    //     return $this->hasOne(Industrytype::className(), ['industrytype_id' => 'industrytype_id']);
+    // }
+    // /**
+    //  * @return \yii\db\ActiveQuery
+    //  */
+    // public function getRequests()
+    // {
+    //     return $this->hasMany(Request::className(), ['customer_id' => 'customer_id']);
+    // }
+    // /**
+    //  * @return \yii\db\ActiveQuery
+    //  */
+    // public function getClassification()
+    // {
+    //     return $this->hasOne(Classification::className(), ['classification_id' => 'classification_id']);
+    // }
 
-    public function getCompleteaddress()
-    {
-         // return $this->hasOne(Classification::className(), ['classification_id' => 'classification_id']);
-         // $address = Barangay::findOne($this->barangay_id);
-         // return $address->cityMunicipality->province->region->region.' '.$address->cityMunicipality->province->province.' '.$address->cityMunicipality->city_municipality.' '.$address->barangay;
+    // public function getCompleteaddress()
+    // {
+    //      // return $this->hasOne(Classification::className(), ['classification_id' => 'classification_id']);
+    //      // $address = Barangay::findOne($this->barangay_id);
+    //      // return $address->cityMunicipality->province->region->region.' '.$address->cityMunicipality->province->province.' '.$address->cityMunicipality->city_municipality.' '.$address->barangay;
 
-         $address = Barangay::findOne($this->barangay_id);
-         if($address)
-            return $address->municipalityCity->province->region->reg_desc.', '.$address->municipalityCity->province->prov_desc.', '.$address->municipalityCity->citymun_desc.', '.$address->brgy_desc;
-        else
-            return "none";
+    //      $address = Barangay::findOne($this->barangay_id);
+    //      if($address)
+    //         return $address->municipalityCity->province->region->reg_desc.', '.$address->municipalityCity->province->prov_desc.', '.$address->municipalityCity->citymun_desc.', '.$address->brgy_desc;
+    //     else
+    //         return "none";
 
-    }
+    // }
 
-  
+    // public function afterSave($insert, $changedAttributes){
+    //      if ($insert) {
+    //          $this->customer_code= $this->rstl_id."-".$this->customer_id;
+    //          $this->save();
+    //          $func = new Functions();
+    //         $func->addlsync("Customer",$this->customer_id);
+    //      }
+    //      parent::afterSave($insert, $changedAttributes);
+    // }
 }

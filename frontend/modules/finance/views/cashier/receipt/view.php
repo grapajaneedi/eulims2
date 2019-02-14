@@ -45,7 +45,7 @@ $add_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paym
                     [
                         'label'=>'Nature of Collection',
                         'format'=>'raw',
-                        'value'=>$model->collectiontype->natureofcollection,
+                        'value'=>$model->collectiontype ? $model->collectiontype->natureofcollection : "",
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
@@ -63,8 +63,8 @@ $add_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paym
                     ],
                     [
                         'label'=>'Total of Collection',
-                        'format'=>'raw',
                         'value'=>$model->total,
+                        'format' => ['decimal', 2],
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
@@ -235,6 +235,6 @@ $add_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paym
    
    
     function addPaymentitem(url,title){
-        LoadModal(title,url,'true','800px');
+        LoadModal(title,url,'true','1100px');
     }
 </script>

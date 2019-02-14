@@ -27,7 +27,7 @@ class InventoryEntriesSearch extends InventoryEntries
     public function rules()
     {
         return [
-            [['inventory_transactions_id', 'transaction_type_id', 'rstl_id', 'product_id', 'created_by', 'suppliers_id', 'quantity', 'created_at', 'updated_at'], 'integer'],
+            [['inventory_transactions_id', 'rstl_id', 'product_id', 'created_by', 'suppliers_id', 'quantity', 'created_at', 'updated_at'], 'integer'],
             [['manufacturing_date', 'expiration_date', 'po_number','createDateStart','createDateEnd','createDateStart2','createDateEnd2'], 'safe'],
             [['amount', 'total_amount'], 'number'],
             [['createTimeRange','createTimeRange2'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
@@ -71,7 +71,7 @@ class InventoryEntriesSearch extends InventoryEntries
         // grid filtering conditions
         $query->andFilterWhere([
             'inventory_transactions_id' => $this->inventory_transactions_id,
-            'transaction_type_id' => $this->transaction_type_id,
+            // 'transaction_type_id' => $this->transaction_type_id,
             'rstl_id' => $this->rstl_id,
             'product_id' => $this->product_id,
             'created_by' => $this->created_by,

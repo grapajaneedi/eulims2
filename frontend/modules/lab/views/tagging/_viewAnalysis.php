@@ -13,7 +13,6 @@ use common\components\Functions;
 use yii\data\ActiveDataProvider;
 use kartik\detail\DetailView;
 
-
 use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
 
@@ -21,7 +20,6 @@ use yii\helpers\Url;
 use yii\web\JsExpression;
 use kartik\widgets\TypeaheadBasic;
 use kartik\widgets\Typeahead;
-
 
 use common\models\lab\Lab;
 use common\models\lab\Labsampletype;
@@ -31,10 +29,7 @@ use common\models\lab\Testnamemethod;
 use common\models\lab\Methodreference;
 use common\models\lab\Testname;
 use kartik\money\MaskMoney;
-
 use common\models\system\Profile;
-/* @var $this yii\web\View */
-
 
 $js=<<<SCRIPT
 
@@ -51,9 +46,26 @@ $(".select-on-check-all").change(function(){
 
 });
 
+function tag(mid){
+    
+      $.ajax({
+         url: '/lab/tagging/tag',
+         method: "post",
+          data: { id: mid},
+          beforeSend: function(xhr) {
+             $('.image-loader').addClass("img-loader");
+             }
+          })
+          .done(function(response) {   
+              alert("boom");            
+          });
+  }
+
 SCRIPT;
 $this->registerJs($js);
 ?>
+
+<?php $this->registerJsFile("/js/services/services.js"); ?>
 
 <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
@@ -88,7 +100,6 @@ $this->registerJs($js);
  
 </script>
 
-
 <?= GridView::widget([
         'dataProvider' => $analysisdataprovider,
         'id'=>'analysis-grid',
@@ -97,8 +108,6 @@ $this->registerJs($js);
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  Analysis' ,
-                'footer'=>Html::button('<i class="glyphicon glyphicon-tag"></i> Start Analysis', ['disabled'=>false,'value' => Url::to(['tagging/startanalysis','id'=>1]), 'onclick'=>'startanalysis()','title'=>'Start Analysis', 'class' => 'btn btn-success','id' => 'btn_start_analysis'])." ".
-                Html::button('<i class="glyphicon glyphicon-ok"></i> Completed', ['disabled'=>false,'value' => Url::to(['tagging/completedanalysis','id'=>1]),'title'=>'Completed', 'onclick'=>'completedanalysis()', 'class' => 'btn btn-success','id' => 'btn_complete_analysis']),
             ],
             'pjaxSettings' => [
                 'options' => [
@@ -107,10 +116,15 @@ $this->registerJs($js);
             ],
             'floatHeaderOptions' => ['scrollingTop' => true],
             'columns' => [
-                  [
-               'class' => '\kartik\grid\CheckboxColumn',
-               'width' => '5px',
-            ],
+           ['class' => 'kartik\grid\ActionColumn',
+           'contentOptions' => ['style' => 'width: 5%'],
+           'template' => '{update}',
+           'buttons'=>[
+               'update'=>function ($url, $model) {
+                   return Html::button('<span class="glyphicon glyphicon-tag"></span>', ['value'=>Url::to(['/lab/tagging/tag','id'=>$model->analysis_id]),'onclick'=>'LoadModal(this.title, this.value, true, 900);', 'class' => 'btn btn-success','title' => Yii::t('app', "Tagging for ".$model->testname."<font color='Blue'></font>")]);
+               },
+           ],
+       ],
                      [
                         'header'=>'Test Name',
                         'format' => 'raw',
@@ -124,12 +138,12 @@ $this->registerJs($js);
                     [
                         'header'=>'Method',
                         'format' => 'raw',
-                        'width' => '300px',
+                        'width' => '50px',
                         'enableSorting' => false,
                         'value' => function($model) {
                             return $model->method;
                         },
-                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                      
+                        'contentOptions' => ['style' => 'width:300px; white-space: normal;'],                      
                     ],
                     [
                         'header'=>'Analyst',
@@ -147,12 +161,22 @@ $this->registerJs($js);
                         },
                         'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
                     ],
-                    // [
-                    //     'header'=>'ISO accredited',
-                    //     'format' => 'raw',
-                    //     'enableSorting' => false,
-                    //     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                 
-                    // ],
+                    [
+                        'header'=>'Steps',
+                        'format' => 'raw',
+                        'enableSorting' => false,
+                        'value'=> function ($model){
+                            return "";
+                            // if ($model->tagging){
+                            //     $profile= Profile::find()->where(['user_id'=> $model->tagging->user_id])->one();
+                            //     return $profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
+                            // }else{
+                            //     return "";
+                            // }
+                           
+                        },
+                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
+                    ],
                     [
                           'header'=>'Status',
                           'hAlign'=>'center',
@@ -223,7 +247,6 @@ $this->registerJs($js);
         });
     }
 
-
     function completedanalysis() {
 
          jQuery.ajax( {
@@ -241,4 +264,3 @@ $this->registerJs($js);
 
     }
 </script>
-

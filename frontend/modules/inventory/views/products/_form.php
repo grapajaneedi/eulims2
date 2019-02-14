@@ -8,26 +8,28 @@ use common\models\inventory\Suppliers;
 use common\models\inventory\Producttype;
 use kartik\widgets\FileInput;
 use kartik\money\MaskMoney;
+use yii\helpers\Url;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\inventory\Products */
 /* @var $form yii\widgets\ActiveForm */
 
-\mootensai\components\JsBlock::widget(['viewFile' => '_script', 'pos'=> \yii\web\View::POS_END, 
-    'viewParams' => [
-        'class' => 'InventoryEntries', 
-        'relID' => 'inventory-entries', 
-        'value' => \yii\helpers\Json::encode($model->inventoryEntries),
-        'isNewRecord' => ($model->isNewRecord) ? 1 : 0
-    ]
-]);
-\mootensai\components\JsBlock::widget(['viewFile' => '_script', 'pos'=> \yii\web\View::POS_END, 
-    'viewParams' => [
-        'class' => 'InventoryWithdrawaldetails', 
-        'relID' => 'inventory-withdrawaldetails', 
-        'value' => \yii\helpers\Json::encode($model->inventoryWithdrawaldetails),
-        'isNewRecord' => ($model->isNewRecord) ? 1 : 0
-    ]
-]);
+// \mootensai\components\JsBlock::widget(['viewFile' => '_script', 'pos'=> \yii\web\View::POS_END, 
+//     'viewParams' => [
+//         'class' => 'InventoryEntries', 
+//         'relID' => 'inventory-entries', 
+//         'value' => \yii\helpers\Json::encode($model->inventoryEntries),
+//         'isNewRecord' => ($model->isNewRecord) ? 1 : 0
+//     ]
+// ]);
+// \mootensai\components\JsBlock::widget(['viewFile' => '_script', 'pos'=> \yii\web\View::POS_END, 
+//     'viewParams' => [
+//         'class' => 'InventoryWithdrawaldetails', 
+//         'relID' => 'inventory-withdrawaldetails', 
+//         'value' => \yii\helpers\Json::encode($model->inventoryWithdrawaldetails),
+//         'isNewRecord' => ($model->isNewRecord) ? 1 : 0
+//     ]
+// ]);
 $stat="";
 
 if ($model->isNewRecord){
@@ -35,23 +37,34 @@ if ($model->isNewRecord){
 }else{
     $stat=false;
 }
+
+
+
+function isthere($file){
+    if($file){
+         return '<img src="'.Url::base()."/".$file.'" width="200" class="file-preview-image">';
+    }else{
+        return '<img src="/uploads/img.png" width="200" class="file-preview-image">';
+    }
+}
         
 ?>
 
 <div class="products-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin( [ 'options' => [ 'enctype' => 'multipart/form-data' ] ] ); ?>
 
     <?= $form->errorSummary($model); ?>
      <?= $form->field($model, 'product_id')->hiddenInput()->label(false) ?>
     <div class="row">
         <div class="col-md-6">
         <?php // your fileinput widget for single file upload
-            echo "<b>Image 1 </b>";
+            echo "<b>Image 1</b>";
+
             echo $form->field($model, 'Image1')->widget(FileInput::classname(), [
                 'options'=>[
                     'id'=>'profileImage_upload',
-                    'accept'=>'image/*'
+                    'accept'=>'*'
                 ],
                 'pluginOptions'=>[
                     'allowedFileExtensions'=>['jpg','gif','png'],
@@ -60,9 +73,7 @@ if ($model->isNewRecord){
                     'initialPreviewConfig'=>[
                         'width'=>'120px',
                     ],
-                    'initialPreview' => [
-                        '<img src="/uploads/img.png" width="200" class="file-preview-image">',
-                    ],
+                    'initialPreview' =>[isthere($model->Image1)],
                     'showUpload'=>false,
                     'showRemove'=>false,
                     'showBrowse'=>true,
@@ -86,9 +97,7 @@ if ($model->isNewRecord){
                     'initialPreviewConfig'=>[
                         'width'=>'120px',
                     ],
-                    'initialPreview' => [
-                        '<img src="/uploads/img.png" width="200" class="file-preview-image">',
-                    ],
+                    'initialPreview' =>[isthere($model->Image2)],
                     'showUpload'=>false,
                     'showRemove'=>false,
                     'showBrowse'=>true,

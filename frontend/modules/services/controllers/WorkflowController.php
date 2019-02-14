@@ -85,6 +85,8 @@ class WorkflowController extends Controller
             ];
         }
 
+        // $model->rstl_id = $GLOBALS['rstl_id'];
+        // $model->pstcanalysis_id = $GLOBALS['rstl_id'];
        if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                     'model' => $model,

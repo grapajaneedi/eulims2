@@ -253,3 +253,9 @@ $Host= "//".Yii::$app->getRequest()->serverName;
 <!-- Add the sidebar's background. This div must be placed
      immediately after the control sidebar -->
 <div class='control-sidebar-bg'></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+        $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+    });
+</script>

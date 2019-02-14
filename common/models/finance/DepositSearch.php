@@ -1,5 +1,11 @@
 <?php
-
+/*
+ * Project Name: eulims * 
+ * Copyright(C)2018 Department of Science & Technology -IX * 
+ * Developer: Eden G. Galleno  * 
+ * 12 22, 18 , 3:52:38 PM * 
+ * Module: DepositSearch * 
+ */
 namespace common\models\finance;
 
 use Yii;
@@ -67,6 +73,7 @@ class DepositSearch extends Deposit
             'amount' => $this->amount,
             'deposit_type_id' => $this->deposit_type_id,
             'deposit_date' => $this->deposit_date,
+            'rstl_id' => Yii::$app->user->identity->profile->rstl_id,
             
         ]);
 

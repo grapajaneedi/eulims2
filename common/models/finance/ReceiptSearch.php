@@ -1,5 +1,11 @@
 <?php
-
+/*
+ * Project Name: eulims * 
+ * Copyright(C)2018 Department of Science & Technology -IX * 
+ * Developer: Eden G. Galleno  * 
+ * 12 22, 18 , 3:52:38 PM * 
+ * Module: ReceiptSearch * 
+ */
 namespace common\models\finance;
 
 use Yii;
@@ -24,7 +30,7 @@ class ReceiptSearch extends Receipt
     {
         return [
             [['receipt_id', 'rstl_id', 'terminal_id', 'orderofpayment_id', 'deposit_type_id', 'or_number', 'collectiontype_id', 'payment_mode_id', 'cancelled'], 'integer'],
-            [['receiptDate','total'], 'safe'],
+            [['receiptDate','total','createDateStart','createDateEnd'], 'safe'],
             [['payor'], 'string'],
             [['createTimeRange'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
         ];
@@ -54,8 +60,10 @@ class ReceiptSearch extends Receipt
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['receiptDate'=>SORT_DESC]],
         ]);
 
+        
         $this->load($params);
 
         if (!$this->validate()) {

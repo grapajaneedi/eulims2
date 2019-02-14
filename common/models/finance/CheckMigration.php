@@ -1,5 +1,11 @@
 <?php
-
+/*
+ * Project Name: eulims * 
+ * Copyright(C)2018 Department of Science & Technology -IX * 
+ * Developer: Eden G. Galleno  * 
+ * 11 22, 18 , 3:52:38 PM * 
+ * Module: CheckMigration * 
+ */
 namespace common\models\finance;
 
 use Yii;
@@ -60,6 +66,7 @@ class CheckMigration extends \yii\db\ActiveRecord
             'checkdate' => 'Checkdate',
             'amount' => 'Amount',
             'local_check_id' => 'Local Check ID',
+            'local_receipt_id' => 'Local Receipt ID',
         ];
     }
 }

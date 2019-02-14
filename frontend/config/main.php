@@ -18,6 +18,7 @@ return [
     //'modules' =>require(__DIR__.'/_modules.php'), // Load routes from PHP File
     'modules' =>$modules,
     //'modules'=>parse_ini_file(Yii::$app->basePath.'/config/module.ini',true),
+    'timeZone' => 'Asia/Manila', //set timezone to Asia/Manila
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
@@ -34,6 +35,10 @@ return [
             'class'=>'common\components\EpaymentConfig',
             'URI'=>'https://yii2customer.onelab.ph/web/api/op',
             
+        ],
+        'api_config' => [
+            'class' => 'common\components\ApiConfig',
+            'api_url' => 'https://eulimsapi.onelab.ph/api/web/v1/'
         ],
         'places' => [
             'class' => '\dosamigos\google\places\Places',

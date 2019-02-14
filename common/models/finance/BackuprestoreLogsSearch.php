@@ -1,5 +1,11 @@
 <?php
-
+/*
+ * Project Name: eulims * 
+ * Copyright(C)2018 Department of Science & Technology -IX * 
+ * Developer: Eden G. Galleno  * 
+ * 11 22, 18 , 3:52:38 PM * 
+ * Module: BackuprestoreLogsSearch * 
+ */
 namespace common\models\finance;
 
 use Yii;
@@ -19,7 +25,7 @@ class BackuprestoreLogsSearch extends BackuprestoreLogs
     {
         return [
             [['id'], 'integer'],
-            [['activity', 'transaction_date', 'op_data', 'pi_data', 'sc_data', 'receipt_data', 'check_data', 'deposit_data', 'status'], 'safe'],
+            [['activity', 'transaction_date', 'data_date', 'op', 'paymentitem', 'receipt', 'check', 'deposit', 'status'], 'safe'],
         ];
     }
 
@@ -60,16 +66,16 @@ class BackuprestoreLogsSearch extends BackuprestoreLogs
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'transaction_date' => $this->transaction_date,
         ]);
 
         $query->andFilterWhere(['like', 'activity', $this->activity])
-            ->andFilterWhere(['like', 'op_data', $this->op_data])
-            ->andFilterWhere(['like', 'pi_data', $this->pi_data])
-            ->andFilterWhere(['like', 'sc_data', $this->sc_data])
-            ->andFilterWhere(['like', 'receipt_data', $this->receipt_data])
-            ->andFilterWhere(['like', 'check_data', $this->check_data])
-            ->andFilterWhere(['like', 'deposit_data', $this->deposit_data])
+            ->andFilterWhere(['like', 'transaction_date', $this->transaction_date])
+            ->andFilterWhere(['like', 'data_date', $this->data_date])
+            ->andFilterWhere(['like', 'op', $this->op])
+            ->andFilterWhere(['like', 'paymentitem', $this->paymentitem])
+            ->andFilterWhere(['like', 'receipt', $this->receipt])
+            ->andFilterWhere(['like', 'check', $this->check])
+            ->andFilterWhere(['like', 'deposit', $this->deposit])
             ->andFilterWhere(['like', 'status', $this->status]);
 
         return $dataProvider;
