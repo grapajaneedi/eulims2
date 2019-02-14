@@ -22,6 +22,7 @@ use linslin\yii2\curl;
 use common\models\lab\exRequestreferral;
 use common\models\lab\Analysis;
 use common\models\lab\Sample;
+use yii\helpers\Json;
 
 
 /**
@@ -179,6 +180,24 @@ class ReferralComponent extends Component {
             return $list;
         } else {
             return 'Not valid request!';
+        }
+    }
+    //post delete request
+    function removeReferral($agencyId,$requestId)
+    {
+        if($agencyId > 0 && $requestId > 0){
+            $apiUrl=$this->source.'/api/web/referral/referrals/deletereferral';
+            $curl = new curl\Curl();
+            $data = Json::encode(['request_id'=>$requestId,'rstl_id'=>$agencyId],JSON_NUMERIC_CHECK);
+            $response = $curl->setRequestBody($data)
+            ->setHeaders([
+                'Content-Type' => 'application/json',
+                'Content-Length' => strlen($data),
+            ])->post($apiUrl);
+
+            return $response;
+        } else {
+            return 0;
         }
     }
 }

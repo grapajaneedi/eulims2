@@ -22,6 +22,7 @@ if(count($sampletype) > 0){
 } else {
     $data = ['' => 'No Sampletype'] + $sampletype;
 }
+$sameSampletype = !empty($model->sampletype_id) ? $model->sampletype_id : 0;
 ?>
 
 <div class="sample-form">
@@ -128,8 +129,8 @@ if(count($sampletype) > 0){
     ?>
     <div class="form-group" style="padding-bottom: 3px;">
         <div style="float:right;">
-            <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-            <?= Html::button('Close', ['class' => 'btn', 'onclick'=>'closeDialog()']) ?>
+            <?= Html::submitButton($model->isNewRecord ? 'Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','id'=>'btn-update']) ?>
+            <?= Html::button('Close', ['class' => 'btn', 'data-dismiss' => 'modal']) ?>
             <br>
         </div>
     </div>
@@ -195,7 +196,6 @@ $('.input-number').change(function() {
         $(this).val($(this).data('oldValue'));
     }
     
-    
 });
 
 $(".input-number").keydown(function (e) {
@@ -214,10 +214,29 @@ $(".input-number").keydown(function (e) {
         }
     });
 
-function closeDialog(){
-    $(".modal").modal('hide'); 
-};
-
+function confirmSampletype(){
+    BootstrapDialog.show({
+        title: "<span class='glyphicon glyphicon-warning-sign' style='font-size:18px;'></span> Warning",
+        type: BootstrapDialog.TYPE_DANGER,
+        message: "<div class='alert alert-danger'><p style='font-weight:bold;font-size:14px;'><span class='glyphicon glyphicon-exclamation-sign' style='font-size:18px;'></span>&nbsp; Changing Sample Type will erase the analyses under this sample.</p><br><strong>Reason:</strong><ul><li>Test/Calibration and Method might not be available for the selected Sample Type</li></ul></div>",
+        buttons: [
+            {
+                label: 'Proceed',
+                cssClass: 'btn-primary',
+                action: function(thisDialog){
+                    thisDialog.close();
+                    $('.sample-form form').submit();
+                }
+            },
+            {
+                label: 'Close',
+                action: function(thisDialog){
+                    thisDialog.close();
+                }
+            }
+        ]
+    });
+}
 </script>
 <?php
 $this->registerJs("$('#saved_templates').on('change',function(){
@@ -244,6 +263,28 @@ $this->registerJs("$('#saved_templates').on('change',function(){
             }
         });
 });");
+?>
+<?php
+if(!$model->isNewRecord) {
+    $this->registerJs("
+        $('#sample-sampletype_id').on('change', function() {
+            var sampletype = $('#sample-sampletype_id').val();
+            if(sampletype != ".$sameSampletype." && sampletype > 0){
+                $('#btn-update').attr('onclick','confirmSampletype()');
+            } else {
+                $('#btn-update').removeAttr('onclick');
+            }
+        });
+
+        $('#btn-update').on('click', function(e){
+            e.preventDefault();
+            var sampletype = $('#sample-sampletype_id').val();
+            if(sampletype == ".$sameSampletype."){
+                $('.sample-form form').submit();
+            }
+        });
+    ");
+}
 ?>
 <style type="text/css">
 /* Absolute Center Spinner */

@@ -199,23 +199,50 @@ class SampleController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         $request = $this->findRequest($model->request_id);
+        $connection= Yii::$app->labdb;
+
         $labId = $request->lab_id;
         //$sampletype = $this->listSampletype($labId);
         $sampletype = ($request->request_type_id == 2) ? $this->listSampletypereferral($labId) : $this->listSampletype($labId);
 
+        $analysisCount = Analysis::find()->where('sample_id =:sampleId',[':sampleId'=>$id])->count();
+        $oldSampletypeId = $model->sampletype_id;
+        $analysisfail = null;
+
         if ($model->load(Yii::$app->request->post())) {
+            $transaction = $connection->beginTransaction();
+            if($oldSampletypeId != $_POST['Sample']['sampletype_id'] && $analysisCount > 0)
+            {
+                $connection->createCommand('SET FOREIGN_KEY_CHECKS=0')->execute();
+
+                if($analysisCount > 0){
+                    $analysisDelete = Analysis::deleteAll('sample_id = :sampleId',[':sampleId'=>$id]);            
+                    if(!$analysisDelete)
+                    {
+                        $analysisfail = 1;
+                    }
+                }
+            }
             if(isset($_POST['Sample']['sampling_date'])){
                 $model->sampling_date = date('Y-m-d H:i:s', strtotime($_POST['Sample']['sampling_date']));
             } else {
                 $model->sampling_date = date('Y-m-d H:i:s');
             }
-
-            if($model->save(false)){
-				Yii::$app->session->setFlash('success', $model->samplename." Successfully Updated.");
-                return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
-
+            if($analysisfail == 1){
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('error', 'Error deleting analysis!');
+                return $this->redirect(['view', 'id' => $model->request_id]);
+            } else {
+                if($model->save(false)){
+                    $transaction->commit();
+    				Yii::$app->session->setFlash('success', $model->samplename." Successfully Updated.");
+                    return $this->redirect(['/lab/request/view', 'id' => $model->request_id]);
+                } else {
+                    $transaction->rollBack();
+                    Yii::$app->session->setFlash('error', 'Error occured during update!');
+                    return $this->redirect(['view', 'id' => $model->request_id]);
+                }
             }
         } elseif (Yii::$app->request->isAjax) {
                 return $this->renderAjax('_form', [

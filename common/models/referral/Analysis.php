@@ -19,6 +19,7 @@ use Yii;
  * @property int $status
  * @property int $is_package
  * @property int $type_fee_id
+ * @property int $local_analysis_id
  * @property int $local_sample_id
  * @property string $created_at
  * @property string $updated_at
@@ -51,9 +52,9 @@ class Analysis extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date_analysis', 'agency_id', 'sample_id', 'testname_id', 'methodreference_id', 'cancelled', 'status', 'type_fee_id', 'local_sample_id', 'created_at'], 'required'],
+            [['date_analysis', 'agency_id', 'sample_id', 'testname_id', 'methodreference_id', 'cancelled', 'status', 'type_fee_id', 'local_analysis_id', 'local_sample_id', 'created_at'], 'required'],
             [['date_analysis', 'created_at', 'updated_at'], 'safe'],
-            [['agency_id', 'pstcanalysis_id', 'sample_id', 'testname_id', 'methodreference_id', 'cancelled', 'status', 'is_package', 'type_fee_id', 'local_sample_id'], 'integer'],
+            [['agency_id', 'pstcanalysis_id', 'sample_id', 'testname_id', 'methodreference_id', 'cancelled', 'status', 'is_package', 'type_fee_id', 'local_analysis_id', 'local_sample_id'], 'integer'],
             [['analysis_fee'], 'number'],
             [['sample_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sample::className(), 'targetAttribute' => ['sample_id' => 'sample_id']],
             [['methodreference_id'], 'exist', 'skipOnError' => true, 'targetClass' => Methodreference::className(), 'targetAttribute' => ['methodreference_id' => 'methodreference_id']],
@@ -79,6 +80,7 @@ class Analysis extends \yii\db\ActiveRecord
             'status' => 'Status',
             'is_package' => 'Is Package',
             'type_fee_id' => 'Type Fee ID',
+            'local_analysis_id' => 'Local Analysis ID',
             'local_sample_id' => 'Local Sample ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

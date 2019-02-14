@@ -313,3 +313,10 @@ frontend/modules/lab/views/sample/_form_ok.php
 frontend/modules/lab/views/sample/_form --.php
 frontend/modules/lab/views/sample/_form --.php
 frontend/modules/lab/views/sample/_form_ok.php
+frontend/modules/lab/controllers/RequestController_20190201.php
+frontend/modules/lab/controllers/SampleController_20181207.php
+frontend/modules/lab/views/request/_formReferral_20190117.php
+frontend/modules/lab/views/request/_formReferral_20190211.php
+frontend/modules/lab/views/request/viewreferral_20190202.php
+frontend/modules/lab/views/request/viewreferral_20190211.php
+frontend/modules/lab/views/sample/_form_20190211.php

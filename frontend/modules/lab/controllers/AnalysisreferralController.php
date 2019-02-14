@@ -651,4 +651,30 @@ class AnalysisreferralController extends Controller
         }
         return $data;
     }
+    //update total of request
+    protected function updateRequestTotal($requestId)
+    {
+        $request = Request::findOne($requestId);
+
+        $discount = Discount::find()->where('discount_id =:discountId',[':discountId'=>$request->discount_id])->one();
+        $rate = $discount->rate;
+        //$sql = 
+       //request_Id = 1;TRUNCATE TABLE tbl_analysis;
+
+        $requestquery = Request::find()->where(['request_id' => $request_id])->one();
+        $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
+        $rate =  $discountquery->rate;       
+        $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=:requestId";
+        $connection = Yii::$app->labdb;
+        //$connection = 
+        $command = $Connection->createCommand($sql);
+        $row = $command->queryOne();
+        $subtotal = $row['subtotal'];
+        $total = $subtotal - ($subtotal * ($rate/100));
+
+        $Connection= Yii::$app->labdb;
+        $sql="UPDATE `tbl_request` SET `total`='$total' WHERE `request_id`=".$request_id;
+        $Command=$Connection->createCommand($sql);
+        $Command->execute();
+    }
 }

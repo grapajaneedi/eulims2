@@ -123,6 +123,7 @@ class RequestController extends Controller
       //  $analysisQuery = Analysis::find()->where(['sample_id' =>$samples->sample_id]);
         if($request_type == 2) {
             $refcomponent = new ReferralComponent();
+            $modelref_request = Referralrequest::find()->where(['request_id'=>$id])->one();
 
             $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
@@ -162,6 +163,7 @@ class RequestController extends Controller
                 'sampleDataProvider' => $sampleDataProvider,
                 'analysisdataprovider'=> $analysisdataprovider,
                 'agencydataprovider'=> $agencydataprovider,
+                'modelref_request'=>$modelref_request,
             ]);
 
         } else {
@@ -625,27 +627,71 @@ class RequestController extends Controller
         $purposereferral = ArrayHelper::map(json_decode($refcomponent->listPurposereferral()), 'purpose_id', 'name');
         $modereleasereferral = ArrayHelper::map(json_decode($refcomponent->listModereleasereferral()), 'modeofrelease_id', 'mode');
 
+        $sampleCount = Sample::find()->where('request_id =:requestId',[':requestId'=>$id])->count();
+        $analysisCount = Analysis::find()->where('request_id =:requestId',[':requestId'=>$id])->count();
+
+        $oldLabId = $model->lab_id;
+        $notified = !empty($modelReferralrequest->notified) ? $modelReferralrequest->notified : 0;
+        $samplefail = null;
+        $analysisfail = null;
+
         if ($model->load(Yii::$app->request->post())) {
             $transaction = $connection->beginTransaction();
-            if ($model->save()){
-                $modelReferralrequest->request_id = $model->request_id;
-                $modelReferralrequest->sample_received_date = date('Y-m-d h:i:s',strtotime($model->sample_received_date));
-                $modelReferralrequest->receiving_agency_id = Yii::$app->user->identity->profile->rstl_id;
-                //$modelReferralrequest->testing_agency_id = null;
-                //$modelReferralrequest->referral_type_id = 1;
-                if ($modelReferralrequest->save()){
-                    $transaction->commit();
-                } else {
-                    $transaction->rollBack();
-                    $modelReferralrequest->getErrors();
-                    return false;
+            //check if lab is updated
+            //if not equal to old lab_id, sample and analysis will be deleted
+            //reason: sample type or test parameter may not be available for the lab
+            if($oldLabId != $_POST['exRequestreferral']['lab_id'] && ($sampleCount > 0 || $analysisCount > 0))
+            {
+                $connection->createCommand('SET FOREIGN_KEY_CHECKS=0')->execute();
+
+                if($sampleCount > 0)
+                {
+                    $sampleDelete = Sample::deleteAll('request_id = :requestId',[':requestId'=>$id]);
+                    if(!$sampleDelete)
+                    {
+                        $samplefail = 1;
+                    } else {
+                        if($analysisCount > 0){
+                            $analysisDelete = Analysis::deleteAll('request_id = :requestId',[':requestId'=>$id]);            
+                            if(!$analysisDelete)
+                            {
+                                $analysisfail = 1;
+                            }
+                        }
+                    }
                 }
-                Yii::$app->session->setFlash('success', 'Referral Request Successfully Updated!');
+            }
+
+            //$a = $refcomponent->removeReferral(1,1);
+
+            //return $a;
+            //exit;
+
+            if($samplefail == 1 || $analysisfail == 1){
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('error', 'Error deleting sample/analysis!');
                 return $this->redirect(['view', 'id' => $model->request_id]);
             } else {
-                $transaction->rollBack();
-                $model->getErrors();
-                return false;
+                if ($model->save()){
+                    $modelReferralrequest->request_id = $model->request_id;
+                    $modelReferralrequest->sample_received_date = date('Y-m-d h:i:s',strtotime($model->sample_received_date));
+                    $modelReferralrequest->receiving_agency_id = Yii::$app->user->identity->profile->rstl_id;
+                    //$modelReferralrequest->testing_agency_id = null;
+                    //$modelReferralrequest->referral_type_id = 1;
+                    if ($modelReferralrequest->save()){
+                        $transaction->commit();
+                    } else {
+                        $transaction->rollBack();
+                        $modelReferralrequest->getErrors();
+                        return false;
+                    }
+                    Yii::$app->session->setFlash('success', 'Referral Request Successfully Updated!');
+                    return $this->redirect(['view', 'id' => $model->request_id]);
+                } else {
+                    $transaction->rollBack();
+                    $model->getErrors();
+                    return false;
+                }
             }
         } else {
             $model->sample_received_date = !empty($modelReferralrequest->sample_received_date) ? $modelReferralrequest->sample_received_date : null;
@@ -659,6 +705,7 @@ class RequestController extends Controller
                     'discountreferral' => $discountreferral,
                     'purposereferral' => $purposereferral,
                     'modereleasereferral' => $modereleasereferral,
+                    'notified'=>$notified,
                 ]);
             }else{
                 return $this->renderAjax('updateReferral', [
@@ -667,6 +714,7 @@ class RequestController extends Controller
                     'discountreferral' => $discountreferral,
                     'purposereferral' => $purposereferral,
                     'modereleasereferral' => $modereleasereferral,
+                    'notified'=>$notified,
                 ]);
             }
         }
@@ -683,10 +731,5 @@ class RequestController extends Controller
         }
 
         return $show;
-    }
-    //send notification
-    public function actionNotify()
-    {
-        return "notification sent";
     }
 }
