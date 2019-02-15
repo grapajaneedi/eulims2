@@ -101,7 +101,7 @@ class RequestController extends Controller
 
         $request_type = $this->findModel($id)->request_type_id;
 
-        $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+        //$GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
         
         $samples = Sample::find()->where(['request_id' => $id])->all();
         
@@ -138,10 +138,6 @@ class RequestController extends Controller
                 'allModels' => $agency,
                 'pagination'=>false,
             ]);
-            /*echo "<pre>";
-            print_r($agency);
-            echo "</pre>";
-            exit;*/
         } else {
             $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
@@ -155,6 +151,14 @@ class RequestController extends Controller
             $model=$this->findRequestModel($id);
         }
 
+        $connection= Yii::$app->labdb;
+        $fee = $connection->createCommand('SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id =:requestId')
+        ->bindValue(':requestId',$id)->queryOne();
+        $subtotal = $fee['subtotal'];
+        $rate = $model->discount;
+        $discounted = $subtotal * ($rate/100);
+        $total = $subtotal - $discounted;
+
         if($request_type == 2){
             return $this->render('viewreferral', [
                 'model' => $model,
@@ -164,6 +168,10 @@ class RequestController extends Controller
                 'analysisdataprovider'=> $analysisdataprovider,
                 'agencydataprovider'=> $agencydataprovider,
                 'modelref_request'=>$modelref_request,
+                'subtotal' => $subtotal,
+                'discounted' => $discounted,
+                'total' => $total,
+                'countSample' => count($samples),
             ]);
 
         } else {
@@ -662,16 +670,21 @@ class RequestController extends Controller
                 }
             }
 
-            //$a = $refcomponent->removeReferral(1,1);
-
-            //return $a;
-            //exit;
-
             if($samplefail == 1 || $analysisfail == 1){
                 $transaction->rollBack();
                 Yii::$app->session->setFlash('error', 'Error deleting sample/analysis!');
                 return $this->redirect(['view', 'id' => $model->request_id]);
             } else {
+                if($analysisCount > 0){
+                    $discount = $refcomponent->getDiscountOne($model->discount_id);
+                    $rate = $discount->rate;
+                    $fee = $connection->createCommand('SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id =:requestId')
+                    ->bindValue(':requestId',$id)->queryOne();
+                    $subtotal = $fee['subtotal'];
+                    $total = $subtotal - ($subtotal * ($rate/100));
+
+                    $model->total = $total;
+                }
                 if ($model->save()){
                     $modelReferralrequest->request_id = $model->request_id;
                     $modelReferralrequest->sample_received_date = date('Y-m-d h:i:s',strtotime($model->sample_received_date));

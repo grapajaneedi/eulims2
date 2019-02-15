@@ -282,7 +282,7 @@ class ReferralController extends Controller
                 //check if each sample contains at least one analysis
                 $checkWithAnalysis = $this->checkWithAnalysis($requestId);
                 if(count($samples) != $checkWithAnalysis){
-                    return "<div class='alert alert-danger'><span class='glyphicon glyphicon-exclamation-sign' style='font-size:18px;'></span>&nbsp;Notification Fail: Make sure a sample contains at least one analysis.</div>";
+                    return "<div class='alert alert-danger'><span class='glyphicon glyphicon-exclamation-sign' style='font-size:18px;'></span>&nbsp;Notification Fail: Make sure each sample contains at least one analysis.</div>";
                 } else {
                     $requestData = [
                         'request_id' => $request['request_id'],
@@ -418,7 +418,7 @@ class ReferralController extends Controller
                                         //header("refresh:2;url=/lab/request/view?id=".$requestId);
                                         //echo 'Notification sent.';
                                     } else {
-                                       return "<div class='alert alert-danger'><span class='glyphicon glyphicon-exclamation-sign' style='font-size:18px;'></span>&nbsp;Notification Fail: Error occured when saving!</div>";
+                                       return "<div class='alert alert-danger'><span class='glyphicon glyphicon-exclamation-sign' style='font-size:18px;'></span>&nbsp;Notification Fail: Error occured when sending!</div>";
                                     }
                                 } else {
                                     //return 'Notification sent.';

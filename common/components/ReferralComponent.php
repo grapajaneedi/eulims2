@@ -55,6 +55,17 @@ class ReferralComponent extends Component {
         $list = $curl->get($apiUrl);
         return json_decode($list);
     }
+    /**
+     * FindOne Discount
+     * @param integer $discountId
+     * @return array
+     */
+    function getDiscountOne($discountId){
+        $apiUrl=$this->source.'/api/web/referral/listdatas/discountbyid?discount_id='.$discountId;
+        $curl = new curl\Curl();
+        $list = $curl->get($apiUrl);
+        return json_decode($list);
+    }
     //get referral laboratory list
     function listLabreferral()
     {
@@ -65,7 +76,6 @@ class ReferralComponent extends Component {
         //$data = ArrayHelper::map(json_decode($list), 'lab_id', 'labname');
         
         return $list;
-
     }
     //get referral discount list
     function listDiscountreferral()
