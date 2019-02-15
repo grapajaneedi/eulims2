@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 use common\models\lab\Customer;
 use common\models\lab\CustomerMigration;
 use common\models\api\CustomerMigrationportal;
+
+use common\models\lab\RequestMigration;
+
 use common\models\lab\Jobportal;
 use yii\data\ActiveDataProvider;
 
@@ -47,14 +50,22 @@ class MigrationportalController extends Controller
         // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         
-        $jobs = Jobportal::find()->where(['rstl_id'=>Yii::$app->user->identity->profile->rstl_id]);
+        // $jobs = Jobportal::find()->where(['rstl_id'=>Yii::$app->user->identity->profile->rstl_id]);
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $jobs,
-        ]);
+        // $dataProvider = new ActiveDataProvider([
+        //     'query' => $jobs,
+        // ]);
+
+
+        $alllrequest= RequestMigration::find()->count();
+        $migrequest= RequestMigration::find()->where(['is_migrated'=>1])->count();
+        $rawrequest= RequestMigration::find()->where(['is_migrated'=>0])->count();
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            // 'dataProvider' => $dataProvider,
+            'allreq'=>$alllrequest,
+            'migreq'=>$migrequest,
+            'rawreq'=>$rawrequest,
         ]);
     }
 
