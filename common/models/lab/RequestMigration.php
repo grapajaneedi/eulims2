@@ -44,9 +44,9 @@ use Yii;
  * @property double $oldColumn_completed
  * @property int $oldColumn_cancelled
  * @property string $oldColumn_create_time
- * @property int $is_migrated 
  * @property int $customer_old_id
-
+ * @property int $tmpCustomerID
+ * @property int $is_migrated
  */
 class RequestMigration extends \yii\db\ActiveRecord
 {
@@ -74,7 +74,7 @@ class RequestMigration extends \yii\db\ActiveRecord
         return [
             [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_ids', 'discount_id', 'purpose_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
             [['request_datetime', 'report_due', 'recommended_due_date', 'est_date_completion', 'equipment_release_date', 'certificate_release_date', 'oldColumn_create_time'], 'safe'],
-            [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'created_at', 'posted', 'status_id', 'selected', 'other_fees_id', 'request_type_id', 'payment_status_id', 'request_old_id', 'oldColumn_sublabId', 'oldColumn_orId', 'oldColumn_cancelled'], 'integer'],
+            [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'created_at', 'posted', 'status_id', 'selected', 'other_fees_id', 'request_type_id', 'payment_status_id', 'request_old_id', 'oldColumn_sublabId', 'oldColumn_orId', 'oldColumn_cancelled', 'customer_old_id', 'tmpCustomerID', 'is_migrated'], 'integer'],
             [['discount', 'total', 'oldColumn_completed'], 'number'],
             [['request_ref_num', 'modeofrelease_ids', 'conforme', 'receivedBy', 'oldColumn_requestId'], 'string', 'max' => 50],
             [['position', 'items_receive_by', 'released_by', 'received_by'], 'string', 'max' => 100],
@@ -125,8 +125,9 @@ class RequestMigration extends \yii\db\ActiveRecord
             'oldColumn_completed' => 'Old Column Completed',
             'oldColumn_cancelled' => 'Old Column Cancelled',
             'oldColumn_create_time' => 'Old Column Create Time',
-            'is_migrated' => 'Is Migrated', 
-            'customer_old_id'=>'customer_old_id',
+            'customer_old_id' => 'Customer Old ID',
+            'tmpCustomerID' => 'Tmp Customer ID',
+            'is_migrated' => 'Is Migrated',
         ];
     }
 }
