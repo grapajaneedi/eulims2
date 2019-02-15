@@ -44,6 +44,9 @@ use Yii;
  * @property double $oldColumn_completed
  * @property int $oldColumn_cancelled
  * @property string $oldColumn_create_time
+ * @property int $is_migrated 
+ * @property int $customer_old_id
+
  */
 class RequestMigration extends \yii\db\ActiveRecord
 {
@@ -122,6 +125,8 @@ class RequestMigration extends \yii\db\ActiveRecord
             'oldColumn_completed' => 'Old Column Completed',
             'oldColumn_cancelled' => 'Old Column Cancelled',
             'oldColumn_create_time' => 'Old Column Create Time',
+            'is_migrated' => 'Is Migrated', 
+            'customer_old_id'=>'customer_old_id',
         ];
     }
 }
