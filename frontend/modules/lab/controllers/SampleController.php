@@ -207,12 +207,18 @@ class SampleController extends Controller
         $sampletype = ($request->request_type_id == 2) ? $this->listSampletypereferral($labId) : $this->listSampletype($labId);
 
         $analysisCount = Analysis::find()->where('sample_id =:sampleId',[':sampleId'=>$id])->count();
-        $oldSampletypeId = $model->sampletype_id;
+        //$oldSampletypeId = $model->sampletype_id;
         $analysisfail = null;
+
+        //print_r($model->sampletype_id);
+        //exit;
+
+        //print_r($_POST['Sample']['sampletype_id']);
+        //exit;
 
         if ($model->load(Yii::$app->request->post())) {
             $transaction = $connection->beginTransaction();
-            if($oldSampletypeId != $_POST['Sample']['sampletype_id'] && $analysisCount > 0)
+            if($model->sampletype_id != $_POST['Sample']['sampletype_id'] && $analysisCount > 0)
             {
                 $connection->createCommand('SET FOREIGN_KEY_CHECKS=0')->execute();
 

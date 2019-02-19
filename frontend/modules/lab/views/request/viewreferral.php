@@ -491,38 +491,12 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                 'vAlign' => 'left',
                 'width' => '7%',
                 'format' => 'raw',
-                'pageSummary'=> function (){
-                    $url = \Yii::$app->request->url;
-                    $id = substr($url, 21);
-                    $requestquery = Request::find()->where(['request_id' => $id])->one();
-                    $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
-                    $samplesquery = Sample::find()->where(['request_id' => $id])->one();
-                    $rate =  $discountquery->rate;
-                    $sample_ids = '';
-                    $samples = Sample::find()->where(['request_id' => $id])->all();
-                    foreach ($samples as $sample){
-                        $sample_ids .= $sample->sample_id.",";
-                    }
-                    $sample_ids = substr($sample_ids, 0, strlen($sample_ids)-1);
-                   
-                    if ($samplesquery){
-                        $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE sample_id IN ($sample_ids)";     
-                        
-                             $Connection = Yii::$app->labdb;
-                             $command = $Connection->createCommand($sql);
-                             $row = $command->queryOne();
-                             $subtotal = $row['subtotal'];
-                             $discounted = ($subtotal * ($rate/100));
-                             $total = $subtotal - $discounted;
-                            
-                             if ($total <= 0){
-                                 return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱0.00</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
-                             }else{
-                                 return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($discounted, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
-                             }
+                'pageSummary'=> function () use ($subtotal,$discounted,$total,$countSample) {
+                    if($countSample > 0){
+                        return  '<div id="subtotal">₱'.number_format($subtotal, 2).'</div><div id="discount">₱'.number_format($discounted, 2).'</div><div id="total"><b>₱'.number_format($total, 2).'</b></div>';
                     } else {
                         return '';
-                    }     
+                    }
                 },
             ],
             [
@@ -958,8 +932,14 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
         //    .find('#modalContent');
             //.load();
         var str = title.slice(7);
+        var header_title = '';
 
-        //alert(agency_name.length);
+        //alert(title.length);
+        if(title.length > 73){
+            header_title = title.slice(0, 70) + '...';
+        } else {
+            header_title = title;
+        }
 
         if(str.length > 0){
             //alert('ggg');
@@ -971,7 +951,7 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
         }
 
         BootstrapDialog.show({
-            title: "<span class='glyphicon glyphicon-send'></span>&nbsp;&nbsp;" + title,
+            title: "<span class='glyphicon glyphicon-send'></span>&nbsp;&nbsp;" + header_title,
             message: "<div class='alert alert-danger' style='border:2px #ff3300 dotted;margin:auto;font-size:13px;text-align:justify;text-justify:inter-word;'>"
                 +"<strong style='font-size:16px;'>Warning:</strong><br>"
                 +"<ol>"
@@ -1007,7 +987,7 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                     action: function(thisDialog){
                         //alert('Hi Orange!');
                         thisDialog.close();
-                        $('.modal-title').html(title);
+                        $('.modal-title').html(header_title);
                         $('#modal').modal('show')
                             .find('#modalContent')
                             .load(url);

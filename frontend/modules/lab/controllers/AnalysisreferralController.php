@@ -125,8 +125,10 @@ class AnalysisreferralController extends Controller
         ]);
 
         if ($model->load(Yii::$app->request->post())) {
-            $postData = Yii::$app->request->post();
+            $connection = Yii::$app->labdb;
+            $transaction = $connection->beginTransaction();
 
+            $postData = Yii::$app->request->post();
             foreach ($postData['sample_ids'] as $sample) {
                 $testId = $postData['Analysisextend']['test_id'];
                 $methodrefId = $postData['methodref_id'];
@@ -147,10 +149,34 @@ class AnalysisreferralController extends Controller
                 $analysis->test_id = (int) $testId;
                 //$model->sample_type_id = null;
                 //$model->testcategory_id = null;
-                $analysis->save(false);
+                //$analysis->save(false);
+                if(!$analysis->save(false)){
+                    goto analysisfail;
+                }
             }
-            Yii::$app->session->setFlash('success', "Analysis Successfully Saved.");
-            return $this->redirect(['/lab/request/view', 'id' => $requestId]);
+            $discount = $component->getDiscountOne($request->discount_id);
+            $rate = $discount->rate;
+            $fee = $connection->createCommand('SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id =:requestId')
+            ->bindValue(':requestId',$requestId)->queryOne();
+            $subtotal = $fee['subtotal'];
+            $total = $subtotal - ($subtotal * ($rate/100));
+
+            $request->total = $total;
+            //$request->save();
+            if($request->save(false)){
+                $transaction->commit();
+                Yii::$app->session->setFlash('success', "Analysis Successfully Saved.");
+                return $this->redirect(['/lab/request/view', 'id' => $requestId]);
+            } else {
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('error', "Analysis fail to save.");
+                return $this->redirect(['/lab/request/view', 'id' => $requestId]);
+            }
+            analysisfail: {
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('error', "Analysis fail to save.");
+                return $this->redirect(['/lab/request/view', 'id' => $requestId]);
+            }
         } elseif (Yii::$app->request->isAjax) {
             return $this->renderAjax('_form', [
                 'model' => $model,
@@ -212,36 +238,6 @@ class AnalysisreferralController extends Controller
             $methods = [];
         }
 
-        //$arr = array();
-
-        //$boxes=Box::model()->findAll();
-
-        //echo "<pre>";
-        //print_r($methods);
-        //echo "</pre>";
-
-        //exit;
-
-        /*foreach($boxes as $box){
-            $arr[]=$box->id;
-            $pos=array_search($model->id,$arr);
-            $page=ceil(($pos+1)/10);//10 indicates pagesize
-            //$this->redirect(array('view','id'=>$model->id));
-            $this->redirect(array('admin','Box_page'=>$page));
-        }*/
-
-        /*foreach ($methods as $method) {
-            $arr[] = $method['methodreference_id'];
-            $pos = array_search($model->methodreference_id, $arr);
-            $page = ceil(($pos+1)/10); //10 indicates pagesize
-            //$this->redirect(array(''));
-            //echo $arr." ";
-            //analysisreferral/update?id=111&request_id=19&page=3&per-page=10
-            return $this->redirect(['/lab/analysisreferral/update', 'id'=>$model->analysis_id,'request_id'=>$requestId,'page'=>$page,'per-page'=>10]);
-        }*/
-
-        //$pageSize = 10;
-
         $methodrefDataProvider = new ArrayDataProvider([
             'allModels' => $methods,
             'pagination' => [
@@ -250,6 +246,8 @@ class AnalysisreferralController extends Controller
         ]);
 
         if ($model->load(Yii::$app->request->post())) {
+            $connection = Yii::$app->labdb;
+            $transaction = $connection->beginTransaction();
             $postData = Yii::$app->request->post();
             
             $testId = $postData['Analysisextend']['test_id'];
@@ -270,9 +268,34 @@ class AnalysisreferralController extends Controller
             $model->test_id = (int) $testId;
             //$model->sample_type_id = null;
             //$model->testcategory_id = null;
-            if($model->save(false))
-            {
-                Yii::$app->session->setFlash('success', "Analysis Successfully Updated.");
+            if($model->save(false)){
+                //$transaction->commit();
+                //Yii::$app->session->setFlash('success', "Analysis Successfully Updated.");
+                //return $this->redirect(['/lab/request/view', 'id' => $requestId]);
+                $discount = $component->getDiscountOne($request->discount_id);
+                $rate = $discount->rate;
+                $fee = $connection->createCommand('SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id =:requestId')
+                ->bindValue(':requestId',$requestId)->queryOne();
+                $subtotal = $fee['subtotal'];
+                $total = $subtotal - ($subtotal * ($rate/100));
+
+                $request->total = $total;
+                //$request->save();
+                if($request->save(false)){
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('success', "Analysis Successfully Updated.");
+                    return $this->redirect(['/lab/request/view', 'id' => $requestId]);
+                } else {
+                    $transaction->rollBack();
+                    Yii::$app->session->setFlash('error', "Analysis fail to update.");
+                    return $this->redirect(['/lab/request/view', 'id' => $requestId]);
+                }
+            } else {
+                goto analysisfail;
+            }
+            analysisfail: {
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('error', "Analysis fail to update.");
                 return $this->redirect(['/lab/request/view', 'id' => $requestId]);
             }
         } elseif (Yii::$app->request->isAjax) {

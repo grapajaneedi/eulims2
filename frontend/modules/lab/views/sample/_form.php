@@ -23,11 +23,6 @@ if(count($sampletype) > 0){
     $data = ['' => 'No Sampletype'] + $sampletype;
 }
 $sameSampletype = !empty($model->sampletype_id) ? $model->sampletype_id : 0;
-if(!$model->isNewRecord) {
-    $disabled = true;
-} else {
-    $disabled = false;
-}
 ?>
 
 <div class="sample-form">
@@ -76,7 +71,7 @@ if(!$model->isNewRecord) {
                     'data' => $sampletype,
                     'theme' => Select2::THEME_KRAJEE,
                     //'theme' => Select2::THEME_BOOTSTRAP,
-                    'options' => ['id'=>'sample-sampletype_id','disabled'=>$disabled],
+                    'options' => ['id'=>'sample-sampletype_id'],
                     'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Sample Type'],
                 ]);
             echo $endDiv;
