@@ -62,6 +62,7 @@ class MigrateportalController extends Controller
                     if($customer){
                         $newcustomer = new Customer;
                         $newcustomer->attributes = $customer->attributes;
+                        $newcustomer->local_customer_id = $customer->customer_old_id;
                         $newcustomer->save(false);
                         $live_request->customer_id=$newcustomer->customer_id;
                     }
