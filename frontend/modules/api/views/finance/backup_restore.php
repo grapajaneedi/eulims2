@@ -1,6 +1,3 @@
-
-
-
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\Progress;
@@ -17,19 +14,13 @@ use kartik\datetime\DateTimePicker;
 use common\components\Functions;
 use linslin\yii2\curl;
 use yii\helpers\Json;
-
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\ServicesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
 $func=new Functions();
-
-
 $month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 $year = ['0000','1970','2013', '2014', '2015', '2016', '2017', '2018','2019'];
-
 //$lablist= ArrayHelper::map( $decode,'lab_id','labname');
-
 $this->title = 'Backup and Restore';
 $this->params['breadcrumbs'][] = ['label' => 'API', 'url' => ['/api']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -61,8 +52,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'theme' => Select2::THEME_KRAJEE,
                         'options' => ['id'=>'year'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Year'],
-                ])->label("Year")."</div>"."<div class='col-md-10' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>OP</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_receipt' onclick='restore_receipt()'>Receipt</span>"
-                  . "&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_paymentitem' onclick='restore_paymentitem()'>Paymentitem</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_deposit' onclick='restore_deposit()'>Deposit</span></div>";
+                ])->label("Year")."</div>"."<div class='col-md-10' style='margin-top:4px'><br><span class='btn btn-success' id='restore_paymentitem' onclick='restore_paymentitem()'>Paymentitem</span>"
+                  . "&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='restore_sync' onclick='restoresync()'>Restore</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='resync' onclick='resync()'>Re-Sync</span></div>";
             ?>
         </div>
         <?php ActiveForm::end(); ?>
@@ -107,14 +98,12 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]);
     
-
     ?>
   
 </div>
 
 <script type="text/javascript">
     function restore(){
-
         var y = $('#year option:selected').text();
     
         $.ajax({
@@ -130,8 +119,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 $('.image-loader').removeClass("img-loader");
             });
         }
+         function restoresync(){
+        var y = $('#year option:selected').text();
+    
+        $.ajax({
+            url: "/api/finance/ressync",
+            method: "POST",
+            data: {year:y},
+            beforeSend: function(xhr) {
+                $('.image-loader').addClass("img-loader");
+               }
+            })
+            .done(function(data) {
+                $("#finance-grid").yiiGridView("applyFilter"); 
+                $('.image-loader').removeClass("img-loader");
+            });
+        }
         function restore_receipt(){
-
         var y = $('#year option:selected').text();
         $.ajax({
             url: "/api/finance/res_receipt",
@@ -147,7 +151,6 @@ $this->params['breadcrumbs'][] = $this->title;
             });
         }
         function restore_paymentitem(){
-
         $.ajax({
             url: "/api/finance/res_paymentitem",
             method: "POST",
@@ -166,6 +169,23 @@ $this->params['breadcrumbs'][] = $this->title;
         var y = $('#year option:selected').text();    
         $.ajax({
             url: "/api/finance/res_deposit",
+            method: "POST",
+            data: {year:y},
+            beforeSend: function(xhr) {
+                $('.image-loader').addClass("img-loader");
+               }
+            })
+            .done(function(data) {
+                $("#finance-grid").yiiGridView("applyFilter"); 
+                $('.image-loader').removeClass("img-loader");
+            });
+        }
+        function resync(){
+        var today = new Date();
+        var y = today.getFullYear();  
+  
+        $.ajax({
+            url: "/api/finance/syncagain",
             method: "POST",
             data: {year:y},
             beforeSend: function(xhr) {

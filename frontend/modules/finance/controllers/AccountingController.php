@@ -12,7 +12,7 @@ use common\models\finance\OpSearch;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\db\Query;
-//use common\models\lab\Request;//
+
 use frontend\modules\finance\components\models\Ext_Request as Request;
 use yii\helpers\Json;
 use common\components\Functions;
@@ -71,7 +71,7 @@ class AccountingController extends Controller
     {
         $model = new Op();
         $paymentitem = new Paymentitem();
-       // $collection= new Collection();
+  
         $searchModel = new OpSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
@@ -93,10 +93,7 @@ class AccountingController extends Controller
                 }else{
                     $model->on_account=0;
                 }
-//                echo "<pre>";
-//                var_dump($model);
-//                echo "</pre>";
-//                exit;
+
                 $model->save();
                 //Saving for Paymentitem
                 for($i=0;$i<$arr_length;$i++){
@@ -116,16 +113,6 @@ class AccountingController extends Controller
                     
                 }
                 //----------------------//
-                //---Saving for Collection-------
-
-//                $collection_name= $this->getCollectionname($model->collectiontype_id);
-//                $collection->nature=$collection_name['natureofcollection'];
-//                $collection->rstl_id=$GLOBALS['rstl_id'];
-//                $collection->orderofpayment_id=$model->orderofpayment_id;
-//                $collection->referral_id=0;
-//                $collection->payment_status_id=1;//Unpaid
-//                $collection->save(false);
-                //
                 $transaction->commit();
                 //$this->postRequest($request_ids);
                 $this->updateTotalOP($model->orderofpayment_id, $total_amount);
@@ -162,7 +149,7 @@ class AccountingController extends Controller
         $searchModel = new OpSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize=5;
-       // $collection= new Collection();
+      
          if ($model->load(Yii::$app->request->post())) {
              $transaction = Yii::$app->financedb->beginTransaction();
              $session = Yii::$app->session;
@@ -177,26 +164,13 @@ class AccountingController extends Controller
                             $model->on_account=0;
                         }
                         $model->save();
-                       
-                        //---Saving for Collection-------
-
-                        //
                         $transaction->commit();
-                        //$this->postRequest($request_ids);
-                       // $this->updateTotalOP($model->orderofpayment_id, $total_amount);
-                      // $session->set('savepopup',"executed");
-                      // return $this->redirect(['/finance/accounting/op']); 
                       return $this->redirect(['/finance/accounting/view-op', 'id' => $model->orderofpayment_id]);                        
                     
                 } catch (Exception $e) {
                     $transaction->rollBack();
                 }
-                
-              //  var_dump($total_amount);
-              //  exit;
-                //-------------------------------------------------------------//
-               
-          
+              //-------------------------------------------------------------//
         } 
         $model->order_date=date('Y-m-d');
         if(Yii::$app->request->isAjax){
@@ -221,10 +195,6 @@ class AccountingController extends Controller
         $paymentitem = [new Paymentitem()];
         $op_amount=$op_model->total_amount;
          if ($op_model->load(Yii::$app->request->post())) {
-            /* echo "<pre>";
-             var_dump(Yii::$app->request->post());
-             echo "</pre>";
-            exit;*/
             Model::loadMultiple($paymentitem, Yii::$app->request->post());
               
             $paymentitem = Model::createMultiple(Paymentitem::classname());
