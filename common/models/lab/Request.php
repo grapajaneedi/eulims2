@@ -39,6 +39,7 @@ use yii\db\ActiveRecord;
  * @property string $certificate_release_date 
  * @property string $released_by 
  * @property string $received_by 
+ * @property int $customer_old_id 
  * $property int $payment_status_id
  * 
  * @property Analysis[] $analyses
@@ -83,7 +84,8 @@ class Request extends \yii\db\ActiveRecord
     }
      public function beforeSave($insert) {
         if ($insert) {
-            $this->request_ref_num=NULL;
+            if(!$this->customer_old_id)
+                $this->request_ref_num=NULL;
         }
         return parent::beforeSave($insert);
     }
@@ -159,7 +161,8 @@ class Request extends \yii\db\ActiveRecord
             'certificate_release_date' => 'Date Release of Certificate',
             'released_by' => 'Released By',
             'received_by' => 'Received By',
-            'payment_status_id'=>'Payment Status'
+            'payment_status_id'=>'Payment Status',
+            'customer_old_id'=>'customer_old_id',
         ];
     }
 

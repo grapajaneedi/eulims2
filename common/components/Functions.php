@@ -603,20 +603,6 @@ SCRIPT;
         return substr($mString,0,$length);
     }
 
-    public function addlsync($tblname,$recordID){
-        $newsync = new LogSync();
-        $newsync->tblname=$tblname;
-        $newsync->recordID=$recordID;
-        $newsync->rstl_id=Yii::$app->user->identity->profile->rstl_id;
-        $newsync->user_id=Yii::$app->user->identity->profile->user_id;
-        $newsync->save();
-    }
-
-    public function getsyncnumber(){
-        $sync = LogSync::find()->all();
-        return count($sync);
-    }
-
     /**
      * 
      * @return type

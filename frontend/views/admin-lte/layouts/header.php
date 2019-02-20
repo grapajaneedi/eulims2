@@ -68,12 +68,6 @@ $GLOBALS['rstl_id']= 11;
             
             <ul class="nav navbar-nav">
                 <li class="dropdown messages-menu">
-                    <a href="<?= Url::to($GLOBALS['frontend_base_uri'].'lsync/') ?>" >
-                        <i class="fa fa-bell-o"></i>
-                        <span class="label label-success"><?= $func->getsyncnumber(); ?></span>
-                    </a>
-                </li>
-                <li class="dropdown messages-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-envelope-o"></i>
                         <span class="label label-success"><?= $TotalMsg ?></span>
