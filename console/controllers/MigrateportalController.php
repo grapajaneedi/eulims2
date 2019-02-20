@@ -81,7 +81,7 @@ class MigrateportalController extends Controller
                         echo " \n Executing samplemigration id : ".$sample->sample_id;
                         $live_sample = new Sample;
                         $live_sample->attributes=$sample->attributes;
-                        $live_sample->request_id=$request->request_id;
+                        $live_sample->request_id=$live_request->request_id;
                         if($live_sample->save(false)){
 
                             //find the analysis
@@ -92,7 +92,7 @@ class MigrateportalController extends Controller
                                  echo " \n Executing analysismigration id : ".$analysis->analysis_id;
                                 $live_analysis = new Analysis;
                                 $live_analysis->attributes = $analysis->attributes;
-                                $live_analysis->sample_id= $analysis->sample_id;
+                                $live_analysis->sample_id= $live_sample->sample_id;
                                 $live_analysis->save(false);
                             }
 
