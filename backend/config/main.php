@@ -13,6 +13,7 @@ return [
      //'bootstrap' => ['log'],
     'bootstrap' => ['log', 'maintenanceMode'],
     'modules' =>require(__DIR__.'/_modules.php'), // Load routes from PHP File
+    'timeZone' => 'Asia/Manila', //set timezone to Asia/Manila
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',

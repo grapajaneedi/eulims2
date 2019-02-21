@@ -9,12 +9,12 @@ use Yii;
  *
  * @property int $referral_request_id
  * @property int $request_id
- * @property string $sample_receive_date
+ * @property string $sample_received_date
  * @property int $receiving_agency_id
  * @property int $testing_agency_id
  * @property int $referral_type_id
  */
-class ReferralRequest extends \yii\db\ActiveRecord
+class Referralrequest extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -38,9 +38,9 @@ class ReferralRequest extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['request_id', 'sample_receive_date', 'receiving_agency_id', 'referral_type_id'], 'required'],
+            [['request_id', 'sample_received_date', 'receiving_agency_id', 'referral_type_id'], 'required'],
             [['request_id', 'receiving_agency_id', 'testing_agency_id', 'referral_type_id'], 'integer'],
-            [['sample_receive_date'], 'safe'],
+            [['sample_received_date'], 'safe'],
             [['request_id'], 'unique'],
         ];
     }
@@ -53,7 +53,7 @@ class ReferralRequest extends \yii\db\ActiveRecord
         return [
             'referral_request_id' => 'Referral Request ID',
             'request_id' => 'Request ID',
-            'sample_receive_date' => 'Sample Receive Date',
+            'sample_received_date' => 'Sample Received Date',
             'receiving_agency_id' => 'Receiving Agency ID',
             'testing_agency_id' => 'Testing Agency ID',
             'referral_type_id' => 'Referral Type ID',

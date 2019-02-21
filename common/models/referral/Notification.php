@@ -9,12 +9,12 @@ use Yii;
  *
  * @property int $notification_id
  * @property int $referral_id
- * @property int $notificationtype_id
- * @property int $recipient_id
+ * @property int $notification_type_id
  * @property int $sender_id
+ * @property int $recipient_id
  * @property string $sender_name
  * @property string $remarks
- * @property int $viewed
+ * @property int $seen
  * @property string $notification_date
  */
 class Notification extends \yii\db\ActiveRecord
@@ -41,10 +41,11 @@ class Notification extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['referral_id', 'notificationtype_id', 'recipient_id', 'sender_id', 'sender_name', 'remarks', 'viewed', 'notification_date'], 'required'],
-            [['referral_id', 'notificationtype_id', 'recipient_id', 'sender_id', 'viewed'], 'integer'],
+            [['referral_id', 'notification_type_id', 'sender_id', 'recipient_id', 'sender_name', 'notification_date'], 'required'],
+            [['referral_id', 'notification_type_id', 'sender_id', 'recipient_id', 'seen'], 'integer'],
             [['notification_date'], 'safe'],
-            [['sender_name', 'remarks'], 'string', 'max' => 100],
+            [['sender_name'], 'string', 'max' => 100],
+            [['remarks'], 'string', 'max' => 200],
         ];
     }
 
@@ -56,12 +57,12 @@ class Notification extends \yii\db\ActiveRecord
         return [
             'notification_id' => 'Notification ID',
             'referral_id' => 'Referral ID',
-            'notificationtype_id' => 'Notificationtype ID',
-            'recipient_id' => 'Recipient ID',
+            'notification_type_id' => 'Notification Type ID',
             'sender_id' => 'Sender ID',
+            'recipient_id' => 'Recipient ID',
             'sender_name' => 'Sender Name',
             'remarks' => 'Remarks',
-            'viewed' => 'Viewed',
+            'seen' => 'Seen',
             'notification_date' => 'Notification Date',
         ];
     }
