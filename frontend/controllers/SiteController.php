@@ -134,13 +134,13 @@ class SiteController extends Controller
          * 
          */
      //   $dashDetails = new DashboardDetails();
-   //     $sqlQueryString = 'Call eulimslab_test.spGetDashboardDetails('. 0 .','. 11 . ',' . 0 .',' . 0 .');'; 
-   //     $mysqli = new mysqli('localhost', 'eulims', 'eulims', 'eulimslab_test');
+   //     $sqlQueryString = 'Call eulims_lab.spGetDashboardDetails('. 0 .','. 11 . ',' . 0 .',' . 0 .');'; 
+   //     $mysqli = new mysqli('localhost', 'eulims', 'eulims', 'eulims_lab');
    //     $sql = $sqlQueryString; 
    //     $res = $mysqli->query($sql);
              //   $dashDetails = $res->fetch_all(MYSQLI_ASSOC);
        
-     //    $dashDetails = Yii::$app->db->createCommand('Call eulimslab_test.spGetDashboardDetails('. 0 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
+     //    $dashDetails = Yii::$app->db->createCommand('Call eulims_lab.spGetDashboardDetails('. 0 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
 
      //    foreach ($dashDetails as $dash) {
            
@@ -153,7 +153,7 @@ class SiteController extends Controller
         $currentyear = 2018;
         $curYearValue =0;
         $strcurrentyear = (string)$currentyear;
-        $dashArray = Yii::$app->db->createCommand('Call eulimslab_test.spGetDashboardDetails('. 0 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
+        $dashArray = Yii::$app->db->createCommand('Call eulims_lab.spGetDashboardDetails('. 0 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
         
         $listLab=array();
         $listLabCount=array();
@@ -186,7 +186,7 @@ class SiteController extends Controller
             }
             
          
-        $arrayYear = Yii::$app->db->createCommand('Call eulimslab_test.spGetDashboardDetails('. 2 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
+        $arrayYear = Yii::$app->db->createCommand('Call eulims_lab.spGetDashboardDetails('. 2 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
         $index = 0;
         foreach ($arrayYear as $colYear)
             {
@@ -202,7 +202,7 @@ class SiteController extends Controller
        // $dashDetails = Yii::$app->db->createCommand($sqlQueryString);
         
         
-        // $dataTop10 = Yii::$app->db->createCommand('Call eulimslab_test.spGetDashboardDetails('. 1 .','. 11 . ',' . 2018 .',' . 1 .');')->queryAll();
+        // $dataTop10 = Yii::$app->db->createCommand('Call eulims_lab.spGetDashboardDetails('. 1 .','. 11 . ',' . 2018 .',' . 1 .');')->queryAll();
         
         
         
@@ -219,7 +219,7 @@ class SiteController extends Controller
         
        $arrayGraphMain=array();
        
-       $arrayGraphPieQuery = Yii::$app->db->createCommand('Call eulimslab_test.spGetChartDashboardDetails('. 4 .','. 11 . ',' . $currentyear .',' . 2 .');')->queryAll();
+       $arrayGraphPieQuery = Yii::$app->db->createCommand('Call eulims_lab.spGetChartDashboardDetails('. 4 .','. 11 . ',' . $currentyear .',' . 2 .');')->queryAll();
        $arrayGraphPieMain=array();
        foreach ($arrayGraphPieQuery as $rows)
             {
@@ -235,7 +235,7 @@ class SiteController extends Controller
         foreach ($listYear as $colYear)
         {
        
-            $arrayGraph = Yii::$app->db->createCommand('Call eulimslab_test.spGetChartDashboardDetails('. 0 .','. 11 . ',' . $colYear .',' . 2 .');')->queryAll();
+            $arrayGraph = Yii::$app->db->createCommand('Call eulims_lab.spGetChartDashboardDetails('. 0 .','. 11 . ',' . $colYear .',' . 2 .');')->queryAll();
             
       
             foreach ($arrayGraph as $rows)
@@ -309,7 +309,7 @@ class SiteController extends Controller
      
         
         $dataTop10 = new SqlDataProvider([
-            'sql' => 'Call eulimslab_test.spGetDashboardDetails(1,11,' . $strcurrentyear . ',1);',
+            'sql' => 'Call eulims_lab.spGetDashboardDetails(1,11,' . $strcurrentyear . ',1);',
             
             'totalCount' => 10,
            'pagination' => [
@@ -557,7 +557,7 @@ class SiteController extends Controller
     public function actionDatatop()
     {
     //    $dataTop10 = new SqlDataProvider([
-     //       'sql' => 'Call eulimslab_test.spGetDashboardDetails(1,11,2017,1);',
+     //       'sql' => 'Call eulims_lab.spGetDashboardDetails(1,11,2017,1);',
             
      //       'totalCount' => 10,
      //      'pagination' => [
@@ -586,7 +586,7 @@ class SiteController extends Controller
        if (Yii::$app->request->isAjax) {
            
             $dataTop10 = new SqlDataProvider([
-            'sql' => 'Call eulimslab_test.spGetDashboardDetails(1,11,' . $paramYear . ',' .$iLab .');',
+            'sql' => 'Call eulims_lab.spGetDashboardDetails(1,11,' . $paramYear . ',' .$iLab .');',
             
             'totalCount' => 10,
            'pagination' => [
@@ -610,7 +610,7 @@ class SiteController extends Controller
     
     public function actionGraphdata()
     {
-         $dashArray = Yii::$app->db->createCommand('Call eulimslab_test.spGetDashboardDetails('. 0 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
+         $dashArray = Yii::$app->db->createCommand('Call eulims_lab.spGetDashboardDetails('. 0 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
         
         $listLab=array();
         $listLabCount=array();
@@ -646,7 +646,7 @@ class SiteController extends Controller
             
        
         
-        $arrayYear = Yii::$app->db->createCommand('Call eulimslab_test.spGetDashboardDetails('. 2 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
+        $arrayYear = Yii::$app->db->createCommand('Call eulims_lab.spGetDashboardDetails('. 2 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
         $index = 0;
         foreach ($arrayYear as $colYear)
             {
@@ -661,7 +661,7 @@ class SiteController extends Controller
         foreach ($listYear as $colYear)
         {
        
-            $arrayGraph = Yii::$app->db->createCommand('Call eulimslab_test.spGetChartDashboardDetails('. 1 .','. 11 . ',' . $colYear .',' . 0 .');')->queryAll();
+            $arrayGraph = Yii::$app->db->createCommand('Call eulims_lab.spGetChartDashboardDetails('. 1 .','. 11 . ',' . $colYear .',' . 0 .');')->queryAll();
             
       
             foreach ($arrayGraph as $rows)
@@ -787,7 +787,7 @@ class SiteController extends Controller
         $arrayGraphMain=array();
       
        
-            $arrayGraph = Yii::$app->db->createCommand('Call eulimslab_test.spGetChartDashboardDetails('. 4 .','. 11 . ',' . $pYear .',' . 0 .');')->queryAll();
+            $arrayGraph = Yii::$app->db->createCommand('Call eulims_lab.spGetChartDashboardDetails('. 4 .','. 11 . ',' . $pYear .',' . 0 .');')->queryAll();
             
       // array('name' => 'Rubber', 'y' => 70, 'sliced' => 'true','color'=>'orange')
                
@@ -922,7 +922,7 @@ class SiteController extends Controller
          $dataGraphColumn="";    
             
             
-         $dashArray = Yii::$app->db->createCommand('Call eulimslab_test.spGetDashboardDetails('. 0 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
+         $dashArray = Yii::$app->db->createCommand('Call eulims_lab.spGetDashboardDetails('. 0 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
         
         $listLab=array();
         $listLabCount=array();
@@ -951,7 +951,7 @@ class SiteController extends Controller
             }
             
             
-            $arrayYear = Yii::$app->db->createCommand('Call eulimslab_test.spGetDashboardDetails('. 2 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
+            $arrayYear = Yii::$app->db->createCommand('Call eulims_lab.spGetDashboardDetails('. 2 .','. 11 . ',' . 0 .',' . 0 .');')->queryAll();
         $index = 0;
         foreach ($arrayYear as $colYear)
             {
@@ -966,7 +966,7 @@ class SiteController extends Controller
         foreach ($listYear as $colYear)
         {
        
-            $arrayGraph = Yii::$app->db->createCommand('Call eulimslab_test.spGetChartDashboardDetails('. $spChartMode .','. 11 . ',' . $colYear .',' . 0 .');')->queryAll();
+            $arrayGraph = Yii::$app->db->createCommand('Call eulims_lab.spGetChartDashboardDetails('. $spChartMode .','. 11 . ',' . $colYear .',' . 0 .');')->queryAll();
             
       
             foreach ($arrayGraph as $rows)
