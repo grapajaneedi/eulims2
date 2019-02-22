@@ -26,6 +26,7 @@ use Yii;
  * @property int $updated_at
  * @property string $Image1
  * @property string $Image2
+ * @property string $sds
  *
  * @property InventoryEntries[] $inventoryEntries
  * @property InventoryWithdrawaldetails[] $inventoryWithdrawaldetails
@@ -63,11 +64,11 @@ class Products extends \yii\db\ActiveRecord
             [['description'], 'string'],
             [['price', 'srp'], 'number'],
             [['suppliers_ids','Image1','Image2'], 'safe'],
-            [['product_code', 'Image1', 'Image2'], 'string', 'max' => 100],
+            [['product_code', 'Image1', 'Image2', 'sds'], 'string', 'max' => 100],
             [['product_name', 'qty_per_unit'], 'string', 'max' => 50],
             [['categorytype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categorytype::className(), 'targetAttribute' => ['categorytype_id' => 'categorytype_id']],
             [['producttype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Producttype::className(), 'targetAttribute' => ['producttype_id' => 'producttype_id']],
-             [['Image1', 'Image2'], 'file', 'extensions'=>'jpg, gif, png, jpeg', 'skipOnEmpty' => true] //experiment only
+             [['Image1', 'Image2', 'sds'], 'file', 'extensions'=>'jpg, gif, png, jpeg, pdf', 'skipOnEmpty' => true] //experiment only
         ];
     }
 
@@ -96,6 +97,7 @@ class Products extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
             'Image1' => 'Image1',
             'Image2' => 'Image2',
+            'sds' => 'Safety Data Sheet',
         ];
     }
 
