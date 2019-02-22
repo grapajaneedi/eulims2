@@ -73,7 +73,7 @@ class RequestMigration extends \yii\db\ActiveRecord
     {
         return [
             [['request_datetime', 'rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_ids', 'discount_id', 'purpose_id', 'report_due', 'conforme', 'receivedBy', 'created_at'], 'required'],
-            [['request_datetime', 'report_due', 'recommended_due_date', 'est_date_completion', 'equipment_release_date', 'certificate_release_date', 'oldColumn_create_time'], 'safe'],
+            [['request_datetime', 'report_due', 'recommended_due_date', 'est_date_completion', 'equipment_release_date', 'certificate_release_date', 'oldColumn_create_time', 'request_old_id'], 'safe'],
             [['rstl_id', 'lab_id', 'customer_id', 'payment_type_id', 'discount_id', 'purpose_id', 'created_at', 'posted', 'status_id', 'selected', 'other_fees_id', 'request_type_id', 'payment_status_id', 'request_old_id', 'oldColumn_sublabId', 'oldColumn_orId', 'oldColumn_cancelled', 'customer_old_id', 'tmpCustomerID', 'is_migrated'], 'integer'],
             [['discount', 'total', 'oldColumn_completed'], 'number'],
             [['request_ref_num', 'modeofrelease_ids', 'conforme', 'receivedBy', 'oldColumn_requestId'], 'string', 'max' => 50],

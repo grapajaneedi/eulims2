@@ -203,6 +203,7 @@ function isthere($file){
                 ],
             ])->label('Product Type');
             ?>
+            <?= $form->field($model, 'sds')->fileInput() ?>
         </div>
     </div>
     <div class="row">

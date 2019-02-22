@@ -92,8 +92,17 @@ class ProductsController extends Controller
             $filename=$model->product_name;
             $filename2=$model->product_name."2";
             
-             $image1= UploadedFile::getInstance($model, 'Image1');
+            $image1= UploadedFile::getInstance($model, 'Image1');
             $image2= UploadedFile::getInstance($model, 'Image2');
+
+            $sds = UploadedFile::getInstance($model, 'sds');
+
+            if (!empty($sds) && $sds !== 0) {                
+                $sds->saveAs('uploads/products/' . $model->product_name.$model->product_id.'.'.$sds->extension);
+                $model->sds =$model->product_name.$model->product_id.'.'.$sds->extension;
+            }
+
+
             if(!empty($image1) && $image1->size !== 0) {
                 $image1->saveAs('uploads/products/'.$model->product_name.$model->product_id.'1.'.$image1->extension);
                 $model->Image1='uploads/products/'.$model->product_name.$model->product_id.'1.'.$image1->extension;
@@ -138,6 +147,15 @@ class ProductsController extends Controller
             $image1= UploadedFile::getInstance($model, 'Image1');
             // var_dump($model); exit;
             $image2= UploadedFile::getInstance($model, 'Image2');
+
+             $sds = UploadedFile::getInstance($model, 'sds');
+
+            if (!empty($sds) && $sds !== 0) {                
+                $sds->saveAs('uploads/products/' . $model->product_name.$model->product_id.'.'.$sds->extension);
+                $model->sds =$model->product_name.$model->product_id.'.'.$sds->extension;
+            }
+
+            
             if(!empty($image1) && $image1->size !== 0) {
                 $image1->saveAs('uploads/products/'.$model->product_name.'1.'.$image1->extension);
                 $model->Image1='uploads/products/'.$model->product_name.'1.'.$image1->extension;
@@ -288,6 +306,15 @@ class ProductsController extends Controller
         return $this->renderAjax('_supplier', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionViewsds($id) {
+
+        $model = $this->findModel($id);
+        
+        return $this->renderAjax('_sds', [
+            'model' => $model,
         ]);
     }
 
