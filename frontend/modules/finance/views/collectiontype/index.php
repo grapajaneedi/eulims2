@@ -31,10 +31,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     'enablePushState' => false,
                 ]
             ],
+           
             'panel' => [
-                'type' => GridView::TYPE_PRIMARY,
-                'before'=>Html::button('<span class="glyphicon glyphicon-plus"></span> Create Collection Type', ['value'=>'/finance/collectiontype/create', 'class' => 'btn btn-success btn-modal','title' => Yii::t('app', "Create New Collection Type"),'id'=>'btnCreate','onclick'=>'addtype(this.value,this.title)']),
+                'type'=>'primary', 'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Create Collection Type', ['value' => Url::to(['/finance/collectiontype/create']),'title'=>'Create Collection Type', 'onclick'=>'addType(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+                
             ],
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
@@ -55,14 +56,18 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 <script type="text/javascript">
-    $('#btnCreate').click(function(){
+   /* $('#btnCreate').click(function(){
         $('.modal-title').html($(this).attr('title'));
         $('#modal').modal('show')
             .find('#modalContent')
             .load($(this).attr('value'));
-    });
+    }); */
     function addType(url,title){
-        LoadModal(title,url,'true','700px');
+        //LoadModal(title,url,'true','700px');
+         $(".modal-title").html(title);
+         $('#modal').modal('show')
+            .find('#modalContent')
+            .load(url);
     }
   
 </script>

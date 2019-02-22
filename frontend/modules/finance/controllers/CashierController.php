@@ -243,16 +243,7 @@ class CashierController extends \yii\web\Controller
     public function actionViewReceipt($receiptid)
     { 
         $receipt=$this->findModelReceipt($receiptid);
-      //  $collection_id=$receipt->collection_id;
-        //$collection=$this->findModelCollection($collection_id);
-       /* $op_model="";
-        $op_id=$receipt->orderofpayment_id;
-        if($op_id == 0 || $op_id ==""){
-            $op_model="";
-        }else{
-            $op_model=$this->findModel($op_id);
-        } */
-        
+     
         $paymentitem_Query = Paymentitem::find()->where(['receipt_id' => $receiptid])->andWhere(['status' => 2]);
         if($paymentitem_Query){
             $paymentitemDataProvider = new ActiveDataProvider([
