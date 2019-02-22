@@ -699,12 +699,12 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
         </div>
     </div>
 <?php  
-    echo ListView::widget([
-        'dataProvider' => $dataProvider,
-        'itemOptions' => ['class' => 'item'],
-        'itemView' => '_item_view',
+    //echo ListView::widget([
+    //    'dataProvider' => $dataProvider,
+    //    'itemOptions' => ['class' => 'item'],
+    //    'itemView' => '_item_view',
         //'pager' => ['class' => ScrollPager::className()]
-    ]);
+    //]);
 ?>
     <div class="container">
         <div class="table-responsive">
