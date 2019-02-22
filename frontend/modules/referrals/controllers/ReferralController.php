@@ -17,6 +17,7 @@ use yii\helpers\ArrayHelper;
 use common\models\lab\Request;
 use common\models\lab\Analysis;
 use common\models\lab\Sample;
+use common\components\ReferralComponent;
 
 /**
  * ReferralController implements the CRUD actions for Referral model.
@@ -442,7 +443,6 @@ class ReferralController extends Controller
             return "<div class='alert alert-danger'><span class='glyphicon glyphicon-exclamation-sign' style='font-size:18px;'></span>&nbsp;No agency to be notified!</div>";
         }
 	}
-
     //find referral request
     protected function findRequest($id)
     {
@@ -453,33 +453,9 @@ class ReferralController extends Controller
             throw new NotFoundHttpException('The requested Request its either does not exist or you have no permission to view it.');
         }
     }
-
     //check if sample has at least one analysis
     protected function checkWithAnalysis($requestId)
     {
-        /*SELECT tbl_sample.sample_id, COUNT(tbl_analysis.`analysis_id`) AS 'analysisCount' -- , tbl_sample.`sample_id`
-        FROM tbl_sample LEFT JOIN tbl_analysis 
-        ON tbl_sample.`sample_id` = tbl_analysis.`sample_id`
-        WHERE tbl_sample.`request_id` = 23
-        GROUP BY tbl_sample.sample_id
-        HAVING analysisCount > 0*/
-
-        /*$analyses = Sample::find()
-            ->select('tbl_sample.`sample_id`,count(tbl_analysis.`analysis_id`) as analysiscount')
-            ->joinWith('analyses')
-            ->where('tbl_sample.`request_id` =:requestId',[':requestId'=>$requestId])
-            ->groupBy('tbl_sample.`sample_id`')
-            ->all();*/
-        /*$connection = Yii::$app->labdb;
-        $analyses = $connection->createCommand(
-                (new \yii\db\Query())
-                    ->select('tbl_sample.`sample_id`,count(tbl_analysis.`analysis_id`) as analysiscount')
-                    ->from('tbl_sample')
-                    ->join('LEFT JOIN','tbl_analysis', 'tbl_sample.`sample_id` = tbl_analysis.`sample_id`')
-                    //->where()
-                    ->where(['tbl_sample.`request_id`'=>$requestId])
-                    ->groupBy('tbl_sample.`sample_id`')
-                )->queryAll();*/
         $analyses = Yii::$app->labdb->createCommand("
                     SELECT tbl_sample.sample_id, COUNT(tbl_analysis.`analysis_id`) AS 'analysisCount'
                     FROM tbl_sample LEFT JOIN tbl_analysis 
@@ -490,40 +466,18 @@ class ReferralController extends Controller
                 ->bindParam(':requestId', $requestId)->queryAll();
         return count($analyses);
     }
+    //get unseen notifications
+    public function actionUnseen_notification()
+    {   
+        $rstlId = Yii::$app->user->identity->profile->rstl_id;
+        $refcomponent = new ReferralComponent();
+        $notification = json_decode($refcomponent->countNofication($rstlId));
 
-    /*
-    //find samples
-    protected function findSample($requestId)
-    {
-        $model = Sample::find()->where(['request_id'=>$requestId])->all();
-        if ($model !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested Request its either does not exist or you have no permission to view it.');
-        }
+        return json_encode(['data_notification'=>$notification]);
     }
-
-    //find analysis
-    protected function findAnalysis($requestId)
+    //get list notifications
+    public function actionListnotification()
     {
-        $model = Analysis::find()->joinWith('sample')->where(['tbl_sample.request_id'=>$requestId])->all();
-        if ($model !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested Request its either does not exist or you have no permission to view it.');
-        }
+        return 'Displays all notifications!';
     }
-
-    //find user details
-    protected function findAgenyOffer($referralId)
-    {
-        $model = Analysis::find()->joinWith('sample')->where(['tbl_sample.request_id'=>$requestId])->all();
-        if ($model !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested Request its either does not exist or you have no permission to view it.');
-        }
-    }
-    */
-
 }

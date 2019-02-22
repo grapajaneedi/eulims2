@@ -320,3 +320,6 @@ frontend/modules/lab/views/request/_formReferral_20190211.php
 frontend/modules/lab/views/request/viewreferral_20190202.php
 frontend/modules/lab/views/request/viewreferral_20190211.php
 frontend/modules/lab/views/sample/_form_20190211.php
+frontend/modules/lab/views/request/viewreferral_20190220.php
+frontend/modules/referrals/controllers/ReferralController_20190215.php
+frontend/views/admin-lte/layouts/left_2019022.php

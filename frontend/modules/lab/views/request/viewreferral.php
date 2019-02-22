@@ -17,6 +17,8 @@ use common\models\lab\Package;
 use yii\bootstrap\Modal;
 use kartik\dialog\Dialog;
 use yii\web\JsExpression;
+//use kop\y2sp\ScrollPager;
+use yii\widgets\ListView;
 
 $Connection = Yii::$app->financedb;
 $func = new Functions();
@@ -683,10 +685,6 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                     'before'=>'<p class="text-primary"><strong>Note:</strong> Agency that offers the testname and method.</p>',
                     'after'=>false,
                 ],
-                /*'krajeeDialogSettings' => [ 
-                    'options' => ['title' => 'Your Custom'],
-                    'overrideYiiConfirm' => true,
-                ],*/
                 'columns' => $gridColumns,
                 'toolbar' => [
                     'content'=> Html::a('<i class="glyphicon glyphicon-repeat"></i> Refresh Grid', [Url::to(['request/view','id'=>$model->request_id])], [
@@ -700,6 +698,14 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
         ?>
         </div>
     </div>
+<?php  
+    echo ListView::widget([
+        'dataProvider' => $dataProvider,
+        'itemOptions' => ['class' => 'item'],
+        'itemView' => '_item_view',
+        //'pager' => ['class' => ScrollPager::className()]
+    ]);
+?>
     <div class="container">
         <div class="table-responsive">
         <?php
@@ -791,40 +797,6 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
         </div>
     </div>
 </div>
-    <!-- Button trigger modal -->
-    <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-      Launch demo modal
-    </button>-->
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class='alert alert-danger' style='border:2px #dd4b39 dotted;margin:auto;font-size:13px;text-align:justify;text-justify:inter-word;color:#8a6d3b;'>
-                <strong>Warning:</strong><br />
-                <ol>
-                    <li>Make sure the selected laboratory is correct before you notify. Is it really Chem Lab, Micro Lab, Metro Lab, etc.?</li>
-                    <li>If you are notifying to <strong><i>DOST-ITDI</i></strong> for chemical analysis, make sure you 
-                    have selected either Organic Chemistry Laboratory (OCS) or Inorganic Chemistry Laboratory (ICS).</li>
-                </ol>
-                If you need assistance, please contact the web administrator.
-            </div>
-            <p class='note' style='margin:15px 0 0 15px;font-weight:bold;color:#0d47a1;font-size:13px;'>Are you sure you want to send notification to <span class='agency-name' style='color:#000000;'><span style='font-size:10px;color:#757575;'>...Loading Agency...</span></span>?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
 </div>
 <script type="text/javascript">
 
@@ -868,35 +840,6 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
     }
     //function updateAnalysisReferral(id,url,title){
     function updateAnalysisReferral(id,requestId,title){
-        //var url = '/lab/analysisreferral/update?id='+id;
-        //var url = '/lab/analysisreferral/update?id='+id+'&request_id='+requestId;
-        //var url = '/lab/analysisreferral/getdefaultpage?analysis_id='+id;
-        //$('.modal-title').html(title);
-        //$('#modalAnalysis').modal('show')
-        //    .find('#modalContent')
-        //    .load(url);
-        /*$.ajax({
-            url: '/lab/analysisreferral/getdefaultpage',
-            //dataType: 'json',
-            method: 'GET',
-            data: {analysis_id:analysisId},
-            //data: $(this).serialize(),
-            success: function (data, textStatus, jqXHR) {
-                $('.image-loader').removeClass("img-loader");
-                //$('#methodreference').html(data);
-                var url = '/lab/analysisreferral/update?id='+id+'&request_id='+requestId+'&perpage='data.count_page;
-                $('.modal-title').html(title);
-                $('#modalAnalysis').modal('show')
-                    .find('#modalContent')
-                    .load(url);
-            },
-            beforeSend: function (xhr) {
-                $('.image-loader').addClass("img-loader");
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alertWarning.alert("<p class='text-danger' style='font-weight:bold;'>Error Encountered!</p>");
-            }
-        });*/
             $.ajax({
                 url: '/lab/analysisreferral/getdefaultpage?analysis_id='+id,
                 success: function (data) {
@@ -921,20 +864,9 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
     }
 
     function sendNotification(url,title){
-        //var url = '/lab/sample/update?id='+id;
-        //$('.modal-title').html(title);
-        //$('#modal').modal('show')
-        //.find('#modalContent')
-        //.load(url);
-
-        //$('.modal-title').html(title);
-        //$('#tae').modal('show')
-        //    .find('#modalContent');
-            //.load();
         var str = title.slice(7);
         var header_title = '';
 
-        //alert(title.length);
         if(title.length > 73){
             header_title = title.slice(0, 70) + '...';
         } else {
@@ -942,9 +874,6 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
         }
 
         if(str.length > 0){
-            //alert('ggg');
-            //$("p.note span.agency-name").html(agency_name);
-            //alert(agency_name);
             var agency_name = str;
         } else {
             var agency_name = "<span style='font-size:10px;color:#757575;'>...No agency to be displayed...</span>";
@@ -961,29 +890,11 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                 +"<p style='font-weight:bold;font-size:13px;'><span class='glyphicon glyphicon-info-sign' style='font-size:17px;'></span>&nbsp;If you need assistance, please contact the web administrator.</p>"
                 +"</div>"
                 +"<p class='note' style='margin:15px 0 0 15px;font-weight:bold;color:#0d47a1;font-size:14px;'>Are you sure you want to send notification to <span class='agency-name' style='color:#000000;'>"+agency_name+"</span>?</p>",
-            /*message: "<div class='alert alert-danger' style='border:2px #dd4b39 dotted;margin:auto;font-size:13px;text-align:justify;text-justify:inter-word;color:#8a6d3b;'>
-                <strong>Warning:</strong><br>
-                <ol>
-                    <li>Make sure the selected laboratory is correct before you notify. Is it really Chem Lab, Micro Lab, Metro Lab, etc.?</li>
-                    <li>If you are notifying to <strong><i>DOST-ITDI</i></strong> for chemical analysis, make sure you 
-                    have selected either Organic Chemistry Laboratory (OCS) or Inorganic Chemistry Laboratory (ICS).</li>
-                </ol>
-                If you need assistance, please contact the web administrator.
-            </div>
-            <p class='note' style='margin:15px 0 0 15px;font-weight:bold;color:#0d47a1;font-size:13px;'>Are you sure you want to send notification to <span class='agency-name' style='color:#000000;'><span style='font-size:10px;color:#757575;'>...Loading Agency...</span></span>?</p>",*/
             buttons: [
-                /*{
-                    label: 'Button 1',
-                    title: 'Mouse over Button 1'
-                },*/
                 {
                     label: 'Send',
                     // no title as it is optional
                     cssClass: 'btn-primary',
-                    /*data: {
-                        js: 'btn-confirm',
-                        'user-id': '3'
-                    },*/
                     action: function(thisDialog){
                         //alert('Hi Orange!');
                         thisDialog.close();
@@ -993,12 +904,6 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                             .load(url);
                     }
                 }, 
-                /*{
-                    icon: 'glyphicon glyphicon-ban-circle',
-                    label: 'Button 3',
-                    title: 'Mouse over Button 3',
-                    cssClass: 'btn-warning'
-                },*/ 
                 {
                     label: 'Close',
                     action: function(thisDialog){
@@ -1007,131 +912,10 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                 }
             ]
         });
-
-        //krajeeDialog.dialog('#referral', function (result) {
-        //    if (result) { // ok button was pressed
-                // execute your code on dialog confirmation
-        //    } else { // dialog dialog was cancelled
-                // execute your code for cancellation
-          //  }
-        //});
-
-
-
-        /*connnn.dialog('<i>dada</i>', function (result) {
-            if (result) { // ok button was pressed
-                // execute your code on dialog confirmation
-            } else { // dialog dialog was cancelled
-                // execute your code for cancellation
-            }
-        });*/
-
-
-
-
-
-
-
-
-
-        //BootstrapDialog.show("Hold On! This is a Krajee alert!");
-        //krajeeDialog.confirm("<p class='text-danger' style='font-weight:bold;'>No sample selected!</p>");
-        //connnn.alert("<p class='text-danger' style='font-weight:bold;'>No sample selected!</p>");
-        //connnn.prompt({label:'Provide reason', placeholder:'Upto 30 characters...'}, function (result) {
-        //if (result) {
-            //alert('Great! You provided a reason: \n\n' + result);
-        //} else {
-            //alert('Oops! You declined to provide a reason!');
-        //}
-    //});
-        // JS Code
-        //connnn.confirm("Are you really sure you want to do this?", function (result) {
-            //{title : title},
-           // if (result) { // ok button was pressed
-                // execute your code for confirmation
-            //    connnn.alert('TAE!');
-            //} else { // confirmation was cancelled
-                // execute your code for cancellation
-            //}
-        //});
-
-        //alert("<p class='text-danger' style='font-weight:bold;'>No Method selected!</p>");
-        // JS Code
-        /*krajeeDialog.dialog('This is a custom dialog', function (result) {
-            if (result) { // ok button was pressed
-                // execute your code on dialog confirmation
-            } else { // dialog dialog was cancelled
-                // execute your code for cancellation
-            }
-        });*/
-        /*krajeeDialog.dialog({
-            label:'Provide reason',
-            placeholder:'Upto 30 characters...',
-            options : {
-                title : 'sss',
-            },
-        }, function(out){
-            if (out) {
-                alert('Yes'); // or do something based on the value of out
-            }
-        });*/
-        /*$.ajax({
-            url: url,
-            success: function (data) {
-                $('.image-loader').removeClass('img-loader');
-                var url = '/lab/analysisreferral/update?id='+id+'&request_id='+requestId+'&page='+data;
-                $('.modal-title').html(title);
-                $('#modalAnalysis').modal('show')
-                    .find('#modalContent')
-                    .load(url);
-            },
-            beforeSend: function (xhr) {
-                $('.image-loader').addClass('img-loader');
-            }
-        });*/
-         //e.preventDefault();
-            //var modal = $('#modal').modal('show');
-            //modal.find('.modal-body').load($('.modal-dialog'));
-            //var that = $(this);
-            //var id = that.data('id');
-            //var name = that.data('name');
-            //modal.find('.modal-title').text('Supprimer la ressource');
-
-            /*$('#delete-confirm').click(function(e) {
-                e.preventDefault();
-                window.location = 'delete?id='+id;
-            });*/
-             /*krajeeDialog.prompt({label:'Estimated Turnaround Time', placeholder:'Upto 30 characters...'}, function (result) {
-                if (result) {
-                    alert('Great! You provided a reason: \n\n' + result);
-                } else {
-                    alert('Oops! You declined to provide a reason!');
-                }
-            });*/
     }
-
-    function notify(){
-
-    }
-    
 </script>
 
 <?php
-//kartik\dialog\DialogAsset::register($this);
-$this->registerJs("
-    /*$('#your-btn-id').on('click', 
-       function(){
-            krajeeDialog.prompt({label:'Provide reason', placeholder:'Upto 30 characters...'}, function (result) {
-                if (result) {
-                    alert('Great! You provided a reason: \n\n' + result);
-                } else {
-                    alert('Oops! You declined to provide a reason!');
-                }
-
-            });
-            $('#dia').modal('open');
-        });*/
-");
 Modal::begin([
         'clientOptions' => ['backdrop' => 'static', 'keyboard' => false],
         'bodyOptions'=>[
@@ -1151,101 +935,6 @@ Modal::begin([
     echo "<div>&nbsp;</div>";
     echo "</div></div>";
 Modal::end();
-Modal::begin([
-        'clientOptions' => ['backdrop' => 'static', 'keyboard' => false],
-        'bodyOptions'=>[
-            'class' => 'modal-body',
-            'style'=>'padding-bottom: 20px',
-        ],
-        'options' => [
-            'id' => 'tae',
-            'tabindex' => false, // important for Select2 to work properly
-            //'tabindex' => 0, // important for Select2 to work properly
-        ],
-        'header' => '<h4 class="fa fa-clone" style="padding-top: 0px;margin-top: 0px;padding-bottom:0px;margin-bottom: 0px"> <span class="modal-title" style="font-size: 16px;font-family: \'Source Sans Pro\',sans-serif;"></span></h4>',
-        //'size' => Modal::SIZE_SMALL,
-    ]);
-    echo "<div>";
-    echo "<div class='modal-scroll'>
-            <div id='modalContent' style='margin-left: 5px;'><div style='text-align:center;'>
-            <!--<img src='/images/img-loader64.gif' alt=''></div>-->
-            <!--<div id='referral' class='alert alert-info' style='width:90%;padding:5px;'>-->
-            <div class='alert alert-danger' role='alert' style='border:2px #FF8800 dotted;margin:auto;font-size:13px;text-align:justify;text-justify:inter-word;color:#8a6d3b;'>
-                <strong>Warning:</strong><br />
-                <ol>
-                    <li>Make sure the selected laboratory is correct before you notify. Is it really Chem Lab, Micro Lab, Metro Lab, etc.?</li>
-                    <li>If you are notifying to <strong><i>DOST-ITDI</i></strong> for chemical analysis, make sure you 
-                    have selected either Organic Chemistry Laboratory (OCS) or Inorganic Chemistry Laboratory (ICS).</li>
-                </ol>
-                If you need assistance, please contact the web administrator.
-            </div>
-            <p class='note' style='margin:15px 0 0 15px;font-weight:bold;color:#0d47a1;font-size:13px;'>Are you sure you want to send notification to <span class='agency-name' style='color:#000000;'><span style='font-size:10px;color:#757575;'>...Loading Agency...</span></span>?</p>
-        </div>
-        <!--</div>-->";
-    echo "<div>&nbsp;</div>";
-    echo "</div></div>";
-Modal::end();
-// Confirmation modal before proceeding
-//echo kartik\dialog\Dialog::widget();
-//echo kartik\dialog\Dialog::widget([
-   //'libName' => 'krajeeDialogCust', // optional if not set will default to `krajeeDialog`
-   //'options' => ['draggable' => true, 'closable' => true], // custom options
-//]);
-//'krajeeDialogSettings' => [
-//    'overrideYiiConfirm' => false
-//];
-//echo Dialog::overrideYiiConfirm => false;
-/*echo Html::a(
-    'Delete', 
-    ['/item/delete1', 'id' =>'1'], 
-    [
-        'data-confirm' => 'Are you sure to delete this item?',
-        'data-method' => 'post'
-    ]
-);*/
-//echo Dialog::widget(['overrideYiiConfirm' => true]);
-/*echo Dialog::widget([
-    'libName' => 'connnn', // a custom lib name
-    //'id' => 'confirmDialog',
-    'overrideYiiConfirm' => false,
-    //'title' => Yii::t('kvdialog', 'Confirmation'),
-    //    'btnOKClass' => 'btn-warning',
-    //    'btnOKLabel' => Dialog::ICON_OK . ' ' . Yii::t('kvdialog', 'Ok'),
-    //    'btnCancelLabel' => Dialog::ICON_CANCEL . ' ' . Yii::t('kvdialog', 'Cancel')
-    //'buttonOKClass' => 'btn-warning',
-    //'btnOKLabel' => Dialog::ICON_OK . ' ' . Yii::t('kvdialog', 'Ok'),
-    //'btnCancelLabel' => Dialog::ICON_CANCEL . ' ' . Yii::t('kvdialog', 'Cancel'),
-    'options' => [  // customized BootstrapDialog options
-        //'size' => Dialog::SIZE_LARGE,
-        'type' => Dialog::TYPE_PRIMARY, // bootstrap contextual color
-        //'title' => "<i class='glyphicon glyphicon-send' style='font-size:20px'></i> Notification",
-        //'buttonSend' = 'Send',
-        //'buttonLabel' => 'Close',
-        'buttons' => [
-            [
-                //'id' => 'cust-btn-1',
-                'label' => 'Button 1',
-                'action' => new JsExpression("function(dialog) {
-                    dialog.setTitle('Title 1');
-                    dialog.setMessage('This is a custom message for button number 1');
-                }")
-                //'label' => Yii::t('kvdialog', 'Close'),
-                //'icon' => Dialog::ICON_CANCEL
-            ],
-            [
-                //'id' => 'cust-btn-2',
-                'label' => 'Button 2',
-                'action' => new JsExpression("function(dialog) {
-                    dialog.setTitle('Title 2');
-                    dialog.setMessage('This is a custom message for button number 2');
-                }")
-                //'label' => Yii::t('kvdialog', 'Kamote'),
-                //'icon' => Dialog::ICON_OK
-                //'cssClass' => 'btn-primary'
-            ],
-        ]
-    ],
-]);*/
 ?>
 <style type="text/css">
 /* Absolute Center Spinner */

@@ -210,4 +210,16 @@ class ReferralComponent extends Component {
             return 0;
         }
     }
+    //get count notifications
+    function countNofication($rstlId)
+    {
+        if($rstlId > 0) {
+            $apiUrl=$this->source.'/api/web/referral/notifications/countnotification?rstl_id='.$rstlId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return $list;
+        } else {
+            return 'Not valid rstl!';
+        }
+    }
 }
