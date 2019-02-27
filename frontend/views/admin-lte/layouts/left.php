@@ -35,12 +35,12 @@ if(Yii::$app->user->isGuest){
     }else{
        $UsernameDesignation=$CurrentUserName.'<br>'.$CurrentUserDesignation;
     }
-	$unseen_notification = json_decode(Yii::$app->runAction('/referrals/referral/unseen_notification'));
+	//$unseen_notification = json_decode(Yii::$app->runAction('/referrals/referral/unseen_notification'));
 	
 	
 	//print_r($unseen_notification);
 	//exit;
-	$unseen = $unseen_notification->data_notification->count_notification > 0 ? $unseen_notification->data_notification->count_notification : '';
+	/*$unseen = $unseen_notification->data_notification->count_notification > 0 ? $unseen_notification->data_notification->count_notification : '';
 	//notification will run if the user is already logged in
 	$this->registerJs("
 		setInterval(function(e){
@@ -69,7 +69,7 @@ if(Yii::$app->user->isGuest){
 				}
 			});
 		}
-	");
+	");*/
 }
 ?>
 <aside class="main-sidebar">
@@ -118,10 +118,11 @@ if(Yii::$app->user->isGuest){
                 $pkgdetails2=str_replace(" ","-",$pkgdetails1);
                 $SubmodulePermission="access-".$pkgdetails2; //access-Order of Payment
 				if($mItem->extra_element == 1){
-					$numNotification = '&nbsp;&nbsp;<span class="label label-danger" id="count_noti_sub">'.$unseen.'</span>';
+					//$numNotification = '&nbsp;&nbsp;<span class="label label-danger" id="count_noti_sub">'.$unseen.'</span>';
+                    $numNotification = '1';
 					$showURL = '#';
 					$template = '<a href="{url}" onclick="showNotifications()" id="btn_unseen">{label}</a>';
-					$this->registerJs("
+					/*$this->registerJs("
 						function showNotifications(){
 							$('.modal-title').html('Notifications');
 							$('#modalNotification').modal('show')
@@ -132,7 +133,7 @@ if(Yii::$app->user->isGuest){
 						$('#btn_unseen').on('click', function(e) {
 							e.preventDefault();
 						});
-					");
+					");*/
 				} else {
 					$numNotification = '';
 					$template = '<a href="{url}">{label}</a>';
@@ -148,7 +149,7 @@ if(Yii::$app->user->isGuest){
                 array_push($ItemSubMenu, $ItemS);
             }
             $MainIcon=substr($Item->icon,6,strlen($Item->icon)-6);
-			$showNotification = (stristr($Item->PackageName, 'referral')) ? '&nbsp;&nbsp;<span class="label label-danger" id="count_noti_menu">'.$unseen.'</span>' : '';
+			$showNotification = (stristr($Item->PackageName, 'referral')) ? '&nbsp;&nbsp;<span class="label label-danger" id="count_noti_menu">1</span>' : '';
             $ItemMenu[]=[
                 'label' => '<img src="/images/icons/' .$Item->icon. '.png" style="width:20px">  <span>' . ucwords($Item->PackageName) . $showNotification . '</span>', 
                 'icon'=>' " style="display:none;width:0px"',
