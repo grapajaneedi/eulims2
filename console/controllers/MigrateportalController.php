@@ -89,9 +89,6 @@ class MigrateportalController extends Controller
                             $live_sample->active=1;
                             break;
                             case '1':
-                            $live_sample->active=2;
-                            break;
-                            case '2':
                             $live_sample->active=0;
                             break;
                             default:
