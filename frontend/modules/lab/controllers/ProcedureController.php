@@ -80,20 +80,16 @@ class ProcedureController extends Controller
     public function actionCreate()
     {
         $model = new Procedure();
-      
-
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->procedure_code=1;
+           // $model->procedure_code=1;
             $model->testname_id=2;
             $model->testname_method_id=3;
             Yii::$app->session->setFlash('success', 'Procedure Successfully Created'); 
             return $this->runAction('index');
-        }
-      
-        $model->procedure_code=1;
-        $model->testname_id=2;
-        $model->testname_method_id=3;
+        } 
+            //$model->procedure_code=1;
+            $model->testname_id=2;
+            $model->testname_method_id=3;
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_form', [
                 'model' => $model,
@@ -111,23 +107,13 @@ class ProcedureController extends Controller
      */
     public function actionUpdate($id)
     {
-        // $model = $this->findModel($id);
-
-        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        //     return $this->redirect(['view', 'id' => $model->procedure_id]);
-        // }
-
-        // return $this->render('update', [
-        //     'model' => $model,
-        // ]);
-            //////
         $model = $this->findModel($id);
 		if ($model->load(Yii::$app->request->post())) {
 			if($model->save()){
 				Yii::$app->session->setFlash('success', $model->procedure_name." Successfully Updated.");
                 return $this->runAction('index');
-
             }
+
 		} elseif (Yii::$app->request->isAjax) {
 			return $this->renderAjax('_form', [
 				'model' => $model,
@@ -165,7 +151,6 @@ class ProcedureController extends Controller
         if (($model = Procedure::findOne($id)) !== null) {
             return $model;
         }
-
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

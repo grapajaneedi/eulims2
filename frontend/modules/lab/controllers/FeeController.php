@@ -10,11 +10,9 @@ use common\models\lab\FeeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
 use common\models\lab\Analysis;
 use common\models\lab\Sample;
 use common\models\lab\AnalysisSearch;
-
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Sampletype;
@@ -22,8 +20,6 @@ use common\models\lab\Testcategory;
 use common\models\lab\Test;
 use common\models\lab\SampleSearch;
 use yii\helpers\Json;
-
-
 
 /**
  * FeeController implements the CRUD actions for Fee model.
@@ -86,10 +82,6 @@ class FeeController extends Controller
         $session = Yii::$app->session;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        //     return $this->redirect(['view', 'id' => $model->fee_id]);
-        // }
-
         $samplesQuery = Sample::find()->where(['request_id' => $id]);
         $sampleDataProvider = new ActiveDataProvider([
                 'query' => $samplesQuery,
@@ -101,7 +93,6 @@ class FeeController extends Controller
 
         $request = $this->findRequest($request_id);
         $labId = $request->lab_id;
-
         $testcategory = $this->listTestcategory($labId);
      
         $sampletype = [];
@@ -116,14 +107,7 @@ class FeeController extends Controller
             foreach ($ids as $sample_id){
 
                 $analysis = new Analysis();
-
                 $modelfee=  Fee::findOne(['fee_id'=>$post['Fee']['name']]);
-
-                //  echo "<pre>";
-                // var_dump($modelfee->name);
-                // echo "</pre>";
-                // exit;
-
                 $analysis->sample_id = $sample_id;
                 $analysis->cancelled = 0;
                 $analysis->pstcanalysis_id = 1;
@@ -143,10 +127,6 @@ class FeeController extends Controller
                 $analysis->sample_code = "-";
                 $analysis->date_analysis = '2018-06-14 7:35:0';   
                 $analysis->save();
-
-                // echo "<pre>";
-                // var_dump($analysis);
-                // echo "</pre>";
             }        
             
             Yii::$app->session->setFlash('success', 'Additional Fee Successfully Added');
@@ -206,19 +186,12 @@ class FeeController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
-
     protected function listTestcategory($labId)
     {
         $testcategory = ArrayHelper::map(Testcategory::find()->andWhere(['lab_id'=>$labId])->all(), 'testcategory_id', 
            function($testcategory, $defaultValue) {
                return $testcategory->category_name;
         });
-
-        /*$testcategory = ArrayHelper::map(Testcategory::find()
-            ->where(['lab_id' => $labId])
-            ->all(), 'testcategory_id', 'category_name');*/
-
         return $testcategory;
     }
 

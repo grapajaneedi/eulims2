@@ -3,12 +3,11 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use common\models\lab\Sampletype;
+use common\models\lab\Procedure;
 use common\models\lab\Testname;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
-
 ?>
-
         <?= GridView::widget([
         'dataProvider' => $workflowdataprovider,
         'pjax' => true,
@@ -22,13 +21,25 @@ use yii\helpers\Url;
             [
                 'header'=>'Workflow Steps',
                 'format' => 'raw',
-                'width' => '80%',
+                'width' => '20%',
                 'enableSorting' => false,
                 'value' => function($model) {
                     return $model->procedure_name;
                 },
+                
                 'contentOptions' => ['style' => 'width:300px; white-space: normal;'],                      
             ],
-           
+            [
+                'attribute' => 'procedure_code',
+                'label' => 'Description',
+                'format' => 'raw',
+                'contentOptions' => ['style' => 'width:70%; white-space: normal;'],
+                'value' => function($model) {   
+                    //find in workflow
+                    $procedure= Procedure::find()->where(['procedure_id'=> $model->method_id])->one();
+                    return $procedure->procedure_code;
+                        //return $model->procedure_code;
+                            },
+            ],
         ],
     ]); ?>    

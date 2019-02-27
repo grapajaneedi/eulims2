@@ -75,14 +75,13 @@ class DocumentcontrolController extends Controller
      * @return mixed
      */
     public function actionCreate()
-    {
-             
+    {           
         $model = new Documentcontrol();
         
         $post= Yii::$app->request->post();
 
                 if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    //dapat mag update ito!
+                
                     $documentcontrolconfig = Documentcontrolconfig::find()->where(['documentcontrolconfig_id' => 1])->one();   
 
                     $dcf = $documentcontrolconfig->dcf;
@@ -111,15 +110,12 @@ class DocumentcontrolController extends Controller
                     $approved = $documentcontrolconfig->approved;
                     $custodian = $documentcontrolconfig->custodian;
                     $dcf = $documentcontrolconfig->dcf + 1;
-                    $year = $documentcontrolconfig->year;
-
-                    
+                    $year = $documentcontrolconfig->year;    
                     $model->approved_by = $approved;
                     $model->reviewed_by = $custodian;
                     $model->custodian = $custodian;
 
                     $len = strlen ($dcf);
-
                     if ($len==1){
                         $model->dcf_no = "00".$dcf."-".$year;
                     }elseif ($len==2){
@@ -127,8 +123,6 @@ class DocumentcontrolController extends Controller
                     }else{
                         $model->dcf_no = $dcf."-".$year;
                     }
-
-                   
 
                     return $this->renderAjax('_form', [
                         'model' => $model,

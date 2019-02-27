@@ -205,7 +205,8 @@ class LabController extends Controller
                                    
                               $newSample = new Restore_sample();
                               $newSample->rstl_id=$samp['rstl_id'];
-                              $newSample->sample_id=$samp['sample_old_id'];
+                             // $newSample->sample_id=$samp['sample_old_id'];
+                              $newSample->sample_id=$samp['sample_id'];
                               $newSample->pstcsample_id=$samp['pstcsample_id'];
                               $newSample->sampletype_id=$samp['sampletype_id'];
                               $newSample->package_id=$samp['package_id'];
@@ -240,7 +241,8 @@ class LabController extends Controller
 
                         foreach ($samp['analyses'] as $anals){
                             $newanalysis = new Restore_analysis();
-                            $newanalysis->analysis_id=$anals['analysis_old_id'];
+                           // $newanalysis->analysis_id=$anals['analysis_old_id'];
+                            $newanalysis->analysis_id=$anals['analysis_id'];
                             $newanalysis->rstl_id=$anals['rstl_id'];
                             $newanalysis->pstcanalysis_id=$anals['pstcanalysis_id'];
                             $newanalysis->sample_id =$anals['old_sample_id'];
@@ -479,7 +481,7 @@ class LabController extends Controller
                               $sample_count++;          
                               $newSample = new Restore_sample();
                               $newSample->rstl_id=$samp['rstl_id'];
-                              $newSample->sample_id=$samp['sample_old_id'];
+                            //   $newSample->sample_id=$samp['sample_old_id'];
                               $newSample->pstcsample_id=$samp['pstcsample_id'];
                               $newSample->sampletype_id=$samp['sampletype_id'];
                               $newSample->package_id=$samp['package_id'];
@@ -494,7 +496,7 @@ class LabController extends Controller
                                             $newSample->sampling_date=$sampdate;
                                     }                        
                               $newSample->remarks=$samp['remarks'];
-                              $newSample->request_id=$samp['old_request_id'];
+                              $newSample->request_id=$newRequest['request_id'];
                               $newSample->sample_month=$samp['sample_month'];
                               $newSample->sample_year=$samp['sample_year'];
                               $newSample->active=$samp['active'];
@@ -514,10 +516,10 @@ class LabController extends Controller
                         foreach ($samp['analyses'] as $anals){
                             $analysis_count++;
                             $newanalysis = new Restore_analysis();
-                            $newanalysis->analysis_id=$anals['analysis_old_id'];
+                           // $newanalysis->analysis_id=$anals['analysis_old_id'];
                             $newanalysis->rstl_id=$anals['rstl_id'];
                             $newanalysis->pstcanalysis_id=$anals['pstcanalysis_id'];
-                            $newanalysis->sample_id =$anals['old_sample_id'];
+                            $newanalysis->sample_id =$anals['sample_id'];
                             $newanalysis->sample_code=$anals['sample_code'];
                             $newanalysis->testname=$anals['testname'];
                             $newanalysis->method=$anals['method'];
@@ -702,6 +704,7 @@ class LabController extends Controller
           {    
                       $newRequest = new Restore_request();    
                       $newRequest->request_id = $request['request_old_id'];
+                    //  $newRequest->request_id = $request['request_id'];
                       $newRequest->request_ref_num = $request['request_ref_num'];
                       $newRequest->request_datetime= $request['request_datetime'];
                       $newRequest->rstl_id= $request['rstl_id'];
@@ -748,7 +751,8 @@ class LabController extends Controller
                           $sample_count++;          
                           $newSample = new Restore_sample();
                           $newSample->rstl_id=$samp['rstl_id'];
-                          $newSample->sample_id=$samp['sample_old_id'];
+                         // $newSample->sample_id=$samp['sample_old_id'];
+                         // $newSample->sample_id=$samp['sample_id'];
                           $newSample->pstcsample_id=$samp['pstcsample_id'];
                           $newSample->sampletype_id=$samp['sampletype_id'];
                           $newSample->package_id=$samp['package_id'];
@@ -765,7 +769,8 @@ class LabController extends Controller
                           }
                           
                           $newSample->remarks=$samp['remarks'];
-                          $newSample->request_id=$samp['old_request_id'];
+                          $newSample->request_id=$newRequest['request_id'];
+                          //$newSample->request_id=$samp['old_request_id'];
                           $newSample->sample_month=$samp['sample_month'];
                           $newSample->sample_year=$samp['sample_year'];
                           $newSample->active=$samp['active'];
@@ -789,10 +794,12 @@ class LabController extends Controller
 					foreach ($samp['analyses'] as $anals){
 						$analysis_count++;
 						$newanalysis = new Restore_analysis();
-						$newanalysis->analysis_id=$anals['analysis_old_id'];
+                      //  $newanalysis->analysis_id=$anals['analysis_old_id'];
+                      //  $newanalysis->analysis_id=$anals['analysis_id'];
 						$newanalysis->rstl_id=$anals['rstl_id'];
 						$newanalysis->pstcanalysis_id=$anals['pstcanalysis_id'];
-						$newanalysis->sample_id =$anals['old_sample_id'];
+                        $newanalysis->sample_id =$newSample['sample_id'];
+                       // $newanalysis->sample_id =$anals['old_sample_id'];
 						$newanalysis->sample_code=$anals['sample_code'];
 						$newanalysis->testname=$anals['testname'];
 						$newanalysis->method=$anals['method'];
@@ -847,8 +854,8 @@ class LabController extends Controller
                                 $newcustomer->is_updated = $customer['is_updated'];
                                 $newcustomer->is_deleted = $customer['is_deleted'];
                                 $newcustomer->save(false);
-                          }
-                        }
+                         }
+                      }
                    }
 				}
 				$samplenum = $samplenum + $request['countSample'];

@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'procedure_name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'procedure_code')->hiddenInput(['maxlength' => true])->label(false); ?>
+    <?= $form->field($model, 'procedure_code')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'testname_id')->hiddenInput()->label(false); ?>
 

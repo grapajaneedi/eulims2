@@ -19,15 +19,6 @@ use linslin\yii2\curl;
 use yii\helpers\Json;
 $func=new Functions();
 
-// $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/sampletypes/restore?id=3";
-// $curl = new curl\Curl();
-// $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
-// $response = $curl->get($apiUrl);
-// $decode=Json::decode($response);
-
-// var_dump($decode);
-//exit;
-
 $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/labs/search?labcount=0";
 $curl = new curl\Curl();
 $curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
@@ -41,7 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
 $services =  Services::find()->all(); 
 
 ?>
-
 
 <div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
      <a href="#" class="close" data-dismiss="alert" >×</a>
@@ -59,8 +49,7 @@ $services =  Services::find()->all();
     </div>
 </fieldset> 
     <div class="row">
-     <?php $form = ActiveForm::begin(); ?>
-   
+     <?php $form = ActiveForm::begin(); ?> 
         <div>
             <?php 
                 echo$sampletype = "<div class='col-md-4'>".$form->field($model,'lab_id')->widget(Select2::classname(),[
@@ -108,7 +97,6 @@ $services =  Services::find()->all();
                 ],
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
-
                 [
                     'header'=>'Action',
                     'format' => 'raw',
@@ -133,18 +121,11 @@ $services =  Services::find()->all();
                     'enableSorting' => false,
                     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],             
                 ],
-                // [
-                //     'header'=>'Offered by',
-                //     'format' => 'raw',
-                //     'enableSorting' => false,
-                //     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],      
-                // ],
                 ['class' => 'yii\grid\ActionColumn'],
             ],
         ]); ?>
  </div>
 </div>
-
 
 <script type="text/javascript">
     $('#sample-test_id').on('change',function(e) {

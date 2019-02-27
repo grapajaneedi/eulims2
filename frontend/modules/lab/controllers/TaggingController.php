@@ -46,7 +46,7 @@ class TaggingController extends Controller
     public function actionIndex()
     {
         $searchModel = new TaggingSearch();
-       // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+     
         $model = new Sample();
         
         $samplesQuery = Sample::find()->where(['sample_id' =>0]);
@@ -227,7 +227,6 @@ class TaggingController extends Controller
                  
             ]);
             return $this->renderAjax('tag', [
-               // 'sampleDataProvider' => $sampleDataProvider,
                 'analysisdataprovider'=> $analysisdataprovider,
                 'analysis_id'=>$analysis_id,
                 'count'=>$count,
@@ -241,41 +240,48 @@ class TaggingController extends Controller
      public function actionTag($id)
      {
        $analysisQuery = Analysis::findOne(['analysis_id' => $id]);
-       $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);
-       
-       $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
      
+      // $workflow = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id]);
 
-       $workflow = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id]);
-    
-       $analysis= Analysis::find()->where(['analysis_id'=> $id])->one();
-       $samplesq = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();             
-       $samcount = $analysis->completed;
+            if ($analysisQuery){
+                $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);   
+                $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
+                $workflow = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id]);
+                $analysis= Analysis::find()->where(['analysis_id'=> $id])->one();
+                $samplesq = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();             
+                $samcount = $analysis->completed;
 
-       //baguhin pa ito!!!
-       $procedure = Procedure::find()->where(['testname_id' => 1]);
-       //count sa workflow
-       $count =  Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();
-       $analysis_id = $id;
-
-       
-       $analysisdataprovider = new ActiveDataProvider([
-               'query' => $workflow,
-               'pagination' => [
-                   'pageSize' => false,
-                          ],                 
-       ]);
-       
-       
-        if(Yii::$app->request->isAjax){
-            return $this->renderAjax('tag', [
-                'analysis_id'=>$analysis_id,
-                'analysisdataprovider'=>$analysisdataprovider,
-                'count'=>$count,
-                'samcount'=>$samcount,
+                $procedure = Procedure::find()->where(['testname_id' => 1]);
+                $count =  Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();
+                $analysis_id = $id;
+        
+                $analysisdataprovider = new ActiveDataProvider([
+                        'query' => $workflow,
+                        'pagination' => [
+                            'pageSize' => false,
+                                ],                 
                 ]);
-        }
+                    
+                if(Yii::$app->request->isAjax){
+                    return $this->renderAjax('tag', [
+                        'analysis_id'=>$analysis_id,
+                        'analysisdataprovider'=>$analysisdataprovider,
+                        'count'=>$count,
+                        'samcount'=>$samcount,
+                        ]);
+                }
+            }else{
 
+                if(Yii::$app->request->isAjax){
+                    return $this->renderAjax('_noworkflow', [
+                        // 'analysis_id'=>$analysis_id,
+                        // 'analysisdataprovider'=>$analysisdataprovider,
+                        // 'count'=>$count,
+                        // 'samcount'=>$samcount,
+                        ]);
+                }
+            }
+    
      }
 
      public function actionCompletedanalysis()
@@ -403,7 +409,7 @@ class TaggingController extends Controller
          $analysisdataprovider = new ActiveDataProvider([
                  'query' => $analysisQuery,
                  'pagination' => [
-                     'pageSize' => 10,
+                     'pageSize' => false,
                  ],
               
          ]);

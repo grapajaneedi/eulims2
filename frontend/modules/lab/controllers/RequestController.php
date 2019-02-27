@@ -10,7 +10,6 @@ use common\models\lab\ReferralRequest;
 use common\models\lab\Request;
 use common\models\lab\Discount;
 use common\models\lab\Analysis;
-//use common\models\lab\AnalysisSearch;
 use common\models\lab\RequestSearch;
 use common\models\lab\Requestcode;
 use yii\web\Controller;
@@ -24,10 +23,8 @@ use DateTime;
 use common\models\system\Profile;
 use common\components\Functions;
 use common\components\ReferralComponent;
-//use linslin\yii2\curl\Curl;
 use kartik\mpdf\Pdf;
 use frontend\modules\finance\components\epayment\ePayment;
-
 use common\models\finance\Op;
 use common\models\system\Rstl;
 use linslin\yii2\curl;
@@ -99,9 +96,7 @@ class RequestController extends Controller
         ]);
 
         $request_type = $this->findModel($id)->request_type_id;
-
-        $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-        
+        $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;     
         $samples = Sample::find()->where(['request_id' => $id])->all();
         
         $sample_ids = '';
@@ -119,7 +114,6 @@ class RequestController extends Controller
         $analysisQuery = Analysis::find()
         ->where(['IN', 'sample_id', $ids]);
 
-      //  $analysisQuery = Analysis::find()->where(['sample_id' =>$samples->sample_id]);
         if($request_type == 2) {
             $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
@@ -262,11 +256,10 @@ class RequestController extends Controller
             'payment_details'=>$Payment_details
         ];
         $content = json_encode($TransactDetails);
-        
-        //return $TransactDetails;
+    
         $curl = new curl\Curl();
         $EpaymentURI="https://yii2customer.onelab.ph/web/api/op";
-        //$EpaymentURI="http://www.eulims.local/capi/op";
+    
         $response = $curl->setRequestBody($content)
             ->setHeaders([
                'Content-Type' => 'application/json',
@@ -277,8 +270,7 @@ class RequestController extends Controller
     }
     public function actionSaverequestransaction(){
         $post= Yii::$app->request->post();
-        // echo $post['request_id'];
-        //exit;
+       
         $return="Failed";
         $request_id=(int) $post['request_id'];
         $lab_id=(int) $post['lab_id'];
@@ -328,12 +320,7 @@ class RequestController extends Controller
         $total = $subtotal - ($subtotal * ($rate/100));
         
         $Request->total=$total;
-        /*
-        echo "<pre>";
-        var_dump($Request);
-        echo "</pre>";
-        exit;
-        */
+      
         if($Request->save()){
             $Func=new Functions();
             $response=$Func->GenerateSampleCode($request_id);
@@ -372,7 +359,7 @@ class RequestController extends Controller
          */
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Request Successfully Created!');
-            return $this->redirect(['view', 'id' => $model->request_id]); ///lab/request/view?id=1
+            return $this->redirect(['view', 'id' => $model->request_id]); 
         } else {
             $date = new DateTime();
             $date2 = new DateTime();
@@ -381,7 +368,7 @@ class RequestController extends Controller
             $model->request_datetime=date("Y-m-d h:i:s");
             $model->report_due=date_format($date2,"Y-m-d");
             $model->created_at=date('U');
-            $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
+            $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;
             $model->payment_type_id=1;
             $model->modeofrelease_ids='1';
             $model->discount_id=0;
@@ -418,7 +405,6 @@ class RequestController extends Controller
      */
     public function actionUpdate($id)
     {
-        //$model = $this->findModel($id);
         $model= eRequest::findOne($id);
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -483,7 +469,7 @@ class RequestController extends Controller
             throw new NotFoundHttpException('The requested Request its either does not exist or you have no permission to view it.');
         }
     }
-    //bergel cutara
+  
     //contacted by function to return result to be displayed in select2
     public function actionRequestlist($q = null, $id = null) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

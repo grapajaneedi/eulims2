@@ -104,8 +104,6 @@ $this->registerJs($js);
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-                // 'before'=>'<span class="btn btn-success legend-font" style="float:left" "id"="servicescount"><span class= "glyphicon glyphicon-upload"></span>SYNC '.$servicecount.'</span>',
-                // 'before'=>Html::button('<i class="glyphicon glyphicon-upload"></i> SYNC '.$servicecount, [ 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/lab/services/sync']) . "';" ,'title'=>'Sync',  'class' => 'btn btn-success']),
                 'after'=>false,
             ],
         'columns' => [
