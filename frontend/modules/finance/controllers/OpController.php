@@ -287,19 +287,26 @@ class OpController extends Controller
             ->from('eulims_finance.tbl_orderofpayment')
             ->one();
           $lastyear=substr($lastyear["lastnumber"],0,4);
+         // echo $lastyear;
+        //  exit;
           $year=date('Y');
           $year_month = date('Y-m');
           $last_trans_num=(new Query)
-            ->select(['count(transactionnum)+ 1 AS lastnumber'])
-            ->from('eulims_finance.tbl_orderofpayment')
-            ->one();
+                ->select(['MAX(transactionnum) AS lastnumber'])
+                ->from('eulims_finance.tbl_orderofpayment')
+                ->one();
+       
           $str_trans_num=0;
           if($last_trans_num != ''){
               if($lastyear < $year){
                  $str_trans_num='0001'; 
               }
               else if($lastyear == $year){
-                 $str_trans_num=str_pad($last_trans_num["lastnumber"], 4, "0", STR_PAD_LEFT);
+                // $str_trans_num=str_pad($last_trans_num["lastnumber"], 4, "0", STR_PAD_LEFT);
+                  $str_trans_num=substr($last_trans_num["lastnumber"],8)+1;
+                  $str_trans_num=str_pad($str_trans_num, 4, "0", STR_PAD_LEFT);
+                //  echo $str_trans_num;
+                 // exit;
               } 
           }
           else{
@@ -307,7 +314,10 @@ class OpController extends Controller
           }
         
          $next_transnumber=$year_month."-".$str_trans_num;
+        // echo $next_transnumber;
+       //s  exit;
          return $next_transnumber;
+         
      }
      
      public function actionCalculateTotal($id) {
