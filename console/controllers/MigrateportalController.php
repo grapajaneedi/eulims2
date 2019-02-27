@@ -82,6 +82,23 @@ class MigrateportalController extends Controller
                         $live_sample = new Sample;
                         $live_sample->attributes=$sample->attributes;
                         $live_sample->request_id=$live_request->request_id;
+
+                        //as per the sp instruction
+                        switch($live_sample->active){
+                            case '0':
+                            $live_sample->active=1;
+                            break;
+                            case '1':
+                            $live_sample->active=2;
+                            break;
+                            case '2':
+                            $live_sample->active=0;
+                            break;
+                            default:
+                            $live_sample->active=0;
+                            break;
+                        }
+
                         if($live_sample->save(false)){
 
                             //find the analysis
@@ -93,6 +110,9 @@ class MigrateportalController extends Controller
                                 $live_analysis = new Analysis;
                                 $live_analysis->attributes = $analysis->attributes;
                                 $live_analysis->sample_id= $live_sample->sample_id;
+                                if($live_analysis->is_package>0){
+                                    $live_analysis->is_package=1;
+                                }
                                 $live_analysis->save(false);
                             }
 
