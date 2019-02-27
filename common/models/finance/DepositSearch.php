@@ -67,6 +67,7 @@ class DepositSearch extends Deposit
             'amount' => $this->amount,
             'deposit_type_id' => $this->deposit_type_id,
             'deposit_date' => $this->deposit_date,
+            'rstl_id' => Yii::$app->user->identity->profile->rstl_id,
             
         ]);
 

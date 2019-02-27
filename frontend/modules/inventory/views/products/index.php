@@ -30,7 +30,7 @@ Modal::begin([
     'header' => '<h4 class="modal-title">Details</h4>',
 ]);
 
-$Button="{update}{delete}";
+$Button="{update}{delete}{sds}";
 //$modalContent=$this->render('_form',['model'=>$searchModel]);
 Modal::end();
 ?>
@@ -93,6 +93,9 @@ Modal::end();
                      return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>'/inventory/products/update?id=' . $model->product_id, 'class' => 'btn btn-success','title' => Yii::t('app', "Update Product"),'id'=>'btnProd','onclick'=>'addProduct(this.value,this.title)']);
                      
                 },
+                'sds' => function($url, $model){
+                     return Html::button('<span class="glyphicon glyphicon-file"></span>', ['value'=>'/inventory/products/viewsds?id='.$model->product_id, 'class' => 'btn btn-primary','title' => Yii::t('app', "Safety Data Sheet"),'id'=>'btnSupplier','onclick'=>'showBonus(this.value,this.title)']);       
+                }
             ],
             
         ],

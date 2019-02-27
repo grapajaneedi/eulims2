@@ -20,6 +20,7 @@ if(Yii::$app->user->isGuest){
     $CurrentUserAvatar=Yii::$app->params['uploadUrl'] . 'no-image.png';
     $CurrentUserDesignation='Guest';
     $UsernameDesignation=$CurrentUserName;
+	$unseen = '';
 }else{
     $CurrentUser= User::findOne(['user_id'=> Yii::$app->user->identity->user_id]);
     $CurrentUserName=$CurrentUser->profile ? $CurrentUser->profile->fullname : $CurrentUser->username;
@@ -34,6 +35,41 @@ if(Yii::$app->user->isGuest){
     }else{
        $UsernameDesignation=$CurrentUserName.'<br>'.$CurrentUserDesignation;
     }
+	$unseen_notification = json_decode(Yii::$app->runAction('/referrals/referral/unseen_notification'));
+	
+	
+	//print_r($unseen_notification);
+	//exit;
+	$unseen = $unseen_notification->data_notification->count_notification > 0 ? $unseen_notification->data_notification->count_notification : '';
+	//notification will run if the user is already logged in
+	$this->registerJs("
+		setInterval(function(e){
+			get_unseen_notifications();
+		}, 30000);
+
+		function get_unseen_notifications()
+		{
+			$.ajax({
+				url: '/referrals/referral/unseen_notification',
+				dataType: 'json',
+				method: 'GET',
+				success: function (data) {
+					if (data.data_notification.count_notification > 0){
+						$('#count_noti_sub').html(data.data_notification.count_notification);
+						$('#count_noti_menu').html(data.data_notification.count_notification);
+					} else if(data.data_notification.count_notification == 0) {
+						$('#count_noti_sub').html('');
+						$('#count_noti_menu').html('');
+					} else {
+						alert(data.data_notification.count_notification);
+					}
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					console.log('error occured!');
+				}
+			});
+		}
+	");
 }
 ?>
 <aside class="main-sidebar">
@@ -81,17 +117,40 @@ if(Yii::$app->user->isGuest){
                 $pkgdetails1=strtolower($mItem->Package_Detail);
                 $pkgdetails2=str_replace(" ","-",$pkgdetails1);
                 $SubmodulePermission="access-".$pkgdetails2; //access-Order of Payment
+				if($mItem->extra_element == 1){
+					$numNotification = '&nbsp;&nbsp;<span class="label label-danger" id="count_noti_sub">'.$unseen.'</span>';
+					$showURL = '#';
+					$template = '<a href="{url}" onclick="showNotifications()" id="btn_unseen">{label}</a>';
+					$this->registerJs("
+						function showNotifications(){
+							$('.modal-title').html('Notifications');
+							$('#modalNotification').modal('show')
+								.find('#modalBody')
+								.load('/referrals/referral/listnotification');
+							
+						}
+						$('#btn_unseen').on('click', function(e) {
+							e.preventDefault();
+						});
+					");
+				} else {
+					$numNotification = '';
+					$template = '<a href="{url}">{label}</a>';
+					$showURL = [$mItem->url];
+				}
                 $ItemS=[
                    'label' =>'<img src="/images/icons/' .$mItem->icon. '.png" style="width:20px">  <span>' . $mItem->Package_Detail . '</span>', 
                    'icon'=>' " style="display:none;width:0px"',
-                   'url'=>[$mItem->url],
-                   'visible'=>Yii::$app->user->can($SubmodulePermission)
+                   'url'=>$showURL,
+                   'visible'=>Yii::$app->user->can($SubmodulePermission),
+				   'template' => $template,
                 ];
                 array_push($ItemSubMenu, $ItemS);
             }
             $MainIcon=substr($Item->icon,6,strlen($Item->icon)-6);
+			$showNotification = (stristr($Item->PackageName, 'referral')) ? '&nbsp;&nbsp;<span class="label label-danger" id="count_noti_menu">'.$unseen.'</span>' : '';
             $ItemMenu[]=[
-                'label' => '<img src="/images/icons/' .$Item->icon. '.png" style="width:20px">  <span>' . ucwords($Item->PackageName) . '</span>', 
+                'label' => '<img src="/images/icons/' .$Item->icon. '.png" style="width:20px">  <span>' . ucwords($Item->PackageName) . $showNotification . '</span>', 
                 'icon'=>' " style="display:none;width:0px"',
                 'url' => ["/".$Item->PackageName."/index"],
                 'items'=>$ItemSubMenu,
@@ -145,3 +204,34 @@ if(Yii::$app->user->isGuest){
     </section>
 
 </aside>
+<?php //if(): ?>
+<script type="text/javascript">
+function showNotifications(){
+	/*BootstrapDialog.show({
+		title: "<span class='glyphicon glyphicon-bell' style='font-size:18px;'></span> Notifications",
+		type: BootstrapDialog.TYPE_PRIMARY,
+		//message: "",
+		message: $('.bootstrap-dialog-message').load('/referrals/referral/listnotification'),
+		//message: $('<div></div>').load('/referrals/referral/listnotification')
+		buttons: [
+			{
+				label: 'Close',
+				action: function(thisDialog){
+					thisDialog.close();
+				}
+			}
+		]
+	});*/
+	//$("#modalContent").html("<img src='/images/img-loader64.gif' alt='' style='display: block;margin-left: auto;margin-right: auto;'>");
+	
+	$(".modal-title").html('Notifications');
+	$('#modalNotification').modal('show')
+		.find('#modalBody')
+		.load('/referrals/referral/listnotification');
+	
+}
+$("#btn_unseen").on('click', function(e) {
+	e.preventDefault();
+});
+</script>
+<?php //endif; ?>

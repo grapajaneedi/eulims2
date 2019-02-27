@@ -1,5 +1,4 @@
 <?php
-
 namespace common\models\finance;
 
 use Yii;

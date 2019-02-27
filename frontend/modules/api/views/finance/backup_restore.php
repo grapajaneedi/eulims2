@@ -1,6 +1,3 @@
-
-
-
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\Progress;
@@ -17,19 +14,13 @@ use kartik\datetime\DateTimePicker;
 use common\components\Functions;
 use linslin\yii2\curl;
 use yii\helpers\Json;
-
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\ServicesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
 $func=new Functions();
-
-
 $month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 $year = ['0000','1970','2013', '2014', '2015', '2016', '2017', '2018','2019'];
-
 //$lablist= ArrayHelper::map( $decode,'lab_id','labname');
-
 $this->title = 'Backup and Restore';
 $this->params['breadcrumbs'][] = ['label' => 'API', 'url' => ['/api']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -107,14 +98,12 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]);
     
-
     ?>
   
 </div>
 
 <script type="text/javascript">
     function restore(){
-
         var y = $('#year option:selected').text();
     
         $.ajax({
@@ -131,7 +120,6 @@ $this->params['breadcrumbs'][] = $this->title;
             });
         }
          function restoresync(){
-
         var y = $('#year option:selected').text();
     
         $.ajax({
@@ -148,7 +136,6 @@ $this->params['breadcrumbs'][] = $this->title;
             });
         }
         function restore_receipt(){
-
         var y = $('#year option:selected').text();
         $.ajax({
             url: "/api/finance/res_receipt",
@@ -164,7 +151,6 @@ $this->params['breadcrumbs'][] = $this->title;
             });
         }
         function restore_paymentitem(){
-
         $.ajax({
             url: "/api/finance/res_paymentitem",
             method: "POST",

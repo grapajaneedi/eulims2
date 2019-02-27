@@ -134,6 +134,14 @@ class RequestController extends Controller
             $model=$this->findRequestModel($id);
         }
 
+        $connection= Yii::$app->labdb;
+        $fee = $connection->createCommand('SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id =:requestId')
+        ->bindValue(':requestId',$id)->queryOne();
+        $subtotal = $fee['subtotal'];
+        $rate = $model->discount;
+        $discounted = $subtotal * ($rate/100);
+        $total = $subtotal - $discounted;
+
         if($request_type == 2){
             return $this->render('viewreferral', [
                 'model' => $model,
@@ -596,6 +604,14 @@ class RequestController extends Controller
         $purposereferral = ArrayHelper::map(json_decode($refcomponent->listPurposereferral()), 'purpose_id', 'name');
         $modereleasereferral = ArrayHelper::map(json_decode($refcomponent->listModereleasereferral()), 'modeofrelease_id', 'mode');
 
+        $sampleCount = Sample::find()->where('request_id =:requestId',[':requestId'=>$id])->count();
+        $analysisCount = Analysis::find()->where('request_id =:requestId',[':requestId'=>$id])->count();
+
+        $oldLabId = $model->lab_id;
+        $notified = !empty($modelReferralrequest->notified) ? $modelReferralrequest->notified : 0;
+        $samplefail = null;
+        $analysisfail = null;
+
         if ($model->load(Yii::$app->request->post())) {
             $transaction = $connection->beginTransaction();
             if ($model->save()){
@@ -608,15 +624,9 @@ class RequestController extends Controller
                     $transaction->commit();
                 } else {
                     $transaction->rollBack();
-                    $modelReferralrequest->getErrors();
+                    $model->getErrors();
                     return false;
                 }
-                Yii::$app->session->setFlash('success', 'Referral Request Successfully Updated!');
-                return $this->redirect(['view', 'id' => $model->request_id]);
-            } else {
-                $transaction->rollBack();
-                $model->getErrors();
-                return false;
             }
         } else {
             $model->sample_receive_date = !empty($modelReferralrequest->sample_receive_date) ? $modelReferralrequest->sample_receive_date : null;
@@ -630,6 +640,7 @@ class RequestController extends Controller
                     'discountreferral' => $discountreferral,
                     'purposereferral' => $purposereferral,
                     'modereleasereferral' => $modereleasereferral,
+                    'notified'=>$notified,
                 ]);
             }else{
                 return $this->renderAjax('updateReferral', [
@@ -638,6 +649,7 @@ class RequestController extends Controller
                     'discountreferral' => $discountreferral,
                     'purposereferral' => $purposereferral,
                     'modereleasereferral' => $modereleasereferral,
+                    'notified'=>$notified,
                 ]);
             }
         }
@@ -654,10 +666,5 @@ class RequestController extends Controller
         }
 
         return $show;
-    }
-    //send notification
-    public function actionNotify()
-    {
-        return "notification sent";
     }
 }

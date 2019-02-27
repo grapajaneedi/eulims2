@@ -37,14 +37,6 @@ class SuppliersController extends Controller
      */
     public function actionIndex()
     {
-        
-       
-        $consoleController = new HelloController(Yii::$app->controller->id, Yii::$app);
-        $var= shell_exec($consoleController->actionIndex().' > /dev/null &');
-       
-        echo "ended ";
-
-        exit;
 
         $searchModel = new SuppliersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);

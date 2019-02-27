@@ -21,6 +21,7 @@ use common\models\lab\Request;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
 use yii\web\View;
+use kartik\dialog\Dialog;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\lab\Request */
@@ -28,6 +29,13 @@ use yii\web\View;
 
 $disabled= $model->posted ? true:false;
 $disabled=$disabled || $model->status_id==2;
+if(!empty($notified) == 1){
+    $disabled = true;
+    $notice = 1;
+} else {
+    $disabled = false;
+    $notice = 0;
+}
 if($disabled){
     $Color="#eee";
 }else{
@@ -61,6 +69,7 @@ if($TRequest>0){
 }
 
 $model->modeofreleaseids=$model->modeofrelease_ids;
+$sameLab = !empty($model->lab_id) ? $model->lab_id : 0;
 ?>
 
 <div class="request-form">
@@ -76,6 +85,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
     <?= $form->field($model, 'created_at')->hiddenInput()->label(false) ?>
     <?= $form->field($model, 'total')->hiddenInput(['maxlength' => true])->label(false) ?>
     <input type="hidden" id="rstlid" name="rstlid" value="<?= $GLOBALS["rstl_id"] ?>">
+    <?= $notice == 1 ? '<span style="top:6px;font-size:13px;position:absolute;" class="label label-danger">Edit not allowed because referral notification had been made.</span>':''; ?>
 <div class="row">
     <div class="col-md-6">
     <?= $form->field($model, 'request_type_id')->widget(Select2::classname(), [
@@ -360,7 +370,7 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
     </div>
 </div>
     <div class="row" style="float: right;padding-right: 15px">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['disabled'=>$disabled,'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['disabled'=>$disabled,'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','id'=>'btn-update']) ?>
         <?php if($model->isNewRecord){ ?>
         <?= Html::resetButton('Reset', ['disabled'=>$disabled,'class' => 'btn btn-danger']) ?>
         <?php } ?>
@@ -368,3 +378,50 @@ $model->modeofreleaseids=$model->modeofrelease_ids;
     </div>
     <?php ActiveForm::end(); ?>
 </div>
+<?php
+if(!$model->isNewRecord) {
+    $this->registerJs("
+        $('#exrequestreferral-lab_id').on('change', function() {
+            var lab = $('#exrequestreferral-lab_id').val();
+            if(lab != ".$sameLab." && lab > 0){
+                $('#btn-update').attr('onclick','confirmLab()');
+            } else {
+                $('#btn-update').removeAttr('onclick');
+            }
+        });
+
+        $('#btn-update').on('click', function(e){
+            e.preventDefault();
+            var lab = $('#exrequestreferral-lab_id').val();
+            if(lab == ".$sameLab."){
+                $('.request-form form').submit();
+            }
+        });
+    ");
+}
+?>
+<script type="text/javascript">
+function confirmLab(){
+    BootstrapDialog.show({
+        title: "<span class='glyphicon glyphicon-warning-sign' style='font-size:18px;'></span> Warning",
+        type: BootstrapDialog.TYPE_DANGER,
+        message: "<div class='alert alert-danger'><p style='font-weight:bold;font-size:14px;'><span class='glyphicon glyphicon-exclamation-sign' style='font-size:18px;'></span>&nbsp; Changing Laboratory will erase the samples and analyses of this request.</p><br><strong>Reasons:</strong><ul><li>Sample Type might not be available for the selected laboratory</li><li>Test/Calibration and Method might not be available for the selected laboratory</li></ul></div>",
+        buttons: [
+            {
+                label: 'Proceed',
+                cssClass: 'btn-primary',
+                action: function(thisDialog){
+                    thisDialog.close();
+                    $('.request-form form').submit();
+                }
+            },
+            {
+                label: 'Close',
+                action: function(thisDialog){
+                    thisDialog.close();
+                }
+            }
+        ]
+    });
+}
+</script>

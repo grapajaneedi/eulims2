@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = 'Update';
         'discountreferral' => $discountreferral,
         'purposereferral' => $purposereferral,
         'modereleasereferral' => $modereleasereferral,
+        'notified'=>$notified,
     ]) ?>
 
 </div>

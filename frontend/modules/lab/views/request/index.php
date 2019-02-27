@@ -111,10 +111,6 @@ $gg = 1;
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Select Customer'],
-               
-                'format' => 'raw',
-                'noWrap' => false,
-                'mergeHeader'=>true,
                 'contentOptions' => ['style' => 'width: 60%;word-wrap: break-word;white-space:pre-line;'],
             ],      
             [

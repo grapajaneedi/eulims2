@@ -250,6 +250,7 @@ use yii\web\JsExpression;
 // Warning alert for no selected sample or method
 echo Dialog::widget([
     'libName' => 'alertWarning', // a custom lib name
+    'overrideYiiConfirm' => false,
     'options' => [  // customized BootstrapDialog options
         'size' => Dialog::SIZE_SMALL, // large dialog text
         'type' => Dialog::TYPE_DANGER, // bootstrap contextual color
