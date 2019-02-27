@@ -23,17 +23,15 @@ $func=new Functions();
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'id'=>'grid',
-        'pjax'=>true,
-        'containerOptions'=> ["style"  => 'overflow:auto;height:500px'],
-        'pjaxSettings' => [
-            'options' => [
-                'enablePushState' => false,
-            ]
-        ],
-        
-        'responsive'=>false,
-        'striped'=>true,
-        'hover'=>true,
+        'filterModel' => $searchModel,
+        'containerOptions' => ['style' => 'overflow-x: none!important','class'=>'kv-grid-container'], // only set when $responsive = false
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'filterRowOptions' => ['class' => 'kartik-sheet-style'],
+        'bordered' => true,
+        'striped' => true,
+        'condensed' => true,
+        'responsive' => false,
+        'hover' => true,
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
             'heading' => '<i class="glyphicon glyphicon-book"></i>  Request',
@@ -108,7 +106,7 @@ $func=new Functions();
 ]); ?>
 
 <div class="form-group pull-right">
-    <button  id='btnSave' class='btn btn-success' ><i class='fa fa-save'></i>Save</button>
+    <button  id='btnreq' class='btn btn-success' ><i class='fa fa-save'></i> Save </button>
     <?php if(Yii::$app->request->isAjax){ ?>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
     <?php } ?>
@@ -129,7 +127,7 @@ $func=new Functions();
             var data_key=$(row).attr("data-key");
             for (i = 0; i < dkeys.length; i++) { 
                 if(data_key==dkeys[i]){
-                    amt=StringToFloat(trows[index].cells[4].innerHTML);
+                    amt=StringToFloat(trows[index].cells[5].innerHTML);
                     Total=Total+parseFloat(amt);
                 }
             }
@@ -142,25 +140,5 @@ $func=new Functions();
         $('#total').html(total);
     
     }
-    
-     $('#btnSave').on('click',function(e) {
-        var dkeys=$("#grid").yiiGridView("getSelectedRows");
-        var ids=dkeys;
-        //alert(ids);
-        if (ids == ""){
-            alert("Please Select Item");
-        }
-        else{
-             $.post({
-               url: 'save-paymentitem?request_ids='+ids+'&receiptid=<?php echo $receipt_id ?>', // your controller action
-            dataType: 'json',
-            success: function(data) {
-               location.reload();
-            }
-            });
-        }
-       
-        
-     });
     
 </script>

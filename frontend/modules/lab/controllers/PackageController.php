@@ -82,12 +82,10 @@ class PackageController extends Controller
                     $model->save(); 
                     Yii::$app->session->setFlash('success', 'Package Successfully Created'); 
                     return $this->runAction('index');
-                }
-        
-                
-               
+                }          
                 if(Yii::$app->request->isAjax){
-                    $model->rstl_id= 11;
+                    $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+                    $model->rstl_id= $GLOBALS['rstl_id'];
                     
                     $model->testcategory_id=1;
                     return $this->renderAjax('_form', [
@@ -95,9 +93,7 @@ class PackageController extends Controller
                         'sampletype'=>$sampletype
                     ]);
                }
-
     }
-
     /**
      * Updates an existing Package model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -164,7 +160,6 @@ class PackageController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
     public function actionGetpackage() {
         if(isset($_GET['packagelist_id'])){
             $id = (int) $_GET['packagelist_id'];
@@ -172,19 +167,14 @@ class PackageController extends Controller
             if(count($modelpackagelist)>0){
                 $rate = $modelpackagelist->rate;
                 $tet = $modelpackagelist->tests;
-
-                $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";     
-                
+                $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";             
                 $Connection = Yii::$app->labdb;
                 $command = $Connection->createCommand($sql);
                 $row = $command->queryOne();    
-                    $tests = $row['GROUP_CONCAT(testName)'];
-                 
-                      
+                $tests = $row['GROUP_CONCAT(testName)'];                
             } else {
                 $rate = "";
-                $tests = "";
-                
+                $tests = "";         
             }
         } else {
             $rate = "Error getting rate";

@@ -5,9 +5,7 @@ namespace frontend\modules\referrals\controllers;
 use Yii;
 use common\models\referral\Referral;
 use common\models\referral\ReferralSearch;
-use common\models\lab\Referralrequest;
 use yii\web\Controller;
-//use yii\rest\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use linslin\yii2\curl;
@@ -27,7 +25,7 @@ class ReferralController extends Controller
     /**
      * {@inheritdoc}
      */
-    /*public function behaviors()
+    public function behaviors()
     {
         return [
             'verbs' => [
@@ -37,7 +35,7 @@ class ReferralController extends Controller
                 ],
             ],
         ];
-    }*/
+    }
 
     /**
      * Lists all Referral models.

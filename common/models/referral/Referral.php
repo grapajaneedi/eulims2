@@ -10,7 +10,6 @@ use Yii;
  * @property int $referral_id
  * @property string $referral_code
  * @property string $referral_date_time
- * @property int $local_request_id
  * @property int $receiving_agency_id
  * @property int $testing_agency_id
  * @property int $lab_id
@@ -20,15 +19,13 @@ use Yii;
  * @property int $modeofrelease_id
  * @property int $purpose_id
  * @property int $discount_id
- * @property string $discount_rate
+ * @property string $discount_amt
  * @property string $total_fee
  * @property string $report_due
  * @property string $conforme
- * @property int $user_id
  * @property int $received_by
  * @property int $bid
  * @property int $cancelled
- * @property string $created_at_local
  * @property string $create_time
  * @property string $update_time
  *
@@ -71,12 +68,12 @@ class Referral extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['referral_date_time', 'sample_received_date', 'report_due', 'created_at_local', 'create_time', 'update_time'], 'safe'],
-            [['local_request_id', 'receiving_agency_id', 'testing_agency_id', 'lab_id', 'sample_received_date', 'customer_id', 'modeofrelease_id', 'purpose_id', 'report_due', 'conforme', 'user_id', 'received_by', 'create_time'], 'required'],
-            [['local_request_id', 'receiving_agency_id', 'testing_agency_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'purpose_id', 'discount_id', 'user_id', 'received_by', 'bid', 'cancelled'], 'integer'],
-            [['discount_rate', 'total_fee'], 'number'],
+            [['referral_date_time', 'sample_received_date', 'report_due', 'create_time', 'update_time'], 'safe'],
+            [['receiving_agency_id', 'testing_agency_id', 'lab_id', 'sample_received_date', 'customer_id', 'modeofrelease_id', 'purpose_id', 'report_due', 'conforme', 'received_by', 'cancelled', 'create_time'], 'required'],
+            [['receiving_agency_id', 'testing_agency_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'purpose_id', 'discount_id', 'received_by', 'bid', 'cancelled'], 'integer'],
+            [['discount_amt', 'total_fee'], 'number'],
             [['referral_code'], 'string', 'max' => 50],
-            [['conforme'], 'string', 'max' => 100],
+            [['conforme'], 'string', 'max' => 60],
             [['payment_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Paymenttype::className(), 'targetAttribute' => ['payment_type_id' => 'payment_type_id']],
             [['modeofrelease_id'], 'exist', 'skipOnError' => true, 'targetClass' => Modeofrelease::className(), 'targetAttribute' => ['modeofrelease_id' => 'modeofrelease_id']],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
@@ -94,7 +91,6 @@ class Referral extends \yii\db\ActiveRecord
             'referral_id' => 'Referral ID',
             'referral_code' => 'Referral Code',
             'referral_date_time' => 'Referral Date Time',
-            'local_request_id' => 'Local Request ID',
             'receiving_agency_id' => 'Receiving Agency ID',
             'testing_agency_id' => 'Testing Agency ID',
             'lab_id' => 'Lab ID',
@@ -104,15 +100,13 @@ class Referral extends \yii\db\ActiveRecord
             'modeofrelease_id' => 'Modeofrelease ID',
             'purpose_id' => 'Purpose ID',
             'discount_id' => 'Discount ID',
-            'discount_rate' => 'Discount Rate',
+            'discount_amt' => 'Discount Amt',
             'total_fee' => 'Total Fee',
             'report_due' => 'Report Due',
             'conforme' => 'Conforme',
-            'user_id' => 'User ID',
             'received_by' => 'Received By',
             'bid' => 'Bid',
             'cancelled' => 'Cancelled',
-            'created_at_local' => 'Created At Local',
             'create_time' => 'Create Time',
             'update_time' => 'Update Time',
         ];

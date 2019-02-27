@@ -25,7 +25,7 @@ class MigrateportalController extends Controller
 
  	public $message;
 
-    public function actionIndex()
+    public function actionIndex($rstl="100",$region="100")
     {
         $limit = 2;
 

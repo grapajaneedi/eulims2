@@ -79,8 +79,7 @@ class LabsampletypeController extends Controller
 
         $sampletype = [];
 
-        if(Yii::$app->request->isAjax){
-           
+        if(Yii::$app->request->isAjax){        
           $date2 = new DateTime();
           date_add($date2,date_interval_create_from_date_string("1 day"));
           $model->effective_date=date_format($date2,"Y-m-d");
@@ -120,7 +119,6 @@ class LabsampletypeController extends Controller
                     ]);
                  }
     }
-
     /**
      * Deletes an existing Labsampletype model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

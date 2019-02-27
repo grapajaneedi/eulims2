@@ -46,9 +46,10 @@ class MigrationportalController extends Controller
      */
     public function actionIndex()
     {
-        // $searchModel = new MigrationportalSearch();
-        // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new MigrationportalSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $fetchlings = Migrationportal::find()->all();
         
         // $jobs = Jobportal::find()->where(['rstl_id'=>Yii::$app->user->identity->profile->rstl_id]);
 
@@ -89,19 +90,13 @@ class MigrationportalController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Jobportal();
-        $model->rstl_id=Yii::$app->user->identity->profile->rstl_id;
+        $model = new Migrationportal();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->rstl_id=Yii::$app->user->identity->profile->rstl_id;
-            $model->job_type=0;
-            if($model->save()){
-                Yii::$app->session->setFlash('success', "Successfully created a job.");
-                return $this->redirect('index');
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->pm_id]);
         }
 
-        return $this->renderAjax('create', [
+        return $this->render('create', [
             'model' => $model,
         ]);
     }

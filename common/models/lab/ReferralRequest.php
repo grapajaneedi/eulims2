@@ -9,12 +9,12 @@ use Yii;
  *
  * @property int $referral_request_id
  * @property int $request_id
- * @property string $sample_received_date
+ * @property string $sample_receive_date
  * @property int $receiving_agency_id
  * @property int $testing_agency_id
  * @property int $referral_type_id
  */
-class Referralrequest extends \yii\db\ActiveRecord
+class ReferralRequest extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -40,7 +40,7 @@ class Referralrequest extends \yii\db\ActiveRecord
         return [
             [['request_id', 'sample_received_date', 'referral_type_id'], 'required'],
             [['request_id', 'receiving_agency_id', 'testing_agency_id', 'referral_type_id'], 'integer'],
-            [['sample_received_date'], 'safe'],
+            [['sample_receive_date'], 'safe'],
             [['request_id'], 'unique'],
         ];
     }
@@ -53,7 +53,7 @@ class Referralrequest extends \yii\db\ActiveRecord
         return [
             'referral_request_id' => 'Referral Request ID',
             'request_id' => 'Request ID',
-            'sample_received_date' => 'Sample Received Date',
+            'sample_receive_date' => 'Sample Receive Date',
             'receiving_agency_id' => 'Receiving Agency ID',
             'testing_agency_id' => 'Testing Agency ID',
             'referral_type_id' => 'Referral Type ID',
