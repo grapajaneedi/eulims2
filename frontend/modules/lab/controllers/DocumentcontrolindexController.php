@@ -52,8 +52,6 @@ class DocumentcontrolindexController extends Controller
      */
     public function actionView($id)
     {
-       
-
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('view', [
                     'model' => $this->findModel($id),
@@ -89,7 +87,6 @@ class DocumentcontrolindexController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->documentcontrolindex_id]);
         }
@@ -109,7 +106,6 @@ class DocumentcontrolindexController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
         return $this->redirect(['index']);
     }
 
@@ -125,7 +121,6 @@ class DocumentcontrolindexController extends Controller
         if (($model = Documentcontrolindex::findOne($id)) !== null) {
             return $model;
         }
-
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

@@ -70,7 +70,7 @@ class Printing {
     }
     private function FastReport($id){
         $Func = new Functions();
-        $Proc = "spGetRequestServices(:nRequestID)";
+        $Proc = "spGetRequestService(:nRequestID)";
         $Params = [':nRequestID' => $id];
         $Connection = \Yii::$app->labdb;
         $RequestRows = $Func->ExecuteStoredProcedureRows($Proc, $Params, $Connection);

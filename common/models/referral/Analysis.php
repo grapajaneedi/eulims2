@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "tbl_analysis".
  *
  * @property int $analysis_id
+ * @property int $analysis_type_id
  * @property string $date_analysis
  * @property int $agency_id
  * @property int $pstcanalysis_id
@@ -69,6 +70,7 @@ class Analysis extends \yii\db\ActiveRecord
     {
         return [
             'analysis_id' => 'Analysis ID',
+            'analysis_type_id' => 'Analysis Type ID',
             'date_analysis' => 'Date Analysis',
             'agency_id' => 'Agency ID',
             'pstcanalysis_id' => 'Pstcanalysis ID',

@@ -5,7 +5,6 @@ use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use common\components\Functions;
-use common\components\ReferralComponent;
 use common\models\lab\Cancelledrequest;
 use common\models\lab\Discount;
 use common\models\lab\Request;
@@ -22,7 +21,6 @@ use yii\widgets\ListView;
 
 $Connection = Yii::$app->financedb;
 $func = new Functions();
-$referralcomp = new ReferralComponent();
 
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
@@ -155,9 +153,6 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
 <div class="<?= $BackClass ?>"></div>
 <div class="request-view ">
     <div class="image-loader" style="display: hidden;"></div>
-    <!--<div id="notification_details" style="display: hidden;">
-        <input type="text" name="sender_remarks" />
-    </div>-->
     <div class="container table-responsive">
         <?php
 
@@ -586,11 +581,9 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
         <div class="table-responsive">
         <?php
         if($model->request_type_id == 2){
-            $requestId = $model->request_id;
             $gridColumns = [
                 [
-                    //'attribute'=>'sample_code',
-                    'attribute'=>'name',
+                    'attribute'=>'sample_code',
                     'enableSorting' => false,
                     'header' => 'Agency',
                     'contentOptions' => [
@@ -598,19 +591,17 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                     ],
                 ],
                 [
-                    //'attribute'=>'samplename',
-                    'attribute'=>'region',
+                    'attribute'=>'samplename',
                     'enableSorting' => false,
                     'header' => 'Region',
                 ],
                 [
-                    //'attribute'=>'description',
-                    'attribute'=>'agency_id',
+                    'attribute'=>'description',
                     'format' => 'raw',
                     'header' => 'Turnaround Time (Estimated)',
                     'enableSorting' => false,
                     'value' => function($data){
-                        //return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".date("Y-m-d h:i A",strtotime($data->sampling_date))."</b></span>,&nbsp;".$data->description : $data->description;
+                        return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".date("Y-m-d h:i A",strtotime($data->sampling_date))."</b></span>,&nbsp;".$data->description : $data->description;
                     },
                    'contentOptions' => [
                         'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
@@ -618,12 +609,22 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                 ],
                 [
                     'class' => 'kartik\grid\ActionColumn',
-                    'template' => '{notification} {confirm} {sendreferral}',
+                    'template' => '{notification}',
                     'dropdown' => false,
                     'dropdownOptions' => ['class' => 'pull-right'],
+                    'urlCreator' => function ($action, $model, $key, $index) {
+                        if ($action === 'delete') {
+                            $url ='/lab/sample/delete?id='.$model->sample_id;
+                            return $url;
+                        } 
+                        if ($action === 'cancel') {
+                            $url ='/lab/sample/cancel?id='.$model->sample_id;
+                            return $url;
+                        }
+                    },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
-                        'notification' => function ($url, $data) use ($model,$referralcomp) {
+                        'notification' => function ($url, $model) {
                             //if($model->active == 1){
                             //    return Html::a('<span class="glyphicon glyphicon-bell"></span> Notify', '#', ['class'=>'btn btn-primary','title'=>'Send Notification','onclick' => 'sendNotification(19,11)']);
 
@@ -668,7 +669,7 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
 
             echo GridView::widget([
                 'id' => 'agency-grid',
-                'dataProvider'=> $agencydataprovider,
+                'dataProvider'=> $sampleDataProvider,
                 'pjax'=>true,
                 'pjaxSettings' => [
                     'options' => [

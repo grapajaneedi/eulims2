@@ -11,7 +11,6 @@ use yii\web\JsExpression;
 use kartik\widgets\TypeaheadBasic;
 use kartik\widgets\Typeahead;
 use yii\helpers\ArrayHelper;
-
 use common\models\lab\Lab;
 use common\models\lab\Labsampletype;
 use common\models\lab\Sampletype;
@@ -20,6 +19,7 @@ use common\models\lab\Testnamemethod;
 use common\models\lab\Methodreference;
 use common\models\lab\Testname;
 ?>
+
 <?= GridView::widget([
         'dataProvider' => $testnamemethoddataprovider,
         'pjax'=>true,

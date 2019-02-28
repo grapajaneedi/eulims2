@@ -5,19 +5,38 @@ use yii\widgets\ActiveForm;
 use common\models\lab\Sampletype;
 use common\models\lab\Lab;
 use common\models\lab\Testname;
+use common\models\lab\Workflow;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use kartik\widgets\Select2;
 
 ///
-$taggingcount = Testname::find()
+$workflow = Workflow::find()->all();
+
+$sample_ids = '';
+foreach ($workflow as $workflo){
+    $sample_ids .= $workflo->testname_method_id.",";
+}
+$sample_ids = substr($sample_ids, 0, strlen($sample_ids)-1);
+echo "<pre>";
+var_dump($sample_ids);
+echo "</pre>";
+
+// if ($sample_ids){
+//     $ids = explode(",", $sample_ids);   
+// }else{
+//     $ids = ['-1'];
+// }
+
+
+$test = Testname::find()
 ->leftJoin('tbl_testname_method', 'tbl_testname.testname_id=tbl_testname_method.testname_id')
-->leftJoin('tbl_workflow', 'tbl_testname_method.testname_method_id=tbl_workflow.testname_method_id')    
-->where(['tbl_testname_method.testname_method_id'=>1 ])
+->leftJoin('tbl_workflow', 'tbl_testname_method.testname_method_id=tbl_workflow.testname_method_id')
+->where(['IN', 'tbl_testname_method.testname_method_id', '1,2,3'])   
 ->all();      
 ///
 
-$lablist= ArrayHelper::map($taggingcount,'testname_id','testName');
+$lablist = ArrayHelper::map($test,'testname_id','testName');
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\ProcedureSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -82,7 +101,6 @@ $this->registerJs($js);
     <p class="note" style="color:#265e8d"><b>Instructions:</b><br>1.<br>2.<br>3.</p>  
     </div> -->
 <?= Html::textInput('testname_id', $testname_id, ['class' => 'form-control', 'id'=>'testname_id', 'type'=>'hidden'], ['readonly' => true]) ?>
-
 <div class="procedure-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <?php $this->registerJsFile("/js/services/services.js"); ?>
@@ -90,9 +108,9 @@ $this->registerJs($js);
 <div class="row">
         <div class="col-sm-6">
         <div class="col-sm-6">
-        <?= Html::textInput('procedure_name', '', ['class' => 'form-control', 'id'=>'procedure_name'], ['readonly' => true]) ?></div>
-        <div class="col-sm-6">
-        <span class='btn btn-success glyphicon glyphicon-plus' style='width:80px' id='offer' onclick=addprocedure()>Add</span>
+            <?= Html::textInput('procedure_name', '', ['class' => 'form-control', 'id'=>'procedure_name'], ['readonly' => true]) ?></div>
+            <div class="col-sm-6">
+        <span class='btn btn-success glyphicon glyphicon-plus' style='width:80px' id='offer' onclick=addprocedure()> Add</span>
         </div>
        
         <?= GridView::widget([

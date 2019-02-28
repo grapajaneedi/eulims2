@@ -19,7 +19,7 @@ use yii\helpers\Json;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use linslin\yii2\curl;
-set_time_limit(1000);
+set_time_limit(2000);
 /**
  * ServicesController implements the CRUD actions for Services model.
  */
@@ -172,13 +172,10 @@ class ServicesController extends Controller
                         $selected = $sampletype['sampletype_id'];
                     }
                 }
-                
-               // echo Json::encode(['output' => $out, 'selected'=>$selected]);
                \Yii::$app->response->data = Json::encode(['output'=>$out, 'selected'=>'']);
                 return;
             }
         }
-//echo Json::encode(['output' => '', 'selected'=>'']);
         \Yii::$app->response->data = Json::encode(['output'=>$out, 'selected'=>'']);
     }
 
@@ -202,13 +199,10 @@ class ServicesController extends Controller
                         $selected = $sampletype['testname_id'];
                     }
                 }
-                
-               // echo Json::encode(['output' => $out, 'selected'=>$selected]);
                 \Yii::$app->response->data = Json::encode(['output'=>$out, 'selected'=>'']);
                 return;
             }
         }
-       // echo Json::encode(['output' => '', 'selected'=>'']);
         \Yii::$app->response->data = Json::encode(['output'=>$out, 'selected'=>'']);
     }
 
@@ -449,12 +443,10 @@ class ServicesController extends Controller
 
      public function actionUnoffer()
      {
-         //method reference id
+        
           $id = $_POST['id'];
           $labid = $_POST['labid'];
           $sampletypeid = $_POST['sampletypeid'];
-
-          //testname_id
           $methodreferenceid = $_POST['methodreferenceid'];
           $labsampletypeid = $_POST['labsampletypeid'];
           $sampletypetestname = $_POST['sampletypetestname'];
@@ -469,10 +461,6 @@ class ServicesController extends Controller
           { 
              $testnamemethodid = $var['testname_method_id'];
           }       
-          
-        //   $methodreference = Methodreference::find()->Where(['method_reference_id'=>$id])->all(); 
-        //   $methodreference->delete();
-        //   $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
 
         $apiUrl_sampletypetestnames="https://eulimsapi.onelab.ph/api/web/v1/sampletypetestnames/restore?sampletype_id=".$sampletypeid."&testname_id=".$methodreferenceid;
         
@@ -485,26 +473,16 @@ class ServicesController extends Controller
                 $sampletypetestnameid = $sampletypetestnames['sampletype_testname_id'];      
             }
 
-
            $connection= Yii::$app->labdb;
            $connection->createCommand('set foreign_key_checks=0')->execute();
-         $connection->createCommand("DELETE FROM tbl_sampletype WHERE sampletype_id=$sampletypeid")->execute();
-         $connection->createCommand("DELETE FROM tbl_lab_sampletype WHERE lab_sampletype_id=$labsampletypeid")->execute();
-          $connection->createCommand("DELETE FROM tbl_methodreference WHERE method_reference_id=$id")->execute();
-          $connection->createCommand("DELETE FROM tbl_testname WHERE testname_id=$methodreferenceid")->execute();
-          $connection->createCommand("DELETE FROM tbl_sampletype_testname WHERE sampletype_testname_id=$sampletypetestnameid")->execute();
-          $connection->createCommand("DELETE FROM tbl_testname_method WHERE testname_method_id=$testnamemethodid")->execute();
-          $connection->createCommand("DELETE FROM tbl_services WHERE method_reference_id=$id AND rstl_id=$GLOBALS[rstl_id]")->execute();
-          $connection->createCommand('set foreign_key_checks=1')->execute();
-        //   $sql="DELETE FROM `tbl_services`  WHERE `method_reference_id`=".$id." AND `rstl_id`=".$GLOBALS['rstl_id'].";";
-        //   $sql.="DELETE FROM `tbl_sampletype`  WHERE `sampletype_id`=".$sampletypeid.";";
-        //   $sql.="DELETE FROM `tbl_lab_sampletype`  WHERE `lab_sampletype_id`=".$labsampletypeid.";";
-        //   $sql.="DELETE FROM `tbl_testname`  WHERE `testname_id`=".$methodreferenceid.";";
-        //   $sql.="DELETE FROM `tbl_sampletype_testname`  WHERE `sampletype_testname_id`=".$sampletypetestname.";";
-        //   $sql.="DELETE FROM `tbl_testname_method`  WHERE `testname_method_id`=".$testnamemethodid.";";
-        //   $sql.="DELETE FROM `tbl_methodreference`  WHERE `method_reference_id`=".$id.";";
-        //   $Command=$Connection->createCommand($sql);
-        //   $Command->execute();     
+           $connection->createCommand("DELETE FROM tbl_sampletype WHERE sampletype_id=$sampletypeid")->execute();
+           $connection->createCommand("DELETE FROM tbl_lab_sampletype WHERE lab_sampletype_id=$labsampletypeid")->execute();
+           $connection->createCommand("DELETE FROM tbl_methodreference WHERE method_reference_id=$id")->execute();
+           $connection->createCommand("DELETE FROM tbl_testname WHERE testname_id=$methodreferenceid")->execute();
+           $connection->createCommand("DELETE FROM tbl_sampletype_testname WHERE sampletype_testname_id=$sampletypetestnameid")->execute();
+           $connection->createCommand("DELETE FROM tbl_testname_method WHERE testname_method_id=$testnamemethodid")->execute();
+           $connection->createCommand("DELETE FROM tbl_services WHERE method_reference_id=$id AND rstl_id=$GLOBALS[rstl_id]")->execute();
+           $connection->createCommand('set foreign_key_checks=1')->execute();  
      }
 
      public function actionSync()
@@ -514,11 +492,8 @@ class ServicesController extends Controller
         $services = Services::find()->all();    
 
         $post = Yii::$app->request->post();
-      //  $ctr = 0;
-
         if(isset($post)){
 
-            //data here requires to the services lab list
             $myvar = Json::decode($post['data']);
             $ids="";
             foreach ($myvar as $var) {
@@ -533,8 +508,7 @@ class ServicesController extends Controller
                 $ids=$ids.$var['id'].',';
             }
             $ctr++;
-        }
-       
+        }      
     }
      \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
 

@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 use yii\helpers\Html;
-use kartik\grid\GridView;
+use yii\grid\GridView;
 use yii\bootstrap\progress;
 use common\models\lab\CustomerMigration;
 use common\models\api\CustomerMigrationportal;
@@ -33,11 +33,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endif; ?>
 
     <h1>Yii 1.0 to 2.0 Migration [Ulimsportal Only]</h1>
-    
+ 
 
    <h2>TOTAL Request : <b><?= $allreq?></b></h2>
     <h2>Pending Request : <b><?= $rawreq?></b></h2>
     <h2>Migrated Request :<b> <?= $migreq?></b></h2>
+
+  
 </div>
 
 <?php 

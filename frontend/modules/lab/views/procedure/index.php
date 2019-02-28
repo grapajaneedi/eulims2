@@ -14,6 +14,7 @@ use yii\helpers\Url;
 $this->title = 'Procedures';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="procedure-index">
 
  
@@ -32,16 +33,19 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-           // 'procedure_id',
             'procedure_name',
-            'procedure_code',
-            'testname_id',
-            'testname_method_id',
-
+            [
+                'attribute' => 'procedure_code',
+                'label' => 'Description',
+                'format' => 'raw',
+                'contentOptions' => ['style' => 'width:70%; white-space: normal;'],
+                'value' => function($model) {    
+                        return $model->procedure_code;
+                            },
+            ],
             ['class' => 'kartik\grid\ActionColumn',
             'contentOptions' => ['style' => 'width: 8.7%'],
-            'template' => '{view}{update}',
+            'template' => '{update}',
            
             'buttons'=>[
                 'view'=>function ($url, $model) {
