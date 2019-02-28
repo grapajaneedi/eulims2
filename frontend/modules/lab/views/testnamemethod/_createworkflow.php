@@ -36,7 +36,7 @@ $test = Testname::find()
 ->all();      
 ///
 
-$lablist= ArrayHelper::map($test,'testname_id','testName');
+$lablist = ArrayHelper::map($test,'testname_id','testName');
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\ProcedureSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
