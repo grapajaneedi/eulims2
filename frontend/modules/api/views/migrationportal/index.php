@@ -38,9 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
    <h2>TOTAL Request : <b><?= $allreq?></b></h2>
     <h2>Pending Request : <b><?= $rawreq?></b></h2>
     <h2>Migrated Request :<b> <?= $migreq?></b></h2>
-  
-
-
 </div>
 
 <?php 

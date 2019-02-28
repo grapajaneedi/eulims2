@@ -14,7 +14,7 @@ use common\models\inventory\Suppliers;
 use common\models\inventory\SuppliersSearch;
 use yii\data\ActiveDataProvider;
 use common\models\inventory\Equipmentservice;
-use frontend\modules\inventory\components\_class\Equipmentevent;
+use frontend\modules\inventory\components\_class\Schedule;
 /**
  * ProductsController implements the CRUD actions for Products model.
  */
@@ -343,57 +343,55 @@ class ProductsController extends Controller
 
         //retrieve the schedules using the $id
 
-         if(Yii::$app->request->isAjax){
+        $model = new Equipmentservice(); 
+        $model->inventory_transactions_id=$id;
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->requested_by = Yii::$app->user->identity->profile->user_id; 
+            if( $model->save()){
+                Yii::$app->session->setFlash('success', "Successfully created a new Schedule.");
+                return $this->redirect(['equipment']);
+            }
+        } 
+
+        if(Yii::$app->request->isAjax){
             return $this->renderAjax('_schedule', [
-                
+                'model'=>$model,
+                'id'=>$id
             ]);
         }
         else {
             return $this->render('_schedule', [
-              
+              'model'=>$model,
+              'id'=>$id
             ]);
         }
     }
 
-    public function actionJsoncalendar($start=NULL,$end=NULL,$_=NULL){
+    public function actionJsoncalendar($start=NULL,$end=NULL,$_=NULL,$id){
 
     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-
     $events = array();
-
-    $Event= new Equipmentevent();
-    $Event->id = 1;
-    $Event->title = 'Equipmentevent Testing';
-    $Event->start = date('Y-m-d\TH:i:s\Z');
-    // $event->nonstandard = [
-    //     'field1' => 'Something I want to be included in object #1',
-    //     'field2' => 'Something I want to be included in object #2',
-    //   ];
-    $events[] = $Event;
     
+    //as of now get all the schedules
+    $schedules = Equipmentservice::find()->where(['inventory_transactions_id'=>$id])->all(); 
 
-  
-    // foreach ($times AS $time){
-    //   //Testing
-    //   $Event = new \yii2fullcalendar\models\Event();
-    //   $Event->id = $time->id;
-    //   $Event->title = $time->categoryAsString;
-    //   $Event->start = date('Y-m-d\TH:i:s\Z',strtotime($time->date_start.' '.$time->time_start));
-    //   $Event->end = date('Y-m-d\TH:i:s\Z',strtotime($time->date_end.' '.$time->time_end));
-    //   $events[] = $Event;
-    // }
+    $ctr=1; 
+    foreach ($schedules AS $schedule){
+        $Event= new Schedule();
+        $Event->id = $ctr;
+        $Event->title =$schedule->servicetype->servicetype;
 
+        $Event->start =$schedule->startdate;
 
-    // $Event= new bergevent();
-    // $Event->id = 1;
-    // $Event->title = 'Testing';
-    // $Event->start = date('Y-m-d\TH:i:s\Z');
-    // $event->nonstandard = [
-    //     'field1' => 'Something I want to be included in object #1',
-    //     'field2' => 'Something I want to be included in object #2',
-    //   ];
-    // $events[] = $Event;
+        $date = $schedule->enddate;
+        $date1 = str_replace('-', '/', $date);
+        $newdate = date('Y-m-d',strtotime($date1 . "+1 days"));
+        $Event->end = $newdate;
+        $events[] = $Event;
+        $ctr++;
+    }
 
     return $events;
   }
