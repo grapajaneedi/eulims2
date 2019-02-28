@@ -155,8 +155,7 @@ class PackagelistController extends Controller
                  $ids = explode(',', $sample_ids);  
                  $post= Yii::$app->request->post();
 
-                    $test= $_POST['package_ids'];
-                    $test_ids = explode(',', $test);  
+                   
 
                  foreach ($ids as $sample_id){  
 
@@ -191,33 +190,45 @@ class PackagelistController extends Controller
                      $analysis->date_analysis = '2018-06-14 7:35:0';   
                      $analysis->save();
 
-                     foreach ($test_ids as $id){
-                        $analysis = new Analysis();
-                        $modeltest=  Testname::findOne(['testname_id'=>$id]);
-                        $modelmethod=  Methodreference::findOne(['testname_id'=>$id]);
+                     $testname_id = $_POST['package_ids'];
+                     $test_ids = explode(',', $testname_id);  
 
-                        $analysis->sample_id = $sample_id;
-                        $analysis->cancelled = 0;
-                        $analysis->pstcanalysis_id = $GLOBALS['rstl_id'];
-                        $analysis->request_id = $request_id;
-                        $analysis->rstl_id = $GLOBALS['rstl_id'];
-                        $analysis->test_id = 1;
-                        $analysis->user_id = 1;
-                        $analysis->type_fee_id = 2;
-                        $analysis->sample_type_id = (int) $post['Packagelist']['sample_type_id'];
-                        $analysis->testcategory_id = 1;
-                        $analysis->is_package = 1;
-                        $analysis->method = $modelmethod->method;
-                        $analysis->fee = 0;
-                        $analysis->testname = $modeltest->testName;
-                        $analysis->references = "references";
-                        $analysis->quantity = 1;
-                        $analysis->sample_code = "sample";
-                        $analysis->date_analysis = '2018-06-14 7:35:0';   
-                        $analysis->save();
+                     foreach ($test_ids as $t_id){
+
+                        $analysis_package = new Analysis();
+                        $modeltest=  Testname::findOne(['testname_id'=>$t_id]);
+
+                        //hindi makuha using model method ui
+
+                        //testnamemethod dapat
+                        //tapos imatch ang testname at methodreference
+                        $modelmethod=  Methodreference::findOne(['testname_id'=>$t_id]);
+
+                        $analysis_package->sample_id = $sample_id;
+                        $analysis_package->cancelled = 0;
+                        $analysis_package->pstcanalysis_id = Yii::$app->user->identity->profile->rstl_id;
+                        $analysis_package->request_id = $request_id;
+                        $analysis_package->rstl_id = Yii::$app->user->identity->profile->rstl_id;
+                        $analysis_package->test_id = $t_id;
+                        $analysis_package->user_id = 1;
+                        $analysis_package->type_fee_id = 2;
+                        $analysis_package->sample_type_id = (int) $post['Packagelist']['sample_type_id'];
+                        $analysis_package->testcategory_id = 1;
+                        $analysis_package->is_package = 1;
+                        $analysis_package->method = '';
+                       // $analysis->method = $modelmethod->method;
+                        $analysis_package->fee = 0;
+                        $analysis_package->testname = $modeltest->testName;
+                        $analysis_package->references = "references";
+                        $analysis_package->quantity = 1;
+                        $analysis_package->sample_code = "sample";
+                        $analysis_package->date_analysis = '2018-06-14 7:35:0';   
+                        $analysis_package->save(false);
+
+                      
                     }      
                  }                   
-                 Yii::$app->session->setFlash('success', 'Package Successfully Created');
+                 Yii::$app->session->setFlash('success', 'Package Succesfull Added');
                  return $this->redirect(['/lab/request/view', 'id' =>$request_id]);
         } 
         if (Yii::$app->request->isAjax) {
@@ -296,33 +307,49 @@ class PackagelistController extends Controller
     }
 
     public function actionGetpackage() {
+
+
+    if ($_GET['packagelist_id']){
         if(isset($_GET['packagelist_id'])){
             $id = (int) $_GET['packagelist_id'];
             $modelpackagelist =  Package::findOne(['id'=>$id]);
-            if(count($modelpackagelist)>0){
-                $rate = number_format($modelpackagelist->rate,2);
-                $tet = $modelpackagelist->tests;
+            $tet = $modelpackagelist->tests;
 
-                $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";     
-     
-                $Connection = Yii::$app->labdb;
-                $command = $Connection->createCommand($sql);
-                $row = $command->queryOne();    
-                    $tests = $row['GROUP_CONCAT(testName)'];               
+             
+                if(count($modelpackagelist)>0){
+                    $rate = number_format($modelpackagelist->rate,2);
+                             
+                    $sql = "SELECT GROUP_CONCAT(testName) FROM tbl_testname WHERE testname_id IN ($tet)";     
+         
+                    $Connection = Yii::$app->labdb;
+                    $command = $Connection->createCommand($sql);
+                    $row = $command->queryOne();    
+                        $tests = $row['GROUP_CONCAT(testName)'];               
+                } else {
+                    $rate = "";
+                    $tests = "";
+                    
+                }
             } else {
-                $rate = "";
-                $tests = "";
-                
+                $rate = "Error getting rate";
+                $tests = "Error getting tests";
             }
-        } else {
-            $rate = "Error getting rate";
-            $tests = "Error getting tests";
-        }
-        return Json::encode([
-            'rate'=>$rate,
-            'tests'=>$tests,
-            'ids'=>$tet,
-        ]);
+            
+            return Json::encode([
+                'rate'=>$rate,
+                'tests'=>$tests,
+                'ids'=>$tet,
+            ]);
+              }else{
+                  $x = 0;
+                return Json::encode([
+                    'rate'=>$x,
+                    'tests'=>'None',
+                    'ids'=>$x,
+                ]);
+              }
+
+           
     }
 
     protected function listTestcategory($labId)
