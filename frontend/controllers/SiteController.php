@@ -160,6 +160,7 @@ class SiteController extends Controller
         $listLabColor=array();
         $listYear=array();
         $listLabCode=array();
+        $datatotal=array();
         
         $mainLaboratoryList=array();
         
@@ -617,6 +618,7 @@ class SiteController extends Controller
         $listLabColor=array();
         $listYear=array();
         $listLabCode=array();
+
         
         $mainLaboratoryList=array();
             

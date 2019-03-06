@@ -2,6 +2,11 @@
 use common\models\inventory\Equipmentservice;
 use yii\helpers\Url;
 use yii\web\JsExpression;
+use yii\helpers\Html; 
+use yii\widgets\ActiveForm; 
+use yii\helpers\ArrayHelper;
+use common\models\inventory\Servicetype;
+use kartik\date\DatePicker;
 
 $DragJS = <<<EOF
 /* initialize the external events
@@ -71,29 +76,96 @@ EOF;
 
 ?>
 <div class="products-index">
-    <div id="external-events">
-    <h4>Draggable Events</h4>
-    <div class="fc-event ui-draggable ui-draggable-handle">Calibration</div>
-    <div class="fc-event ui-draggable ui-draggable-handle">Maintenace</div>
-    <div class="fc-event ui-draggable ui-draggable-handle">Usage</div>
-    <p>
-        <input type="checkbox" id="drop-remove">
-        <label for="drop-remove">remove after drop</label>
-    </p>x
-</div>
- <?= \yii2fullcalendar\yii2fullcalendar::widget(array(
-      'events'=> Url::to(['/inventory/products/jsoncalendar']),
-      'clientOptions' => [
-                    'selectable' => true,
-                    'selectHelper' => true,
-                    'droppable' => true,
-                    'editable' => true,
-                    'select' => new JsExpression($JSCode),
-                    'drop' => new JsExpression($JSDropEvent),
-                    'eventClick' => new JsExpression($JSEventClick),
-                    // 'dayClick'=>new \yii\web\JsExpression($JSDayClick),
-                    'defaultDate' => date('Y-m-d')
-              ],
-  ));
-?>
+    <div class="col-md-6" class="row">
+        <div id="external-events" >
+        <?= \yii2fullcalendar\yii2fullcalendar::widget(array(
+          'events'=> Url::to(['/inventory/products/jsoncalendar?id='.$id]),
+          'clientOptions' => [
+                        'selectable' => true,
+                        'selectHelper' => true,
+                        'droppable' => true,
+                        'editable' => true,
+                        // 'select' => new JsExpression($JSCode),
+                        // 'drop' => new JsExpression($JSDropEvent),
+                        // 'eventClick' => new JsExpression($JSEventClick),
+                        // 'dayClick'=>new \yii\web\JsExpression($JSDayClick),
+                        'defaultDate' => date('Y-m-d')
+                  ],
+      ));
+    ?>
+
+
+    </div>
+     
+    </div>
+    <div class="col-md-6">
+        
+        <div class="equipmentservice-form"> 
+            <h2>Set new Schedule</h2>
+            <br><br>
+            <?php $form = ActiveForm::begin(); ?> 
+             <?= $form->errorSummary($model); ?>
+
+            <?=
+            $form->field($model, 'servicetype_id')->widget(\kartik\widgets\Select2::classname(), [
+                'data' => ArrayHelper::map(Servicetype::find()->orderBy('servicetype')->asArray()->all(), 'servicetype_id', 'servicetype'),
+                'options' => ['placeholder' => 'Choose Service Type'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ])->label('Service Type');
+            ?>
+            <?php
+                 echo "<b>Start Date</b>";
+                echo DatePicker::widget([
+                    'model' => $model,
+                    'attribute' => 'startdate',
+                    'readonly' => true,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("Y-m-d", $model->startdate);
+                    },
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
+                    ]
+                ]);
+                ?>
+
+                <br>
+
+            <?php
+                 echo "<b>End Date</b>";
+                echo DatePicker::widget([
+                    'model' => $model,
+                    'attribute' => 'enddate',
+                    'readonly' => true,
+                    'options' => ['placeholder' => 'Enter Date'],
+                    'value' => function($model) {
+                        return date("Y-m-d", $model->enddate);
+                    },
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'removeButton' => false,
+                        'format' => 'yyyy-mm-dd'
+                    ],
+                    'pluginEvents' => [
+                        "change" => "function() {  }",
+                    ]
+                ]);
+                ?>
+
+                <br>
+            <div class="form-group"> 
+                <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?> 
+            </div> 
+
+            <?php ActiveForm::end(); ?> 
+
+        </div> 
+    </div>
 </div>

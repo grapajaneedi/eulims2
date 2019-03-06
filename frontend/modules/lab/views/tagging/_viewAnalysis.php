@@ -162,7 +162,7 @@ $this->registerJs($js);
                         'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
                     ],
                     [
-                        'header'=>'Steps',
+                        'header'=>'Progress',
                         'format' => 'raw',
                         'enableSorting' => false,
                         'value'=> function ($model){

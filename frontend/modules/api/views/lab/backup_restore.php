@@ -35,7 +35,7 @@ $func=new Functions();
 $month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 $year = ['2013', '2014', '2015', '2016', '2017', '2018', '2019'];
 
-$this->title = 'Backup and Restore';
+$this->title = 'Laboratory Module Backup and Restore';
 $this->params['breadcrumbs'][] = ['label' => 'API', 'url' => ['/api']];
 $this->params['breadcrumbs'][] = $this->title;
    
@@ -97,7 +97,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <span class='badge btn-success legend-font' ><span class= 'glyphicon glyphicon-check'></span> DONE</span>
     <span class='badge btn-danger legend-font' ><span class= 'glyphicon glyphicon-check'></span> PENDING</span>
 
- 
                 
     </div>
 </fieldset>
