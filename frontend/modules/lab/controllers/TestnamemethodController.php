@@ -146,10 +146,12 @@ class TestnamemethodController extends Controller
         $model = new Procedure();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $Connection= Yii::$app->labdb;
+        $sql="UPDATE `tbl_testname_method` SET `workflow`=1 WHERE `testname_method_id`=".$testname_id;
+        $Command=$Connection->createCommand($sql);
+        $Command->execute();  
 
-        $procedure = Procedure::find()->where(['procedure_id' => $id])->one();
-
-        
+        $procedure = Procedure::find()->where(['procedure_id' => $id])->one();       
         $workflow = new Workflow();
         $workflow->testname_method_id = $testname_id;
         $workflow->method_id = $id;
@@ -219,6 +221,64 @@ class TestnamemethodController extends Controller
    
        
   }
+
+  public function actionAddtemplate()
+  {
+      //$testnamemethod_id = $_POST['testnamemethod_id'];
+      $testnamemethod_id = 1;
+      $testname_id = $_POST['testname_id']; //testnamemethod_id po ito hihi
+      $searchModel = new ProcedureSearch();
+      $model = new Procedure();
+      $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+      
+      $workflow = Workflow::find()->where(['testname_method_id' => $testnamemethod_id])->all();
+      
+      $sample_ids = '';
+      foreach ($workflow as $sample){
+          $sample_ids .= $sample->workflow_id.",";
+      }
+      $sample_ids = substr($sample_ids, 0, strlen($sample_ids)-1);
+     
+   
+    $ids = explode(",", $sample_ids);   
+    
+
+    foreach ($ids as $workflow){  
+        $workflows = Workflow::find()->where(['workflow_id' => $workflow])->one();
+
+        $procedure = Procedure::find()->where(['procedure_id' => $workflows->method_id])->one();       
+        $workflow = new Workflow();
+        $workflow->testname_method_id = $testname_id;
+        $workflow->method_id = $workflows->method_id; //procedure_id
+        $workflow->procedure_name = $procedure->procedure_name;
+        $workflow->status = 1;
+        $workflow->save();
+    }
+
+    
+
+      $workflow = Workflow::find()->where(['testname_method_id' => $testname_id]);
+      
+              $workflowdataprovider = new ActiveDataProvider([
+                      'query' => $workflow,
+                      'pagination' => [
+                          'pageSize' => false,
+                      ],
+                   
+              ]);
+
+      if(Yii::$app->request->isAjax){
+          return $this->renderAjax('_createworkflow', [
+              'searchModel' => $searchModel,
+              'dataProvider' => $dataProvider,
+              'workflowdataprovider'=>$workflowdataprovider,
+              'testname_id'=>$testname_id,
+              'model'=>$model,
+          ]);
+      }
+  
+      
+ }
 
    public function actionDeleteworkflow()
    {

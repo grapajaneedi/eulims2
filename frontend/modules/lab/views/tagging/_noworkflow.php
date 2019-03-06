@@ -17,7 +17,7 @@ use common\models\system\Profile;
 
 
 <?php
-echo Html::button('<i class="glyphicon glyphicon-pencil"></i> Workflow Management', ['disabled'=>false,'title'=>'Click to start this procedure', 'class' => 'btn btn-success','id' => 'btn_start_analysis', 'htmlOptions' => ['target' => '_blank'],]);
+//echo Html::button('<i class="glyphicon glyphicon-pencil"></i> Workflow Management', ['disabled'=>false,'title'=>'Click to start this procedure', 'class' => 'btn btn-success','id' => 'btn_start_analysis', 'htmlOptions' => ['target' => '_blank'],]);
 ?>
 
 </div>
