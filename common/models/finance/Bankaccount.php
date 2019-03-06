@@ -50,7 +50,6 @@ class Bankaccount extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'bankaccount_id' => 'Account ID',
             'bank_name' => 'Bank Name',
             'account_number' => 'Account Number',
         ];
