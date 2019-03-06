@@ -22,11 +22,13 @@ use rmrevin\yii\fontawesome\FA;
 class Printing {
 
     public function PrintRequest($id) {
+        
         \Yii::$app->view->registerJsFile("css/pdf.css");
         $config= \Yii::$app->components['reports'];
         $ReportNumber=(int)$config['ReportNumber'];
+       
         if($ReportNumber==1){
-            $mTemplate = $this->RequestTemplate($id);
+             $mTemplate = $this->RequestTemplate($id);
         }elseif($ReportNumber==2){
             $mTemplate=$this->FastReport($id);
         }else{// in case does not matched any
@@ -213,16 +215,21 @@ class Printing {
         return $RequestTemplate;
     }
     private function RequestTemplate($id) {
+
         $Func = new Functions();
         $Proc = "spGetRequestServices(:nRequestID)";
         $Params = [':nRequestID' => $id];
         $Form="OP-007-F1"."<br>"."Rev. 05 | 10.01.14";
         $Connection = \Yii::$app->labdb;
+        
         $RequestRows = $Func->ExecuteStoredProcedureRows($Proc, $Params, $Connection);
         $RequestHeader = (object) $RequestRows[0];
+       
         $rstl_id = $RequestHeader->rstl_id;
+       
         $RstlDetails = RstlDetails::find()->where(['rstl_id' => $rstl_id])->one();
         if ($RstlDetails) {
+            
             $RequestTemplate = "<table border='0' style='border-collapse: collapse;font-size: 12px' width=100%>";
             $RequestTemplate .= "<thead>";
             $RequestTemplate .= "<tr>";

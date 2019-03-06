@@ -3,16 +3,16 @@
 namespace frontend\modules\finance\controllers;
 
 use Yii;
-use common\models\finance\Orseries;
-use common\models\finance\OrseriesSearch;
+use common\models\finance\Bankaccount;
+use common\models\finance\BankaccountSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * OrseriesController implements the CRUD actions for Orseries model.
+ * BankaccountController implements the CRUD actions for Bankaccount model.
  */
-class OrseriesController extends Controller
+class BankaccountController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,12 +30,12 @@ class OrseriesController extends Controller
     }
 
     /**
-     * Lists all Orseries models.
+     * Lists all Bankaccount models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new OrseriesSearch();
+        $searchModel = new BankaccountSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class OrseriesController extends Controller
     }
 
     /**
-     * Displays a single Orseries model.
+     * Displays a single Bankaccount model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -58,22 +58,21 @@ class OrseriesController extends Controller
     }
 
     /**
-     * Creates a new Orseries model.
+     * Creates a new Bankaccount model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Orseries();
+        $model = new Bankaccount();
 
         if ($model->load(Yii::$app->request->post())) {
             $rstl_id=Yii::$app->user->identity->profile->rstl_id;
             $model->rstl_id=$rstl_id;
-            $model->terminal_id=0;
-            $model->save();
-            //return $this->redirect(['view', 'id' => $model->or_series_id]);
-             Yii::$app->session->setFlash('success', 'O.R Series,Successfully added!');
-            return $this->redirect(['/finance/orseries']);
+            
+            $model->save(false);
+             Yii::$app->session->setFlash('success', 'Bank Account,Successfully added!');
+             return $this->redirect(['/finance/bankaccount']);
         }
 
         return $this->renderAjax('create', [
@@ -82,7 +81,7 @@ class OrseriesController extends Controller
     }
 
     /**
-     * Updates an existing Orseries model.
+     * Updates an existing Bankaccount model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -93,8 +92,8 @@ class OrseriesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'O.R Series,Successfully updated!');
-            return $this->redirect(['/finance/orseries']);
+             Yii::$app->session->setFlash('success', 'Bank Account,Successfully updated!');
+             return $this->redirect(['/finance/bankaccount']);
         }
 
         return $this->renderAjax('update', [
@@ -103,7 +102,7 @@ class OrseriesController extends Controller
     }
 
     /**
-     * Deletes an existing Orseries model.
+     * Deletes an existing Bankaccount model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -112,21 +111,21 @@ class OrseriesController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-         Yii::$app->session->setFlash('success', 'O.R Series,Successfully deleted!');
-         return $this->redirect(['/finance/orseries']);
-        //return $this->redirect(['index']);
+        Yii::$app->session->setFlash('success', 'Bank Account,Successfully deleted!');
+        return $this->redirect(['/finance/bankaccount']);
+        
     }
 
     /**
-     * Finds the Orseries model based on its primary key value.
+     * Finds the Bankaccount model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Orseries the loaded model
+     * @return Bankaccount the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Orseries::findOne($id)) !== null) {
+        if (($model = Bankaccount::findOne($id)) !== null) {
             return $model;
         }
 

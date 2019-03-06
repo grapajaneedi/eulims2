@@ -5,11 +5,11 @@ use kartik\grid\GridView;
 use common\models\lab\Customer;
 use common\models\finance\Collectiontype;
 use yii\helpers\ArrayHelper;
-use kartik\widgets\DatePicker;
 use kartik\daterange\DateRangePicker;
 use yii\db\Query;
 use common\models\finance\PaymentStatus;
 /* @var $this yii\web\View */
+use kartik\widgets\DatePicker;
 /* @var $searchModel common\models\finance\Op */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
