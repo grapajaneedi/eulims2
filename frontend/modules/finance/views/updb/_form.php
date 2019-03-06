@@ -15,11 +15,11 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'tblname')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'num')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'ids')->textInput(['maxlength' => true]) ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    <div class="form-group pull-right">
+             <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+            <?php if(Yii::$app->request->isAjax){ ?>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <?php } ?>
     </div>
 
     <?php ActiveForm::end(); ?>
