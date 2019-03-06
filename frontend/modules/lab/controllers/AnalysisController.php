@@ -125,6 +125,8 @@ class AnalysisController extends Controller
 
     public function actionListtest()
     {
+        //error here
+        //weird
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $id = end($_POST['depdrop_parents']);

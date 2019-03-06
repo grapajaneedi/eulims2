@@ -9,32 +9,20 @@ use common\models\lab\Workflow;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use kartik\widgets\Select2;
+use kartik\widgets\DepDrop;
 
-///
-$workflow = Workflow::find()->all();
-
-$sample_ids = '';
-foreach ($workflow as $workflo){
-    $sample_ids .= $workflo->testname_method_id.",";
-}
-$sample_ids = substr($sample_ids, 0, strlen($sample_ids)-1);
-echo "<pre>";
-var_dump($sample_ids);
-echo "</pre>";
-
-// if ($sample_ids){
-//     $ids = explode(",", $sample_ids);   
-// }else{
-//     $ids = ['-1'];
-// }
 
 
 $test = Testname::find()
 ->leftJoin('tbl_testname_method', 'tbl_testname.testname_id=tbl_testname_method.testname_id')
 ->leftJoin('tbl_workflow', 'tbl_testname_method.testname_method_id=tbl_workflow.testname_method_id')
-->where(['IN', 'tbl_testname_method.testname_method_id', '1,2,3'])   
+//->where(['IN', 'tbl_testname_method.testname_method_id', '9']) 
+->Where(['tbl_testname_method.workflow'=>1])  
 ->all();      
-///
+
+//TESTNAME METHOD PO ITO DAPAT
+// $analysisQuery = Analysis::find()
+// ->where(['IN', 'sample_id', $ids]);
 
 $lablist = ArrayHelper::map($test,'testname_id','testName');
 /* @var $this yii\web\View */
@@ -64,6 +52,22 @@ function addprocedure(){
         url: '/lab/testnamemethod/addprocedure',
         method: "post",
         data: {procedure_name: $('#procedure_name').val(), testname_id: $('#testname_id').val()},
+        beforeSend: function(xhr) {
+           $('.image-loader').addClass("img-loader");
+           }
+        })
+        .done(function( response ) {  
+            //render partial nalang 
+            $("#workflow").html(response); 
+            $("#testname-grid").yiiGridView("applyFilter");   
+        });
+}
+
+function addtemplate(){  
+    $.ajax({
+        url: '/lab/testnamemethod/addtemplate',
+        method: "post",
+        data: {testnamemethod_id: $('#sample-testcategory_id').val(), testname_id: $('#testname_id').val()},
         beforeSend: function(xhr) {
            $('.image-loader').addClass("img-loader");
            }
@@ -150,12 +154,25 @@ $this->registerJs($js);
                             'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Template'],
                     ])->label(false);
                 ?>
+
+                <?php
+            //      $form->field($model, 'testname_method_id')->widget(DepDrop::classname(), [
+            //     'type'=>DepDrop::TYPE_SELECT2,
+            //     'data'=>$lablist,
+            //     'options'=>['id'=>'method'],
+            //     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+            //     'pluginOptions'=>[
+            //         'depends'=>['sample-sample_type_id'],
+            //         'placeholder'=>'Select Method',
+            //         'url'=>Url::to(['/lab/analysis/listtest']),
+            //         'loadingText' => 'Loading Method...',
+            //     ]
+            // ])->label(false)
+            ?>
                 <?php ActiveForm::end(); ?>
         </div>
         <div class="col-sm-6">
-        <?php
-        echo Html::button('<i class="glyphicon glyphicon-plus"></i> Add', ['disabled'=>false,'value' => Url::to(['tagging/startanalysis','id'=>1]), 'onclick'=>'startanalysis()','title'=>'Click to add new procedure', 'class' => 'btn btn-success btn-block','id' => 'btn_start_analysis', 'style'=>'width:80px']);
-        ?></div>
+        <span class='btn btn-success glyphicon glyphicon-plus' style='width:80px' id='offer' onclick=addtemplate()> Add</span></div>
   
         <?= GridView::widget([
         'dataProvider' => $workflowdataprovider,

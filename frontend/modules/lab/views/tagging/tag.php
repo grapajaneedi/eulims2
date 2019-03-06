@@ -1,14 +1,12 @@
 
-
-
-
-
-
 <?php
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use common\models\lab\Tagging;
+use common\models\lab\Workflow;
+use common\models\lab\Methodreference;
+use common\models\lab\Testnamemethod;
 use common\models\system\Profile;
 $js=<<<SCRIPT
 
@@ -43,6 +41,14 @@ function tag(mid){
 SCRIPT;
 $this->registerJs($js, $this::POS_READY);
 
+
+
+// //echo $tagging->cancelled_by;
+// if ($tagging){
+//     echo "meron";
+// }else{
+//     echo "wala";
+//}
 ?>
 
 
@@ -82,8 +88,16 @@ $this->registerJs($js, $this::POS_READY);
 
 // echo $count."<br>";
 // echo $samcount;
-$max = 100/$count; 
-$num = $samcount * $max;
+
+$samcount = 0;
+if ($count){
+    $max = 100/$count; 
+    $num = $samcount * $max;
+}else{
+    $max = 0;
+    $num = $samcount * $max;
+}
+
 
 // $max = 99;
 // $num = 100;
@@ -131,7 +145,13 @@ $num = $samcount * $max;
         'format' => 'raw',
         'enableSorting' => false,
         'value'=> function ($model){
-            return $model->procedure_name;   
+           // return $model->procedure_name; 
+          $workflow= Workflow::find()->where(['workflow_id'=> $model->analysis_id])->one(); 
+
+           return $workflow->procedure_name;
+         // return $model->cancelled_by;
+
+       //  return "";
         },
         'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
     ],
@@ -141,14 +161,19 @@ $num = $samcount * $max;
             'format' => 'raw',
             'enableSorting' => false,
             'value'=> function ($model){
-                $tagging= Tagging::find()->where(['analysis_id'=> $model->workflow_id])->one();
+                $tagging = Tagging::find()->where(['tagging_id'=> $model->tagging_id])->one();
 
-                if ($tagging){
-                    $profile= Profile::find()->where(['user_id'=> $tagging->user_id])->one();
-                    return $profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
-                }else{
-                    return "";
-                }  
+               
+                    $profile = Profile::find()->where(['user_id'=> $tagging->user_id])->one();
+
+                    if ($profile){
+                        return $profile->firstname.' '. strtoupper(substr($profile->middleinitial,0,1)).'. '.$profile->lastname;
+                    }else{
+                        return '';
+                    }
+                    
+                    //return $profile->user_id;
+            
             },
             'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
         ],
@@ -167,7 +192,8 @@ $num = $samcount * $max;
               'hAlign'=>'center',
               'format'=>'raw',
               'value' => function($model) {
-                    $tagging= Tagging::find()->where(['analysis_id'=> $model->workflow_id])->one();
+                    $tagging= Tagging::find()->where(['tagging_id'=> $model->tagging_id])->one();
+
                     if ($tagging){
 
                      if ($tagging->tagging_status_id==1) {
@@ -180,12 +206,16 @@ $num = $samcount * $max;
                         }
                         else if ($tagging->tagging_status_id==4) {
                             return "<span class='badge btn-danger' style='width:90px;height:20px'>CANCELLED</span>";
+                        }else{
+                            return "<span class='badge btn-default' style='width:90px;height:20px'>PENDING</span>";
                         }
                          
                   
                     }else{
                         return "<span class='badge btn-default' style='width:80px;height:20px'>PENDING</span>";
                     }
+
+                   // return $tagging->tagging_status_id;
                    
                   },
                   'enableSorting' => false,
@@ -198,7 +228,7 @@ $num = $samcount * $max;
             'width' => '100px',
             'value' => function($model) {
 
-                $tagging= Tagging::find()->where(['analysis_id'=> $model->workflow_id])->one();
+                $tagging= Tagging::find()->where(['tagging_id'=> $model->tagging_id])->one();
                 if ($tagging){
 
                                             return "<b>Start Date:&nbsp;&nbsp;</b>".$tagging->start_date."
@@ -296,3 +326,7 @@ echo Html::button('<i class="glyphicon glyphicon-ok"></i> End', ['disabled'=>fal
 
     }
 </script>
+
+<?php
+echo $samcount."<br>".$count;
+?>

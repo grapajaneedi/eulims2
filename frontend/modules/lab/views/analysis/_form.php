@@ -58,6 +58,8 @@ $this->registerJs($js);
     <?php   
     }
 ?>
+
+
       <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
         'pjax'=>true,
