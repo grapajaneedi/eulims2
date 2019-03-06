@@ -109,6 +109,7 @@ class UpdbController extends \yii\web\Controller{
         $model = new YiiMigration();
 
         if ($model->load(Yii::$app->request->post())) {
+            $model->ids=0;
             $model->save(false);
              Yii::$app->session->setFlash('success', 'Sync,Successfully added!');
              return $this->redirect(['/finance/updb']);
