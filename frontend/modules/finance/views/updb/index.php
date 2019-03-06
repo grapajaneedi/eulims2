@@ -10,7 +10,7 @@ use kartik\helpers;
 
 $this->title = 'Yii Migrations';
 $this->params['breadcrumbs'][] = $this->title;
-$Button="{view}{update}";
+$Button="{view}{update}{delete}";
 ?>
 <div class="yii-migration-index">
 
@@ -18,7 +18,7 @@ $Button="{view}{update}";
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Yii Migration', ['create'], ['class' => 'btn btn-success']) ?>
+        <?=Html::button('<span class="glyphicon glyphicon-plus"></span> Create Yii Migration', ['value'=>'/finance/updb/create', 'class' => 'btn btn-success','title' => Yii::t('app', "Create New"),'onclick'=>'addYii(this.value,this.title)']) ?>
     </p>
 
     <?= GridView::widget([
@@ -57,3 +57,9 @@ $Button="{view}{update}";
         ],
     ]); ?>
 </div>
+<script type="text/javascript">
+    function addYii(url,title){
+        LoadModal(title,url,'true','700px');
+    }
+  
+</script>

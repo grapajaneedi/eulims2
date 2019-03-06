@@ -104,6 +104,20 @@ class UpdbController extends \yii\web\Controller{
 
     }
     
+     public function actionCreate()
+    {
+        $model = new YiiMigration();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save(false);
+             Yii::$app->session->setFlash('success', 'Sync,Successfully added!');
+             return $this->redirect(['/finance/updb']);
+        }
+
+        return $this->renderAjax('create', [
+            'model' => $model,
+        ]);
+    }
      public function actionSync($tblname)
     { 
        // $model=$this->findModel($id);
@@ -474,7 +488,13 @@ class UpdbController extends \yii\web\Controller{
        Yii::$app->session->setFlash('success', 'Successfully posted!');
         return $this->redirect(['/finance/updb']); 
     }
-    
+     public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+        Yii::$app->session->setFlash('success', 'Sync,Successfully deleted!');
+        return $this->redirect(['/finance/updb']);
+        
+    }
     protected function findModel($id)
     {
         if (($model = YiiMigration::findOne($id)) !== null) {
@@ -483,4 +503,5 @@ class UpdbController extends \yii\web\Controller{
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
 }

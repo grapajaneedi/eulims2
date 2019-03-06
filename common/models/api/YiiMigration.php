@@ -42,8 +42,8 @@ class YiiMigration extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'tblname' => 'Tblname',
-            'num' => 'Num',
+            'tblname' => 'Table name',
+            'num' => 'Last ID No.:',
             'ids' => 'Ids',
         ];
     }
