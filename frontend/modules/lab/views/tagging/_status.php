@@ -47,6 +47,8 @@ $this->registerJs($js, $this::POS_READY);
 
 <?php
 
+$analysis = Analysis::find()->where(['analysis_id'=> $analysis_id])->one();
+
 
 
 $taggingcount= Tagging::find()
@@ -80,6 +82,9 @@ if ($count){
     $max = 0;
     $num = $samcount * $max;
 }
+
+
+echo "<h4><b>".$analysis->testname."</b> | ".round($num)."%</h4>";
 // echo $count."<br>";
 // echo $samcount;
 
@@ -217,7 +222,7 @@ if ($count){
                                            
                                     },
                                         'enableSorting' => false,
-                                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
+                                        'contentOptions' => ['style' => 'width:40%; white-space: normal;'],
                                 ],
 
 ],

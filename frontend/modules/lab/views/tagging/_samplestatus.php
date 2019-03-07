@@ -32,18 +32,32 @@ use common\models\system\Profile;
 
 <?php
 
-echo "<span class='payment alert-warning' style='float:right; min-width:80px; min-height:30px; line-height:30px;text-align:center;display:inline-block;font-weight:bold;'>Pending</span><br><br>";
+$samples_count= Sample::find() 
+->leftJoin('tbl_request', 'tbl_request.request_id=tbl_sample.request_id')    
+->where(['tbl_request.request_id'=>$request->request_id ])
+->all();  
 
-//  if (($countdata==0)){
-	
-// }else if (($countdata==$request->completed) || ($countdata<$request->completed)){
-// 	echo "<span class='payment alert-success' style='float:right; min-width:80px; min-height:30px; line-height:30px;text-align:center;display:inline-block;font-weight:bold;'>Completed</span>";
-// }else if (($request->completed==0)){
-// 	echo "<span class='payment alert-warning' style='float:right; min-width:80px; min-height:30px; line-height:30px;text-align:center;display:inline-block;font-weight:bold;'>Pending</span>";
-// }
-// else if (($request->completed<$coundata) || ($request->completed!=0)){
-// 	echo "<span class='payment alert-info' style='float:right; min-width:80px; min-height:30px; line-height:30px;text-align:center;display:inline-block;font-weight:bold;'>Ongoing</span>";
-// }
+$requestcount= Sample::find()
+->leftJoin('tbl_request', 'tbl_sample.request_id=tbl_request.request_id')
+->leftJoin('tbl_analysis', 'tbl_sample.sample_id=tbl_analysis.sample_id')
+->leftJoin('tbl_tagging_analysis', 'tbl_analysis.analysis_id=tbl_tagging_analysis.cancelled_by')
+->where(['tbl_tagging_analysis.tagging_status_id'=>2, 'tbl_request.request_id'=>$request->request_id ])   
+->all();  
+
+$scount = count($samples_count); 
+$rcount = count($requestcount); 
+
+if ($rcount==0){
+    echo "<span class='payment alert-default' style='float:right; min-width:80px; min-height:30px; line-height:30px;text-align:center;display:inline-block;font-weight:bold;'>PENDING</span><br><br>";
+}elseif ($scount>$rcount){
+    echo "<span class='payment alert-info' style='float:right; min-width:80px; min-height:30px; line-height:30px;text-align:center;display:inline-block;font-weight:bold;'>ONGOING</span><br><br>";
+}elseif ($scount==$rcount){
+    echo "<span class='payment alert-success' style='float:right; min-width:80px; min-height:30px; line-height:30px;text-align:center;display:inline-block;font-weight:bold;'>COMPLETED</span><br><br>";
+}
+
+
+
+
 ?>
 
 <?php
@@ -199,12 +213,28 @@ echo "<span class='payment alert-warning' style='float:right; min-width:80px; mi
                         ],
                         [
                             'header'=>'Status',
-                            'hAlign'=>'left',
+                            'hAlign'=>'center',
                             'format' => 'raw',
                             'enableSorting' => false,
                             'value'=> function ($model){
-                              //$workflow= Workflow::find()->where(['workflow_id'=> $model->analysis_id])->one(); 
-                             return "";
+                                $samples = Sample::find()->where(['sample_id' =>$model->sample_id])->one();
+                                $count = Sample::find()->where(['request_id' =>$model->request_id])->count();
+                             
+                                if ($samples->completed==0) {
+                                    return "<span class='badge btn-default' style='width:90px;height:20px'>PENDING</span>";
+                                   
+                                }else if ($samples->completed==$count) {
+                                        return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
+                                        
+                                    }
+                                    else if ($samples->completed>=1) {
+                                        return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
+                                    }
+                                    else if ($samples->completed==0) {
+                                        
+                                    }
+                             
+                              
                             },
                             'contentOptions' => ['style' => 'width:15%; white-space: normal;'],                   
                         ],

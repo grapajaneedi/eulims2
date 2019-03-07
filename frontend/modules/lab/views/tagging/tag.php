@@ -115,6 +115,9 @@ if ($count){
     $num = $samcount * $max;
 }
 
+$analysis = Analysis::find()->where(['analysis_id' => $analysis_id])->one();
+echo "<h4><b>".$analysis->testname."</b> | ".round($num)."% </h4>"
+
 ?>
 
 <div class="progress" >
