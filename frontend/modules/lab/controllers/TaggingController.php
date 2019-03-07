@@ -301,7 +301,26 @@ class TaggingController extends Controller
                             $tagging= Tagging::find()->where(['cancelled_by'=> $id]);
 
                             $analysis= Analysis::find()->where(['analysis_id'=> $id])->one();
-                            $samplesq = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();             
+                            $samplesq = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();    
+                            
+                            $count = Sample::find()->where(['request_id' =>$samplesq->request_id])->count(); 
+
+                            $requestcount= Sample::find()
+                            ->leftJoin('tbl_request', 'tbl_sample.request_id=tbl_request.request_id')   
+                            ->all();  
+
+                           // $rcount = count($requestcount); 
+
+                            $rcount= 2;
+
+                                         if ($samplesq->completed==$count){
+                                             
+                                            $Connection= Yii::$app->labdb;
+                                            $sql="UPDATE `tbl_request` SET `completed`='$rcount' WHERE `request_id`=".$samplesq->request_id;
+                                            $Command=$Connection->createCommand($sql);
+                                            $Command->execute(); 
+                                         }
+
                             $samcount = $analysis->completed;
 
                             $procedure = Procedure::find()->where(['testname_id' => 1]);
@@ -420,6 +439,8 @@ class TaggingController extends Controller
                                     $Command=$Connection->createCommand($sql);
                                     $Command->execute();                      
                                     $sample= Sample::find()->where(['sample_id'=> $aid])->one();
+
+
                                 }else{
             
                                 }    
@@ -430,6 +451,9 @@ class TaggingController extends Controller
          }
             
              $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
+
+           
+
              $sampleDataProvider = new ActiveDataProvider([
                      'query' => $samplesQuery,
                      'pagination' => [
