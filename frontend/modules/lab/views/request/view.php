@@ -9,6 +9,7 @@ use common\models\lab\Cancelledrequest;
 use common\models\lab\Discount;
 use common\models\lab\Request;
 use common\models\lab\Sample;
+use common\models\lab\Tagginganalysis;
 use common\models\lab\Sampletype;
 use common\models\finance\Paymentitem;
 
@@ -533,25 +534,25 @@ $this->registerJs($PrintEvent);
                 'hAlign'=>'center',
                 'format'=>'raw',
                 'value' => function($model) {
-              
-                  if ($model->tagging){
+                  $tagging = Tagginganalysis::findOne(['cancelled_by' => $model->analysis_id]);             
+                  if ($tagging){
 
-                   if ($model->tagging->tagging_status_id==1) {
-                          return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
-                      }else if ($model->tagging->tagging_status_id==2) {
-                          return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
+                   if ($tagging->tagging_status_id==1) {
+                        return Html::button('<span style="width:90px;height:20px"><b>ONGOING</span>', ['value'=>Url::to(['/lab/tagging/status','id'=>$model->analysis_id]),'onclick'=>'LoadModal(this.title, this.value, true, 600);', 'class' => 'btn btn-primary','title' => Yii::t('app', "Analysis Status for ".$model->testname."<font color='Blue'></font>")]);
+                      }else if ($tagging->tagging_status_id==2) {
+                        return Html::button('<span style="width:90px;height:20px"><b>COMPLETED</span>', ['value'=>Url::to(['/lab/tagging/status','id'=>$model->analysis_id]),'onclick'=>'LoadModal(this.title, this.value, true, 600);', 'class' => 'btn btn-success','title' => Yii::t('app', "Analysis Status for ".$model->testname."<font color='Blue'></font>")]);
                       }
-                      else if ($model->tagging->tagging_status_id==3) {
-                          return "<span class='badge btn-warning' style='width:90px;height:20px'>ASSIGNED</span>";
+                      else if ($tagging->tagging_status_id==3) {
+                          return "<span class='badge btn-warning' style='width:90px;height:20px'><b>ASSIGNED</span>";
                       }
-                      else if ($model->tagging->tagging_status_id==4) {
-                          return "<span class='badge btn-danger' style='width:90px;height:20px'>CANCELLED</span>";
+                      else if ($tagging->tagging_status_id==4) {
+                          return "<span class='badge btn-danger' style='width:90px;height:20px'><b>CANCELLED</span>";
                       }
                        
                 
                   }else{
-                      return "<span class='badge badge-success' style='width:80px!important;height:20px!important;'>PENDING</span>";
-                  }
+                   return Html::button('<span"><b>PENDING</span>', ['value'=>Url::to(['/lab/tagging/status','id'=>$model->analysis_id]),'onclick'=>'LoadModal(this.title, this.value, true, 600);', 'class' => 'btn btn-default','title' => Yii::t('app', "Analysis Status for ".$model->testname."<font color='Blue'></font>")]);
+                }
                  
                 },
                 'enableSorting' => false,
@@ -568,7 +569,6 @@ $this->registerJs($PrintEvent);
                     'delete'=>function ($url, $model) {
                         $urls = '/lab/analysis/delete?id='.$model->analysis_id;
                         return Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Analysis','data-pjax'=>'0']);
-                       // return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/lab/analysis/delete','id'=>$model->analysis_id]), 'class' => 'btn btn-danger']);
                     },
                 ],
             ],

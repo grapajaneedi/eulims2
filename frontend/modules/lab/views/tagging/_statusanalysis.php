@@ -24,7 +24,6 @@ use kartik\widgets\Typeahead;
 use common\models\lab\Lab;
 
 use common\models\lab\Workflow;
-use common\models\lab\Sample;
 use common\models\lab\Labsampletype;
 use common\models\lab\Sampletype;
 use common\models\lab\Sampletypetestname;
@@ -35,84 +34,13 @@ use common\models\lab\Tagginganalysis;
 use kartik\money\MaskMoney;
 use common\models\system\Profile;
 
-$js=<<<SCRIPT
-
-$(".kv-row-checkbox").click(function(){
-   var keys = $('#analysis-grid').yiiGridView('getSelectedRows');
-   var keylist= keys.join();
-   $("#sample_ids").val(keylist);
-   
-});    
-$(".select-on-check-all").change(function(){
- var keys = $('#analysis-grid').yiiGridView('getSelectedRows');
- var keylist= keys.join();
- $("#sample_ids").val(keylist);
-
-});
-
-function tag(mid){
-    
-      $.ajax({
-         url: '/lab/tagging/tag',
-         method: "post",
-          data: { id: mid},
-          beforeSend: function(xhr) {
-             $('.image-loader').addClass("img-loader");
-             }
-          })
-          .done(function(response) {   
-              alert("boom");            
-          });
-  }
-
-SCRIPT;
-$this->registerJs($js);
 ?>
-
-<?php $this->registerJsFile("/js/services/services.js"); ?>
-
-<?= GridView::widget([
-        'dataProvider' => $sampleDataProvider,
-        'pjax' => true,
-        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-analysis']],
-        'panel' => [
-                'type' => GridView::TYPE_PRIMARY,
-                'heading' => '<span class="glyphicon glyphicon-book"></span>  Sample' ,
-            ],
-        'columns' => [
-            [
-                'header'=>'Sample Name',
-                'format' => 'raw',
-                'width' => '30%',
-                'value' => function($model) {
-                    return "<b>".$model->samplename."</b>";
-                },
-                'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:40px; white-space: normal;'], 
-            ],
-            [
-                'header'=>'Description',
-                'format' => 'raw',
-                'enableSorting' => false,
-                'attribute'=>'description',
-                'contentOptions' => ['style' => 'width:40px; white-space: normal;'],   
-            ],
-            
-        ],
-    ]); ?>
-<script type='text/javascript'>
- 
-</script>
 
 <?= GridView::widget([
         'dataProvider' => $analysisdataprovider,
         'id'=>'analysis-grid',
         'pjax' => true,
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-analysis']],
-        'panel' => [
-                'type' => GridView::TYPE_PRIMARY,
-                'heading' => '<span class="glyphicon glyphicon-book"></span>  Analysis' ,
-            ],
             'pjaxSettings' => [
                 'options' => [
                     'enablePushState' => false,
@@ -120,16 +48,6 @@ $this->registerJs($js);
             ],
             'floatHeaderOptions' => ['scrollingTop' => true],
             'columns' => [
-                [
-                    'header'=>'Tag',
-                    'hAlign'=>'center',
-                    'format' => 'raw',
-                    'contentOptions' => ['style' => 'width: 5%;word-wrap: break-word;white-space:pre-line;'],
-                    'value'=>function($model){
-                        return Html::button('<span class="glyphicon glyphicon-tag"></span>', ['value'=>Url::to(['/lab/tagging/tag','id'=>$model->analysis_id]),'onclick'=>'LoadModal(this.title, this.value, true, 950);', 'class' => 'btn btn-success','title' => Yii::t('app', "Tagging for ".$model->testname."<font color='Blue'></font>")]);
-                    },
-                    'enableSorting' => false,
-                ],
                      [
                         'header'=>'Test Name',
                         'format' => 'raw',
@@ -146,7 +64,7 @@ $this->registerJs($js);
                         'value' => function($model) {
                             return $model->method;
                         },
-                        'contentOptions' => ['style' => 'width:30%; white-space: normal;'],                      
+                        'contentOptions' => ['style' => 'width:40%; white-space: normal;'],                      
                     ],
                     [
                         'header'=>'Analyst',
@@ -171,7 +89,7 @@ $this->registerJs($js);
                         
                            
                         },
-                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
+                        'contentOptions' => ['style' => 'width:10%; white-space: normal;'],                   
                     ],
                     [
                         'header'=>'Progress',
@@ -196,16 +114,16 @@ $this->registerJs($js);
                         },
                         'contentOptions' => ['style' => 'width:8%; white-space: normal;'],                   
                     ],
-                    // [
-                    //     'header'=>'Cycle Time',
-                    //     'format' => 'raw',
-                    //     'enableSorting' => false,
-                    //     'value'=> function ($model){
-                    //         return "";
+                //     // [
+                //     //     'header'=>'Cycle Time',
+                //     //     'format' => 'raw',
+                //     //     'enableSorting' => false,
+                //     //     'value'=> function ($model){
+                //     //         return "";
                            
-                    //     },
-                    //     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
-                    // ],
+                //     //     },
+                //     //     'contentOptions' => ['style' => 'width:40px; white-space: normal;'],                   
+                //     // ],
                     [
                           'header'=>'Status',
                           'hAlign'=>'center',
@@ -220,21 +138,6 @@ $this->registerJs($js);
                              if ($analysis->completed==0) {
                                 return "<span class='badge btn-default' style='width:90px;height:20px'>PENDING</span>";
                                 }else if ($analysis->completed==$count) {
-
-                                  
-                                    $samples = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();
-                                    $samplecount= Tagginganalysis::find()
-                                    ->leftJoin('tbl_analysis', 'tbl_tagging_analysis.cancelled_by=tbl_analysis.analysis_id')
-                                    ->leftJoin('tbl_sample', 'tbl_analysis.sample_id=tbl_sample.sample_id')    
-                                    ->where(['tbl_tagging_analysis.tagging_status_id'=>2, 'tbl_analysis.sample_id'=>$samples->sample_id ])
-                                    ->all();  
-                                    $scount = count($samplecount); 
-
-                                    $Connection= Yii::$app->labdb;
-                                    $sql="UPDATE `tbl_sample` SET `completed`='$scount' WHERE `sample_id`=".$analysis->sample_id;
-                                    $Command=$Connection->createCommand($sql);
-                                    $Command->execute(); 
-
                                     return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
                                     
                                 }
@@ -271,46 +174,9 @@ $this->registerJs($js);
                            
                     },
                         'enableSorting' => false,
-                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
+                        'contentOptions' => ['style' => 'width:10%; white-space: normal;'],
                 ],
             
         ],
     ]); 
     ?>
-<?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids', 'type'=>'hidden'], ['readonly' => true]) ?>
-<?= Html::textInput('aid', $analysis_id, ['class' => 'form-control', 'id'=>'aid', 'type'=>'hidden'], ['readonly' => true]) ?>
-   
-<script type="text/javascript">
-   function startanalysis() {
-
-         jQuery.ajax( {
-            type: 'POST',
-            url: 'tagging/startanalysis',
-            data: { id: $('#sample_ids').val(), analysis_id: $('#aid').val()},
-            success: function ( response ) {
-
-                 $("#xyz").html(response);
-               },
-            error: function ( xhr, ajaxOptions, thrownError ) {
-                alert( thrownError );
-            }
-        });
-    }
-
-    function completedanalysis() {
-
-         jQuery.ajax( {
-            type: 'POST',
-            url: 'tagging/completedanalysis',
-            data: { id: $('#sample_ids').val(), analysis_id: $('#aid').val()},
-            success: function ( response ) {
-
-                 $("#xyz").html(response);
-               },
-            error: function ( xhr, ajaxOptions, thrownError ) {
-                alert( thrownError );
-            }
-        });
-
-    }
-</script>

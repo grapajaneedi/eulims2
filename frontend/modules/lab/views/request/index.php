@@ -13,7 +13,7 @@ use common\models\lab\Customer;
 use common\models\lab\Sample;
 use yii\bootstrap\Modal;
 use common\models\finance\Paymentitem;
-
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\RequestSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -131,33 +131,33 @@ $gg = 1;
                 'format'=>'raw',
                 'value'=>function($model){
 
-                    $samples_count= Sample::find()
-                    ->leftJoin('tbl_analysis', 'tbl_sample.sample_id=tbl_analysis.sample_id')
-                    ->leftJoin('tbl_tagging', 'tbl_analysis.analysis_id=tbl_tagging.analysis_id') 
-                    ->leftJoin('tbl_request', 'tbl_request.request_id=tbl_analysis.request_id')    
-                    ->where(['tbl_request.request_id'=>$model->request_id ])
-                    ->all();  
+                    return Html::button('<span"><b>PENDING</span>', ['value'=>Url::to(['/lab/tagging/samplestatus','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value, true, 1200);', 'class' => 'btn btn-default','title' => Yii::t('app', "Analyses Monitoring<font color='Blue'></font>")]);
+                    // $samples_count= Sample::find()
+                    // ->leftJoin('tbl_analysis', 'tbl_sample.sample_id=tbl_analysis.sample_id')
+                    // ->leftJoin('tbl_tagging', 'tbl_analysis.analysis_id=tbl_tagging.analysis_id') 
+                    // ->leftJoin('tbl_request', 'tbl_request.request_id=tbl_analysis.request_id')    
+                    // ->where(['tbl_request.request_id'=>$model->request_id ])
+                    // ->all();  
 
-                    $samples_tagged= Sample::find()
-                    ->leftJoin('tbl_analysis', 'tbl_sample.sample_id=tbl_analysis.sample_id')
-                    ->leftJoin('tbl_tagging', 'tbl_analysis.analysis_id=tbl_tagging.analysis_id') 
-                    ->leftJoin('tbl_request', 'tbl_request.request_id=tbl_analysis.request_id')    
-                    ->where(['tbl_tagging.tagging_status_id'=>2, 'tbl_request.request_id'=>$model->request_id ])
-                    ->all();  
+                    // $samples_tagged= Sample::find()
+                    // ->leftJoin('tbl_analysis', 'tbl_sample.sample_id=tbl_analysis.sample_id')
+                    // ->leftJoin('tbl_tagging', 'tbl_analysis.analysis_id=tbl_tagging.analysis_id') 
+                    // ->leftJoin('tbl_request', 'tbl_request.request_id=tbl_analysis.request_id')    
+                    // ->where(['tbl_tagging.tagging_status_id'=>2, 'tbl_request.request_id'=>$model->request_id ])
+                    // ->all();  
 
-                    $c = count ($samples_count);
-                    $t = count ($samples_tagged);
+                    // $c = count ($samples_count);
+                    // $t = count ($samples_tagged);
 
-                  // return $c."<br>".$t;
 
-                    if ($t==0 ){
-                        return "<span class='badge btn-default' style='width:80px!important;height:20px!important;'>PENDING</span>";
-                    }else if ($t<$c){
-                           return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
-                    }else if ($c==$t){
-                        return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
+                    // if ($t==0 ){
+                    //     return "<span class='badge btn-default' style='width:80px!important;height:20px!important;'>PENDING</span>";
+                    // }else if ($t<$c){
+                    //        return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
+                    // }else if ($c==$t){
+                    //     return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
                       
-                    }
+                    // }
               }
             ],
             [
