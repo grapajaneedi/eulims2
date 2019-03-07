@@ -1,11 +1,9 @@
-<div id="janeedi">
+
 <?php
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use common\models\lab\Tagging;
-use common\models\lab\Tagginganalysis;
-use common\models\lab\Sample;
 use common\models\lab\Workflow;
 use common\models\lab\Analysis;
 use common\models\lab\Methodreference;
@@ -67,25 +65,36 @@ $this->registerJs($js, $this::POS_READY);
 </style>
 <body>
 
+
+
+
 </body>
 </html>
 
-
+<div id="janeedi">
 <!-- <div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
      <a href="#" class="close" data-dismiss="alert" >×</a>
     <p class="note" style="color:#265e8d"><b>Sample Name:</b> Please scan barcode in the dropdown list below. .</p>
      
     </div> -->
 <?php
+
+
+//  $analysis = Analysis::findOne(['analysis_id' => $analysis_id]);
+//  $modelmethod=  Methodreference::findOne(['method'=>$analysis->method]);                              
+//  $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysis->test_id, 'method_id'=>$analysis->testcategory_id]);                           
+//  $count = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();     
+
+//  $counts = $count + 1;
+
+//  echo $samcount."<br>".$count;
+ 
+//  ////
 $taggingcount= Tagging::find()
 ->leftJoin('tbl_analysis', 'tbl_tagging.cancelled_by=tbl_analysis.analysis_id')
 ->leftJoin('tbl_sample', 'tbl_analysis.sample_id=tbl_sample.sample_id')    
 ->where(['tbl_tagging.tagging_status_id'=>2, 'tbl_tagging.cancelled_by'=>$analysis_id ])
-->all(); 
-
-
-
-//echo $scount;
+->all();  
 
 $samcount = count($taggingcount); 
 $Connection= Yii::$app->labdb;
@@ -93,6 +102,7 @@ $sql="UPDATE `tbl_analysis` SET `completed`='$samcount' WHERE `analysis_id`=".$a
 $Command=$Connection->createCommand($sql);
 $Command->execute();     
 
+//echo $samcount."<br>".$count;
 
 if ($samcount==$count){
     $now = date('Y-m-d');
@@ -100,9 +110,6 @@ if ($samcount==$count){
     $sql="UPDATE `tbl_tagging_analysis` SET `end_date`='$now', `tagging_status_id`='2' WHERE `cancelled_by`=".$analysis_id;
     $Command=$Connection->createCommand($sql);
     $Command->execute(); 
-
-   
-   
 }
 
 
@@ -114,7 +121,18 @@ if ($count){
     $max = 0;
     $num = $samcount * $max;
 }
+// echo $count."<br>";
+// echo $samcount;
 
+
+
+// $max = 99;
+// $num = 100;
+
+//echo $count."<br>".$samcount;
+
+
+//count muna ilan ang completed para icompare dito
 ?>
 
 <div class="progress" >
@@ -244,8 +262,6 @@ if ($count){
 
 ],
 ]); 
-
-
 ?>
 
 <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids',  'type'=>'hidden'], ['readonly' => true]) ?>
@@ -333,6 +349,9 @@ echo Html::button('<i class="glyphicon glyphicon-ok"></i> End', ['disabled'=>fal
 
 <?php
 
+// $analysis= Analysis::find()->where(['analysis_id'=> 18])->one();
+             
+// $samcount = $analysis->completed;
 
 
 ?>
