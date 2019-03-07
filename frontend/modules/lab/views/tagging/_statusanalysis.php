@@ -100,16 +100,22 @@ use common\models\system\Profile;
                             $analysis = Analysis::findOne(['analysis_id' => $model->analysis_id]);
                             $modelmethod=  Methodreference::findOne(['method'=>$analysis->method]);                              
                             $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysis->test_id, 'method_id'=>$analysis->testcategory_id]);                           
-                            $count = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();     
-                            
-                            if ($count==0){
-                                return $analysis->completed.'/'.$count;
-                            }else{
-                                $percent = $analysis->completed / $count * 100;
-                                $formattedNum = number_format($percent);
+                            if ($testnamemethod){
+                                $count = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();     
                                 
-                                return $analysis->completed.'/'.$count." = ".$formattedNum."%";  
+                              
+                                if ($count==0){
+                                    return $analysis->completed.'/'.$count;
+                                }else{
+                                    $percent = $analysis->completed / $count * 100;
+                                    $formattedNum = number_format($percent);
+                                    
+                                    return $analysis->completed.'/'.$count." = ".$formattedNum."%";  
+                                }
+                            }else{
+                                return "";
                             }
+                            
                                            
                         },
                         'contentOptions' => ['style' => 'width:8%; white-space: normal;'],                   
@@ -130,27 +136,30 @@ use common\models\system\Profile;
                           'format'=>'raw',
                           'value' => function($model) {
                             $analysis = Analysis::findOne(['analysis_id' => $model->analysis_id]);
-                            $modelmethod=  Methodreference::findOne(['method'=>$analysis->method]);                              
+                            $modelmethod=  Methodreference::findOne(['method'=>$analysis->method]);    
+                                                      
                             $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysis->test_id, 'method_id'=>$analysis->testcategory_id]);                           
-                            $count = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();     
                             
-                         
-                             if ($analysis->completed==0) {
+                            if ($testnamemethod){
+                                $count = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();     
+                                
+                             
+                                 if ($analysis->completed==0) {
+                                    return "<span class='badge btn-default' style='width:90px;height:20px'>PENDING</span>";
+                                    }else if ($analysis->completed==$count) {
+                                        return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";            
+                                    }
+                                    else if ($analysis->completed>=1) {
+                                        return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
+                                    }
+                                    else if ($analysis->completed==0) {
+                                        
+                                    }   
+                            }else{
                                 return "<span class='badge btn-default' style='width:90px;height:20px'>PENDING</span>";
-                                }else if ($analysis->completed==$count) {
-                                    return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
-                                    
-                                }
-                                else if ($analysis->completed>=1) {
-                                    return "<span class='badge btn-primary' style='width:90px;height:20px'>ONGOING</span>";
-                                }
-                                else if ($analysis->completed==0) {
-                                    
-                                }
-                                 
-                          
-                          
+                            }
                            
+                                
                           },
                           'enableSorting' => false,
                           'contentOptions' => ['style' => 'width:5%; white-space: normal;'],

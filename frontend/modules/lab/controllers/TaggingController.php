@@ -358,9 +358,9 @@ class TaggingController extends Controller
                 $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);   
              
                 $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
-
+                if ($testnamemethod){
                 $workflow = Workflow::find()->where(['testname_method_id' => $testnamemethod->testname_method_id])->all();
-                if ($workflow){
+               
                         $tagging= Tagging::find()->where(['cancelled_by'=> $id]);
                         $analysis= Analysis::find()->where(['analysis_id'=> $id])->one();
                         $samcount = $analysis->completed;
