@@ -31,7 +31,7 @@ $Button="{view}{update}{delete}";
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-                'before'=> "<b>OP: </b>".$op."<b><br>Paymentitem:</b>".$paymentitem."<b><br>Receipt: </b>".$receipt."<b><br>Deposit: </b>".$deposit,
+                'before'=> "<b>OP: </b>".$op."<b><br>Paymentitem:</b>".$paymentitem."<b><br>Receipt: </b>".$receipt."<b><br>Deposit: </b>".$deposit."<b><br>Check: </b>".$check,
                 'after'=>false,
             ],
         'columns' => [
