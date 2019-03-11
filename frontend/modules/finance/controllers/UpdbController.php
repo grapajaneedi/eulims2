@@ -18,6 +18,7 @@ use common\models\finance\Paymentitem;
 use common\models\finance\Receipt;
 use common\models\finance\Deposit;
 use common\models\finance\Restore_op;
+use common\models\finance\Check;
 
 
 use Yii;
@@ -41,6 +42,7 @@ class UpdbController extends \yii\web\Controller{
         $paymentitem = Paymentitem::find()->count();
         $receipt = Receipt::find()->count();
         $deposit= Deposit::find()->count();
+        $check=Check::find()->count();
 
         $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
         $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/ops/countop?rstl_id=".$GLOBALS['rstl_id'];        
@@ -86,11 +88,22 @@ class UpdbController extends \yii\web\Controller{
         $response_deposit = curl_exec($curl_deposit);			
         $data_deposit = json_decode($response_deposit, true);
         
+        //check
+        $apiUrl_check="https://eulimsapi.onelab.ph/api/web/v1/checks/countcheck?rstl_id=".$GLOBALS['rstl_id'];        
+        $curl_check = curl_init();			
+        curl_setopt($curl_check, CURLOPT_URL, $apiUrl_check);
+        curl_setopt($curl_check, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl_check, CURLOPT_SSL_VERIFYHOST, FALSE); 
+        curl_setopt($curl_check, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+        curl_setopt($curl_check, CURLOPT_RETURNTRANSFER, true);
+        $response_check = curl_exec($curl_check);			
+        $data_check = json_decode($response_check, true);
         
         $opdata=number_format($op)."/ ".number_format($data);
         $paymentitemdata=number_format($paymentitem)."/ ".number_format($data_paymentitem);
         $receiptdata=number_format($receipt)."/ ".number_format($data_receipt);
         $depositdata=number_format($deposit)."/ ".number_format($data_deposit);
+        $checkdata=number_format($check)."/ ".number_format($data_check);
         
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -99,7 +112,8 @@ class UpdbController extends \yii\web\Controller{
             'op'=>$opdata,
             'paymentitem'=> $paymentitemdata, 
             'receipt'=> $receiptdata, 
-            'deposit'=> $depositdata
+            'deposit'=> $depositdata,
+            'check' => $checkdata
         ]);
 
     }

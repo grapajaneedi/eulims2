@@ -1,7 +1,5 @@
 <?php
-
 namespace frontend\modules\finance\controllers;
-
 use Yii;
 use common\models\finance\Op;
 use frontend\modules\finance\components\models\CollectionSearch;
@@ -33,7 +31,6 @@ use yii2tech\spreadsheet\Myspreadsheet;
 use frontend\modules\reports\modules\finance\templates\Orspreadsheet;
 use frontend\modules\finance\components\models\Model;
 use common\models\lab\RequestSearch;
-
 class CashierController extends \yii\web\Controller
 {
     public function actionIndex()
@@ -46,7 +43,6 @@ class CashierController extends \yii\web\Controller
         $model =new Op();
         $searchModel = new CollectionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
         return $this->render('collection/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -114,7 +110,6 @@ class CashierController extends \yii\web\Controller
             //$searchModel->receipt_id=-1;
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
             if(Yii::$app->request->isAjax){
-
                 return $this->renderAjax('billing/_form', [
                     'model' => $model,
                     'SoaModel'=> $SoaModel,
@@ -182,7 +177,6 @@ class CashierController extends \yii\web\Controller
         $model = new Receipt();
         $searchModel = new ReceiptSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
         return $this->render('receipt/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -243,13 +237,22 @@ class CashierController extends \yii\web\Controller
     public function actionViewReceipt($receiptid)
     { 
         $receipt=$this->findModelReceipt($receiptid);
-     
+      //  $collection_id=$receipt->collection_id;
+        //$collection=$this->findModelCollection($collection_id);
+       /* $op_model="";
+        $op_id=$receipt->orderofpayment_id;
+        if($op_id == 0 || $op_id ==""){
+            $op_model="";
+        }else{
+            $op_model=$this->findModel($op_id);
+        } */
+        
         $paymentitem_Query = Paymentitem::find()->where(['receipt_id' => $receiptid])->andWhere(['status' => 2]);
         if($paymentitem_Query){
             $paymentitemDataProvider = new ActiveDataProvider([
             'query' => $paymentitem_Query,
             'pagination' => [
-            'pageSize' => 20,
+            'pageSize' => 10,
             ],
             ]);
         }else{
@@ -325,7 +328,6 @@ class CashierController extends \yii\web\Controller
         $model = new Deposit();
         $searchModel = new DepositSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
         return $this->render('deposit/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -510,7 +512,6 @@ class CashierController extends \yii\web\Controller
     }
   
      public function Savecollection($receiptid,$orderofpayment_id){
-
         $op_id=$orderofpayment_id;
         $op_model=$this->findModel($op_id);
         $amount=$op_model->total_amount;
@@ -691,38 +692,39 @@ class CashierController extends \yii\web\Controller
         ]);
     }
     
-     public function actionAddReceipt()
+     public function actionAddreceipt()
     {
         $model = new Receipt();
         
         if ($model->load(Yii::$app->request->post())) {
-            $connection=Yii::$app->financedb;
-            $transaction =$connection->beginTransaction();
-            $session = Yii::$app->session;
-           
-             try {
-                 
-               // $model->getDb()=$connection;
-                $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
-                $model->terminal_id=$GLOBALS['terminal_id'];
-                $model->orderofpayment_id=0;
-                $this->update_nextor($model->or_series_id,$connection);
+            if($model->collectiontype_id == 1 || $model->collectiontype_id == 2){
                 
-               // $model->or_series_id=$model->or_series_id;
-                $model->or_number=$model->or;
-                $model->total=0;
-                $model->customer_id=0;
-                $model->cancelled=0;
-                $model->save(false);
-                 $transaction->commit();
-                $this->created_receipt(0,$model->receipt_id);
-                $this->Savecollection($model->receipt_id,"");
-              
-                return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]); 
-             } catch (Exception $e) {
-                 $transaction->rollBack();
-                 return $e;
-             }
+            }else{
+                $connection=Yii::$app->financedb;
+                $transaction =$connection->beginTransaction();
+                $session = Yii::$app->session;
+                 try {
+                   // $model->getDb()=$connection;
+                    $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
+                    $model->terminal_id=$GLOBALS['terminal_id'];
+                    $model->orderofpayment_id=0;
+                    $this->update_nextor($model->or_series_id,$connection);
+                   // $model->or_series_id=$model->or_series_id;
+                    $model->or_number=$model->or;
+                    $model->total=0;
+                    $model->customer_id=0;
+                    $model->cancelled=0;
+                    $model->save(false);
+                     $transaction->commit();
+                    $this->created_receipt(0,$model->receipt_id);
+                    $this->Savecollection($model->receipt_id,"");
+                    return $this->redirect(['/finance/cashier/viewreceipt?receiptid='.$model->receipt_id]); 
+                 } catch (Exception $e) {
+                     $transaction->rollBack();
+                     return $e;
+                 }
+            }
+            
         }
             $model->deposit_type_id=1;
             $model->receiptDate=date('Y-m-d');
@@ -734,6 +736,7 @@ class CashierController extends \yii\web\Controller
                 'op_model'=> "",
            ]);
         }else{
+         
             return $this->render('receipt/_form', [
                 'model' => $model,
                 'op_model'=> "",
@@ -744,7 +747,7 @@ class CashierController extends \yii\web\Controller
     public function actionAddpaymentitem($collectiontype_id,$receiptid) {
        
         $paymentitem = [new Paymentitem()];
-        
+       
          if (Yii::$app->request->post()) {
            
             Model::loadMultiple($paymentitem, Yii::$app->request->post());
@@ -787,13 +790,14 @@ class CashierController extends \yii\web\Controller
        else{
           if($collectiontype_id == 1 || $collectiontype_id == 2){
                 $searchModel = new RequestSearch();
-                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-                $dataProvider->pagination->pageSize=10;
-                 /* $query = Request::find()->where(['not', ['posted' => 1]]);
+                //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+                //$dataProvider->pagination->pageSize=500;
+                  $query = Request::find()->where(['not', ['posted' => 1]]);
                     $dataProvider = new ActiveDataProvider([
                         'query' => $query,
-                    ]); */
-                  return $this->renderAjax('receipt/_request', ['dataProvider'=>$dataProvider, 'searchModel' => $searchModel]);
+                    ]); 
+                    $dataProvider->pagination->pageSize=500;
+                  return $this->renderAjax('receipt/_request', ['dataProvider'=>$dataProvider, 'searchModel' => $searchModel,'receipt_id'=>$receiptid]);
           }else{
               return $this->renderAjax('receipt/_form_paymentitem', [
                 'paymentitem' => (empty($paymentitem)) ? [new Paymentitem()] : $paymentitem
@@ -811,4 +815,47 @@ class CashierController extends \yii\web\Controller
             ->execute();
         
     }
+    
+    public function actionSavePaymentitem($request_ids,$receiptid){
+        $total_amount=0;
+        $str_request = explode(',', $request_ids);
+        $arr_length = count($str_request);
+        $connection= Yii::$app->financedb;
+        $connection->createCommand('set foreign_key_checks=0')->execute();
+        for($i=0;$i<$arr_length;$i++){
+            $request =$this->findRequest($str_request[$i]);
+            $paymentitem = new Paymentitem();
+            $paymentitem->rstl_id =Yii::$app->user->identity->profile ? Yii::$app->user->identity->profile->rstl_id : 11;
+            $paymentitem->request_id = $str_request[$i];
+            $paymentitem->orderofpayment_id = 0;
+            $paymentitem->details =$request->request_ref_num;
+            $total=$request->total;
+            $amount=$request->getBalance($str_request[$i],$total);
+            $total_amount+=$amount;
+            $paymentitem->amount = $amount;
+            $paymentitem->request_type_id =$request->request_type_id;
+            $paymentitem->status=2;//Unpaid
+            $paymentitem->receipt_id=$receiptid;
+            $paymentitem->save(false); 
+            $total_amount= $total_amount + $paymentitem->amount;
+        }
+        $this->postRequest($request_ids);
+        $sum = Paymentitem::find()->where(['receipt_id' => $receiptid])
+                 ->sum('amount');
+        $sql_query1 = $connection->createCommand("UPDATE tbl_receipt set total=$sum WHERE receipt_id =$receiptid");
+        $sql_query1->execute();
+        Yii::$app->session->setFlash('success','Successfully Saved');
+        return $this->redirect(['/finance/cashier/view-receipt', 'receiptid' => $receiptid]);
+    }
+    
+    public function postRequest($reqID){
+         $str_total = explode(',', $reqID);
+         $arr_length = count($str_total); 
+         for($i=0;$i<$arr_length;$i++){
+            Yii::$app->labdb->createCommand()
+            ->update('tbl_request', ['posted' => 1], 'request_id= '.$str_total[$i])
+            ->execute(); 
+         }
+         return;
+     }
 }

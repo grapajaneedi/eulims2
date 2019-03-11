@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use kartik\detail\DetailView;
 use kartik\grid\GridView;
@@ -7,16 +6,13 @@ use common\models\finance\Collection;
 use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model common\models\finance\Op */
-
 $this->title = 'Receipt';
 $this->params['breadcrumbs'][] = ['label' => 'Finance', 'url' => ['/finance']];
 $this->params['breadcrumbs'][] = ['label' => 'Receipt', 'url' => ['/finance/cashier/receipt']];
 $this->params['breadcrumbs'][] = 'View';
 $enable=false;
 $receiptid=$receipt->receipt_id;
-
 $print_button=Html::button('<span class="glyphicon glyphicon-download"></span> Print Receipt Excel', ['value'=>'/finance/cashier/printview?id='.$model->receipt_id, 'class' => 'btn btn-small btn-primary','title' => Yii::t('app', "Print Report"),'onclick'=>"location.href=this.value"]);
-
 $add_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paymentitem', ['value' => Url::to(['/finance/cashier/addpaymentitem','collectiontype_id'=>$model->collectiontype_id,'receiptid'=>$model->receipt_id]),'title'=>'Add Payment Item', 'onclick'=>'addPaymentitem(this.value,this.title)', 'class' => 'btn btn-primary','id' => 'modalBtn'])
 ?>
 <div class="receipt-view">
@@ -63,8 +59,8 @@ $add_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paym
                     ],
                     [
                         'label'=>'Total of Collection',
-                        'format'=>'raw',
                         'value'=>$model->total,
+                        'format' => ['decimal', 2],
                         'valueColOptions'=>['style'=>'width:30%'], 
                         'displayOnly'=>true
                     ],
@@ -100,7 +96,6 @@ $add_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paym
                 ],
               
             ];
-
             echo GridView::widget([
                 'id' => 'collection-grid',
                 'dataProvider'=> $paymentitemDataProvider,
@@ -177,7 +172,6 @@ $add_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paym
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                 ],
             ];
-
             echo GridView::widget([
                 'id' => 'check-grid',
                 'dataProvider'=> $check_model,
@@ -235,6 +229,6 @@ $add_paymentitem=Html::button('<i class="glyphicon glyphicon-plus"></i> Add Paym
    
    
     function addPaymentitem(url,title){
-        LoadModal(title,url,'true','800px');
+        LoadModal(title,url,'true','1100px');
     }
 </script>
