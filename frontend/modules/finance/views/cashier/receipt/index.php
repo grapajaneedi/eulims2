@@ -41,7 +41,7 @@ $Header.="Receipt";
         ],
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
-                'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Create Receipt', ['value' => Url::to(['/finance/cashier/add-receipt']),'title'=>'Create Receipt', 'onclick'=>'addReceipt(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
+                'before'=>Html::button('<i class="glyphicon glyphicon-plus"></i> Create Receipt', ['value' => Url::to(['/finance/cashier/addreceipt']),'title'=>'Create Receipt', 'onclick'=>'addReceipt(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']),
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
                 
         ],
@@ -135,7 +135,7 @@ $Header.="Receipt";
 //                          return Html::a('View', ['/finance/cashier/view-receipt?receiptid='.$model->receipt_id], ['target'=>'_blank','class'=>'btn btn-primary']);
 //                    },
                     'view' => function ($url, $model) {
-                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/cashier/view-receipt?receiptid='.$model->receipt_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Receipt")]);
+                        return Html::button('<span class="glyphicon glyphicon-eye-open"></span>', ['value' => '/finance/cashier/viewreceipt?receiptid='.$model->receipt_id,'onclick'=>'location.href=this.value', 'class' => 'btn btn-primary', 'title' => Yii::t('app', "View Receipt")]);
                     },        
                   ],
             ],

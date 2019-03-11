@@ -211,7 +211,7 @@ class CashierController extends \yii\web\Controller
                 $this->created_receipt($op_id,$model->receipt_id);
                 $this->Savecollection($model->receipt_id,$op_id);
               
-                return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]); 
+                return $this->redirect(['/finance/cashier/viewreceipt?receiptid='.$model->receipt_id]); 
              } catch (Exception $e) {
                  $transaction->rollBack();
                  return $e;
@@ -234,7 +234,7 @@ class CashierController extends \yii\web\Controller
         }
     }
    
-    public function actionViewReceipt($receiptid)
+    public function actionViewreceipt($receiptid)
     { 
         $receipt=$this->findModelReceipt($receiptid);
       //  $collection_id=$receipt->collection_id;
@@ -313,6 +313,7 @@ class CashierController extends \yii\web\Controller
     }
      
     public function created_receipt($opID,$receiptid){
+         
         if(!empty($opID))
         {
             Yii::$app->financedb->createCommand()
@@ -573,7 +574,7 @@ class CashierController extends \yii\web\Controller
            
              //End Update Request
              //finance/cashier/view-receipt
-            return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]); 
+            return $this->redirect(['/finance/cashier/viewreceipt?receiptid='.$receiptid]); 
         
     }
      public function actionCalculateTotal($id) {
@@ -616,7 +617,7 @@ class CashierController extends \yii\web\Controller
                    } 
                 }
                 // Yii::$app->session->setFlash('success','Successfully Saved!');
-                return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$receiptid]);
+                return $this->redirect(['/finance/cashier/viewreceipt?receiptid='.$receiptid]);
              } catch (Exception $e) {
                  return $e;
              }
@@ -659,7 +660,7 @@ class CashierController extends \yii\web\Controller
        
         if($model->delete()) {
             Yii::$app->session->setFlash('success','Successfully Removed!');
-            return $this->redirect(['/finance/cashier/view-receipt?receiptid='.$model->receipt_id]);
+            return $this->redirect(['/finance/cashier/viewreceipt?receiptid='.$model->receipt_id]);
         }else {
             return $model->error();
         }
@@ -697,9 +698,7 @@ class CashierController extends \yii\web\Controller
         $model = new Receipt();
         
         if ($model->load(Yii::$app->request->post())) {
-            if($model->collectiontype_id == 1 || $model->collectiontype_id == 2){
-                
-            }else{
+           
                 $connection=Yii::$app->financedb;
                 $transaction =$connection->beginTransaction();
                 $session = Yii::$app->session;
@@ -716,14 +715,15 @@ class CashierController extends \yii\web\Controller
                     $model->cancelled=0;
                     $model->save(false);
                      $transaction->commit();
-                    $this->created_receipt(0,$model->receipt_id);
-                    $this->Savecollection($model->receipt_id,"");
+                   // $this->created_receipt(0,$model->receipt_id);
+                    //$this->Savecollection($model->receipt_id,"");
+                     Yii::$app->session->setFlash('success','Successfully added!');
                     return $this->redirect(['/finance/cashier/viewreceipt?receiptid='.$model->receipt_id]); 
                  } catch (Exception $e) {
                      $transaction->rollBack();
                      return $e;
                  }
-            }
+            
             
         }
             $model->deposit_type_id=1;
@@ -780,7 +780,7 @@ class CashierController extends \yii\web\Controller
                        $this->UpdateTotalReceipt($receiptid);//update total of receipt
                        
                        Yii::$app->session->setFlash('success','Successfully Saved');
-                       return $this->redirect(['/finance/cashier/view-receipt', 'receiptid' => $receiptid]);
+                       return $this->redirect(['/finance/cashier/viewreceipt', 'receiptid' => $receiptid]);
                 
                 } catch (Exception $e) {
                     Yii::$app->session->setFlash('danger','Transaction failed');
@@ -845,7 +845,7 @@ class CashierController extends \yii\web\Controller
         $sql_query1 = $connection->createCommand("UPDATE tbl_receipt set total=$sum WHERE receipt_id =$receiptid");
         $sql_query1->execute();
         Yii::$app->session->setFlash('success','Successfully Saved');
-        return $this->redirect(['/finance/cashier/view-receipt', 'receiptid' => $receiptid]);
+        return $this->redirect(['/finance/cashier/viewreceipt', 'receiptid' => $receiptid]);
     }
     
     public function postRequest($reqID){
