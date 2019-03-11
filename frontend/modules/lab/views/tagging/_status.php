@@ -1,11 +1,9 @@
-<div id="janeedi">
+
 <?php
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use common\models\lab\Tagging;
-use common\models\lab\Tagginganalysis;
-use common\models\lab\Sample;
 use common\models\lab\Workflow;
 use common\models\lab\Analysis;
 use common\models\lab\Methodreference;
@@ -13,39 +11,11 @@ use common\models\lab\Testnamemethod;
 use common\models\system\Profile;
 $js=<<<SCRIPT
 
-$(".kv-row-checkbox").change(function(){
-   var keys = $('#workflow-grid').yiiGridView('getSelectedRows');
-   var keylist= keys.join();
-   $("#sample_ids").val(keylist); 
-  
-});    
-$(".select-on-check-all").change(function(){
- var keys = $('#workflow-grid').yiiGridView('getSelectedRows');
- var keylist= keys.join();
- $("#sample_ids").val(keylist);
- 
- 
-});
-
-function tag(mid){
-      $.ajax({
-         url: '/lab/tagging/tag',
-         method: "post",
-          data: { id: mid},
-          beforeSend: function(xhr) {
-             $('.image-loader').addClass("img-loader");
-             }
-          })
-          .done(function(response) {   
-                   
-          });
-  }
 
 SCRIPT;
 $this->registerJs($js, $this::POS_READY);
 
 ?>
-
 
 
 </body>
@@ -67,25 +37,25 @@ $this->registerJs($js, $this::POS_READY);
 </style>
 <body>
 
+
+
+
 </body>
 </html>
 
+<div id="janeedi">
 
-<!-- <div class="alert alert-info" style="background: #d4f7e8 !important;margin-top: 1px !important;">
-     <a href="#" class="close" data-dismiss="alert" >×</a>
-    <p class="note" style="color:#265e8d"><b>Sample Name:</b> Please scan barcode in the dropdown list below. .</p>
-     
-    </div> -->
 <?php
+
+$analysis = Analysis::find()->where(['analysis_id'=> $analysis_id])->one();
+
+
+
 $taggingcount= Tagging::find()
 ->leftJoin('tbl_analysis', 'tbl_tagging.cancelled_by=tbl_analysis.analysis_id')
 ->leftJoin('tbl_sample', 'tbl_analysis.sample_id=tbl_sample.sample_id')    
 ->where(['tbl_tagging.tagging_status_id'=>2, 'tbl_tagging.cancelled_by'=>$analysis_id ])
-->all(); 
-
-
-
-//echo $scount;
+->all();  
 
 $samcount = count($taggingcount); 
 $Connection= Yii::$app->labdb;
@@ -93,6 +63,7 @@ $sql="UPDATE `tbl_analysis` SET `completed`='$samcount' WHERE `analysis_id`=".$a
 $Command=$Connection->createCommand($sql);
 $Command->execute();     
 
+//echo $samcount."<br>".$count;
 
 if ($samcount==$count){
     $now = date('Y-m-d');
@@ -100,9 +71,6 @@ if ($samcount==$count){
     $sql="UPDATE `tbl_tagging_analysis` SET `end_date`='$now', `tagging_status_id`='2' WHERE `cancelled_by`=".$analysis_id;
     $Command=$Connection->createCommand($sql);
     $Command->execute(); 
-
-   
-   
 }
 
 
@@ -115,9 +83,20 @@ if ($count){
     $num = $samcount * $max;
 }
 
-$analysis = Analysis::find()->where(['analysis_id' => $analysis_id])->one();
-echo "<h4><b>".$analysis->testname."</b> | ".round($num)."% </h4>"
 
+echo "<h4><b>".$analysis->testname."</b> | ".round($num)."%</h4>";
+// echo $count."<br>";
+// echo $samcount;
+
+
+
+// $max = 99;
+// $num = 100;
+
+//echo $count."<br>".$samcount;
+
+
+//count muna ilan ang completed para icompare dito
 ?>
 
 <div class="progress" >
@@ -149,7 +128,8 @@ echo "<h4><b>".$analysis->testname."</b> | ".round($num)."% </h4>"
     ],
     'floatHeaderOptions' => ['scrollingTop' => true],
     'columns' => [
-           ['class' => '\kartik\grid\CheckboxColumn'],
+          // ['class' => '\kartik\grid\CheckboxColumn'],
+         // ['class' => 'yii\grid\SerialColumn'],
           
      [
         'header'=>'Procedure',
@@ -242,13 +222,11 @@ echo "<h4><b>".$analysis->testname."</b> | ".round($num)."% </h4>"
                                            
                                     },
                                         'enableSorting' => false,
-                                        'contentOptions' => ['style' => 'width:40px; white-space: normal;'],
+                                        'contentOptions' => ['style' => 'width:40%; white-space: normal;'],
                                 ],
 
 ],
 ]); 
-
-
 ?>
 
 <?= Html::textInput('sample_ids', '', ['class' => 'form-control', 'id'=>'sample_ids',  'type'=>'hidden'], ['readonly' => true]) ?>
@@ -260,20 +238,6 @@ echo "<h4><b>".$analysis->testname."</b> | ".round($num)."% </h4>"
      
     </div> -->
 
-<div class="form-group pull-right">
-
-
-
-<?php
-echo Html::button('<i class="glyphicon glyphicon-ok"></i> Start', ['disabled'=>false,'value' => Url::to(['tagging/startanalysis','id'=>1]), 'onclick'=>'startanalysis()','title'=>'Click to start this procedure', 'class' => 'btn btn-success','id' => 'btn_start_analysis']);
-?>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<?php
-echo Html::button('<i class="glyphicon glyphicon-ok"></i> End', ['disabled'=>false,'value' => Url::to(['tagging/completedanalysis','id'=>1]),'title'=>'Click to end this procedure', 'onclick'=>'completedanalysis()', 'class' => 'btn btn-success','id' => 'btn_complete_analysis']);
-
-?>
-
-</div>
 </div>
 <script type="text/javascript">
    function startanalysis() {
@@ -336,6 +300,9 @@ echo Html::button('<i class="glyphicon glyphicon-ok"></i> End', ['disabled'=>fal
 
 <?php
 
+// $analysis= Analysis::find()->where(['analysis_id'=> 18])->one();
+             
+// $samcount = $analysis->completed;
 
 
 ?>
