@@ -258,6 +258,29 @@ class TaggingController extends Controller
             
      }
 
+     public function actionSampleregister()
+     {
+        //  $searchModel = new TestnamemethodSearch();
+        //  $model = new Testnamemethod();
+        //  $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $sample = Sample::find()->all();   
+        $sampledataprovider = new ActiveDataProvider([
+            'query' => $sample,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+         
+        ]);
+ 
+        return $this->render('sampleregister', [
+            // 'analysisdataprovider'=> $analysisdataprovider,
+            // 'analysis_id'=>$analysis_id,
+            // 'count'=>$count,
+            // 'samcount'=>$samcount,
+         ]);
+     }
+
      public function actionTag($id)
      {
                 $analysisQuery = Analysis::findOne(['analysis_id' => $id]);
