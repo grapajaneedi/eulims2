@@ -207,9 +207,7 @@ class TaggingController extends Controller
                             $tagginganalysis->analysis_id = $aid;
                             $tagginganalysis->start_date = date("Y-m-d");
                             $tagginganalysis->tagging_status_id = 1;
-                            $tagginganalysis->reason = 1;
                             $tagginganalysis->cancelled_by = $_POST['analysis_id'];
-                            $tagginganalysis->iso_accredited = 1;
                             $tagginganalysis->save(false);   
                         }
                     

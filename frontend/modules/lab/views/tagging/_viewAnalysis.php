@@ -180,18 +180,24 @@ $this->registerJs($js);
                         'enableSorting' => false,
                         'value'=> function ($model){
                             $analysis = Analysis::findOne(['analysis_id' => $model->analysis_id]);
-                            $modelmethod=  Methodreference::findOne(['method'=>$analysis->method]);                              
-                            $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysis->test_id, 'method_id'=>$analysis->testcategory_id]);                           
-                            $count = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();     
+                            $modelmethod=  Methodreference::findOne(['method'=>$analysis->method]); 
                             
-                            if ($count==0){
-                                return $analysis->completed.'/'.$count;
-                            }else{
-                                $percent = $analysis->completed / $count * 100;
-                                $formattedNum = number_format($percent);
+                            if ($modelmethod){
+                                $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysis->test_id, 'method_id'=>$analysis->testcategory_id]);                           
+                                $count = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();     
                                 
-                                return $analysis->completed.'/'.$count." = ".$formattedNum."%";  
+                                if ($count==0){
+                                    return $analysis->completed.'/'.$count;
+                                }else{
+                                    $percent = $analysis->completed / $count * 100;
+                                    $formattedNum = number_format($percent);
+                                    
+                                    return $analysis->completed.'/'.$count." = ".$formattedNum."%";  
+                                }
+                            }else{
+                                return "";
                             }
+                           
                                            
                         },
                         'contentOptions' => ['style' => 'width:8%; white-space: normal;'],                   
