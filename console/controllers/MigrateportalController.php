@@ -46,6 +46,7 @@ class MigrateportalController extends Controller
                 //request live
                 $live_request = new Request;
                 $live_request->attributes = $request->attributes;
+                $live_request->discount_id = $live_request->discount;
 
                 //searching existing customer
                 echo " \n \n Searching existing customer using code: ".$request->rstl_id.'-'.$request->customer_old_id;
