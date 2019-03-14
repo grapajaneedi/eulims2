@@ -4,6 +4,7 @@ namespace backend\modules\system\controllers;
 
 use Yii;
 use common\models\lab\Lab;
+use common\models\lab\RstlLab;
 use common\models\lab\LabSearch;
 use common\models\lab\LabManagerSearch;
 use yii\web\Controller;
@@ -105,6 +106,16 @@ class ConfigurationsController extends Controller
             if ($model->save()){
                 Yii::$app->session->setFlash('success', 'Laboratory Successfully Updated!');
                 \Yii::$app->session['config-item']=1;
+
+                $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+
+                $rstllab = new RstlLab();
+                $rstllab->rstl_id = $GLOBALS['rstl_id'];
+                $rstllab->lab_id= $id;
+                $rstllab->created_at = 1535437311;
+                $rstllab->lab_color = 1;
+                $rstllab->save(false);
+
                 return $this->redirect(['/system/configurations']);
             }else{
                 return $this->renderAjax('update', [

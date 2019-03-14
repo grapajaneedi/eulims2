@@ -186,9 +186,7 @@ class TaggingController extends Controller
                         $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
                         $now = date('Y-m-d');
                         $Connection= Yii::$app->labdb;
-
-
-                        
+    
                         $sql="UPDATE `tbl_tagging` SET `start_date`='$now', `tagging_status_id`='1', `user_id`='$profile->user_id'  WHERE `tagging_id`=".$aid;
                         $Command=$Connection->createCommand($sql);
                         $Command->execute();                      
