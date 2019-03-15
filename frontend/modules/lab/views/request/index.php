@@ -29,8 +29,6 @@ if(Yii::$app->user->can('allow-cancel-request')){
 }else{
     $Button="{view}{update}";
 }
-///$Paymentitem= Paymentitem::find()->where(['request_id'=>$model->request_id])
-$gg = 1;
 
 ?>
 
