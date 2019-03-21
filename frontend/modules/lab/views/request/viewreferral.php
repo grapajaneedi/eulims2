@@ -27,7 +27,7 @@ $referralcomp = new ReferralComponent();
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$rstlID=Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
+$rstlId=Yii::$app->user->identity->profile->rstl_id;
 $Year=date('Y', strtotime($model->request_datetime));
 $paymentitem= Paymentitem::find()->where(['request_id'=> $model->request_id])->one();
 
@@ -36,6 +36,7 @@ if ($paymentitem){
 }else{
     $analysistemplate = "{view} {update} {delete}";
 }
+
 // /lab/request/saverequestransaction
 $js=<<<SCRIPT
     $("#btnSaveRequest").click(function(){
@@ -46,7 +47,7 @@ $js=<<<SCRIPT
             $.post('/lab/request/saverequestransaction', {
                 request_id: $model->request_id,
                 lab_id: $model->lab_id,
-                rstl_id: $rstlID,
+                rstl_id: $rstlId,
                 year: $Year
             }, function(result){
                if(result){
@@ -67,7 +68,7 @@ $js=<<<SCRIPT
     });  
 SCRIPT;
 $this->registerJs($js);
-if($model->request_ref_num==null || $model->status_id==0){
+if($model->request_ref_num==null || $model->status_id==0 || $checkTesting == 1){
     $CancelButton='';
 }else{
     $Func="LoadModal('Cancellation of Request','/lab/cancelrequest/create?req=".$model->request_id."',true,500)";
@@ -124,6 +125,13 @@ SCRIPT;
 $this->registerJs($PrintEvent);
 $requeststatus = $model->status_id; //get status value of referral request
 $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 0; //get value if notified
+$hasTestingAgency = !empty($modelref_request->testing_agency_id) ? $modelref_request->testing_agency_id : 0; //get value if sent
+
+if($requeststatus > 0 && $notified == 1 && $hasTestingAgency > 0 && !empty($model->request_ref_num) && $checkTesting == 0 && $checkSamplecode == 0){
+    $btnGetSamplecode = Html::button('<i class="glyphicon glyphicon-tag"></i> Get Sample Code', ['value' => Url::to(['/referrals/referral/get_samplecode','request_id'=>$model->request_id]),'title'=>'Get Sample Code', 'onclick'=>'getSamplecode(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']);
+} else {
+    $btnGetSamplecode = "";
+}
 ?>
 <div class="section-request"> 
 <div id="cancelled-div" class="outer-div <?= $CancelClass ?>">
@@ -261,21 +269,23 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                 [
                     'columns' => [
                         [
-                            'label'=>'OR No.',
-                            'value'=>$orNumbers,
+                            'label'=>'Deposite Slip',
+                            //'value'=>$orNumbers,
+                            'value'=>null,
                             'displayOnly'=>true,
                             'valueColOptions'=>['style'=>'width:30%']
                         ],
                         [
-                            'label'=>'Collection',
+                            'label'=>'Official Receipt',
                             'format'=>'raw',
-                            'value'=>"₱".$payment_total,
+                            //'value'=>$payment_total,
+                            'value'=>null,
                             'valueColOptions'=>['style'=>'width:30%'], 
                             'displayOnly'=>true
                         ],
                     ],
                 ],
-                [
+                /*[
                     'columns' => [
                         [
                             'label'=>'OR Date',
@@ -291,7 +301,7 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                             'displayOnly'=>true
                         ],
                     ],
-                ],
+                ],*/
                 
                 [
                     'group'=>true,
@@ -368,22 +378,22 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                     },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
-                        'update' => function ($url, $model) use ($requeststatus,$notified) {
-                            if($model->active == 1 && $requeststatus > 0 && $notified == 0){
+                        'update' => function ($url, $model) use ($requeststatus,$notified,$checkTesting) {
+                            if($model->active == 1 && $requeststatus > 0 && $notified == 0 && $checkTesting == 0){
                                 return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', ['class'=>'btn btn-primary','title'=>'Update Sample','onclick' => 'updateSample('.$model->sample_id.')']);
                             } else {
                                 return null;
                             }
                         },
-                        'delete' => function ($url, $model) use ($requeststatus,$notified) {
-                            if($model->sample_code == "" && $model->active == 1 && $requeststatus > 0 && $notified == 0){
+                        'delete' => function ($url, $model) use ($requeststatus,$notified,$checkTesting) {
+                            if($model->sample_code == "" && $model->active == 1 && $requeststatus > 0 && $notified == 0 && $checkTesting == 0){
                                 return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,['data-confirm'=>"Are you sure you want to delete <b>".$model->samplename."</b>?",'data-method'=>'post','class'=>'btn btn-danger','title'=>'Delete Sample','data-pjax'=>'0']);
                             } else {
                                 return null;
                             }
                         },
-                        'cancel' => function ($url, $model) use ($requeststatus,$notified) {
-                            if($model->sample_code != "" && $model->active == 1 && $requeststatus > 0 && $notified == 0) {
+                        'cancel' => function ($url, $model) use ($requeststatus,$notified,$checkTesting) {
+                            if($model->sample_code != "" && $model->active == 1 && $requeststatus > 0 && $notified == 0 && $checkTesting == 0) {
                                 return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', '#', ['class'=>'btn btn-warning','title'=>'Cancel Sample','onclick' => 'cancelSample('.$model->sample_id.')']);
                             } else {
                                 return $model->active == 0 ? Html::a('<span style="font-size:12px;"><span class="glyphicon glyphicon-ban-circle"></span> Cancelled.</span>','#',['class'=>'btn btn-danger','title'=>'View Cancel Remarks','onclick' => 'viewRemarkSample('.$model->sample_id.')']) : '';
@@ -408,7 +418,7 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Samples</h3>',
                     'type'=>'primary',
-                    'before'=>($requeststatus > 0 && $notified == 0) ? Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn'])." ".Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>!$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/reports/preview?url=/lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label',  'class' => 'btn btn-success']) : null,
+                    'before'=>($requeststatus > 0 && $notified == 0 && $hasTestingAgency == 0 && trim($model->request_ref_num) == "" && $checkTesting == 0) ? Html::button('<i class="glyphicon glyphicon-plus"></i> Add Sample', ['disabled'=>$enableRequest, 'value' => Url::to(['sample/create','request_id'=>$model->request_id]),'title'=>'Add Sample', 'onclick'=>'addSample(this.value,this.title)', 'class' => 'btn btn-success','id' => 'modalBtn']) : Html::button('<i class="glyphicon glyphicon-print"></i> Print Label', ['disabled'=>!$enableRequest, 'onclick'=>"window.location.href = '" . \Yii::$app->urlManager->createUrl(['/reports/preview?url=/lab/request/printlabel','request_id'=>$model->request_id]) . "';" ,'title'=>'Print Label', 'class' => 'btn btn-success'])." ".$btnGetSamplecode,
                     'after'=>false,
                 ],
                 /*'krajeeDialogSettings' => [ 
@@ -535,13 +545,13 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                 'contentOptions' => ['style' => 'width: 8.7%'],
                 'template' => $analysistemplate,
                 'buttons'=>[
-                    'update'=>function ($url, $model) use ($requeststatus,$notified) {
+                    'update'=>function ($url, $model) use ($requeststatus,$notified,$checkTesting) {
                         //return Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['value'=>Url::to(['/lab/analysisreferral/update','id'=>$model->analysis_id,'request_id'=>$model->request_id,'page'=>3]), 'onclick'=>'updateAnalysisReferral('.$model->analysis_id.',this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Update Analysis']);
-                        return ($requeststatus > 0 && $notified == 0) ? Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['onclick'=>'updateAnalysisReferral('.$model->analysis_id.','.$model->request_id.',this.title)', 'class' => 'btn btn-primary','title' => 'Update Analysis']) : null;
+                        return ($requeststatus > 0 && $notified == 0 && $checkTesting == 0) ? Html::button('<span class="glyphicon glyphicon-pencil"></span>', ['onclick'=>'updateAnalysisReferral('.$model->analysis_id.','.$model->request_id.',this.title)', 'class' => 'btn btn-primary','title' => 'Update Analysis']) : null;
                     },
-                    'delete'=>function ($url, $model) use ($requeststatus,$notified) {
+                    'delete'=>function ($url, $model) use ($requeststatus,$notified,$checkTesting) {
                         $urls = '/lab/analysis/delete?id='.$model->analysis_id;
-                        return ($requeststatus > 0 && $notified == 0) ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Analysis','data-pjax'=>'0']) : null;
+                        return ($requeststatus > 0 && $notified == 0 && $checkTesting == 0) ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Analysis','data-pjax'=>'0']) : null;
                        // return Html::button('<span class="glyphicon glyphicon-trash"></span>', ['value'=>Url::to(['/lab/analysis/delete','id'=>$model->analysis_id]), 'class' => 'btn btn-danger']);
                     },
                     'view' => function ($url, $model) use ($requeststatus) {
@@ -569,12 +579,12 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                 'panel' => [
                     'heading'=>'<h3 class="panel-title">Analysis</h3>',
                     'type'=>'primary',
-                    'before'=>($requeststatus > 0 && $notified == 0) ? Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => $model->request_type_id == 2 ? Url::to(['analysisreferral/create','request_id'=>$model->request_id]) : "",'title'=>'Add Analyses', 'onclick'=> $model->request_type_id == 2 ? $ClickButtonAnalysisReferral : "", 'class' => 'btn btn-success','id' => 'btn_add_analysis'])."   ".
+                    'before'=>($requeststatus > 0 && $notified == 0 && $hasTestingAgency == 0 && trim($model->request_ref_num) == "") ? Html::button('<i class="glyphicon glyphicon-plus"></i> Add Analysis', ['disabled'=>$enableRequest,'value' => $model->request_type_id == 2 ? Url::to(['analysisreferral/create','request_id'=>$model->request_id]) : "",'title'=>'Add Analyses', 'onclick'=> $model->request_type_id == 2 ? $ClickButtonAnalysisReferral : "", 'class' => 'btn btn-success','id' => 'btn_add_analysis'])."   ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Add Package', ['disabled'=>$enableRequest,'value' => Url::to(['/services/packagelist/createpackage','id'=>$model->request_id]),'title'=>'Add Package', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_package'])." ".
                     Html::button('<i class="glyphicon glyphicon-plus"></i> Additional Fees', ['disabled'=>$enableRequest,'value' => Url::to(['/lab/fee/create','id'=>$model->request_id]),'title'=>'Add Additional Fees', 'onclick'=>$ClickButton, 'class' => 'btn btn-success','id' => 'btn_add_fees']) : null,
                    'after'=>false,
                    //'footer'=>($model->request_type_id == 2 || $requeststatus <= 0) ? "":"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button>".$EnablePrint."</div>",
-                   'footer'=>($model->request_type_id == 2 || $notified == 0) ? "":"<div class='row' style='margin-left: 2px;padding-top: 5px'><button ".$disableButton." value='/lab/request/saverequestransaction' ".$btnID." class='btn btn-success'><i class='fa fa-save'></i> Save Request</button>".$EnablePrint."</div>",
+                   'footer'=>(($model->request_type_id == 2 && $notified == 1 && $hasTestingAgency > 0 && trim($model->request_ref_num) != "") || $checkTesting == 1) ? "<div class='row' style='margin-left: 2px;padding-top: 5px'>".$EnablePrint."</div>" : null,
                 ],
                 'columns' => $analysisgridColumns,
                 'toolbar' => [
@@ -582,10 +592,11 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
             ]);
         ?>
     </div>
+    <?php if($model->request_type_id == 2 && trim($model->request_ref_num) == "" && $checkTesting == 0): ?>
     <div class="container">
         <div class="table-responsive">
         <?php
-        if($model->request_type_id == 2){
+        //if($model->request_type_id == 2){
             $requestId = $model->request_id;
             $gridColumns = [
                 [
@@ -605,12 +616,15 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                 ],
                 [
                     //'attribute'=>'description',
-                    'attribute'=>'agency_id',
+                    //'attribute'=>'agency_id',
                     'format' => 'raw',
-                    'header' => 'Turnaround Time (Estimated)',
+                    'header' => 'Estimated due date',
                     'enableSorting' => false,
-                    'value' => function($data){
+                    'value' => function($data) use ($model,$referralcomp,$rstlId){
                         //return ($data->request->lab_id == 2) ? "Sampling Date: <span style='color:#000077;'><b>".date("Y-m-d h:i A",strtotime($data->sampling_date))."</b></span>,&nbsp;".$data->description : $data->description;
+                        $estimated_due = json_decode($referralcomp->getDuedate($model->request_id,$rstlId,$data['agency_id']),true);
+
+                        return $estimated_due == 0 ? null : date('F j, Y',strtotime($estimated_due));
                     },
                    'contentOptions' => [
                         'style'=>'max-width:180px; overflow: auto; white-space: normal; word-wrap: break-word;'
@@ -623,39 +637,33 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                     'dropdownOptions' => ['class' => 'pull-right'],
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
-                        'notification' => function ($url, $data) use ($model,$referralcomp) {
-                            //if($model->active == 1){
-                            //    return Html::a('<span class="glyphicon glyphicon-bell"></span> Notify', '#', ['class'=>'btn btn-primary','title'=>'Send Notification','onclick' => 'sendNotification(19,11)']);
+                        'notification' => function ($url, $data) use ($model,$referralcomp,$rstlId) {
 
-                            $checkNotify = $referralcomp->checkNotify($model->request_id,$data['agency_id']);
                             $checkActive = $referralcomp->checkActiveLab($model->lab_id,$data['agency_id']);
+                            $checkNotify = $referralcomp->checkNotify($model->request_id,$data['agency_id']);
+                            $checkConfirm = $referralcomp->checkConfirm($model->request_id,$rstlId,$data['agency_id']);
 
-                            //return $model->lab_id.". .".$data['agency_id'];
+                            //return $checkConfirm; 
                             //exit;
+
                             if($model->status_id > 0) {
                                 switch ($checkNotify) {
                                     case 0:
                                         alert('Not valid request!');
-                                        /*return Html::button('<span class="glyphicon glyphicon-bell"></span> Notify', ['value'=>Url::to(['/referrals/referral/notify','request_id'=>$model->request_id,'agency_id'=>$data['agency_id']]), 'onclick'=>'sendNotification(this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Notify Agency']);
-                                        break;*/
                                         if($checkActive != 1)
                                         {
                                             return 'Lab not active.';
                                         }
                                     case 1:
                                         if($checkActive == 1){
-                                            $noti_message = "";
                                             return Html::button('<span class="glyphicon glyphicon-bell"></span> Notify', ['value'=>Url::to(['/referrals/referral/notify','request_id'=>$model->request_id,'agency_id'=>$data['agency_id']]),'onclick'=>'sendNotification(this.value,this.title)','class' => 'btn btn-primary','title' => 'Notify '.$data['name']]);
-                                            //return Html::button('<span class="glyphicon glyphicon-bell"></span> Notify', ['value'=>Url::to(['/referrals/referral/notify','request_id'=>$model->request_id,'agency_id'=>$data['agency_id']]),'id'=>'send-notice','data-toggle'=>'modal','data-target'=>'#exampleModal','class' => 'btn btn-primary','title' => 'Notify Agency']);
-                                            //return Html::button('<span class="glyphicon glyphicon-bell"></span> Notify', ['value'=>Url::to(['/referrals/referral/notify','request_id'=>$model->request_id,'agency_id'=>$data['agency_id']]), 'onclick'=>'sendNotification(this.value,this.title)', 'class' => 'btn btn-primary','title' => 'Notify Agency']);
-                                            //return Html::button('<span class="glyphicon glyphicon-bell"></span> Notify',['data-confirm'=>"Confirm to notify <b>".$data['name']."</b>. Click OK to proceed.",'class'=>'btn btn-primary','title'=>'Notify '.$data['name'],'data-pjax'=>'0',['value'=>Url::to(['/referrals/referral/notify','request_id'=>$model->request_id,'agency_id'=>$data['agency_id']],'onclick'=>'sendNotification(this.value,this.title)']);
-                                            //return Html::button('<span class="glyphicon glyphicon-trash"></span> Notify',['data-confirm'=>" <b>".$data['name']."</b>?",'data-method'=>'post','class'=>'btn btn-danger','title'=>'Delete Sample','data-pjax'=>'0']);
                                         } else {
                                             return '<span class="label label-danger">LAB NOT ACTIVE</span>';
                                         }
                                         break;
                                     case 2: 
-                                        return '<span class="text-success">Notice sent.</span>';
+                                        //return '<span class="text-success">Notice sent.</span>';
+                                        return $checkConfirm == 1 ? Html::button('<span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp;Send', ['value'=>Url::to(['/referrals/referral/send','request_id'=>$model->request_id,'agency_id'=>$data['agency_id']]),'onclick'=>'sendReferral(this.value,this.title)','class' => 'btn btn-primary','title' => 'Send Referral '.$data['name']]) : '<span class="text-success">Notice sent.</span>';
                                         break;
                                 }
                             } else {
@@ -694,10 +702,11 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                     //'{toggleData}',
                 ],
             ]);
-        }
+        //}
         ?>
         </div>
     </div>
+    <?php endif; ?>
 <?php  
     //echo ListView::widget([
     //    'dataProvider' => $dataProvider,
@@ -912,6 +921,71 @@ $notified = !empty($modelref_request->notified) ? $modelref_request->notified : 
                 }
             ]
         });
+    }
+
+    function sendReferral(url,title){
+        var str = title.slice(14);
+        var header_title = '';
+
+        if(title.length > 73){
+            header_title = title.slice(0, 70) + '...';
+        } else {
+            header_title = title;
+        }
+
+        if(str.length > 0){
+            var agency_name = str;
+        } else {
+            var agency_name = "<span style='font-size:10px;color:#757575;'>...No agency to be displayed...</span>";
+        }
+
+        BootstrapDialog.show({
+            title: "<span class='glyphicon glyphicon-send'></span>&nbsp;&nbsp;" + header_title,
+            message: "<p class='note' style='margin:15px 0 0 15px;font-weight:bold;color:#990000;font-size:14px;'><span class='glyphicon glyphicon-exclamation-sign' style='font-size:17px;'></span> Are you sure you want to send the referral to <span class='agency-name' style='color:#000000;'>"+agency_name+"</span>?</p>",
+            buttons: [
+                {
+                    label: 'Send',
+                    // no title as it is optional
+                    cssClass: 'btn-primary',
+                    action: function(thisDialog){
+                        //alert('Hi Orange!');
+                        thisDialog.close();
+                        $('.modal-title').html(header_title);
+                        $('#modal').modal('show')
+                           .find('#modalContent')
+                           .load(url);
+                        /*$.ajax({
+                            url: '/lab/analysisreferral/getdefaultpage?analysis_id='+id,
+                            success: function (data) {
+                                $('.image-loader').removeClass('img-loader');
+                                //alert(data);
+                                var url = '/lab/analysisreferral/update?id='+id+'&request_id='+requestId+'&page='+data;
+                                $('.modal-title').html(title);
+                                $('#modalAnalysis').modal('show')
+                                    .find('#modalContent')
+                                    .load(url);
+                            },
+                            beforeSend: function (xhr) {
+                                $('.image-loader').addClass('img-loader');
+                            }
+                        });*/
+                    }
+                }, 
+                {
+                    label: 'Close',
+                    action: function(thisDialog){
+                        thisDialog.close();
+                    }
+                }
+            ]
+        });
+    }
+
+    function getSamplecode(url,title){
+        $('.modal-title').html(title);
+        $('#modal').modal('show')
+           .find('#modalContent')
+           .load(url);
     }
 </script>
 

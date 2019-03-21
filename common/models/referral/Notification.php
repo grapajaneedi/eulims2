@@ -12,9 +12,10 @@ use Yii;
  * @property int $notification_type_id
  * @property int $sender_id
  * @property int $recipient_id
+ * @property int $sender_user_id
  * @property string $sender_name
  * @property string $remarks
- * @property int $seen
+ * @property int $responded
  * @property string $notification_date
  */
 class Notification extends \yii\db\ActiveRecord
@@ -41,8 +42,8 @@ class Notification extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['referral_id', 'notification_type_id', 'sender_id', 'recipient_id', 'sender_name', 'notification_date'], 'required'],
-            [['referral_id', 'notification_type_id', 'sender_id', 'recipient_id', 'seen'], 'integer'],
+            [['referral_id', 'notification_type_id', 'sender_id', 'recipient_id', 'sender_user_id', 'sender_name', 'notification_date'], 'required'],
+            [['referral_id', 'notification_type_id', 'sender_id', 'recipient_id', 'sender_user_id', 'responded'], 'integer'],
             [['notification_date'], 'safe'],
             [['sender_name'], 'string', 'max' => 100],
             [['remarks'], 'string', 'max' => 200],
@@ -60,9 +61,10 @@ class Notification extends \yii\db\ActiveRecord
             'notification_type_id' => 'Notification Type ID',
             'sender_id' => 'Sender ID',
             'recipient_id' => 'Recipient ID',
+            'sender_user_id' => 'Sender User ID',
             'sender_name' => 'Sender Name',
             'remarks' => 'Remarks',
-            'seen' => 'Seen',
+            'responded' => 'Responded',
             'notification_date' => 'Notification Date',
         ];
     }

@@ -19,7 +19,14 @@ use yii\widgets\DetailView;
                     return !empty($data->sample->samplename) ?  $data->sample->samplename : '<span class="not-set">No related record</span>';
                 },
             ],
-            'sample_code',
+            //'sample_code',
+            [
+                'label' => 'Sample Code',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return !empty($data->sample->sample_code) ?  $data->sample->sample_code : '<span class="not-set">No related record</span>';
+                },
+            ],
             'testname',
             'method',
             'references',

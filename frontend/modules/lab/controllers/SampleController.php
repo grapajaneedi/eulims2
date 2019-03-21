@@ -617,20 +617,13 @@ class SampleController extends Controller
     protected function listSampletypereferral($labId)
     {
         //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/labsampletypebylab?lab_id='.$labId;
-        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/sampletypebylab?lab_id='.$labId;
+        //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/sampletypebylab?lab_id='.$labId;
+        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/sampletypebylab?lab_id='.$labId;
         $curl = new curl\Curl();
         $list = $curl->get($apiUrl);
 
         $data = ArrayHelper::map(json_decode($list), 'sampletype_id', 'type');
         
         return $data;
-        //echo "<pre>";
-        //print_r($data);
-        //echo "</pre>";
-        //exit;
-       
-        //echo "<pre>";
-        //print_r(json_decode($list['sampletype']));
-        //echo "</pre>";
     }
 }

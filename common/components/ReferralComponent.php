@@ -32,17 +32,21 @@ use yii\helpers\Json;
  */
 class ReferralComponent extends Component {
 
-    public $source = 'http://localhost/eulimsapi.onelab.ph';
+    public $source = 'https://eulimsapi.onelab.ph';
     /**
      * FindOne testname
      * @param integer $testnameId
      * @return array
      */
     function getTestnameOne($testnameId){
-        $apiUrl=$this->source.'/api/web/referral/listdatas/testnameone?testname_id='.$testnameId;
-        $curl = new curl\Curl();
-        $list = $curl->get($apiUrl);
-        return json_decode($list);
+        if($testnameId > 0){
+            $apiUrl=$this->source.'/api/web/referral/listdatas/testnameone?testname_id='.$testnameId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return json_decode($list);
+        } else {
+            return "Not valid testname";
+        }
     }
     /**
      * FindOne Method reference
@@ -50,10 +54,14 @@ class ReferralComponent extends Component {
      * @return array
      */
     function getMethodrefOne($methodrefId){
-        $apiUrl=$this->source.'/api/web/referral/listdatas/methodreferenceone?methodref_id='.$methodrefId;
-        $curl = new curl\Curl();
-        $list = $curl->get($apiUrl);
-        return json_decode($list);
+        if($methodrefId > 0){
+            $apiUrl=$this->source.'/api/web/referral/listdatas/methodreferenceone?methodref_id='.$methodrefId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return json_decode($list);
+        } else {
+            return "Not valid method reference";
+        }
     }
     /**
      * FindOne Discount
@@ -61,10 +69,29 @@ class ReferralComponent extends Component {
      * @return array
      */
     function getDiscountOne($discountId){
-        $apiUrl=$this->source.'/api/web/referral/listdatas/discountbyid?discount_id='.$discountId;
-        $curl = new curl\Curl();
-        $list = $curl->get($apiUrl);
-        return json_decode($list);
+        if($discountId > 0){
+            $apiUrl=$this->source.'/api/web/referral/listdatas/discountbyid?discount_id='.$discountId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return json_decode($list);
+        } else {
+            return "Not valid discount";
+        }
+    }
+    /**
+     * FindOne Customer
+     * @param integer $customerId
+     * @return array
+     */
+    function getCustomerOne($customerId){
+        if($customerId > 0){
+            $apiUrl=$this->source.'/api/web/referral/customers/customerone?customer_id='.$customerId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return $list;
+        } else {
+            return "Not valid customer";
+        }
     }
     //get referral laboratory list
     function listLabreferral()
@@ -180,6 +207,18 @@ class ReferralComponent extends Component {
             return 'Not valid request!';
         }
     }
+    //check if confirmed
+    function checkConfirm($requestId,$rstlId,$testingAgencyId)
+    {
+        if($requestId > 0 && $rstlId > 0 && $testingAgencyId > 0) {
+            $apiUrl=$this->source.'/api/web/referral/notifications/checkconfirm?request_id='.$requestId.'&receiving_id='.$rstlId.'&testing_id='.$testingAgencyId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return $list;
+        } else {
+            return 'Not valid request!';
+        }
+    }
     //check if active lab
     function checkActiveLab($labId, $agencyId)
     {
@@ -210,8 +249,8 @@ class ReferralComponent extends Component {
             return 0;
         }
     }
-    //get count notifications
-    function countNofication($rstlId)
+    //get notifications
+    function listUnrespondedNofication($rstlId)
     {
         if($rstlId > 0) {
             $apiUrl=$this->source.'/api/web/referral/notifications/countnotification?rstl_id='.$rstlId;
@@ -220,6 +259,101 @@ class ReferralComponent extends Component {
             return $list;
         } else {
             return 'Not valid rstl!';
+        }
+    }
+    //get referral details via referral_id
+    function getReferraldetails($referralId,$rstlId)
+    {
+        if($referralId > 0 && $rstlId > 0) {
+            $apiUrl=$this->source.'/api/web/referral/referrals/viewdetail?referral_id='.$referralId.'&rstl_id='.$rstlId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return $list;
+        } else {
+            return 'Not valid request!';
+        }
+    }
+    //get referral,sample,analysis details for saving in eulims local
+    function getReferralRequestDetails($referralId,$rstlId)
+    {
+        if($referralId > 0 && $rstlId > 0) {
+            $apiUrl=$this->source.'/api/web/referral/referrals/get_referral_detail?referral_id='.$referralId.'&rstl_id='.$rstlId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return $list;
+        } else {
+            return 'Not valid request!';
+        }
+    }
+    //get all notifications of rstl
+    function getNotificationAll($rstlId)
+    {
+        if($rstlId > 0) {
+            $apiUrl=$this->source.'/api/web/referral/notifications/listall?rstl_id='.$rstlId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return $list;
+        } else {
+            return 'Not valid request!';
+        }
+    }
+    //get notification
+    function getNotificationOne($notificationId,$rstlId)
+    {
+        if($rstlId > 0 && $notificationId > 0) {
+            $apiUrl=$this->source.'/api/web/referral/notifications/notification_one?notification_id='.$notificationId.'&rstl_id='.$rstlId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return $list;
+        } else {
+            return 'Not valid request!';
+        }
+    }
+    //get estimated due date
+    function getDuedate($requestId,$rstlId,$senderId)
+    {
+        if($rstlId > 0 && $requestId > 0 && $senderId > 0) {
+            $apiUrl=$this->source.'/api/web/referral/notifications/showdue?request_id='.$requestId.'&rstl_id='.$rstlId.'&sender_id='.$senderId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return $list;
+        } else {
+            return 'Not valid request!';
+        }
+    }
+    //get checkowner
+    function checkOwner($referralId,$rstlId)
+    {
+        if($rstlId > 0 && $referralId > 0) {
+            $apiUrl=$this->source.'/api/web/referral/referrals/checkowner?referral_id='.$referralId.'&sender_id='.$rstlId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return $list;
+        } else {
+            return 'Not valid request!';
+        }
+    }
+    //get only referral
+    function getReferralOne($referralId,$rstlId)
+    {
+        if($referralId > 0){
+            $apiUrl=$this->source.'/api/web/referral/referrals/referral_one?referral_id='.$referralId.'&rstl_id='.$rstlId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return $list;
+        } else {
+            return 'Invalid referral!';
+        }
+    }
+    //get details for sample code
+    function getSamplecode_details($requestId,$rstlId){
+        if($requestId > 0 && $rstlId > 0) {
+            $apiUrl=$this->source.'/api/web/referral/referrals/get_samplecode?request_id='.$requestId.'&rstl_id='.$rstlId;
+            $curl = new curl\Curl();
+            $list = $curl->get($apiUrl);
+            return $list;
+        } else {
+            return 'Invalid request!';
         }
     }
 }

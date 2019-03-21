@@ -24,8 +24,10 @@ use Yii;
  * @property string $total_fee
  * @property string $report_due
  * @property string $conforme
- * @property int $user_id
- * @property int $received_by
+ * @property int $receiving_user_id
+ * @property string $cro_receiving
+ * @property int $testing_user_id
+ * @property string $cro_testing
  * @property int $bid
  * @property int $cancelled
  * @property string $created_at_local
@@ -72,11 +74,11 @@ class Referral extends \yii\db\ActiveRecord
     {
         return [
             [['referral_date_time', 'sample_received_date', 'report_due', 'created_at_local', 'create_time', 'update_time'], 'safe'],
-            [['local_request_id', 'receiving_agency_id', 'testing_agency_id', 'lab_id', 'sample_received_date', 'customer_id', 'modeofrelease_id', 'purpose_id', 'report_due', 'conforme', 'user_id', 'received_by', 'create_time'], 'required'],
-            [['local_request_id', 'receiving_agency_id', 'testing_agency_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'purpose_id', 'discount_id', 'user_id', 'received_by', 'bid', 'cancelled'], 'integer'],
+            [['local_request_id', 'receiving_agency_id', 'testing_agency_id', 'lab_id', 'sample_received_date', 'customer_id', 'modeofrelease_id', 'purpose_id', 'report_due', 'conforme', 'receiving_user_id', 'cro_receiving', 'create_time'], 'required'],
+            [['local_request_id', 'receiving_agency_id', 'testing_agency_id', 'lab_id', 'customer_id', 'payment_type_id', 'modeofrelease_id', 'purpose_id', 'discount_id', 'receiving_user_id', 'testing_user_id', 'bid', 'cancelled'], 'integer'],
             [['discount_rate', 'total_fee'], 'number'],
             [['referral_code'], 'string', 'max' => 50],
-            [['conforme'], 'string', 'max' => 100],
+            [['conforme', 'cro_receiving', 'cro_testing'], 'string', 'max' => 100],
             [['payment_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => Paymenttype::className(), 'targetAttribute' => ['payment_type_id' => 'payment_type_id']],
             [['modeofrelease_id'], 'exist', 'skipOnError' => true, 'targetClass' => Modeofrelease::className(), 'targetAttribute' => ['modeofrelease_id' => 'modeofrelease_id']],
             [['lab_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lab::className(), 'targetAttribute' => ['lab_id' => 'lab_id']],
@@ -108,8 +110,10 @@ class Referral extends \yii\db\ActiveRecord
             'total_fee' => 'Total Fee',
             'report_due' => 'Report Due',
             'conforme' => 'Conforme',
-            'user_id' => 'User ID',
-            'received_by' => 'Received By',
+            'receiving_user_id' => 'Receiving User ID',
+            'cro_receiving' => 'CRO Receiving',
+            'testing_user_id' => 'Testing User ID',
+            'cro_testing' => 'CRO Testing',
             'bid' => 'Bid',
             'cancelled' => 'Cancelled',
             'created_at_local' => 'Created At Local',

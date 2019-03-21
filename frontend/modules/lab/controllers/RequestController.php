@@ -6,7 +6,7 @@ use Yii;
 use frontend\modules\lab\components\eRequest;
 use common\models\lab\exRequest;
 use common\models\lab\exRequestreferral;
-use common\models\lab\ReferralRequest;
+use common\models\lab\Referralrequest;
 use common\models\lab\Request;
 use common\models\lab\Discount;
 use common\models\lab\Analysis;
@@ -159,7 +159,11 @@ class RequestController extends Controller
         $discounted = $subtotal * ($rate/100);
         $total = $subtotal - $discounted;
 
+        $rstlId = (int) Yii::$app->user->identity->profile->rstl_id;
+
         if($request_type == 2){
+            $checkTesting = $this->checkTesting($id,$rstlId);
+            $checkSamplecode = $this->checkSamplecode($id);
             return $this->render('viewreferral', [
                 'model' => $model,
                 'searchModel' => $searchModel,
@@ -172,6 +176,8 @@ class RequestController extends Controller
                 'discounted' => $discounted,
                 'total' => $total,
                 'countSample' => count($samples),
+                'checkTesting' => $checkTesting,
+                'checkSamplecode' => $checkSamplecode,
             ]);
 
         } else {
@@ -549,7 +555,7 @@ class RequestController extends Controller
         
         if ($model->load(Yii::$app->request->post())) {
             $transaction = $connection->beginTransaction();
-            $modelReferralrequest = new ReferralRequest();
+            $modelReferralrequest = new Referralrequest();
             if ($model->save()){
                 $modelReferralrequest->request_id = $model->request_id;
                 $modelReferralrequest->sample_received_date = date('Y-m-d h:i:s',strtotime($model->sample_received_date));
@@ -626,7 +632,7 @@ class RequestController extends Controller
     {
         //$model = $this->findModel($id);
         $model= exRequestreferral::findOne($id);
-        $modelReferralrequest = ReferralRequest::find()->where('request_id = :requestId', [':requestId' => $id])->one();
+        $modelReferralrequest = Referralrequest::find()->where('request_id = :requestId', [':requestId' => $id])->one();
         $connection= Yii::$app->labdb;
         $refcomponent = new ReferralComponent();
         
@@ -736,7 +742,8 @@ class RequestController extends Controller
     public function actionReferralcustomerlist($query = null, $id = null)
     {
         if (!is_null($query)) {
-            $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/customers/searchname?keyword='.$query;
+            //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/customers/searchname?keyword='.$query;
+            $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/customers/searchname?keyword='.$query;
             $curl = new curl\Curl();
             $show = $curl->get($apiUrl);
         } else {
@@ -744,5 +751,31 @@ class RequestController extends Controller
         }
 
         return $show;
+    }
+    //check if received sample as a tesing lab
+    protected function checkTesting($requestId,$rstlId)
+    {
+        $model = Referralrequest::find()->where('request_id =:requestId AND testing_agency_id =:testingAgency AND referral_type_id =:referralType',[':requestId'=>$requestId,':testingAgency'=>$rstlId,':referralType'=>2])->count();
+        if($model > 0){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    //check if sample code is not null for referral request
+    protected function checkSamplecode($requestId)
+    {
+        $request1 = exRequestreferral::find()->where('request_id =:requestId AND request_type_id =:requestType AND referral_id > 0',[':requestId'=>$requestId,':requestType'=>2])->count();
+        $request2 = exRequestreferral::find()->where('request_id =:requestId AND request_type_id =:requestType',[':requestId'=>$requestId,':requestType'=>2])->count();
+        $samples1 = Sample::find()->where('request_id =:requestId AND referral_sample_id > 0',[':requestId'=>$requestId])->count();
+        $samples2 = Sample::find()->where('request_id =:requestId',[':requestId'=>$requestId])->count();
+        $analyses1 = Analysis::find()->where('request_id =:requestId AND referral_analysis_id > 0',[':requestId'=>$requestId])->count();
+        $analyses2 = Analysis::find()->where('request_id =:requestId',[':requestId'=>$requestId])->count();
+
+        if($request1 == $request2 && $samples1 == $samples2 && $analyses1 == $analyses2){
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }

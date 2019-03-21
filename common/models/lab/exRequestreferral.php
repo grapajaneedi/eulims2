@@ -43,13 +43,13 @@ class exRequestreferral extends Request{
         ];
     }
 	
-	public function beforeSave($insert) {
+	/*public function beforeSave($insert) {
         if ($insert) {
             $this->request_datetime='0000-00-00 00:00:00';
 			$this->request_ref_num=NULL;
         }
         return parent::beforeSave($insert);
-    }
+    }*/
 	
     /**
      * {@inheritdoc}

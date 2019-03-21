@@ -67,7 +67,6 @@ class AnalysisreferralController extends Controller
         /*return $this->render('view', [
             'model' => $this->findModel($id),
         ]);*/
-
         $model = $this->findModel($id);
         if (Yii::$app->request->isAjax) {
             return $this->renderAjax('view', [
@@ -415,7 +414,8 @@ class AnalysisreferralController extends Controller
 
         //echo $a;
 
-        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnamebysampletype?sampletype_id='.$sampletypeId;
+        //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnamebysampletype?sampletype_id='.$sampletypeId;
+        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/testnamebysampletype?sampletype_id='.$sampletypeId;
         $curl = new curl\Curl();
         $list = $curl->get($apiUrl);
 
@@ -445,7 +445,8 @@ class AnalysisreferralController extends Controller
             }
         }
         //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/labsampletypebylab?lab_id='.$labId;
-        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnamebysampletype?sampletype_id='.$sampletypeId;
+        //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnamebysampletype?sampletype_id='.$sampletypeId;
+        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/testnamebysampletype?sampletype_id='.$sampletypeId;
         $curl = new curl\Curl();
         $list = $curl->get($apiUrl);
 
@@ -521,7 +522,8 @@ class AnalysisreferralController extends Controller
                 return $data['sampletype_id'];
             }, $sample));
 
-            $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnamebysampletype?sampletype_id='.$sampletypeId;
+            //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnamebysampletype?sampletype_id='.$sampletypeId;
+            $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/testnamebysampletype?sampletype_id='.$sampletypeId;
             $curl = new curl\Curl();
             $lists = $curl->get($apiUrl);
 
@@ -624,7 +626,8 @@ class AnalysisreferralController extends Controller
             //$testnameId = Yii::$app->request->get('testname_id');
 
             if($testnameId > 0){
-                $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnamemethodref?testname_id='.$testnameId;
+                //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/testnamemethodref?testname_id='.$testnameId;
+                $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/testnamemethodref?testname_id='.$testnameId;
                 $curl = new curl\Curl();
                 //$list = $curl->get($apiUrl);
                 $data = $curl->get($apiUrl);
@@ -664,7 +667,8 @@ class AnalysisreferralController extends Controller
 
         if($analysisId > 0){
             $model = $this->findModel($analysisId);
-            $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/setpagemethodref?testname_id='.$model->test_id.'&methodref_id='.$model->methodref_id.'&perpage='.$perpage;
+            //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/setpagemethodref?testname_id='.$model->test_id.'&methodref_id='.$model->methodref_id.'&perpage='.$perpage;
+            $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/setpagemethodref?testname_id='.$model->test_id.'&methodref_id='.$model->methodref_id.'&perpage='.$perpage;
             $curl = new curl\Curl();
             $list = $curl->get($apiUrl);
             $cpage = json_decode($list,true);
@@ -673,31 +677,5 @@ class AnalysisreferralController extends Controller
             $data = [];
         }
         return $data;
-    }
-    //update total of request
-    protected function updateRequestTotal($requestId)
-    {
-        $request = Request::findOne($requestId);
-
-        $discount = Discount::find()->where('discount_id =:discountId',[':discountId'=>$request->discount_id])->one();
-        $rate = $discount->rate;
-        //$sql = 
-       //request_Id = 1;TRUNCATE TABLE tbl_analysis;
-
-        $requestquery = Request::find()->where(['request_id' => $request_id])->one();
-        $discountquery = Discount::find()->where(['discount_id' => $requestquery->discount_id])->one();
-        $rate =  $discountquery->rate;       
-        $sql = "SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id=:requestId";
-        $connection = Yii::$app->labdb;
-        //$connection = 
-        $command = $Connection->createCommand($sql);
-        $row = $command->queryOne();
-        $subtotal = $row['subtotal'];
-        $total = $subtotal - ($subtotal * ($rate/100));
-
-        $Connection= Yii::$app->labdb;
-        $sql="UPDATE `tbl_request` SET `total`='$total' WHERE `request_id`=".$request_id;
-        $Command=$Connection->createCommand($sql);
-        $Command->execute();
     }
 }

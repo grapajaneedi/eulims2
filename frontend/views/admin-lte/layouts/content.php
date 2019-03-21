@@ -15,6 +15,7 @@ $Host= "//".Yii::$app->getRequest()->serverName;
 //echo $Host;
 //echo Dialog::widget();
 ?>
+<div class="content-image-loader" style="display: none;"><img src='/images/img-png-loader90.png' alt=''></div>
 <div class="content-wrapper">
     <?php
     Modal::begin([
@@ -39,7 +40,8 @@ $Host= "//".Yii::$app->getRequest()->serverName;
         'clientOptions' => ['backdrop' => 'static', 'keyboard' => false],
         'bodyOptions'=>[
             'class' => 'modal-body',
-            'style'=>'padding-bottom: 20px',
+            //'style'=>'padding-bottom: 20px',
+            'style'=>'padding: 0',
         ],
         'options' => [
             'id' => 'modalNotification',
@@ -47,10 +49,10 @@ $Host= "//".Yii::$app->getRequest()->serverName;
         ],
         'header' => '<h4 style="padding-top: 0px;margin-top: 0px;padding-bottom:0px;margin-bottom: 0px"><span class="glyphicon glyphicon-bell" style="margin-right:7px;"></span><span class="modal-title" style="font-size: 16px;font-family: \'Source Sans Pro\',sans-serif;"></span></h4>'
     ]);
-    echo "<div>";
-    echo "<div id='modalBody' style='margin-left: 5px;'><div style='text-align:center;'><img src='/images/img-loader64.gif' alt=''></div></div>";
-    echo "<div>&nbsp;</div>";
-    echo "</div>";
+    //echo "<div>";
+    echo "<div id='modalBody' style='margin: 0;'><div style='text-align:center;padding:20px;'><img src='/images/img-loader64.gif' alt=''></div></div>";
+    //echo "<div>&nbsp;</div>";
+    //echo "</div>";
     Modal::end();
     
     echo Breadcrumbs::widget([
@@ -278,3 +280,33 @@ $(document).ready(function () {
     $.fn.modal.Constructor.prototype._enforceFocus = function() {};
 });
 </script>
+<style type="text/css">
+/* Absolute Center Spinner */
+.content-img-loader {
+    position: fixed;
+    z-index: 999;
+    /*height: 2em;
+    width: 2em;*/
+    height: 90px;
+    width: 90px;
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: url('/images/img-png-loader90.png');
+    background-repeat: no-repeat;
+}
+/* Transparent Overlay */
+.content-img-loader:before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+}
+</style>
