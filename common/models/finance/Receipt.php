@@ -68,6 +68,7 @@ class Receipt extends \yii\db\ActiveRecord
             [['payment_mode_id'], 'exist', 'skipOnError' => true, 'targetClass' => Paymentmode::className(), 'targetAttribute' => ['payment_mode_id' => 'payment_mode_id']],
             [['collectiontype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Collectiontype::className(), 'targetAttribute' => ['collectiontype_id' => 'collectiontype_id']],
             [['deposit_id'], 'exist', 'skipOnError' => true, 'targetClass' => Deposit::className(), 'targetAttribute' => ['deposit_id' => 'deposit_id']],
+            [$this->attributes(), 'safe'],
         ];
     }
 
