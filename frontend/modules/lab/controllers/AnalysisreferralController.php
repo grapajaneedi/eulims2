@@ -204,7 +204,6 @@ class AnalysisreferralController extends Controller
      */
     public function actionUpdate($id)
     {
-
         $model = $this->findModel($id);
         $component = new ReferralComponent();
 

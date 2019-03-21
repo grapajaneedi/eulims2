@@ -5,6 +5,7 @@ use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use common\components\Functions;
+use common\components\ReferralComponent;
 use common\models\lab\Cancelledrequest;
 use common\models\lab\Discount;
 use common\models\lab\Request;
@@ -21,6 +22,7 @@ use yii\widgets\ListView;
 
 $Connection = Yii::$app->financedb;
 $func = new Functions();
+$referralcomp = new ReferralComponent();
 
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
@@ -35,37 +37,6 @@ if ($paymentitem){
     $analysistemplate = "{view} {update} {delete}";
 }
 
-// /lab/request/saverequestransaction
-$js=<<<SCRIPT
-    $("#btnSaveRequest").click(function(){
-        var SampleRows=$sampleDataProvider->count;
-        var AnalysisRows=$analysisdataprovider->count;
-        var msg='';
-        if(SampleRows>0 && AnalysisRows>0){
-            $.post('/lab/request/saverequestransaction', {
-                request_id: $model->request_id,
-                lab_id: $model->lab_id,
-                rstl_id: $rstlId,
-                year: $Year
-            }, function(result){
-               if(result){
-                    //document.write(result);
-                   location.reload();
-               }
-            });
-        }else{
-            if(SampleRows<=0 && AnalysisRows<=0){
-               msg='Please Add Sample and Analysis!';
-            }else if(SampleRows<=0 && AnalysisRows>0){
-               msg='Please Add Sample!';
-            }else if(SampleRows>0 && AnalysisRows<=0){
-               msg='Please Add Analysis!';
-            }
-            krajeeDialog.alert(msg);
-        }
-    });  
-SCRIPT;
-$this->registerJs($js);
 if($model->request_ref_num==null || $model->status_id==0 || $checkTesting == 1){
     $CancelButton='';
 }else{
@@ -446,7 +417,6 @@ if($requeststatus > 0 && $notified == 1 && $hasTestingAgency > 0 && !empty($mode
             [
                 'attribute'=>'sample_name',
                 'header'=>'Sample',
-              
                 'format' => 'raw',
                 'enableSorting' => false,
                 'value' => function($model) {
@@ -591,11 +561,10 @@ if($requeststatus > 0 && $notified == 1 && $hasTestingAgency > 0 && !empty($mode
     <div class="container">
         <div class="table-responsive">
         <?php
-        if($model->request_type_id == 2){
             $requestId = $model->request_id;
             $gridColumns = [
                 [
-                    'attribute'=>'sample_code',
+                    'attribute'=>'name',
                     'enableSorting' => false,
                     'header' => 'Agency',
                     'contentOptions' => [
@@ -603,13 +572,13 @@ if($requeststatus > 0 && $notified == 1 && $hasTestingAgency > 0 && !empty($mode
                     ],
                 ],
                 [
-                    'attribute'=>'samplename',
+					'attribute'=>'region',
                     'enableSorting' => false,
                     'header' => 'Region',
                 ],
                 [
                     //'attribute'=>'description',
-                    //'attribute'=>'agency_id',
+                    'attribute'=>'agency_id',
                     'format' => 'raw',
                     'header' => 'Estimated due date',
                     'enableSorting' => false,
@@ -628,16 +597,6 @@ if($requeststatus > 0 && $notified == 1 && $hasTestingAgency > 0 && !empty($mode
                     'template' => '{notification}',
                     'dropdown' => false,
                     'dropdownOptions' => ['class' => 'pull-right'],
-                    'urlCreator' => function ($action, $model, $key, $index) {
-                        if ($action === 'delete') {
-                            $url ='/lab/sample/delete?id='.$model->sample_id;
-                            return $url;
-                        } 
-                        if ($action === 'cancel') {
-                            $url ='/lab/sample/cancel?id='.$model->sample_id;
-                            return $url;
-                        }
-                    },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
                         'notification' => function ($url, $data) use ($model,$referralcomp,$rstlId) {
@@ -679,7 +638,7 @@ if($requeststatus > 0 && $notified == 1 && $hasTestingAgency > 0 && !empty($mode
 
             echo GridView::widget([
                 'id' => 'agency-grid',
-                'dataProvider'=> $sampleDataProvider,
+                'dataProvider'=> $agencydataprovider,
                 'pjax'=>true,
                 'pjaxSettings' => [
                     'options' => [

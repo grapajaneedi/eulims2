@@ -599,7 +599,7 @@ class ReferralController extends Controller
                         $data = Json::encode(['request_data'=>$requestData,'sample_data'=>$sample_data,'agency_id'=>$agency_id],JSON_NUMERIC_CHECK);
 
                         //$referralUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/referrals/sendreferral';
-                        $referralUrl='http://eulimsapi.onelab.ph/api/web/referral/referrals/sendreferral';
+                        $referralUrl='https://eulimsapi.onelab.ph/api/web/referral/referrals/sendreferral';
                        
                         $curl = new curl\Curl();
                         $referralreturn = $curl->setRequestBody($data)
@@ -608,10 +608,8 @@ class ReferralController extends Controller
                             'Content-Length' => strlen($data),
                         ])->post($referralUrl);
 
-                        $referralResponse = Json::decode($referralreturn);
-
-                        //print_r($referralreturn);
-                        //exit;
+                        $referralResponse = json_decode($referralreturn,true);
+                        
                         switch ($referralResponse['response']) {
                             case 0:
                                 $transaction->rollBack();
