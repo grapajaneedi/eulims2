@@ -173,6 +173,57 @@ class RequestController extends Controller
             ]);
         }
     }
+
+    public function actionReportstatus($id)
+    {
+       $id = $_GET['id'];
+
+       $request = Request::find()->where(['request_id' => $id])->one();
+       $sample = Sample::find()->where(['request_id' => $id]);
+
+      // $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
+
+       $sampledataprovider = new ActiveDataProvider([
+           'query' => $sample,
+           'pagination' => [
+               'pageSize' => false,
+                   ],                 
+       ]);
+
+       if(Yii::$app->request->isAjax){
+                return $this->renderAjax('_reportstatus', [
+               'sampledataprovider'=>$sampledataprovider,
+               'request'=>$request,
+               ]);
+       }
+          
+    }
+
+    public function actionPaymentstatus($id)
+    {
+       $id = $_GET['id'];
+
+       $request = Request::find()->where(['request_id' => $id])->one();
+       $sample = Sample::find()->where(['request_id' => $id]);
+
+      // $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
+
+       $sampledataprovider = new ActiveDataProvider([
+           'query' => $sample,
+           'pagination' => [
+               'pageSize' => false,
+                   ],                 
+       ]);
+
+       if(Yii::$app->request->isAjax){
+                return $this->renderAjax('_paymentstatus', [
+               'sampledataprovider'=>$sampledataprovider,
+               'request'=>$request,
+               ]);
+       }
+          
+    }
+
     public function actionCustomerlist($q = null, $id = null) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $out = ['results' => ['id' => '', 'text' => '']];
@@ -203,7 +254,7 @@ class RequestController extends Controller
        if(isset($_GET['request_id'])){
         $id = $_GET['request_id'];
         $mpdf = new \Mpdf\Mpdf([
-            'format' => [35,66], 
+            'format' => [50,66], 
             'orientation' => 'L',
         ]);
         $request = Request::find()->where(['request_id' => $id]);

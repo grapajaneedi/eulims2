@@ -197,7 +197,7 @@ if ($rcount==0){
                             'value'=> function ($model){
                              
                             $samples = Sample::find()->where(['sample_id' =>$model->sample_id])->one();
-                            $count = Sample::find()->where(['request_id' =>$model->request_id])->count();
+                            $count = Analysis::find()->where(['sample_id' =>$model->sample_id])->count();
                              
                             if ($count==0){
                                 return $samples->completed.'/'.$count;
@@ -205,7 +205,9 @@ if ($rcount==0){
                                 $percent = $samples->completed / $count * 100;
                                 $formattedNum = number_format($percent);
                                 
-                                return "<b>".$samples->completed.'/'.$count." = ".$formattedNum."%</b>";  
+                                return "<b>".$samples->completed.'/'.$count." = ".$formattedNum."%</b>";
+                                
+                               // return 
                             }
 
                             },
@@ -218,7 +220,7 @@ if ($rcount==0){
                             'enableSorting' => false,
                             'value'=> function ($model){
                                 $samples = Sample::find()->where(['sample_id' =>$model->sample_id])->one();
-                                $count = Sample::find()->where(['request_id' =>$model->request_id])->count();
+                                $count = Analysis::find()->where(['sample_id' =>$model->sample_id])->count();
                              
                                 if ($samples->completed==0) {
                                     return "<span class='badge btn-default' style='width:90px;height:20px'>PENDING</span>";

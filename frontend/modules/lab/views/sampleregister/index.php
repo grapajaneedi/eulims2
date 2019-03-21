@@ -88,14 +88,14 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php
             $gridColumns = [
                 //['class'=>'kartik\grid\SerialColumn'],
-                [
-                    'label' => 'Request Reference #',
-                    'format' => 'raw',
-                    'value' => function($model, $key, $index, $widget){
-                        return $model->request->request_ref_num;
-                    },
-                    'group'=>true,  // enable grouping
-                ],
+                // [
+                //     'label' => 'Request Reference #',
+                //     'format' => 'raw',
+                //     'value' => function($model, $key, $index, $widget){
+                //         return $model->request->request_ref_num;
+                //     },
+                //     'group'=>true,  // enable grouping
+                // ],
                 [
                     'label' => 'Sample Code',
                     'format' => 'raw',
@@ -109,17 +109,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     'value' => function($model, $key, $index, $widget){
                         return Yii::$app->formatter->asDate($model->request->request_datetime, 'php:Y-m-d');
                     },
-                    'width'=>'250px',
+                    'width'=>'100px',
                 ],
                 [
-                    'label' => 'Report Due Date',
+                    'label' => 'Due Date',
                     'format' => 'raw',
                     'value' => function($model, $key, $index, $widget){
                         return Yii::$app->formatter->asDate($model->request->report_due, 'php:Y-m-d');
                     }
                 ],
                 [
-                    'label' => 'Sample Name',
+                    'label' => 'Sample',
                     'format' => 'raw',
                     'value' => function($model, $key, $index, $widget){
                         return $model->samplename;
@@ -134,7 +134,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
                 [
-                    'label' => 'Date Analysis Started',
+                    'label' => 'Date Analyzed',
                     'format' => 'raw',
                     'value' => function($model, $key, $index, $widget){
                         $start_date = $model->showStartDate($model->sample_id);
@@ -168,8 +168,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'label' => 'Analyst',
                     'format' => 'raw',
-                    //'filterType' => GridView::FILTER_SELECT2,
-                    //'filter' => $analysts,
+                  
                     'value' => function($model, $key, $index, $widget){
                         $analyst = $model->showAnalyst($model->sample_id);
                         return $analyst;

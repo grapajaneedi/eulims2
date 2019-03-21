@@ -61,6 +61,19 @@ class TestnamemethodController extends Controller
         ]);
     }
 
+    public function actionWorkflows()
+    {
+        $searchModel = new TestnamemethodSearch();
+        $model = new Testnamemethod();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('indexworkflow', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'model'=>$model,
+        ]);
+    }
+
     public function actionIndextestnamemethod()
     {
         $searchModel = new TestnamemethodSearch();

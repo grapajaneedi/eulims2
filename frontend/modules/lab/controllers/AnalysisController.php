@@ -318,36 +318,21 @@ class AnalysisController extends Controller
                 $test = [];
 
             if ($model->load(Yii::$app->request->post())) { 
-
+                        //
+                        // $Connection= Yii::$app->labdb;
+                        // $sql="UPDATE `tbl_tagging` SET `start_date`='$now', 
+                        // `tagging_status_id`='1', `user_id`='$profile->user_id' 
+                        //  WHERE `tagging_id`=".$aid;
+                        // $Command=$Connection->createCommand($sql);
+                        // $Command->execute();  
+                        //
                     if($model->save(false)){
                         $post= Yii::$app->request->post();
                         $modelmethod=  Methodreference::findOne(['method_reference_id'=>$post['Analysis']['method']]);
                         $modeltest=  Testname::findOne(['testname_id'=>$post['Analysis']['test_id']]);
-                        // $sample_id = $post['Analysis']['sample_id'];
-                        // $pstc_id = $post['Analysis']['pstcanalysis_id'];
-                        // $Connection= Yii::$app->labdb;
-                        // $sql="UPDATE `tbl_analysis` SET
-                        // 'sample_id' = '$sample_id',
-                        // 'cancelled' = 0,
-                        // 'pstcanalysis_id' = ".$post['Analysis']['pstcanalysis_id'].",
-                        // 'request_id' = ".$post['Analysis']['request_id'].",
-                        // 'type_fee_id' = 1,
-                        // 'rstl_id' = $GLOBALS[rstl_id],
-                        // 'test_id' = ".(int) $post['Analysis']['test_id'].",
-                        // 'sample_type_id' = ".(int) $post['Analysis']['sample_type_id'].",
-                        // 'testcategory_id' = 1,
-                        // 'is_package' = ".(int) $post['Analysis']['is_package'].",
-                        // 'method' = $modelmethod->method,
-                        // 'fee' = ".$post['Analysis']['fee'].",
-                        // 'testname' = '$modeltest->testName',
-                        // 'references' = ".$post['Analysis']['references'].",
-                        // 'quantity' = 1,
-                        // 'sample_code' = ".$post['Analysis']['sample_code'].",
-                        // 'date_analysis' = date('Y-m-d h:i:s'),
-                        // WHERE `analysis_id`=".$id;
-                        // $Command=$Connection->createCommand($sql);
-                        // $Command->execute();
-                        //yung testname kasi naka 0 yun kaya malamang hindi talaga yun nag uupdate           
+                      
+                        
+                        //update command
                         $post= Yii::$app->request->post();
                             
                         $modelmethod=  Methodreference::findOne(['method_reference_id'=>$post['Analysis']['method']]);
