@@ -25,7 +25,7 @@ class MigrateportalController extends Controller
 
  	public $message;
 
-    public function actionIndex()
+    public function actionIndex($rstl="100",$region="100")
     {
         $limit = 2;
 
@@ -46,6 +46,7 @@ class MigrateportalController extends Controller
                 //request live
                 $live_request = new Request;
                 $live_request->attributes = $request->attributes;
+                $live_request->discount_id = $live_request->discount;
 
                 //searching existing customer
                 echo " \n \n Searching existing customer using code: ".$request->rstl_id.'-'.$request->customer_old_id;
@@ -82,6 +83,20 @@ class MigrateportalController extends Controller
                         $live_sample = new Sample;
                         $live_sample->attributes=$sample->attributes;
                         $live_sample->request_id=$live_request->request_id;
+
+                        //as per the sp instruction
+                        switch($live_sample->active){
+                            case '0':
+                            $live_sample->active=1;
+                            break;
+                            case '1':
+                            $live_sample->active=0;
+                            break;
+                            default:
+                            $live_sample->active=0;
+                            break;
+                        }
+
                         if($live_sample->save(false)){
 
                             //find the analysis
@@ -93,6 +108,9 @@ class MigrateportalController extends Controller
                                 $live_analysis = new Analysis;
                                 $live_analysis->attributes = $analysis->attributes;
                                 $live_analysis->sample_id= $live_sample->sample_id;
+                                if($live_analysis->is_package>0){
+                                    $live_analysis->is_package=1;
+                                }
                                 $live_analysis->save(false);
                             }
 

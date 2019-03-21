@@ -56,15 +56,15 @@ $func=new Functions();
      
     </div>
     <div class="row">
-             <div class="col-md-4">
-                <?php $form = ActiveForm::begin(); ?>
-                <?php
-                        $disabled=false; 
-                        echo $func->GetSampleCode($form,$model,$disabled,"");
-                ?>    
-                <?php ActiveForm::end(); ?>
-                    </div>
-                       </div>
+    <div class="col-md-4">
+       <?php $form = ActiveForm::begin(); ?>
+       <?php
+               $disabled=false; 
+               echo $func->GetSampleCode($form,$model,$disabled,"");
+       ?>    
+       <?php ActiveForm::end(); ?>
+           </div>
+              </div>
 
  <div class="row-fluid" id ="xyz">
     <?= GridView::widget([

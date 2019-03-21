@@ -71,7 +71,9 @@ class OrseriesController extends Controller
             $model->rstl_id=$rstl_id;
             $model->terminal_id=0;
             $model->save();
-            return $this->redirect(['view', 'id' => $model->or_series_id]);
+            //return $this->redirect(['view', 'id' => $model->or_series_id]);
+             Yii::$app->session->setFlash('success', 'O.R Series,Successfully added!');
+            return $this->redirect(['/finance/orseries']);
         }
 
         return $this->renderAjax('create', [
@@ -91,7 +93,8 @@ class OrseriesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->or_series_id]);
+            Yii::$app->session->setFlash('success', 'O.R Series,Successfully updated!');
+            return $this->redirect(['/finance/orseries']);
         }
 
         return $this->renderAjax('update', [
@@ -109,8 +112,9 @@ class OrseriesController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+         Yii::$app->session->setFlash('success', 'O.R Series,Successfully deleted!');
+         return $this->redirect(['/finance/orseries']);
+        //return $this->redirect(['index']);
     }
 
     /**

@@ -5,7 +5,6 @@ use kartik\detail\DetailView;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use common\components\Functions;
-use common\components\ReferralComponent;
 use common\models\lab\Cancelledrequest;
 use common\models\lab\Discount;
 use common\models\lab\Request;
@@ -22,7 +21,6 @@ use yii\widgets\ListView;
 
 $Connection = Yii::$app->financedb;
 $func = new Functions();
-$referralcomp = new ReferralComponent();
 
 $this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
@@ -163,9 +161,6 @@ if($requeststatus > 0 && $notified == 1 && $hasTestingAgency > 0 && !empty($mode
 <div class="<?= $BackClass ?>"></div>
 <div class="request-view ">
     <div class="image-loader" style="display: hidden;"></div>
-    <!--<div id="notification_details" style="display: hidden;">
-        <input type="text" name="sender_remarks" />
-    </div>-->
     <div class="container table-responsive">
         <?php
 
@@ -596,12 +591,11 @@ if($requeststatus > 0 && $notified == 1 && $hasTestingAgency > 0 && !empty($mode
     <div class="container">
         <div class="table-responsive">
         <?php
-        //if($model->request_type_id == 2){
+        if($model->request_type_id == 2){
             $requestId = $model->request_id;
             $gridColumns = [
                 [
-                    //'attribute'=>'sample_code',
-                    'attribute'=>'name',
+                    'attribute'=>'sample_code',
                     'enableSorting' => false,
                     'header' => 'Agency',
                     'contentOptions' => [
@@ -609,8 +603,7 @@ if($requeststatus > 0 && $notified == 1 && $hasTestingAgency > 0 && !empty($mode
                     ],
                 ],
                 [
-                    //'attribute'=>'samplename',
-                    'attribute'=>'region',
+                    'attribute'=>'samplename',
                     'enableSorting' => false,
                     'header' => 'Region',
                 ],
@@ -632,9 +625,19 @@ if($requeststatus > 0 && $notified == 1 && $hasTestingAgency > 0 && !empty($mode
                 ],
                 [
                     'class' => 'kartik\grid\ActionColumn',
-                    'template' => '{notification} {confirm} {sendreferral}',
+                    'template' => '{notification}',
                     'dropdown' => false,
                     'dropdownOptions' => ['class' => 'pull-right'],
+                    'urlCreator' => function ($action, $model, $key, $index) {
+                        if ($action === 'delete') {
+                            $url ='/lab/sample/delete?id='.$model->sample_id;
+                            return $url;
+                        } 
+                        if ($action === 'cancel') {
+                            $url ='/lab/sample/cancel?id='.$model->sample_id;
+                            return $url;
+                        }
+                    },
                     'headerOptions' => ['class' => 'kartik-sheet-style'],
                     'buttons' => [
                         'notification' => function ($url, $data) use ($model,$referralcomp,$rstlId) {
@@ -676,7 +679,7 @@ if($requeststatus > 0 && $notified == 1 && $hasTestingAgency > 0 && !empty($mode
 
             echo GridView::widget([
                 'id' => 'agency-grid',
-                'dataProvider'=> $agencydataprovider,
+                'dataProvider'=> $sampleDataProvider,
                 'pjax'=>true,
                 'pjaxSettings' => [
                     'options' => [

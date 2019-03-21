@@ -1,11 +1,5 @@
 <?php
-/*
- * Project Name: eulims * 
- * Copyright(C)2018 Department of Science & Technology -IX * 
- * Developer: Eden G. Galleno  * 
- * 11 22, 18 , 3:52:38 PM * 
- * Module: Bankaccount * 
- */
+
 namespace common\models\finance;
 
 use Yii;
@@ -56,7 +50,6 @@ class Bankaccount extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'bankaccount_id' => 'Account ID',
             'bank_name' => 'Bank Name',
             'account_number' => 'Account Number',
         ];

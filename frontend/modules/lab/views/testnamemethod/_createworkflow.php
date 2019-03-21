@@ -5,19 +5,26 @@ use yii\widgets\ActiveForm;
 use common\models\lab\Sampletype;
 use common\models\lab\Lab;
 use common\models\lab\Testname;
+use common\models\lab\Workflow;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use kartik\widgets\Select2;
+use kartik\widgets\DepDrop;
 
-///
-$taggingcount = Testname::find()
+
+
+$test = Testname::find()
 ->leftJoin('tbl_testname_method', 'tbl_testname.testname_id=tbl_testname_method.testname_id')
-->leftJoin('tbl_workflow', 'tbl_testname_method.testname_method_id=tbl_workflow.testname_method_id')    
-->where(['tbl_testname_method.testname_method_id'=>1 ])
+->leftJoin('tbl_workflow', 'tbl_testname_method.testname_method_id=tbl_workflow.testname_method_id')
+//->where(['IN', 'tbl_testname_method.testname_method_id', '9']) 
+->Where(['tbl_testname_method.workflow'=>1])  
 ->all();      
-///
 
-$lablist= ArrayHelper::map($taggingcount,'testname_id','testName');
+//TESTNAME METHOD PO ITO DAPAT
+// $analysisQuery = Analysis::find()
+// ->where(['IN', 'sample_id', $ids]);
+
+$lablist = ArrayHelper::map($test,'testname_id','testName');
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\ProcedureSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -56,6 +63,22 @@ function addprocedure(){
         });
 }
 
+function addtemplate(){  
+    $.ajax({
+        url: '/lab/testnamemethod/addtemplate',
+        method: "post",
+        data: {testnamemethod_id: $('#sample-testcategory_id').val(), testname_id: $('#testname_id').val()},
+        beforeSend: function(xhr) {
+           $('.image-loader').addClass("img-loader");
+           }
+        })
+        .done(function( response ) {  
+            //render partial nalang 
+            $("#workflow").html(response); 
+            $("#testname-grid").yiiGridView("applyFilter");   
+        });
+}
+
 function deleteworkflow(mid){  
     $.ajax({
         url: '/lab/testnamemethod/deleteworkflow',
@@ -82,7 +105,6 @@ $this->registerJs($js);
     <p class="note" style="color:#265e8d"><b>Instructions:</b><br>1.<br>2.<br>3.</p>  
     </div> -->
 <?= Html::textInput('testname_id', $testname_id, ['class' => 'form-control', 'id'=>'testname_id', 'type'=>'hidden'], ['readonly' => true]) ?>
-
 <div class="procedure-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <?php $this->registerJsFile("/js/services/services.js"); ?>
@@ -90,9 +112,9 @@ $this->registerJs($js);
 <div class="row">
         <div class="col-sm-6">
         <div class="col-sm-6">
-        <?= Html::textInput('procedure_name', '', ['class' => 'form-control', 'id'=>'procedure_name'], ['readonly' => true]) ?></div>
-        <div class="col-sm-6">
-        <span class='btn btn-success glyphicon glyphicon-plus' style='width:80px' id='offer' onclick=addprocedure()>Add</span>
+            <?= Html::textInput('procedure_name', '', ['class' => 'form-control', 'id'=>'procedure_name'], ['readonly' => true]) ?></div>
+            <div class="col-sm-6">
+        <span class='btn btn-success glyphicon glyphicon-plus' style='width:80px' id='offer' onclick=addprocedure()> Add</span>
         </div>
        
         <?= GridView::widget([
@@ -132,12 +154,25 @@ $this->registerJs($js);
                             'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Template'],
                     ])->label(false);
                 ?>
+
+                <?php
+            //      $form->field($model, 'testname_method_id')->widget(DepDrop::classname(), [
+            //     'type'=>DepDrop::TYPE_SELECT2,
+            //     'data'=>$lablist,
+            //     'options'=>['id'=>'method'],
+            //     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+            //     'pluginOptions'=>[
+            //         'depends'=>['sample-sample_type_id'],
+            //         'placeholder'=>'Select Method',
+            //         'url'=>Url::to(['/lab/analysis/listtest']),
+            //         'loadingText' => 'Loading Method...',
+            //     ]
+            // ])->label(false)
+            ?>
                 <?php ActiveForm::end(); ?>
         </div>
         <div class="col-sm-6">
-        <?php
-        echo Html::button('<i class="glyphicon glyphicon-plus"></i> Add', ['disabled'=>false,'value' => Url::to(['tagging/startanalysis','id'=>1]), 'onclick'=>'startanalysis()','title'=>'Click to add new procedure', 'class' => 'btn btn-success btn-block','id' => 'btn_start_analysis', 'style'=>'width:80px']);
-        ?></div>
+        <span class='btn btn-success glyphicon glyphicon-plus' style='width:80px' id='offer' onclick=addtemplate()> Add</span></div>
   
         <?= GridView::widget([
         'dataProvider' => $workflowdataprovider,

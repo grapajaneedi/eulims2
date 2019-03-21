@@ -67,7 +67,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model) {    
                         return $model->name;
                             },
-           //     'contentOptions' => ['style' => 'width:60px; white-space: normal;'],
                 'filterInputOptions' => ['placeholder' => 'Sample Type', 'testcategory_id' => 'grid-products-search-category_type_id']
             ],
             [

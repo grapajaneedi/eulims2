@@ -19,10 +19,6 @@ use yii\web\NotFoundHttpException;
 //use common\models\system\LogSync;
 //use common\models\system\ApiSettings;
 use linslin\yii2\curl;
-use common\models\lab\exRequestreferral;
-use common\models\lab\Analysis;
-use common\models\lab\Sample;
-use yii\helpers\Json;
 
 
 /**

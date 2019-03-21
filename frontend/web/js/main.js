@@ -12,7 +12,9 @@ jQuery(document).ready(function ($) {
     $('.img-modal').click(function () {
         ShowModal(this.name, this.title,true,'600px');
     }); 
-
+    $('.img-modalx').click(function () {
+        ShowModal(this.name, this.title,true,'900px');
+    }); 
     // --- Delete action (bootbox) ---
     yii.confirm = function (message, ok, cancel) {
         var title = $(this).data("title");

@@ -4,6 +4,7 @@ namespace frontend\modules\lab\controllers;
 
 use Yii;
 use common\models\lab\Tagging;
+use common\models\lab\Tagginganalysis;
 use common\models\lab\Analysis;
 use common\models\lab\Workflow;
 use common\models\lab\Testnamemethod;
@@ -46,7 +47,7 @@ class TaggingController extends Controller
     public function actionIndex()
     {
         $searchModel = new TaggingSearch();
-       // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+     
         $model = new Sample();
         
         $samplesQuery = Sample::find()->where(['sample_id' =>0]);
@@ -166,13 +167,8 @@ class TaggingController extends Controller
     }
 
     public function actionStartanalysis()
-    {
-        print_r(Yii::$app->request->get());
-
-        exit;
-        
+    {           
         if(isset($_POST['id'])){
-<<<<<<< HEAD
            
      
             $ids = $_POST['id'];
@@ -182,35 +178,43 @@ class TaggingController extends Controller
             $samplesq = Sample::find()->where(['sample_id' =>$analysiss->sample_id])->one();             
             $samcount = $analysiss->completed;  
 
-=======
-			$ids = $_POST['id'];
-            $analysisID = explode(",", $ids);
-                
->>>>>>> upstream/master
 			if ($ids){
 				foreach ($analysisID as $aid){
                     
                     $taggingmodel = Tagging::find()->where(['analysis_id'=>$aid])->one();
-                    if ($taggingmodel){
-
-                    }else{
-                        $tagging = new Tagging();
+                  
                         $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
-                        $tagging->user_id = $profile->user_id;
-                        $tagging->analysis_id = $aid;
-                        $tagging->start_date = date("Y-m-d");
-                       // $tagging->end_date = "0000-00-00";
-                        $tagging->tagging_status_id = 1;
-                     //   $tagging->cancel_date = "0000-00-00";
-                        $tagging->reason = 1;
-                        $tagging->cancelled_by = 1;
-                    //    $tagging->disposed_date = "0000-00-00";
-                        $tagging->iso_accredited = 1;
-                        $tagging->save(false);               	
-                    }
-                 
-            }
+                        $now = date('Y-m-d');
+                        $Connection= Yii::$app->labdb;
 
+
+                        
+                        $sql="UPDATE `tbl_tagging` SET `start_date`='$now', `tagging_status_id`='1', `user_id`='$profile->user_id'  WHERE `tagging_id`=".$aid;
+                        $Command=$Connection->createCommand($sql);
+                        $Command->execute();                      
+                        $sample= Sample::find()->where(['sample_id'=> $aid])->one();
+
+
+                        $tagginganalysismodel = Tagginganalysis::find()->where(['cancelled_by'=> $analysis])->one();
+
+                        if ($tagginganalysismodel)
+                        {
+
+                        }else{
+                            $tagginganalysis = new Tagginganalysis();
+                            $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+                            $tagginganalysis->user_id = $profile->user_id;
+                            $tagginganalysis->analysis_id = $aid;
+                            $tagginganalysis->start_date = date("Y-m-d");
+                            $tagginganalysis->tagging_status_id = 1;
+                            $tagginganalysis->reason = 1;
+                            $tagginganalysis->cancelled_by = $_POST['analysis_id'];
+                            $tagginganalysis->iso_accredited = 1;
+                            $tagginganalysis->save(false);   
+                        }
+                    
+                
+            }
         }
        
             $analysis_id = $_POST['analysis_id'];    
@@ -222,38 +226,33 @@ class TaggingController extends Controller
                     ],
                  
             ]);
-<<<<<<< HEAD
             $procedure = Procedure::find()->where(['testname_id' => 1]);
 
          
 
             $analysisQuery = Analysis::findOne(['analysis_id' => $analysis]);
+            $samcount = $analysisQuery->completed;
             $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);
             
             $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
           
-     
+            $tagging= Tagging::find()->where(['cancelled_by'=> $analysis_id]);        
             $workflow = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id]);
             $count = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();
 
             $analysisdataprovider = new ActiveDataProvider([
-                    'query' => $workflow,
-=======
-            $analysisQuery = Analysis::find()->where(['sample_id' => $analysis_id]);      
-            $analysisdataprovider = new ActiveDataProvider([
-                    'query' => $analysisQuery,
->>>>>>> upstream/master
+                    'query' => $tagging,
                     'pagination' => [
                         'pageSize' => 10,
                     ],
                  
             ]);
-            return $this->renderAjax('_viewAnalysis', [
-                'sampleDataProvider' => $sampleDataProvider,
+            return $this->renderAjax('tag', [
                 'analysisdataprovider'=> $analysisdataprovider,
                 'analysis_id'=>$analysis_id,
+                'count'=>$count,
+                'samcount'=>$samcount,
              ]);
-         
             
         }
             
@@ -261,45 +260,160 @@ class TaggingController extends Controller
 
      public function actionTag($id)
      {
-<<<<<<< HEAD
-       $analysisQuery = Analysis::findOne(['analysis_id' => $id]);
-       $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);
-       
-       $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
-     
+                $analysisQuery = Analysis::findOne(['analysis_id' => $id]);
+                $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);   
+             
+                $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
 
-       $workflow = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id]);
+                $workflow = Workflow::find()->where(['testname_method_id' => $testnamemethod->testname_method_id])->all();
+                if ($workflow){
+                            $w = '';
+                            foreach ($workflow as $w_id){
+                                $w .= $w_id->workflow_id.",";
+                            }
+                            $w = substr($w, 0, strlen($w)-1);
+                        
+                        
+                        $ids = explode(",", $w);   
+                        
+                        $tagging= Tagging::find()->where(['cancelled_by'=> $id])->one();
+
+                            if ($tagging){
+                            
+                            }else{
+                                foreach ($ids as $workflow){  
+                                    $workflows = Workflow::find()->where(['workflow_id' => $workflow])->one();
+                                    $tagging = new Tagging();
+                                    $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
+                                    $tagging->user_id = null;
+                                    $tagging->analysis_id = $workflows->workflow_id;
+                                    $tagging->start_date = null;
+                                    $tagging->tagging_status_id = 0;
+                                    $tagging->reason = 1;
+                                    $tagging->cancelled_by = $id;
+                                    $tagging->iso_accredited = 1;
+                                    $tagging->save(false);  
+                                }
+                            }
+                                    
+                    
+                            $workflow = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id]);
+                            $tagging= Tagging::find()->where(['cancelled_by'=> $id]);
+
+                            $analysis= Analysis::find()->where(['analysis_id'=> $id])->one();
+                            $samplesq = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();    
+                            
+                            $count = Sample::find()->where(['request_id' =>$samplesq->request_id])->count(); 
+
+                            $requestcount= Sample::find()
+                            ->leftJoin('tbl_request', 'tbl_sample.request_id=tbl_request.request_id')   
+                            ->all();  
+
+                           // $rcount = count($requestcount); 
+
+                            $rcount= 2;
+
+                                         if ($samplesq->completed==$count){
+                                             
+                                            $Connection= Yii::$app->labdb;
+                                            $sql="UPDATE `tbl_request` SET `completed`='$rcount' WHERE `request_id`=".$samplesq->request_id;
+                                            $Command=$Connection->createCommand($sql);
+                                            $Command->execute(); 
+                                         }
+
+                            $samcount = $analysis->completed;
+
+                            $procedure = Procedure::find()->where(['testname_id' => 1]);
+                            $count =  Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();
+                            $analysis_id = $id;
+                    
+                            $analysisdataprovider = new ActiveDataProvider([
+                                    'query' => $tagging,
+                                    'pagination' => [
+                                        'pageSize' => false,
+                                            ],                 
+                            ]);
+                                
+                            if(Yii::$app->request->isAjax){
+                                return $this->renderAjax('tag', [
+                                    'analysis_id'=>$analysis_id,
+                                    'analysisdataprovider'=>$analysisdataprovider,
+                                    'count'=>$count,
+                                    'samcount'=>$samcount,
+                                    ]);
+                            }
+            }else{
+
+                if(Yii::$app->request->isAjax){
+                    return $this->renderAjax('_noworkflow', [
+                        ]);
+                }
+            }
     
-       $analysis= Analysis::find()->where(['analysis_id'=> $id])->one();
-       $samplesq = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();             
-       $samcount = $analysis->completed;
+     }
 
-       //baguhin pa ito!!!
-       $procedure = Procedure::find()->where(['testname_id' => 1]);
-       //count sa workflow
-       $count =  Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();
-       $analysis_id = $id;
+     public function actionStatus($id)
+     {
+                $analysisQuery = Analysis::findOne(['analysis_id' => $id]);
+                $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);   
+             
+                $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
+                if ($testnamemethod){
+                $workflow = Workflow::find()->where(['testname_method_id' => $testnamemethod->testname_method_id])->all();
+               
+                        $tagging= Tagging::find()->where(['cancelled_by'=> $id]);
+                        $analysis= Analysis::find()->where(['analysis_id'=> $id])->one();
+                        $samcount = $analysis->completed;
+                        $count =  Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();
+                        $analysis_id = $id;
+                
+                            $analysisdataprovider = new ActiveDataProvider([
+                                    'query' => $tagging,
+                                    'pagination' => [
+                                        'pageSize' => false,
+                                            ],                 
+                            ]);
+                                
+                            if(Yii::$app->request->isAjax){
+                                return $this->renderAjax('_status', [
+                                    'analysis_id'=>$analysis_id,
+                                    'analysisdataprovider'=>$analysisdataprovider,
+                                    'count'=>$count,
+                                    'samcount'=>$samcount,
+                                    ]);
+                            }
+            }else{
+                if(Yii::$app->request->isAjax){
+                    return $this->renderAjax('_noworkflow', [
+                        ]);
+                }
+            }
+    
+     }
 
-       
-=======
-       $analysisQuery = Analysis::find()->where(['analysis_id' => $id]);
-       $procedure = Procedure::find()->where(['testname_id' => 1]);
+     public function actionSamplestatus($id)
+     {
+        $id = $_GET['id'];
 
->>>>>>> upstream/master
-       $analysisdataprovider = new ActiveDataProvider([
-               'query' => $workflow,
-               'pagination' => [
-                   'pageSize' => false,
-                          ],                 
-       ]);
+        $request = Request::find()->where(['request_id' => $id])->one();
+        $sample = Sample::find()->where(['request_id' => $id]);
+
+       // $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
+
+        $sampledataprovider = new ActiveDataProvider([
+            'query' => $sample,
+            'pagination' => [
+                'pageSize' => false,
+                    ],                 
+        ]);
 
         if(Yii::$app->request->isAjax){
-            return $this->renderAjax('tag', [
-                'id'=>$id,
-                'analysisdataprovider'=>$analysisdataprovider,
+                 return $this->renderAjax('_samplestatus', [
+                'sampledataprovider'=>$sampledataprovider,
+                'request'=>$request,
                 ]);
         }
-
+           
      }
 
      public function actionCompletedanalysis()
@@ -312,65 +426,34 @@ class TaggingController extends Controller
              $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
              if ($ids){
                  foreach ($analysisID as $aid){
-                    $tagging= Tagging::find()->where(['analysis_id'=> $aid])->one();
-                    $analysis= Analysis::find()->where(['analysis_id'=> $aid])->one();
-                
-                    if ($tagging){
-                        $now = date('Y-m-d');
-                        $Connection= Yii::$app->labdb;
-                        $sql="UPDATE `tbl_tagging` SET `end_date`='$now', `tagging_status_id`='2' WHERE `tagging_id`=".$tagging->tagging_id;
-                        $Command=$Connection->createCommand($sql);
-                        $Command->execute();                      
-                        $sample= Sample::find()->where(['sample_id'=> $aid])->one();
-                                      
-                        $taggingcount= Tagging::find()
-                        ->leftJoin('tbl_analysis', 'tbl_tagging.analysis_id=tbl_analysis.analysis_id')
-                        ->leftJoin('tbl_sample', 'tbl_analysis.sample_id=tbl_sample.sample_id')    
-                        ->where(['tbl_tagging.tagging_status_id'=>2, 'tbl_sample.sample_id'=>$analysis->sample_id ])
-                        ->all();                                        
+                    $tagging = Tagging::find()->where(['tagging_id'=>$aid])->one();             
+                    $analysis= Analysis::find()->where(['analysis_id'=> $_POST['analysis_id']])->one();
+
+                    if ($tagging->tagging_status_id==0 ){
+
                     }else{
+                                if ($tagging){
+                                    $now = date('Y-m-d');
+                                    $Connection= Yii::$app->labdb;
+                                    $sql="UPDATE `tbl_tagging` SET `end_date`='$now', `tagging_status_id`='2' WHERE `tagging_id`=".$tagging->tagging_id;
+                                    $Command=$Connection->createCommand($sql);
+                                    $Command->execute();                      
+                                    $sample= Sample::find()->where(['sample_id'=> $aid])->one();
 
-                    }                     
+
+                                }else{
+            
+                                }    
+                    }
+                                    
              } 
-
-             if ($taggingcount){
-                $counttag = count($taggingcount); 
-             } 
-<<<<<<< HEAD
-
-             //fix this
-
-              $sql="UPDATE `tbl_analysis` SET `completed`='$counttag' WHERE `analysis_id`=".$analysis->analysis_id;
-              $Command=$Connection->createCommand($sql);
-              $Command->execute();                 
-              $samplesq = Sample::find()->where(['sample_id' =>$analysis->sample_id])->one();             
-              $samcount = $analysis->completed;
-=======
-              $sql="UPDATE `tbl_sample` SET `completed`='$counttag' WHERE `sample_id`=".$analysis_id;
-              $Command=$Connection->createCommand($sql);
-              $Command->execute();                 
-              $samplesq = Sample::find()->where(['sample_id' =>$analysis_id])->one();             
-              $samcount = $samplesq->completed;
->>>>>>> upstream/master
-
-              $sampletagged= Sample::find()
-              ->leftJoin('tbl_analysis', 'tbl_sample.sample_id=tbl_analysis.sample_id')
-              ->leftJoin('tbl_tagging', 'tbl_analysis.analysis_id=tbl_tagging.analysis_id') 
-              ->leftJoin('tbl_request', 'tbl_request.request_id=tbl_analysis.request_id')    
-              ->where(['tbl_tagging.tagging_status_id'=>2, 'tbl_request.request_id'=>$samplesq->request_id ])
-              ->all();  
-
-              $st = count($sampletagged);
-
-              if ($samcount==$counttag){
-                $sql="UPDATE `tbl_request` SET `completed`='$st' WHERE `request_id`=".$samplesq->request_id;
-                $Command=$Connection->createCommand($sql);
-                $Command->execute(); 
-              }
             
          }
             
              $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
+
+           
+
              $sampleDataProvider = new ActiveDataProvider([
                      'query' => $samplesQuery,
                      'pagination' => [
@@ -378,10 +461,8 @@ class TaggingController extends Controller
                      ],
                   
              ]);
-<<<<<<< HEAD
-             $procedure = Procedure::find()->where(['testname_id' => 1]);
+           
             
-
              $analysisQuery = Analysis::findOne(['analysis_id' => $analysis_id]);
              $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);
              
@@ -390,24 +471,25 @@ class TaggingController extends Controller
       
              $workflow = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id]);
              $count = Workflow::find()->where(['testname_method_id'=>$testnamemethod->testname_method_id])->count();     
-
+             $samplesq = Sample::find()->where(['sample_id' =>$analysisQuery->sample_id])->one();             
+             $samcount = $analysisQuery->completed;
+             $tagging= Tagging::find()->where(['cancelled_by'=> $analysis_id]);   
              $analysisdataprovider = new ActiveDataProvider([
-                     'query' => $workflow,
-=======
-             $analysisQuery = Analysis::find()->where(['sample_id' => $analysis_id]);   
-             $analysisdataprovider = new ActiveDataProvider([
-                     'query' => $analysisQuery,
->>>>>>> upstream/master
+                     'query' => $tagging,
                      'pagination' => [
                          'pageSize' => 10,
                      ],
                   
              ]);
+
+            
  
-             return $this->renderAjax('_viewAnalysis', [
+             return $this->renderAjax('tag', [
                  'sampleDataProvider' => $sampleDataProvider,
                  'analysisdataprovider'=> $analysisdataprovider,
                  'analysis_id'=>$analysis_id,
+                 'count'=>$count,
+                 'samcount'=>$samcount,
               ]);
           
              
@@ -436,7 +518,7 @@ class TaggingController extends Controller
          $analysisdataprovider = new ActiveDataProvider([
                  'query' => $analysisQuery,
                  'pagination' => [
-                     'pageSize' => 10,
+                     'pageSize' => false,
                  ],
               
          ]);

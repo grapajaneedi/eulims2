@@ -10,7 +10,6 @@ use Yii;
  * @property int $referral_id
  * @property string $referral_code
  * @property string $referral_date_time
- * @property int $local_request_id
  * @property int $receiving_agency_id
  * @property int $testing_agency_id
  * @property int $lab_id
@@ -20,7 +19,7 @@ use Yii;
  * @property int $modeofrelease_id
  * @property int $purpose_id
  * @property int $discount_id
- * @property string $discount_rate
+ * @property string $discount_amt
  * @property string $total_fee
  * @property string $report_due
  * @property string $conforme
@@ -30,7 +29,6 @@ use Yii;
  * @property string $cro_testing
  * @property int $bid
  * @property int $cancelled
- * @property string $created_at_local
  * @property string $create_time
  * @property string $update_time
  *
@@ -96,7 +94,6 @@ class Referral extends \yii\db\ActiveRecord
             'referral_id' => 'Referral ID',
             'referral_code' => 'Referral Code',
             'referral_date_time' => 'Referral Date Time',
-            'local_request_id' => 'Local Request ID',
             'receiving_agency_id' => 'Receiving Agency ID',
             'testing_agency_id' => 'Testing Agency ID',
             'lab_id' => 'Lab ID',
@@ -106,7 +103,7 @@ class Referral extends \yii\db\ActiveRecord
             'modeofrelease_id' => 'Modeofrelease ID',
             'purpose_id' => 'Purpose ID',
             'discount_id' => 'Discount ID',
-            'discount_rate' => 'Discount Rate',
+            'discount_amt' => 'Discount Amt',
             'total_fee' => 'Total Fee',
             'report_due' => 'Report Due',
             'conforme' => 'Conforme',
@@ -116,7 +113,6 @@ class Referral extends \yii\db\ActiveRecord
             'cro_testing' => 'CRO Testing',
             'bid' => 'Bid',
             'cancelled' => 'Cancelled',
-            'created_at_local' => 'Created At Local',
             'create_time' => 'Create Time',
             'update_time' => 'Update Time',
         ];

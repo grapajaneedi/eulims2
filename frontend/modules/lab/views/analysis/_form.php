@@ -12,7 +12,6 @@ use yii\web\JsExpression;
 use kartik\widgets\TypeaheadBasic;
 use kartik\widgets\Typeahead;
 use yii\helpers\ArrayHelper;
-
 use common\models\lab\Lab;
 use common\models\lab\Labsampletype;
 use common\models\lab\Sampletype;
@@ -45,12 +44,9 @@ $js=<<<SCRIPT
 SCRIPT;
 $this->registerJs($js);
 ?>
-
-
 <div class="analysis-form">
-
     <?php $form = ActiveForm::begin(); ?>
- 
+
     <?php
     if(!$model->isNewRecord){
     ?>
@@ -59,12 +55,12 @@ $this->registerJs($js);
            $(".select-on-check-all").click();
         });
     </script>
-    <?php
-    
+    <?php   
     }
 ?>
 
-    <?= GridView::widget([
+
+      <?= GridView::widget([
         'dataProvider' => $sampleDataProvider,
         'pjax'=>true,
         'headerRowOptions' => ['class' => 'kartik-sheet-style'],
@@ -125,13 +121,12 @@ $this->registerJs($js);
      ->innerJoin('tbl_sampletype_testname', 'tbl_testname.testname_id=tbl_sampletype_testname.testname_id')
      ->Where(['tbl_sampletype_testname.sampletype_id'=>118])
      ->asArray()
-     ->all();
-    
-?>
+     ->all(); 
+    ?>
+
     <div class="row">
     <div class="col-sm-6">
 
-  
     <?= $form->field($model,'sample_type_id')->widget(Select2::classname(),[
                     'data' => $testcategory,
                     'theme' => Select2::THEME_KRAJEE,
@@ -141,7 +136,6 @@ $this->registerJs($js);
         ?>
     </div>
     <div class="col-sm-6">
-
         <?= $form->field($model, 'test_id')->widget(DepDrop::classname(), [
             'type'=>DepDrop::TYPE_SELECT2,
             'data'=>$sampletype,
@@ -157,7 +151,6 @@ $this->registerJs($js);
         ?>
     </div>
 </div>
-
         <?= $form->field($model, 'method')->widget(DepDrop::classname(), [
                 'type'=>DepDrop::TYPE_SELECT2,
                 'data'=>$test,
@@ -187,31 +180,20 @@ $this->registerJs($js);
                'allowNegative' => false,
             ]
            ])->label("Fee");
-        ?>
-
-        
-                    
+        ?>               
         </div>
-           <div class="col-sm-6">
-             
+           <div class="col-sm-6">       
         </div>
     </div>
        
-
     <div class="row-fluid" id ="xyz">
         <div>
    
-   
-
-
     <div class="row" style="float: right;padding-right: 30px">
     <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'id'=>'analysis_create', 'disabled'=> true]) ?>
         <?php if($model->isNewRecord){ ?>
         <?php } ?>
     <?= Html::Button('Cancel', ['class' => 'btn btn-default', 'id' => 'modalCancel', 'data-dismiss' => 'modal']) ?>
-
-   
-
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -242,8 +224,6 @@ $this->registerJs("$('#sample-test_id').on('depdrop:afterChange',function(){
         });
 });");
 ?>
-
-
 <?php
 $this->registerJs("$('#sample-test_id').on('change',function(){
     var id = $('#sample-test_id').val();
@@ -252,9 +232,7 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
             dataType: 'json',
             method: 'GET',
             data: {method_reference_id: id},
-            success: function (data, textStatus, jqXHR) {
-               
-           
+            success: function (data, textStatus, jqXHR) {        
                 $('#analysis-references').val(data.references);
                 $('#analysis-fee').val(data.fee);
                 $('#analysis-fee-disp').val(data.fee);
@@ -272,21 +250,3 @@ $this->registerJs("$('#sample-test_id').on('change',function(){
         });
 });");
 ?>
-
-
-<!-- <script type="text/javascript">
-    $('#sample-test_id').on('change',function(e) {
-       e.preventDefault();
-         jQuery.ajax( {
-            type: 'GET',
-            url: '/lab/analysis/getmethod?id='+$(this).val(),
-            dataType: 'html',
-            success: function ( response ) {        
-              $("#xyz").html(response);
-            },
-            error: function ( xhr, ajaxOptions, thrownError ) {
-                alert( thrownError );
-            }
-        });
-    });
-    </script> -->

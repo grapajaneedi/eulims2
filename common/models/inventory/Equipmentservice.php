@@ -8,16 +8,15 @@ use common\models\User;
  * This is the model class for table "tbl_equipmentservice".
  *
  * @property integer $equipmentservice_id
- * @property integer $inventory_transactions_id
+ * @property integer $inventory_transactions_id //a mistake has been made this should be the productid
  * @property integer $servicetype_id
  * @property integer $requested_by
- * @property integer $startdate
- * @property integer $enddate
+ * @property string $startdate
+ * @property string $enddate
  * @property integer $request_status
  * @property string $attachment
  *
  * @property Servicetype $servicetype
- * @property InventoryEntries $inventoryTransactions
  * @property User $requesteduser
  */
 class Equipmentservice extends \yii\db\ActiveRecord
@@ -44,11 +43,10 @@ class Equipmentservice extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['inventory_transactions_id', 'servicetype_id', 'requested_by'], 'required'],
-            [['inventory_transactions_id', 'servicetype_id', 'requested_by', 'startdate', 'enddate', 'request_status'], 'integer'],
+            [['servicetype_id', 'requested_by', 'startdate', 'enddate'], 'required'],
+            [['inventory_transactions_id', 'servicetype_id', 'requested_by', 'request_status'], 'integer'],
             [['attachment'], 'string', 'max' => 100],
             [['servicetype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Servicetype::className(), 'targetAttribute' => ['servicetype_id' => 'servicetype_id']],
-            [['inventory_transactions_id'], 'exist', 'skipOnError' => true, 'targetClass' => InventoryEntries::className(), 'targetAttribute' => ['inventory_transactions_id' => 'inventory_transactions_id']],
         ];
     }
 
@@ -77,13 +75,7 @@ class Equipmentservice extends \yii\db\ActiveRecord
         return $this->hasOne(Servicetype::className(), ['servicetype_id' => 'servicetype_id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getInventoryTransactions()
-    {
-        return $this->hasOne(InventoryEntries::className(), ['inventory_transactions_id' => 'inventory_transactions_id']);
-    }
+    
     /**
      * @return \yii\db\ActiveQuery
      */

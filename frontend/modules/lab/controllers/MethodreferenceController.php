@@ -1,7 +1,6 @@
 <?php
 
 namespace frontend\modules\lab\controllers;
-
 use Yii;
 use common\models\lab\Methodreference;
 use common\models\lab\MethodreferenceSearch;
@@ -84,10 +83,11 @@ class MethodreferenceController extends Controller
             Yii::$app->session->setFlash('success', 'Method Reference Successfully Created'); 
             return $this->runAction('index');
         }
-        $model->create_time=date("Y-m-d h:i:s");
-        $model->update_time=date("Y-m-d h:i:s");
+            $model->create_time=date("Y-m-d h:i:s");
+            $model->update_time=date("Y-m-d h:i:s");
 
-       $model->testname_id = 0;
+            $model->testname_id = 0;
+            
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('_form', [
                 'model' => $model,

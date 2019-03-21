@@ -10,7 +10,6 @@ use common\models\lab\Referralrequest;
 use common\models\lab\Request;
 use common\models\lab\Discount;
 use common\models\lab\Analysis;
-//use common\models\lab\AnalysisSearch;
 use common\models\lab\RequestSearch;
 use common\models\lab\Requestcode;
 use yii\web\Controller;
@@ -24,10 +23,8 @@ use DateTime;
 use common\models\system\Profile;
 use common\components\Functions;
 use common\components\ReferralComponent;
-//use linslin\yii2\curl\Curl;
 use kartik\mpdf\Pdf;
 use frontend\modules\finance\components\epayment\ePayment;
-
 use common\models\finance\Op;
 use common\models\system\Rstl;
 use linslin\yii2\curl;
@@ -36,7 +33,6 @@ use common\models\system\User;
 use frontend\modules\lab\components\Printing;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
-use yii\data\ArrayDataProvider;
 
 //use yii\helpers\Url;
 /**
@@ -100,9 +96,7 @@ class RequestController extends Controller
         ]);
 
         $request_type = $this->findModel($id)->request_type_id;
-
-        //$GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
-        
+        $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;     
         $samples = Sample::find()->where(['request_id' => $id])->all();
         
         $sample_ids = '';
@@ -120,23 +114,12 @@ class RequestController extends Controller
         $analysisQuery = Analysis::find()
         ->where(['IN', 'sample_id', $ids]);
 
-      //  $analysisQuery = Analysis::find()->where(['sample_id' =>$samples->sample_id]);
         if($request_type == 2) {
-            $refcomponent = new ReferralComponent();
-            $modelref_request = Referralrequest::find()->where(['request_id'=>$id])->one();
-
             $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
                 'pagination' => [
                     'pageSize' => 10,
                 ]
-            ]);
-
-            $agency = Json::decode($refcomponent->listMatchAgency($id));
-
-            $agencydataprovider = new ArrayDataProvider([
-                'allModels' => $agency,
-                'pagination'=>false,
             ]);
         } else {
             $analysisdataprovider = new ActiveDataProvider([
@@ -293,11 +276,10 @@ class RequestController extends Controller
             'payment_details'=>$Payment_details
         ];
         $content = json_encode($TransactDetails);
-        
-        //return $TransactDetails;
+    
         $curl = new curl\Curl();
         $EpaymentURI="https://yii2customer.onelab.ph/web/api/op";
-        //$EpaymentURI="http://www.eulims.local/capi/op";
+    
         $response = $curl->setRequestBody($content)
             ->setHeaders([
                'Content-Type' => 'application/json',
@@ -308,8 +290,7 @@ class RequestController extends Controller
     }
     public function actionSaverequestransaction(){
         $post= Yii::$app->request->post();
-        // echo $post['request_id'];
-        //exit;
+       
         $return="Failed";
         $request_id=(int) $post['request_id'];
         $lab_id=(int) $post['lab_id'];
@@ -359,12 +340,7 @@ class RequestController extends Controller
         $total = $subtotal - ($subtotal * ($rate/100));
         
         $Request->total=$total;
-        /*
-        echo "<pre>";
-        var_dump($Request);
-        echo "</pre>";
-        exit;
-        */
+      
         if($Request->save()){
             $Func=new Functions();
             $response=$Func->GenerateSampleCode($request_id);
@@ -403,7 +379,7 @@ class RequestController extends Controller
          */
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Request Successfully Created!');
-            return $this->redirect(['view', 'id' => $model->request_id]); ///lab/request/view?id=1
+            return $this->redirect(['view', 'id' => $model->request_id]); 
         } else {
             $date = new DateTime();
             $date2 = new DateTime();
@@ -412,7 +388,7 @@ class RequestController extends Controller
             $model->request_datetime=date("Y-m-d h:i:s");
             $model->report_due=date_format($date2,"Y-m-d");
             $model->created_at=date('U');
-            $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
+            $model->rstl_id= Yii::$app->user->identity->profile->rstl_id;
             $model->payment_type_id=1;
             $model->modeofrelease_ids='1';
             $model->discount_id=0;
@@ -449,7 +425,6 @@ class RequestController extends Controller
      */
     public function actionUpdate($id)
     {
-        //$model = $this->findModel($id);
         $model= eRequest::findOne($id);
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -514,7 +489,7 @@ class RequestController extends Controller
             throw new NotFoundHttpException('The requested Request its either does not exist or you have no permission to view it.');
         }
     }
-    //bergel cutara
+  
     //contacted by function to return result to be displayed in select2
     public function actionRequestlist($q = null, $id = null) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -558,7 +533,7 @@ class RequestController extends Controller
             $modelReferralrequest = new Referralrequest();
             if ($model->save()){
                 $modelReferralrequest->request_id = $model->request_id;
-                $modelReferralrequest->sample_received_date = date('Y-m-d h:i:s',strtotime($model->sample_received_date));
+                $modelReferralrequest->sample_receive_date = date('Y-m-d h:i:s',strtotime($model->sample_receive_date));
                 $modelReferralrequest->receiving_agency_id = Yii::$app->user->identity->profile->rstl_id;
                 //$modelReferralrequest->testing_agency_id = null;
                 $modelReferralrequest->referral_type_id = 1;
@@ -651,61 +626,14 @@ class RequestController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $transaction = $connection->beginTransaction();
-            //check if lab is updated
-            //if not equal to old lab_id, sample and analysis will be deleted
-            //reason: sample type or test parameter may not be available for the lab
-            if($oldLabId != $_POST['exRequestreferral']['lab_id'] && ($sampleCount > 0 || $analysisCount > 0))
-            {
-                $connection->createCommand('SET FOREIGN_KEY_CHECKS=0')->execute();
-
-                if($sampleCount > 0)
-                {
-                    $sampleDelete = Sample::deleteAll('request_id = :requestId',[':requestId'=>$id]);
-                    if(!$sampleDelete)
-                    {
-                        $samplefail = 1;
-                    } else {
-                        if($analysisCount > 0){
-                            $analysisDelete = Analysis::deleteAll('request_id = :requestId',[':requestId'=>$id]);            
-                            if(!$analysisDelete)
-                            {
-                                $analysisfail = 1;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if($samplefail == 1 || $analysisfail == 1){
-                $transaction->rollBack();
-                Yii::$app->session->setFlash('error', 'Error deleting sample/analysis!');
-                return $this->redirect(['view', 'id' => $model->request_id]);
-            } else {
-                if($analysisCount > 0){
-                    $discount = $refcomponent->getDiscountOne($model->discount_id);
-                    $rate = $discount->rate;
-                    $fee = $connection->createCommand('SELECT SUM(fee) as subtotal FROM tbl_analysis WHERE request_id =:requestId')
-                    ->bindValue(':requestId',$id)->queryOne();
-                    $subtotal = $fee['subtotal'];
-                    $total = $subtotal - ($subtotal * ($rate/100));
-
-                    $model->total = $total;
-                }
-                if ($model->save()){
-                    $modelReferralrequest->request_id = $model->request_id;
-                    $modelReferralrequest->sample_received_date = date('Y-m-d h:i:s',strtotime($model->sample_received_date));
-                    $modelReferralrequest->receiving_agency_id = Yii::$app->user->identity->profile->rstl_id;
-                    //$modelReferralrequest->testing_agency_id = null;
-                    //$modelReferralrequest->referral_type_id = 1;
-                    if ($modelReferralrequest->save()){
-                        $transaction->commit();
-                    } else {
-                        $transaction->rollBack();
-                        $modelReferralrequest->getErrors();
-                        return false;
-                    }
-                    Yii::$app->session->setFlash('success', 'Referral Request Successfully Updated!');
-                    return $this->redirect(['view', 'id' => $model->request_id]);
+            if ($model->save()){
+                $modelReferralrequest->request_id = $model->request_id;
+                $modelReferralrequest->sample_receive_date = date('Y-m-d h:i:s',strtotime($model->sample_receive_date));
+                $modelReferralrequest->receiving_agency_id = Yii::$app->user->identity->profile->rstl_id;
+                //$modelReferralrequest->testing_agency_id = null;
+                //$modelReferralrequest->referral_type_id = 1;
+                if ($modelReferralrequest->save()){
+                    $transaction->commit();
                 } else {
                     $transaction->rollBack();
                     $model->getErrors();
@@ -713,7 +641,7 @@ class RequestController extends Controller
                 }
             }
         } else {
-            $model->sample_received_date = !empty($modelReferralrequest->sample_received_date) ? $modelReferralrequest->sample_received_date : null;
+            $model->sample_receive_date = !empty($modelReferralrequest->sample_receive_date) ? $modelReferralrequest->sample_receive_date : null;
             if($model->request_ref_num){
                 $model->request_ref_num=NULL;
             }

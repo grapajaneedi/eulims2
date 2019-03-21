@@ -44,6 +44,30 @@ if(Yii::$app->user->isGuest){
 			get_unresponded_notifications();
 		}, 30000);
 	");
+
+	/*	function get_unseen_notifications()
+		{
+			$.ajax({
+				url: '/referrals/referral/unseen_notification',
+				dataType: 'json',
+				method: 'GET',
+				success: function (data) {
+					if (data.data_notification.count_notification > 0){
+						$('#count_noti_sub').html(data.data_notification.count_notification);
+						$('#count_noti_menu').html(data.data_notification.count_notification);
+					} else if(data.data_notification.count_notification == 0) {
+						$('#count_noti_sub').html('');
+						$('#count_noti_menu').html('');
+					} else {
+						alert(data.data_notification.count_notification);
+					}
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					console.log('error occured!');
+				}
+			});
+		}
+	");*/
 }
 ?>
 <aside class="main-sidebar">
@@ -101,7 +125,7 @@ if(Yii::$app->user->isGuest){
 					$showURL = [$mItem->url];
 				}
                 $ItemS=[
-                   'label' =>'<img src="/images/icons/' .$mItem->icon. '.png" style="width:20px">  <span>' . $mItem->Package_Detail ." ".$numNotification. '</span>', 
+                   'label' =>'<img src="/images/icons/' .$mItem->icon. '.png" style="width:20px">  <span>' . $mItem->Package_Detail . '</span>', 
                    'icon'=>' " style="display:none;width:0px"',
                    'url'=>$showURL,
                    'visible'=>Yii::$app->user->can($SubmodulePermission),

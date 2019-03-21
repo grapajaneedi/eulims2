@@ -52,7 +52,7 @@ class Procedure extends \yii\db\ActiveRecord
         return [
             'procedure_id' => 'Procedure ID',
             'procedure_name' => 'Procedure Name',
-            'procedure_code' => 'Procedure Code',
+            'procedure_code' => 'Description',
             'testname_id' => 'Tests',
             'testname_method_id' => 'Method',
         ];

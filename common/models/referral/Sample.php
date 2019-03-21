@@ -21,11 +21,7 @@ use Yii;
  * @property string $remarks
  * @property int $sample_month
  * @property int $sample_year
- * @property int $local_request_id
- * @property int $local_sample_id
  * @property int $active
- * @property string $created_at
- * @property string $updated_at
  *
  * @property Analysis[] $analyses
  * @property Packagelist[] $packagelists
@@ -93,11 +89,7 @@ class Sample extends \yii\db\ActiveRecord
             'remarks' => 'Remarks',
             'sample_month' => 'Sample Month',
             'sample_year' => 'Sample Year',
-            'local_request_id' => 'Local Request ID',
-            'local_sample_id' => 'Local Sample ID',
             'active' => 'Active',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
         ];
     }
 

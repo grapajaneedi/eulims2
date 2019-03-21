@@ -817,4 +817,15 @@ return array (
       '@yii/queue/sqs' => $vendorDir . '/yiisoft/yii2-queue/src/drivers/sqs',
     ),
   ),
+    
+    'kartik-v/yii2-datecontrol' => 
+    array (
+      'name' => 'kartik-v/yii2-datecontrol',
+      'version' => '1.9.7',
+      'alias' => 
+      array (
+        '@kartik/datecontrol/Module' => $vendorDir . '/kartik-v/yii2-datecontrol/Module',
+      ),
+    ),
+
 );
