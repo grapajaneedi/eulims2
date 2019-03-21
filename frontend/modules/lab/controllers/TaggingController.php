@@ -276,16 +276,15 @@ class TaggingController extends Controller
             // 'samcount'=>$samcount,
          ]);
      }
-
      public function actionTag($id)
      {
                 $analysisQuery = Analysis::findOne(['analysis_id' => $id]);
                 $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);   
              
                 $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
-
+                if ( $testnamemethod){
                 $workflow = Workflow::find()->where(['testname_method_id' => $testnamemethod->testname_method_id])->all();
-                if ($workflow){
+             
                             $w = '';
                             foreach ($workflow as $w_id){
                                 $w .= $w_id->workflow_id.",";

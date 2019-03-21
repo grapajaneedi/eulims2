@@ -102,20 +102,21 @@ if(Yii::$app->user->can('allow-cancel-request')){
                 'value' => function ($model, $key, $index, $widget) { 
                     return $model->customer ? $model->customer->customer_name : "";
                 },
-                //'group'=>true,  // enable grouping
+              
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ArrayHelper::map(Customer::find()->orderBy('customer_name')->asArray()->all(), 'customer_id', 'customer_name'), 
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Select Customer'],
-                'contentOptions' => ['style' => 'width: 60%;word-wrap: break-word;white-space:pre-line;'],
+                'contentOptions' => ['style' => 'width: 50%;word-wrap: break-word;white-space:pre-line;'],
             ],      
             [
                 'label'=>'Total',
                 'attribute'=>'total',
                 'hAlign'=>'right',
                 'format' => ['decimal', 2],
+               
             ],
             [
                 'label'=>'Report Due',
@@ -128,35 +129,29 @@ if(Yii::$app->user->can('allow-cancel-request')){
                 'hAlign'=>'center',
                 'format'=>'raw',
                 'value'=>function($model){
-
-                   
+         
                     $samples_count= Sample::find() 
                     ->leftJoin('tbl_request', 'tbl_request.request_id=tbl_sample.request_id')    
                     ->where(['tbl_request.request_id'=>$model->request_id ])
-                    ->all();  
-                    
+                    ->all();              
                     $requestcount= Sample::find()
                     ->leftJoin('tbl_request', 'tbl_sample.request_id=tbl_request.request_id')
                     ->leftJoin('tbl_analysis', 'tbl_sample.sample_id=tbl_analysis.sample_id')
                     ->leftJoin('tbl_tagging_analysis', 'tbl_analysis.analysis_id=tbl_tagging_analysis.cancelled_by')
                     ->where(['tbl_tagging_analysis.tagging_status_id'=>2, 'tbl_request.request_id'=>$model->request_id ])   
-                    ->all();  
-                    
+                    ->all();                  
                     $scount = count($samples_count); 
                     $rcount = count($requestcount); 
                     
                     if ($rcount==0){
-                        return Html::button('<span"><b>PENDING</span>', ['value'=>Url::to(['/lab/tagging/samplestatus','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value, true, 1200);', 'class' => 'btn btn-default','title' => Yii::t('app', "Analyses Monitoring<font color='Blue'></font>")]);
+                        return Html::button('<span"><b>PENDING</span>', ['value'=>Url::to(['/lab/tagging/samplestatus','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value, true, 1200);', 'class' => 'btn btn-default','title' => Yii::t('app', "Analyses Monitoring")]);
                         
                     }elseif ($scount>$rcount){
-                        return Html::button('<span"><b>ONGOING</span>', ['value'=>Url::to(['/lab/tagging/samplestatus','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value, true, 1200);', 'class' => 'btn btn-primary','title' => Yii::t('app', "Analyses Monitoring<font color='Blue'></font>")]);
+                        return Html::button('<span"><b>ONGOING</span>', ['value'=>Url::to(['/lab/tagging/samplestatus','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value, true, 1200);', 'class' => 'btn btn-primary','title' => Yii::t('app', "Analyses Monitoring")]);
                         
                     }elseif ($scount==$rcount){
-                        return Html::button('<span"><b>COMPLETED</span>', ['value'=>Url::to(['/lab/tagging/samplestatus','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value, true, 1200);', 'class' => 'btn btn-success','title' => Yii::t('app', "Analyses Monitoring<font color='Blue'></font>")]);
-                        
-                    }
-
-                    
+                        return Html::button('<span"><b>COMPLETED</span>', ['value'=>Url::to(['/lab/tagging/samplestatus','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value, true, 1200);', 'class' => 'btn btn-success','title' => Yii::t('app', "Analyses Monitoring")]);                  
+                    }           
               }
             ],
             [
@@ -166,9 +161,11 @@ if(Yii::$app->user->can('allow-cancel-request')){
                 'value'=>function($model){
                     if($model->testreports){
                         $req = Request::findOne($model->request_id);
-                        return "<a class='badge badge-success' href='/reports/lab/testreport/view?id=".$req->testreports[0]->testreport_id."' style='width:80px!important;height:20px!important;'>View</a>";
+                        //return "<a class='badge badge-success' href='/reports/lab/testreport/view?id=".$req->testreports[0]->testreport_id."' style='width:80px!important;height:20px!important;'>View</a>";
+                        return Html::button('<span"><b>VIEW</span>', ['value'=>Url::to(['/lab/request/reportstatus','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value, true, 500);', 'class' => 'btn btn-success','title' => Yii::t('app', "Report Status")]);
                     }else{
-                        return "<span class='badge badge-default' style='width:80px!important;height:20px!important;'>None</span>";
+                        //return "<span class='badge badge-default' style='width:80px!important;height:20px!important;'>None</span>";
+                        return Html::button('<span"><b>NONE</span>', ['value'=>Url::to(['/lab/request/reportstatus','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value, true, 500);', 'class' => 'btn btn-default','title' => Yii::t('app', "Report Status")]);
                     }
                     
                 }
@@ -178,12 +175,21 @@ if(Yii::$app->user->can('allow-cancel-request')){
                 'hAlign'=>'center',
                 'format'=>'raw',
                 'value'=>function($model){
-                    $Obj=$model->getPaymentStatusDetails($model->request_id);
-                    if($Obj){
-                       return "<span class='badge ".$Obj[0]['class']."' style='width:80px!important;height:20px!important;'>".$Obj[0]['payment_status']."</span>"; 
+                    
+                    if ($model->payment_status_id==2)
+                    {
+                        return Html::button('<span"><b>PAID</span>', ['value'=>Url::to(['/lab/request/paymentstatus','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value, true, 500);', 'class' => 'btn btn-success','title' => Yii::t('app', "Payment Status")]);
                     }else{
-                       return "<span class='badge badge-primary' style='width:80px!important;height:20px!important;'>Unpaid</span>";
+                        return Html::button('<span"><b>UNPAID</span>', ['value'=>Url::to(['/lab/request/paymentstatus','id'=>$model->request_id]),'onclick'=>'LoadModal(this.title, this.value, true, 500);', 'class' => 'btn btn-default','title' => Yii::t('app', "Payment Status")]);
                     }
+                    // $Obj=$model->getPaymentStatusDetails($model->request_id);
+                    // if($Obj){
+                    //    //return "<span class='badge ".$Obj[0]['class']."' style='width:80px!important;height:20px!important;'>".$Obj[0]['payment_status']."</span>"; 
+                      
+                    // }else{
+                    //    //return "<span class='badge badge-primary' style='width:80px!important;height:20px!important;'>Unpaid</span>";
+                      
+                    // }
                    //
                 }
             ],

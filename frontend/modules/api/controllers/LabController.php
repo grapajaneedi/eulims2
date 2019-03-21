@@ -10,6 +10,7 @@ use common\models\lab\Restore_customer;
 use common\models\lab\Restore_sample;
 use common\models\lab\Restore_analysis;
 use common\models\lab\Sample;
+use common\models\lab\Backup;
 use common\models\lab\Request;
 use common\models\lab\Analysis;
 use common\models\lab\Customer;
@@ -111,8 +112,6 @@ class LabController extends Controller
      public function actionRestore()
      {
         $restore= Restore::find();
-      
-
         $restoredataprovider = new ActiveDataProvider([
                     'query' => $restore,
                     'pagination' => [
@@ -123,6 +122,23 @@ class LabController extends Controller
         
 
          return $this->render('restore', [
+             'restoredataprovider' => $restoredataprovider,
+         ]);
+     }
+
+     public function actionBackup()
+     {
+        $backup= Backup::find();
+        $restoredataprovider = new ActiveDataProvider([
+                    'query' => $backup,
+                    'pagination' => [
+                        'pageSize' => false,
+                            ],                 
+            ]);
+
+        
+
+         return $this->render('backup', [
              'restoredataprovider' => $restoredataprovider,
          ]);
      }
@@ -653,11 +669,7 @@ class LabController extends Controller
        $year =  $_POST['year'];
 
        for($month=1;$month < 13;$month++){
-           $request_count = 0;
-           $sample_count = 0;
-           $analysis_count = 0;
-           $samplenum = 0;
-           $analysesnum = 0;
+
            if ($month>9){
                $start = $year."-".$month;
                $end = $year."-".$month;
@@ -852,7 +864,7 @@ class LabController extends Controller
                    
                    $sql = "SET FOREIGN_KEY_CHECKS = 1;";
 
-
+                  //dapat mag save ito somewhere
                    $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
                    $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/countmax?rstl_id=".$GLOBALS['rstl_id']."&reqds=".$year."&reqde=".$year;
                    $curl = curl_init();			

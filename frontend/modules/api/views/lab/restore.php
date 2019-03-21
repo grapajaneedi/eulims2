@@ -83,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
                           return "<b>".$model->year;
                 },
                 'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:10px; white-space: normal;'],           
+                'contentOptions' => ['style' => 'width:10%; white-space: normal;'],           
             ],
             // [
             //     'header'=>'Customer',
@@ -134,7 +134,7 @@ $this->params['breadcrumbs'][] = $this->title;
                          
                 },
                 'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:10px; white-space: normal;'],           
+                'contentOptions' => ['style' => 'width:10%; white-space: normal;'],           
             ],
             [
                 'header'=>'Sample',
@@ -160,7 +160,7 @@ $this->params['breadcrumbs'][] = $this->title;
                           return number_format($sample)."/".number_format($data_sample);
                 },
                 'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:10px; white-space: normal;'],           
+                'contentOptions' => ['style' => 'width:10%; white-space: normal;'],           
             ],
             [
                 'header'=>'Analysis',
@@ -185,7 +185,7 @@ $this->params['breadcrumbs'][] = $this->title;
                           return number_format($analysis)."/".number_format($data_analysis);
                 },
                 'enableSorting' => false,
-                'contentOptions' => ['style' => 'width:10px; white-space: normal;'],           
+                'contentOptions' => ['style' => 'width:10%; white-space: normal;'],           
             ],
             // [
             //     'header'=>'Truncate',
@@ -198,25 +198,93 @@ $this->params['breadcrumbs'][] = $this->title;
             //     'contentOptions' => ['style' => 'width:10%; white-space: normal;'],           
             // ],
             [
-                'header'=>'Sync',
+                'header'=>'Action',
                 'hAlign'=>'center',
                 'format'=>'raw',
                 'value' => function($model) {        
-                    return "<span class='btn btn-primary' onclick='restoreyear(".$model->year.")'>RESTORE</span>";      
+                    return "<span class='btn btn-primary' onclick='restoreyear(".$model->year.")'>SYNC</span>";      
                 },
                 'enableSorting' => false,
                 'contentOptions' => ['style' => 'width:10%; white-space: normal;'],           
             ],
-            // [
-            //     'header'=>'Status',
-            //     'hAlign'=>'center',
-            //     'format'=>'raw',
-            //     'value' => function($model) {
-            //         return "<span class='badge btn-default' style='width:90px;height:20px'>PENDING</span>";
-            //     },
-            //     'enableSorting' => false,
-            //     'contentOptions' => ['style' => 'width:5%; white-space: normal;'],           
-            // ],
+            [
+                'header'=>'Status',
+                'hAlign'=>'center',
+                'format'=>'raw',
+                'value' => function($model) {
+
+                    //request
+                    $request = Request::find()
+                    ->Where(['like', 'request_ref_num', '%'.$model->year.'%', false])
+                    ->count();
+
+                    $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+                    $apiUrl="https://eulimsapi.onelab.ph/api/web/v1/requests/countrequest?rstl_id=".$GLOBALS['rstl_id']."&year=".$model->year;       
+                    $curl = curl_init();			
+                    curl_setopt($curl, CURLOPT_URL, $apiUrl);
+                    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+                    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); 
+                    curl_setopt($curl, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($curl);			
+                    $data = json_decode($response, true);
+
+                    //sample
+                    $sample = Sample::find()
+                    ->leftJoin('tbl_request', 'tbl_sample.request_id=tbl_request.request_id')  
+                    ->Where(['like', 'request_ref_num', '%'.$model->year.'%', false])
+                    ->count();
+
+                    $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+                    $apiUrl_sample="https://eulimsapi.onelab.ph/api/web/v1/samples/countsample?rstl_id=".$GLOBALS['rstl_id']."&year=".$model->year;
+                    $curl_sample = curl_init();			
+                    curl_setopt($curl_sample, CURLOPT_URL, $apiUrl_sample);
+                    curl_setopt($curl_sample, CURLOPT_SSL_VERIFYPEER, FALSE);
+                    curl_setopt($curl_sample, CURLOPT_SSL_VERIFYHOST, FALSE); 
+                    curl_setopt($curl_sample, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+                    curl_setopt($curl_sample, CURLOPT_RETURNTRANSFER, true);
+                    $response_sample = curl_exec($curl_sample);			
+                    $data_sample = json_decode($response_sample, true);
+
+                    //analysis
+                    $analysis = Analysis::find()
+                    ->AndWhere(['like', 'date_analysis', '%'.$model->year.'%', false])
+                    ->count();
+
+                    $GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
+                    $apiUrl_analysis="https://eulimsapi.onelab.ph/api/web/v1/analysisdatas/countanalysis?rstl_id=".$GLOBALS['rstl_id']."&year=".$model->year;
+                    $curl_analysis = curl_init();			
+                    curl_setopt($curl_analysis, CURLOPT_URL, $apiUrl_analysis);
+                    curl_setopt($curl_analysis, CURLOPT_SSL_VERIFYPEER, FALSE);
+                    curl_setopt($curl_analysis, CURLOPT_SSL_VERIFYHOST, FALSE); 
+                    curl_setopt($curl_analysis, CURLOPT_FTP_SSL, CURLFTPSSL_TRY); 
+                    curl_setopt($curl_analysis, CURLOPT_RETURNTRANSFER, true);
+                    $response_analysis = curl_exec($curl_analysis);			
+                    $data_analysis = json_decode($response_analysis, true);
+
+
+                    if (($request==$data) && ($sample==$data_sample) && ($analysis==$data_analysis) ){
+                        return "<span class='badge btn-success' style='width:90px;height:20px'>COMPLETED</span>";
+                    }else   
+                        return "<span class='badge btn-danger' style='width:90px;height:20px'>PENDING</span>";
+                   
+                },
+                'enableSorting' => false,
+                'contentOptions' => ['style' => 'width:5%; white-space: normal;'],           
+            ],
+
+            [
+                'header'=>'Remarks',
+                'hAlign'=>'center',
+                'format'=>'raw',
+                'value' => function($model) {
+                   // return "<span class='badge btn-default' style='width:90px;height:20px'>PENDING</span>";
+
+                   return "";
+                },
+                'enableSorting' => false,
+                'contentOptions' => ['style' => 'width:15%; white-space: normal;'],           
+            ],
         ],
     ]);
     ?>
