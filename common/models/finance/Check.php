@@ -46,6 +46,7 @@ class Check extends \yii\db\ActiveRecord
             [['amount'], 'number'],
             [['bank', 'checknumber'], 'string', 'max' => 25],
             [['receipt_id'], 'exist', 'skipOnError' => true, 'targetClass' => Receipt::className(), 'targetAttribute' => ['receipt_id' => 'receipt_id']], 
+             [$this->attributes(), 'safe'],
         ];
     }
 
