@@ -35,7 +35,7 @@ $func=new Functions();
 $month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 $year = ['2013', '2014', '2015', '2016', '2017', '2018', '2019'];
 
-$this->title = 'Laboratory Module Backup and Restore';
+$this->title = 'Laboratory Module Restore';
 $this->params['breadcrumbs'][] = ['label' => 'API', 'url' => ['/api']];
 $this->params['breadcrumbs'][] = $this->title;
    
@@ -120,8 +120,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'options' => ['id'=>'year'],
                         'pluginOptions' => ['allowClear' => true,'placeholder' => 'Select Year'],
                 ])->label("Year")
-                ."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>BY YEAR</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='offer' onclick='restorebyyear()'>BY MONTH</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='sync' onclick='restore_sync  ()'>SYNC</span>";
-                //."</div><div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restorebyyear()'>RESTORE BY MONTH</span><div class='col-md-4' style='margin-top:4px'><span class='btn btn-success' id='offer' onclick='restore()'>RESTORE</span></div><div class='col-md-4' style='margin-top:4px'><span class='btn btn-success' id='offer' onclick='restore()'>SYNC</span></div>";
+               // ."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>BY YEAR</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='offer' onclick='restorebyyear()'>BY MONTH</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='sync' onclick='restore_sync  ()'>SYNC</span>";
+                ."</div>"."<div class='col-md-4' style='margin-top:4px'><br><span class='btn btn-success' id='offer' onclick='restore()'>2013</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='offer' onclick='restorebyyear()'>2014</span>&nbsp;&nbsp;&nbsp;<span class='btn btn-success' id='sync' onclick='restore_sync  ()'>SYNC</span>";
             ?>
         </div>
         <?php ActiveForm::end(); ?>
@@ -140,7 +140,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'panel' => [
                 'type' => GridView::TYPE_PRIMARY,
                 'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
-                'before'=> "<b>No. of Customers: </b>".number_format($customer)."/ ".number_format($data_customer)."<br>"."<b>No. of Requests: </b>  ".number_format($request)."/ ".number_format($data)."<b><br>No. of Analyses:</b>".number_format($analysis)."/".number_format($data_analysis)."<b><br>No. of Sample: </b>".number_format($sample)."/".number_format($data_sample),
+              //  'before'=> "<b>No. of Customers: </b>".number_format($customer)."/ ".number_format($data_customer)."<br>"."<b>No. of Requests: </b>  ".number_format($request)."/ ".number_format($data)."<b><br>No. of Analyses:</b>".number_format($analysis)."/".number_format($data_analysis)."<b><br>No. of Sample: </b>".number_format($sample)."/".number_format($data_sample),
                'after'=>false,
             ],
         'columns' => [

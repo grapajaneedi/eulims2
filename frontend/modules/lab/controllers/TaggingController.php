@@ -186,9 +186,7 @@ class TaggingController extends Controller
                         $profile= Profile::find()->where(['user_id'=> Yii::$app->user->id])->one();
                         $now = date('Y-m-d');
                         $Connection= Yii::$app->labdb;
-
-
-                        
+    
                         $sql="UPDATE `tbl_tagging` SET `start_date`='$now', `tagging_status_id`='1', `user_id`='$profile->user_id'  WHERE `tagging_id`=".$aid;
                         $Command=$Connection->createCommand($sql);
                         $Command->execute();                      
@@ -207,9 +205,7 @@ class TaggingController extends Controller
                             $tagginganalysis->analysis_id = $aid;
                             $tagginganalysis->start_date = date("Y-m-d");
                             $tagginganalysis->tagging_status_id = 1;
-                            $tagginganalysis->reason = 1;
                             $tagginganalysis->cancelled_by = $_POST['analysis_id'];
-                            $tagginganalysis->iso_accredited = 1;
                             $tagginganalysis->save(false);   
                         }
                     
@@ -258,15 +254,37 @@ class TaggingController extends Controller
             
      }
 
+     public function actionSampleregister()
+     {
+        //  $searchModel = new TestnamemethodSearch();
+        //  $model = new Testnamemethod();
+        //  $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $sample = Sample::find()->all();   
+        $sampledataprovider = new ActiveDataProvider([
+            'query' => $sample,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+         
+        ]);
+ 
+        return $this->render('sampleregister', [
+            // 'analysisdataprovider'=> $analysisdataprovider,
+            // 'analysis_id'=>$analysis_id,
+            // 'count'=>$count,
+            // 'samcount'=>$samcount,
+         ]);
+     }
      public function actionTag($id)
      {
                 $analysisQuery = Analysis::findOne(['analysis_id' => $id]);
                 $modelmethod=  Methodreference::findOne(['method'=>$analysisQuery->method]);   
              
                 $testnamemethod = Testnamemethod::findOne(['testname_id'=>$analysisQuery->test_id, 'method_id'=>$analysisQuery->testcategory_id]);
-
+                if ( $testnamemethod){
                 $workflow = Workflow::find()->where(['testname_method_id' => $testnamemethod->testname_method_id])->all();
-                if ($workflow){
+             
                             $w = '';
                             foreach ($workflow as $w_id){
                                 $w .= $w_id->workflow_id.",";
