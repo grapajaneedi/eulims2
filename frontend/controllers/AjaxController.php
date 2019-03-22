@@ -95,10 +95,9 @@ class AjaxController extends Controller{
         return $discount;
     }
     public function actionGetdiscountreferral(){
-        $post= \Yii::$app->request->post();
-        $id=$post['discountid'];
-        //$apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/discountbyid?discount_id='.$id;
-        $apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/discountbyid?discount_id='.$id;
+        $id=(int) \Yii::$app->request->get('discountid');
+        $apiUrl='https://eulimsapi.onelab.ph/api/web/referral/listdatas/discountbyid?discount_id='.$id;
+        //$apiUrl='http://localhost/eulimsapi.onelab.ph/api/web/referral/listdatas/discountbyid?discount_id='.$id;
         $curl = new curl\Curl();
         $discount = $curl->get($apiUrl);
         \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;

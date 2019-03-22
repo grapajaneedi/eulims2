@@ -623,7 +623,7 @@ class ReferralController extends Controller
                                 $referral_request_update = Referralrequest::find()->where('request_id =:requestId AND notified =:notified',[':requestId'=>$requestId,':notified'=>1])->one();
                                 $referral_request_update->testing_agency_id = $agency_id;
 
-                                if($requestUpdate->save() && $referral_request_update->save()){
+                                if($requestUpdate->save(false) && $referral_request_update->save()){
                                     goto send;
                                 } else {
                                     $transaction->rollBack();
@@ -973,7 +973,7 @@ class ReferralController extends Controller
         
         $request->total = $total;
 
-        if($request->save()){
+        if($request->save(false)){
             //$Func=new Functions();
             //$response=$func->GenerateSampleCode($requestId);
 

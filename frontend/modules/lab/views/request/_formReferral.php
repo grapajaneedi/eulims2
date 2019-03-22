@@ -316,7 +316,7 @@ $sameLab = !empty($model->lab_id) ? $model->lab_id : 0;
             "change" => 'function() { 
                 var discountid=this.value;
                 console.log(discountid);
-                $.post("/ajax/getdiscountreferral/", {
+                $.get("/ajax/getdiscountreferral", {
                         discountid: discountid
                     }, function(result){
                     if(result){

@@ -124,6 +124,7 @@ class RequestController extends Controller
         if($request_type == 2) {
             $refcomponent = new ReferralComponent();
             $modelref_request = Referralrequest::find()->where(['request_id'=>$id])->one();
+            $reqModel=$this->findRequestModel($id);
 
             $analysisdataprovider = new ActiveDataProvider([
                 'query' => $analysisQuery,
@@ -132,7 +133,8 @@ class RequestController extends Controller
                 ]
             ]);
 
-            $agency = Json::decode($refcomponent->listMatchAgency($id));
+            $customer = json_decode($refcomponent->getCustomerOne($reqModel->customer_id),true);
+            $agency = json_decode($refcomponent->listMatchAgency($id),true);
 
             $agencydataprovider = new ArrayDataProvider([
                 'allModels' => $agency,
@@ -178,6 +180,7 @@ class RequestController extends Controller
                 'countSample' => count($samples),
                 'checkTesting' => $checkTesting,
                 'checkSamplecode' => $checkSamplecode,
+                'customer' => $customer,
             ]);
 
         } else {
@@ -598,6 +601,7 @@ class RequestController extends Controller
         $refcomponent = new ReferralComponent();
         $Func->CheckRSTLProfile();
         $connection= Yii::$app->labdb;
+        $connection->createCommand('SET FOREIGN_KEY_CHECKS=0')->execute();
         //$GLOBALS['rstl_id']=Yii::$app->user->identity->profile->rstl_id;
         $labreferral = ArrayHelper::map(json_decode($refcomponent->listLabreferral()), 'lab_id', 'labname');
         $discountreferral = ArrayHelper::map(json_decode($refcomponent->listDiscountreferral()), 'discount_id', 'type');
@@ -607,7 +611,8 @@ class RequestController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $transaction = $connection->beginTransaction();
             $modelReferralrequest = new Referralrequest();
-            if ($model->save()){
+            $model->request_datetime="0000-00-00 00:00:00";
+            if ($model->save(false)){
                 $modelReferralrequest->request_id = $model->request_id;
                 $modelReferralrequest->sample_received_date = date('Y-m-d h:i:s',strtotime($model->sample_received_date));
                 $modelReferralrequest->receiving_agency_id = Yii::$app->user->identity->profile->rstl_id;
@@ -617,15 +622,15 @@ class RequestController extends Controller
                     $transaction->commit();
                 } else {
                     $transaction->rollBack();
-                    $modelReferralrequest->getErrors();
-                    return false;
+                    print_r($modelReferralrequest->getErrors());
+                    //return false;
                 }
                 Yii::$app->session->setFlash('success', 'Referral Request Successfully Created!');
                 return $this->redirect(['view', 'id' => $model->request_id]); ///lab/request/view?id=1
             } else {
                 $transaction->rollBack();
-                $model->getErrors();
-                return false;
+                print_r($model->getErrors());
+                //return false;
             }
         } else {
             $date = new DateTime();
