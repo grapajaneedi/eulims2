@@ -1047,8 +1047,13 @@ class ReferralController extends Controller
             $refcomponent = new ReferralComponent();
             $get_details = json_decode($refcomponent->getSamplecode_details($requestId,$rstlId),true);
 
-            $referral = $get_details['referral_data'];
-            $samples_analyses = $get_details['sample_analysis_data'];
+            if($get_details > 0){
+                $referral = $get_details['referral_data'];
+                $samples_analyses = $get_details['sample_analysis_data'];
+            } else {
+                Yii::$app->session->setFlash('error', "Sample code not yet generated!");
+                return $this->redirect(['/lab/request']);
+            }
 
             //update request
             $request = $this->findRequest($requestId);
