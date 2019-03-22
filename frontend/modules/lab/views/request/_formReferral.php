@@ -98,12 +98,12 @@ $sameLab = !empty($model->lab_id) ? $model->lab_id : 0;
     ])->label('Request Type'); ?>
     </div>
     <div class="col-md-6">
-    <?= $form->field($model, 'sample_receive_date')->widget(DateTimePicker::classname(), [
+    <?= $form->field($model, 'sample_received_date')->widget(DateTimePicker::classname(), [
         'readonly'=>true,
         'disabled' => $disabled,
     'options' => ['placeholder' => 'Enter Date'],
         'value'=>function($model){
-             return date("m/d/Y h:i:s P", strtotime($model->sample_receive_date));
+             return date("m/d/Y h:i:s P", strtotime($model->sample_received_date));
         },
         'convertFormat' => true,
     'pluginOptions' => [
@@ -116,7 +116,7 @@ $sameLab = !empty($model->lab_id) ? $model->lab_id : 0;
     ],
         'pluginEvents'=>[
             "changeDate" => "function(e) { 
-                var dv=$('#exrequestreferral-sample_receive_date').val();
+                var dv=$('#exrequestreferral-sample_received_date').val();
                 var d=dv.split(' ');
                 $('#exrequestreferral-request_date').val(d[0]);
             }",
