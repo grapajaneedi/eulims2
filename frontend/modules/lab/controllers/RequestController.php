@@ -5,6 +5,7 @@ namespace frontend\modules\lab\controllers;
 use Yii;
 use frontend\modules\lab\components\eRequest;
 use common\models\lab\exRequest;
+use common\models\lab\Testreport;
 use common\models\lab\exRequestreferral;
 use common\models\lab\ReferralRequest;
 use common\models\lab\Request;
@@ -167,12 +168,12 @@ class RequestController extends Controller
        $id = $_GET['id'];
 
        $request = Request::find()->where(['request_id' => $id])->one();
-       $sample = Sample::find()->where(['request_id' => $id]);
+       $testreport = Testreport::find()->where(['request_id' => $id]);
 
-      // $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
+       $req = Request::find()->where(['request_id' => $id]);
 
-       $sampledataprovider = new ActiveDataProvider([
-           'query' => $sample,
+       $testreportdataprovider = new ActiveDataProvider([
+           'query' => $req,
            'pagination' => [
                'pageSize' => false,
                    ],                 
@@ -180,7 +181,7 @@ class RequestController extends Controller
 
        if(Yii::$app->request->isAjax){
                 return $this->renderAjax('_reportstatus', [
-               'sampledataprovider'=>$sampledataprovider,
+               'testreportdataprovider'=>$testreportdataprovider,
                'request'=>$request,
                ]);
        }
@@ -193,11 +194,11 @@ class RequestController extends Controller
 
        $request = Request::find()->where(['request_id' => $id])->one();
        $sample = Sample::find()->where(['request_id' => $id]);
-
-      // $samplesQuery = Sample::find()->where(['sample_id' =>$analysis_id]);
-
-       $sampledataprovider = new ActiveDataProvider([
-           'query' => $sample,
+       
+       $req = Request::find()->where(['request_id' => $id]);
+    
+       $paymentstatusdataprovider = new ActiveDataProvider([
+           'query' => $req,
            'pagination' => [
                'pageSize' => false,
                    ],                 
@@ -205,7 +206,7 @@ class RequestController extends Controller
 
        if(Yii::$app->request->isAjax){
                 return $this->renderAjax('_paymentstatus', [
-               'sampledataprovider'=>$sampledataprovider,
+               'paymentstatusdataprovider'=>$paymentstatusdataprovider,
                'request'=>$request,
                ]);
        }

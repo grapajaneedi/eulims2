@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use  kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\feedback\UserFeedbackSearch */
@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div style="overflow: auto;overflow-y: hidden;height:400px"> 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 

@@ -48,7 +48,7 @@ $func = new Functions();
 //   exit;
 
 
-$this->title = empty($model->request_ref_num) ? $model->request_id : $model->request_ref_num;
+$this->title = empty($model->request_ref_num) ? "Create New Request" : $model->request_ref_num;
 $this->params['breadcrumbs'][] = ['label' => 'Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $rstlID=Yii::$app->user->identity->profile->rstl_id;//$GLOBALS['rstl_id'];
