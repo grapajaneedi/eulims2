@@ -82,10 +82,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     $urls = '/lab/testnamemethod/delete?id='.$model->testname_method_id;
                     return Html::a('<span class="glyphicon glyphicon-trash"></span>', $urls,['data-confirm'=>"Are you sure you want to delete this record?<b></b>", 'data-method'=>'post', 'class'=>'btn btn-danger','title'=>'Delete Test Name Method','data-pjax'=>'0']);
                 },
-                'workflow'=>function ($url, $model) {
-                  $t = '/lab/testnamemethod/createworkflow?test_id='.$model->testname_method_id;
-                    return Html::button('<span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-file"></span>', ['value'=>$t, 'class' => 'btn btn-warning btn-modal','onclick'=>'LoadModal(this.title, this.value, true, 900);','name' => Yii::t('app', "Manage Workflow"),'title' => Yii::t('app', "Create Workflow")]);
-                },
+                // 'workflow'=>function ($url, $model) {
+                //   $t = '/lab/testnamemethod/createworkflow?test_id='.$model->testname_method_id;
+                //     return Html::button('<span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-file"></span>', ['value'=>$t, 'class' => 'btn btn-warning btn-modal','onclick'=>'LoadModal(this.title, this.value, true, 900);','name' => Yii::t('app', "Manage Workflow"),'title' => Yii::t('app', "Create Workflow")]);
+                // },
                 ],
             ],
           

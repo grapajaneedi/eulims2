@@ -7,6 +7,7 @@ use yii\grid\ActionColumn;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use common\models\lab\Lab;
+use common\models\lab\Request;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\lab\TestreportSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -40,30 +41,32 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'request_id',
             // 'lab_id',
             // 'lab.labname',
-            [
-                'attribute'=>'lab_id',
-                'value'=>'lab.labname',
-                'filter'=>Select2::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'lab_id',
-                    'data' => ArrayHelper::map(Lab::find()->all(), 'lab_id', 'labname'),
-                    'theme' => Select2::THEME_BOOTSTRAP,
-                    'hideSearch' => false,
-                    'options' => [
-                        'placeholder' => 'Select a Laboratory',
-                    ],
-                    'pluginOptions' => [
-                        'allowClear' => true,
-                    ],
-                ]),
-            ],
+         
             'report_num',
             'report_date',
-            //'status_id',
-            //'release_date',
-            //'reissue',
-            //'previous_id',
-            //'new_id',
+            [
+               
+                'header'=>'Request Reference Number',
+                'value'=>function($model){
+
+                    $request = Request::find()->where(['request_id' => $model->request_id])->one();
+                    return $request->request_ref_num;
+                },
+               
+                // 'filter'=>Select2::widget([
+                //     'model' => $searchModel,
+                //     'attribute' => 'lab_id',
+                //     'data' => ArrayHelper::map(Lab::find()->all(), 'lab_id', 'labname'),
+                //     'theme' => Select2::THEME_BOOTSTRAP,
+                //     'hideSearch' => false,
+                //     'options' => [
+                //         'placeholder' => 'Select a Laboratory',
+                //     ],
+                //     'pluginOptions' => [
+                //         'allowClear' => true,
+                //     ],
+                // ]),
+            ],
 
             ['class' => 'kartik\grid\ActionColumn',
                 'template'=> '{view}',

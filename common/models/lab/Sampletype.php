@@ -41,6 +41,7 @@ class Sampletype extends \yii\db\ActiveRecord
             [['type', 'status_id'], 'required'],
             [['status_id'], 'integer'],
             [['type'], 'string', 'max' => 75],
+          //  [['type'], 'unique']
         ];
     }
 

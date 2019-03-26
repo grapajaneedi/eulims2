@@ -318,14 +318,9 @@ class AnalysisController extends Controller
                 $test = [];
 
             if ($model->load(Yii::$app->request->post())) { 
-                        //
-                        // $Connection= Yii::$app->labdb;
-                        // $sql="UPDATE `tbl_tagging` SET `start_date`='$now', 
-                        // `tagging_status_id`='1', `user_id`='$profile->user_id' 
-                        //  WHERE `tagging_id`=".$aid;
-                        // $Command=$Connection->createCommand($sql);
-                        // $Command->execute();  
-                        //
+                        
+                       
+                        
                     if($model->save(false)){
                         $post= Yii::$app->request->post();
                         $modelmethod=  Methodreference::findOne(['method_reference_id'=>$post['Analysis']['method']]);
@@ -333,6 +328,15 @@ class AnalysisController extends Controller
                       
                         
                         //update command
+
+                        $now = "12345";
+                        $Connection= Yii::$app->labdb;
+                        $sql="UPDATE `tbl_analysis` SET `testname`='$modeltest->testName'
+                        WHERE `analysis_id`=".$id;
+                        $Command=$Connection->createCommand($sql);
+                        $Command->execute();  
+
+
                         $post= Yii::$app->request->post();
                             
                         $modelmethod=  Methodreference::findOne(['method_reference_id'=>$post['Analysis']['method']]);

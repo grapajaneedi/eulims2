@@ -12,11 +12,8 @@ use Yii;
  * @property int $sampletype_id
  * @property string $effective_date
  * @property string $added_by
- *
- * @property Sampletype $sampletype
-* @property Lab $lab
  */
-class LabSampletype extends \yii\db\ActiveRecord
+class Labsampletype extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -39,13 +36,12 @@ class LabSampletype extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        // return [
-        //     [['lab_id', 'sampletype_id', 'added_by'], 'required'],
-        //     [['lab_id', 'sampletype_id'], 'integer'],
-        //     [['effective_date'], 'safe'],
-        //     [['added_by'], 'string', 'max' => 300],
-        //     [['sampletype_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sampletype::className(), 'targetAttribute' => ['sampletype_id' => 'sampletype_id']],
-        // ];
+        return [
+            [['lab_id', 'sampletype_id', 'added_by'], 'required'],
+            [['lab_id', 'sampletype_id'], 'integer'],
+            [['effective_date'], 'safe'],
+            [['added_by'], 'string', 'max' => 30],
+        ];
     }
 
     /**
@@ -54,24 +50,20 @@ class LabSampletype extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'lab_sampletype_id' => 'Lab Sampletype ID',
+            'lab_sampletype_id' => 'Lab Sample type',
             'lab_id' => 'Lab',
-            'sampletype_id' => 'Sample Type',
+            'sampletype_id' => 'Sample type',
             'effective_date' => 'Effective Date',
             'added_by' => 'Added By',
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSampletype()
-    {
-        return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletype_id']);
-    }
-
     public function getLab()
     {
         return $this->hasOne(Lab::className(), ['lab_id' => 'lab_id']);
+    }
+    public function getSampletype()
+    {
+        return $this->hasOne(Sampletype::className(), ['sampletype_id' => 'sampletype_id']);
     }
 }
