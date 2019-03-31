@@ -295,10 +295,11 @@ class RequestController extends Controller
 
             $i = 1;
             $analysisquery = Analysis::find()->where(['sample_id' => $sample['sample_id']])->all();
+            $acount = Analysis::find()->where(['sample_id' => $sample['sample_id']])->count();
                    foreach ($analysisquery as $analysis){
                         $mpdf->WriteHTML("&nbsp;&nbsp;&nbsp;&nbsp;<font size='2'>".$analysis['testname']."</font>");
 
-                        if ($i++ == 3)
+                        if ($i++ == $acount)
                         break;
                    }               
             }          

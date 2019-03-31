@@ -58,7 +58,7 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
     <?= $form->field($model, 'tests')->widget(DepDrop::classname(), [
             'type'=>DepDrop::TYPE_SELECT2,
             'data'=>$sampletype,
-            'options'=>['id'=>'sample-sample_type_id',  'multiple' => true,],
+            'options'=>['id'=>'sample-sample_type_id'],
             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
             'pluginOptions'=>[
                 'depends'=>['sample-testcategory_id'],
@@ -78,40 +78,32 @@ $sampletypelist= ArrayHelper::map(Sampletype::find()->all(),'sampletype_id','typ
     </div>
 
     <?php ActiveForm::end(); ?>
-
-    <?php
-  $this->registerJs('var temp = [];');  
-
-$this->registerJs("$('#sample-sample_type_id').on('change',function(){
-    var id = $('#sample-sample_type_id').val();
+    <div class="row" id="methodreference"  style="padding-left:15px;padding-right:15px">
+    </div>
   
-    temp.push(id);
-
-    $('#sample_ids').val(id);
-
-
-        // $.ajax({
-        //     url: '".Url::toRoute("package/getpackage")."',
-        //     dataType: 'json',
-        //     method: 'GET',
-        //     data: {id: id},
-        //     success: function (data, textStatus, jqXHR) {
-               
-        //        
-            
-        //         $('.image-loader').removeClass( \"img-loader\" );
-        //         $('.image-loader').removeClass( \"img-loader\" );
-        //     },
-        //     beforeSend: function (xhr) {
-        //         //alert('Please wait...');
-        //         $('.image-loader').addClass( \"img-loader\" );
-        //     },
-        //     error: function (jqXHR, textStatus, errorThrown) {
-        //         console.log('An error occured!');
-        //         alert('Error in ajax request');
-        //     }
-        // });
-});");
-?>
 
 </div>
+
+<script type="text/javascript">
+    $('#sample-sample_type_id').on('change',function() {
+        alert('boom');
+         var id = $('#sample-sample_type_id').val();
+         temp.push(id);
+    $('#sample_ids').val(id);
+        $.ajax({
+            url: '/lab/services/getmethod?id='+$(this).val(),
+            method: "GET",
+            dataType: 'html',
+            data: sample_type_id: $('#sample-sample_type_id').val()},
+            beforeSend: function(xhr) {
+               alert("boom");
+               $('.image-loader').addClass("img-loader");
+               }
+            })
+            .done(function( response ) {
+                $("#methodreference").html(response); 
+                $('.image-loader').removeClass("img-loader");  
+            });
+
+    });
+</script>
