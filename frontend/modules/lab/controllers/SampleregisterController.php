@@ -26,7 +26,6 @@ class SampleregisterController extends Controller
 {
     public function actionIndex()
     {
-        //$model = new Requestextend;
         $model = new Sampleextend;
         $rstlId = Yii::$app->user->identity->profile->rstl_id;
         
@@ -39,19 +38,17 @@ class SampleregisterController extends Controller
                 $fromDate = Yii::$app->request->get('from_date');
             } else {
                 $fromDate = date('Y-m-d');
-                //Yii::$app->session->setFlash('error', "Not a valid date!");
             }
 
             if($this->checkValidDate(Yii::$app->request->get('to_date')) == true){
                 $toDate = Yii::$app->request->get('to_date');
             } else {
                 $toDate = date('Y-m-d');
-                //Yii::$app->session->setFlash('error', "Not a valid date!");
             }
         } else {
             $labId = 1;
-            $fromDate = date('Y-01-01'); //first day of the year
-            $toDate = date('Y-m-d'); //as of today
+            $fromDate = date('Y-01-01'); 
+            $toDate = date('Y-m-d');
 
             $_GET['lab_id'] = 1;
             $_GET['from_date'] = $fromDate;
@@ -60,11 +57,9 @@ class SampleregisterController extends Controller
 
         $searchModel = new SampleregisterSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->get());
-        //$dataProvider->setPagination(['pageSize' => 10]);
         $dataProvider->pagination->pageSize=10;
 
         return $this->render('index', [
-            //'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'model' => $model,
             'laboratories' => $this->listLaboratory(),
